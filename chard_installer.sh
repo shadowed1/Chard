@@ -28,35 +28,16 @@ case "$choice" in
     1)
 echo ""
 echo "${GREEN}${BOLD}About to start downloading STUFF${RESET}"
-download_and_extract()
-{
+echo ""
+download_and_extract() {
     local url="$1"
     local target_dir="$2"
-    local FILE SAFE_FILE
-    echo "${MAGENTA}"
-    echo "Downloading: $URL"
-    echo "${RESET}${BLUE}"
-    
-    if [[ -f "download" ]]; then
-        FILE="download"
-    else
-        FILE=$(ls -t *.pkg.tar.zst 2>/dev/null | head -n 1)
-    fi
-
-    SAFE_FILE="${FILE//:/}"
-    if [[ "$FILE" != "$SAFE_FILE" ]]; then
-        mv "$FILE" "$SAFE_FILE"
-        FILE="$SAFE_FILE"
-    fi
-
-    echo "Extracting $FILE to $target_dir"
-    tar --use-compress-program=unzstd -xvf "$FILE" -C "$target_dir"
-
-
-    mkdir -p "$target_dir"
+    local FILE SAFE_FILE BASENAME
 
     echo "${MAGENTA}Downloading: $url${RESET}"
-    curl -LO "$URL"
+    mkdir -p "$target_dir"
+
+    curl -LO "$url"
 
     if [[ -f "download" ]]; then
         FILE="download"
@@ -70,19 +51,20 @@ download_and_extract()
         FILE="$SAFE_FILE"
     fi
 
+    BASENAME="${FILE%.zst}"
     echo "${CYAN}Extracting $FILE to $target_dir${RESET}"
-    unzstd "$FILE" -o "${FILE%.zst}"
-    tar -xvf "${FILE%.zst}" -C "$target_dir"
-    rm -f "$FILE" "${FILE%.zst}"
-    rm -f "$FILE" "${FILE%.tar}"
+    unzstd "$FILE" -o "$BASENAME"
+    tar -xvf "$BASENAME" -C "$target_dir"
+
+    rm -f "$FILE" "$BASENAME"
 
     chmod +x "$target_dir/usr/bin/"* 2>/dev/null || true
     chmod +x "$target_dir/usr/share/"* 2>/dev/null || true
 
     echo "${GREEN}${SAFE_FILE} extracted to $target_dir${RESET}"
-
     sleep 1
 }
+
 
 export PATH="$HOME/opt/chard/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$HOME/opt/chard/usr/lib:$LD_LIBRARY_PATH"
