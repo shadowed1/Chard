@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# ========== Begin Chard Logic ==========
+# ========== Begin Chard Root Logic ==========
 
 CHARD_ROOT="$HOME/opt/chard"
 CHARD_RUNTIME="$CHARD_ROOT/.xdg-runtime-dir"
