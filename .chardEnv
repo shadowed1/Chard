@@ -10,7 +10,6 @@ export FLATPAK_USER_DIR="$CHARD_SHARE/flatpak"
 export XDG_RUNTIME_DIR="$CHARD_ROOT/.xdg-runtime-dir"
 export TMPDIR="$HOME/tmp"
 
-# Path helpers
 add_to_path() {
   case ":$PATH:" in
     *":$1:"*) ;; *) PATH="$1:$PATH" ;; esac
