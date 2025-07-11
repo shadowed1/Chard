@@ -54,7 +54,7 @@ export NVM_DIR="$HOME/opt/chard/usr/share/nvm"
 export ELECTRON_FORCE_DEVICE_SCALE_FACTOR
 export XCURSOR_SIZE
 
-aurora_debug() {
+chard_debug() {
   echo "==== ENVIRONMENTAL VARIABLES ===="
   echo "PATH=$PATH"
   echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
@@ -70,4 +70,4 @@ aurora_debug() {
 
 
 
-# ========== End Aurora Flatpak Environment ==========
+# ========== End Chard Environment ==========
