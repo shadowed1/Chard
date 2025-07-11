@@ -14,3 +14,7 @@ EOF
 chmod +x ~/chard/nosudo.sh
 
 bash ~/chard/nosudo
+
+don't run this:
+
+bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_installer.sh?$(date +%s)")
