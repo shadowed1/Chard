@@ -440,6 +440,32 @@ echo ""
 "$HOME/opt/chard/flatpak/usr/bin/flatpak" --version
 sleep 3
 
+echo ""
+
+"$HOME/opt/chard/flatpak/usr/bin/flatpak" --version
+sleep 3
+
+NPM_BASE="$HOME/opt/chard/usr/lib/node_modules/npm"
+NVM_DIR="$HOME/opt/chard/usr/share/nvm"
+BIN_DIR="$HOME/opt/chard/usr/bin"
+
+mkdir -p "$BIN_DIR"
+mkdir -p ~/opt/etc/xdg/xfce4/xfwm4
+
+rm -f "$BIN_DIR/npm" "$BIN_DIR/npx"
+
+ln -s "$NPM_BASE/bin/npm-cli.js" "$BIN_DIR/npm"
+ln -s "$NPM_BASE/bin/npx-cli.js" "$BIN_DIR/npx"
+
+chmod +x "$NPM_BASE/bin/"*.js
+
+ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/yay"
+ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/paru"
+ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/pacaur"
+ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/pacman"
+
+
+echo ""
 
         ;;
     *)
