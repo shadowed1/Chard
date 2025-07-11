@@ -1,3 +1,12 @@
+#!/bin/bash
+
+# ========== Begin Chard Logic ==========
+
+CHARD_ROOT="$HOME/opt/chard"
+CHARD_RUNTIME="$CHARD_ROOT/.xdg-runtime-dir"
+CHARD_ENV="$CHARD_ROOT/.chardEnv"
+CHARD_FLATPAK="$CHARD_ROOT/flatpak"
+CHARD_DEPS="$CHARD_ROOT/flatpak-deps"
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -8,16 +17,14 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-$HOME/opt/chard/.xdg-runtime-dir}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-$CHARD_RUNTIME}"
 mkdir -p "$XDG_RUNTIME_DIR/doc/portal"
 chmod 700 "$XDG_RUNTIME_DIR"
 echo 3 > "$XDG_RUNTIME_DIR/doc/portal/version"
 
 export USER="${USER:-$(id -un)}"
 
-if [ -f "$HOME/opt/chard.flatpak.env" ]; then
-    . "$HOME/opt/chard.flatpak.env"
-fi
+[ -f "$CHARD_ENV" ] && . "$CHARD_ENV"
 
 echo "${MAGENTA}Aurora initializing Flatpak!${RESET}${BLUE}"
 
@@ -30,17 +37,18 @@ if [ ! -S "$XDG_RUNTIME_DIR/dbus-session" ]; then
   sleep 1
 fi
 
-export TMPDIR="$HOME/tmp"
-mkdir -p "$XDG_RUNTIME_DIR" "$TMPDIR"
+export DBUS_SESSION_BUS_ADDRESS=$(grep -E '^unix:' "$XDG_RUNTIME_DIR/dbus-session.address" | head -n1 | tr -d '\n')
+
+mkdir -p "$XDG_RUNTIME_DIR" "$HOME/tmp"
 chmod 700 "$XDG_RUNTIME_DIR"
+export TMPDIR="$HOME/tmp"
 
-  export DBUS_SESSION_BUS_ADDRESS=$(grep -E '^unix:' "$XDG_RUNTIME_DIR/dbus-session.address" | head -n1 | tr -d '\n')
-
-if [ -x "$HOME/opt/chardflatpak-deps/usr/lib/xdg-desktop-portal-gtk" ] && [ -n "$USER" ] && ! pgrep -u "$USER" -f xdg-desktop-portal-gtk > /dev/null; then
-  "$HOME/opt/chardflatpak-deps/usr/lib/xdg-desktop-portal-gtk" &
+if [ -x "$CHARD_DEPS/usr/lib/xdg-desktop-portal-gtk" ] && ! pgrep -u "$USER" -f xdg-desktop-portal-gtk > /dev/null; then
+  "$CHARD_DEPS/usr/lib/xdg-desktop-portal-gtk" &
 fi
-if [ -x "$HOME/opt/chardflatpak-deps/usr/lib/xdg-desktop-portal" ] && [ -n "$USER" ] && ! pgrep -u "$USER" -f xdg-desktop-portal$ > /dev/null; then
-  "$HOME/opt/chardflatpak-deps/usr/lib/xdg-desktop-portal" &
+
+if [ -x "$CHARD_DEPS/usr/lib/xdg-desktop-portal" ] && ! pgrep -u "$USER" -f xdg-desktop-portal$ > /dev/null; then
+  "$CHARD_DEPS/usr/lib/xdg-desktop-portal" &
 fi
 
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -48,9 +56,10 @@ flatpak --user update --appstream
 
 echo "${RESET}${CYAN}Flatpak ready!${RESET}"
 
-MARKER="# Flatpak --user logic"
-if ! grep -q 'aurora() {' "$HOME/.bashrc"; then
-cat << 'EOF' >> "$HOME/.bashrc"
+# Only append wrapper functions once
+if ! grep -q 'aurora() {' "$HOME/.chardbashrc"; then
+cat << 'EOF' >> "$HOME/.chardbashrc"
+
 # Flatpak --user logic
 flatpak() {
   case "$1" in
@@ -71,7 +80,7 @@ flatpak() {
 }
 
 aurora() {
-  local AURORA_SCRIPT="$HOME/opt/chardbin/aurora"
+  local AURORA_SCRIPT="$HOME/opt/chard/bin/aurora"
 
   "$AURORA_SCRIPT" "$@"
 
@@ -82,32 +91,27 @@ aurora() {
       fi
       ;;
   esac
+}
 
+ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/yay"
+ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/paru"
+ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/pacaur"
+yay() { chard "$@"; }
+paru() { chard "$@"; }
 
-ln -s "$NPM_BASE/bin/npm-cli.js" "$BIN_DIR/npm"
-ln -s "$NPM_BASE/bin/npx-cli.js" "$BIN_DIR/npx"
-ln -sf "$HOME/opt/chardbin/starman" "$HOME/opt/chardbin/yay"
-ln -sf "$HOME/opt/chardbin/starman" "$HOME/opt/chardbin/paru"
-ln -sf "$HOME/opt/chardbin/starman" "$HOME/opt/chardbin/pacaur"
-yay() { starman "$@"; }
-paru() { starman "$@"; }
-
-
-
-flatpak --user list --columns=application,name | tail -n +1 | sort -u > "$HOME/.starman_flatpak_cache"
-
+flatpak --user list --columns=application,name | tail -n +1 | sort -u > "$HOME/.chard_flatpak_cache"
 
 EOF
-echo ""
-echo "${BOLD}${CYAN}Aurora has successfully finished setting up Flatpak! Reinitializing .bashrc to enable --user shortcut"
-sleep 1
-echo "."
-sleep 1
-echo ".${RESET}"
-echo ""
-~/opt/usr/bin/fastfetch
-echo ""
-source ~/.bashrc
-echo ""
-~/opt/bin/aurora help
+
+  echo ""
+  echo "${BOLD}${CYAN}Aurora has successfully finished setting up Flatpak! Reinitializing .chardbashrc to enable --user shortcut"
+  sleep 1; echo "."; sleep 1; echo ".${RESET}"
+  echo ""
+  ~/opt/usr/bin/fastfetch
+  echo ""
+  source ~/.chardbashrc
+  echo ""
+  ~/opt/bin/aurora help
 fi
+
+# ========== End Chard Logic ==========
