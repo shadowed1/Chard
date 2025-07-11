@@ -81,9 +81,10 @@ download_and_extract()
     sleep 1
 }
 
-export PATH="$HOME/opt/chard/flatpak/usr/bin:$HOME/opt/chard/flatpak-deps/usr/bin:/bin:/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/opt/chard/flatpak-deps/usr/lib:$LD_LIBRARY_PATH"
-export XDG_RUNTIME_DIR="$HOME/.xdg-runtime-dir"
+export PATH="$HOME/opt/chard/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/opt/chard/usr/lib:$LD_LIBRARY_PATH"
+export XDG_DATA_DIRS="$HOME/opt/chard/usr/share:$XDG_DATA_DIRS"
+export FLATPAK_USER_DIR="$HOME/opt/chard/share/flatpak"
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
@@ -416,3 +417,46 @@ download_and_extract "$URL" "$HOME/opt/chard"
 URL="https://archlinux.org/packages/extra/x86_64/unzip/download"
 download_and_extract "$URL" "$HOME/opt/chard"
 
+echo "${RESET}${GREEN}"
+curl -L https://raw.githubusercontent.com/shadowed1/Chard/main/.chardLogic -o ~/opt/chard/.chardLogic
+echo "${RESET}${YELLOW}"
+curl -L https://raw.githubusercontent.com/shadowed1/Chard/main/.chardEnv -o ~/opt/chard/bin/.chardEnv
+echo "${RESET}${GREEN}"
+curl -L https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o ~/opt/chard/bin/chard
+echo "${RESET}${YELLOW}"
+curl -L https://raw.githubusercontent.com/shadowed1/Chard/main/version -o ~/opt/chard/bin/version
+echo "${RESET}"
+chmod +x ~/opt/bin/chard
+echo ""
+
+export LD_LIBRARY_PATH="$HOME/opt/chard/flatpak-deps/usr/lib:$LD_LIBRARY_PATH"
+
+if file "$XDG_RUNTIME_DIR/dbus-session" | grep -q socket; then
+  export DBUS_SESSION_BUS_ADDRESS=$(grep -E '^unix:' "$XDG_RUNTIME_DIR/dbus-session.address")
+  grep -v '^export DBUS_SESSION_BUS_ADDRESS=' "$HOME/opt/chard/.chardEnv" > "$HOME/opt/chard/chardEnv.tmp"
+  echo "export DBUS_SESSION_BUS_ADDRESS=\"$DBUS_SESSION_BUS_ADDRESS\"" >> "$HOME/opt/chard/.chardEnv.tmp"
+  mv "$HOME/opt/chard/.chardEnv.tmp" "$HOME/opt/chard/.chardEnv"
+else
+  echo "dbus socket not found."
+fi
+
+[ -f "$HOME/.chardbashrc" ] || touch "$HOME/.chardbashrc"
+
+FLATPAK_ENV_LINE='[ -f "$HOME/opt/chard/.chardEnv" ] && . "$HOME/opt/chard/.chardEnv"'
+FLATPAK_LOGIC_LINE='[ -f "$HOME/opt/chard/.chardLogic" ] && . "$HOME/opt/chard/.chardLogic"'
+
+grep -Fxq "$FLATPAK_ENV_LINE" "$HOME/.chardbashrc" || echo "$FLATPAK_ENV_LINE" >> "$HOME/.chardbashrc"
+grep -Fxq "$FLATPAK_LOGIC_LINE" "$HOME/.chardbashrc" || echo "$FLATPAK_LOGIC_LINE" >> "$HOME/.chardbashrc"
+
+echo ""
+"$HOME/opt/chard/flatpak/usr/bin/flatpak" --version
+sleep 3
+
+
+        ;;
+    *)
+        echo "${RED}Invalid option.$RESET"
+        exit 1
+        ;;
+esac
+exit 0
