@@ -1,3 +1,4 @@
+'EOF'
 #!/bin/bash
 # ========== Begin Chard Root Logic ==========
 
@@ -110,3 +111,4 @@ EOF
 fi
 
 # ========== End Chard Root Logic ==========
+EOF
