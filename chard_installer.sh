@@ -67,7 +67,10 @@ download_and_extract() {
 
 
 export PATH="$HOME/opt/chard/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/opt/chard/usr/lib:$LD_LIBRARY_PATH"
+CHARD_LIB="$HOME/opt/chard/usr/lib"
+FLATPAK_USER_DIR="$HOME/opt/chard/share/flatpak" \
+LD_LIBRARY_PATH="$CHARD_LIB:$LD_LIBRARY_PATH" \
+"$HOME/opt/chard/flatpak/usr/bin/flatpak" --version
 export XDG_DATA_DIRS="$HOME/opt/chard/usr/share:$XDG_DATA_DIRS"
 export FLATPAK_USER_DIR="$HOME/opt/chard/share/flatpak"
 mkdir -p "$XDG_RUNTIME_DIR"
