@@ -37,7 +37,7 @@ export PKG_CONFIG_PATH
 export GIT_EXEC_PATH="$HOME/opt/chard/usr/lib/git-core"
 export TMPDIR="$HOME/tmp"
 export XDG_CONFIG_DIRS="/home/chronos/opt/etc/xdg:/etc/xdg"
-export XDG_RUNTIME_DIR="$HOME/.xdg-runtime-dir"
+export XDG_RUNTIME_DIR="$HOME/opt/chard/.xdg-runtime-dir"
 export XDG_CONFIG_DIRS="$HOME/opt/chard/etc/xdg:$XDG_CONFIG_DIRS"
 export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/dbus-session"
 export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$HOME/opt/chard/share:/usr/local/share:/usr/share"
