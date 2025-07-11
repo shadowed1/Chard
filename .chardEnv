@@ -1,1 +1,73 @@
 
+add_to_path() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+  esac
+}
+
+add_to_ld_path() {
+  case ":$LD_LIBRARY_PATH:" in
+    *":$1:"*) ;;
+    *) LD_LIBRARY_PATH="$1${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" ;;
+  esac
+}
+
+add_to_pkg_path() {
+  case ":$PKG_CONFIG_PATH:" in
+    *":$1:"*) ;;
+    *) PKG_CONFIG_PATH="$1${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}" ;;
+  esac
+}
+
+add_to_path "$HOME/opt/chard/bin"
+add_to_path "$HOME/opt/chard/flatpak/usr/bin"
+add_to_path "$HOME/opt/chard/flatpak-deps/usr/bin"
+add_to_path "$HOME/opt/chard/usr/bin"
+add_to_path "$HOME/opt/chard/usr/lib/xfce4/"
+
+add_to_ld_path "$HOME/opt/chard/flatpak-deps/usr/lib"
+add_to_ld_path "$HOME/opt/chard/usr/lib"
+
+add_to_pkg_path "$HOME/opt/chard/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+export PATH
+export LD_LIBRARY_PATH
+export PKG_CONFIG_PATH
+export GIT_EXEC_PATH="$HOME/opt/chard/usr/lib/git-core"
+export TMPDIR="$HOME/tmp"
+export XDG_CONFIG_DIRS="/home/chronos/opt/etc/xdg:/etc/xdg"
+export XDG_RUNTIME_DIR="$HOME/.xdg-runtime-dir"
+export XDG_CONFIG_DIRS="$HOME/opt/chard/etc/xdg:$XDG_CONFIG_DIRS"
+export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/dbus-session"
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$HOME/opt/chard/share:/usr/local/share:/usr/share"
+export DISPLAY=":0"
+export GTK_USE_PORTAL=0
+export FLATPAK_DISABLE_PORTAL=1
+export XDG_DESKTOP_PORTAL_DIR=/dev/null
+: "${ELECTRON_FORCE_DEVICE_SCALE_FACTOR:=1.0}"
+: "${XCURSOR_SIZE:=24}"
+
+export NVM_DIR="$HOME/opt/chard/usr/share/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+export ELECTRON_FORCE_DEVICE_SCALE_FACTOR
+export XCURSOR_SIZE
+
+aurora_debug() {
+  echo "==== ENVIRONMENTAL VARIABLES ===="
+  echo "PATH=$PATH"
+  echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+  echo "TMPDIR=$TMPDIR"
+  echo "DISPLAY=$DISPLAY"
+  echo "XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
+  echo "XDG_DATA_DIRS=$XDG_DATA_DIRS"
+  echo "GTK_USE_PORTAL=$GTK_USE_PORTAL"
+  echo "FLATPAK_DISABLE_PORTAL=$FLATPAK_DISABLE_PORTAL"
+  echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS"
+  echo "==============================="
+}
+
+
+
+# ========== End Aurora Flatpak Environment ==========
