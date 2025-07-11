@@ -1,0 +1,16 @@
+##########################################
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+mkdir -p ~/chard
+cd ~/chard
+curl -LO https://archlinux.org/packages/extra/x86_64/wget/download
+mv download wget-1.25.0-2-x86_64.pkg.tar.zst
+unzstd wget-1.25.0-2-x86_64.pkg.tar.zst
+tar -xvf wget-1.25.0-2-x86_64.pkg.tar
