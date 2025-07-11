@@ -9,10 +9,6 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-mkdir -p ~/chard
-mkdir -p ~/chard/flatpak
-mkdir -p ~/chard/flatpak-deps
-
 echo "${RESET}${GREEN}Flatpak directly in ChromeOS without Developer mode?${RESET}"
 echo "${RESET}"
 echo "${YELLOW}0: Quit${RESET}"
@@ -29,6 +25,10 @@ case "$choice" in
 echo ""
 echo "${GREEN}${BOLD}About to start downloading STUFF${RESET}"
 echo ""
+mkdir -p ~/chard
+mkdir -p ~/chard/flatpak
+mkdir -p ~/chard/flatpak-deps
+
 download_and_extract() {
     local url="$1"
     local target_dir="$2"
@@ -53,8 +53,7 @@ download_and_extract() {
 
     BASENAME="${FILE%.zst}"
     echo "${CYAN}Extracting $FILE to $target_dir${RESET}"
-    unzstd "$FILE" -o "$BASENAME"
-    tar -xvf "$BASENAME" -C "$target_dir"
+    tar --use-compress-program=unzstd -xvf "$FILE" -C "$target_dir"
 
     rm -f "$FILE" "$BASENAME"
 
