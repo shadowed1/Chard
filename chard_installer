@@ -12,17 +12,19 @@ mkdir -p ~/chard
 mkdir -p ~/chard/flatpak
 mkdir -p ~/chard/flatpak-deps
 
-export PATH="$HOME/chard/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/chard/usr/lib:$LD_LIBRARY_PATH"
-export XDG_DATA_DIRS="$HOME/chard/usr/share:$XDG_DATA_DIRS"
-export FLATPAK_USER_DIR="$HOME/chard/flatpak"
-
-echo "${RESET}${GREEN}Run apps and games with Flatpak directly in ChromeOS without Developer mode?${RESET}"
+echo "${RESET}${GREEN}Flatpak directly in ChromeOS without Developer mode?${RESET}"
 echo "${RESET}"
 echo "${YELLOW}0: Quit${RESET}"
 echo "${GREEN}1: Download and install Chard to ~/chard{RESET}"
 echo ""
 
+case "$choice" in
+    0)
+        echo "Quit"
+        ;;
+    1)
+echo ""
+echo "${GREEN}${BOLD}About to start downloading STUFF${RESET}"
 download_and_extract()
 {
     local url="$1"
