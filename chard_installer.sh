@@ -19,6 +19,8 @@ echo "${YELLOW}0: Quit${RESET}"
 echo "${GREEN}1: Download and install Chard to ~/chard{RESET}"
 echo ""
 
+read -rp "Enter (0-1): " choice
+
 case "$choice" in
     0)
         echo "Quit"
