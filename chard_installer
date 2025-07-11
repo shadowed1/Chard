@@ -1,4 +1,6 @@
 ##########################################
+NOT SAFE TO RUN
+##########################################
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -9,6 +11,8 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 mkdir -p ~/chard
+mkdir -p ~/chard/flatpak
+mkdir -p ~/chard/flatpak-deps
 cd ~/chard
 curl -LO https://archlinux.org/packages/extra/x86_64/wget/download
 mv download wget-1.25.0-2-x86_64.pkg.tar.zst
@@ -17,9 +21,14 @@ tar -xvf wget-1.25.0-2-x86_64.pkg.tar
 
 cat > ~/chard/nosudo.sh <<'EOF'
 #!/bin/bash
-echo "running without exec permission"
+echo "test"
 EOF
 
 chmod +x ~/chard/nosudo.sh
 
 bash ~/chard/nosudo
+
+export PATH="$HOME/chard/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/chard/usr/lib:$LD_LIBRARY_PATH"
+export XDG_DATA_DIRS="$HOME/chard/usr/share:$XDG_DATA_DIRS"
+export FLATPAK_USER_DIR="$HOME/chard/flatpak"
