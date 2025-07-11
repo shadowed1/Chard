@@ -66,10 +66,6 @@ flatpak() {
       command flatpak "$@"
       ;;
     install)
-      if [[ "$*" == *"com.valvesoftware.Steam"* ]]; then
-        echo "${RED}Installing com.valvesoftware.Steam is blocked to protect your Steam install.${RESET}"
-        return 1
-      fi
       command flatpak --user "$@"
       ;;
     *)
