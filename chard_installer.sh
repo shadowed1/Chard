@@ -12,7 +12,7 @@ RESET=$(tput sgr0)
 echo "${RESET}${GREEN}Flatpak directly in ChromeOS without Developer mode?${RESET}"
 echo "${RESET}"
 echo "${YELLOW}0: Quit${RESET}"
-echo "${GREEN}1: Download and install Chard to ~/chard{RESET}"
+echo "${GREEN}1: Download and install Chard to ~/chard${RESET}"
 echo ""
 
 read -rp "Enter (0-1): " choice
