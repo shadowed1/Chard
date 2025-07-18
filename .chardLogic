@@ -2,7 +2,7 @@
 #!/bin/bash
 # ========== Begin Chard Root Logic ==========
 
-CHARD_ROOT="$HOME/opt/chard"
+CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RUNTIME="$CHARD_ROOT/.xdg-runtime-dir"
 CHARD_ENV="$CHARD_ROOT/.chardEnv"
 CHARD_FLATPAK="$CHARD_ROOT/flatpak"
@@ -76,7 +76,7 @@ flatpak() {
 }
 
 aurora() {
-  local AURORA_SCRIPT="$HOME/opt/chard/bin/aurora"
+  local AURORA_SCRIPT="/usr/local/bin/chard/bin/aurora"
 
   "$AURORA_SCRIPT" "$@"
 
@@ -89,9 +89,9 @@ aurora() {
   esac
 }
 
-ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/yay"
-ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/paru"
-ln -sf "$HOME/opt/chard/bin/chard" "$HOME/opt/chard/bin/pacaur"
+ln -sf "/usr/local/bin/chard/bin/chard" "/usr/local/bin/chard/bin/yay"
+ln -sf "/usr/local/bin/chard/bin/chard" "/usr/local/bin/chard/bin/paru"
+ln -sf "/usr/local/bin/chard/bin/chard" "/usr/local/bin/chard/bin/pacaur"
 yay() { chard "$@"; }
 paru() { chard "$@"; }
 
