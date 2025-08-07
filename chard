@@ -1,4 +1,3 @@
-'EOF' 
 #!/bin/bash
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -8,4 +7,3 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-EOF
