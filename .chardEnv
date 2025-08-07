@@ -1,4 +1,3 @@
-#!/bin/bash
 # ========== Begin Chard Root Environment ==========
 
 CHARD_ROOT="$HOME/opt/chard"
