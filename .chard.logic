@@ -1,5 +1,4 @@
 #!/bin/bash
-# Chard logic
 chard_emerge() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "CHARD_ROOT is not set. Run 'source /usr/local/chard/chard.env' first."
