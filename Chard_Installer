@@ -8,37 +8,51 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-  
+
 set -e
 
 CHARD_ROOT="/usr/local/chard"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
 
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) GENTOO_ARCH="amd64" ;;
-    i*86)   GENTOO_ARCH="x86" ;;
-    aarch64) GENTOO_ARCH="arm64" ;; # gentoo calls this "arm64" keyword
-    armv7l) GENTOO_ARCH="arm" ;;
-    ppc64le) GENTOO_ARCH="ppc64le" ;;
+    x86_64)   GENTOO_ARCH="amd64" ;;
+    i*86)     GENTOO_ARCH="x86" ;;
+    aarch64)  GENTOO_ARCH="arm64" ;;
+    armv7l)   GENTOO_ARCH="arm" ;;
+    ppc64le)  GENTOO_ARCH="ppc64le" ;;
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 echo "[*] Writing $MAKE_CONF..."
-cat > "$MAKE_CONF" <<EOF
-CHOST="${GENTOO_ARCH}-unknown-linux-gnu"
-ARCH="${GENTOO_ARCH}"
-ACCEPT_KEYWORDS="~${GENTOO_ARCH}"
-ROOT="${CHARD_ROOT}"
-CFLAGS="-O2 -pipe"
-CXXFLAGS="\${CFLAGS}"
-PORTAGE_TMPDIR="\${ROOT}/var/tmp"
-DISTDIR="\${ROOT}/var/cache/distfiles"
-PKGDIR="\${ROOT}/var/cache/packages"
-EOF
+sudo bash -c "cat > '$MAKE_CONF' <<EOF
+CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
+ARCH='${GENTOO_ARCH}'
+ACCEPT_KEYWORDS='~${GENTOO_ARCH}'
+ROOT='${CHARD_ROOT}'
+CFLAGS='-O2 -pipe'
+CXXFLAGS='\${CFLAGS}'
+PORTAGE_TMPDIR='\${ROOT}/var/tmp'
+DISTDIR='\${ROOT}/var/cache/distfiles'
+PKGDIR='\${ROOT}/var/cache/packages'
+EOF"
 
 echo "[*] make.conf created with ARCH=${GENTOO_ARCH}"
 echo "[*] Directory structure ready under $CHARD_ROOT"
+
+PORTAGE_DIR="$CHARD_ROOT/usr/portage"
+SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
+TMP_TAR="/tmp/portage-latest.tar.xz"
+
+echo "[*] Downloading Portage tree snapshot..."
+curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
+
+echo "[*] Extracting snapshot into $PORTAGE_DIR..."
+sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+rm -f "$TMP_TAR"
+
+echo "[*] Portage tree ready in $PORTAGE_DIR"
+echo "[*] Chard root setup complete."
