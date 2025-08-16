@@ -54,28 +54,8 @@ rm -f "$TMP_TAR"
 echo "[*] Portage tree ready in $PORTAGE_DIR"
 
 if [ ! -f "$USER_RC" ]; then
-    echo "[*] Creating $USER_RC with loader..."
-    cat > "$USER_RC" <<'EOF'
-# <<< CHARD_ENV <<<
-
-if [ ! -f /usr/local/chard/chard.env ]; then
-    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o /usr/local/chard/chard.env
+    echo "[*] Downloading .chardrc from GitHub..."
+    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$USER_RC"
 fi
 
-if [ ! -f /usr/local/chard/chard.logic ]; then
-    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o /usr/local/chard/chard.logic
-fi
-
-if [ -f /usr/local/chard/chard.env ]; then
-    source /usr/local/chard/chard.env
-fi
-
-if [ -f /usr/local/chard/chard.logic ]; then
-    source /usr/local/chard/chard.logic
-fi
-
-# <<< END CHARD_ENV <<<
-EOF
-fi
-
-echo "[*] Chard sandbox setup complete. Reload terminal or run 'source ~/.chardrc' to start using it."
+echo "[*] Chard root setup complete. Reload terminal or run 'source ~/.chardrc' to begin."
