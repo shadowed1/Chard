@@ -17,4 +17,4 @@ bash ~/chard/nosudo
 
 don't run this:
 
-<pre> bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)") </pre>
+<pre> bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/refs/heads/main/Chard_Installer?$(date +%s)") </pre>
