@@ -12,6 +12,7 @@ RESET=$(tput sgr0)
 set -e
 
 CHARD_ROOT="/usr/local/chard"
+USER_RC="$HOME/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
@@ -41,7 +42,6 @@ PKGDIR='\${ROOT}/var/cache/packages'
 EOF"
 
 echo "[*] make.conf created with ARCH=${GENTOO_ARCH}"
-echo "[*] Directory structure ready under $CHARD_ROOT"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -55,4 +55,30 @@ sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 rm -f "$TMP_TAR"
 
 echo "[*] Portage tree ready in $PORTAGE_DIR"
-echo "[*] Chard root setup complete."
+
+if [ ! -f "$USER_RC" ]; then
+    echo "[*] Creating $USER_RC with loader..."
+    cat > "$USER_RC" <<'EOF'
+# <<< CHARD_ENV <<<
+
+if [ ! -f /usr/local/chard/chard.env ]; then
+    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o /usr/local/chard/chard.env
+fi
+
+if [ ! -f /usr/local/chard/chard.logic ]; then
+    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o /usr/local/chard/chard.logic
+fi
+
+if [ -f /usr/local/chard/chard.env ]; then
+    source /usr/local/chard/chard.env
+fi
+
+if [ -f /usr/local/chard/chard.logic ]; then
+    source /usr/local/chard/chard.logic
+fi
+
+# <<< END CHARD_ENV <<<
+EOF
+fi
+
+echo "[*] Chard sandbox setup complete. Reload terminal or run 'source ~/.chardrc' to start using it."
