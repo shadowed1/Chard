@@ -1,0 +1,16 @@
+#!/bin/bash
+# Chard logic
+chard_emerge() {
+    if [ -z "$CHARD_ROOT" ]; then
+        echo "CHARD_ROOT is not set. Run 'source /usr/local/chard/chard.env' first."
+        return 1
+    fi
+
+    sudo env ROOT="$CHARD_ROOT" \
+        PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
+        DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
+        PKGDIR="$CHARD_ROOT/var/cache/packages" \
+        PATH="$CHARD_ROOT/usr/bin:$PATH" \
+        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" \
+        emerge "$@"
+}
