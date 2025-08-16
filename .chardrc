@@ -1,0 +1,40 @@
+# <<< CHARD_ENV <<<
+
+CHARD_ROOT="/usr/local/chard"
+
+# Fetch latest env and logic from GitHub if missing
+if [ ! -f "$CHARD_ROOT/chard.env" ]; then
+    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
+fi
+
+if [ ! -f "$CHARD_ROOT/chard.logic" ]; then
+    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+fi
+
+if [ -f "$CHARD_ROOT/chard.env" ]; then
+    while IFS= read -r line; do
+        # Only handle PATH or LD_LIBRARY_PATH carefully
+        if [[ "$line" =~ ^export[[:space:]]+PATH= ]]; then
+            NEW_PATH=$(echo "$line" | cut -d= -f2- | tr -d '"')
+            case ":$PATH:" in
+                *":$NEW_PATH:"*) : ;; # already in PATH
+                *) export PATH="$NEW_PATH:$PATH" ;;
+            esac
+        elif [[ "$line" =~ ^export[[:space:]]+LD_LIBRARY_PATH= ]]; then
+            NEW_LD=$(echo "$line" | cut -d= -f2- | tr -d '"')
+            case ":$LD_LIBRARY_PATH:" in
+                *":$NEW_LD:"*) : ;; # already in LD_LIBRARY_PATH
+                *) export LD_LIBRARY_PATH="$NEW_LD:$LD_LIBRARY_PATH" ;;
+            esac
+        else
+            eval "$line"
+        fi
+    done < "$CHARD_ROOT/chard.env"
+fi
+
+# Source chard.logic
+if [ -f "$CHARD_ROOT/chard.logic" ]; then
+    source "$CHARD_ROOT/chard.logic"
+fi
+
+# <<< END CHARD_ENV <<<
