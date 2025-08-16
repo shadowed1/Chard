@@ -1,0 +1,44 @@
+#!/bin/bash
+
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+  
+set -e
+
+CHARD_ROOT="/usr/local/chard"
+
+echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp}
+
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) GENTOO_ARCH="amd64" ;;
+    i*86)   GENTOO_ARCH="x86" ;;
+    aarch64) GENTOO_ARCH="arm64" ;; # gentoo calls this "arm64" keyword
+    armv7l) GENTOO_ARCH="arm" ;;
+    ppc64le) GENTOO_ARCH="ppc64le" ;;
+    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+esac
+
+MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
+echo "[*] Writing $MAKE_CONF..."
+cat > "$MAKE_CONF" <<EOF
+CHOST="${GENTOO_ARCH}-unknown-linux-gnu"
+ARCH="${GENTOO_ARCH}"
+ACCEPT_KEYWORDS="~${GENTOO_ARCH}"
+ROOT="${CHARD_ROOT}"
+CFLAGS="-O2 -pipe"
+CXXFLAGS="\${CFLAGS}"
+PORTAGE_TMPDIR="\${ROOT}/var/tmp"
+DISTDIR="\${ROOT}/var/cache/distfiles"
+PKGDIR="\${ROOT}/var/cache/packages"
+EOF
+
+echo "[*] make.conf created with ARCH=${GENTOO_ARCH}"
+echo "[*] Directory structure ready under $CHARD_ROOT"
