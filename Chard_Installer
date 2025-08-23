@@ -1,5 +1,6 @@
-
 #!/bin/bash
+set -e
+
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -9,13 +10,13 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-set -e
-
 CHARD_ROOT="/usr/local/chard"
-CHARD_RC="/home/chronos/user/.chardrc"
+CHARD_BIN="$CHARD_ROOT/bin"
+HOME_DIR="/home/chronos/user"
+CHARD_RC="$HOME_DIR/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages,bin}
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -57,21 +58,22 @@ rm -f "$TMP_TAR"
 echo "[*] Portage tree ready in $PORTAGE_DIR"
 
 echo "[*] Downloading chard configuration files..."
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$HOME/.chardrc"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_RC"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/chard"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_BIN/chard"
+sudo chmod +x "$CHARD_BIN/chard"
 
 echo "[*] Chard root setup complete."
 echo "[*] To start using it, run:"
-echo "source ~/.chardrc"
+echo "source $CHARD_RC"
 
-if ! grep -q "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
-    cat >> "$HOME/.bashrc" <<'EOF'
+# Append to bashrc if not already present
+BASHRC="$HOME_DIR/.bashrc"
+if ! grep -q "<<< CHARD ENV MARKER <<<" "$BASHRC"; then
+    cat >> "$BASHRC" <<'EOF'
 # <<< CHARD ENV MARKER <<<
-[ -f ~/.chardrc ] && source ~/.chardrc
+[ -f /home/chronos/user/.chardrc ] && source /home/chronos/user/.chardrc
 # <<< END CHARD ENV MARKER <<<
 EOF
 fi
-
