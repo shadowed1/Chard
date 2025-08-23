@@ -1,6 +1,6 @@
 #!/bin/bash
 CHARD_ROOT="/usr/local/chard"
-CHARD_RC="$HOME/.chardrc"
+CHARD_RC="/home/chronos/user/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
     source "$CHARD_RC"
