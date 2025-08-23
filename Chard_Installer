@@ -57,7 +57,7 @@ echo "[*] Portage tree ready in $PORTAGE_DIR"
 echo "[*] Bootstrapping Gentoo stage3..."
 BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH"
 TARFILE=$(curl -fsSL "$BASE/latest-stage3-$GENTOO_ARCH.txt" | tail -n1)
-TMP_TAR="/tmp/$TARFILE"
+TMP_TAR="$CHARD_ROOT/var/tmp/$TARFILE"
 
 echo "[*] Downloading stage3 tarball..."
 curl -L -o "$TMP_TAR" "$BASE/$TARFILE"
