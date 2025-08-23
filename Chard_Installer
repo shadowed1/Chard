@@ -61,6 +61,21 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.lo
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
+echo "[*] Bootstrapping Gentoo stage3..."
+ARCH="$GENTOO_ARCH"
+BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$ARCH/autobuilds/current-stage3-$ARCH"
+TARFILE=$(curl -fsSL "$BASE/latest-stage3-$ARCH.txt" | tail -n1)
+TMP_TAR="/tmp/$TARFILE"
+
+echo "[*] Downloading stage3 tarball..."
+curl -L -o "$TMP_TAR" "$BASE/$TARFILE"
+
+echo "[*] Extracting stage3 into $CHARD_ROOT..."
+sudo tar -xJf "$TMP_TAR" -C "$CHARD_ROOT" --strip-components=1
+rm -f "$TMP_TAR"
+
+echo "[*] stage3 bootstrap complete. emerge should now be available."
+
 echo "[*] Chard root setup complete."
 echo "[*] To start using it, run:"
 echo "source $CHARD_RC"
