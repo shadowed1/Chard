@@ -1,6 +1,6 @@
 #!/bin/bash
 CHARD_ROOT="/usr/local/chard"
-CHARD_RC="~/.chardrc"
+CHARD_RC="$HOME/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
     source "$CHARD_RC"
@@ -12,8 +12,18 @@ fi
 if [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
     echo "[*] Bootstrapping stage3 Gentoo..."
     ARCH="$GENTOO_ARCH"
-    BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$ARCH/autobuilds/current-stage3-$ARCH"
-    TARFILE=$(curl -fsSL "$BASE/latest-stage3-$ARCH.txt" | tail -n1)
+
+    if [ "$ARCH" = "amd64" ]; then
+        FLAVOR="current-stage3-amd64-desktop"
+    else
+        FLAVOR="current-stage3-$ARCH"
+    fi
+
+    BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$ARCH/autobuilds/$FLAVOR"
+    LATEST=$(curl -fsSL "$BASE/latest-stage3-*.txt" | tail -n1 | awk '{print $1}')
+    TARFILE=$(basename "$LATEST")
+
+    echo "[*] Downloading $TARFILE..."
     curl -L -o "/tmp/$TARFILE" "$BASE/$TARFILE"
     sudo tar -xJf "/tmp/$TARFILE" -C "$CHARD_ROOT" --strip-components=1
     rm -f "/tmp/$TARFILE"
