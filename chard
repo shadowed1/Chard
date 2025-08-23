@@ -1,39 +1,42 @@
 #!/bin/bash
-
 CHARD_ROOT="/usr/local/chard"
+CHARD_RC="$CHARD_ROOT/.chardrc"
 
-if [ ! -f "$CHARD_ROOT/.chardrc" ]; then
-    echo "ERROR: Chard environment not found. Run installer first."
+if [ -f "$CHARD_RC" ]; then
+    source "$CHARD_RC"
+else
+    echo "ERROR: Chard environment missing. Run installer first."
     exit 1
 fi
 
-source "$CHARD_ROOT/.chardrc"
+if [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
+    echo "[*] Bootstrapping stage3 Gentoo..."
+    ARCH="$GENTOO_ARCH"
+    BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$ARCH/autobuilds/current-stage3-$ARCH"
+    TARFILE=$(curl -fsSL "$BASE/latest-stage3-$ARCH.txt" | tail -n1)
+    curl -L -o "/tmp/$TARFILE" "$BASE/$TARFILE"
+    sudo tar -xJf "/tmp/$TARFILE" -C "$CHARD_ROOT" --strip-components=1
+    rm -f "/tmp/$TARFILE"
+fi
 
-chard_emerge() {
-    sudo env ROOT="$CHARD_ROOT" \
-        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-        emerge "$@"
-}
-
-chard_run() {
-    if [ $# -lt 1 ]; then
-        echo "Usage: chard run <command>"
-        return 1
-    fi
-    local cmd="$1"; shift
-    "$CHARD_ROOT/usr/bin/env" bash -c "PATH=$CHARD_ROOT/usr/bin:\$PATH LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH $cmd $*"
-}
-
-case "$1" in
-    emerge)
-        shift
-        chard_emerge "$@"
+cmd="$1"; shift || true
+case "$cmd" in
+    install)
+        echo "[*] Installing package(s): $*"
+        sudo env ROOT="$CHARD_ROOT" PORTAGE_CONFIGROOT="$CHARD_ROOT" emerge --ask=n "$@"
         ;;
     run)
-        shift
-        chard_run "$@"
+        if [ $# -lt 1 ]; then
+            echo "Usage: chard run <binary> [args...]"
+            exit 1
+        fi
+        "$CHARD_ROOT/usr/bin/env" bash -c "PATH=$CHARD_ROOT/usr/bin:\$PATH LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH $*"
+        ;;
+    shell)
+        echo "[*] Entering sandbox shell..."
+        exec bash --rcfile <(echo "source $CHARD_RC")
         ;;
     *)
-        echo "Usage: $0 {emerge|run} [args...]"
+        echo "Usage: chard {install|run|shell} [args...]"
         ;;
 esac
