@@ -1,25 +1,20 @@
 #!/bin/bash
+
 chard_emerge() {
     if [ -z "$CHARD_ROOT" ]; then
-        echo "CHARD_ROOT is not set. Run 'source /usr/local/chard/chard.env' first."
+        echo "CHARD_ROOT is not set. Run 'source /usr/local/chard/.chardrc' first."
         return 1
     fi
 
+    # Ensure CHARD_ROOT is in PATH
     case ":$PATH:" in
-        *":/usr/local/chard:"*) : ;; 
-        *) export PATH="/usr/local/chard:$PATH" ;;
+        *":$CHARD_ROOT/usr/bin:"*) : ;;
+        *) export PATH="$CHARD_ROOT/usr/bin:$PATH" ;;
     esac
 
-chard_emerge() {
-    if [ -z "$CHARD_ROOT" ]; then
-        echo "CHARD_ROOT is not set. Run 'source /usr/local/chard/chard.env' first."
-        return 1
-    fi
-
-    # Ensure PATH contains sandbox binaries
-    case ":$PATH:" in
-        *":$CHARD_ROOT:"*) : ;;
-        *) export PATH="$CHARD_ROOT:$PATH" ;;
+    case ":$LD_LIBRARY_PATH:" in
+        *":$CHARD_ROOT/usr/lib:"*) : ;;
+        *) export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" ;;
     esac
 
     sudo env \
