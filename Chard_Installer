@@ -69,7 +69,7 @@ echo "source $CHARD_RC"
 if ! grep -q "<<< CHARD ENV MARKER <<<" /home/chronos/user/.bashrc; then
     cat >> /home/chronos/user/.bashrc <<'EOF'
 # <<< CHARD ENV MARKER <<<
-[ -f /usr/local/chard/.chardrc ] && source /usr/local/chard/.chardrc"
+[ -f /usr/local/chard/.chardrc ] && source /usr/local/chard/.chardrc
 # <<< END CHARD ENV MARKER <<<
 EOF
 fi
