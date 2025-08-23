@@ -1,3 +1,4 @@
+
 #!/bin/bash
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -11,7 +12,7 @@ RESET=$(tput sgr0)
 set -e
 
 CHARD_ROOT="/usr/local/chard"
-CHARD_RC="$HOME/.chardrc"
+CHARD_RC="/home/chronos/user/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
