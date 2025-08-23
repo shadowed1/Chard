@@ -11,7 +11,7 @@ RESET=$(tput sgr0)
 set -e
 
 CHARD_ROOT="/usr/local/chard"
-CHARD_RC="/home/chronos/user/.chardrc"
+CHARD_RC="$CHARD_ROOT/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
@@ -69,7 +69,7 @@ echo "source $CHARD_RC"
 if ! grep -q "<<< CHARD ENV MARKER <<<" /home/chronos/user/.bashrc; then
     cat >> /home/chronos/user/.bashrc <<'EOF'
 # <<< CHARD ENV MARKER <<<
-[ -f /home/chronos/user/.chardrc ] && source /home/chronos/user/.chardrc
+[ -f /usr/local/chard/.chardrc ] && source /usr/local/chard/.chardrc"
 # <<< END CHARD ENV MARKER <<<
 EOF
 fi
