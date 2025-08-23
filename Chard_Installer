@@ -59,6 +59,8 @@ echo "[*] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/chard"
+chmod +x "$CHARD_ROOT/chard"
 
 echo "[*] Chard root setup complete."
 echo "[*] To start using it, run: source $CHARD_ROOT/.chardrc"
