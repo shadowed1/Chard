@@ -66,6 +66,11 @@ echo "[*] Chard root setup complete."
 echo "[*] To start using it, run:"
 echo "source ~/.chardrc"
 
+if ! grep -q "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
+    cat >> "$HOME/.bashrc" <<'EOF'
 # <<< CHARD ENV MARKER <<<
 [ -f ~/.chardrc ] && source ~/.chardrc
 # <<< END CHARD ENV MARKER <<<
+EOF
+fi
+
