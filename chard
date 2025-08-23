@@ -65,8 +65,11 @@ case "$cmd" in
             echo "Usage: chard run <binary> [args...]"
             exit 1
         fi
-        "$CHARD_ROOT/usr/bin/env" bash -c \
-            "PATH=\"$CHARD_ROOT/usr/bin:\$PATH\" LD_LIBRARY_PATH=\"$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH\" \"$@\"" -- "$@"
+        sudo env \
+            ROOT="$CHARD_ROOT" \
+            PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
+            LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$LD_LIBRARY_PATH" \
+            "$@"
         ;;
     shell)
         echo "[*] Entering sandbox shell..."
