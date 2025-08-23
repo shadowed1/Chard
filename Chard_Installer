@@ -88,7 +88,7 @@ echo "[*] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
 
-echo "[*] stage3 bootstrap complete. emerge and all binaries should now be available."
+echo "[*] stage3 bootstrap complete. All binaries now available."
 
 echo "[*] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
