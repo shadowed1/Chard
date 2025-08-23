@@ -22,18 +22,30 @@ if [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
     BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$ARCH/autobuilds/$FLAVOR"
     LATEST=$(curl -fsSL "$BASE/latest-stage3-*.txt" | tail -n1 | awk '{print $1}')
     TARFILE=$(basename "$LATEST")
+    TMP_TAR="$CHARD_ROOT/var/tmp/$TARFILE"
 
     echo "[*] Downloading $TARFILE..."
-    curl -L -o "/tmp/$TARFILE" "$BASE/$TARFILE"
-    sudo tar -xJf "/tmp/$TARFILE" -C "$CHARD_ROOT" --strip-components=1
-    rm -f "/tmp/$TARFILE"
+    curl -L -o "$TMP_TAR" "$BASE/$TARFILE"
+
+    echo "[*] Extracting stage3 tarball into $CHARD_ROOT..."
+    sudo tar -xJf "$TMP_TAR" -C "$CHARD_ROOT" --strip-components=1
+
+    rm -f "$TMP_TAR"
 fi
 
 cmd="$1"; shift || true
 case "$cmd" in
     install)
         echo "[*] Installing package(s): $*"
-        sudo env ROOT="$CHARD_ROOT" PORTAGE_CONFIGROOT="$CHARD_ROOT" emerge --ask=n "$@"
+        sudo env \
+            ROOT="$CHARD_ROOT" \
+            PORTAGE_CONFIGROOT="$CHARD_ROOT" \
+            PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
+            DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
+            PKGDIR="$CHARD_ROOT/var/cache/packages" \
+            PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
+            LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$LD_LIBRARY_PATH" \
+            "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
         ;;
     run)
         if [ $# -lt 1 ]; then
