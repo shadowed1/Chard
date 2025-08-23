@@ -58,12 +58,19 @@ echo "[*] Portage tree ready in $PORTAGE_DIR"
 echo "[*] Bootstrapping Gentoo stage3..."
 BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH"
 
-STAGE3_FILE=$(curl -fsSL "$BASE/latest-stage3-$GENTOO_ARCH.txt" | grep -v '^#' | grep -v '^$' | tail -n1)
+BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH"
+LATEST_FILE_LIST="$CHARD_ROOT/var/tmp/latest-stage3.txt"
+
+curl -fsSL "$BASE/latest-stage3-$GENTOO_ARCH.txt" | tr -d '\r' | sed '/^#/d;/^$/d' > "$LATEST_FILE_LIST"
+
+STAGE3_FILE=$(tail -n1 "$LATEST_FILE_LIST")
 
 if [ -z "$STAGE3_FILE" ]; then
     echo "${RED}ERROR: Could not determine stage3 tarball filename${RESET}"
     exit 1
 fi
+
+echo "[*] Found stage3 tarball: $STAGE3_FILE"
 
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$(basename "$STAGE3_FILE")"
 
