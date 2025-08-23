@@ -76,14 +76,18 @@ case "$cmd" in
         exec bash --rcfile <(echo "source $CHARD_RC")
         ;;
     reinstall)
-        echo "[*] Chard Reinstall Options:"
-        echo "1) Quick reinstall (update chard scripts and environment files)"
-        echo "2) Full reinstall (rerun installer)"
-        echo "q) Cancel"
+        echo "${RESET}${GREEN}"
+        echo "[1] Quick reinstall (Update Chard Scripts and Environment Files)"
+        echo "${RESET}${YELLOW}"
+        echo "[2] Full reinstall (Download Chard Installer)"
+        echo "${RESET}${RED}"
+        echo "[q] Cancel"
+        echo "${RESET}${GREEN}"
         read -p "Choose an option [1/2/q]: " choice
 
         case "$choice" in
             1)
+                echo "${RESET}"
                 echo "[*] Performing quick reinstall..."
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc    -o "$CHARD_ROOT/.chardrc"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env  -o "$CHARD_ROOT/chard.env"
@@ -91,13 +95,18 @@ case "$cmd" in
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard       -o "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 echo "[*] Quick reinstall complete."
+                echo "${RESET}"
                 ;;
             2)
+                echo "${RESET}"
                 echo "[*] Performing full reinstall..."
                 bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")
+                echo "${RESET}"
                 ;;
             q|Q|*)
+                echo "${RESET}"
                 echo "[*] Reinstall cancelled."
+                echo "${RESET}"
                 ;;
         esac
         ;;
