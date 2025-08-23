@@ -14,8 +14,7 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
-
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages,bin}
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)   GENTOO_ARCH="amd64" ;;
