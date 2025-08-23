@@ -18,7 +18,7 @@ for c in "${SKIP_BOOTSTRAP[@]}"; do
     fi
 done
 
-if [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
+if [ "$BOOTSTRAP_SKIP" -eq 0 ] && [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
     echo "[*] Bootstrapping stage3 Gentoo..."
     ARCH="$GENTOO_ARCH"
 
