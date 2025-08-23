@@ -2,7 +2,8 @@
 
 chard_emerge() {
     if [ -z "$CHARD_ROOT" ]; then
-        echo "CHARD_ROOT is not set. Run 'source ~/.chardrc' first."
+        echo "CHARD_ROOT is not set. Run:"
+        echo "source ~/.chardrc"
         return 1
     fi
 
