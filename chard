@@ -33,7 +33,6 @@ if [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
     rm -f "$TMP_TAR"
 fi
 
-# Ensure chard environment exists
 if [ -f "$CHARD_RC" ]; then
     source "$CHARD_RC"
 fi
