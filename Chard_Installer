@@ -63,4 +63,9 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o 
 sudo chmod +x "$CHARD_ROOT/chard"
 
 echo "[*] Chard root setup complete."
-echo "[*] To start using it, run: source $CHARD_ROOT/.chardrc"
+echo "[*] To start using it, run:"
+echo "source $CHARD_ROOT/.chardrc"
+
+# <<< CHARD ENV MARKER <<<
+[ -f ~/.chardrc ] && source ~/.chardrc
+# <<< END CHARD ENV MARKER <<<
