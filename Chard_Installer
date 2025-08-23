@@ -14,7 +14,7 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,bin,dev,tmp}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -44,55 +44,23 @@ echo "[*] make.conf created with ARCH=${GENTOO_ARCH}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
-TMP_PORTAGE="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
+TMP_TAR="/tmp/portage-latest.tar.xz"
 
 echo "[*] Downloading Portage tree snapshot..."
-sudo curl -L -o "$TMP_PORTAGE" "$SNAPSHOT_URL"
+curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
 
 echo "[*] Extracting snapshot into $PORTAGE_DIR..."
-sudo tar -xJf "$TMP_PORTAGE" -C "$PORTAGE_DIR" --strip-components=1
-sudo rm -f "$TMP_PORTAGE"
+sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+rm -f "$TMP_TAR"
 
 echo "[*] Portage tree ready in $PORTAGE_DIR"
 
-echo "[*] Bootstrapping Gentoo stage3..."
-echo "[*] Bootstrapping Gentoo stage3..."
-BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH"
-STAGE3_FILE=$(sudo curl -fsSL "$BASE/latest-stage3-$GENTOO_ARCH.txt" | grep -v '^#' | tail -n1)
-
-if [ -z "$STAGE3_FILE" ]; then
-    echo "${RED}ERROR: Could not determine stage3 tarball filename${RESET}"
-    exit 1
-fi
-
-TMP_STAGE3="$CHARD_ROOT/var/tmp/$(basename "$STAGE3_FILE")"
-
-echo "[*] Downloading stage3 tarball..."
-sudo curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
-
-echo "[*] Extracting stage3 into $CHARD_ROOT..."
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
-sudo rm -f "$TMP_STAGE3"
-
-
-echo "[*] stage3 bootstrap complete. emerge and all binaries should now be available."
-
 echo "[*] Downloading chard configuration files..."
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 echo "[*] Chard root setup complete."
-echo "[*] To start using it, run:"
-echo "source $CHARD_RC"
-
-BASHRC="/home/chronos/user/.bashrc"
-if ! grep -q "<<< CHARD ENV MARKER <<<" "$BASHRC"; then
-    cat >> "$BASHRC" <<'EOF'
-# <<< CHARD ENV MARKER <<<
-[ -f /usr/local/chard/.chardrc ] && source /usr/local/chard/.chardrc
-# <<< END CHARD ENV MARKER <<<
-EOF
-fi
+echo "[*] To start using it, run: source $CHARD_ROOT/.chardrc"
