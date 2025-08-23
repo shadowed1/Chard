@@ -9,6 +9,15 @@ else
     exit 1
 fi
 
+cmd="$1"; shift || true
+SKIP_BOOTSTRAP=("uninstall" "reinstall" "run" "shell" "help")
+for c in "${SKIP_BOOTSTRAP[@]}"; do
+    if [[ "$cmd" == "$c" ]]; then
+        BOOTSTRAP_SKIP=1
+        break
+    fi
+done
+
 if [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
     echo "[*] Bootstrapping stage3 Gentoo..."
     ARCH="$GENTOO_ARCH"
