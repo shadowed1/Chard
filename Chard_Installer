@@ -11,7 +11,7 @@ RESET=$(tput sgr0)
 set -e
 
 CHARD_ROOT="/usr/local/chard"
-CHARD_RC="$CHARD_ROOT/.chardrc"
+CHARD_RC="~/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
@@ -56,7 +56,7 @@ rm -f "$TMP_TAR"
 echo "[*] Portage tree ready in $PORTAGE_DIR"
 
 echo "[*] Downloading chard configuration files..."
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "~/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/chard"
