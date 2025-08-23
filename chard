@@ -38,7 +38,7 @@ case "$cmd" in
             exit 1
         fi
         "$CHARD_ROOT/usr/bin/env" bash -c \
-            "PATH=$CHARD_ROOT/usr/bin:\$PATH LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH $*"
+            "PATH=\"$CHARD_ROOT/usr/bin:\$PATH\" LD_LIBRARY_PATH=\"$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH\" \"$@\"" -- "$@"
         ;;
     shell)
         echo "[*] Entering sandbox shell..."
