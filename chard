@@ -26,6 +26,17 @@ chard_emerge() {
         "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
 }
 
+list_installed() {
+    echo "[*] Listing installed packages in Chard root..."
+    
+    if [ -x "$CHARD_ROOT/usr/bin/qlist" ]; then
+        sudo env ROOT="$CHARD_ROOT" PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/qlist" -I
+    else
+        echo "[!] qlist not found, falling back to 'emerge --search --installed'"
+        sudo env ROOT="$CHARD_ROOT" PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/emerge" --search --installed
+    fi
+}
+
 cmd="$1"; shift || true
 
 case "$cmd" in
@@ -69,6 +80,9 @@ case "$cmd" in
                 echo "[*] Reinstall cancelled."
                 ;;
         esac
+        ;;
+    list)
+        list_installed
         ;;
     uninstall)
         echo "[*] Uninstalling Chard..."
