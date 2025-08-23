@@ -3,7 +3,7 @@
 chard_emerge() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "CHARD_ROOT is not set. Run:"
-        echo "source ~/.chardrc"
+        echo "source /home/chronos/user/.chardrc"
         return 1
     fi
 
