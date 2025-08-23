@@ -56,11 +56,11 @@ rm -f "$TMP_TAR"
 echo "[*] Portage tree ready in $PORTAGE_DIR"
 
 echo "[*] Downloading chard configuration files..."
-curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "/home/chronos/user/.chardrc"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 echo "[*] Chard root setup complete."
 echo "[*] To start using it, run:"
