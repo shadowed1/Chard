@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -10,13 +8,13 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+set -e
+
 CHARD_ROOT="/usr/local/chard"
-CHARD_BIN="$CHARD_ROOT/bin"
-HOME_DIR="/home/chronos/user"
-CHARD_RC="$HOME_DIR/.chardrc"
+CHARD_RC="/home/chronos/user/.chardrc"
 
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages,bin}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,dev,tmp,var/cache/distfiles,var/cache/packages}
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -59,19 +57,17 @@ echo "[*] Portage tree ready in $PORTAGE_DIR"
 
 echo "[*] Downloading chard configuration files..."
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_RC"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_BIN/chard"
-sudo chmod +x "$CHARD_BIN/chard"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/chard"
 
 echo "[*] Chard root setup complete."
 echo "[*] To start using it, run:"
 echo "source $CHARD_RC"
 
-# Append to bashrc if not already present
-BASHRC="$HOME_DIR/.bashrc"
-if ! grep -q "<<< CHARD ENV MARKER <<<" "$BASHRC"; then
-    cat >> "$BASHRC" <<'EOF'
+if ! grep -q "<<< CHARD ENV MARKER <<<" /home/chronos/user/.bashrc; then
+    cat >> /home/chronos/user/.bashrc <<'EOF'
 # <<< CHARD ENV MARKER <<<
 [ -f /home/chronos/user/.chardrc ] && source /home/chronos/user/.chardrc
 # <<< END CHARD ENV MARKER <<<
