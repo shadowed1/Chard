@@ -26,7 +26,7 @@ chard_emerge() {
         "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
 }
 
-list_installed() {
+chard_list() {
     echo "[*] Listing installed packages in Chard root..."
     
     if [ -x "$CHARD_ROOT/usr/bin/qlist" ]; then
@@ -36,6 +36,23 @@ list_installed() {
         sudo env ROOT="$CHARD_ROOT" PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/emerge" --search --installed
     fi
 }
+
+chard_categories() {
+    PORTAGE_DIR="$CHARD_ROOT/usr/portage"
+
+    if [ ! -d "$PORTAGE_DIR" ]; then
+        echo "ERROR: Portage tree not found at $PORTAGE_DIR"
+        return 1
+    fi
+
+    echo "[*] Available Portage categories:"
+    # List directories inside the portage tree
+    for cat in "$PORTAGE_DIR"/*/; do
+        [ -d "$cat" ] || continue
+        basename "$cat"
+    done | sort
+}
+
 
 cmd="$1"; shift || true
 
@@ -82,7 +99,7 @@ case "$cmd" in
         esac
         ;;
     list)
-        list_installed
+        chard_list
         ;;
     uninstall)
         echo "[*] Uninstalling Chard..."
@@ -92,6 +109,9 @@ case "$cmd" in
         fi
         rm -f "$CHARD_RC"
         echo "[*] Chard uninstalled."
+        ;;
+    categories|cat)
+        chard_categories
         ;;
     *)
         echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
