@@ -1,0 +1,39 @@
+#!/bin/bash
+
+CHARD_ROOT="/usr/local/chard"
+
+if [ ! -f "$CHARD_ROOT/.chardrc" ]; then
+    echo "ERROR: Chard environment not found. Run installer first."
+    exit 1
+fi
+
+source "$CHARD_ROOT/.chardrc"
+
+chard_emerge() {
+    sudo env ROOT="$CHARD_ROOT" \
+        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
+        emerge "$@"
+}
+
+chard_run() {
+    if [ $# -lt 1 ]; then
+        echo "Usage: chard run <command>"
+        return 1
+    fi
+    local cmd="$1"; shift
+    "$CHARD_ROOT/usr/bin/env" bash -c "PATH=$CHARD_ROOT/usr/bin:\$PATH LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH $cmd $*"
+}
+
+case "$1" in
+    emerge)
+        shift
+        chard_emerge "$@"
+        ;;
+    run)
+        shift
+        chard_run "$@"
+        ;;
+    *)
+        echo "Usage: $0 {emerge|run} [args...]"
+        ;;
+esac
