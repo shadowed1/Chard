@@ -2,6 +2,12 @@
 
 export CHARD_ROOT="/usr/local/chard"
 
+# Add chard's own bin to PATH first
+case ":$PATH:" in
+    *":$CHARD_ROOT/bin:"*) ;;
+    *) PATH="$CHARD_ROOT/bin:$PATH" ;;
+esac
+
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
     *) PATH="$CHARD_ROOT/usr/bin:$PATH" ;;
@@ -22,9 +28,7 @@ fi
 
 if [ -f "$CHARD_ROOT/chard.env" ]; then
     while IFS= read -r line; do
-        # Skip empty lines and comments
         [[ -z "$line" || "$line" =~ ^# ]] && continue
-        # Only handle PATH or LD_LIBRARY_PATH carefully
         if [[ "$line" =~ ^export[[:space:]]+PATH= ]]; then
             NEW_PATH=$(echo "$line" | cut -d= -f2- | tr -d '"')
             case ":$PATH:" in
