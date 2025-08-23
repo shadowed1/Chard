@@ -9,83 +9,55 @@ else
     exit 1
 fi
 
-cmd="$1"; shift || true
-SKIP_BOOTSTRAP=("uninstall" "reinstall" "run" "shell" "help")
-for c in "${SKIP_BOOTSTRAP[@]}"; do
-    if [[ "$cmd" == "$c" ]]; then
-        BOOTSTRAP_SKIP=1
-        break
+chard_emerge() {
+    if [ $# -lt 1 ]; then
+        echo "Usage: chard emerge <package> [options]"
+        return 1
     fi
-done
-
-if [ "$BOOTSTRAP_SKIP" -eq 0 ] && [ ! -x "$CHARD_ROOT/usr/bin/emerge" ]; then
-    echo "[*] Bootstrapping stage3 Gentoo..."
-    ARCH="$GENTOO_ARCH"
-
-    if [ "$ARCH" = "amd64" ]; then
-        FLAVOR="current-stage3-amd64-desktop"
-    else
-        FLAVOR="current-stage3-$ARCH"
-    fi
-
-    BASE="https://bouncer.gentoo.org/fetch/root/all/releases/$ARCH/autobuilds/$FLAVOR"
-    LATEST=$(curl -fsSL "$BASE/latest-stage3-*.txt" | tail -n1 | awk '{print $1}')
-    TARFILE=$(basename "$LATEST")
-    TMP_TAR="$CHARD_ROOT/var/tmp/$TARFILE"
-
-    echo "[*] Downloading $TARFILE..."
-    curl -L -o "$TMP_TAR" "$BASE/$TARFILE"
-
-    echo "[*] Extracting stage3 tarball into $CHARD_ROOT..."
-    sudo tar -xJf "$TMP_TAR" -C "$CHARD_ROOT" --strip-components=1
-
-    rm -f "$TMP_TAR"
-fi
-
-if [ -f "$CHARD_RC" ]; then
-    source "$CHARD_RC"
-fi
+    echo "[*] Running emerge inside Chard environment..."
+    sudo env \
+        ROOT="$CHARD_ROOT" \
+        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
+        PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
+        DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
+        PKGDIR="$CHARD_ROOT/var/cache/packages" \
+        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
+        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$LD_LIBRARY_PATH" \
+        "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
+}
 
 cmd="$1"; shift || true
+
 case "$cmd" in
-    install)
-        echo "[*] Installing package(s): $*"
-        sudo env \
-            ROOT="$CHARD_ROOT" \
-            PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-            PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
-            DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
-            PKGDIR="$CHARD_ROOT/var/cache/packages" \
-            PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
-            LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$LD_LIBRARY_PATH" \
-            "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
+    emerge)
+        chard_emerge "$@"
         ;;
     run)
         if [ $# -lt 1 ]; then
             echo "Usage: chard run <binary> [args...]"
             exit 1
         fi
-        "$CHARD_ROOT/usr/bin/env" bash -c "PATH=$CHARD_ROOT/usr/bin:\$PATH LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH $*"
+        "$CHARD_ROOT/usr/bin/env" bash -c \
+            "PATH=$CHARD_ROOT/usr/bin:\$PATH LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib:\$LD_LIBRARY_PATH $*"
         ;;
     shell)
         echo "[*] Entering sandbox shell..."
         exec bash --rcfile <(echo "source $CHARD_RC")
         ;;
-   reinstall)
-        echo "${GREEN}${BOLD}[*] Chard Reinstall Options:${RESET}"
-        echo "${GREEN}1) Quick reinstall (update chard scripts and environment files)${RESET}"
-        echo "${CYAN}2) Full reinstall (rerun installer)${RESET}"
-        echo "${YELLOW}q) Cancel${RESET}"
+    reinstall)
+        echo "[*] Chard Reinstall Options:"
+        echo "1) Quick reinstall (update chard scripts and environment files)"
+        echo "2) Full reinstall (rerun installer)"
+        echo "q) Cancel"
         read -p "Choose an option [1/2/q]: " choice
-    
+
         case "$choice" in
             1)
                 echo "[*] Performing quick reinstall..."
-                echo "[*] Downloading chard configuration files..."
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc    -o "$CHARD_ROOT/.chardrc"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env  -o "$CHARD_ROOT/chard.env"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard       -o "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 echo "[*] Quick reinstall complete."
                 ;;
@@ -108,6 +80,6 @@ case "$cmd" in
         echo "[*] Chard uninstalled."
         ;;
     *)
-        echo "Usage: chard {install|run|shell|reinstall|uninstall} [args...]"
+        echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
         ;;
 esac
