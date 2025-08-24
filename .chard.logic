@@ -1,5 +1,3 @@
-#!/bin/bash
-
 chard_emerge() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "CHARD_ROOT is not set. Run:"
@@ -7,25 +5,11 @@ chard_emerge() {
         return 1
     fi
 
-    case ":$PATH:" in
-        *":$CHARD_ROOT/usr/bin:"*) : ;;
-        *) export PATH="$CHARD_ROOT/usr/bin:$PATH" ;;
-    esac
+    [[ ":$PATH:" != *":$CHARD_ROOT/usr/bin:"* ]] && PATH="$CHARD_ROOT/usr/bin:$PATH"
+    [[ ":$PATH:" != *":$CHARD_ROOT/bin:"* ]] && PATH="$CHARD_ROOT/bin:$PATH"
 
-    case ":$PATH:" in
-        *":$CHARD_ROOT/bin:"*) : ;;
-        *) export PATH="$CHARD_ROOT/bin:$PATH" ;;
-    esac
-
-    case ":$LD_LIBRARY_PATH:" in
-        *":$CHARD_ROOT/usr/lib:"*) : ;;
-        *) export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" ;;
-    esac
-
-    case ":$LD_LIBRARY_PATH:" in
-        *":$CHARD_ROOT/lib:"*) : ;;
-        *) export LD_LIBRARY_PATH="$CHARD_ROOT/lib:$LD_LIBRARY_PATH" ;;
-    esac
+    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/usr/lib:"* ]] && LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:${LD_LIBRARY_PATH:-}"
+    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/lib:"* ]] && LD_LIBRARY_PATH="$CHARD_ROOT/lib:${LD_LIBRARY_PATH:-}"
 
     sudo env \
         ROOT="$CHARD_ROOT" \
@@ -33,7 +17,7 @@ chard_emerge() {
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
         DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
-        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
-        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$LD_LIBRARY_PATH" \
+        PATH="$PATH" \
+        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         "$CHARD_ROOT/usr/bin/emerge" "$@"
 }
