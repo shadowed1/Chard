@@ -15,7 +15,6 @@ CHARD_RC="$CHARD_ROOT/.chardrc"
 echo "${RESET}${GREEN}"
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
-echo "${RESET}"
 ARCH=$(uname -m)
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -24,7 +23,7 @@ case "$ARCH" in
     aarch64)  GENTOO_ARCH="arm64" ;;
     armv7l)   GENTOO_ARCH="arm" ;;
     ppc64le)  GENTOO_ARCH="ppc64le" ;;
-    *) echo "${RED}Unknown architecture: $ARCH ${RESET}"; exit 1 ;;
+    *) echo "${RESET}${RED}Unknown architecture: $ARCH ${RESET}"; exit 1 ;;
 esac
 echo "${RESET}${GREEN}"
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
