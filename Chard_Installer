@@ -12,10 +12,10 @@ set -e
 
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-
+echo "${RESET}${GREEN}"
 echo "[*] Creating CHARD ROOT in $CHARD_ROOT..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
-
+echo "${RESET}"
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)   GENTOO_ARCH="amd64" ;;
@@ -23,10 +23,13 @@ case "$ARCH" in
     aarch64)  GENTOO_ARCH="arm64" ;;
     armv7l)   GENTOO_ARCH="arm" ;;
     ppc64le)  GENTOO_ARCH="ppc64le" ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    echo "${RESET}"
+    *) echo "${RED}Unknown architecture: $ARCH ${RESET}"; exit 1 ;;
+    echo "${RESET}"
 esac
-
+echo "${RESET}${GREEN}"
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
+echo "${RESET}${GREEN}"
 echo "[*] Writing $MAKE_CONF..."
 sudo bash -c "cat > '$MAKE_CONF' <<EOF
 CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
@@ -40,6 +43,7 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF"
 
+echo "${RESET}"
 echo "[*] make.conf created with ARCH=${GENTOO_ARCH}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
