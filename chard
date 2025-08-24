@@ -21,45 +21,38 @@ chard_emerge() {
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
         DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
-        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
-        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$LD_LIBRARY_PATH" \
+        PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
+        LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
         "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
 }
 
 chard_list() {
     echo "[*] Listing installed packages in Chard root..."
-    
     if [ -x "$CHARD_ROOT/usr/bin/qlist" ]; then
-        sudo env ROOT="$CHARD_ROOT" PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/qlist" -I
+        sudo env ROOT="$CHARD_ROOT" PATH="$PATH:$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/bin/qlist" -I
     else
         echo "[!] qlist not found, falling back to 'emerge --search --installed'"
-        sudo env ROOT="$CHARD_ROOT" PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/emerge" --search --installed
+        sudo env ROOT="$CHARD_ROOT" PATH="$PATH:$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/bin/emerge" --search --installed
     fi
 }
 
 chard_categories() {
     PORTAGE_DIR="$CHARD_ROOT/usr/portage"
-
     if [ ! -d "$PORTAGE_DIR" ]; then
         echo "ERROR: Portage tree not found at $PORTAGE_DIR"
         return 1
     fi
-
     echo "[*] Available Portage categories:"
-    # List directories inside the portage tree
     for cat in "$PORTAGE_DIR"/*/; do
         [ -d "$cat" ] || continue
         basename "$cat"
     done | sort
 }
 
-
 cmd="$1"; shift || true
 
 case "$cmd" in
-    emerge)
-        chard_emerge "$@"
-        ;;
+    emerge) chard_emerge "$@" ;;
     run)
         if [ $# -lt 1 ]; then
             echo "Usage: chard run <binary> [args...]"
@@ -67,8 +60,8 @@ case "$cmd" in
         fi
         sudo env \
             ROOT="$CHARD_ROOT" \
-            PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
-            LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$LD_LIBRARY_PATH" \
+            PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
+            LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
             "$@"
         ;;
     shell)
@@ -84,7 +77,6 @@ case "$cmd" in
         echo "[q] Cancel"
         echo "${RESET}${GREEN}"
         read -p "Choose an option [1/2/q]: " choice
-
         case "$choice" in
             1)
                 echo "${RESET}"
@@ -110,9 +102,7 @@ case "$cmd" in
                 ;;
         esac
         ;;
-    list)
-        chard_list
-        ;;
+    list) chard_list ;;
     uninstall)
         echo "[*] Uninstalling Chard..."
         sudo rm -rf "$CHARD_ROOT"
@@ -122,9 +112,7 @@ case "$cmd" in
         rm -f "$CHARD_RC"
         echo "[*] Chard uninstalled."
         ;;
-    categories|cat)
-        chard_categories
-        ;;
+    categories|cat) chard_categories ;;
     *)
         echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
         ;;
