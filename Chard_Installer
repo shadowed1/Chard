@@ -98,9 +98,19 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.en
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
-
+echo "${RESET}${GREEN}"
 echo "[*] Chard root setup complete."
+
+if ! grep -Fxq "source \"$CHARD_RC\"" "$HOME/.bashrc"; then
+    echo "source \"$CHARD_RC\"" >> "$HOME/.bashrc"
+    echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
+else
+    echo "${YELLOW}[*] Chard sourced to ~/.bashrc${RESET}"
+fi
+
+echo "${RESET}${YELLOW}"
 echo "[*] To start using it, run: source $CHARD_RC"
+echo "${RESET}"
 
 BASHRC="/home/chronos/user/.bashrc"
 if ! grep -q "<<< CHARD ENV MARKER <<<" "$BASHRC"; then
