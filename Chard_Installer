@@ -81,6 +81,18 @@ echo "[*] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
 
+echo "[*] Setting default profile symlink..."
+PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
+PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 2 -type d -name "systemd" | sort | tail -n1)
+
+if [ -n "$PROFILE_CANDIDATE" ]; then
+    sudo ln -sfn "$PROFILE_CANDIDATE" "$CHARD_ROOT/etc/portage/make.profile"
+    echo "[*] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
+else
+    echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
+    echo "Chroot into Chard and run 'eselect profile set' once eselect is installed."
+fi
+
 echo "[*] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
