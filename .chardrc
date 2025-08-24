@@ -2,29 +2,28 @@
 
 export CHARD_ROOT="/usr/local/chard"
 
-# Add chard's own bin to PATH first
 case ":$PATH:" in
-    *":$CHARD_ROOT/bin:"*) ;;
-    *) PATH="$CHARD_ROOT/bin:$PATH" ;;
+    *":$CHARD_ROOT/usr/bin:"*) ;;
+    *) export PATH="$CHARD_ROOT/usr/bin:$PATH" ;;
 esac
 
 case ":$PATH:" in
-    *":$CHARD_ROOT/usr/bin:"*) ;;
-    *) PATH="$CHARD_ROOT/usr/bin:$PATH" ;;
+    *":$CHARD_ROOT/bin:"*) ;;
+    *) export PATH="$CHARD_ROOT/bin:$PATH" ;;
 esac
 
 case ":$LD_LIBRARY_PATH:" in
     *":$CHARD_ROOT/usr/lib:"*) ;;
-    *) LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" ;;
+    *) export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" ;;
 esac
 
-if [ ! -f "$CHARD_ROOT/chard.env" ]; then
-    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
-fi
+case ":$LD_LIBRARY_PATH:" in
+    *":$CHARD_ROOT/lib:"*) ;;
+    *) export LD_LIBRARY_PATH="$CHARD_ROOT/lib:$LD_LIBRARY_PATH" ;;
+esac
 
-if [ ! -f "$CHARD_ROOT/chard.logic" ]; then
-    curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-fi
+[ ! -f "$CHARD_ROOT/chard.env" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
+[ ! -f "$CHARD_ROOT/chard.logic" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 
 if [ -f "$CHARD_ROOT/chard.env" ]; then
     while IFS= read -r line; do
@@ -47,8 +46,6 @@ if [ -f "$CHARD_ROOT/chard.env" ]; then
     done < "$CHARD_ROOT/chard.env"
 fi
 
-if [ -f "$CHARD_ROOT/chard.logic" ]; then
-    source "$CHARD_ROOT/chard.logic"
-fi
+[ -f "$CHARD_ROOT/chard.logic" ] && source "$CHARD_ROOT/chard.logic"
 
 # <<< END CHARD_ENV <<<
