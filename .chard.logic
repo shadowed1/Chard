@@ -5,11 +5,11 @@ chard_emerge() {
         return 1
     fi
 
-    [[ ":$PATH:" != *":$CHARD_ROOT/usr/bin:"* ]] && PATH="$CHARD_ROOT/usr/bin:$PATH"
-    [[ ":$PATH:" != *":$CHARD_ROOT/bin:"* ]] && PATH="$CHARD_ROOT/bin:$PATH"
+    [[ ":$PATH:" != *":$CHARD_ROOT/usr/bin:"* ]] && PATH="$PATH:$CHARD_ROOT/usr/bin"
+    [[ ":$PATH:" != *":$CHARD_ROOT/bin:"* ]] && PATH="$PATH:$CHARD_ROOT/bin"
 
-    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/usr/lib:"* ]] && LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:${LD_LIBRARY_PATH:-}"
-    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/lib:"* ]] && LD_LIBRARY_PATH="$CHARD_ROOT/lib:${LD_LIBRARY_PATH:-}"
+    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/usr/lib:"* ]] && LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib"
+    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/lib:"* ]] && LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib"
 
     sudo env \
         ROOT="$CHARD_ROOT" \
