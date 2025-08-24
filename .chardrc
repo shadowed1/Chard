@@ -4,22 +4,22 @@ export CHARD_ROOT="/usr/local/chard"
 
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
-    *) export PATH="$CHARD_ROOT/usr/bin:$PATH" ;;
+    *) export PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
 esac
 
 case ":$PATH:" in
     *":$CHARD_ROOT/bin:"*) ;;
-    *) export PATH="$CHARD_ROOT/bin:$PATH" ;;
+    *) export PATH="$PATH:$CHARD_ROOT/bin" ;;
 esac
 
 case ":$LD_LIBRARY_PATH:" in
     *":$CHARD_ROOT/usr/lib:"*) ;;
-    *) export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" ;;
+    *) export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib" ;;
 esac
 
 case ":$LD_LIBRARY_PATH:" in
     *":$CHARD_ROOT/lib:"*) ;;
-    *) export LD_LIBRARY_PATH="$CHARD_ROOT/lib:$LD_LIBRARY_PATH" ;;
+    *) export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib" ;;
 esac
 
 [ ! -f "$CHARD_ROOT/chard.env" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
@@ -32,13 +32,13 @@ if [ -f "$CHARD_ROOT/chard.env" ]; then
             NEW_PATH=$(echo "$line" | cut -d= -f2- | tr -d '"')
             case ":$PATH:" in
                 *":$NEW_PATH:"*) : ;;
-                *) export PATH="$NEW_PATH:$PATH" ;;
+                *) export PATH="$PATH:$NEW_PATH" ;;
             esac
         elif [[ "$line" =~ ^export[[:space:]]+LD_LIBRARY_PATH= ]]; then
             NEW_LD=$(echo "$line" | cut -d= -f2- | tr -d '"')
             case ":$LD_LIBRARY_PATH:" in
                 *":$NEW_LD:"*) : ;;
-                *) export LD_LIBRARY_PATH="$NEW_LD:$LD_LIBRARY_PATH" ;;
+                *) export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$NEW_LD" ;;
             esac
         else
             eval "$line"
@@ -49,3 +49,4 @@ fi
 [ -f "$CHARD_ROOT/chard.logic" ] && source "$CHARD_ROOT/chard.logic"
 
 # <<< END CHARD_ENV <<<
+
