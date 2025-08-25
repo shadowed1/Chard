@@ -27,7 +27,7 @@ case "$ARCH" in
 esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Writing $MAKE_CONF..."
+echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Writing $MAKE_CONF..."
 sudo bash -c "cat > '$MAKE_CONF' <<EOF
 CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
 ARCH='${GENTOO_ARCH}'
@@ -40,11 +40,11 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF"
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] make.conf created with ARCH=${GENTOO_ARCH}"
+echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] make.conf created with ARCH=${GENTOO_ARCH}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
-TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
+TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 
 echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Downloading Portage tree snapshot..."
 sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
@@ -62,30 +62,17 @@ case "$GENTOO_ARCH" in
 esac
 
 BASE="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/$AUTOBUILD_DIR/"
-TODAY=$(date +%Y%m%d)
-
 STAGE3_FILE=$(curl -fsSL "$BASE" \
     | tr -d '\r' \
     | grep -o "stage3-$GENTOO_ARCH-systemd-[0-9]\+T[0-9]\+Z\.tar\.xz" \
-    | grep "$TODAY" \
     | sort \
     | tail -n1)
-
-if [ -z "$STAGE3_FILE" ]; then
-    echo "[!] No stage3 found for today ($TODAY), using latest available..."
-    STAGE3_FILE=$(curl -fsSL "$BASE" \
-        | tr -d '\r' \
-        | grep -o "stage3-$GENTOO_ARCH-systemd-[0-9]\+T[0-9]\+Z\.tar\.xz" \
-        | sort \
-        | tail -n1)
-fi
 
 if [ -z "$STAGE3_FILE" ]; then
     echo "${RED}ERROR: Could not determine stage3 tarball filename${RESET}"
     exit 1
 fi
 
-echo "[*] Using stage3 tarball: $STAGE3_FILE"
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Downloading stage3 tarball..."
 sudo curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
@@ -93,16 +80,6 @@ sudo curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
 echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
-
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Updating Portage to latest version..."
-PORTAGE_UPDATE_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
-TMP_PORTAGE="$CHARD_ROOT/var/tmp/portage-latest-update.tar.xz"
-
-sudo curl -L -o "$TMP_PORTAGE" "$PORTAGE_UPDATE_URL"
-sudo tar -xJf "$TMP_PORTAGE" -C "$CHARD_ROOT/usr" --strip-components=1
-sudo rm -f "$TMP_PORTAGE"
-
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Portage update complete."
 
 echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Setting default profile symlink..."
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
@@ -134,11 +111,11 @@ auto-sync = no
 priority = 50
 EOF
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Chard root setup complete."
+echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Chard root setup complete."
 
 if ! grep -Fxq "source \"$CHARD_RC\"" "$HOME/.bashrc"; then
     echo "source \"$CHARD_RC\"" >> "$HOME/.bashrc"
     echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
 else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
+    echo "${YELLOW}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}]${RESET}${YELLOW} Chard already sourced in ~/.bashrc${RESET}"
 fi
