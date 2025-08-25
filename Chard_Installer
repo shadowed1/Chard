@@ -91,7 +91,6 @@ if [ -n "$PROFILE_CANDIDATE" ]; then
     echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
-    echo "Chroot into Chard and run 'eselect profile set' once eselect is installed."
 fi
 
 echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Downloading chard configuration files..."
