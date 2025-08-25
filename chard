@@ -23,7 +23,7 @@ chard_emerge() {
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
         PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
         LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-        "/usr/local/bin/emerge" --ask=n "$@"
+        "$CHARD_ROOT/bin/emerge" --ask=n "$@"
 }
 
 chard_list() {
