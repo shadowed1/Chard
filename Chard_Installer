@@ -102,11 +102,13 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-sudo tee "$CHARD_ROOT/etc/portage/repos.conf/local.conf" > /dev/null <<EOF
-[local]
-location = $CHARD_ROOT/usr/portage
+sudo tee /usr/local/chard/etc/portage/repos.conf/gentoo.conf > /dev/null <<'EOF'
+[gentoo]
+location = /usr/local/chard/usr/portage
+masters =
 sync-type = none
-priority = 100
+auto-sync = no
+priority = 50
 EOF
 
 echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Chard root setup complete."
