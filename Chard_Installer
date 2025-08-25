@@ -102,7 +102,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-cat > "$CHARD_ROOT/etc/portage/repos.conf/local.conf" <<EOF
+sudo tee "$CHARD_ROOT/etc/portage/repos.conf/local.conf" > /dev/null <<EOF
 [local]
 location = $CHARD_ROOT/usr/portage
 sync-type = none
