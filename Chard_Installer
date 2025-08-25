@@ -86,7 +86,6 @@ PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 
 if [ -n "$PROFILE_CANDIDATE" ]; then
-    # Create a relative symlink for relocatability
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
     sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/make.profile"
     echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
