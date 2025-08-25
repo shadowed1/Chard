@@ -100,6 +100,15 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.lo
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
+mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+
+cat > "$CHARD_ROOT/etc/portage/repos.conf/local.conf" <<EOF
+[local]
+location = $CHARD_ROOT/usr/portage
+sync-type = none
+priority = 100
+EOF
+
 echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Chard root setup complete."
 
 if ! grep -Fxq "source \"$CHARD_RC\"" "$HOME/.bashrc"; then
