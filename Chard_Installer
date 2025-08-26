@@ -100,7 +100,7 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.lo
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
-mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 sudo tee /usr/local/chard/etc/portage/repos.conf/gentoo.conf > /dev/null <<'EOF'
 [gentoo]
