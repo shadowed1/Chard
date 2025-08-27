@@ -113,9 +113,14 @@ EOF
 
 echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Chard root setup complete."
 
-if ! grep -Fxq "source \"$CHARD_RC\"" "$HOME/.bashrc"; then
-    echo "source \"$CHARD_RC\"" >> "$HOME/.bashrc"
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
+    cat >> "$HOME/.bashrc" <<'EOF'
+
+# <<< CHARD ENV MARKER <<<
+source "$CHARD_RC"
+# <<< END CHARD ENV MARKER <<<
+EOF
     echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
 else
-    echo "${YELLOW}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}]${RESET}${YELLOW} Chard already sourced in ~/.bashrc${RESET}"
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
