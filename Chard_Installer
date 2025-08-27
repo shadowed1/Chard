@@ -13,8 +13,13 @@ set -e
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Creating CHARD ROOT in $CHARD_ROOT..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}]Creating Chard group...${GENTOO_ARCH}"
+
+sudo groupadd -f chard
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+sudo chown -R root:chard "$CHARD_ROOT"
+sudo chmod -R 2775 "$CHARD_ROOT"
+sudo usermod -aG chard "$USER"
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -27,7 +32,7 @@ case "$ARCH" in
 esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Writing $MAKE_CONF..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Writing $MAKE_CONF..."
 sudo bash -c "cat > '$MAKE_CONF' <<EOF
 CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
 ARCH='${GENTOO_ARCH}'
@@ -40,7 +45,7 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF"
 
-echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] make.conf created with ARCH=${GENTOO_ARCH}"
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] make.conf created with ARCH=${GENTOO_ARCH}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -102,49 +107,38 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-CHARD_ROOT="/usr/local/chard"
-TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.gz"
+CHROME_PYTHON=/usr/bin/python3
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
 
-echo "[*] Downloading Portage 3.0.68..."
-sudo curl -L -o "$TMP_TAR" "https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.68.tar.gz"
+GIT_VERSION="2.51.0"
+GIT_TAR="git-$GIT_VERSION.tar.gz"
+GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
-TMP_DIR="$CHARD_ROOT/var/tmp/portage-extract"
-sudo rm -rf "$TMP_DIR"
-sudo mkdir -p "$TMP_DIR"
-sudo tar -xzf "$TMP_TAR" -C "$TMP_DIR"
-sudo rm -f "$TMP_TAR"
-EXTRACTED_DIR=$(find "$TMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n1)
-sudo cp -a "$EXTRACTED_DIR/." "$CHARD_ROOT/usr/portage/"
-sudo rm -rf "$TMP_DIR"
+BUILD_DIR="$CHARD_ROOT/tmp-build"
+sudo mkdir -p "$BUILD_DIR"
+sudo chown root:chard "$BUILD_DIR"
+sudo chmod 2775 "$BUILD_DIR"
+
+cd "$BUILD_DIR"
+
+curl -L -o "$GIT_TAR" "$GIT_URL"
+tar -xzf "$GIT_TAR"
+cd "git-$GIT_VERSION"
+
+./configure --prefix="$CHARD_ROOT/usr"
+make -j"$(nproc)"
+
+sudo make install
+
+cd "$CHARD_ROOT"
+sudo rm -rf "$BUILD_DIR"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 
 
-sudo chown -R root:root "$CHARD_ROOT/usr/portage"
+cd "$CHARD_ROOT"
 
-echo "[*] Portage updated to portage-3.0.68"
-
-sudo tee "$CHARD_ROOT/etc/portage/make.conf" > /dev/null <<EOF
-CHOST='x86_64-unknown-linux-gnu'
-ACCEPT_KEYWORDS='~amd64'
-ROOT='$CHARD_ROOT'
-CFLAGS='-O2 -pipe'
-CXXFLAGS='\${CFLAGS}'
-PORTAGE_TMPDIR='\${ROOT}/var/tmp'
-DISTDIR='\${ROOT}/var/cache/distfiles'
-PKGDIR='\${ROOT}/var/cache/packages'
-EOF
-
-sudo tee "$CHARD_ROOT/etc/portage/repos.conf/gentoo.conf" > /dev/null <<EOF
-[gentoo]
-location = $CHARD_ROOT/usr/portage
-sync-type = webrsync
-sync-uri = https://gentoo.osuosl.org/snapshots
-auto-sync = yes
-priority = 50
-EOF
-
-echo "[*] make.conf and repos.conf updated"
-
-echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard root setup complete."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard root setup complete."
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
     cat >> "$HOME/.bashrc" <<EOF
@@ -161,5 +155,3 @@ fi
 echo "${RESET}${GREEN}"
 echo "Open a new shell for chard logic to load"
 echo "${RESET}"
-
-
