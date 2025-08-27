@@ -13,7 +13,7 @@ set -e
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Creating CHARD ROOT in $CHARD_ROOT..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Creating CHARD ROOT in $CHARD_ROOT..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 
 ARCH=$(uname -m)
@@ -27,7 +27,7 @@ case "$ARCH" in
 esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Writing $MAKE_CONF..."
+echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Writing $MAKE_CONF..."
 sudo bash -c "cat > '$MAKE_CONF' <<EOF
 CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
 ARCH='${GENTOO_ARCH}'
@@ -40,20 +40,20 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF"
 
-echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] make.conf created with ARCH=${GENTOO_ARCH}"
+echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] make.conf created with ARCH=${GENTOO_ARCH}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Downloading Portage tree snapshot..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Portage tree snapshot..."
 sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Extracting snapshot into $PORTAGE_DIR..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting snapshot into $PORTAGE_DIR..."
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Bootstrapping Gentoo stage3..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping Gentoo stage3..."
 case "$GENTOO_ARCH" in
     amd64) AUTOBUILD_DIR="current-stage3-amd64-systemd" ;;
     x86)   AUTOBUILD_DIR="current-stage3-x86-systemd" ;;
@@ -74,26 +74,26 @@ if [ -z "$STAGE3_FILE" ]; then
 fi
 
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Downloading stage3 tarball..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading stage3 tarball..."
 sudo curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Extracting stage3 into $CHARD_ROOT..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Setting default profile symlink..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Setting default profile symlink..."
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
     sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/make.profile"
-    echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
+    echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
 
-echo "${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Downloading chard configuration files..."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
@@ -111,16 +111,17 @@ auto-sync = no
 priority = 50
 EOF
 
-echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}*${RESET}${GREEN}] Chard root setup complete."
+echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard root setup complete."
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
-    cat >> "$HOME/.bashrc" <<'EOF'
+    cat >> "$HOME/.bashrc" <<EOF
 
 # <<< CHARD ENV MARKER <<<
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
+    echo "${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard sourced to ~/.bashrc${RESET}"
 else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
+
