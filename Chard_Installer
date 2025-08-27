@@ -102,14 +102,47 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-sudo tee /usr/local/chard/etc/portage/repos.conf/gentoo.conf > /dev/null <<'EOF'
+CHARD_ROOT="/usr/local/chard"
+TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.gz"
+
+echo "[*] Downloading Portage 3.0.68..."
+sudo curl -L -o "$TMP_TAR" "https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.68.tar.gz"
+
+TMP_DIR="$CHARD_ROOT/var/tmp/portage-extract"
+sudo rm -rf "$TMP_DIR"
+sudo mkdir -p "$TMP_DIR"
+sudo tar -xzf "$TMP_TAR" -C "$TMP_DIR"
+sudo rm -f "$TMP_TAR"
+EXTRACTED_DIR=$(find "$TMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n1)
+sudo cp -a "$EXTRACTED_DIR/." "$CHARD_ROOT/usr/portage/"
+sudo rm -rf "$TMP_DIR"
+
+
+sudo chown -R root:root "$CHARD_ROOT/usr/portage"
+
+echo "[*] Portage updated to portage-3.0.68"
+
+sudo tee "$CHARD_ROOT/etc/portage/make.conf" > /dev/null <<EOF
+CHOST='x86_64-unknown-linux-gnu'
+ACCEPT_KEYWORDS='~amd64'
+ROOT='$CHARD_ROOT'
+CFLAGS='-O2 -pipe'
+CXXFLAGS='\${CFLAGS}'
+PORTAGE_TMPDIR='\${ROOT}/var/tmp'
+DISTDIR='\${ROOT}/var/cache/distfiles'
+PKGDIR='\${ROOT}/var/cache/packages'
+EOF
+
+sudo tee "$CHARD_ROOT/etc/portage/repos.conf/gentoo.conf" > /dev/null <<EOF
 [gentoo]
-location = /usr/local/chard/usr/portage
+location = $CHARD_ROOT/usr/portage
 sync-type = webrsync
 sync-uri = https://gentoo.osuosl.org/snapshots
-auto-sync = no
+auto-sync = yes
 priority = 50
 EOF
+
+echo "[*] make.conf and repos.conf updated"
 
 echo "${RESET}${GREEN}${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard root setup complete."
 
@@ -127,7 +160,9 @@ fi
 
 echo "${RESET}${GREEN}"
 echo "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
+echo "░                                            ░"
 echo "░  ${RESET${GREEN}${BOLD$}Open a new shell for chard logic to load${RESET}${GREEN}  ░"
+echo "░                                            ░"
 echo "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
 echo "${RESET}"
 
