@@ -60,6 +60,7 @@ case "$cmd" in
         fi
         sudo env \
             ROOT="$CHARD_ROOT" \
+            PORTAGE_CONFIGROOT="$CHARD_ROOT" \
             PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
             LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
             "$@"
