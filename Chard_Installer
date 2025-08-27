@@ -159,10 +159,7 @@ else
 fi
 
 echo "${RESET}${GREEN}"
-echo "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
-echo "░                                            ░"
-echo "░  ${RESET${GREEN}${BOLD$}Open a new shell for chard logic to load${RESET}${GREEN}  ░"
-echo "░                                            ░"
-echo "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
+echo "Open a new shell for chard logic to load"
 echo "${RESET}"
+
 
