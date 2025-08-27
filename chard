@@ -15,16 +15,19 @@ chard_emerge() {
         return 1
     fi
     echo "[*] Running emerge inside Chard environment..."
-    sudo env \
+    sudo env -i \
         ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
         DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
-        PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
-        LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-        "$CHARD_ROOT/bin/emerge" --ask=n "$@"
+        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
+        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
+        HOME="$HOME" \
+        SHELL="$SHELL" \
+        "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
 }
+
 
 chard_list() {
     echo "[*] Listing installed packages in Chard root..."
