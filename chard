@@ -15,7 +15,7 @@ chard_emerge() {
         return 1
     fi
     echo "[*] Running emerge inside Chard environment..."
-    sudo env -i \
+    sudo env \
         ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
@@ -26,6 +26,7 @@ chard_emerge() {
         HOME="$HOME" \
         SHELL="$SHELL" \
         "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
+
 }
 
 
@@ -117,7 +118,7 @@ case "$cmd" in
         echo "[*] Chard uninstalled."
         ;;
     categories|cat) chard_categories ;;
-    *)
+        *)
         echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
         ;;
 esac
