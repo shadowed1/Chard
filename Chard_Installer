@@ -105,8 +105,8 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo tee /usr/local/chard/etc/portage/repos.conf/gentoo.conf > /dev/null <<'EOF'
 [gentoo]
 location = /usr/local/chard/usr/portage
-masters =
-sync-type = none
+sync-type = webrsync
+sync-uri = https://gentoo.osuosl.org/snapshots
 auto-sync = no
 priority = 50
 EOF
