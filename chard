@@ -56,7 +56,9 @@ chard_categories() {
 cmd="$1"; shift || true
 
 case "$cmd" in
-    emerge) chard_emerge "$@" ;;
+    emerge)
+        chard_emerge "$@"
+        ;;
     run)
         if [ $# -lt 1 ]; then
             echo "Usage: chard run <binary> [args...]"
@@ -86,10 +88,10 @@ case "$cmd" in
             1)
                 echo "${RESET}"
                 echo "[*] Performing quick reinstall..."
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc    -o "$CHARD_ROOT/.chardrc"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env  -o "$CHARD_ROOT/chard.env"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard       -o "$CHARD_ROOT/bin/chard"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 echo "[*] Quick reinstall complete."
                 echo "${RESET}"
@@ -107,7 +109,9 @@ case "$cmd" in
                 ;;
         esac
         ;;
-    list) chard_list ;;
+    list)
+        chard_list
+        ;;
     uninstall)
         echo "[*] Uninstalling Chard..."
         sudo rm -rf "$CHARD_ROOT"
@@ -117,8 +121,10 @@ case "$cmd" in
         rm -f "$CHARD_RC"
         echo "[*] Chard uninstalled."
         ;;
-    categories|cat) chard_categories ;;
-        *)
+    categories|cat)
+        chard_categories
+        ;;
+    *)
         echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
         ;;
 esac
