@@ -142,19 +142,23 @@ esac
 TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading musl toolchain from $TOOLCHAIN_URL..."
+MUSL_DIR="$CHARD_ROOT/usr/musl"
+sudo mkdir -p "$MUSL_DIR"
+TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
 sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting toolchain into $TOOLCHAIN_DIR..."
-sudo tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting toolchain into $MUSL_DIR..."
+sudo tar -xzf "$TOOLCHAIN_TAR" -C "$MUSL_DIR" --strip-components=1
 sudo rm -f "$TOOLCHAIN_TAR"
 
-for bin in gcc g++ ar ld ranlib strip; do
-    if [ -f "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" ]; then
-        sudo ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
-    fi
-done
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Musl toolchain installed and symlinked into $CHARD_ROOT/usr/bin"
+export CC="$MUSL_DIR/bin/musl-gcc"
+export CXX="$MUSL_DIR/bin/musl-g++"
+export AR="$MUSL_DIR/bin/ar"
+export LD="$MUSL_DIR/bin/ld"
+export RANLIB="$MUSL_DIR/bin/ranlib"
+export STRIP="$MUSL_DIR/bin/strip"
+export CFLAGS="-O2 -pipe"
+export CXXFLAGS="$CFLAGS"
 
 CHROME_PYTHON=/usr/bin/python3
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
@@ -164,10 +168,7 @@ GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo mkdir -p "$BUILD_DIR"
-sudo chown root:chard "$BUILD_DIR"
-sudo chmod 2775 "$BUILD_DIR"
-
+mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
 curl -L -o "$GIT_TAR" "$GIT_URL"
@@ -175,33 +176,28 @@ tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
 ./configure \
-  CC="$CHARD_ROOT/usr/bin/gcc" \
-  CXX="$CHARD_ROOT/usr/bin/g++" \
-  --prefix="$CHARD_ROOT/usr" \
-  --host="$MUSL_ARCH-linux-musl" \
-  ac_cv_func_iconv=yes \
-  ac_cv_lib_iconv=yes \
-  git_cv_iconv_omits_bom=yes \
-  GIT_ICONV=yes \
-  ac_cv_func_malloc_0_nonnull=yes \
-  ac_cv_func_realloc_0_nonnull=yes \
-  ac_cv_func_memcmp_working=yes \
-  ac_cv_func_memcpy_working=yes \
-  ac_cv_func_memmove_working=yes \
-  ac_cv_func_memset_working=yes
+    --prefix="$CHARD_ROOT/usr" \
+    am_cv_func_iconv=yes \
+    am_cv_lib_iconv=yes \
+    git_cv_iconv_omits_bom=yes \
+    GIT_ICONV=yes \
+    ac_cv_func_malloc_0_nonnull=yes \
+    ac_cv_func_realloc_0_nonnull=yes \
+    ac_cv_func_memcmp_working=yes \
+    ac_cv_func_memcpy_working=yes \
+    ac_cv_func_memmove_working=yes \
+    ac_cv_func_memset_working=yes
 
 make -j"$(nproc)"
-
-sudo make install
+make install
 
 cd "$CHARD_ROOT"
-sudo rm -rf "$BUILD_DIR"
+rm -rf "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 
-cd "$CHARD_ROOT"
-
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard root setup complete."
+
 
 echo "${RESET}${GREEN}"
 echo "Open a new shell for chard logic to load"
