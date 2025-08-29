@@ -179,8 +179,9 @@ sudo ./configure \
     CXX="$CHARD_ROOT/usr/bin/g++" \
     --prefix="$CHARD_ROOT/usr" \
     --host="$MUSL_ARCH-linux-musl" \
-    am_cv_func_iconv=yes am_cv_lib_iconv=yes
-
+    am_cv_func_iconv=yes \
+    am_cv_lib_iconv=yes \
+    git_cv_iconv_omits_bom=yes
 
 sudo make -j"$(nproc)"
 sudo make install
