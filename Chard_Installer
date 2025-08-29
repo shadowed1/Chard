@@ -107,6 +107,43 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping musl toolchain..."
+
+TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
+sudo mkdir -p "$TOOLCHAIN_DIR"
+
+case "$ARCH" in
+    x86_64)
+        MUSL_ARCH="x86_64"
+        TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz"
+        ;;
+    aarch64)
+        MUSL_ARCH="aarch64"
+        TOOLCHAIN_URL="https://musl.cc/aarch64-linux-musl-native.tgz"
+        ;;
+    *)
+        echo "${RED}No musl toolchain available for $ARCH${RESET}"
+        exit 1
+        ;;
+esac
+
+TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading musl toolchain from $TOOLCHAIN_URL..."
+sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting toolchain into $TOOLCHAIN_DIR..."
+sudo tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
+sudo rm -f "$TOOLCHAIN_TAR"
+
+for bin in gcc g++ ar ld ranlib strip; do
+    if [ -f "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" ]; then
+        sudo ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
+    fi
+done
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Musl toolchain installed and symlinked into $CHARD_ROOT/usr/bin"
+
 CHROME_PYTHON=/usr/bin/python3
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
 
