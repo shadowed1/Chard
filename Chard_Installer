@@ -144,7 +144,6 @@ TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading musl toolchain from $TOOLCHAIN_URL..."
 MUSL_DIR="$CHARD_ROOT/usr/musl"
 sudo mkdir -p "$MUSL_DIR"
-TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
 sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting toolchain into $MUSL_DIR..."
@@ -160,22 +159,59 @@ export STRIP="$MUSL_DIR/bin/strip"
 export CFLAGS="-O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 
-CHROME_PYTHON=/usr/bin/python3
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
+PY_VERSION="3.13.7"
+PY_TAR="Python-$PY_VERSION.tgz"
+PY_URL="https://www.python.org/ftp/python/$PY_VERSION/$PY_TAR"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build-python"
+sudo mkdir -p "$BUILD_DIR"
+sudo chown "$USER":"$USER" "$BUILD_DIR"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Python $PY_VERSION..."
+curl -L -o "$BUILD_DIR/$PY_TAR" "$PY_URL"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting Python..."
+tar -xzf "$BUILD_DIR/$PY_TAR" -C "$BUILD_DIR" --strip-components=1
+cd "$BUILD_DIR"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Python with musl-native GCC..."
+CC="$CC" CXX="$CXX" AR="$AR" LD="$LD" RANLIB="$RANLIB" STRIP="$STRIP" \
+CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" \
+./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --enable-optimizations \
+    --with-lto \
+    --with-system-ffi \
+    --enable-shared
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Python..."
+make -j"$(nproc)"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Python..."
+sudo make install
+
+CHARD_PYTHON="$CHARD_ROOT/usr/bin/python3"
+cd "$CHARD_ROOT"
+rm -rf "$BUILD_DIR"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Python $PY_VERSION installed in $CHARD_PYTHON"
 
 GIT_VERSION="2.51.0"
 GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
-
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-mkdir -p "$BUILD_DIR"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build-git"
+sudo mkdir -p "$BUILD_DIR"
+sudo chown "$USER":"$USER" "$BUILD_DIR"
 cd "$BUILD_DIR"
 
-curl -L -o "$GIT_TAR" "$GIT_URL"
-tar -xzf "$GIT_TAR"
-cd "git-$GIT_VERSION"
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Git $GIT_VERSION..."
+curl -L -o "$BUILD_DIR/$GIT_TAR" "$GIT_URL"
 
-./configure \
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting Git..."
+tar -xzf "$BUILD_DIR/$GIT_TAR" -C "$BUILD_DIR" --strip-components=1
+cd "$BUILD_DIR"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with Chard Python..."
+CC="$CC" CXX="$CXX" ./configure \
     --prefix="$CHARD_ROOT/usr" \
     am_cv_func_iconv=yes \
     am_cv_lib_iconv=yes \
@@ -186,10 +222,14 @@ cd "git-$GIT_VERSION"
     ac_cv_func_memcmp_working=yes \
     ac_cv_func_memcpy_working=yes \
     ac_cv_func_memmove_working=yes \
-    ac_cv_func_memset_working=yes
+    ac_cv_func_memset_working=yes \
+    PYTHON="$CHARD_PYTHON"
 
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Git..."
 make -j"$(nproc)"
-make install
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Git..."
+sudo make install
 
 cd "$CHARD_ROOT"
 rm -rf "$BUILD_DIR"
@@ -197,8 +237,4 @@ rm -rf "$BUILD_DIR"
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard Root Complete."
-
-
-echo "${RESET}${GREEN}"
-echo "Open a new shell for chard logic to load"
-echo "${RESET}"
+echo "${RESET}${GREEN}Open a new shell for chard logic to load${RESET}"
