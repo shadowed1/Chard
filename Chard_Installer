@@ -170,21 +170,28 @@ sudo chmod 2775 "$BUILD_DIR"
 
 cd "$BUILD_DIR"
 
-sudo curl -L -o "$GIT_TAR" "$GIT_URL"
-sudo tar -xzf "$GIT_TAR"
+curl -L -o "$GIT_TAR" "$GIT_URL"
+tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
-sudo ./configure \
-    CC="$CHARD_ROOT/usr/bin/gcc" \
-    CXX="$CHARD_ROOT/usr/bin/g++" \
-    --prefix="$CHARD_ROOT/usr" \
-    --host="$MUSL_ARCH-linux-musl" \
-    am_cv_func_iconv=yes \
-    am_cv_lib_iconv=yes \
-    git_cv_iconv_omits_bom=yes \
-    GIT_ICONV=yes
+./configure \
+  CC="$CHARD_ROOT/usr/bin/gcc" \
+  CXX="$CHARD_ROOT/usr/bin/g++" \
+  --prefix="$CHARD_ROOT/usr" \
+  --host="$MUSL_ARCH-linux-musl" \
+  ac_cv_func_iconv=yes \
+  ac_cv_lib_iconv=yes \
+  git_cv_iconv_omits_bom=yes \
+  GIT_ICONV=yes \
+  ac_cv_func_malloc_0_nonnull=yes \
+  ac_cv_func_realloc_0_nonnull=yes \
+  ac_cv_func_memcmp_working=yes \
+  ac_cv_func_memcpy_working=yes \
+  ac_cv_func_memmove_working=yes \
+  ac_cv_func_memset_working=yes
 
-sudo make -j"$(nproc)"
+make -j"$(nproc)"
+
 sudo make install
 
 cd "$CHARD_ROOT"
