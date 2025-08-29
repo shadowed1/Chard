@@ -13,7 +13,7 @@ set -e
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Creating Chard group...${GENTOO_ARCH}"
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Creating Chard Root...${GENTOO_ARCH}"
 
 sudo groupadd -f chard
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
@@ -196,7 +196,7 @@ rm -rf "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard root setup complete."
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard Root Complete."
 
 
 echo "${RESET}${GREEN}"
