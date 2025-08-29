@@ -162,7 +162,11 @@ sudo curl -L -o "$GIT_TAR" "$GIT_URL"
 sudo tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
-sudo ./configure CC="$CHARD_ROOT/usr/bin/gcc" CXX="$CHARD_ROOT/usr/bin/g++" --prefix="$CHARD_ROOT/usr"
+sudo ./configure \
+    CC="$CHARD_ROOT/usr/bin/gcc" \
+    CXX="$CHARD_ROOT/usr/bin/g++" \
+    --prefix="$CHARD_ROOT/usr"
+
 sudo make -j"$(nproc)"
 sudo make install
 
@@ -170,8 +174,6 @@ cd "$CHARD_ROOT"
 sudo rm -rf "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
-
-
 
 cd "$CHARD_ROOT"
 
