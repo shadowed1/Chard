@@ -151,7 +151,7 @@ GIT_VERSION="2.51.0"
 GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
-BUILD_DIR="$CHARD_ROOT/tmp-build"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 sudo chown root:chard "$BUILD_DIR"
 sudo chmod 2775 "$BUILD_DIR"
