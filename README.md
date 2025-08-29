@@ -5,4 +5,4 @@
 *After install, enter shell, and chard commands will be available, along with many apps; like nano. 
 `nano` <--- to launch nano. 
 
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)") </pre>
+<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")</pre>
