@@ -1,5 +1,5 @@
 # <<< CHARD_ENV <<<
-CHARD_ROOT="/usr/local/chard"
+CHARD_ROOT="/usr/local/bin/chard"
 
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
