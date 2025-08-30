@@ -180,9 +180,6 @@ sudo tar -xzf "$GIT_TAR" --strip-components=1
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with system Python..."
 CHROME_PYTHON=$(command -v python3 || true)
-CC="$CHARD_ROOT/usr/musl/bin/musl-gcc" \
-CFLAGS="-O2 -pipe" \
-LDFLAGS="-L$CHARD_ROOT/usr/musl/lib -Wl,-rpath,$CHARD_ROOT/usr/musl/lib" \
 ./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
     am_cv_func_iconv=yes \
     am_cv_lib_iconv=yes \
@@ -194,7 +191,6 @@ LDFLAGS="-L$CHARD_ROOT/usr/musl/lib -Wl,-rpath,$CHARD_ROOT/usr/musl/lib" \
     ac_cv_func_memcpy_working=yes \
     ac_cv_func_memmove_working=yes \
     ac_cv_func_memset_working=yes
-
 
 make -j"$(nproc)"
 sudo make install
