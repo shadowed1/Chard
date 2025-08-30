@@ -1,18 +1,21 @@
 # <<< CHARD_ENV <<<
-
 export CHARD_ROOT="/usr/local/chard"
+
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
     *) PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
 esac
+
 case ":$PATH:" in
     *":$CHARD_ROOT/bin:"*) ;;
     *) PATH="$PATH:$CHARD_ROOT/bin" ;;
 esac
+
 case ":${LD_LIBRARY_PATH:-}:" in
     *":$CHARD_ROOT/usr/lib:"*) ;;
     *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib" ;;
 esac
+
 case ":${LD_LIBRARY_PATH:-}:" in
     *":$CHARD_ROOT/lib:"*) ;;
     *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/lib" ;;
@@ -22,22 +25,11 @@ export PATH LD_LIBRARY_PATH
 
 [ ! -f "$CHARD_ROOT/.chard.env" ] && \
     curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/.chard.env"
+
 [ ! -f "$CHARD_ROOT/.chard.logic" ] && \
     curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
 
-musl() {
-    . "$CHARD_ROOT/.chard.env"
-    export PATH="$CHARD_ROOT/usr/musl/bin:$PATH"
-    export LD_LIBRARY_PATH="$CHARD_ROOT/usr/musl/lib:$CHARD_ROOT/usr/musl/lib64:$CHARD_ROOT/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-    export CC="$CHARD_ROOT/usr/musl/bin/musl-gcc"
-    export CXX="$CHARD_ROOT/usr/musl/bin/musl-g++"
-    export AR="$CHARD_ROOT/usr/musl/bin/ar"
-    export LD="$CHARD_ROOT/usr/musl/bin/ld"
-    export RANLIB="$CHARD_ROOT/usr/musl/bin/ranlib"
-    export STRIP="$CHARD_ROOT/usr/musl/bin/strip"
-    "$@"
-}
-
+[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
 # <<< END CHARD_ENV <<<
