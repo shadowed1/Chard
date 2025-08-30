@@ -40,15 +40,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
-export PATH="$CHARD_ROOT/usr/musl/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/musl/lib:$CHARD_ROOT/usr/musl/lib64:$CHARD_ROOT/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export CC="$CHARD_ROOT/usr/musl/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/musl/bin/musl-g++"
-export AR="$CHARD_ROOT/usr/musl/bin/ar"
-export LD="$CHARD_ROOT/usr/musl/bin/ld"
-export RANLIB="$CHARD_ROOT/usr/musl/bin/ranlib"
-export STRIP="$CHARD_ROOT/usr/musl/bin/strip"
-
 CHARD_PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin"
 CHARD_LD="$CHARD_ROOT/usr/lib:$CHARD_ROOT/usr/lib64:$CHARD_ROOT/lib"
 source "$CHARD_ROOT/.chardrc"
@@ -128,6 +119,46 @@ if [ -n "$PROFILE_CANDIDATE" ]; then
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping musl toolchain..."
+
+TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
+sudo mkdir -p "$TOOLCHAIN_DIR"
+
+case "$ARCH" in
+    x86_64)
+        MUSL_ARCH="x86_64"
+        TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz"
+        ;;
+    aarch64)
+        MUSL_ARCH="aarch64"
+        TOOLCHAIN_URL="https://musl.cc/aarch64-linux-musl-native.tgz"
+        ;;
+    *)
+        echo "${RED}No musl toolchain available for $ARCH${RESET}"
+        exit 1
+        ;;
+esac
+
+TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading musl toolchain from $TOOLCHAIN_URL..."
+MUSL_DIR="$CHARD_ROOT/usr/musl"
+sudo mkdir -p "$MUSL_DIR"
+sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting toolchain into $MUSL_DIR..."
+sudo tar -xzf "$TOOLCHAIN_TAR" -C "$MUSL_DIR" --strip-components=1
+sudo rm -f "$TOOLCHAIN_TAR"
+
+export PATH="$CHARD_ROOT/usr/musl/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/musl/lib:$CHARD_ROOT/usr/musl/lib64:$CHARD_ROOT/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export CC="$CHARD_ROOT/usr/musl/bin/musl-gcc"
+export CXX="$CHARD_ROOT/usr/musl/bin/musl-g++"
+export AR="$CHARD_ROOT/usr/musl/bin/ar"
+export LD="$CHARD_ROOT/usr/musl/bin/ld"
+export RANLIB="$CHARD_ROOT/usr/musl/bin/ranlib"
+export STRIP="$CHARD_ROOT/usr/musl/bin/strip"
 
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
