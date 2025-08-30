@@ -12,6 +12,9 @@ set -e
 
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
+MUSL_GCC="$CHARD_ROOT/usr/bin/gcc -static"
+MUSL_GXX="$CHARD_ROOT/usr/bin/g++ -static"
+
 
 echo "[+] Creating Chard group and directories..."
 
@@ -80,7 +83,6 @@ sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
-# --- Stage3 ---
 case "$GENTOO_ARCH" in
     amd64) AUTOBUILD_DIR="current-stage3-amd64-systemd" ;;
     x86)   AUTOBUILD_DIR="current-stage3-x86-systemd" ;;
@@ -106,7 +108,6 @@ echo "[+] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
 
-# --- Profile symlink ---
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 if [ -n "$PROFILE_CANDIDATE" ]; then
@@ -153,7 +154,6 @@ sudo mkdir -p /usr/local/bin/chard/var/tmp
 echo 'int main(){return 0;}' | sudo tee /usr/local/bin/chard/var/tmp/test.c
 sudo /usr/local/bin/chard/usr/bin/gcc -o /usr/local/bin/chard/var/tmp/test /usr/local/bin/chard/var/tmp/test.c
 sudo /usr/local/bin/chard/var/tmp/test && echo "Musl gcc works!"
-
 
 CHROME_PYTHON=/usr/bin/python3
 echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
