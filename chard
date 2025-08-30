@@ -1,5 +1,5 @@
 #!/bin/bash
-CHARD_ROOT="/usr/local/chard"
+CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
