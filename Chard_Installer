@@ -136,8 +136,8 @@ GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Git $GIT_VERSION..."
-curl -L -o "$GIT_TAR" "$GIT_URL"
-tar -xzf "$GIT_TAR" --strip-components=1
+sudo curl -L -o "$GIT_TAR" "$GIT_URL"
+sudo tar -xzf "$GIT_TAR" --strip-components=1
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with system Python..."
 CHROME_PYTHON=$(command -v python3 || true)
