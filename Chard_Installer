@@ -41,8 +41,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
-source /home/chronos/user/.bashrc
-
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)   GENTOO_ARCH="amd64" ;;
@@ -121,6 +119,11 @@ fi
 
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
+
+sudo mkdir -p /usr/local/bin/chard/var/tmp
+echo 'int main(){return 0;}' | sudo tee /usr/local/bin/chard/var/tmp/test.c
+sudo /usr/local/chard/usr/bin/gcc -o /usr/local/bin/chard/var/tmp/test /usr/local/bin/chard/var/tmp/test.c
+sudo /usr/local/bin/chard/var/tmp/test && echo "Musl gcc works!"
 
 # --- Musl toolchain ---
 echo "[+] Bootstrapping musl toolchain..."
