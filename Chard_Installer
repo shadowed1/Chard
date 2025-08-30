@@ -175,31 +175,24 @@ echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting Python..."
 sudo tar -xzf "$BUILD_DIR/$PY_TAR" -C "$BUILD_DIR" --strip-components=1
 cd "$BUILD_DIR"
 
+set -a
+source "$CHARD_ROOT/.chard.env"
+set +a
+
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Python with musl-native GCC..."
-
-TMP_LD="$LD_LIBRARY_PATH"
-[ -n "$CHARD_LD" ] && TMP_LD="${TMP_LD:+$TMP_LD:}$CHARD_LD"
-
-TMP_PATH="$CHARD_PATH:$PATH"
-
 CC="$CC" CXX="$CXX" AR="$AR" LD="$LD" RANLIB="$RANLIB" STRIP="$STRIP" \
 CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" \
-env PATH="$TMP_PATH" LD_LIBRARY_PATH="$TMP_LD" \
-    ./configure \
-        --prefix="$CHARD_ROOT/usr" \
-        --enable-optimizations \
-        --with-lto \
-        --enable-shared
+./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --enable-optimizations \
+    --with-lto \
+    --enable-shared
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Python..."
-env PATH="$CHARD_PATH:$PATH" \
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_LD" \
-    make -j"$(nproc)"
+make -j"$(nproc)"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Python..."
-sudo env PATH="$CHARD_PATH:$PATH" \
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_LD" \
-    make install
+sudo make install
 
 CHARD_PYTHON="$CHARD_ROOT/usr/bin/python3"
 cd "$CHARD_ROOT"
@@ -220,37 +213,29 @@ tar -xzf "$BUILD_DIR/$GIT_TAR" -C "$BUILD_DIR" --strip-components=1
 cd "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with Chard Python..."
-env PATH="$CHARD_PATH:$PATH" \
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_LD" \
-    CC="$CC" CXX="$CXX" \
-    ./configure \
-        --prefix="$CHARD_ROOT/usr" \
-        am_cv_func_iconv=yes \
-        am_cv_lib_iconv=yes \
-        git_cv_iconv_omits_bom=yes \
-        GIT_ICONV=yes \
-        ac_cv_func_malloc_0_nonnull=yes \
-        ac_cv_func_realloc_0_nonnull=yes \
-        ac_cv_func_memcmp_working=yes \
-        ac_cv_func_memcpy_working=yes \
-        ac_cv_func_memmove_working=yes \
-        ac_cv_func_memset_working=yes \
-        PYTHON="$CHARD_PYTHON"
+CC="$CC" CXX="$CXX" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    am_cv_func_iconv=yes \
+    am_cv_lib_iconv=yes \
+    git_cv_iconv_omits_bom=yes \
+    GIT_ICONV=yes \
+    ac_cv_func_malloc_0_nonnull=yes \
+    ac_cv_func_realloc_0_nonnull=yes \
+    ac_cv_func_memcmp_working=yes \
+    ac_cv_func_memcpy_working=yes \
+    ac_cv_func_memmove_working=yes \
+    ac_cv_func_memset_working=yes \
+    PYTHON="$CHARD_PYTHON"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Git..."
-env PATH="$CHARD_PATH:$PATH" \
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_LD" \
-    make -j"$(nproc)"
+make -j"$(nproc)"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Git..."
-sudo env PATH="$CHARD_PATH:$PATH" \
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_LD" \
-    make install
+sudo make install
 
 cd "$CHARD_ROOT"
 rm -rf "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
-
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard Root Complete."
 echo "${RESET}${GREEN}Open a new shell for chard logic to load${RESET}"
