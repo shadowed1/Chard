@@ -25,9 +25,6 @@ echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading chard config
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
-
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
     cat >> "$HOME/.bashrc" <<EOF
 
@@ -120,6 +117,8 @@ else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
 
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping musl toolchain..."
@@ -178,16 +177,14 @@ cd "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Python with musl-native GCC..."
 
-if [ -n "$LD_LIBRARY_PATH" ]; then
-    TMP_LD="$LD_LIBRARY_PATH:$CHARD_LD"
-else
-    TMP_LD="$CHARD_LD"
-fi
+TMP_LD="$LD_LIBRARY_PATH"
+[ -n "$CHARD_LD" ] && TMP_LD="${TMP_LD:+$TMP_LD:}$CHARD_LD"
 
-env PATH="$CHARD_PATH:$PATH" \
-    LD_LIBRARY_PATH="$TMP_LD" \
-    CC="$CC" CXX="$CXX" AR="$AR" LD="$LD" RANLIB="$RANLIB" STRIP="$STRIP" \
-    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" \
+TMP_PATH="$CHARD_PATH:$PATH"
+
+CC="$CC" CXX="$CXX" AR="$AR" LD="$LD" RANLIB="$RANLIB" STRIP="$STRIP" \
+CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" \
+env PATH="$TMP_PATH" LD_LIBRARY_PATH="$TMP_LD" \
     ./configure \
         --prefix="$CHARD_ROOT/usr" \
         --enable-optimizations \
