@@ -141,7 +141,7 @@ sudo tar -xzf "$GIT_TAR" --strip-components=1
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with system Python..."
 CHROME_PYTHON=$(command -v python3 || true)
-./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
+musl ./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
     am_cv_func_iconv=yes \
     am_cv_lib_iconv=yes \
     git_cv_iconv_omits_bom=yes \
@@ -153,11 +153,8 @@ CHROME_PYTHON=$(command -v python3 || true)
     ac_cv_func_memmove_working=yes \
     ac_cv_func_memset_working=yes
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Git..."
-make -j"$(nproc)"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Git..."
-sudo make install
+musl make -j"$(nproc)"
+musl sudo make install
 
 cd "$CHARD_ROOT"
 rm -rf "$BUILD_DIR"
