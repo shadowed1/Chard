@@ -114,21 +114,6 @@ export DISTDIR="$ROOT/var/cache/distfiles"
 export PKGDIR="$ROOT/var/cache/packages"
 export PORTDIR="$ROOT/usr/portage"
 
-# Add directories to PATH only if not already present
-for dir in "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/bin"; do
-    case ":$PATH:" in
-        *":$dir:"*) ;; # already in PATH
-        *) PATH="$dir:$PATH" ;;
-    esac
-done
-
-for dir in "$ROOT/usr/lib" "$ROOT/usr/lib64" "$ROOT/lib"; do
-    case ":${LD_LIBRARY_PATH:-}:" in
-        *":$dir:"*) ;; # already present
-        *) LD_LIBRARY_PATH="${dir}:${LD_LIBRARY_PATH:-}" ;;
-    esac
-done
-
 export PATH
 export LD_LIBRARY_PATH
 
