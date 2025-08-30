@@ -124,11 +124,6 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o 
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-CHROME_PYTHON=$(which python3)
-if [ -z "$CHROME_PYTHON" ]; then
-    echo "${RED}ERROR: ChromeOS system Python not found${RESET}"
-    exit 1
-fi
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Using ChromeOS Python at $CHROME_PYTHON"
 
 BUILD_DIR="$CHARD_ROOT/var/tmp/build-git"
