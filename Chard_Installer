@@ -177,8 +177,15 @@ sudo tar -xzf "$BUILD_DIR/$PY_TAR" -C "$BUILD_DIR" --strip-components=1
 cd "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Python with musl-native GCC..."
+
+if [ -n "$LD_LIBRARY_PATH" ]; then
+    TMP_LD="$LD_LIBRARY_PATH:$CHARD_LD"
+else
+    TMP_LD="$CHARD_LD"
+fi
+
 env PATH="$CHARD_PATH:$PATH" \
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_LD" \
+    LD_LIBRARY_PATH="$TMP_LD" \
     CC="$CC" CXX="$CXX" AR="$AR" LD="$LD" RANLIB="$RANLIB" STRIP="$STRIP" \
     CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" \
     ./configure \
