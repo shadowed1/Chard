@@ -115,9 +115,7 @@ case "$cmd" in
     uninstall)
         echo "[*] Uninstalling Chard..."
         sudo rm -rf "$CHARD_ROOT"
-        if grep -q "<<< CHARD ENV MARKER <<<" /home/chronos/user/.bashrc; then
-            sed -i '/<<< CHARD ENV MARKER <<<$/,/<<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
-        fi
+        sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
         rm -f "$CHARD_RC"
         echo "[*] Chard uninstalled."
         ;;
