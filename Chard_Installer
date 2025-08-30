@@ -13,7 +13,7 @@ set -e
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Creating Chard Root...${GENTOO_ARCH}"
+echo "[+] Creating Chard group and directories..."
 
 sudo groupadd -f chard
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
@@ -21,26 +21,25 @@ sudo chown -R root:chard "$CHARD_ROOT"
 sudo chmod -R 2775 "$CHARD_ROOT"
 sudo usermod -aG chard "$USER"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading chard configuration files..."
+echo "[+] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
 
-if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "home/chronos/user/.bashrc"; then
     cat >> "$HOME/.bashrc" <<EOF
 
 # <<< CHARD ENV MARKER <<<
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard sourced to ~/.bashrc${RESET}"
+    echo "[+] Chard sourced to ~/.bashrc"
 else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
-
-source /home/chronos/user/.bashrc
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -49,11 +48,11 @@ case "$ARCH" in
     aarch64)  GENTOO_ARCH="arm64" ;;
     armv7l)   GENTOO_ARCH="arm" ;;
     ppc64le)  GENTOO_ARCH="ppc64le" ;;
-    *) echo "${RESET}${RED}Unknown architecture: $ARCH ${RESET}"; exit 1 ;;
+    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Writing $MAKE_CONF..."
+echo "[+] Writing $MAKE_CONF..."
 sudo bash -c "cat > '$MAKE_CONF' <<EOF
 CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
 ARCH='${GENTOO_ARCH}'
@@ -66,137 +65,114 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] make.conf created with ARCH=${GENTOO_ARCH}"
+echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
+# --- Portage snapshot ---
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Portage tree snapshot..."
+echo "[+] Downloading Portage tree snapshot..."
 sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting snapshot into $PORTAGE_DIR..."
+echo "[+] Extracting snapshot into $PORTAGE_DIR..."
 sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping Gentoo stage3..."
+# --- Stage3 ---
 case "$GENTOO_ARCH" in
     amd64) AUTOBUILD_DIR="current-stage3-amd64-systemd" ;;
     x86)   AUTOBUILD_DIR="current-stage3-x86-systemd" ;;
     arm64) AUTOBUILD_DIR="current-stage3-arm64-systemd" ;;
-    *) echo "${RED}Unsupported architecture: $GENTOO_ARCH${RESET}"; exit 1 ;;
+    *) echo "Unsupported architecture: $GENTOO_ARCH"; exit 1 ;;
 esac
 
 BASE="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/$AUTOBUILD_DIR/"
-STAGE3_FILE=$(curl -fsSL "$BASE" \
-    | tr -d '\r' \
+STAGE3_FILE=$(curl -fsSL "$BASE" | tr -d '\r' \
     | grep -o "stage3-$GENTOO_ARCH-systemd-[0-9]\+T[0-9]\+Z\.tar\.xz" \
-    | sort \
-    | tail -n1)
+    | sort | tail -n1)
 
 if [ -z "$STAGE3_FILE" ]; then
-    echo "${RED}ERROR: Could not determine stage3 tarball filename${RESET}"
+    echo "ERROR: Could not determine stage3 tarball filename"
     exit 1
 fi
 
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading stage3 tarball..."
+echo "[+] Downloading stage3 tarball..."
 sudo curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting stage3 into $CHARD_ROOT..."
+echo "[+] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Setting default profile symlink..."
+# --- Profile symlink ---
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
     sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/make.profile"
-    echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
+    echo "[+] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping musl toolchain..."
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
 
+# --- Musl toolchain ---
+echo "[+] Bootstrapping musl toolchain..."
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 sudo mkdir -p "$TOOLCHAIN_DIR"
 
 case "$ARCH" in
-    x86_64)
-        MUSL_ARCH="x86_64"
-        TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz"
-        ;;
-    aarch64)
-        MUSL_ARCH="aarch64"
-        TOOLCHAIN_URL="https://musl.cc/aarch64-linux-musl-native.tgz"
-        ;;
-    *)
-        echo "${RED}No musl toolchain available for $ARCH${RESET}"
-        exit 1
-        ;;
+    x86_64) MUSL_ARCH="x86_64"; TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz" ;;
+    aarch64) MUSL_ARCH="aarch64"; TOOLCHAIN_URL="https://musl.cc/aarch64-linux-musl-native.tgz" ;;
+    *) echo "No musl toolchain available for $ARCH"; exit 1 ;;
 esac
 
 TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading musl toolchain from $TOOLCHAIN_URL..."
-MUSL_DIR="$CHARD_ROOT/usr/musl"
-sudo mkdir -p "$MUSL_DIR"
 sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting toolchain into $MUSL_DIR..."
-sudo tar -xzf "$TOOLCHAIN_TAR" -C "$MUSL_DIR" --strip-components=1
+sudo tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
 sudo rm -f "$TOOLCHAIN_TAR"
 
-export PATH="$CHARD_ROOT/usr/musl/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/musl/lib:$CHARD_ROOT/usr/musl/lib64"
-export CC="$CHARD_ROOT/usr/musl/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/musl/bin/musl-g++"
-export AR="$CHARD_ROOT/usr/musl/bin/ar"
-export LD="$CHARD_ROOT/usr/musl/bin/ld"
-export RANLIB="$CHARD_ROOT/usr/musl/bin/ranlib"
-export STRIP="$CHARD_ROOT/usr/musl/bin/strip"
+for bin in gcc g++ ar ld ranlib strip; do
+    if [ -f "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" ]; then
+        sudo ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
+    fi
+done
 
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+echo "[+] Musl toolchain installed and symlinked into $CHARD_ROOT/usr/bin"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Using ChromeOS Python at $CHROME_PYTHON"
+sudo ln -sf /usr/local/chard/usr/toolchain/bin/x86_64-linux-musl-gcc     /usr/local/chard/usr/toolchain/bin/musl-gcc
+sudo ln -sf /usr/local/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /usr/local/chard/usr/toolchain/bin/musl-g++
+sudo ln -sf /usr/local/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/chard/usr/toolchain/bin/cc
+sudo ln -sf /usr/local/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/chard/usr/toolchain/bin/c++
 
-BUILD_DIR="$CHARD_ROOT/var/tmp/build-git"
-sudo mkdir -p "$BUILD_DIR"
-sudo chown "$USER":"$USER" "$BUILD_DIR"
-cd "$BUILD_DIR"
+CHROME_PYTHON=/usr/bin/python3
+echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
 
 GIT_VERSION="2.51.0"
 GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Git $GIT_VERSION..."
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo mkdir -p "$BUILD_DIR"
+sudo chown root:chard "$BUILD_DIR"
+sudo chmod 2775 "$BUILD_DIR"
+
+cd "$BUILD_DIR"
 sudo curl -L -o "$GIT_TAR" "$GIT_URL"
-sudo tar -xzf "$GIT_TAR" --strip-components=1
+sudo tar -xzf "$GIT_TAR"
+cd "git-$GIT_VERSION"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with system Python..."
-CHROME_PYTHON=$(command -v python3 || true)
-./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
-    am_cv_func_iconv=yes \
-    am_cv_lib_iconv=yes \
-    git_cv_iconv_omits_bom=yes \
-    GIT_ICONV=yes \
-    ac_cv_func_malloc_0_nonnull=yes \
-    ac_cv_func_realloc_0_nonnull=yes \
-    ac_cv_func_memcmp_working=yes \
-    ac_cv_func_memcpy_working=yes \
-    ac_cv_func_memmove_working=yes \
-    ac_cv_func_memset_working=yes
-
-make -j"$(nproc)"
+sudo ./configure CC="$CHARD_ROOT/usr/bin/gcc" CXX="$CHARD_ROOT/usr/bin/g++" --prefix="$CHARD_ROOT/usr"
+sudo make -j"$(nproc)"
 sudo make install
 
 cd "$CHARD_ROOT"
-rm -rf "$BUILD_DIR"
+sudo rm -rf "$BUILD_DIR"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard Root Complete. Ready to run commands."
+echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
+
+echo "[+] Chard root setup complete."
