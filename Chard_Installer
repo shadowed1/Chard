@@ -74,6 +74,7 @@ echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Portage tree
 sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting snapshot into $PORTAGE_DIR..."
+sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
@@ -108,7 +109,6 @@ sudo rm -f "$TMP_STAGE3"
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Setting default profile symlink..."
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
-
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
     sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/make.profile"
@@ -121,93 +121,12 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o 
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Bootstrapping musl toolchain..."
-
-TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
-sudo mkdir -p "$TOOLCHAIN_DIR"
-
-case "$ARCH" in
-    x86_64)
-        MUSL_ARCH="x86_64"
-        TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz"
-        ;;
-    aarch64)
-        MUSL_ARCH="aarch64"
-        TOOLCHAIN_URL="https://musl.cc/aarch64-linux-musl-native.tgz"
-        ;;
-    *)
-        echo "${RED}No musl toolchain available for $ARCH${RESET}"
-        exit 1
-        ;;
-esac
-
-TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading musl toolchain from $TOOLCHAIN_URL..."
-MUSL_DIR="$CHARD_ROOT/usr/musl"
-sudo mkdir -p "$MUSL_DIR"
-sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting toolchain into $MUSL_DIR..."
-sudo tar -xzf "$TOOLCHAIN_TAR" -C "$MUSL_DIR" --strip-components=1
-sudo rm -f "$TOOLCHAIN_TAR"
-
-export CC="$MUSL_DIR/bin/musl-gcc"
-export CXX="$MUSL_DIR/bin/musl-g++"
-export AR="$MUSL_DIR/bin/ar"
-export LD="$MUSL_DIR/bin/ld"
-export RANLIB="$MUSL_DIR/bin/ranlib"
-export STRIP="$MUSL_DIR/bin/strip"
-export CFLAGS="-O2 -pipe"
-export CXXFLAGS="$CFLAGS"
-
-MUSL_DIR="$CHARD_ROOT/usr/musl"
-
-PY_VERSION="3.13.7"
-PY_TAR="Python-$PY_VERSION.tgz"
-PY_URL="https://www.python.org/ftp/python/$PY_VERSION/$PY_TAR"
-BUILD_DIR="$CHARD_ROOT/var/tmp/build-python"
-
-sudo mkdir -p "$BUILD_DIR"
-sudo chown "$USER":"$USER" "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-echo "[+] Downloading Python $PY_VERSION..."
-curl -L -o "$PY_TAR" "$PY_URL"
-
-echo "[+] Extracting Python..."
-sudo tar --no-same-owner --no-same-permissions -xzf "$PY_TAR" --strip-components=1
-
-if [ -f "$CHARD_ROOT/.chard.env" ]; then
-    source "$CHARD_ROOT/.chard.env"
-else
-    echo "ERROR: chard env not found at $CHARD_ROOT/.chard.env"
+CHROME_PYTHON=$(which python3)
+if [ -z "$CHROME_PYTHON" ]; then
+    echo "${RED}ERROR: ChromeOS system Python not found${RESET}"
     exit 1
 fi
-
-which pkg-config || true
-$CHARD_ROOT/usr/bin/pkg-config --version || true
-ldd $CHARD_ROOT/usr/bin/pkg-config 2>/dev/null || true
-echo "PATH=$PATH"
-echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
-$CHARD_ROOT/usr/musl/bin/musl-gcc --version || true
-$CHARD_ROOT/usr/bin/pkg-config --modversion libffi || true
-
-echo "[+] Configuring Python with musl-native GCC..."
-./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --enable-optimizations \
-    --with-lto \
-    --enable-shared
-
-echo "[+] Building Python..."
-make -j"$(nproc)"
-
-echo "[+] Installing Python..."
-sudo make install
-
-CHARD_PYTHON="$CHARD_ROOT/usr/bin/python3"
-echo "[+] Python installed at $CHARD_PYTHON"
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Using ChromeOS Python at $CHROME_PYTHON"
 
 BUILD_DIR="$CHARD_ROOT/var/tmp/build-git"
 sudo mkdir -p "$BUILD_DIR"
@@ -218,10 +137,13 @@ GIT_VERSION="2.51.0"
 GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Git $GIT_VERSION..."
 curl -L -o "$GIT_TAR" "$GIT_URL"
-tar --no-same-owner --no-same-permissions -xzf "$GIT_TAR" --strip-components=1
+tar -xzf "$GIT_TAR" --strip-components=1
 
-./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHARD_PYTHON" \
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with system Python..."
+CHROME_PYTHON=$(command -v python3 || true)
+./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
     am_cv_func_iconv=yes \
     am_cv_lib_iconv=yes \
     git_cv_iconv_omits_bom=yes \
@@ -233,7 +155,10 @@ tar --no-same-owner --no-same-permissions -xzf "$GIT_TAR" --strip-components=1
     ac_cv_func_memmove_working=yes \
     ac_cv_func_memset_working=yes
 
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Git..."
 make -j"$(nproc)"
+
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Git..."
 sudo make install
 
 cd "$CHARD_ROOT"
