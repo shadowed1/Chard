@@ -40,6 +40,15 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
+export PATH="$CHARD_ROOT/usr/musl/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/musl/lib:$CHARD_ROOT/usr/musl/lib64:$CHARD_ROOT/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export CC="$CHARD_ROOT/usr/musl/bin/musl-gcc"
+export CXX="$CHARD_ROOT/usr/musl/bin/musl-g++"
+export AR="$CHARD_ROOT/usr/musl/bin/ar"
+export LD="$CHARD_ROOT/usr/musl/bin/ld"
+export RANLIB="$CHARD_ROOT/usr/musl/bin/ranlib"
+export STRIP="$CHARD_ROOT/usr/musl/bin/strip"
+
 CHARD_PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin"
 CHARD_LD="$CHARD_ROOT/usr/lib:$CHARD_ROOT/usr/lib64:$CHARD_ROOT/lib"
 source "$CHARD_ROOT/.chardrc"
@@ -141,7 +150,7 @@ sudo tar -xzf "$GIT_TAR" --strip-components=1
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with system Python..."
 CHROME_PYTHON=$(command -v python3 || true)
-musl ./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
+./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
     am_cv_func_iconv=yes \
     am_cv_lib_iconv=yes \
     git_cv_iconv_omits_bom=yes \
@@ -153,8 +162,8 @@ musl ./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHROME_PYTHON" \
     ac_cv_func_memmove_working=yes \
     ac_cv_func_memset_working=yes
 
-musl make -j"$(nproc)"
-musl sudo make install
+make -j"$(nproc)"
+sudo make install
 
 cd "$CHARD_ROOT"
 rm -rf "$BUILD_DIR"
