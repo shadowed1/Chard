@@ -161,60 +161,67 @@ export STRIP="$MUSL_DIR/bin/strip"
 export CFLAGS="-O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 
+MUSL_DIR="$CHARD_ROOT/usr/musl"
+
 PY_VERSION="3.13.7"
 PY_TAR="Python-$PY_VERSION.tgz"
 PY_URL="https://www.python.org/ftp/python/$PY_VERSION/$PY_TAR"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build-python"
+
 sudo mkdir -p "$BUILD_DIR"
 sudo chown "$USER":"$USER" "$BUILD_DIR"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Python $PY_VERSION..."
-curl -L -o "$BUILD_DIR/$PY_TAR" "$PY_URL"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting Python..."
-sudo tar -xzf "$BUILD_DIR/$PY_TAR" -C "$BUILD_DIR" --strip-components=1
 cd "$BUILD_DIR"
 
-set -a
-source "$CHARD_ROOT/.chard.env"
-set +a
+echo "[+] Downloading Python $PY_VERSION..."
+curl -L -o "$PY_TAR" "$PY_URL"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Python with musl-native GCC..."
-CC="$CC" CXX="$CXX" AR="$AR" LD="$LD" RANLIB="$RANLIB" STRIP="$STRIP" \
-CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" \
+echo "[+] Extracting Python..."
+sudo tar --no-same-owner --no-same-permissions -xzf "$PY_TAR" --strip-components=1
+
+if [ -f "$CHARD_ROOT/.chard.env" ]; then
+    source "$CHARD_ROOT/.chard.env"
+else
+    echo "ERROR: chard env not found at $CHARD_ROOT/.chard.env"
+    exit 1
+fi
+
+which pkg-config || true
+$CHARD_ROOT/usr/bin/pkg-config --version || true
+ldd $CHARD_ROOT/usr/bin/pkg-config 2>/dev/null || true
+echo "PATH=$PATH"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+$CHARD_ROOT/usr/musl/bin/musl-gcc --version || true
+$CHARD_ROOT/usr/bin/pkg-config --modversion libffi || true
+
+echo "[+] Configuring Python with musl-native GCC..."
 ./configure \
     --prefix="$CHARD_ROOT/usr" \
     --enable-optimizations \
     --with-lto \
     --enable-shared
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Python..."
+echo "[+] Building Python..."
 make -j"$(nproc)"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Python..."
+echo "[+] Installing Python..."
 sudo make install
 
 CHARD_PYTHON="$CHARD_ROOT/usr/bin/python3"
-cd "$CHARD_ROOT"
-rm -rf "$BUILD_DIR"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Python $PY_VERSION installed in $CHARD_PYTHON"
+echo "[+] Python installed at $CHARD_PYTHON"
 
 BUILD_DIR="$CHARD_ROOT/var/tmp/build-git"
 sudo mkdir -p "$BUILD_DIR"
 sudo chown "$USER":"$USER" "$BUILD_DIR"
 cd "$BUILD_DIR"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Git $GIT_VERSION..."
-curl -L -o "$BUILD_DIR/$GIT_TAR" "$GIT_URL"
+GIT_VERSION="2.51.0"
+GIT_TAR="git-$GIT_VERSION.tar.gz"
+GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting Git..."
-tar -xzf "$BUILD_DIR/$GIT_TAR" -C "$BUILD_DIR" --strip-components=1
-cd "$BUILD_DIR"
+curl -L -o "$GIT_TAR" "$GIT_URL"
+tar --no-same-owner --no-same-permissions -xzf "$GIT_TAR" --strip-components=1
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Git with Chard Python..."
-CC="$CC" CXX="$CXX" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
+./configure --prefix="$CHARD_ROOT/usr" PYTHON="$CHARD_PYTHON" \
     am_cv_func_iconv=yes \
     am_cv_lib_iconv=yes \
     git_cv_iconv_omits_bom=yes \
@@ -224,13 +231,9 @@ CC="$CC" CXX="$CXX" ./configure \
     ac_cv_func_memcmp_working=yes \
     ac_cv_func_memcpy_working=yes \
     ac_cv_func_memmove_working=yes \
-    ac_cv_func_memset_working=yes \
-    PYTHON="$CHARD_PYTHON"
+    ac_cv_func_memset_working=yes
 
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Git..."
 make -j"$(nproc)"
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Installing Git..."
 sudo make install
 
 cd "$CHARD_ROOT"
