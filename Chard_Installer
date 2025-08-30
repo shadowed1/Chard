@@ -192,7 +192,6 @@ env PATH="$CHARD_PATH:$PATH" \
         --prefix="$CHARD_ROOT/usr" \
         --enable-optimizations \
         --with-lto \
-        --with-system-ffi \
         --enable-shared
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Building Python..."
