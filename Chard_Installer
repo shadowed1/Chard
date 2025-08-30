@@ -25,6 +25,12 @@ echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading chard config
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
+
+
+ if grep -q "<<< CHARD ENV MARKER <<<" /home/chronos/user/.bashrc; then
+     sed -i '/<<< CHARD ENV MARKER <<<$/,/<<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
+ fi
+
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
     cat >> "$HOME/.bashrc" <<EOF
 
