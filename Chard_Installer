@@ -40,7 +40,8 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
-source "$CHARD_ROOT/.chardrc"
+source /home/chronos/user/.bashrc
+
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)   GENTOO_ARCH="amd64" ;;
