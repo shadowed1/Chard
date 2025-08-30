@@ -151,7 +151,7 @@ sudo tar -xzf "$TOOLCHAIN_TAR" -C "$MUSL_DIR" --strip-components=1
 sudo rm -f "$TOOLCHAIN_TAR"
 
 export PATH="$CHARD_ROOT/usr/musl/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/musl/lib:$CHARD_ROOT/usr/musl/lib64:$CHARD_ROOT/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/musl/lib:$CHARD_ROOT/usr/musl/lib64"
 export CC="$CHARD_ROOT/usr/musl/bin/musl-gcc"
 export CXX="$CHARD_ROOT/usr/musl/bin/musl-g++"
 export AR="$CHARD_ROOT/usr/musl/bin/ar"
