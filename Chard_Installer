@@ -173,7 +173,7 @@ echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading Python $PY_V
 curl -L -o "$BUILD_DIR/$PY_TAR" "$PY_URL"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Extracting Python..."
-tar -xzf "$BUILD_DIR/$PY_TAR" -C "$BUILD_DIR" --strip-components=1
+sudo tar -xzf "$BUILD_DIR/$PY_TAR" -C "$BUILD_DIR" --strip-components=1
 cd "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Configuring Python with musl-native GCC..."
