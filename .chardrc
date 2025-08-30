@@ -22,10 +22,10 @@ case ":$LD_LIBRARY_PATH:" in
     *) export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib" ;;
 esac
 
-[ ! -f "$CHARD_ROOT/chard.env" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
-[ ! -f "$CHARD_ROOT/chard.logic" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+[ ! -f "$CHARD_ROOT/.chard.env" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
+[ ! -f "$CHARD_ROOT/.chard.logic" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 
-if [ -f "$CHARD_ROOT/chard.env" ]; then
+if [ -f "$CHARD_ROOT/.chard.env" ]; then
     while IFS= read -r line; do
         [[ -z "$line" || "$line" =~ ^# ]] && continue
         if [[ "$line" =~ ^export[[:space:]]+PATH= ]]; then
@@ -43,10 +43,10 @@ if [ -f "$CHARD_ROOT/chard.env" ]; then
         else
             eval "$line"
         fi
-    done < "$CHARD_ROOT/chard.env"
+    done < "$CHARD_ROOT/.chard.env"
 fi
 
-[ -f "$CHARD_ROOT/chard.logic" ] && source "$CHARD_ROOT/chard.logic"
+[ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
 # <<< END CHARD_ENV <<<
 
