@@ -21,6 +21,28 @@ sudo chown -R root:chard "$CHARD_ROOT"
 sudo chmod -R 2775 "$CHARD_ROOT"
 sudo usermod -aG chard "$USER"
 
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading chard configuration files..."
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
+
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
+    cat >> "$HOME/.bashrc" <<EOF
+
+# <<< CHARD ENV MARKER <<<
+source "$CHARD_RC"
+# <<< END CHARD ENV MARKER <<<
+EOF
+    echo "${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard sourced to ~/.bashrc${RESET}"
+else
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
+fi
+
+
+
+
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)   GENTOO_ARCH="amd64" ;;
@@ -96,46 +118,6 @@ if [ -n "$PROFILE_CANDIDATE" ]; then
     echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
-fi
-
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Downloading chard configuration files..."
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
-
-export CHARD_ROOT="/usr/local/chard"
-export ROOT="$CHARD_ROOT"
-export CHARD_RC="$CHARD_ROOT/.chardrc"
-
-export PORTAGE_TMPDIR="$ROOT/var/tmp"
-export DISTDIR="$ROOT/var/cache/distfiles"
-export PKGDIR="$ROOT/var/cache/packages"
-export PORTDIR="$ROOT/usr/portage"
-
-export PATH
-export LD_LIBRARY_PATH
-
-export CC="$CHARD_ROOT/usr/musl/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/musl/bin/musl-g++"
-export AR="$CHARD_ROOT/usr/musl/bin/ar"
-export LD="$CHARD_ROOT/usr/musl/bin/ld"
-export RANLIB="$CHARD_ROOT/usr/musl/bin/ranlib"
-export STRIP="$CHARD_ROOT/usr/musl/bin/strip"
-
-export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
-
-if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
-    cat >> "$HOME/.bashrc" <<EOF
-
-# <<< CHARD ENV MARKER <<<
-source "$CHARD_RC"
-# <<< END CHARD ENV MARKER <<<
-EOF
-    echo "${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard sourced to ~/.bashrc${RESET}"
-else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
