@@ -42,7 +42,7 @@ fi
 
 CHARD_PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin"
 CHARD_LD="$CHARD_ROOT/usr/lib:$CHARD_ROOT/usr/lib64:$CHARD_ROOT/lib"
-
+source "$CHARD_ROOT/.chardrc"
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)   GENTOO_ARCH="amd64" ;;
@@ -163,5 +163,4 @@ cd "$CHARD_ROOT"
 rm -rf "$BUILD_DIR"
 
 echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
-echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard Root Complete."
-echo "${RESET}${GREEN}Open a new shell for chard logic to load${RESET}"
+echo "${RESET}${GREEN}[${RESET}${RED}+${RESET}${GREEN}] Chard Root Complete. Ready to run commands."
