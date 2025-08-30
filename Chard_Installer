@@ -40,8 +40,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
-CHARD_PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin"
-CHARD_LD="$CHARD_ROOT/usr/lib:$CHARD_ROOT/usr/lib64:$CHARD_ROOT/lib"
 source "$CHARD_ROOT/.chardrc"
 ARCH=$(uname -m)
 case "$ARCH" in
