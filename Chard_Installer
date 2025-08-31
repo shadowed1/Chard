@@ -166,7 +166,7 @@ sudo curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
 sudo tar -xf "$DIFFUTILS_TAR"
 
 cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
-./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
 sudo "$CHARD_ROOT/usr/bin/make" install
 
