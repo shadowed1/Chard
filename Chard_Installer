@@ -173,6 +173,30 @@ export PATH="$CHARD_ROOT/usr/bin:$PATH"
 
 echo "[+] diffutils installed and ready for Git build"
 
+echo "[+] Bootstrapping readline (required for Git)..."
+
+READLINE_VERSION="8.3"
+READLINE_TAR="readline-$READLINE_VERSION.tar.gz"
+READLINE_URL="https://ftp.gnu.org/gnu/readline/$READLINE_TAR"
+
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+
+sudo curl -L -o "$READLINE_TAR" "$READLINE_URL"
+sudo tar -xzf "$READLINE_TAR"
+cd "readline-$READLINE_VERSION"
+sudo rm -f "$READLINE_TAR"
+
+sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
+sudo "$CHARD_ROOT/usr/bin/make" install
+
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+sudo ldconfig || true
+
+echo "[+] Readline $READLINE_VERSION installed into $CHARD_ROOT/usr"
+
 CHROME_PYTHON=/usr/bin/python3
 echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
 
