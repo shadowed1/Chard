@@ -120,6 +120,8 @@ fi
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
+source /home/chronos/user/.chardrc
+
 echo "[+] Bootstrapping musl toolchain..."
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 sudo mkdir -p "$TOOLCHAIN_DIR"
@@ -167,7 +169,7 @@ sudo curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
 sudo tar -xf "$DIFFUTILS_TAR"
 cd "diffutils-$DIFFUTILS_VERSION"
 
-sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
+sudo MAKE="$CHARD_ROOT/usr/bin/make" ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
 sudo "$CHARD_ROOT/usr/bin/make" install
 
