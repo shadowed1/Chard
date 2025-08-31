@@ -70,7 +70,6 @@ EOF"
 
 echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
-# --- Portage snapshot ---
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
@@ -121,7 +120,6 @@ fi
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
-# --- Musl toolchain ---
 echo "[+] Bootstrapping musl toolchain..."
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 sudo mkdir -p "$TOOLCHAIN_DIR"
@@ -149,6 +147,7 @@ sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-gcc     /us
 sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /usr/local/bin/chard/usr/toolchain/bin/musl-g++
 sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/bin/chard/usr/toolchain/bin/cc
 sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
+sudo ln -sf "$CHARD_ROOT/usr/bin/make" /usr/local/bin/chard/usr/bin/make
 
 sudo mkdir -p /usr/local/bin/chard/var/tmp
 echo 'int main(){return 0;}' | sudo tee "$CHARD_ROOT/var/tmp/test.c"
