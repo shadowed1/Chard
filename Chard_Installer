@@ -151,9 +151,9 @@ sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /us
 sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 
 sudo mkdir -p /usr/local/bin/chard/var/tmp
-echo 'int main(){return 0;}' | sudo tee /usr/local/bin/chard/var/tmp/test.c
-sudo /usr/local/bin/chard/usr/bin/gcc -o /usr/local/bin/chard/var/tmp/test /usr/local/bin/chard/var/tmp/test.c
-sudo /usr/local/bin/chard/var/tmp/test && echo "Musl gcc works!"
+echo 'int main(){return 0;}' | sudo tee "$CHARD_ROOT/var/tmp/test.c"
+sudo $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
+sudo "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
 
 CHROME_PYTHON=/usr/bin/python3
 echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
@@ -172,7 +172,7 @@ sudo curl -L -o "$GIT_TAR" "$GIT_URL"
 sudo tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
-sudo ./configure CC="$CHARD_ROOT/usr/bin/gcc" CXX="$CHARD_ROOT/usr/bin/g++" --prefix="$CHARD_ROOT/usr"
+sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
 sudo make -j"$(nproc)"
 sudo make install
 
