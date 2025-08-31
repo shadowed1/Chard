@@ -120,8 +120,6 @@ fi
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
-exec sudo -u chronos bash --rcfile /home/chronos/user/.bashrc
-
 echo "[+] Bootstrapping musl toolchain..."
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 sudo mkdir -p "$TOOLCHAIN_DIR"
@@ -203,3 +201,5 @@ cd "$CHARD_ROOT"
 sudo rm -rf "$BUILD_DIR"
 echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 echo "[+] Chard root setup complete."
+exec sudo -u chronos bash --rcfile /home/chronos/user/.bashrc
+
