@@ -162,16 +162,14 @@ DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-
 sudo curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
 sudo tar -xf "$DIFFUTILS_TAR"
-cd "diffutils-$DIFFUTILS_VERSION"
 
-sudo MAKE="$CHARD_ROOT/usr/bin/make" ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
+./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
 sudo "$CHARD_ROOT/usr/bin/make" install
 
-cd "$CHARD_ROOT"
 sudo rm -rf "$BUILD_DIR"
 
 echo "[+] diffutils $DIFFUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
