@@ -148,7 +148,7 @@ sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /us
 sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/bin/chard/usr/toolchain/bin/cc
 sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 
-sudo mkdir -p /usr/local/bin/chard/var/tmp
+sudo mkdir -p "$CHARD_ROOT/var/tmp"
 echo 'int main(){return 0;}' | sudo tee "$CHARD_ROOT/var/tmp/test.c"
 sudo $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
 sudo "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
@@ -164,7 +164,14 @@ sudo curl -L -o diffutils.tar.xz "$DIFFUTILS_URL"
 sudo tar -xJf diffutils.tar.xz -C "$CHARD_ROOT/usr" --strip-components=1
 sudo rm -f diffutils.tar.xz
 
-echo "[+] diffutils installed into $CHARD_ROOT/usr/bin"
+cd "$CHARD_ROOT/usr/bin"
+[ -f cmp ] || sudo ln -sf uutils-cmp cmp
+[ -f diff ] || sudo ln -sf uutils-diff diff
+sudo chmod +x cmp diff
+
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+
+echo "[+] diffutils installed and ready for Git build"
 
 CHROME_PYTHON=/usr/bin/python3
 echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
@@ -173,12 +180,11 @@ GIT_VERSION="2.51.0"
 GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 sudo chown root:chard "$BUILD_DIR"
 sudo chmod 2775 "$BUILD_DIR"
-
 cd "$BUILD_DIR"
+
 sudo curl -L -o "$GIT_TAR" "$GIT_URL"
 sudo tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
@@ -194,3 +200,4 @@ echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 echo "[+] Chard root setup complete."
 
 exec sudo -u chronos bash --rcfile /home/chronos/user/.bashrc
+
