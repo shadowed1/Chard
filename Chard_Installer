@@ -15,7 +15,6 @@ CHARD_RC="$CHARD_ROOT/.chardrc"
 MUSL_GCC="$CHARD_ROOT/usr/bin/gcc -static"
 MUSL_GXX="$CHARD_ROOT/usr/bin/g++ -static"
 
-
 echo "[+] Creating Chard group and directories..."
 
 sudo groupadd -f chard
