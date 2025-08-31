@@ -12,23 +12,26 @@ set -e
 
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-MUSL_GCC="$CHARD_ROOT/usr/bin/gcc"
-MUSL_GXX="$CHARD_ROOT/usr/bin/g++"
+MUSL_GCC="$CHARD_ROOT/usr/bin/gcc -static"
+MUSL_GXX="$CHARD_ROOT/usr/bin/g++ -static"
+
 
 echo "[+] Creating Chard group and directories..."
+
 sudo groupadd -f chard
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp,bin}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo chown -R root:chard "$CHARD_ROOT"
 sudo chmod -R 2775 "$CHARD_ROOT"
 sudo usermod -aG chard "$USER"
 
 echo "[+] Downloading chard configuration files..."
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
+
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
 
@@ -64,6 +67,8 @@ PORTAGE_TMPDIR='\${ROOT}/var/tmp'
 DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF"
+
+echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -130,163 +135,46 @@ sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
 sudo tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
 sudo rm -f "$TOOLCHAIN_TAR"
 
-for bin in gcc g++ ar ld ranlib strip cc c++; do
-    sudo ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
+for bin in gcc g++ ar ld ranlib strip; do
+    if [ -f "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" ]; then
+        sudo ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
+    fi
 done
 
-TEST_C="$CHARD_ROOT/var/tmp/test.c"
-TEST_BIN="$CHARD_ROOT/var/tmp/test"
-echo 'int main(){return 0;}' | sudo tee "$TEST_C" >/dev/null
-sudo "$CHARD_ROOT/usr/bin/gcc" -static -o "$TEST_BIN" "$TEST_C"
+echo "[+] Musl toolchain installed and symlinked into $CHARD_ROOT/usr/bin"
 
-if sudo "$TEST_BIN"; then
-    echo "[+] Musl gcc works (static test)"
-else
-    echo "[!] Musl gcc test failed"
-    exit 1
-fi
+sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-gcc     /usr/local/bin/chard/usr/toolchain/bin/musl-gcc
+sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /usr/local/bin/chard/usr/toolchain/bin/musl-g++
+sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/bin/chard/usr/toolchain/bin/cc
+sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export CC="$CHARD_ROOT/usr/bin/gcc"
-export CXX="$CHARD_ROOT/usr/bin/g++"
-export CPPFLAGS="-I$TOOLCHAIN_DIR/include"
-export LDFLAGS="-L$TOOLCHAIN_DIR/lib"
+sudo mkdir -p /usr/local/bin/chard/var/tmp
+echo 'int main(){return 0;}' | sudo tee "$CHARD_ROOT/var/tmp/test.c"
+sudo $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
+sudo "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
 
-echo "[+] Using musl-gcc at $CC for building GNU packages"
+echo "[+] Bootstrapping diffutils (provides cmp, diff)..."
 
-BUILD_DIR="$CHARD_ROOT/var/tmp/build-gnu"
-sudo mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-BINUTILS_VERSION="2.44"
-BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
-BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
-
-echo "[+] Downloading Binutils $BINUTILS_VERSION..."
-sudo curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
-sudo tar -xJf "$BINUTILS_TAR"
-
-cd "binutils-$BINUTILS_VERSION" || exit 1
-sudo rm -f "../$BINUTILS_TAR"
-
-sudo mkdir -p build
-sudo chown chronos:chronos build   # allow your user to build here
-cd build
-
-sudo chroot "$CHARD_ROOT" /bin/bash
-cd /var/tmp/build-gnu/binutils-2.44/build
-../configure --prefix=/usr
-make
-make install
-
-echo "[+] Binutils $BINUTILS_VERSION installed"
-cd "$BUILD_DIR"
-
-cd "$BUILD_DIR"
-GCC_VERSION="15.2.0"
-GCC_TAR="gcc-$GCC_VERSION.tar.xz"
-GCC_URL="https://ftp.gnu.org/gnu/gcc/gcc-$GCC_VERSION/$GCC_TAR"
-
-echo "[+] Downloading GCC $GCC_VERSION..."
-sudo curl -L -o "$GCC_TAR" "$GCC_URL"
-sudo tar -xJf "$GCC_TAR"
-cd "gcc-$GCC_VERSION"
-sudo rm -f "$GCC_TAR"
-sudo ./contrib/download_prerequisites
-
-sudo mkdir -p build
-cd build
-sudo ../configure --prefix="$CHARD_ROOT/usr" --disable-multilib --enable-languages=c,c++ --with-system-zlib
-sudo make -j"$(nproc)"
-sudo make install
-cd "$BUILD_DIR"
-
-MAKE_VERSION="4.4"
-MAKE_TAR="make-$MAKE_VERSION.tar.gz"
-MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
-
-echo "[+] Downloading GNU Make $MAKE_VERSION..."
-sudo curl -L -o "$MAKE_TAR" "$MAKE_URL"
-sudo tar -xzf "$MAKE_TAR"
-cd "make-$MAKE_VERSION"
-sudo rm -f "$MAKE_TAR"
-
-sudo ./configure CC="$CHARD_ROOT/usr/bin/gcc" --prefix="$CHARD_ROOT/usr"
-sudo "$CHARD_ROOT/usr/bin/gcc" make -j"$(nproc)" || true
-sudo ./build/make -j"$(nproc)"
-sudo make install
-cd "$BUILD_DIR"
-
-AUTOCONF_URL="https://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.xz"
-AUTOCONF_TAR=$(basename "$AUTOCONF_URL")
-
-echo "[+] Downloading Autoconf..."
-sudo curl -L -o "$AUTOCONF_TAR" "$AUTOCONF_URL"
-sudo tar -xJf "$AUTOCONF_TAR"
-cd autoconf-*/
-sudo rm -f "$AUTOCONF_TAR"
-
-sudo ./configure --prefix="$CHARD_ROOT/usr"
-sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo make install
-cd "$BUILD_DIR"
-
-AUTOMAKE_VERSION="1.18"
-AUTOMAKE_TAR="automake-$AUTOMAKE_VERSION.tar.xz"
-AUTOMAKE_URL="https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR"
-
-echo "[+] Downloading Automake $AUTOMAKE_VERSION..."
-sudo curl -L -o "$AUTOMAKE_TAR" "$AUTOMAKE_URL"
-sudo tar -xJf "$AUTOMAKE_TAR"
-cd "automake-$AUTOMAKE_VERSION"
-sudo rm -f "$AUTOMAKE_TAR"
-
-sudo ./configure --prefix="$CHARD_ROOT/usr"
-sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo make install
-cd "$BUILD_DIR"
-
-echo "[+] GNU dependencies installed"
-
-DIFFUTILS_URL="https://github.com/uutils/diffutils/releases/download/v0.4.2/diffutils-x86_64-unknown-linux-gnu.tar.xz"
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-sudo curl -L -o diffutils.tar.xz "$DIFFUTILS_URL"
-sudo tar -xJf diffutils.tar.xz -C "$CHARD_ROOT/usr" --strip-components=1
-sudo rm -f diffutils.tar.xz
-
-cd "$CHARD_ROOT/usr/bin"
-[ -f cmp ] || sudo ln -sf uutils-cmp cmp
-[ -f diff ] || sudo ln -sf uutils-diff diff
-sudo chmod +x cmp diff
-
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-
-echo "[+] diffutils installed and ready for Git build"
-
-READLINE_VERSION="8.3"
-READLINE_TAR="readline-$READLINE_VERSION.tar.gz"
-READLINE_URL="https://ftp.gnu.org/gnu/readline/$READLINE_TAR"
+DIFFUTILS_VERSION="3.12"
+DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
+DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
 
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
-sudo curl -L -o "$READLINE_TAR" "$READLINE_URL"
-sudo tar -xzf "$READLINE_TAR"
-cd "readline-$READLINE_VERSION"
-sudo rm -f "$READLINE_TAR"
+sudo curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
+sudo tar -xf "$DIFFUTILS_TAR"
+cd "diffutils-$DIFFUTILS_VERSION"
 
-sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+sudo MAKE="$CHARD_ROOT/usr/bin/make" ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
 sudo "$CHARD_ROOT/usr/bin/make" install
 
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-sudo ldconfig || true
+cd "$CHARD_ROOT"
+sudo rm -rf "$BUILD_DIR"
 
-echo "[+] Readline $READLINE_VERSION installed into $CHARD_ROOT/usr"
+echo "[+] diffutils $DIFFUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
 
 CHROME_PYTHON=/usr/bin/python3
 echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
@@ -295,23 +183,22 @@ GIT_VERSION="2.51.0"
 GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 sudo chown root:chard "$BUILD_DIR"
 sudo chmod 2775 "$BUILD_DIR"
-cd "$BUILD_DIR"
 
+cd "$BUILD_DIR"
 sudo curl -L -o "$GIT_TAR" "$GIT_URL"
 sudo tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
 sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
-sudo PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/make" install
+sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
+sudo "$CHARD_ROOT/usr/bin/make" install
 
 cd "$CHARD_ROOT"
 sudo rm -rf "$BUILD_DIR"
-
 echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 echo "[+] Chard root setup complete."
-
 exec sudo -u chronos bash --rcfile /home/chronos/user/.bashrc
