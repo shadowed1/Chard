@@ -155,26 +155,16 @@ sudo "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
 
 echo "[+] Bootstrapping diffutils (provides cmp, diff)..."
 
-DIFFUTILS_VERSION="3.12"
-DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
-DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
-
+DIFFUTILS_URL="https://github.com/uutils/diffutils/releases/download/v0.4.2/diffutils-x86_64-unknown-linux-gnu.tar.xz"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
-sudo curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
-sudo tar -xf "$DIFFUTILS_TAR"
-cd "diffutils-$DIFFUTILS_VERSION"
+sudo curl -L -o diffutils.tar.xz "$DIFFUTILS_URL"
+sudo tar -xJf diffutils.tar.xz -C "$CHARD_ROOT/usr" --strip-components=1
+sudo rm -f diffutils.tar.xz
 
-sudo MAKE="$CHARD_ROOT/usr/bin/make" ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo "$CHARD_ROOT/usr/bin/make" install
-
-cd "$CHARD_ROOT"
-sudo rm -rf "$BUILD_DIR"
-
-echo "[+] diffutils $DIFFUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
+echo "[+] diffutils installed into $CHARD_ROOT/usr/bin"
 
 CHROME_PYTHON=/usr/bin/python3
 echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
@@ -199,7 +189,8 @@ sudo "$CHARD_ROOT/usr/bin/make" install
 
 cd "$CHARD_ROOT"
 sudo rm -rf "$BUILD_DIR"
+
 echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 echo "[+] Chard root setup complete."
-exec sudo -u chronos bash --rcfile /home/chronos/user/.bashrc
 
+exec sudo -u chronos bash --rcfile /home/chronos/user/.bashrc
