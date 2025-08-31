@@ -28,7 +28,6 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.en
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-# Update ~/.bashrc
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -52,7 +51,6 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
-# Write make.conf
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 echo "[+] Writing $MAKE_CONF..."
 sudo bash -c "cat > '$MAKE_CONF' <<EOF
@@ -79,7 +77,6 @@ sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
-# Stage3 download
 case "$GENTOO_ARCH" in
     amd64) AUTOBUILD_DIR="current-stage3-amd64-systemd" ;;
     x86)   AUTOBUILD_DIR="current-stage3-x86-systemd" ;;
@@ -115,11 +112,9 @@ else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
 
-# Chard binary
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
-# --- Musl toolchain bootstrap ---
 echo "[+] Bootstrapping musl toolchain..."
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 sudo mkdir -p "$TOOLCHAIN_DIR"
@@ -135,12 +130,10 @@ sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
 sudo tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
 sudo rm -f "$TOOLCHAIN_TAR"
 
-# Symlinks
 for bin in gcc g++ ar ld ranlib strip cc c++; do
     sudo ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
 done
 
-# Test static compile
 TEST_C="$CHARD_ROOT/var/tmp/test.c"
 TEST_BIN="$CHARD_ROOT/var/tmp/test"
 echo 'int main(){return 0;}' | sudo tee "$TEST_C" >/dev/null
@@ -153,7 +146,6 @@ else
     exit 1
 fi
 
-# Export toolchain environment
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export CC="$CHARD_ROOT/usr/bin/gcc"
 export CXX="$CHARD_ROOT/usr/bin/g++"
@@ -162,7 +154,6 @@ export LDFLAGS="-L$TOOLCHAIN_DIR/lib"
 
 echo "[+] Using musl-gcc at $CC for building GNU packages"
 
-# --- Binutils fixed version ---
 BUILD_DIR="$CHARD_ROOT/var/tmp/build-gnu"
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
@@ -220,7 +211,6 @@ sudo ./build/make -j"$(nproc)"
 sudo make install
 cd "$BUILD_DIR"
 
-# --- Autoconf ---
 AUTOCONF_URL="https://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.xz"
 AUTOCONF_TAR=$(basename "$AUTOCONF_URL")
 
@@ -235,7 +225,6 @@ sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
 sudo make install
 cd "$BUILD_DIR"
 
-# --- Automake ---
 AUTOMAKE_VERSION="1.18"
 AUTOMAKE_TAR="automake-$AUTOMAKE_VERSION.tar.xz"
 AUTOMAKE_URL="https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR"
