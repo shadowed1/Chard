@@ -190,8 +190,8 @@ sudo tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
 sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
-sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo "$CHARD_ROOT/usr/bin/make" install
+sudo PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
+sudo PATH="$CHARD_ROOT/usr/bin:$PATH" "$CHARD_ROOT/usr/bin/make" install
 
 cd "$CHARD_ROOT"
 sudo rm -rf "$BUILD_DIR"
