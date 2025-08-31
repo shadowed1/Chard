@@ -44,8 +44,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
-exec bash --rcfile /home/chronos/user/.bashrc
-
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)   GENTOO_ARCH="amd64" ;;
