@@ -1,10 +1,10 @@
 # <<< CHARD_LOGIC <<<
-export CHARD_ROOT="/usr/local/chard"
+export CHARD_ROOT="/usr/local/bin/chard"
 
 chard_emerge() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "CHARD_ROOT is not set. Run:"
-        echo "source /usr/local/chard/.chardrc"
+        echo "source /usr/local/bin/chard/.chardrc"
         return 1
     fi
 
