@@ -120,8 +120,6 @@ fi
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
-source /usr/local/bin/chard/.chardrc
-
 echo "[+] Bootstrapping musl toolchain..."
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 sudo mkdir -p "$TOOLCHAIN_DIR"
