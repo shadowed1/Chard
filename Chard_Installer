@@ -152,6 +152,37 @@ echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
 sudo -E $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
 sudo -E "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
 
+GAWK_VERSION="5.3.2"
+GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
+GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
+
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo -E mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+
+echo "[+] Downloading gawk $GAWK_VERSION..."
+sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
+
+echo "[+] Extracting gawk $GAWK_VERSION..."
+sudo -E tar -xf "$GAWK_TAR"
+
+echo "[+] gawk extracted to $BUILD_DIR/gawk-$GAWK_VERSION"
+
+cd "$BUILD_DIR/gawk-$GAWK_VERSION"
+
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+CC="$CHARD_ROOT/usr/bin/gcc"
+CXX="$CHARD_ROOT/usr/bin/g++"
+CFLAGS="-O2 -pipe -static"
+CXXFLAGS="-O2 -pipe -static"
+LDFLAGS="-static"
+
+sudo -E env PATH="$PATH" CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
+    ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+sudo -E make -j"$(nproc)"
+sudo -E make install
+
 echo "[+] Bootstrapping diffutils (provides cmp, diff)..."
 
 DIFFUTILS_VERSION="3.12"
@@ -163,19 +194,22 @@ sudo -E mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 sudo -E curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
 sudo -E tar -xf "$DIFFUTILS_TAR"
-(
-  export PATH="$CHARD_ROOT/usr/bin:$PATH"
-  export CC="$MUSL_GCC"
-  export CXX="$MUSL_GXX"
-cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
-export SED="$CHARD_ROOT/usr/bin/gsed"
-sudo -E ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-sudo -E "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo -E "$CHARD_ROOT/usr/bin/make" install
-)
-sudo -E rm -rf "$BUILD_DIR"
 
+cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
+    CC="$MUSL_GCC" CXX="$MUSL_GXX" SED="$CHARD_ROOT/usr/bin/gsed" \
+    ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make install
+
+
+sudo -E rm -rf "$BUILD_DIR"
 echo "[+] diffutils $DIFFUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
+
 
 CHROME_PYTHON=/usr/bin/python3
 echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
@@ -193,17 +227,3 @@ cd "$BUILD_DIR"
 sudo -E curl -L -o "$GIT_TAR" "$GIT_URL"
 sudo -E tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
-(
-  export PATH="$CHARD_ROOT/usr/bin:$PATH"
-  export CC="$MUSL_GCC"
-  export CXX="$MUSL_GXX"
-sudo -E ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
-sudo -E "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo -E "$CHARD_ROOT/usr/bin/make" install
-)
-
-cd "$CHARD_ROOT"
-sudo -E rm -rf "$BUILD_DIR"
-echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
-echo "[+] Chard root setup complete."
-exec sudo -E -u chronos bash --rcfile /home/chronos/user/.bashrc
