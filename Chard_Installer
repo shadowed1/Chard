@@ -196,6 +196,26 @@ sudo -E make install
 
 echo "[+] binutils $BINUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
 
+MPFR_VERSION="4.2.2"
+MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
+MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
+sudo -E tar -xf "$MPFR_TAR"
+cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
+
+sudo -E env \
+    PATH="$CHARD_ROOT/usr/bin:$PATH" \
+    CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
+    CFLAGS="$CFLAGS -I$CHARD_ROOT/usr/include" \
+    CXXFLAGS="$CXXFLAGS -I$CHARD_ROOT/usr/include" \
+    LDFLAGS="$LDFLAGS -L$CHARD_ROOT/usr/lib" \
+    ./configure --prefix="$CHARD_ROOT/usr" --with-gmp="$CHARD_ROOT/usr" --enable-static --disable-shared
+
+sudo -E make -j"$(nproc)"
+sudo -E make install
+
 GMP_VERSION="6.3.0"
 GMP_TAR="gmp-$GMP_VERSION.tar.xz"
 GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
@@ -228,26 +248,6 @@ sudo -E env \
     CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
     CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
     ./configure --prefix="$CHARD_ROOT/usr" --enable-static --disable-shared
-
-sudo -E make -j"$(nproc)"
-sudo -E make install
-
-MPFR_VERSION="4.2.2"
-MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
-MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
-sudo -E tar -xf "$MPFR_TAR"
-cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
-
-sudo -E env \
-    PATH="$CHARD_ROOT/usr/bin:$PATH" \
-    CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
-    CFLAGS="$CFLAGS -I$CHARD_ROOT/usr/include" \
-    CXXFLAGS="$CXXFLAGS -I$CHARD_ROOT/usr/include" \
-    LDFLAGS="$LDFLAGS -L$CHARD_ROOT/usr/lib" \
-    ./configure --prefix="$CHARD_ROOT/usr" --with-gmp="$CHARD_ROOT/usr" --enable-static --disable-shared
 
 sudo -E make -j"$(nproc)"
 sudo -E make install
