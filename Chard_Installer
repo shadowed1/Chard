@@ -159,6 +159,9 @@ export CXXFLAGS="-O2 -pipe -static"
 export LDFLAGS="-static"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+export CFLAGS="-I$CHARD_ROOT/usr/include"
+export CXXFLAGS="$CFLAGS"
 
 sudo -E mkdir -p /usr/local/bin/chard/var/tmp
 echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
@@ -191,7 +194,7 @@ sudo -E make install
 
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 
-sudo ln -sf /usr/local/bin/chard/usr/lib/libmpfr.so.6 /usr/local/bin/chard/lib/libmpfr.so.6
+# sudo ln -sf /usr/local/bin/chard/usr/lib/libmpfr.so.6 /usr/local/bin/chard/lib/libmpfr.so.6
 
 echo "[+] Bootstrapping GNU Make"
 
@@ -303,23 +306,21 @@ export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 export MAKE="$CHARD_ROOT/usr/bin/make"
 
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure --prefix="$CHARD_ROOT/usr" \
-        --enable-static --disable-shared
+cd "$BUILD_DIR/gmp-$GMP_VERSION"
+./configure --prefix="$CHARD_ROOT/usr" --enable-static --disable-shared
+make -j$(nproc)
+make install
+cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E make install
+    ./configure \
+        --prefix="$CHARD_ROOT/usr" \
+        --with-gmp="$CHARD_ROOT/usr" \
+        --enable-static \
+        --disable-shared
 
-GAWK_VERSION="5.3.2"
-GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
-GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
-sudo -E tar -xf "$GAWK_TAR"
-cd "$BUILD_DIR/gawk-$GAWK_VERSION"
-
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j$(nproc)
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 export MAKE="$CHARD_ROOT/usr/bin/make"
@@ -338,6 +339,44 @@ sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
 sudo -E make install
+
+GAWK_VERSION="5.3.2"
+GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
+GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
+
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo -E mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
+sudo -E tar -xf "$GAWK_TAR"
+
+cd "$BUILD_DIR/gawk-$GAWK_VERSION"
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
+
+# force static linking against GMP/MPFR
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+export MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+export MPFR_LIBS="-L$CHARD_ROOT/usr/lib -lmpfr -lgmp -lm"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    CC="$MUSL_GCC" CXX="$MUSL_GXX" \
+    ./configure \
+        --prefix="$CHARD_ROOT/usr" \
+        --disable-shared \
+        --enable-static \
+        --without-readline \
+        --disable-dependency-tracking \
+        MPFR_CFLAGS="$MPFR_CFLAGS" \
+        MPFR_LIBS="$MPFR_LIBS"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make install
+
 
 echo "[+] Bootstrapping diffutils (provides cmp, diff)..."
 
