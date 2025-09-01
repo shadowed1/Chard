@@ -1,19 +1,11 @@
 # <<< CHARD_LOGIC <<<
-export CHARD_ROOT="/usr/local/bin/chard"
+
+if [ -z "$CHARD_ROOT" ]; then
+    echo "CHARD_ROOT is not set. Run: source ~/.chardrc"
+    return 1
+fi
 
 chard_emerge() {
-    if [ -z "$CHARD_ROOT" ]; then
-        echo "CHARD_ROOT is not set. Run:"
-        echo "source /usr/local/bin/chard/.chardrc"
-        return 1
-    fi
-
-    [[ ":$PATH:" != *":$CHARD_ROOT/usr/bin:"* ]] && PATH="$PATH:$CHARD_ROOT/usr/bin"
-    [[ ":$PATH:" != *":$CHARD_ROOT/bin:"* ]] && PATH="$PATH:$CHARD_ROOT/bin"
-
-    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/usr/lib:"* ]] && LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib"
-    [[ ":$LD_LIBRARY_PATH:" != *":$CHARD_ROOT/lib:"* ]] && LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib"
-
     sudo env \
         ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
@@ -25,47 +17,4 @@ chard_emerge() {
         "$CHARD_ROOT/usr/bin/emerge" "$@"
 }
 
-
-case ":$PATH:" in
-    *":$CHARD_ROOT/usr/bin:"*) ;;
-    *) export PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
-esac
-
-case ":$PATH:" in
-    *":$CHARD_ROOT/bin:"*) ;;
-    *) export PATH="$PATH:$CHARD_ROOT/bin" ;;
-esac
-
-case ":$LD_LIBRARY_PATH:" in
-    *":$CHARD_ROOT/usr/lib:"*) ;;
-    *) export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib" ;;
-esac
-
-case ":$LD_LIBRARY_PATH:" in
-    *":$CHARD_ROOT/lib:"*) ;;
-    *) export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib" ;;
-esac
-
-[ ! -f "$CHARD_ROOT/chard.env" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
-[ ! -f "$CHARD_ROOT/chard.logic" ] && curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-
-if [ -f "$CHARD_ROOT/chard.env" ]; then
-    while IFS= read -r line; do
-        [[ -z "$line" || "$line" =~ ^# ]] && continue
-        if [[ "$line" =~ ^export[[:space:]]+PATH= ]]; then
-            NEW_PATH=$(echo "$line" | cut -d= -f2- | tr -d '"')
-            case ":$PATH:" in
-                *":$NEW_PATH:"*) : ;;
-                *) export PATH="$PATH:$NEW_PATH" ;;
-            esac
-        elif [[ "$line" =~ ^export[[:space:]]+LD_LIBRARY_PATH= ]]; then
-            NEW_LD=$(echo "$line" | cut -d= -f2- | tr -d '"')
-            case ":$LD_LIBRARY_PATH:" in
-                *":$NEW_LD:"*) : ;;
-                *) export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$NEW_LD" ;;
-            esac
-        else
-            eval "$line"
-        fi
-    done < "$CHARD_ROOT/chard.env"
-fi
+# <<< END CHARD_LOGIC <<<
