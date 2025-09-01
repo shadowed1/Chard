@@ -17,17 +17,17 @@ MUSL_GXX="$CHARD_ROOT/usr/bin/g++ -static"
 
 echo "[+] Creating Chard group and directories..."
 
-sudo groupadd -f chard
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
-sudo chown -R root:chard "$CHARD_ROOT"
-sudo chmod -R 2775 "$CHARD_ROOT"
-sudo usermod -aG chard "$USER"
+sudo -E groupadd -f chard
+sudo -E mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+sudo -E chown -R root:chard "$CHARD_ROOT"
+sudo -E chmod -R 2775 "$CHARD_ROOT"
+sudo -E usermod -aG chard "$USER"
 
 echo "[+] Downloading chard configuration files..."
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+sudo -E mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
 
@@ -55,7 +55,7 @@ esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 echo "[+] Writing $MAKE_CONF..."
-sudo bash -c "cat > '$MAKE_CONF' <<EOF
+sudo -E bash -c "cat > '$MAKE_CONF' <<EOF
 CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
 ARCH='${GENTOO_ARCH}'
 ACCEPT_KEYWORDS='~${GENTOO_ARCH}'
@@ -74,12 +74,12 @@ SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 
 echo "[+] Downloading Portage tree snapshot..."
-sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
+sudo -E curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
 
 echo "[+] Extracting snapshot into $PORTAGE_DIR..."
-sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
-sudo rm -f "$TMP_TAR"
+sudo -E mkdir -p "$PORTAGE_DIR"
+sudo -E tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+sudo -E rm -f "$TMP_TAR"
 
 case "$GENTOO_ARCH" in
     amd64) AUTOBUILD_DIR="current-stage3-amd64-systemd" ;;
@@ -100,28 +100,28 @@ fi
 
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 echo "[+] Downloading stage3 tarball..."
-sudo curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
+sudo -E curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
 
 echo "[+] Extracting stage3 into $CHARD_ROOT..."
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
-sudo rm -f "$TMP_STAGE3"
+sudo -E tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
+sudo -E rm -f "$TMP_STAGE3"
 
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
-    sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/make.profile"
+    sudo -E ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
     echo "[+] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
 
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo -E chmod +x "$CHARD_ROOT/bin/chard"
 
 echo "[+] Bootstrapping musl toolchain..."
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
-sudo mkdir -p "$TOOLCHAIN_DIR"
+sudo -E mkdir -p "$TOOLCHAIN_DIR"
 
 case "$ARCH" in
     x86_64) MUSL_ARCH="x86_64"; TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz" ;;
@@ -130,27 +130,27 @@ case "$ARCH" in
 esac
 
 TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
-sudo curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
-sudo tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
-sudo rm -f "$TOOLCHAIN_TAR"
+sudo -E curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
+sudo -E tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
+sudo -E rm -f "$TOOLCHAIN_TAR"
 
 for bin in gcc g++ ar ld ranlib strip; do
     if [ -f "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" ]; then
-        sudo ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
+        sudo -E ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
     fi
 done
 
 echo "[+] Musl toolchain installed and symlinked into $CHARD_ROOT/usr/bin"
 
-sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-gcc     /usr/local/bin/chard/usr/toolchain/bin/musl-gcc
-sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /usr/local/bin/chard/usr/toolchain/bin/musl-g++
-sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/bin/chard/usr/toolchain/bin/cc
-sudo ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
+sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-gcc     /usr/local/bin/chard/usr/toolchain/bin/musl-gcc
+sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /usr/local/bin/chard/usr/toolchain/bin/musl-g++
+sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/bin/chard/usr/toolchain/bin/cc
+sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 
-sudo mkdir -p /usr/local/bin/chard/var/tmp
-echo 'int main(){return 0;}' | sudo tee "$CHARD_ROOT/var/tmp/test.c"
-sudo $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
-sudo "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
+sudo -E mkdir -p /usr/local/bin/chard/var/tmp
+echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
+sudo -E $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
+sudo -E "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
 
 echo "[+] Bootstrapping diffutils (provides cmp, diff)..."
 
@@ -159,17 +159,21 @@ DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
 DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
 
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo mkdir -p "$BUILD_DIR"
+sudo -E mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-sudo curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
-sudo tar -xf "$DIFFUTILS_TAR"
-
+sudo -E curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
+sudo -E tar -xf "$DIFFUTILS_TAR"
+(
+  export PATH="$CHARD_ROOT/usr/bin:$PATH"
+  export CC="$MUSL_GCC"
+  export CXX="$MUSL_GXX"
 cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
-sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo "$CHARD_ROOT/usr/bin/make" install
-
-sudo rm -rf "$BUILD_DIR"
+export SED="$CHARD_ROOT/usr/bin/gsed"
+sudo -E ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+sudo -E "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
+sudo -E "$CHARD_ROOT/usr/bin/make" install
+)
+sudo -E rm -rf "$BUILD_DIR"
 
 echo "[+] diffutils $DIFFUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
 
@@ -181,21 +185,25 @@ GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo mkdir -p "$BUILD_DIR"
-sudo chown root:chard "$BUILD_DIR"
-sudo chmod 2775 "$BUILD_DIR"
+sudo -E mkdir -p "$BUILD_DIR"
+sudo -E chown root:chard "$BUILD_DIR"
+sudo -E chmod 2775 "$BUILD_DIR"
 
 cd "$BUILD_DIR"
-sudo curl -L -o "$GIT_TAR" "$GIT_URL"
-sudo tar -xzf "$GIT_TAR"
+sudo -E curl -L -o "$GIT_TAR" "$GIT_URL"
+sudo -E tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
-
-sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
-sudo "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
-sudo "$CHARD_ROOT/usr/bin/make" install
+(
+  export PATH="$CHARD_ROOT/usr/bin:$PATH"
+  export CC="$MUSL_GCC"
+  export CXX="$MUSL_GXX"
+sudo -E ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
+sudo -E "$CHARD_ROOT/usr/bin/make" -j"$(nproc)"
+sudo -E "$CHARD_ROOT/usr/bin/make" install
+)
 
 cd "$CHARD_ROOT"
-sudo rm -rf "$BUILD_DIR"
+sudo -E rm -rf "$BUILD_DIR"
 echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
 echo "[+] Chard root setup complete."
-exec sudo -u chronos bash --rcfile /home/chronos/user/.bashrc
+exec sudo -E -u chronos bash --rcfile /home/chronos/user/.bashrc
