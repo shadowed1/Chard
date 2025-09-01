@@ -194,7 +194,46 @@ sudo -E env \
 sudo -E make -j"$(nproc)"
 sudo -E make install
 
-echo "[+] binutils $BINUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
+BINUTILS_VERSION="2.45"
+BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
+BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
+
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo -E mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+
+echo "[+] Downloading binutils $BINUTILS_VERSION..."
+sudo -E curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
+sudo -E tar -xf "$BINUTILS_TAR"
+cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    ./configure --prefix="$CHARD_ROOT/usr" \
+        --disable-nls \
+        --disable-werror \
+        --enable-static \
+        --disable-shared
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
+sudo -E make install
+
+GMP_VERSION="6.3.0"
+GMP_TAR="gmp-$GMP_VERSION.tar.xz"
+GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
+sudo -E tar -xf "$GMP_TAR"
+cd "$BUILD_DIR/gmp-$GMP_VERSION"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    ./configure --prefix="$CHARD_ROOT/usr" \
+        --enable-static --disable-shared
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
+sudo -E make install
 
 MPFR_VERSION="4.2.2"
 MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
@@ -205,91 +244,32 @@ sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
 sudo -E tar -xf "$MPFR_TAR"
 cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
 
-sudo -E env \
-    PATH="$CHARD_ROOT/usr/bin:$PATH" \
-    CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
-    CFLAGS="$CFLAGS -I$CHARD_ROOT/usr/include" \
-    CXXFLAGS="$CXXFLAGS -I$CHARD_ROOT/usr/include" \
-    LDFLAGS="$LDFLAGS -L$CHARD_ROOT/usr/lib" \
-    ./configure --prefix="$CHARD_ROOT/usr" --with-gmp="$CHARD_ROOT/usr" --enable-static --disable-shared
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    ./configure --prefix="$CHARD_ROOT/usr" \
+        --with-gmp="$CHARD_ROOT/usr" \
+        --enable-static --disable-shared
 
-sudo -E make -j"$(nproc)"
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
 sudo -E make install
-
-GMP_VERSION="6.3.0"
-GMP_TAR="gmp-$GMP_VERSION.tar.xz"
-GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
-
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-echo "[+] Downloading GMP $GMP_VERSION..."
-sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
-
-echo "[+] Extracting GMP $GMP_VERSION..."
-sudo -E tar -xf "$GMP_TAR"
-
-cd "$BUILD_DIR/gmp-$GMP_VERSION"
-
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-
-CC="$CHARD_ROOT/usr/bin/gcc"
-CXX="$CHARD_ROOT/usr/bin/g++"
-AR="$CHARD_ROOT/usr/bin/ar"
-RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-CFLAGS="-O2 -pipe -static"
-CXXFLAGS="-O2 -pipe -static"
-LDFLAGS="-static"
-
-sudo -E env \
-    PATH="$PATH" \
-    CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
-    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
-    ./configure --prefix="$CHARD_ROOT/usr" --enable-static --disable-shared
-
-sudo -E make -j"$(nproc)"
-sudo -E make install
-
-echo "[+] GMP $GMP_VERSION and MPFR $MPFR_VERSION installed statically into $CHARD_ROOT/usr"
 
 GAWK_VERSION="5.3.2"
 GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
 GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
 
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-
-echo "[+] Downloading gawk $GAWK_VERSION..."
 sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
-
-echo "[+] Extracting gawk $GAWK_VERSION..."
 sudo -E tar -xf "$GAWK_TAR"
-
-echo "[+] gawk extracted to $BUILD_DIR/gawk-$GAWK_VERSION"
-
 cd "$BUILD_DIR/gawk-$GAWK_VERSION"
 
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    ./configure --prefix="$CHARD_ROOT/usr" \
+        --with-gmp="$CHARD_ROOT/usr" \
+        --with-mpfr="$CHARD_ROOT/usr" \
+        --disable-dependency-tracking
 
-CC="$CHARD_ROOT/usr/bin/gcc"
-CXX="$CHARD_ROOT/usr/bin/g++"
-AR="$CHARD_ROOT/usr/bin/ar"
-RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-CFLAGS="-O2 -pipe -static"
-CXXFLAGS="-O2 -pipe -static"
-LDFLAGS="-static"
-
-sudo -E env \
-    PATH="$PATH" \
-    CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
-    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
-    ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-
-sudo -E make -j"$(nproc)"
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
 sudo -E make install
 
 echo "[+] Bootstrapping diffutils (provides cmp, diff)..."
