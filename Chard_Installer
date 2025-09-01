@@ -148,14 +148,39 @@ sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      
 sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ar     $CHARD_ROOT/usr/bin/ar
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
-sudo ln -sf /usr/local/bin/chard/usr/lib/libmpfr.so.6 /usr/local/bin/chard/lib/libmpfr.so.6
+sudo ldconfig
+
 
 sudo -E mkdir -p /usr/local/bin/chard/var/tmp
 echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
 sudo -E $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
 sudo -E "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
 
-echo "[+] Bootstrapping GNU Make (provides make)..."
+MPFR_VERSION="4.2.2"
+MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
+MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
+sudo -E tar -xf "$MPFR_TAR"
+cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    ./configure \
+        --prefix="$CHARD_ROOT/usr" \
+        --with-gmp="$CHARD_ROOT/usr" \
+        --enable-shared \
+        --disable-static
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
+sudo -E make install
+
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+
+sudo ln -sf /usr/local/bin/chard/usr/lib/libmpfr.so.6 /usr/local/bin/chard/lib/libmpfr.so.6
+
+echo "[+] Bootstrapping GNU Make"
 
 MAKE_VERSION="4.4"
 MAKE_TAR="make-$MAKE_VERSION.tar.gz"
@@ -241,7 +266,6 @@ export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 export MAKE="$CHARD_ROOT/usr/bin/make"
 
-
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
         --disable-nls \
@@ -269,28 +293,6 @@ export MAKE="$CHARD_ROOT/usr/bin/make"
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
         --enable-static --disable-shared
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E make install
-
-MPFR_VERSION="4.2.2"
-MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
-MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
-sudo -E tar -xf "$MPFR_TAR"
-cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure --prefix="$CHARD_ROOT/usr" \
-        --with-gmp="$CHARD_ROOT/usr" \
-        --enable-static --disable-shared
-
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
