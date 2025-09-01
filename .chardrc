@@ -24,7 +24,6 @@ esac
 
 export PATH LD_LIBRARY_PATH
 
-# Optional: only source these if they exist
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
