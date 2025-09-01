@@ -148,150 +148,27 @@ sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      
 sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ar     $CHARD_ROOT/usr/bin/ar
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
+#sudo ln -sf "$CHARD_ROOT/usr/lib64/libmpfr.so.6.2.2" "$CHARD_ROOT/usr/lib64/libmpfr.so.6"
+#sudo ln -sf "$CHARD_ROOT/usr/lib64/libmpfr.so.6.2.2" "$CHARD_ROOT/usr/lib64/libmpfr.so"
+
 sudo ldconfig
 
 export CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc"
 export CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++"
 export AR="$CHARD_ROOT/usr/bin/ar"
 export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-export CFLAGS="-O2 -pipe -static"
-export CXXFLAGS="-O2 -pipe -static"
-export LDFLAGS="-static"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
-export CFLAGS="-I$CHARD_ROOT/usr/include"
+
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static"
 export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
 
-sudo -E mkdir -p /usr/local/bin/chard/var/tmp
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo -E mkdir -p "$BUILD_DIR"
+
 echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
-sudo -E $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
-sudo -E "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
-
-MPFR_VERSION="4.2.2"
-MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
-MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
-sudo -E tar -xf "$MPFR_TAR"
-cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure \
-        --prefix="$CHARD_ROOT/usr" \
-        --with-gmp="$CHARD_ROOT/usr" \
-        --enable-static \
-        --disable-shared
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E make install
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E make install
-
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-
-# sudo ln -sf /usr/local/bin/chard/usr/lib/libmpfr.so.6 /usr/local/bin/chard/lib/libmpfr.so.6
-
-echo "[+] Bootstrapping GNU Make"
-
-MAKE_VERSION="4.4"
-MAKE_TAR="make-$MAKE_VERSION.tar.gz"
-MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
-
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$MAKE_TAR" "$MAKE_URL"
-sudo -E tar -xf "$MAKE_TAR"
-
-cd "$BUILD_DIR/make-$MAKE_VERSION"
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
-    CC="$MUSL_GCC" CXX="$MUSL_GXX" \
-    ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
-    make -j"$(nproc)"
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
-    make install
-
-sudo -E rm -rf "$BUILD_DIR"
-echo "[+] make $MAKE_VERSION installed into $CHARD_ROOT/usr/bin"
-
-BINUTILS_VERSION="2.45"
-BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
-BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
-
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-echo "[+] Downloading binutils $BINUTILS_VERSION..."
-sudo -E curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
-
-echo "[+] Extracting binutils $BINUTILS_VERSION..."
-sudo -E tar -xf "$BINUTILS_TAR"
-
-cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
-
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
-
-CC="$CHARD_ROOT/usr/bin/gcc"
-CXX="$CHARD_ROOT/usr/bin/g++"
-AR="$CHARD_ROOT/usr/bin/ar"
-RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-CFLAGS="-O2 -pipe -static"
-CXXFLAGS="-O2 -pipe -static"
-LDFLAGS="-static"
-
-sudo -E env \
-    PATH="$PATH" \
-    CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
-    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
-    ./configure --prefix="$CHARD_ROOT/usr" \
-        --disable-nls \
-        --disable-werror \
-        --enable-static \
-        --disable-shared
-
-sudo -E make -j"$(nproc)"
-sudo -E make install
-
-BINUTILS_VERSION="2.45"
-BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
-BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
-
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-echo "[+] Downloading binutils $BINUTILS_VERSION..."
-sudo -E curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
-sudo -E tar -xf "$BINUTILS_TAR"
-cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
-
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure --prefix="$CHARD_ROOT/usr" \
-        --disable-nls \
-        --disable-werror \
-        --enable-static \
-        --disable-shared
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E make install
+sudo -E $CC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
+sudo -E "$CHARD_ROOT/var/tmp/test" && echo "[+] Musl gcc works!"
 
 GMP_VERSION="6.3.0"
 GMP_TAR="gmp-$GMP_VERSION.tar.xz"
@@ -300,129 +177,114 @@ GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
 cd "$BUILD_DIR"
 sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
 sudo -E tar -xf "$GMP_TAR"
-cd "$BUILD_DIR/gmp-$GMP_VERSION"
+cd "gmp-$GMP_VERSION"
 
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --enable-static \
+    --disable-shared
 
-cd "$BUILD_DIR/gmp-$GMP_VERSION"
-./configure --prefix="$CHARD_ROOT/usr" --enable-static --disable-shared
-make -j$(nproc)
-make install
-cd "$BUILD_DIR/mpfr-$MPFR_VERSION"
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure \
-        --prefix="$CHARD_ROOT/usr" \
-        --with-gmp="$CHARD_ROOT/usr" \
-        --enable-static \
-        --disable-shared
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j$(nproc)
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure \
-        --prefix="$CHARD_ROOT/usr" \
-        --disable-dependency-tracking \
-        --without-readline \
-        MPFR_CFLAGS="-I$CHARD_ROOT/usr/include" \
-        MPFR_LIBS="-L$CHARD_ROOT/usr/lib -lmpfr -lgmp" \
-        --with-mpfr \
-        --disable-shared \
-        --enable-static
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
+sudo -E make -j"$(nproc)"
 sudo -E make install
+echo "[+] GMP $GMP_VERSION installed"
+
+MPFR_VERSION="4.2.2"
+MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
+MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
+sudo -E tar -xf "$MPFR_TAR"
+cd "mpfr-$MPFR_VERSION"
+
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --with-gmp="$CHARD_ROOT/usr" \
+    --enable-static \
+    --disable-shared
+
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] MPFR $MPFR_VERSION installed"
 
 GAWK_VERSION="5.3.2"
 GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
 GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
 
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
 sudo -E tar -xf "$GAWK_TAR"
+cd "gawk-$GAWK_VERSION"
 
-cd "$BUILD_DIR/gawk-$GAWK_VERSION"
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+MPFR_LIBS="-L$CHARD_ROOT/usr/lib -L$CHARD_ROOT/usr/lib64 -lmpfr -lgmp -lm -static"
 
-export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static"
-export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
-export MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
-export MPFR_LIBS="-L$CHARD_ROOT/usr/lib -lmpfr -lgmp -lm"
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-shared \
+    --enable-static \
+    --without-readline \
+    --disable-dependency-tracking \
+    MPFR_CFLAGS="$MPFR_CFLAGS" \
+    MPFR_LIBS="$MPFR_LIBS"
 
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    CC="$MUSL_GCC" CXX="$MUSL_GXX" \
-    ./configure \
-        --prefix="$CHARD_ROOT/usr" \
-        --disable-shared \
-        --enable-static \
-        --without-readline \
-        --disable-dependency-tracking \
-        MPFR_CFLAGS="$MPFR_CFLAGS" \
-        MPFR_LIBS="$MPFR_LIBS"
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] Gawk $GAWK_VERSION installed"
 
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make install
+MAKE_VERSION="4.4"
+MAKE_TAR="make-$MAKE_VERSION.tar.gz"
+MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
 
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$MAKE_TAR" "$MAKE_URL"
+sudo -E tar -xf "$MAKE_TAR"
+cd "make-$MAKE_VERSION"
 
-echo "[+] Bootstrapping diffutils (provides cmp, diff)..."
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-dependency-tracking
+
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] Make $MAKE_VERSION installed"
+
+BINUTILS_VERSION="2.45"
+BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
+BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
+sudo -E tar -xf "$BINUTILS_TAR"
+cd "binutils-$BINUTILS_VERSION"
+
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-nls \
+    --disable-werror \
+    --enable-static \
+    --disable-shared
+
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] Binutils $BINUTILS_VERSION installed"
 
 DIFFUTILS_VERSION="3.12"
 DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
 DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
 
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 sudo -E curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
 sudo -E tar -xf "$DIFFUTILS_TAR"
+cd "diffutils-$DIFFUTILS_VERSION"
 
-cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-dependency-tracking
 
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
-    CC="$MUSL_GCC" CXX="$MUSL_GXX" SED="$CHARD_ROOT/usr/bin/gsed" \
-    ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make install
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] Diffutils $DIFFUTILS_VERSION installed"
 
 sudo -E rm -rf "$BUILD_DIR"
-echo "[+] diffutils $DIFFUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
-
-CHROME_PYTHON=/usr/bin/python3
-echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
-
-GIT_VERSION="2.51.0"
-GIT_TAR="git-$GIT_VERSION.tar.gz"
-GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
-
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
-sudo -E chown root:chard "$BUILD_DIR"
-sudo -E chmod 2775 "$BUILD_DIR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$GIT_TAR" "$GIT_URL"
-sudo -E tar -xzf "$GIT_TAR"
-cd "git-$GIT_VERSION"
-
-export MAKE="$CHARD_ROOT/usr/bin/make"
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+echo "[+] All packages built and installed into $CHARD_ROOT/usr/bin"
