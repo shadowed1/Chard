@@ -355,7 +355,6 @@ export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 export MAKE="$CHARD_ROOT/usr/bin/make"
 
-# force static linking against GMP/MPFR
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
 export MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
