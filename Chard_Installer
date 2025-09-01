@@ -210,6 +210,47 @@ sudo -E env \
 sudo -E make -j"$(nproc)"
 sudo -E make install
 
+BINUTILS_VERSION="2.45"
+BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
+BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
+
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo -E mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+
+echo "[+] Downloading binutils $BINUTILS_VERSION..."
+sudo -E curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
+
+echo "[+] Extracting binutils $BINUTILS_VERSION..."
+sudo -E tar -xf "$BINUTILS_TAR"
+
+cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
+
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+
+CC="$CHARD_ROOT/usr/bin/gcc"
+CXX="$CHARD_ROOT/usr/bin/g++"
+AR="$CHARD_ROOT/usr/bin/ar"
+RANLIB="$CHARD_ROOT/usr/bin/ranlib"
+CFLAGS="-O2 -pipe -static"
+CXXFLAGS="-O2 -pipe -static"
+LDFLAGS="-static"
+
+sudo -E env \
+    PATH="$PATH" \
+    CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
+    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
+    ./configure --prefix="$CHARD_ROOT/usr" \
+        --disable-nls \
+        --disable-werror \
+        --enable-static \
+        --disable-shared
+
+sudo -E make -j"$(nproc)"
+sudo -E make install
+
+echo "[+] binutils $BINUTILS_VERSION installed into $CHARD_ROOT/usr/bin"
 echo "[+] GMP $GMP_VERSION and MPFR $MPFR_VERSION installed statically into $CHARD_ROOT/usr"
 
 GAWK_VERSION="5.3.2"
