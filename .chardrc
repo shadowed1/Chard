@@ -2,7 +2,6 @@
 
 export CHARD_ROOT="/usr/local/bin/chard"
 
-# Add Chard bin paths to PATH
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
     *) PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
@@ -13,7 +12,6 @@ case ":$PATH:" in
     *) PATH="$PATH:$CHARD_ROOT/bin" ;;
 esac
 
-# Add Chard libs to LD_LIBRARY_PATH
 case ":${LD_LIBRARY_PATH:-}:" in
     *":$CHARD_ROOT/usr/lib:"*) ;;
     *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib" ;;
