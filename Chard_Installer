@@ -148,6 +148,7 @@ sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      
 sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ar     $CHARD_ROOT/usr/bin/ar
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
+sudo ln -sf libmpfr.so.X.Y.Z /usr/local/bin/chard/lib/libmpfr.so.6
 
 sudo -E mkdir -p /usr/local/bin/chard/var/tmp
 echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
@@ -206,6 +207,8 @@ echo "[+] Downloading binutils $BINUTILS_VERSION..."
 sudo -E curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
 sudo -E tar -xf "$BINUTILS_TAR"
 cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
@@ -226,6 +229,9 @@ cd "$BUILD_DIR"
 sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
 sudo -E tar -xf "$GMP_TAR"
 cd "$BUILD_DIR/gmp-$GMP_VERSION"
+
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
@@ -249,6 +255,9 @@ sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
         --with-gmp="$CHARD_ROOT/usr" \
         --enable-static --disable-shared
 
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
 sudo -E make install
@@ -261,6 +270,9 @@ cd "$BUILD_DIR"
 sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
 sudo -E tar -xf "$GAWK_TAR"
 cd "$BUILD_DIR/gawk-$GAWK_VERSION"
+
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
@@ -285,6 +297,8 @@ sudo -E curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
 sudo -E tar -xf "$DIFFUTILS_TAR"
 
 cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
     CC="$MUSL_GCC" CXX="$MUSL_GXX" SED="$CHARD_ROOT/usr/bin/gsed" \
@@ -314,3 +328,6 @@ cd "$BUILD_DIR"
 sudo -E curl -L -o "$GIT_TAR" "$GIT_URL"
 sudo -E tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
+
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
