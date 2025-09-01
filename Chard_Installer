@@ -148,12 +148,40 @@ sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      
 sudo -E ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ar     $CHARD_ROOT/usr/bin/ar
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
-sudo ln -sf libmpfr.so.X.Y.Z /usr/local/bin/chard/lib/libmpfr.so.6
+sudo ln -sf /usr/local/bin/chard/usr/lib/libmpfr.so.6 /usr/local/bin/chard/lib/libmpfr.so.6
 
 sudo -E mkdir -p /usr/local/bin/chard/var/tmp
 echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
 sudo -E $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
 sudo -E "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
+
+echo "[+] Bootstrapping GNU Make (provides make)..."
+
+MAKE_VERSION="4.4"
+MAKE_TAR="make-$MAKE_VERSION.tar.gz"
+MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
+
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+sudo -E mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$MAKE_TAR" "$MAKE_URL"
+sudo -E tar -xf "$MAKE_TAR"
+
+cd "$BUILD_DIR/make-$MAKE_VERSION"
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
+    CC="$MUSL_GCC" CXX="$MUSL_GXX" \
+    ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
+    make -j"$(nproc)"
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
+    make install
+
+sudo -E rm -rf "$BUILD_DIR"
+echo "[+] make $MAKE_VERSION installed into $CHARD_ROOT/usr/bin"
 
 BINUTILS_VERSION="2.45"
 BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
@@ -173,6 +201,7 @@ cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
 
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
 
 CC="$CHARD_ROOT/usr/bin/gcc"
 CXX="$CHARD_ROOT/usr/bin/g++"
@@ -207,8 +236,11 @@ echo "[+] Downloading binutils $BINUTILS_VERSION..."
 sudo -E curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
 sudo -E tar -xf "$BINUTILS_TAR"
 cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
+
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
+
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
@@ -232,6 +264,7 @@ cd "$BUILD_DIR/gmp-$GMP_VERSION"
 
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
@@ -257,6 +290,7 @@ sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
 
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
@@ -273,12 +307,16 @@ cd "$BUILD_DIR/gawk-$GAWK_VERSION"
 
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure --prefix="$CHARD_ROOT/usr" \
-        --with-gmp="$CHARD_ROOT/usr" \
-        --with-mpfr="$CHARD_ROOT/usr" \
-        --disable-dependency-tracking
+    ./configure \
+        --prefix="$CHARD_ROOT/usr" \
+        --disable-dependency-tracking \
+        --without-readline \
+        MPFR_CFLAGS="-I$CHARD_ROOT/usr/include" \
+        MPFR_LIBS="-L$CHARD_ROOT/usr/lib -lmpfr -lgmp" \
+        --with-mpfr
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
@@ -299,6 +337,7 @@ sudo -E tar -xf "$DIFFUTILS_TAR"
 cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
     CC="$MUSL_GCC" CXX="$MUSL_GXX" SED="$CHARD_ROOT/usr/bin/gsed" \
@@ -329,5 +368,6 @@ sudo -E curl -L -o "$GIT_TAR" "$GIT_URL"
 sudo -E tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
+export MAKE="$CHARD_ROOT/usr/bin/make"
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
