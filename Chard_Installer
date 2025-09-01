@@ -150,37 +150,20 @@ sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ar     $CHARD_ROOT/usr/bin/ar
 sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
 sudo ldconfig
 
+export CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc"
+export CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++"
+export AR="$CHARD_ROOT/usr/bin/ar"
+export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
+export CFLAGS="-O2 -pipe -static"
+export CXXFLAGS="-O2 -pipe -static"
+export LDFLAGS="-static"
+export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 
 sudo -E mkdir -p /usr/local/bin/chard/var/tmp
 echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
 sudo -E $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
 sudo -E "$CHARD_ROOT/var/tmp/test" && echo "Musl gcc works!"
-
-GMP_VERSION="6.3.0"
-GMP_TAR="gmp-$GMP_VERSION.tar.xz"
-GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
-sudo -E tar -xf "$GMP_TAR"
-cd "$BUILD_DIR/gmp-$GMP_VERSION"
-
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export MAKE="$CHARD_ROOT/usr/bin/make"
-export CC="$CHARD_ROOT/usr/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/bin/musl-g++"
-export CFLAGS="-O2 -static"
-export CXXFLAGS="-O2 -static"
-export LDFLAGS="-static"
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    ./configure --prefix="$CHARD_ROOT/usr" \
-        --enable-static --disable-shared
-
-sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
-    make -j"$(nproc)"
-sudo -E make install
 
 MPFR_VERSION="4.2.2"
 MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
@@ -195,8 +178,12 @@ sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure \
         --prefix="$CHARD_ROOT/usr" \
         --with-gmp="$CHARD_ROOT/usr" \
-        --enable-shared \
-        --disable-static
+        --enable-static \
+        --disable-shared
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
+sudo -E make install
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
@@ -221,12 +208,6 @@ sudo -E tar -xf "$MAKE_TAR"
 cd "$BUILD_DIR/make-$MAKE_VERSION"
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
-export CC="$CHARD_ROOT/usr/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/bin/musl-g++"
-export CFLAGS="-O2 -static"
-export CXXFLAGS="-O2 -static"
-export LDFLAGS="-static"
-
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
     CC="$MUSL_GCC" CXX="$MUSL_GXX" \
@@ -297,12 +278,6 @@ cd "$BUILD_DIR/binutils-$BINUTILS_VERSION"
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 export MAKE="$CHARD_ROOT/usr/bin/make"
-export CC="$CHARD_ROOT/usr/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/bin/musl-g++"
-export CFLAGS="-O2 -static"
-export CXXFLAGS="-O2 -static"
-export LDFLAGS="-static"
-
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure --prefix="$CHARD_ROOT/usr" \
@@ -310,6 +285,27 @@ sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
         --disable-werror \
         --enable-static \
         --disable-shared
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    make -j"$(nproc)"
+sudo -E make install
+
+GMP_VERSION="6.3.0"
+GMP_TAR="gmp-$GMP_VERSION.tar.xz"
+GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
+sudo -E tar -xf "$GMP_TAR"
+cd "$BUILD_DIR/gmp-$GMP_VERSION"
+
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
+export MAKE="$CHARD_ROOT/usr/bin/make"
+
+sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
+    ./configure --prefix="$CHARD_ROOT/usr" \
+        --enable-static --disable-shared
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
@@ -327,11 +323,6 @@ cd "$BUILD_DIR/gawk-$GAWK_VERSION"
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 export MAKE="$CHARD_ROOT/usr/bin/make"
-export CC="$CHARD_ROOT/usr/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/bin/musl-g++"
-export CFLAGS="-O2 -static"
-export CXXFLAGS="-O2 -static"
-export LDFLAGS="-static"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     ./configure \
@@ -340,7 +331,9 @@ sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
         --without-readline \
         MPFR_CFLAGS="-I$CHARD_ROOT/usr/include" \
         MPFR_LIBS="-L$CHARD_ROOT/usr/lib -lmpfr -lgmp" \
-        --with-mpfr
+        --with-mpfr \
+        --disable-shared \
+        --enable-static
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" MAKE="$CHARD_ROOT/usr/bin/make" \
     make -j"$(nproc)"
@@ -362,11 +355,6 @@ cd "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION"
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH"
 export MAKE="$CHARD_ROOT/usr/bin/make"
-export CC="$CHARD_ROOT/usr/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/bin/musl-g++"
-export CFLAGS="-O2 -static"
-export CXXFLAGS="-O2 -static"
-export LDFLAGS="-static"
 
 sudo -E env PATH="$CHARD_ROOT/usr/bin:$PATH" \
     CC="$MUSL_GCC" CXX="$MUSL_GXX" SED="$CHARD_ROOT/usr/bin/gsed" \
