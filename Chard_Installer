@@ -139,6 +139,7 @@ export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
 export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib64"
 
 ./configure --prefix=/usr --disable-dependency-tracking
 make -j\$(nproc)
