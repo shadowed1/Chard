@@ -34,9 +34,9 @@ ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
     i*86)   GENTOO_ARCH="x86";   CHOST="i686-pc-linux-gnu";;
-    aarch64)GENTOO_ARCH="arm64";  CHOST="aarch64-unknown-linux-gnu";;
-    armv7l) GENTOO_ARCH="arm";    CHOST="armv7a-unknown-linux-gnueabihf";;
-    ppc64le)GENTOO_ARCH="ppc64le";CHOST="powerpc64le-unknown-linux-gnu";;
+    aarch64)GENTOO_ARCH="arm64";  CHOST="aarch64-linux-gnu";;
+    armv7l) GENTOO_ARCH="arm";    CHOST="armv7a-linux-gnueabihf";;
+    ppc64le)GENTOO_ARCH="ppc64le";CHOST="powerpc64le-linux-gnu";;
     *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
 
