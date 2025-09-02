@@ -60,62 +60,6 @@ chard_categories() {
     done | sort
 }
 
-chard_uninstall() {
-    echo ""
-    echo "${MAGENTA}${BOLD}Chard Uninstaller${RESET}"
-    echo "${BLUE}${BOLD}Select an option:${RESET}"
-    echo "${BLUE}[0] Quit${RESET}"
-    echo "${CYAN}[1] Remove Chard binaries and environment files (keep build/cache directories)${RESET}"
-    echo "${MAGENTA}[2] Full uninstall (removes all Chard directories, environment files, and ~/.bashrc entries)${RESET}"
-    echo ""
-    read -rp "Enter choice [0-2]: " CHOICE
-
-    case "$CHOICE" in
-        0)
-            echo "${RED}Quit.${RESET}"
-            return 0
-            ;;
-        1)
-            echo "${GREEN}Removing Chard binaries and environment files (keeping build/cache)...${RESET}"
-            if [ -e "$CHARD_ROOT/bin" ]; then
-                sudo rm -rf "$CHARD_ROOT/bin"
-                echo "${CYAN}Removed $CHARD_ROOT/bin${RESET}"
-            fi
-            if [ -e "$CHARD_RC" ]; then
-                sudo rm -f "$CHARD_RC"
-                echo "${CYAN}Removed $CHARD_RC${RESET}"
-            fi
-            echo "${GREEN}Chard binaries and environment files removed. Build/cache directories retained.${RESET}"
-            ;;
-        2)
-            echo "${YELLOW}${BOLD}Full uninstall: Removing $CHARD_ROOT and ~/.bashrc Chard entries${RESET}"
-            echo "${RED}${BOLD}WARNING: This will delete all Chard directories and environment files.${RESET}"
-            read -rp "Type 'yes' to confirm: " FULL_CONFIRM
-            if [ "$FULL_CONFIRM" != "yes" ]; then
-                echo "${GREEN}Full uninstall aborted. No changes made.${RESET}"
-                return 1
-            fi
-
-            if grep -q "# <<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
-                sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$HOME/.bashrc"
-                echo "${CYAN}Removed Chard block from ~/.bashrc${RESET}"
-            fi
-
-            if [ -d "$CHARD_ROOT" ]; then
-                sudo rm -rf "$CHARD_ROOT"
-                echo "${MAGENTA}Removed $CHARD_ROOT${RESET}"
-            fi
-
-            echo "${YELLOW}${BOLD}Full Chard uninstall complete. All Chard directories and ~/.bashrc entries removed.${RESET}"
-            ;;
-        *)
-            echo "${RED}Invalid choice. Exiting.${RESET}"
-            return 1
-            ;;
-    esac
-}
-
-
 cmd="$1"; shift || true
 
 case "$cmd" in
@@ -176,14 +120,17 @@ case "$cmd" in
         chard_list
         ;;
     uninstall)
-        chard_uninstall
+        echo "[*] Uninstalling Chard..."
+        sudo rm -rf "$CHARD_ROOT"
+        sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
+        rm -f "$CHARD_RC"
+        echo "[*] Chard uninstalled."
         ;;
     categories|cat)
         chard_categories
         ;;
     root)
         sudo chroot "$CHARD_ROOT" /bin/bash -c
-        ;;
     *)
         echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
         ;;
