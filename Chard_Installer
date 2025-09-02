@@ -14,8 +14,8 @@ export NM="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
 export RANLIB="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-export CC=/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
-export CXX=/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export CC="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
+export CXX="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
 MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
@@ -47,18 +47,36 @@ fi
 
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64)   GENTOO_ARCH="amd64" ;;
-    i*86)     GENTOO_ARCH="x86" ;;
-    aarch64)  GENTOO_ARCH="arm64" ;;
-    armv7l)   GENTOO_ARCH="arm" ;;
-    ppc64le)  GENTOO_ARCH="ppc64le" ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    x86_64)
+        GENTOO_ARCH="amd64"
+        CHOST="x86_64-pc-linux-gnu"
+        ;;
+    i*86)
+        GENTOO_ARCH="x86"
+        CHOST="i686-pc-linux-gnu"
+        ;;
+    aarch64)
+        GENTOO_ARCH="arm64"
+        CHOST="aarch64-unknown-linux-gnu"
+        ;;
+    armv7l)
+        GENTOO_ARCH="arm"
+        CHOST="armv7a-unknown-linux-gnueabihf"
+        ;;
+    ppc64le)
+        GENTOO_ARCH="ppc64le"
+        CHOST="powerpc64le-unknown-linux-gnu"
+        ;;
+    *)
+        echo "Unknown architecture: $ARCH"
+        exit 1
+        ;;
 esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 echo "[+] Writing $MAKE_CONF..."
 bash -c "cat > '$MAKE_CONF' <<EOF
-CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
+CHOST='${CHOST}'
 ARCH='${GENTOO_ARCH}'
 ACCEPT_KEYWORDS='~${GENTOO_ARCH}'
 ROOT='${CHARD_ROOT}'
@@ -225,7 +243,7 @@ env PATH="$PATH" ./configure \
     MPFR_CFLAGS="$MPFR_CFLAGS" \
     MPFR_LIBS="$MPFR_LIBS" \
     CC="$CC" \
-    CXX="$CHARD_ROOT/usr/bin/g++" \
+    CXX="$CXX" \
     CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
     CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
     LDFLAGS="-L$CHARD_ROOT/usr/lib"
