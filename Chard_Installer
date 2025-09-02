@@ -14,7 +14,7 @@ MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
-sudo mkdir -p "$CHARD_ROOT"/{var/tmp,etc,usr/bin,usr/lib,var/cache}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 
 echo "[+] Downloading chard configuration files..."
@@ -90,7 +90,7 @@ export CC="$CHARD_ROOT/usr/bin/gcc"
 export CXX="$CHARD_ROOT/usr/bin/g++"
 export AR="$CHARD_ROOT/usr/bin/ar"
 export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
 export CFLAGS="-O2 -pipe -static -I$CHARD_ROOT/usr/include -fPIC"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
@@ -123,12 +123,14 @@ curl -L -o "$MAKE_TAR" "$MAKE_URL"
 tar -xf "$MAKE_TAR"
 cd "make-$MAKE_VERSION"
 
- env PATH="$PATH" ./configure \
+env PATH="$CHARD_ROOT/usr/bin:$PATH" ./configure \
     --prefix="$CHARD_ROOT/usr" \
     --disable-dependency-tracking
 
+env PATH="$PATH" ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 make -j"$(nproc)"
 make install
+
 echo "[+] Make $MAKE_VERSION installed"
 
 echo
