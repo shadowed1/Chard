@@ -13,6 +13,7 @@ BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 echo "[+] Creating Chard directories..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+
 echo "[+] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
@@ -33,7 +34,7 @@ fi
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
-    aarch64)GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
+    aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
     *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
 
@@ -72,14 +73,16 @@ sudo curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
 
-PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
-PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
-if [ -n "$PROFILE_CANDIDATE" ]; then
-    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
-    sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
-    echo "[+] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
+PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
+MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
+sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
+if [ -d "$PROFILE_DIR" ]; then
+    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
+    sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
+    echo "[+] Portage profile set to $REL_TARGET"
 else
-    echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
+    echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
+    exit 1
 fi
 
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
