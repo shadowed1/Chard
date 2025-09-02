@@ -129,6 +129,8 @@ case "$cmd" in
     categories|cat)
         chard_categories
         ;;
+    root)
+        sudo chroot "$CHARD_ROOT" /bin/bash -c
     *)
         echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
         ;;
