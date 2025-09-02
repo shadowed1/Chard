@@ -9,11 +9,13 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 set -e
-
+export AR="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
+export NM="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
+export RANLIB="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-CC="$CHARD_ROOT/usr/bin/gcc"
-CXX="$CHARD_ROOT/usr/bin/g++"
+export CC=/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
 MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
@@ -82,52 +84,49 @@ tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 rm -f "$TMP_TAR"
 
 case "$GENTOO_ARCH" in
-    amd64) AUTOBUILD_DIR="current-stage3-amd64-systemd" ;;
-    x86)   AUTOBUILD_DIR="current-stage3-x86-systemd" ;;
-    arm64) AUTOBUILD_DIR="current-stage3-arm64-systemd" ;;
-    *) echo "Unsupported architecture: $GENTOO_ARCH"; exit 1 ;;
+    amd64)
+        STAGE3_URL="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20250831T170358Z.tar.xz"
+        ;;
+    arm64)
+        STAGE3_URL="https://gentoo.osuosl.org/releases/arm64/autobuilds/current-stage3-arm64-systemd/stage3-arm64-systemd-20250831T234929Z.tar.xz"
+        ;;
+    *)
+        echo "Unsupported architecture: $GENTOO_ARCH"
+        exit 1
+        ;;
 esac
 
-BASE="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/$AUTOBUILD_DIR/"
-STAGE3_FILE=$(curl -fsSL "$BASE" | tr -d '\r' \
-    | grep -o "stage3-$GENTOO_ARCH-systemd-[0-9]\+T[0-9]\+Z\.tar\.xz" \
-    | sort | tail -n1)
-
-if [ -z "$STAGE3_FILE" ]; then
-    echo "ERROR: Could not determine stage3 tarball filename"
-    exit 1
-fi
-
+STAGE3_FILE=$(basename "$STAGE3_URL")
 mkdir -p "$BUILD_DIR"
 
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 echo "[+] Downloading stage3 tarball..."
-curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
+curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
 
 echo "[+] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
-sudo chown -R 1000:1000 /usr/local/bin/chard
+sudo chown -R 1000:1000 "$CHARD_ROOT"
 
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
-     ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
+    ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
     echo "[+] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
+
 
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 chmod +x "$CHARD_ROOT/bin/chard"
 
 export CC="$CC"
 export CXX="$CXX"
-export AR="$CHARD_ROOT/usr/bin/ar"
-export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
-
+export AR="$AR"
+export RANLIB="$RANLIB"
+export PATH=/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14:$PATH
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
@@ -148,20 +147,16 @@ curl -L -o "$MAKE_TAR" "$MAKE_URL"
 tar -xf "$MAKE_TAR"
 cd "make-$MAKE_VERSION"
 
- env PATH="$PATH" ./configure \
+MAKE_CFLAGS="-O2 -pipe"
+MAKE_LDFLAGS=""
+
+env PATH="$PATH" CFLAGS="$MAKE_CFLAGS" LDFLAGS="$MAKE_LDFLAGS" ./configure \
     --prefix="$CHARD_ROOT/usr" \
     --disable-dependency-tracking
 
-export CC="$CHARD_ROOT/usr/bin/gcc"
-export CXX="$CHARD_ROOT/usr/bin/g++"
-export AR="$CHARD_ROOT/usr/bin/ar"
-export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-
-cd "$BUILD_DIR/make-4.4"
-./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 make -j"$(nproc)"
 make install
+echo "[+] Make $MAKE_VERSION installed"
 
 echo
 echo "Installing GNU GMP"
