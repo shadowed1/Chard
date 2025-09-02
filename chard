@@ -2,6 +2,13 @@
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
+ARCH=\$(uname -m)
+case \"\$ARCH\" in
+    x86_64) CHOST=x86_64-pc-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
+    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+esac
+
 if [ -f "$CHARD_RC" ]; then
     source "$CHARD_RC"
 else
@@ -21,7 +28,7 @@ chard_emerge() {
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
         DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
-        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
+        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin"
         LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
         HOME="$HOME" \
         SHELL="$SHELL" \
