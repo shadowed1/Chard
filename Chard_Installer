@@ -14,6 +14,9 @@ CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 MUSL_GCC="$CHARD_ROOT/usr/bin/gcc -static"
 MUSL_GXX="$CHARD_ROOT/usr/bin/g++ -static"
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
 echo "[+] Creating Chard group and directories..."
 
@@ -98,6 +101,10 @@ if [ -z "$STAGE3_FILE" ]; then
     exit 1
 fi
 
+sudo mkdir -p "$BUILD_DIR"
+sudo chown root:chard "$BUILD_DIR"
+sudo chmod 2775 "$BUILD_DIR"
+
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 echo "[+] Downloading stage3 tarball..."
 sudo -E curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
@@ -153,84 +160,27 @@ sudo ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
 
 sudo ldconfig
 
-export CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc"
-export CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++"
+export CC="$MUSL_GCC"
+export CXX="$MUSL_GXX"
 export AR="$CHARD_ROOT/usr/bin/ar"
 export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
 
-export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static"
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static -fPIC"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+export AWK=/usr/bin/mawk
 
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-sudo -E mkdir -p "$BUILD_DIR"
+echo "[+] Exporting compiler paths"
 
-echo 'int main(){return 0;}' | sudo -E tee "$CHARD_ROOT/var/tmp/test.c"
-sudo -E $CC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
+sudo -E mkdir -p "$CHARD_ROOT/var/tmp"
+echo 'int main(){return 0;}' | sudo tee "$CHARD_ROOT/var/tmp/test.c" >/dev/null
+sudo -E $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
 sudo -E "$CHARD_ROOT/var/tmp/test" && echo "[+] Musl gcc works!"
 
-GMP_VERSION="6.3.0"
-GMP_TAR="gmp-$GMP_VERSION.tar.xz"
-GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
-sudo -E tar -xf "$GMP_TAR"
-cd "gmp-$GMP_VERSION"
-
-sudo -E env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --enable-static \
-    --disable-shared
-
-sudo -E make -j"$(nproc)"
-sudo -E make install
-echo "[+] GMP $GMP_VERSION installed"
-
-MPFR_VERSION="4.2.2"
-MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
-MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
-sudo -E tar -xf "$MPFR_TAR"
-cd "mpfr-$MPFR_VERSION"
-
-sudo -E env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --with-gmp="$CHARD_ROOT/usr" \
-    --enable-static \
-    --disable-shared
-
-sudo -E make -j"$(nproc)"
-sudo -E make install
-echo "[+] MPFR $MPFR_VERSION installed"
-
-GAWK_VERSION="5.3.2"
-GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
-GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
-
-cd "$BUILD_DIR"
-sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
-sudo -E tar -xf "$GAWK_TAR"
-cd "gawk-$GAWK_VERSION"
-
-MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
-MPFR_LIBS="-L$CHARD_ROOT/usr/lib -L$CHARD_ROOT/usr/lib64 -lmpfr -lgmp -lm -static"
-
-sudo -E env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-shared \
-    --enable-static \
-    --without-readline \
-    --disable-dependency-tracking \
-    MPFR_CFLAGS="$MPFR_CFLAGS" \
-    MPFR_LIBS="$MPFR_LIBS"
-
-sudo -E make -j"$(nproc)"
-sudo -E make install
-echo "[+] Gawk $GAWK_VERSION installed"
+echo
+echo "Installing GNU Make"
+echo
 
 MAKE_VERSION="4.4"
 MAKE_TAR="make-$MAKE_VERSION.tar.gz"
@@ -249,6 +199,91 @@ sudo -E make -j"$(nproc)"
 sudo -E make install
 echo "[+] Make $MAKE_VERSION installed"
 
+echo
+echo "Installing GNU GMP"
+echo
+
+GMP_VERSION="6.3.0"
+GMP_TAR="gmp-$GMP_VERSION.tar.xz"
+GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$GMP_TAR" "$GMP_URL"
+sudo -E tar -xf "$GMP_TAR"
+cd "gmp-$GMP_VERSION"
+
+sudo -E env PATH="$PATH" AWK="$AWK" CC="$MUSL_GCC" CXX="$MUSL_GXX" AR="$AR" RANLIB="$RANLIB" \
+    ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --enable-static \
+    --disable-shared \
+    --with-pic
+
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] GMP $GMP_VERSION installed"
+
+echo
+echo "Installing MPFR"
+echo
+
+MPFR_VERSION="4.2.2"
+MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
+MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$MPFR_TAR" "$MPFR_URL"
+sudo -E tar -xf "$MPFR_TAR"
+cd "mpfr-$MPFR_VERSION"
+
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --with-gmp="$CHARD_ROOT/usr" \
+    --enable-static \
+    --disable-shared \
+    --with-pic
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] MPFR $MPFR_VERSION installed"
+
+echo
+echo "Installing GAWK"
+echo
+
+GAWK_VERSION="5.3.2"
+GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
+GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
+
+cd "$BUILD_DIR"
+sudo -E curl -L -o "$GAWK_TAR" "$GAWK_URL"
+sudo -E tar -xf "$GAWK_TAR"
+cd "gawk-$GAWK_VERSION"
+
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+
+sudo -E env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-shared \
+    --enable-static \
+    --without-readline \
+    --disable-dependency-tracking \
+    MPFR_CFLAGS="$MPFR_CFLAGS" \
+    MPFR_LIBS="$MPFR_LIBS" \
+    CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc" \
+    CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++" \
+    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
+    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
+    LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+
+sudo -E make -j"$(nproc)"
+sudo -E make install
+echo "[+] Gawk $GAWK_VERSION installed (fully static)"
+
+echo
+echo "Installing BINUTILS"
+echo
+
 BINUTILS_VERSION="2.45"
 BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
 BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
@@ -263,11 +298,17 @@ sudo -E env PATH="$PATH" ./configure \
     --disable-nls \
     --disable-werror \
     --enable-static \
-    --disable-shared
+    --disable-shared \
+    MPFR_CFLAGS="$MPFR_CFLAGS" \
+    MPFR_LIBS="$MPFR_LIBS"
 
 sudo -E make -j"$(nproc)"
 sudo -E make install
 echo "[+] Binutils $BINUTILS_VERSION installed"
+
+echo
+echo "Installing Diffutils"
+echo
 
 DIFFUTILS_VERSION="3.12"
 DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
@@ -288,3 +329,31 @@ echo "[+] Diffutils $DIFFUTILS_VERSION installed"
 
 sudo -E rm -rf "$BUILD_DIR"
 echo "[+] All packages built and installed into $CHARD_ROOT/usr/bin"
+
+
+CHROME_PYTHON=/usr/bin/python3
+echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
+
+echo
+echo "Installing Git"
+echo
+
+GIT_VERSION="2.51.0"
+GIT_TAR="git-$GIT_VERSION.tar.gz"
+GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
+
+cd "$BUILD_DIR"
+sudo curl -L -o "$GIT_TAR" "$GIT_URL"
+sudo tar -xzf "$GIT_TAR"
+cd "git-$GIT_VERSION"
+
+sudo ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
+sudo make -j"$(nproc)"
+sudo make install
+
+cd "$CHARD_ROOT"
+sudo rm -rf "$BUILD_DIR"
+
+echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
+echo
+echo "[+] Chard root setup complete."
