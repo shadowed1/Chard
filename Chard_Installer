@@ -104,7 +104,7 @@ CHROOT_BUILD_DIR="$CHROOT_DIR/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 sudo mkdir -p "$CHROOT_BUILD_DIR"
 
-echo "[+] Installing GNU Make inside temporary chroot"
+echo "[+] Installing GNU Make"
 
 MAKE_VERSION="4.4"
 MAKE_TAR="make-$MAKE_VERSION.tar.gz"
@@ -137,164 +137,297 @@ export LDFLAGS='-L/usr/lib'
 make -j\$(nproc)
 make install
 "
+
 sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
 sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
 sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
 sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
 sudo rm -rf "$CHROOT_BUILD_DIR"
 
-echo "[+] GNU Make installed successfully inside chroot"
+echo "[+] GNU Make built successfully"
 
 echo
-echo "Installing GNU GMP"
-echo
+echo "[+] Installing GNU GMP"
 
 GMP_VERSION="6.3.0"
 GMP_TAR="gmp-$GMP_VERSION.tar.xz"
 GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
 
-cd "$BUILD_DIR"
-curl -L -o "$GMP_TAR" "$GMP_URL"
-tar -xf "$GMP_TAR"
-cd "gmp-$GMP_VERSION"
+sudo mkdir -p "$BUILD_DIR"
+sudo mkdir -p "$CHROOT_BUILD_DIR"
 
- env PATH="$PATH" AWK="$AWK" CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
-    ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --with-pic
+sudo curl -L -o "$BUILD_DIR/$GMP_TAR" "$GMP_URL"
+sudo tar -xf "$BUILD_DIR/$GMP_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/gmp-$GMP_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
 
-make -j"$(nproc)"
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build/gmp-$GMP_VERSION
+
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
+export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+
+./configure --prefix=/usr --with-pic
+make -j\$(nproc)
 make install
-echo "[+] GMP $GMP_VERSION installed"
+"
+
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
+
+echo "[+] GMP $GMP_VERSION built successfully"
 
 echo
-echo "Installing MPFR"
-echo
+echo "[+] Installing MPFR"
 
 MPFR_VERSION="4.2.2"
 MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
 MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
 
-cd "$BUILD_DIR"
-curl -L -o "$MPFR_TAR" "$MPFR_URL"
-tar -xf "$MPFR_TAR"
-cd "mpfr-$MPFR_VERSION"
+sudo mkdir -p "$BUILD_DIR"
+sudo mkdir -p "$CHROOT_BUILD_DIR"
 
-env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --with-gmp="$CHARD_ROOT/usr" \
-    --with-pic
-make -j"$(nproc)"
+sudo curl -L -o "$BUILD_DIR/$MPFR_TAR" "$MPFR_URL"
+sudo tar -xf "$BUILD_DIR/$MPFR_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/mpfr-$MPFR_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
+
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build/mpfr-$MPFR_VERSION
+
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
+export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+
+./configure --prefix=/usr --with-gmp=/usr --with-pic
+make -j\$(nproc)
 make install
-echo "[+] MPFR $MPFR_VERSION installed"
+"
 
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
+
+echo "[+] MPFR $MPFR_VERSION built successfully"
 echo
-echo "Installing GAWK"
-echo
-
-GAWK_VERSION="5.3.2"
-GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
-GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
-
-cd "$BUILD_DIR"
-curl -L -o "$GAWK_TAR" "$GAWK_URL"
-tar -xf "$GAWK_TAR"
-cd "gawk-$GAWK_VERSION"
-
-MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
-MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
-
-env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-shared \
-    --without-readline \
-    --disable-dependency-tracking \
-    MPFR_CFLAGS="$MPFR_CFLAGS" \
-    MPFR_LIBS="$MPFR_LIBS" \
-    CC="$CC" \
-    CXX="$CXX" \
-    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
-    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
-    LDFLAGS="-L$CHARD_ROOT/usr/lib"
-
-make -j"$(nproc)"
-make install
-echo "[+] Gawk $GAWK_VERSION installed (fully static)"
-
-echo
-echo "Installing BINUTILS"
-echo
+echo "[+] Installing Binutils"
 
 BINUTILS_VERSION="2.45"
 BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
 BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
 
-cd "$BUILD_DIR"
-curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
-tar -xf "$BINUTILS_TAR"
-cd "binutils-$BINUTILS_VERSION"
+sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
 
-env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-nls \
-    --disable-werror \
-    --enable-static \
-    --disable-shared \
-    MPFR_CFLAGS="$MPFR_CFLAGS" \
-    MPFR_LIBS="$MPFR_LIBS"
+sudo curl -L -o "$BUILD_DIR/$BINUTILS_TAR" "$BINUTILS_URL"
+sudo tar -xf "$BUILD_DIR/$BINUTILS_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/binutils-$BINUTILS_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
 
-make -j"$(nproc)"
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build/binutils-$BINUTILS_VERSION
+
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
+export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+
+./configure --prefix=/usr --disable-nls --disable-werror --enable-static --disable-shared
+make -j\$(nproc)
 make install
-echo "[+] Binutils $BINUTILS_VERSION installed"
+"
+
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
+
+echo "[+] Binutils $BINUTILS_VERSION built successfully"
 
 echo
-echo "Installing Diffutils"
-echo
+echo "[+] Installing Diffutils"
 
 DIFFUTILS_VERSION="3.12"
 DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
 DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
 
-cd "$BUILD_DIR"
-curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
-tar -xf "$DIFFUTILS_TAR"
-cd "diffutils-$DIFFUTILS_VERSION"
+sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
 
-env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-dependency-tracking
+sudo curl -L -o "$BUILD_DIR/$DIFFUTILS_TAR" "$DIFFUTILS_URL"
+sudo tar -xf "$BUILD_DIR/$DIFFUTILS_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
 
-make -j"$(nproc)"
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build/diffutils-$DIFFUTILS_VERSION
+
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
+export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+
+./configure --prefix=/usr --disable-dependency-tracking
+make -j\$(nproc)
 make install
-echo "[+] Diffutils $DIFFUTILS_VERSION installed"
+"
 
-rm -rf "$BUILD_DIR"
-echo "[+] All packages built and installed into $CHARD_ROOT/usr/bin"
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
 
-
-CHROME_PYTHON=/usr/bin/python3
-echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
+echo "[+] Diffutils $DIFFUTILS_VERSION built successfully"
 
 echo
-echo "Installing Git"
-echo
+echo "[+] Installing Git"
 
 GIT_VERSION="2.51.0"
 GIT_TAR="git-$GIT_VERSION.tar.gz"
 GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 
-cd "$BUILD_DIR"
-curl -L -o "$GIT_TAR" "$GIT_URL"
-tar -xzf "$GIT_TAR"
-cd "git-$GIT_VERSION"
+sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
 
-./configure CC="$CC" CXX="$CXX" --prefix="$CHARD_ROOT/usr"
-make -j"$(nproc)"
+sudo curl -L -o "$BUILD_DIR/$GIT_TAR" "$GIT_URL"
+sudo tar -xzf "$BUILD_DIR/$GIT_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/git-$GIT_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
+
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build/git-$GIT_VERSION
+
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
+export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+
+./configure --prefix=/usr
+make -j\$(nproc)
 make install
+"
 
-cd "$CHARD_ROOT"
-rm -rf "$BUILD_DIR"
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
 
-echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
+echo "[+] Git $GIT_VERSION built successfully"
+
 echo
-echo "[+] Chard root setup complete."
+echo "[+] Installing Python"
+
+PYTHON_VERSION="3.13.7"
+PYTHON_TAR="Python-$PYTHON_VERSION.tar.xz"
+PYTHON_URL="https://www.python.org/ftp/python/$PYTHON_VERSION/$PYTHON_TAR"
+
+sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
+
+sudo curl -L -o "$BUILD_DIR/$PYTHON_TAR" "$PYTHON_URL"
+sudo tar -xf "$BUILD_DIR/$PYTHON_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/Python-$PYTHON_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
+
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build/Python-$PYTHON_VERSION
+
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
+export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+
+./configure --prefix=/usr --enable-optimizations --with-ensurepip=install
+make -j\$(nproc)
+make install
+"
+
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
+
+echo "[+] Python $PYTHON_VERSION built successfully"
+
+sudo chown -R 1000:1000 \
+    "$CHARD_ROOT/bin" \
+    "$CHARD_ROOT/lib" \
+    "$CHARD_ROOT/include" \
+    "$CHARD_ROOT/share" \
+    "$CHARD_ROOT/lib/python$PYTHON_VERSION" \
+    "$CHARD_ROOT/var/tmp" \
+    "$CHARD_ROOT/var/cache"
+
+echo "[+] Chard Root Environment ready to run!"
+
+chard help
+
+
