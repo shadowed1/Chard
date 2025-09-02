@@ -1,190 +1,132 @@
-Skip to content
-Navigation Menu
-shadowed1
-Chard
+#!/bin/bash
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
 
-Type / to search
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-Files
-Go to file
-t
-.chard.env
-.chard.logic
-.chardrc
-Chard_Installer
-LICENSE
-README.md
-chard
-Chard
-/
-Chard_Installer
-in
-main
+set -e
+export AR="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
+export NM="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
+export RANLIB="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
+CHARD_ROOT="/usr/local/bin/chard"
+CHARD_RC="$CHARD_ROOT/.chardrc"
+export CC=/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
-Edit
+echo "[+] Creating Chard group and directories..."
 
-Preview
-Indent mode
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+sudo chown -R 1000:1000 /usr/local/bin/chard
 
-Spaces
-Indent size
+echo "[+] Downloading chard configuration files..."
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-4
-Line wrap mode
+sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
 
-No wrap
-Editing Chard_Installer file contents
-export PATH
-nextpreviousallmatch caseregexpby word
-Replace
-replacereplace all×
-Selection deleted
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-if [ -z "$STAGE3_FILE" ]; then
-    echo "ERROR: Could not determine stage3 tarball filename"
-    exit 1
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
+    cat >> "/home/chronos/user/.bashrc" <<EOF
+
+# <<< CHARD ENV MARKER <<<
+source "$CHARD_RC"
+# <<< END CHARD ENV MARKER <<<
+EOF
+    echo "[+] Chard sourced to ~/.bashrc"
+else
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)   GENTOO_ARCH="amd64" ;;
+    i*86)     GENTOO_ARCH="x86" ;;
+    aarch64)  GENTOO_ARCH="arm64" ;;
+    armv7l)   GENTOO_ARCH="arm" ;;
+    ppc64le)  GENTOO_ARCH="ppc64le" ;;
+    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+esac
+
+MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
+echo "[+] Writing $MAKE_CONF..."
+bash -c "cat > '$MAKE_CONF' <<EOF
+CHOST='${GENTOO_ARCH}-unknown-linux-gnu'
+ARCH='${GENTOO_ARCH}'
+ACCEPT_KEYWORDS='~${GENTOO_ARCH}'
+ROOT='${CHARD_ROOT}'
+CFLAGS='-O2 -pipe'
+CXXFLAGS='\${CFLAGS}'
+PORTAGE_TMPDIR='\${ROOT}/var/tmp'
+DISTDIR='\${ROOT}/var/cache/distfiles'
+PKGDIR='\${ROOT}/var/cache/packages'
+EOF"
+
+echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
+
+PORTAGE_DIR="$CHARD_ROOT/usr/portage"
+SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
+TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
+
+echo "[+] Downloading Portage tree snapshot..."
+curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
+
+echo "[+] Extracting snapshot into $PORTAGE_DIR..."
+mkdir -p "$PORTAGE_DIR"
+tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+rm -f "$TMP_TAR"
+
+case "$GENTOO_ARCH" in
+    amd64)
+        STAGE3_URL="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20250831T170358Z.tar.xz"
+        ;;
+    arm64)
+        STAGE3_URL="https://gentoo.osuosl.org/releases/arm64/autobuilds/current-stage3-arm64-systemd/stage3-arm64-systemd-20250831T234929Z.tar.xz"
+        ;;
+    *)
+        echo "Unsupported architecture: $GENTOO_ARCH"
+        exit 1
+        ;;
+esac
+
+STAGE3_FILE=$(basename "$STAGE3_URL")
 mkdir -p "$BUILD_DIR"
 
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 echo "[+] Downloading stage3 tarball..."
-curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
+curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
 
 echo "[+] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
-sudo chown -R 1000:1000 /usr/local/bin/chard
+sudo chown -R 1000:1000 "$CHARD_ROOT"
 
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
-     ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
+    ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
     echo "[+] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
+
 
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 chmod +x "$CHARD_ROOT/bin/chard"
 
 export CC="$CC"
 export CXX="$CXX"
-export AR="$CHARD_ROOT/usr/bin/ar"
-export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
-
+export AR="$AR"
+export RANLIB="$RANLIB"
+export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$PATH"
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
@@ -205,20 +147,16 @@ curl -L -o "$MAKE_TAR" "$MAKE_URL"
 tar -xf "$MAKE_TAR"
 cd "make-$MAKE_VERSION"
 
- env PATH="$PATH" ./configure \
+MAKE_CFLAGS="-O2 -pipe"
+MAKE_LDFLAGS=""
+
+env PATH="$PATH" CFLAGS="$MAKE_CFLAGS" LDFLAGS="$MAKE_LDFLAGS" ./configure \
     --prefix="$CHARD_ROOT/usr" \
     --disable-dependency-tracking
 
-export CC="$CC"
-export CXX="$CXX"
-export AR="$AR"
-export RANLIB="$RANLIB"
-export PATH="$PATH"
-
-cd "$BUILD_DIR/make-4.4"
-./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 make -j"$(nproc)"
 make install
+echo "[+] Make $MAKE_VERSION installed"
 
 echo
 echo "Installing GNU GMP"
@@ -253,5 +191,123 @@ MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
 cd "$BUILD_DIR"
 curl -L -o "$MPFR_TAR" "$MPFR_URL"
 tar -xf "$MPFR_TAR"
-Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
-Editing Chard/Chard_Installer at main · shadowed1/Chard
+cd "mpfr-$MPFR_VERSION"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --with-gmp="$CHARD_ROOT/usr" \
+    --with-pic
+make -j"$(nproc)"
+make install
+echo "[+] MPFR $MPFR_VERSION installed"
+
+echo
+echo "Installing GAWK"
+echo
+
+GAWK_VERSION="5.3.2"
+GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
+GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$GAWK_TAR" "$GAWK_URL"
+tar -xf "$GAWK_TAR"
+cd "gawk-$GAWK_VERSION"
+
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-shared \
+    --without-readline \
+    --disable-dependency-tracking \
+    MPFR_CFLAGS="$MPFR_CFLAGS" \
+    MPFR_LIBS="$MPFR_LIBS" \
+    CC="$CC" \
+    CXX="$CHARD_ROOT/usr/bin/g++" \
+    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
+    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
+    LDFLAGS="-L$CHARD_ROOT/usr/lib"
+
+make -j"$(nproc)"
+make install
+echo "[+] Gawk $GAWK_VERSION installed (fully static)"
+
+echo
+echo "Installing BINUTILS"
+echo
+
+BINUTILS_VERSION="2.45"
+BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
+BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
+tar -xf "$BINUTILS_TAR"
+cd "binutils-$BINUTILS_VERSION"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-nls \
+    --disable-werror \
+    --enable-static \
+    --disable-shared \
+    MPFR_CFLAGS="$MPFR_CFLAGS" \
+    MPFR_LIBS="$MPFR_LIBS"
+
+make -j"$(nproc)"
+make install
+echo "[+] Binutils $BINUTILS_VERSION installed"
+
+echo
+echo "Installing Diffutils"
+echo
+
+DIFFUTILS_VERSION="3.12"
+DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
+DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
+tar -xf "$DIFFUTILS_TAR"
+cd "diffutils-$DIFFUTILS_VERSION"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-dependency-tracking
+
+make -j"$(nproc)"
+make install
+echo "[+] Diffutils $DIFFUTILS_VERSION installed"
+
+rm -rf "$BUILD_DIR"
+echo "[+] All packages built and installed into $CHARD_ROOT/usr/bin"
+
+
+CHROME_PYTHON=/usr/bin/python3
+echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
+
+echo
+echo "Installing Git"
+echo
+
+GIT_VERSION="2.51.0"
+GIT_TAR="git-$GIT_VERSION.tar.gz"
+GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$GIT_TAR" "$GIT_URL"
+tar -xzf "$GIT_TAR"
+cd "git-$GIT_VERSION"
+
+./configure CC="$CC" CXX="$CXX" --prefix="$CHARD_ROOT/usr"
+make -j"$(nproc)"
+make install
+
+cd "$CHARD_ROOT"
+rm -rf "$BUILD_DIR"
+
+echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
+echo
+echo "[+] Chard root setup complete."
