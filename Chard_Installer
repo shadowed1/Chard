@@ -9,21 +9,51 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 set -e
-export AR="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
-export NM="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
-export RANLIB="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-export CC="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
-export CXX="/usr/local/bin/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+
+export CC="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
+export CXX="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
+export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
+export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
+export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
+
+export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$PATH"
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib"
+
 MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+
+export AWK=/usr/bin/mawk
+
 
 echo "[+] Creating Chard group and directories..."
 
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo chown -R 1000:1000 /usr/local/bin/chard
+
+CHARD_ROOT="/usr/local/bin/chard"
+CHARD_RC="$CHARD_ROOT/.chardrc"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+
+export CC="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
+export CXX="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
+export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
+export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
+export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
+
+export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$PATH"
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib"
+
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
+
+export AWK=/usr/bin/mawk
 
 echo "[+] Downloading chard configuration files..."
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
