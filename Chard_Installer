@@ -171,8 +171,8 @@ sudo chroot --userspec=1000:1000 "$CHROOT_DIR" /bin/bash -c "
 set -e
 cd /var/tmp/build
 echo '[+] Downloading GNU Make $MAKE_VERSION...'
-sudo curl -fsSL $MAKE_URL -o $MAKE_TAR
-sudo tar -xf $MAKE_TAR
+curl -fsSL $MAKE_URL -o $MAKE_TAR
+tar -xf $MAKE_TAR
 
 cd make-$MAKE_VERSION
 
@@ -193,9 +193,7 @@ make -j\$(nproc)
 
 echo '[+] Installing Make...'
 make install
-"
 
-# Cleanup mounts
 sudo umount "$CHROOT_DIR/usr/include"
 sudo umount "$CHROOT_DIR/dev/shm"
 sudo umount "$CHROOT_DIR/dev"
