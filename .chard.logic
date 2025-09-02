@@ -12,8 +12,8 @@ chard_emerge() {
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
         DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
-        PATH="$PATH" \
-        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+        PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:/usr/bin:/bin" \
+        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" \
         "$CHARD_ROOT/usr/bin/emerge" "$@"
 }
 
