@@ -7,59 +7,20 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
+sed -i '/# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' ~/.bashrc
 set -e
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
-export CC="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
-export CXX="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
-export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
-export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
-export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
-
-export PATH="$PATH:$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin"
-export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
-export CXXFLAGS="$CFLAGS"
-export LDFLAGS="-L$CHARD_ROOT/usr/lib"
-
-MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
-MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
-
-export AWK=/usr/bin/mawk
-
-
 echo "[+] Creating Chard group and directories..."
 
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
-
-CHARD_ROOT="/usr/local/bin/chard"
-CHARD_RC="$CHARD_ROOT/.chardrc"
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-
-export CC="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
-export CXX="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
-export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
-export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
-export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
-
-export PATH="$PATH:$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin"
-export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
-export CXXFLAGS="$CFLAGS"
-
-MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
-MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
-
-export AWK=/usr/bin/mawk
-
 echo "[+] Downloading chard configuration files..."
-curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
-curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
-curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -122,12 +83,12 @@ SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 
 echo "[+] Downloading Portage tree snapshot..."
-curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
+sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
 
 echo "[+] Extracting snapshot into $PORTAGE_DIR..."
-mkdir -p "$PORTAGE_DIR"
-tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
-rm -f "$TMP_TAR"
+sudo mkdir -p "$PORTAGE_DIR"
+sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+sudo rm -f "$TMP_TAR"
 
 case "$GENTOO_ARCH" in
     amd64)
@@ -143,16 +104,15 @@ case "$GENTOO_ARCH" in
 esac
 
 STAGE3_FILE=$(basename "$STAGE3_URL")
-mkdir -p "$BUILD_DIR"
+sudo mkdir -p "$BUILD_DIR"
 
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
-echo "[+] Downloading stage3 tarball..."
-curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
+sudo echo "[+] Downloading stage3 tarball..."
+sudo curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
 
 echo "[+] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
-sudo chown -R 1000:1000 "$CHARD_ROOT"
 
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
@@ -164,29 +124,35 @@ else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
 fi
 
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
 
-curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-chmod +x "$CHARD_ROOT/bin/chard"
-
-export CC="$CC"
-export CXX="$CXX"
-export AR="$AR"
-export RANLIB="$RANLIB"
+export CC="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
+export CXX="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
+export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
+export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
+export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
 export PATH="$PATH:$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin"
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 export AWK=/usr/bin/mawk
 
 echo "[+] Exporting compiler paths"
 
-echo
-echo "Installing GNU Make inside temporary chroot"
-echo
+echo "[+] Installing GNU Make inside temporary chroot"
 
 CHROOT_DIR="$CHARD_ROOT/chroot"
-mkdir -p "$CHROOT_DIR"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+MAKE_VERSION="4.4"
+MAKE_TAR="make-$MAKE_VERSION.tar.gz"
+MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
+
+sudo mkdir -p "$CHROOT_DIR"
 sudo rsync -a --exclude 'chroot' "$CHARD_ROOT/" "$CHROOT_DIR/"
+sudo mkdir -p "$CHROOT_DIR/var/tmp/build"
 
 sudo mount -t proc none "$CHROOT_DIR/proc"
 sudo mount -t sysfs none "$CHROOT_DIR/sys"
@@ -195,42 +161,40 @@ sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
 sudo mount --bind "$CHROOT_DIR/usr/include" "$CHROOT_DIR/usr/include"
 sudo mount --bind "$CHROOT_DIR/usr/lib" "$CHROOT_DIR/usr/lib"
 
-sudo mkdir -p "$CHROOT_DIR/var/tmp/build"
-sudo cp -r "$BUILD_DIR/make-4.4" "$CHROOT_DIR/var/tmp/build/"
-
 sudo chroot --userspec=1000:1000 "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build
+echo '[+] Downloading GNU Make $MAKE_VERSION...'
+sudo curl -fsSL $MAKE_URL -o $MAKE_TAR
+sudo tar -xf $MAKE_TAR
+
+cd make-$MAKE_VERSION
+
 export PATH=/usr/bin:/bin:/usr/local/bin
 export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
 export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
 export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
 export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
 export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='\$CFLAGS'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
-cd /var/tmp/build/make-4.4
 
-
-sudo chroot --userspec=1000:1000 "$CHROOT_DIR" /bin/bash -c "
-export PATH=/usr/bin:/bin:/usr/local/bin
-export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
-export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
-export CFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-gcc -v
-echo 'int main(){return 0;}' > test.c
-\$CC test.c -o test && echo 'GCC works!' || echo 'GCC failed!'
-"
-
+echo '[+] Configuring Make...'
 ./configure --prefix=/usr --disable-dependency-tracking
+
+echo '[+] Building Make...'
 make -j\$(nproc)
+
+echo '[+] Installing Make...'
 make install
 "
+
+# Cleanup mounts
 sudo umount "$CHROOT_DIR/usr/include"
 sudo umount "$CHROOT_DIR/dev/shm"
 sudo umount "$CHROOT_DIR/dev"
 sudo umount "$CHROOT_DIR/sys"
 sudo umount "$CHROOT_DIR/proc"
-sudo rm -rf "$CHROOT_DIR/var/tmp/build/make-4.4"
 
 echo "[+] GNU Make installed successfully inside chroot"
 
