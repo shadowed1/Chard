@@ -33,7 +33,6 @@ export AWK=/usr/bin/mawk
 echo "[+] Creating Chard group and directories..."
 
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
-sudo chown -R 1000:1000 /usr/local/bin/chard
 
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
@@ -187,7 +186,7 @@ echo
 
 CHROOT_DIR="$CHARD_ROOT/chroot"
 mkdir -p "$CHROOT_DIR"
-sudo cp -a "$CHARD_ROOT"/* "$CHROOT_DIR/"
+sudo rsync -a --exclude 'chroot' "$CHARD_ROOT/" "$CHROOT_DIR/"
 
 sudo mount -t proc none "$CHROOT_DIR/proc"
 sudo mount -t sysfs none "$CHROOT_DIR/sys"
