@@ -2,25 +2,21 @@
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-sed -i '/# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' ~/.bashrc
 set -e
+
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
-echo "[+] Creating Chard group and directories..."
-
+echo "[+] Creating Chard directories..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 echo "[+] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -36,38 +32,16 @@ fi
 
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64)
-        GENTOO_ARCH="amd64"
-        CHOST="x86_64-pc-linux-gnu"
-        ;;
-    i*86)
-        GENTOO_ARCH="x86"
-        CHOST="i686-pc-linux-gnu"
-        ;;
-    aarch64)
-        GENTOO_ARCH="arm64"
-        CHOST="aarch64-unknown-linux-gnu"
-        ;;
-    armv7l)
-        GENTOO_ARCH="arm"
-        CHOST="armv7a-unknown-linux-gnueabihf"
-        ;;
-    ppc64le)
-        GENTOO_ARCH="ppc64le"
-        CHOST="powerpc64le-unknown-linux-gnu"
-        ;;
-    *)
-        echo "Unknown architecture: $ARCH"
-        exit 1
-        ;;
+    x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
+    i*86)   GENTOO_ARCH="x86";   CHOST="i686-pc-linux-gnu";;
+    aarch64)GENTOO_ARCH="arm64";  CHOST="aarch64-unknown-linux-gnu";;
+    armv7l) GENTOO_ARCH="arm";    CHOST="armv7a-unknown-linux-gnueabihf";;
+    ppc64le)GENTOO_ARCH="ppc64le";CHOST="powerpc64le-unknown-linux-gnu";;
+    *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
 
-CHARD_ROOT="/usr/local/bin/chard"
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-
-echo "[+] Writing $MAKE_CONF..."
 sudo mkdir -p "$(dirname "$MAKE_CONF")"
-
 sudo tee "$MAKE_CONF" > /dev/null <<EOF
 CHOST='${CHOST}'
 ARCH='${GENTOO_ARCH}'
@@ -79,44 +53,25 @@ PORTAGE_TMPDIR='\${ROOT}/var/tmp'
 DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF
-
-
-
 echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
-
 echo "[+] Downloading Portage tree snapshot..."
 sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
-
-echo "[+] Extracting snapshot into $PORTAGE_DIR..."
 sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
 case "$GENTOO_ARCH" in
-    amd64)
-        STAGE3_URL="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20250831T170358Z.tar.xz"
-        ;;
-    arm64)
-        STAGE3_URL="https://gentoo.osuosl.org/releases/arm64/autobuilds/current-stage3-arm64-systemd/stage3-arm64-systemd-20250831T234929Z.tar.xz"
-        ;;
-    *)
-        echo "Unsupported architecture: $GENTOO_ARCH"
-        exit 1
-        ;;
+    amd64) STAGE3_URL="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20250831T170358Z.tar.xz";;
+    arm64) STAGE3_URL="https://gentoo.osuosl.org/releases/arm64/autobuilds/current-stage3-arm64-systemd/stage3-arm64-systemd-20250831T234929Z.tar.xz";;
+    *) echo "Unsupported architecture: $GENTOO_ARCH"; exit 1;;
 esac
-
 STAGE3_FILE=$(basename "$STAGE3_URL")
-sudo mkdir -p "$BUILD_DIR"
-
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
-sudo echo "[+] Downloading stage3 tarball..."
 sudo curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
-
-echo "[+] Extracting stage3 into $CHARD_ROOT..."
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 sudo rm -f "$TMP_STAGE3"
 
@@ -124,7 +79,7 @@ PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
-   sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
+    sudo ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
     echo "[+] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
@@ -136,45 +91,38 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 export CC="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
 export CXX="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
 export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
-export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
 export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
 export PATH="$PATH:$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin"
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
-MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
-MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 export AWK=/usr/bin/mawk
 
-echo "[+] Exporting compiler paths"
+CHROOT_DIR="$CHARD_ROOT/chroot"
+CHROOT_BUILD_DIR="$CHROOT_DIR/var/tmp/build"
+
+sudo mkdir -p "$BUILD_DIR"
+sudo mkdir -p "$CHROOT_BUILD_DIR"
 
 echo "[+] Installing GNU Make inside temporary chroot"
 
-CHROOT_DIR="$CHARD_ROOT/chroot"
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 MAKE_VERSION="4.4"
 MAKE_TAR="make-$MAKE_VERSION.tar.gz"
 MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
 
-sudo mkdir -p "$CHROOT_DIR"
-sudo rsync -a --exclude 'chroot' "$CHARD_ROOT/" "$CHROOT_DIR/"
-sudo mkdir -p "$CHROOT_DIR/var/tmp/build"
+sudo curl -L -o "$BUILD_DIR/$MAKE_TAR" "$MAKE_URL"
+sudo tar -xf "$BUILD_DIR/$MAKE_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/make-$MAKE_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
 
-sudo mount -t proc none "$CHROOT_DIR/proc"
-sudo mount -t sysfs none "$CHROOT_DIR/sys"
-sudo mount --bind /dev "$CHROOT_DIR/dev"
-sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
-sudo mount --bind "$CHROOT_DIR/usr/include" "$CHROOT_DIR/usr/include"
-sudo mount --bind "$CHROOT_DIR/usr/lib" "$CHROOT_DIR/usr/lib"
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
 
-sudo chroot --userspec=1000:1000 "$CHROOT_DIR" /bin/bash -c "
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
 set -e
-cd /var/tmp/build
-echo '[+] Downloading GNU Make $MAKE_VERSION...'
-curl -fsSL $MAKE_URL -o $MAKE_TAR
-tar -xf $MAKE_TAR
-
-cd make-$MAKE_VERSION
+cd /var/tmp/build/make-$MAKE_VERSION
 
 export PATH=/usr/bin:/bin:/usr/local/bin
 export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
@@ -185,20 +133,15 @@ export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
 
-echo '[+] Configuring Make...'
 ./configure --prefix=/usr --disable-dependency-tracking
-
-echo '[+] Building Make...'
 make -j\$(nproc)
-
-echo '[+] Installing Make...'
 make install
-
-sudo umount "$CHROOT_DIR/usr/include"
-sudo umount "$CHROOT_DIR/dev/shm"
-sudo umount "$CHROOT_DIR/dev"
-sudo umount "$CHROOT_DIR/sys"
-sudo umount "$CHROOT_DIR/proc"
+"
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
 
 echo "[+] GNU Make installed successfully inside chroot"
 
