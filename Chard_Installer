@@ -19,7 +19,7 @@ export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
 export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
 export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
 
-export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$PATH"
+export PATH="$PATH:$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin"
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
@@ -45,7 +45,7 @@ export AR="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
 export NM="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
 export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib"
 
-export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$PATH"
+export PATH="$PATH:$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin"
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 
@@ -173,7 +173,7 @@ export CC="$CC"
 export CXX="$CXX"
 export AR="$AR"
 export RANLIB="$RANLIB"
-export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$PATH"
+export PATH="$PATH:$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin"
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
@@ -185,12 +185,10 @@ echo
 echo "Installing GNU Make inside temporary chroot"
 echo
 
-# Directories for chroot
 CHROOT_DIR="$CHARD_ROOT/chroot"
 mkdir -p "$CHROOT_DIR"
 sudo cp -a "$CHARD_ROOT"/* "$CHROOT_DIR/"
 
-# Prepare chroot mounts
 sudo mount -t proc none "$CHROOT_DIR/proc"
 sudo mount -t sysfs none "$CHROOT_DIR/sys"
 sudo mount --bind /dev "$CHROOT_DIR/dev"
@@ -198,11 +196,9 @@ sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
 sudo mount --bind "$CHROOT_DIR/usr/include" "$CHROOT_DIR/usr/include"
 sudo mount --bind "$CHROOT_DIR/usr/lib" "$CHROOT_DIR/usr/lib"
 
-# Copy build directory into chroot
 sudo mkdir -p "$CHROOT_DIR/var/tmp/build"
 sudo cp -r "$BUILD_DIR/make-4.4" "$CHROOT_DIR/var/tmp/build/"
 
-# Enter chroot and build
 sudo chroot --userspec=1000:1000 "$CHROOT_DIR" /bin/bash -c "
 export PATH=/usr/bin:/bin:/usr/local/bin
 export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
@@ -226,13 +222,10 @@ echo 'int main(){return 0;}' > test.c
 \$CC test.c -o test && echo 'GCC works!' || echo 'GCC failed!'
 "
 
-
 ./configure --prefix=/usr --disable-dependency-tracking
 make -j\$(nproc)
 make install
 "
-
-# Cleanup mounts
 sudo umount "$CHROOT_DIR/usr/include"
 sudo umount "$CHROOT_DIR/dev/shm"
 sudo umount "$CHROOT_DIR/dev"
@@ -241,7 +234,6 @@ sudo umount "$CHROOT_DIR/proc"
 sudo rm -rf "$CHROOT_DIR/var/tmp/build/make-4.4"
 
 echo "[+] GNU Make installed successfully inside chroot"
-
 
 echo
 echo "Installing GNU GMP"
