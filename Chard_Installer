@@ -33,7 +33,7 @@ fi
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
-    aarch64)GENTOO_ARCH="arm64"; CHOST="aarch64-linux-gnu";;
+    aarch64)GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
     *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
 
@@ -126,7 +126,7 @@ cd /var/tmp/build/make-$MAKE_VERSION
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
     x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
@@ -181,7 +181,7 @@ cd /var/tmp/build/gmp-$GMP_VERSION
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
     x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
@@ -236,7 +236,7 @@ cd /var/tmp/build/mpfr-$MPFR_VERSION
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
     x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
@@ -289,7 +289,7 @@ cd /var/tmp/build/binutils-$BINUTILS_VERSION
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
     x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
@@ -343,7 +343,7 @@ cd /var/tmp/build/diffutils-$DIFFUTILS_VERSION
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
     x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
@@ -397,7 +397,7 @@ cd /var/tmp/build/git-$GIT_VERSION
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
     x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
@@ -451,7 +451,7 @@ cd /var/tmp/build/Python-$PYTHON_VERSION
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
     x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
