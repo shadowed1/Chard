@@ -8,6 +8,10 @@ RESET=$(tput sgr0)
 
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
+MUSL_GCC="$CHARD_ROOT/usr/bin/gcc -static"
+MUSL_GXX="$CHARD_ROOT/usr/bin/g++ -static"
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
 sudo mkdir -p "$CHARD_ROOT"/{var/tmp,etc,usr/bin,usr/lib,var/cache}
@@ -77,7 +81,7 @@ export PATH="$CHARD_ROOT/usr/bin:$TOOLCHAIN_DIR/bin:$PATH"
 echo "[+] Musl toolchain installed and ready"
 
 echo
-echo "[+] Setting up build environment inside Alpine musl rootfs..."
+echo "[+] Setting up build environment inside Chard Rootfs..."
 
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
@@ -87,7 +91,202 @@ export CXX="$CHARD_ROOT/usr/bin/g++"
 export AR="$CHARD_ROOT/usr/bin/ar"
 export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
 export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export CFLAGS="-O2 -pipe -static -I$CHARD_ROOT/usr/include"
+export CFLAGS="-O2 -pipe -static -I$CHARD_ROOT/usr/include -fPIC"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
 AWK=/usr/bin/mawk
+
+ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-gcc     /usr/local/bin/chard/usr/toolchain/bin/musl-gcc
+ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /usr/local/bin/chard/usr/toolchain/bin/musl-g++
+ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/bin/chard/usr/toolchain/bin/cc
+ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
+ln -sf $CHARD_ROOT/usr/toolchain/bin/ar     $CHARD_ROOT/usr/bin/ar
+ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
+
+echo "[+] Exporting compiler paths"
+
+mkdir -p "$CHARD_ROOT/var/tmp"
+echo 'int main(){return 0;}' |  tee "$CHARD_ROOT/var/tmp/test.c" >/dev/null
+$MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
+"$CHARD_ROOT/var/tmp/test" && echo "[+] Musl gcc works!"
+
+echo
+echo "Installing GNU Make"
+echo
+
+MAKE_VERSION="4.4"
+MAKE_TAR="make-$MAKE_VERSION.tar.gz"
+MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$MAKE_TAR" "$MAKE_URL"
+tar -xf "$MAKE_TAR"
+cd "make-$MAKE_VERSION"
+
+ env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-dependency-tracking
+
+make -j"$(nproc)"
+make install
+echo "[+] Make $MAKE_VERSION installed"
+
+echo
+echo "Installing GNU GMP"
+echo
+
+GMP_VERSION="6.3.0"
+GMP_TAR="gmp-$GMP_VERSION.tar.xz"
+GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$GMP_TAR" "$GMP_URL"
+tar -xf "$GMP_TAR"
+cd "gmp-$GMP_VERSION"
+
+ env PATH="$PATH" AWK="$AWK" CC="$MUSL_GCC" CXX="$MUSL_GXX" AR="$AR" RANLIB="$RANLIB" \
+    ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --enable-static \
+    --disable-shared \
+    --with-pic
+
+make -j"$(nproc)"
+make install
+echo "[+] GMP $GMP_VERSION installed"
+
+echo
+echo "Installing MPFR"
+echo
+
+MPFR_VERSION="4.2.2"
+MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
+MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$MPFR_TAR" "$MPFR_URL"
+tar -xf "$MPFR_TAR"
+cd "mpfr-$MPFR_VERSION"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --with-gmp="$CHARD_ROOT/usr" \
+    --enable-static \
+    --disable-shared \
+    --with-pic
+make -j"$(nproc)"
+make install
+echo "[+] MPFR $MPFR_VERSION installed"
+
+echo
+echo "Installing GAWK"
+echo
+
+GAWK_VERSION="5.3.2"
+GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
+GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$GAWK_TAR" "$GAWK_URL"
+tar -xf "$GAWK_TAR"
+cd "gawk-$GAWK_VERSION"
+
+MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
+MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-shared \
+    --enable-static \
+    --without-readline \
+    --disable-dependency-tracking \
+    MPFR_CFLAGS="$MPFR_CFLAGS" \
+    MPFR_LIBS="$MPFR_LIBS" \
+    CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc" \
+    CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++" \
+    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
+    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
+    LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+
+make -j"$(nproc)"
+make install
+echo "[+] Gawk $GAWK_VERSION installed (fully static)"
+
+echo
+echo "Installing BINUTILS"
+echo
+
+BINUTILS_VERSION="2.45"
+BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
+BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
+tar -xf "$BINUTILS_TAR"
+cd "binutils-$BINUTILS_VERSION"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-nls \
+    --disable-werror \
+    --enable-static \
+    --disable-shared \
+    MPFR_CFLAGS="$MPFR_CFLAGS" \
+    MPFR_LIBS="$MPFR_LIBS"
+
+make -j"$(nproc)"
+make install
+echo "[+] Binutils $BINUTILS_VERSION installed"
+
+echo
+echo "Installing Diffutils"
+echo
+
+DIFFUTILS_VERSION="3.12"
+DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
+DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
+tar -xf "$DIFFUTILS_TAR"
+cd "diffutils-$DIFFUTILS_VERSION"
+
+env PATH="$PATH" ./configure \
+    --prefix="$CHARD_ROOT/usr" \
+    --disable-dependency-tracking
+
+make -j"$(nproc)"
+make install
+echo "[+] Diffutils $DIFFUTILS_VERSION installed"
+
+rm -rf "$BUILD_DIR"
+echo "[+] All packages built and installed into $CHARD_ROOT/usr/bin"
+
+
+CHROME_PYTHON=/usr/bin/python3
+echo "[+] Bootstrapping Git using ChromeOS Python ($CHROME_PYTHON)..."
+
+echo
+echo "Installing Git"
+echo
+
+GIT_VERSION="2.51.0"
+GIT_TAR="git-$GIT_VERSION.tar.gz"
+GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
+
+cd "$BUILD_DIR"
+curl -L -o "$GIT_TAR" "$GIT_URL"
+tar -xzf "$GIT_TAR"
+cd "git-$GIT_VERSION"
+
+./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
+make -j"$(nproc)"
+make install
+
+cd "$CHARD_ROOT"
+rm -rf "$BUILD_DIR"
+
+echo "[+] Git $GIT_VERSION installed into $CHARD_ROOT/usr/bin"
+echo
+echo "[+] Chard root setup complete."
+
