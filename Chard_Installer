@@ -478,7 +478,7 @@ sudo rm -rf "$CHROOT_BUILD_DIR"
 
 echo "[+] Python $PYTHON_VERSION built successfully"
 
-sudo chown -R 1000:1000 \
+sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/bin" \
     "$CHARD_ROOT/lib" \
     "$CHARD_ROOT/include" \
