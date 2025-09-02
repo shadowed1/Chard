@@ -28,12 +28,11 @@ chard_emerge() {
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
         DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
-        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin"
+        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
         LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
         HOME="$HOME" \
         SHELL="$SHELL" \
         "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
-
 }
 
 
