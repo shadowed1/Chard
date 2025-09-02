@@ -48,7 +48,6 @@ export RANLIB="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gn
 export PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:$PATH"
 export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
-export LDFLAGS="-L$CHARD_ROOT/usr/lib"
 
 MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
@@ -183,28 +182,66 @@ export AWK=/usr/bin/mawk
 echo "[+] Exporting compiler paths"
 
 echo
-echo "Installing GNU Make"
+echo "Installing GNU Make inside temporary chroot"
 echo
 
-MAKE_VERSION="4.4"
-MAKE_TAR="make-$MAKE_VERSION.tar.gz"
-MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
+# Directories for chroot
+CHROOT_DIR="$CHARD_ROOT/chroot"
+mkdir -p "$CHROOT_DIR"
+sudo cp -a "$CHARD_ROOT"/* "$CHROOT_DIR/"
 
-cd "$BUILD_DIR"
-curl -L -o "$MAKE_TAR" "$MAKE_URL"
-tar -xf "$MAKE_TAR"
-cd "make-$MAKE_VERSION"
+# Prepare chroot mounts
+sudo mount -t proc none "$CHROOT_DIR/proc"
+sudo mount -t sysfs none "$CHROOT_DIR/sys"
+sudo mount --bind /dev "$CHROOT_DIR/dev"
+sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+sudo mount --bind "$CHROOT_DIR/usr/include" "$CHROOT_DIR/usr/include"
+sudo mount --bind "$CHROOT_DIR/usr/lib" "$CHROOT_DIR/usr/lib"
 
-MAKE_CFLAGS="-O2 -pipe"
-MAKE_LDFLAGS=""
+# Copy build directory into chroot
+sudo mkdir -p "$CHROOT_DIR/var/tmp/build"
+sudo cp -r "$BUILD_DIR/make-4.4" "$CHROOT_DIR/var/tmp/build/"
 
-env PATH="$PATH" CFLAGS="$MAKE_CFLAGS" LDFLAGS="$MAKE_LDFLAGS" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-dependency-tracking
+# Enter chroot and build
+sudo chroot --userspec=1000:1000 "$CHROOT_DIR" /bin/bash -c "
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export AR=/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar
+export RANLIB=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='\$CFLAGS'
+export LDFLAGS='-L/usr/lib'
+cd /var/tmp/build/make-4.4
 
-make -j"$(nproc)"
+
+sudo chroot --userspec=1000:1000 "$CHROOT_DIR" /bin/bash -c "
+export PATH=/usr/bin:/bin:/usr/local/bin
+export CC=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc
+export CXX=/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++
+export CFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+gcc -v
+echo 'int main(){return 0;}' > test.c
+\$CC test.c -o test && echo 'GCC works!' || echo 'GCC failed!'
+"
+
+
+./configure --prefix=/usr --disable-dependency-tracking
+make -j\$(nproc)
 make install
-echo "[+] Make $MAKE_VERSION installed"
+"
+
+# Cleanup mounts
+sudo umount "$CHROOT_DIR/usr/include"
+sudo umount "$CHROOT_DIR/dev/shm"
+sudo umount "$CHROOT_DIR/dev"
+sudo umount "$CHROOT_DIR/sys"
+sudo umount "$CHROOT_DIR/proc"
+sudo rm -rf "$CHROOT_DIR/var/tmp/build/make-4.4"
+
+echo "[+] GNU Make installed successfully inside chroot"
+
 
 echo
 echo "Installing GNU GMP"
