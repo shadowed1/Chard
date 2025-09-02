@@ -105,14 +105,16 @@ echo "[+] Downloading stage3 tarball..."
 curl -L -o "$TMP_STAGE3" "$BASE/$STAGE3_FILE"
 
 echo "[+] Extracting stage3 into $CHARD_ROOT..."
-tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
-rm -f "$TMP_STAGE3"
+sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
+sudo rm -f "$TMP_STAGE3"
+
+sudo chown -R 1000:1000 /usr/local/bin/chard
 
 PROFILE_BASE="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH"
 PROFILE_CANDIDATE=$(find "$PROFILE_BASE" -maxdepth 3 -type d -name "systemd" | sort | tail -n1)
 if [ -n "$PROFILE_CANDIDATE" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_CANDIDATE")
-     ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
+    ln -sfn "$REL_TARGET" "$CHARD_ROOT/etc/portage/.profile"
     echo "[+] Profile set to ${PROFILE_CANDIDATE#$PROFILE_BASE/}"
 else
     echo "${YELLOW}[!] No systemd profile found under $PROFILE_BASE"
@@ -173,26 +175,26 @@ echo 'int main(){return 0;}' |  tee "$CHARD_ROOT/var/tmp/test.c" >/dev/null
 $MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
 "$CHARD_ROOT/var/tmp/test" && echo "[+] Musl gcc works!"
 
-echo
-echo "Installing GNU Make"
-echo
+#echo
+#echo "Installing GNU Make"
+#echo
 
-MAKE_VERSION="4.4"
-MAKE_TAR="make-$MAKE_VERSION.tar.gz"
-MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
+#MAKE_VERSION="4.4"
+#MAKE_TAR="make-$MAKE_VERSION.tar.gz"
+#MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
 
-cd "$BUILD_DIR"
-curl -L -o "$MAKE_TAR" "$MAKE_URL"
-tar -xf "$MAKE_TAR"
-cd "make-$MAKE_VERSION"
+#cd "$BUILD_DIR"
+#curl -L -o "$MAKE_TAR" "$MAKE_URL"
+#tar -xf "$MAKE_TAR"
+#cd "make-$MAKE_VERSION"
 
- env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-dependency-tracking
+ #env PATH="$PATH" ./configure \
+ #   --prefix="$CHARD_ROOT/usr" \
+ #   --disable-dependency-tracking
 
-make -j"$(nproc)"
-make install
-echo "[+] Make $MAKE_VERSION installed"
+#make -j"$(nproc)"
+#make install
+#echo "[+] Make $MAKE_VERSION installed"
 
 echo
 echo "Installing GNU GMP"
@@ -241,39 +243,39 @@ make -j"$(nproc)"
 make install
 echo "[+] MPFR $MPFR_VERSION installed"
 
-echo
-echo "Installing GAWK"
-echo
+#echo
+#echo "Installing GAWK"
+#echo
 
-GAWK_VERSION="5.3.2"
-GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
-GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
+#GAWK_VERSION="5.3.2"
+#GAWK_TAR="gawk-$GAWK_VERSION.tar.xz"
+#GAWK_URL="https://ftp.gnu.org/gnu/gawk/$GAWK_TAR"
 
-cd "$BUILD_DIR"
-curl -L -o "$GAWK_TAR" "$GAWK_URL"
-tar -xf "$GAWK_TAR"
-cd "gawk-$GAWK_VERSION"
+#cd "$BUILD_DIR"
+#curl -L -o "$GAWK_TAR" "$GAWK_URL"
+#tar -xf "$GAWK_TAR"
+#cd "gawk-$GAWK_VERSION"
 
-MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
-MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+#MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
+#MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
+#env PATH="$PATH" AWK="$AWK" CC="$MUSL_GCC" CXX="$MUSL_GXX" AR="$AR" RANLIB="$RANLIB" \
+#    ./configure \
+#    --prefix="$CHARD_ROOT/usr" \
+#    --disable-shared \
+#    --enable-static \
+#    --without-readline \
+#    --disable-dependency-tracking \
+#    MPFR_CFLAGS="$MPFR_CFLAGS" \
+#    MPFR_LIBS="$MPFR_LIBS" \
+#    CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc" \
+#    CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++" \
+#    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
+#    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
+#    LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
 
-env PATH="$PATH" ./configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-shared \
-    --enable-static \
-    --without-readline \
-    --disable-dependency-tracking \
-    MPFR_CFLAGS="$MPFR_CFLAGS" \
-    MPFR_LIBS="$MPFR_LIBS" \
-    CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc" \
-    CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++" \
-    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
-    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
-    LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
-
-make -j"$(nproc)"
-make install
-echo "[+] Gawk $GAWK_VERSION installed (fully static)"
+#make -j"$(nproc)"
+#make install
+#echo "[+] Gawk $GAWK_VERSION installed (fully static)"
 
 echo
 echo "Installing BINUTILS"
@@ -288,7 +290,8 @@ curl -L -o "$BINUTILS_TAR" "$BINUTILS_URL"
 tar -xf "$BINUTILS_TAR"
 cd "binutils-$BINUTILS_VERSION"
 
-env PATH="$PATH" ./configure \
+ env PATH="$PATH" AWK="$AWK" CC="$MUSL_GCC" CXX="$MUSL_GXX" AR="$AR" RANLIB="$RANLIB" \
+./configure \
     --prefix="$CHARD_ROOT/usr" \
     --disable-nls \
     --disable-werror \
@@ -314,7 +317,8 @@ curl -L -o "$DIFFUTILS_TAR" "$DIFFUTILS_URL"
 tar -xf "$DIFFUTILS_TAR"
 cd "diffutils-$DIFFUTILS_VERSION"
 
-env PATH="$PATH" ./configure \
+ env PATH="$PATH" AWK="$AWK" CC="$MUSL_GCC" CXX="$MUSL_GXX" AR="$AR" RANLIB="$RANLIB" \
+./configure \
     --prefix="$CHARD_ROOT/usr" \
     --disable-dependency-tracking
 
@@ -342,6 +346,7 @@ curl -L -o "$GIT_TAR" "$GIT_URL"
 tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
+ env PATH="$PATH" AWK="$AWK" CC="$MUSL_GCC" CXX="$MUSL_GXX" AR="$AR" RANLIB="$RANLIB" \
 ./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
 make -j"$(nproc)"
 make install
