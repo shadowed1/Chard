@@ -12,8 +12,8 @@ set -e
 
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-MUSL_GCC="$CHARD_ROOT/usr/bin/gcc -static"
-MUSL_GXX="$CHARD_ROOT/usr/bin/g++ -static"
+export CC="$CHARD_ROOT/usr/bin/gcc"
+export CXX="$CHARD_ROOT/usr/bin/g++"
 MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
@@ -122,57 +122,18 @@ fi
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 chmod +x "$CHARD_ROOT/bin/chard"
 
-echo "[+] Bootstrapping musl toolchain..."
-TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
-mkdir -p "$TOOLCHAIN_DIR"
-
-case "$ARCH" in
-    x86_64) MUSL_ARCH="x86_64"; TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz" ;;
-    aarch64) MUSL_ARCH="aarch64"; TOOLCHAIN_URL="https://musl.cc/aarch64-linux-musl-native.tgz" ;;
-    *) echo "No musl toolchain available for $ARCH"; exit 1 ;;
-esac
-
-TOOLCHAIN_TAR="$CHARD_ROOT/var/tmp/$(basename "$TOOLCHAIN_URL")"
-curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
-tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
-rm -f "$TOOLCHAIN_TAR"
-
-for bin in gcc g++ ar ld ranlib strip; do
-    if [ -f "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" ]; then
-         ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
-    fi
-done
-
-echo "[+] Musl toolchain installed and symlinked into $CHARD_ROOT/usr/bin"
-
-ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-gcc     /usr/local/bin/chard/usr/toolchain/bin/musl-gcc
-ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-g++     /usr/local/bin/chard/usr/toolchain/bin/musl-g++
-ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-cc      /usr/local/bin/chard/usr/toolchain/bin/cc
-ln -sf /usr/local/bin/chard/usr/toolchain/bin/x86_64-linux-musl-c++    /usr/local/bin/chard/usr/toolchain/bin/c++
-ln -sf $CHARD_ROOT/usr/toolchain/bin/ar     $CHARD_ROOT/usr/bin/ar
-ln -sf $CHARD_ROOT/usr/toolchain/bin/ranlib $CHARD_ROOT/usr/bin/ranlib
-# ln -sf "$CHARD_ROOT/usr/lib64/libmpfr.so.6.2.2" "$CHARD_ROOT/usr/lib64/libmpfr.so.6"
-# ln -sf "$CHARD_ROOT/usr/lib64/libmpfr.so.6.2.2" "$CHARD_ROOT/usr/lib64/libmpfr.so"
-
- # ldconfig
-
-export CC="$MUSL_GCC"
-export CXX="$MUSL_GXX"
+export CC="$CC"
+export CXX="$CXX"
 export AR="$CHARD_ROOT/usr/bin/ar"
 export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/toolchain/bin:$PATH"
 
-export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static -fPIC"
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
-export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib"
 export AWK=/usr/bin/mawk
 
 echo "[+] Exporting compiler paths"
-
-mkdir -p "$CHARD_ROOT/var/tmp"
-echo 'int main(){return 0;}' |  tee "$CHARD_ROOT/var/tmp/test.c" >/dev/null
-$MUSL_GCC -o "$CHARD_ROOT/var/tmp/test" "$CHARD_ROOT/var/tmp/test.c"
-"$CHARD_ROOT/var/tmp/test" && echo "[+] Musl gcc works!"
 
 echo
 echo "Installing GNU Make"
@@ -187,17 +148,20 @@ curl -L -o "$MAKE_TAR" "$MAKE_URL"
 tar -xf "$MAKE_TAR"
 cd "make-$MAKE_VERSION"
 
-MAKE_CFLAGS="-O2 -pipe"
-MAKE_LDFLAGS=""
-
-env PATH="$PATH" CFLAGS="$MAKE_CFLAGS" LDFLAGS="$MAKE_LDFLAGS" ./configure \
+ env PATH="$PATH" ./configure \
     --prefix="$CHARD_ROOT/usr" \
     --disable-dependency-tracking
 
+export CC="$CHARD_ROOT/usr/bin/gcc"
+export CXX="$CHARD_ROOT/usr/bin/g++"
+export AR="$CHARD_ROOT/usr/bin/ar"
+export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+
+cd "$BUILD_DIR/make-4.4"
+./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 make -j"$(nproc)"
 make install
-echo "[+] Make $MAKE_VERSION installed"
-
 
 echo
 echo "Installing GNU GMP"
@@ -212,11 +176,9 @@ curl -L -o "$GMP_TAR" "$GMP_URL"
 tar -xf "$GMP_TAR"
 cd "gmp-$GMP_VERSION"
 
- env PATH="$PATH" AWK="$AWK" CC="$MUSL_GCC" CXX="$MUSL_GXX" AR="$AR" RANLIB="$RANLIB" \
+ env PATH="$PATH" AWK="$AWK" CC="$CC" CXX="$CXX" AR="$AR" RANLIB="$RANLIB" \
     ./configure \
     --prefix="$CHARD_ROOT/usr" \
-    --enable-static \
-    --disable-shared \
     --with-pic
 
 make -j"$(nproc)"
@@ -239,8 +201,6 @@ cd "mpfr-$MPFR_VERSION"
 env PATH="$PATH" ./configure \
     --prefix="$CHARD_ROOT/usr" \
     --with-gmp="$CHARD_ROOT/usr" \
-    --enable-static \
-    --disable-shared \
     --with-pic
 make -j"$(nproc)"
 make install
@@ -265,16 +225,15 @@ MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 env PATH="$PATH" ./configure \
     --prefix="$CHARD_ROOT/usr" \
     --disable-shared \
-    --enable-static \
     --without-readline \
     --disable-dependency-tracking \
     MPFR_CFLAGS="$MPFR_CFLAGS" \
     MPFR_LIBS="$MPFR_LIBS" \
-    CC="$CHARD_ROOT/usr/toolchain/bin/musl-gcc" \
-    CXX="$CHARD_ROOT/usr/toolchain/bin/musl-g++" \
-    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
-    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static" \
-    LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+    CC="$CHARD_ROOT/usr/bin/gcc" \
+    CXX="$CHARD_ROOT/usr/bin/g++" \
+    CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
+    CXXFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe" \
+    LDFLAGS="-L$CHARD_ROOT/usr/lib"
 
 make -j"$(nproc)"
 make install
@@ -347,7 +306,7 @@ curl -L -o "$GIT_TAR" "$GIT_URL"
 tar -xzf "$GIT_TAR"
 cd "git-$GIT_VERSION"
 
-./configure CC="$MUSL_GCC" CXX="$MUSL_GXX" --prefix="$CHARD_ROOT/usr"
+./configure CC="$CC" CXX="$CXX" --prefix="$CHARD_ROOT/usr"
 make -j"$(nproc)"
 make install
 
