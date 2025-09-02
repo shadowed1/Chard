@@ -12,8 +12,8 @@ set -e
 
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-export CC="$CHARD_ROOT/usr/bin/gcc"
-export CXX="$CHARD_ROOT/usr/bin/g++"
+CC="$CHARD_ROOT/usr/bin/gcc"
+CXX="$CHARD_ROOT/usr/bin/g++"
 MPFR_CFLAGS="-I$CHARD_ROOT/usr/include"
 MPFR_LIBS="$CHARD_ROOT/usr/lib/libmpfr.a $CHARD_ROOT/usr/lib/libgmp.a -lm"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
