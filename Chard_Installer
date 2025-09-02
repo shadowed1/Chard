@@ -20,7 +20,7 @@ BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
 echo "[+] Creating Chard group and directories..."
 
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+sudo mkdir -p "$CHARD_ROOT"/{var/tmp/build,etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo chown -R 1000:1000 /usr/local/bin/chard
 
 echo "[+] Downloading chard configuration files..."
