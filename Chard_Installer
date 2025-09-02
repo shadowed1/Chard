@@ -12,7 +12,7 @@ BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
 echo "[+] Creating Chard directories..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
-mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 echo "[+] Downloading chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
