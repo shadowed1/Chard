@@ -5,6 +5,13 @@ if [ -z "$CHARD_ROOT" ]; then
     return 1
 fi
 
+ARCH=\$(uname -m)
+case \"\$ARCH\" in
+    x86_64) CHOST=x86_64-pc-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
+    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+esac
+
 chard_emerge() {
     sudo env \
         ROOT="$CHARD_ROOT" \
@@ -12,7 +19,7 @@ chard_emerge() {
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
         DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
         PKGDIR="$CHARD_ROOT/var/cache/packages" \
-        PATH="$CHARD_ROOT/usr/x86_64-pc-linux-gnu/gcc-bin/14:$CHARD_ROOT/usr/bin:/usr/bin:/bin" \
+        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin"
         LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" \
         "$CHARD_ROOT/usr/bin/emerge" "$@"
 }
