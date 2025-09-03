@@ -13,7 +13,7 @@ CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
 echo "[+] Creating Chard directories..."
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 echo "[+] Downloading Chard configuration files..."
@@ -41,7 +41,6 @@ case "$ARCH" in
 esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-sudo mkdir -p "$(dirname "$MAKE_CONF")"
 sudo tee "$MAKE_CONF" > /dev/null <<EOF
 CHOST='${CHOST}'
 ARCH='${GENTOO_ARCH}'
@@ -55,37 +54,16 @@ PKGDIR='\${ROOT}/var/cache/packages'
 EOF
 echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
-PORTAGE_DIR="$CHARD_ROOT/usr/portage"
-SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
-TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
-echo "[+] Downloading Portage tree snapshot..."
-sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
-sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
-sudo rm -f "$TMP_TAR"
-
-case "$GENTOO_ARCH" in
-    amd64) STAGE3_URL="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20250831T170358Z.tar.xz";;
-    arm64) STAGE3_URL="https://gentoo.osuosl.org/releases/arm64/autobuilds/current-stage3-arm64-systemd/stage3-arm64-systemd-20250831T234929Z.tar.xz";;
-    *) echo "Unsupported architecture: $GENTOO_ARCH"; exit 1;;
-esac
-STAGE3_FILE=$(basename "$STAGE3_URL")
-TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
-sudo curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
-sudo rm -f "$TMP_STAGE3"
-
-PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
-MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
-sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
-if [ -d "$PROFILE_DIR" ]; then
-    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
-    sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
-    echo "[+] Portage profile set to $REL_TARGET"
-else
-    echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
-    exit 1
-fi
+echo "[+] Copying system files into Chard root..."
+sudo tar -C / \
+  --exclude=dev --exclude=proc --exclude=sys --exclude=run --exclude=tmp \
+  --exclude=mnt --exclude=boot --exclude=var --exclude=home --exclude=opt \
+  --exclude=usr/share --exclude=usr/local \
+  --exclude=sbin \
+  --exclude="$CHARD_ROOT" --exclude="$CHARD_ROOT/*" \
+  -cf - bin etc lib lib64 usr \
+| gzip -1 \
+| sudo tar -C "$CHARD_ROOT" -xvzf -
 
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
