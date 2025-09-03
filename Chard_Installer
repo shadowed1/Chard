@@ -143,7 +143,9 @@ sudo tar -C "$CHARD_ROOT" -cf - --exclude='./chroot' . 2>/dev/null \
 | sudo tar -C "$CHROOT_DIR" -xzf -
 
 echo "[+] Copying build directory into chroot..."
-sudo tar -C "$BUILD_DIR" -cf - . | gzip -1 | sudo tar -C "$CHROOT_BUILD_DIR" -xf -
+sudo tar -C "$BUILD_DIR" -cf - . \
+| gzip -1 \
+| sudo tar -C "$CHROOT_BUILD_DIR" -xzf -
 
 for pkg in "${PACKAGES[@]}"; do
     NAME="${pkg%%|*}"
