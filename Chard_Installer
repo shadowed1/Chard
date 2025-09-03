@@ -112,7 +112,7 @@ done
 echo "[+] Setting up Chard Chroot..."
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | gzip -1 \
-| sudo tar -C "$CHARD_ROOT" -xzf - 
+| sudo tar -C "$CHARD_ROOT" -xvzpf -
 
 for pkg in "${PACKAGES[@]}"; do
     NAME="${pkg%%|*}"
