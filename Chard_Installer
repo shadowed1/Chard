@@ -110,25 +110,51 @@ CHROOT_BUILD_DIR="$CHROOT_DIR/var/tmp/build"
 sudo mkdir -p "$BUILD_DIR"
 sudo mkdir -p "$CHROOT_BUILD_DIR"
 
-echo "[+] Installing GNU Make"
+PACKAGES=(
+    "make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz"
+    "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz"
+    "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
+    "binutils|2.45|tar.xz|https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
+    "diffutils|3.12|tar.xz|https://ftp.gnu.org/gnu/diffutils/diffutils-3.12.tar.xz"
+    "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz"
+)
 
-MAKE_VERSION="4.4"
-MAKE_TAR="make-$MAKE_VERSION.tar.gz"
-MAKE_URL="https://ftp.gnu.org/gnu/make/$MAKE_TAR"
+mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
 
-sudo curl -L -o "$BUILD_DIR/$MAKE_TAR" "$MAKE_URL"
-sudo tar -xf "$BUILD_DIR/$MAKE_TAR" -C "$BUILD_DIR"
-sudo rsync -a "$BUILD_DIR/make-$MAKE_VERSION" "$CHROOT_BUILD_DIR/"
-sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
+for pkg in "${PACKAGES[@]}"; do
+    NAME="${pkg%%|*}"
+    REST="${pkg#*|}"
+    VERSION="${REST%%|*}"
+    REST="${REST#*|}"
+    EXT="${REST%%|*}"
+    URL="${REST#*|}"
+    TAR_FILE="$BUILD_DIR/$NAME-$VERSION.$EXT"
 
-mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
-mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
-mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
-mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+    echo "[+] Downloading $NAME-$VERSION"
+    sudo curl -L -o "$TAR_FILE" "$URL"
 
-sudo chroot "$CHROOT_DIR" /bin/bash -c "
+    echo "[+] Extracting $NAME-$VERSION"
+    sudo tar -xf "$TAR_FILE" -C "$BUILD_DIR"
+done
+
+echo "[+] Copying CHARD_ROOT into chroot"
+sudo cp -a --update "$CHARD_ROOT/." "$CHROOT_DIR/"
+
+for pkg in "${PACKAGES[@]}"; do
+    NAME="${pkg%%|*}"
+    REST="${pkg#*|}"
+    VERSION="${REST%%|*}"
+
+    echo "[+] Mounting pseudo-filesystems in chroot"
+    mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+    mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+    mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+    mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+    echo "[+] Building $NAME-$VERSION in chroot"
+    sudo chroot "$CHROOT_DIR" /bin/bash -c "
 set -e
-cd /var/tmp/build/make-$MAKE_VERSION
+cd /var/tmp/build/$NAME-$VERSION
 
 ARCH=\$(uname -m)
 case \"\$ARCH\" in
@@ -145,294 +171,24 @@ export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
 export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
-export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib64"
+export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
+export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib64\"
 
 ./configure --prefix=/usr --disable-dependency-tracking
 make -j\$(nproc)
 make install
 "
 
-sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
-sudo rm -rf "$CHROOT_BUILD_DIR"
+    echo "[+] Cleaning up $NAME-$VERSION build"
+    sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+    sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+    sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+    sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+    sudo rm -rf "$CHROOT_BUILD_DIR"
 
-echo "[+] GNU Make built successfully"
-
-echo
-echo "[+] Installing GNU GMP"
-
-GMP_VERSION="6.3.0"
-GMP_TAR="gmp-$GMP_VERSION.tar.xz"
-GMP_URL="https://gmplib.org/download/gmp/$GMP_TAR"
-
-sudo mkdir -p "$BUILD_DIR"
-sudo mkdir -p "$CHROOT_BUILD_DIR"
-
-sudo curl -L -o "$BUILD_DIR/$GMP_TAR" "$GMP_URL"
-sudo tar -xf "$BUILD_DIR/$GMP_TAR" -C "$BUILD_DIR"
-sudo rsync -a "$BUILD_DIR/gmp-$GMP_VERSION" "$CHROOT_BUILD_DIR/"
-sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
-
-mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
-mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
-mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
-mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
-
-sudo chroot "$CHROOT_DIR" /bin/bash -c "
-set -e
-cd /var/tmp/build/gmp-$GMP_VERSION
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-
-export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-
-./configure --prefix=/usr --disable-dependency-tracking
-make -j\$(nproc)
-make install
-"
-
-sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
-sudo rm -rf "$CHROOT_BUILD_DIR"
-
-echo "[+] GMP $GMP_VERSION built successfully"
-
-echo
-echo "[+] Installing MPFR"
-
-MPFR_VERSION="4.2.2"
-MPFR_TAR="mpfr-$MPFR_VERSION.tar.xz"
-MPFR_URL="https://www.mpfr.org/mpfr-current/$MPFR_TAR"
-
-sudo mkdir -p "$BUILD_DIR"
-sudo mkdir -p "$CHROOT_BUILD_DIR"
-
-sudo curl -L -o "$BUILD_DIR/$MPFR_TAR" "$MPFR_URL"
-sudo tar -xf "$BUILD_DIR/$MPFR_TAR" -C "$BUILD_DIR"
-sudo rsync -a "$BUILD_DIR/mpfr-$MPFR_VERSION" "$CHROOT_BUILD_DIR/"
-sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
-
-mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
-mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
-mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
-mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
-
-sudo chroot "$CHROOT_DIR" /bin/bash -c "
-set -e
-cd /var/tmp/build/mpfr-$MPFR_VERSION
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-
-export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-
-./configure --prefix=/usr --disable-dependency-tracking
-make -j\$(nproc)
-make install
-"
-
-sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
-sudo rm -rf "$CHROOT_BUILD_DIR"
-
-echo "[+] MPFR $MPFR_VERSION built successfully"
-echo
-echo "[+] Installing Binutils"
-
-BINUTILS_VERSION="2.45"
-BINUTILS_TAR="binutils-$BINUTILS_VERSION.tar.xz"
-BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
-
-sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
-
-sudo curl -L -o "$BUILD_DIR/$BINUTILS_TAR" "$BINUTILS_URL"
-sudo tar -xf "$BUILD_DIR/$BINUTILS_TAR" -C "$BUILD_DIR"
-sudo rsync -a "$BUILD_DIR/binutils-$BINUTILS_VERSION" "$CHROOT_BUILD_DIR/"
-sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
-
-mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
-mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
-mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
-mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
-
-sudo chroot "$CHROOT_DIR" /bin/bash -c "
-set -e
-cd /var/tmp/build/binutils-$BINUTILS_VERSION
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-
-export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-
-./configure --prefix=/usr --disable-dependency-tracking
-make -j\$(nproc)
-make install
-"
-
-sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
-sudo rm -rf "$CHROOT_BUILD_DIR"
-
-echo "[+] Binutils $BINUTILS_VERSION built successfully"
-
-echo
-echo "[+] Installing Diffutils"
-
-DIFFUTILS_VERSION="3.12"
-DIFFUTILS_TAR="diffutils-$DIFFUTILS_VERSION.tar.xz"
-DIFFUTILS_URL="https://ftp.gnu.org/gnu/diffutils/$DIFFUTILS_TAR"
-
-sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
-
-sudo curl -L -o "$BUILD_DIR/$DIFFUTILS_TAR" "$DIFFUTILS_URL"
-sudo tar -xf "$BUILD_DIR/$DIFFUTILS_TAR" -C "$BUILD_DIR"
-sudo rsync -a "$BUILD_DIR/diffutils-$DIFFUTILS_VERSION" "$CHROOT_BUILD_DIR/"
-sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
-
-mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
-mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
-mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
-mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
-
-sudo chroot "$CHROOT_DIR" /bin/bash -c "
-set -e
-cd /var/tmp/build/diffutils-$DIFFUTILS_VERSION
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-
-export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-
-./configure --prefix=/usr --disable-dependency-tracking
-make -j\$(nproc)
-make install
-"
-
-sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
-sudo rm -rf "$CHROOT_BUILD_DIR"
-
-echo "[+] Diffutils $DIFFUTILS_VERSION built successfully"
-
-echo
-echo "[+] Installing Git"
-
-GIT_VERSION="2.51.0"
-GIT_TAR="git-$GIT_VERSION.tar.gz"
-GIT_URL="https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
-
-sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
-
-sudo curl -L -o "$BUILD_DIR/$GIT_TAR" "$GIT_URL"
-sudo tar -xzf "$BUILD_DIR/$GIT_TAR" -C "$BUILD_DIR"
-sudo rsync -a "$BUILD_DIR/git-$GIT_VERSION" "$CHROOT_BUILD_DIR/"
-sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
-
-mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
-mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
-mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
-mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
-
-sudo chroot "$CHROOT_DIR" /bin/bash -c "
-set -e
-cd /var/tmp/build/git-$GIT_VERSION
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-
-export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-
-./configure --prefix=/usr --disable-dependency-tracking
-make -j\$(nproc)
-make install
-"
-
-sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
-sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
-sudo rm -rf "$CHROOT_BUILD_DIR"
-
-echo "[+] Git $GIT_VERSION built successfully"
-
-echo
+    echo "[+] $NAME-$VERSION built successfully"
+    echo
+done
 
 sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/bin" \
@@ -445,5 +201,3 @@ sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/var/cache"
 
 echo "[+] Chard Root Environment ready to run!"
-
-chard help
