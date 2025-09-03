@@ -2,13 +2,6 @@
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
-esac
-
 if [ -f "$CHARD_RC" ]; then
     source "$CHARD_RC"
 else
@@ -33,6 +26,7 @@ chard_emerge() {
         HOME="$HOME" \
         SHELL="$SHELL" \
         "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
+
 }
 
 
@@ -52,7 +46,7 @@ chard_categories() {
         echo "ERROR: Portage tree not found at $PORTAGE_DIR"
         return 1
     fi
-    echo "[*] Available Portage categories in $CHARD_ROOT/usr/portage :"
+    echo "[*] Available Portage categories:"
     for cat in "$PORTAGE_DIR"/*/; do
         [ -d "$cat" ] || continue
         basename "$cat"
@@ -77,7 +71,7 @@ case "$cmd" in
             LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
             "$@"
         ;;
-    shell)
+    root)
         echo "[*] Entering sandbox shell..."
         exec bash --rcfile <(echo "source $CHARD_RC")
         ;;
@@ -127,9 +121,6 @@ case "$cmd" in
         ;;
     categories|cat)
         chard_categories
-        ;;
-    root)
-        sudo chroot "$CHARD_ROOT" /bin/bash -c
         ;;
     *)
         echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
