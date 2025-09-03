@@ -433,6 +433,58 @@ sudo rm -rf "$CHROOT_BUILD_DIR"
 echo "[+] Git $GIT_VERSION built successfully"
 
 echo
+echo "[+] Installing Python"
+
+PYTHON_VERSION="3.11.1"
+PYTHON_TAR="Python-$PYTHON_VERSION.tar.xz"
+PYTHON_URL="https://www.python.org/ftp/python/$PYTHON_VERSION/$PYTHON_TAR"
+
+sudo mkdir -p "$BUILD_DIR" "$CHROOT_BUILD_DIR"
+
+sudo curl -L -o "$BUILD_DIR/$PYTHON_TAR" "$PYTHON_URL"
+sudo tar -xf "$BUILD_DIR/$PYTHON_TAR" -C "$BUILD_DIR"
+sudo rsync -a "$BUILD_DIR/Python-$PYTHON_VERSION" "$CHROOT_BUILD_DIR/"
+sudo rsync -a --exclude 'chroot' --exclude 'var/tmp/build' "$CHARD_ROOT/" "$CHROOT_DIR/"
+
+mountpoint -q "$CHROOT_DIR/proc"    || sudo mount -t proc proc "$CHROOT_DIR/proc"
+mountpoint -q "$CHROOT_DIR/sys"     || sudo mount -t sysfs sys "$CHROOT_DIR/sys"
+mountpoint -q "$CHROOT_DIR/dev"     || sudo mount --bind /dev "$CHROOT_DIR/dev"
+mountpoint -q "$CHROOT_DIR/dev/shm" || sudo mount --bind /dev/shm "$CHROOT_DIR/dev/shm"
+
+sudo chroot "$CHROOT_DIR" /bin/bash -c "
+set -e
+cd /var/tmp/build/Python-$PYTHON_VERSION
+
+ARCH=\$(uname -m)
+case \"\$ARCH\" in
+    x86_64) CHOST=x86_64-pc-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
+    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+esac
+
+GCC_DIR=/usr/\$CHOST/gcc-bin/14
+export CC=\$GCC_DIR/\$CHOST-gcc
+export CXX=\$GCC_DIR/\$CHOST-g++
+export AR=\$GCC_DIR/gcc-ar
+export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+
+export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
+
+./configure --prefix=/usr --disable-dependency-tracking
+make -j\$(nproc)
+make install
+"
+
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+sudo rm -rf "$CHROOT_BUILD_DIR"
+
+echo "[+] Python $PYTHON_VERSION built successfully"
 
 sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/bin" \
@@ -447,5 +499,3 @@ sudo chown -Rf 1000:1000 \
 echo "[+] Chard Root Environment ready to run!"
 
 chard help
-
-
