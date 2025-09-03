@@ -12,16 +12,16 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 chard_emerge() {
-    sudo env \
+    env \
     ROOT="$CHARD_ROOT" \
-    PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-    PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
-    DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
-    PKGDIR="$CHARD_ROOT/var/cache/packages" \
-    PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
-    LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib64" \
-    HOME="$HOME" \
-    SHELL="$SHELL" \
+   # PORTAGE_CONFIGROOT="$CHARD_ROOT" \
+   # PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
+   # DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
+   # PKGDIR="$CHARD_ROOT/var/cache/packages" \
+   # PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
+   # LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib64" \
+   # HOME="$HOME" \
+   # SHELL="$SHELL" \
     "$CHARD_ROOT/bin/emerge" --ask=n "$@"
 }
 
