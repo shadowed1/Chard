@@ -45,7 +45,7 @@ chard_python() {
     sudo env \
         ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin"
+        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin \
         LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib64" \
         "$CHARD_ROOT/bin/python3" "$@"
 }
@@ -94,7 +94,7 @@ chard_git() {
     sudo env \
         ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin"
+        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
         LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib64" \
         "$CHARD_ROOT/bin/git" "$@"
 }
