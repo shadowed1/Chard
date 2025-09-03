@@ -24,7 +24,7 @@ chard_emerge() {
         return 1
     fi
     echo "[*] Running emerge inside Chard environment..."
-    sudo env \
+    env \
         ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
         PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
