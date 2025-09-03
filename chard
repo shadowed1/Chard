@@ -150,7 +150,7 @@ case "$cmd" in
         sudo chroot "$CHARD_ROOT" /bin/bash
         ;;
     git)
-        chard_git
+        chard_git "$@" 
         ;;
     reinstall)
         chard_reinstall
