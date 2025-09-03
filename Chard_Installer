@@ -140,7 +140,6 @@ done
 echo "[+] Copying CHARD_ROOT into Chard chroot."
 sudo tar -C "$CHARD_ROOT" -cf - \
     --exclude='./chroot' \
-    --exclude='./var/tmp/build' \
     . 2>/dev/null \
 | gzip -1 | sudo gzip -d | sudo tar -C "$CHROOT_DIR" -xf -
 
