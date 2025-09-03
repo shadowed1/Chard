@@ -469,7 +469,8 @@ export AR=\$GCC_DIR/gcc-ar
 export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
 export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
+export LDFLAGS="-L/usr/lib -L/usr/lib64"
+export LD_LIBRARY_PATH="/usr/lib:/usr/lib64:$LD_LIBRARY_PATH"
 
 export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 
