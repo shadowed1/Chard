@@ -8,8 +8,6 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-set -e
-
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
@@ -160,7 +158,7 @@ for pkg in "${PACKAGES[@]}"; do
 
     echo "[+] Building $NAME-$VERSION in chroot"
     sudo chroot "$CHROOT_DIR" /bin/bash -c "
-set -e
+
 cd /var/tmp/build/$NAME-$VERSION
 
 ARCH=\$(uname -m)
