@@ -29,6 +29,23 @@ chard_emerge() {
 
 }
 
+chard_python() {
+    if [ $# -lt 1 ]; then
+        echo "Usage: chard python <script.py> [args...]"
+        return 1
+    fi
+    echo "[*] Running Python inside Chard environment..."
+    sudo env \
+        ROOT="$CHARD_ROOT" \
+        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
+        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
+        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
+        HOME="$HOME" \
+        SHELL="$SHELL" \
+        "$CHARD_ROOT/usr/bin/python3" "$@"
+}
+
+
 
 chard_list() {
     echo "[*] Listing installed packages in Chard root..."
@@ -58,6 +75,9 @@ cmd="$1"; shift || true
 case "$cmd" in
     emerge)
         chard_emerge "$@"
+        ;;
+    python)
+        chard_python "$@"
         ;;
     run)
         if [ $# -lt 1 ]; then
