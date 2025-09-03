@@ -188,6 +188,12 @@ make install
     echo
 done
 
+echo "[+] Cleaning up Chard Chroot"
+sudo umount -l "$CHROOT_DIR/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/dev"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/sys"     2>/dev/null || true
+sudo umount -l "$CHROOT_DIR/proc"    2>/dev/null || true
+
 sudo rm -rf "$CHROOT_BUILD_DIR"
 
 sudo chown -Rf 1000:1000 \
