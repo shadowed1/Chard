@@ -22,7 +22,7 @@ chard_emerge() {
     LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib64"
     HOME="$HOME" \
     SHELL="$SHELL" \
-    "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
+    "$CHARD_ROOT/bin/emerge" --ask=n "$@"
 }
 
 # <<< END CHARD_LOGIC <<<
