@@ -30,10 +30,8 @@ chard_emerge() {
     PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
     DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
     PKGDIR="$CHARD_ROOT/var/cache/packages" \
-   # PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
-   # LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib64" \
-   # HOME="$HOME" \
-   # SHELL="$SHELL" \
+     PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
+     LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib64" \
     "$CHARD_ROOT/bin/emerge" --ask=n "$@"
 
 }
@@ -49,8 +47,6 @@ chard_python() {
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
         PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
         LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-        HOME="$HOME" \
-        SHELL="$SHELL" \
         "$CHARD_ROOT/bin/python3" "$@"
 }
 
@@ -88,6 +84,21 @@ chard_reinstall() {
                 ;;
         esac
 }
+
+chard_git() {
+    if [ $# -lt 1 ]; then
+        echo "Usage: chard git <git-args...>"
+        return 1
+    fi
+    echo "[*] Running Git inside Chard environment..."
+    sudo env \
+        ROOT="$CHARD_ROOT" \
+        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
+        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
+        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
+        "$CHARD_ROOT/usr/bin/git" "$@"
+}
+
 
 
 chard_list() {
@@ -137,6 +148,9 @@ case "$cmd" in
     root)
         echo "[*] Entering sandbox shell..."
         sudo chroot "$CHARD_ROOT" /bin/bash
+        ;;
+    git)
+        chard_git
         ;;
     reinstall)
         chard_reinstall
