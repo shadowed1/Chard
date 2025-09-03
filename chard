@@ -1,4 +1,9 @@
 #!/bin/bash
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
@@ -47,7 +52,7 @@ chard_python() {
 }
 
 chard_reinstall() {
-echo "${RESET}${GREEN}"
+        echo "${RESET}${GREEN}"
         echo "[1] Quick reinstall (Update Chard Scripts and Environment Files)"
         echo "${RESET}${YELLOW}"
         echo "[2] Full reinstall (Download Chard Installer)"
