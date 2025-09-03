@@ -187,12 +187,6 @@ sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
-PYTHON_REAL="$CHARD_ROOT/usr/bin/python3.13"
-sudo cp "$PYTHON_REAL" "$CHARD_ROOT/bin/python3"
-sudo chmod +x "$CHARD_ROOT/bin/python3"
-EMERGE_FILE="$CHARD_ROOT/bin/emerge"
-sudo sed -i "1 s|^#!.*|#!$PYTHON_REAL|" "$EMERGE_FILE"
-
 sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/bin" \
     "$CHARD_ROOT/lib" \
