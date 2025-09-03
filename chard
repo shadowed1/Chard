@@ -57,9 +57,9 @@ chard_python() {
 
 chard_reinstall() {
         echo "${RESET}${GREEN}"
-        echo "[1] Quick reinstall (Update Chard Scripts and Environment Files)"
+        echo "[1] Quick Reinstall (Update Chard)"
         echo "${RESET}${YELLOW}"
-        echo "[2] Full reinstall (Download Chard Installer)"
+        echo "[2] Full Reinstall (Run Chard Installer)"
         echo "${RESET}${RED}"
         echo "[q] Cancel"
         echo "${RESET}${GREEN}"
