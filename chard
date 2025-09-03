@@ -73,7 +73,7 @@ case "$cmd" in
         ;;
     root)
         echo "[*] Entering sandbox shell..."
-        exec bash --rcfile <(echo "source $CHARD_RC")
+        sudo chroot "$CHARD_ROOT" /bin/bash
         ;;
     reinstall)
         echo "${RESET}${GREEN}"
