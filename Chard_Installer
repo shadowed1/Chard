@@ -81,20 +81,18 @@ echo "[+] Attaching loop device..."
 LOOP_DEV=$(sudo losetup --show -fP "$BIN_FILE")
 echo "[+] Using loop device: $LOOP_DEV"
 
-ROOT_PART=$(sudo fdisk -l "$LOOP_DEV" \
-    | awk '/Linux filesystem/ {print $1, $4}' \
-    | sort -k2 -nr \
-    | head -n1 \
-    | awk '{print $1}')
-
-if [ -z "$ROOT_PART" ]; then
-    echo "${RED}[!] Could not detect ROOT-A partition${RESET}"
+ROOT_PART="${LOOP_DEV}p3"
+if [ ! -b "$ROOT_PART" ]; then
+    echo "${RED}[!] ROOT-A partition not found at ${ROOT_PART}${RESET}"
     sudo losetup -d "$LOOP_DEV"
     exit 1
 fi
 
 echo "[+] Mounting ROOT-A partition $ROOT_PART..."
 sudo mount -o ro "$ROOT_PART" "$MOUNT_DIR"
+
+echo "[+] Top-level contents of ROOT-A:"
+ls -l "$MOUNT_DIR"
 
 echo "[+] Copying system files into Chard root..."
 sudo tar -C "$MOUNT_DIR" \
