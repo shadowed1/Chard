@@ -3,7 +3,7 @@
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
+BLUE=$(tput setaf 4)Pr
 MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
@@ -103,7 +103,7 @@ download_and_install_pkg() {
         echo "${YELLOW}[!] Could not resolve final URL; trying to download original URL directly${RESET}"
         final="$src_url"
     fi
-    echo "${RED} Mirror: $final ${RESET}"
+    echo "${RED}==> Mirror:${RESET}${YELLOW} $final ${RESET}"
 
     local filename
     filename=$(basename "${final%%\?*}")
@@ -187,7 +187,7 @@ fi
 
 for p in "${PACKS[@]}"; do
     echo
-    echo "${GREEN}==> Processing: $p${RESET}"
+    echo "${RED}==> Processing:${RESET}${YELLOW} $p${RESET}"
     download_and_install_pkg "$p" || {
         echo "${YELLOW}[!] Warning: failed to download/install package: $p - continuing${RESET}"
     }
