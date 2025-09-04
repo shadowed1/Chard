@@ -2,28 +2,6 @@
 
 export CHARD_ROOT="/usr/local/chard"
 
-case ":$PATH:" in
-    *":$CHARD_ROOT/usr/bin:"*) ;;
-    *) PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
-esac
-
-case ":$PATH:" in
-    *":$CHARD_ROOT/bin:"*) ;;
-    *) PATH="$PATH:$CHARD_ROOT/bin" ;;
-esac
-
-case ":${LD_LIBRARY_PATH:-}:" in
-    *":$CHARD_ROOT/usr/lib:"*) ;;
-    *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib" ;;
-esac
-
-case ":${LD_LIBRARY_PATH:-}:" in
-    *":$CHARD_ROOT/lib:"*) ;;
-    *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib" ;;
-esac
-
-export PATH LD_LIBRARY_PATH
-
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
