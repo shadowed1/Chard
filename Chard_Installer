@@ -17,6 +17,26 @@ echo "[+] Creating Chard directories..."
 sudo mkdir -p "$CHARD_ROOT"/{usr/bin,usr/lib,usr/include,usr/toolchain,var/tmp}
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 
+echo "[+] Downloading chard configuration files..."
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+sudo -E mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+
+sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
+
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
+    cat >> "/home/chronos/user/.bashrc" <<EOF
+
+# <<< CHARD ENV MARKER <<<
+source "$CHARD_RC"
+# <<< END CHARD ENV MARKER <<<
+EOF
+    echo "[+] Chard sourced to ~/.bashrc"
+else
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
+fi
+
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) MUSL_ARCH="x86_64"; TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz" ;;
