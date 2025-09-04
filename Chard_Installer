@@ -14,7 +14,7 @@ BUILD_DIR="$CHARD_ROOT/var/tmp"
 TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 
 echo "[+] Creating Chard directories..."
-sudo mkdir -p "$CHARD_ROOT"/{usr/bin,usr/lib,usr/include,usr/toolchain,var/tmp}
+sudo mkdir -p "$CHARD_ROOT"/{usr/bin,usr/lib,usr/include,usr/toolchain,var/tmp,bin}
 echo "[+] Downloading chard configuration files..."
 sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
