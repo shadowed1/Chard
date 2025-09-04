@@ -10,12 +10,9 @@ RESET=$(tput sgr0)
 
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-RECOVERY_DIR="$CHARD_ROOT/var/tmp/recovery"
-MOUNT_DIR="$RECOVERY_DIR/mount"
 
 echo "[+] Creating Chard directories..."
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp,bin}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo mkdir -p "$BUILD_DIR" "$RECOVERY_DIR" "$MOUNT_DIR"
 
@@ -23,19 +20,6 @@ echo "[+] Downloading Chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
-
-sudo dev_install 2>/dev/null || true
-
-cd /usr/local
-sudo curl -LO https://files.pythonhosted.org/packages/8e/7c/6c56e0f58c1b2a8f3e3f04e2c98f2f8a1b1234c7f623d8f1a5b1f0e0b91c/protobuf-4.24.1-py3-none-any.whl
-python3 -m ensurepip --default-pip
-sudo python3 -m pip install /usr/local/protobuf-4.24.1-py3-none-any.whl
-/usr/lib/python-exec/python3.11/python3 -m pip install --upgrade pip
-python3 -m pip install --user protobuf
-
-sudo chown -R 1000:1000 "$CHARD_ROOT"
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -49,77 +33,82 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
-ARCH=$(uname -m)
-RECOVERY_DIR="$HOME/Downloads"
+hwid=$(crossystem hwid | awk '{print $1}')
+BOARD=${hwid%%-*}
+BOARD=$(echo "$BOARD" | tr '[:upper:]' '[:lower:]')
+echo "[+] Detected board: $BOARD"
 
-mkdir -p "$RECOVERY_DIR"
-
-if [[ "$ARCH" == "x86_64" ]]; then
-    BIN_URL="https://dl.google.com/chromeos/samus/13816.82.0/stable-channel/chromeos_13816.82.0_samus_stable-channel_full_mp-v3.bin-gyydszjugq3wj4x2vmoatz2fonnr7g3y.signed"
-    BIN_PATH="$RECOVERY_DIR/$(basename "$BIN_URL")"
-else
-    BIN_URL="https://dl.google.com/chromeos/kevin/14526.89.0/stable-channel/chromeos_14526.89.0_kevin_stable-channel_full_mp.bin-gyzdkn3dmqztq6qtgusvmfckvfocpax7.signed"
-    BIN_PATH="$RECOVERY_DIR/$(basename "$BIN_URL")"
-fi
-
-echo "[+] Downloading recovery image for $ARCH..."
-curl -L -o "$BIN_PATH" "$BIN_URL"
-
-
-EXTRACTOR_DIR="/usr/local/extract_android_ota_payload"
-EXTRACT_DIR="$EXTRACTOR_DIR/extracted"
-
-
-sudo mkdir -p "$EXTRACTOR_DIR"
-sudo chown 1000:1000 "$EXTRACTOR_DIR"
-mkdir -p "$EXTRACT_DIR"
-
-OTA_ZIP="$EXTRACTOR_DIR/extract_android_ota_payload.zip"
-curl -L -o "$OTA_ZIP" https://github.com/cyxx/extract_android_ota_payload/archive/refs/heads/master.zip
-bsdtar -xf "$OTA_ZIP" -C "$EXTRACTOR_DIR"
-EXTRACTOR="$EXTRACTOR_DIR/extract_android_ota_payload-master/extract_android_ota_payload.py"
-
-cp "$BIN_PATH" "$EXTRACTOR_DIR/update.signed"
-ZIP_PATH="$EXTRACTOR_DIR/update.signed"
-
-mkdir -p "$EXTRACT_DIR"
-python3 "$EXTRACTOR" "$ZIP_PATH" "$EXTRACT_DIR" || echo "${YELLOW}[!] Warning: extractor returned non-zero exit code, continuing...${RESET}"
-
-ROOT_IMG=$(find "$EXTRACT_DIR" -name "root.img" | head -n1)
-if [ -z "$ROOT_IMG" ]; then
-    echo "${RED}Failed to extract root.img${RESET}"
+echo "[+] Fetching recovery manifest..."
+MANIFEST=$(curl -s https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.json)
+if [ -z "$MANIFEST" ]; then
+    echo "${RED}Failed to fetch recovery manifest.${RESET}"
     exit 1
 fi
-echo "[+] root.img found at $ROOT_IMG"
 
-mkdir -p "$MOUNT_DIR"
-sudo mount -o ro "$ROOT_IMG" "$MOUNT_DIR"
+LINK=$(echo "$MANIFEST" \
+    | tr '\n' ' ' \
+    | sed 's/},/}\n/g' \
+    | grep -i "$hwid" \
+    | grep -o '"url": *"[^"]*"' \
+    | sed -E 's/.*"url": *"([^"]*)".*/\1/' \
+    | tail -n1)
+
+if [ -z "$LINK" ]; then
+    echo "${RED}No recovery image found for HWID $hwid${RESET}"
+    exit 1
+fi
+
+FILENAME=$(basename "$LINK")
+ZIP_PATH="$RECOVERY_DIR/$FILENAME"
+
+echo "[+] Downloading recovery image..."
+sudo curl -L -o "$ZIP_PATH" "$LINK"
+
+echo "[+] Extracting recovery image with bsdtar..."
+sudo bsdtar -xf "$ZIP_PATH" -C "$RECOVERY_DIR"
+
+BIN_FILE=$(find "$RECOVERY_DIR" -name "*.bin" | head -n1)
+if [ -z "$BIN_FILE" ]; then
+    echo "${RED}Failed to extract .bin from zip${RESET}"
+    exit 1
+fi
+echo "[+] Recovery bin: $BIN_FILE"
+
+echo "[+] Attaching loop device..."
+LOOP_DEV=$(sudo losetup --show -fP "$BIN_FILE")
+echo "[+] Using loop device: $LOOP_DEV"
+
+ROOT_PART=$(sudo fdisk -l "$LOOP_DEV" \
+    | grep 'Linux filesystem' \
+    | awk '{print $1}' \
+    | head -n1)
+
+if [ -z "$ROOT_PART" ]; then
+    echo "${RED}[!] Could not detect ROOT-A partition${RESET}"
+    sudo losetup -d "$LOOP_DEV"
+    exit 1
+fi
+
+echo "[+] Mounting ROOT-A partition $ROOT_PART..."
+sudo mount -o ro "$ROOT_PART" "$MOUNT_DIR"
 
 echo "[+] Copying system files into Chard root..."
-rsync -aH --info=progress2 \
-  --exclude=dev \
-  --exclude=proc \
-  --exclude=sys \
-  --exclude=run \
-  --exclude=tmp \
-  --exclude=mnt \
-  --exclude=boot \
-  --exclude=var \
-  --exclude=home \
-  --exclude=opt \
-  --exclude=usr/share \
-  --exclude=usr/local \
+sudo tar -C "$MOUNT_DIR" \
+  --exclude=dev --exclude=proc --exclude=sys --exclude=run --exclude=tmp \
+  --exclude=mnt --exclude=boot --exclude=var --exclude=home --exclude=opt \
+  --exclude=usr/share --exclude=usr/local \
   --exclude=sbin \
-  "$MOUNT_DIR"/bin \
-  "$MOUNT_DIR"/etc \
-  "$MOUNT_DIR"/lib \
-  "$MOUNT_DIR"/lib64 \
-  "$MOUNT_DIR"/usr \
-  "$CHARD_ROOT"/
+  --exclude="$CHARD_ROOT" --exclude="$CHARD_ROOT/*" \
+  -cf - bin etc lib lib64 usr \
+| gzip -1 \
+| sudo tar -C "$CHARD_ROOT" -xvzf -
 
 sudo umount "$MOUNT_DIR"
+sudo losetup -d "$LOOP_DEV"
+
 sudo rm -rf "$RECOVERY_DIR"
 
+ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
     aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
@@ -140,45 +129,15 @@ PKGDIR='\${ROOT}/var/cache/packages'
 EOF
 echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
+GCC_DIR="$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+export CC="$GCC_DIR/$CHOST-gcc"
+export CXX="$GCC_DIR/$CHOST-g++"
+export AR="$GCC_DIR/gcc-ar"
+export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
+export PATH="$PATH:$GCC_DIR:$CHARD_ROOT/usr/bin"
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib"
 export AWK=/usr/bin/mawk
-echo "[+] Downloading and installing GNU Make for $ARCH..."
-
-if [[ "$ARCH" == "x86_64" ]]; then
-    MAKE_URL="https://archlinux.org/packages/core/x86_64/make/download"
-    MAKE_ARCHIVE="$CHARD_ROOT/var/tmp/make.pkg.tar.zst"
-elif [[ "$ARCH" == "aarch64" ]]; then
-    MAKE_URL="http://mirror.archlinuxarm.org/aarch64/core/make-4.4.1-2-aarch64.pkg.tar.xz"
-    MAKE_ARCHIVE="$CHARD_ROOT/var/tmp/make.pkg.tar.xz"
-else
-    echo "${RED}[!] Unknown architecture: $ARCH${RESET}"
-    exit 1
-fi
-
-curl -L -o "$MAKE_ARCHIVE" "$MAKE_URL"
-
-mkdir -p "$CHARD_ROOT/opt/make"
-case "$MAKE_ARCHIVE" in
-    *.zst) 
-        zstd -d --stdout "$MAKE_ARCHIVE" | bsdtar -x -C "$CHARD_ROOT/opt/make"
-        ;;
-    *.xz)
-        bsdtar -xf "$MAKE_ARCHIVE" -C "$CHARD_ROOT/opt/make"
-        ;;
-    *) 
-        echo "${RED}[!] Unsupported archive format${RESET}"
-        exit 1
-        ;;
-esac
-
-MAKE_BIN=$(find "$CHARD_ROOT/opt/make" -type f -name make | head -n1)
-if [[ -n "$MAKE_BIN" ]]; then
-    ln -sf "$MAKE_BIN" "$CHARD_ROOT/usr/bin/make"
-    chmod +x "$MAKE_BIN"
-    echo "[+] GNU Make installed at $MAKE_BIN and symlinked to $CHARD_ROOT/usr/bin/make"
-else
-    echo "${RED}[!] Failed to locate make binary in archive${RESET}"
-fi
-
-rm -f "$MAKE_ARCHIVE"
 
 echo "[+] Chard root environment ready!"
