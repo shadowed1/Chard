@@ -1,13 +1,4 @@
 #!/bin/bash
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
-
 CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
@@ -24,81 +15,19 @@ chard_emerge() {
         return 1
     fi
     echo "[*] Running emerge inside Chard environment..."
-    env \
-    ROOT="$CHARD_ROOT" \
-    PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-    PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
-    DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
-    PKGDIR="$CHARD_ROOT/var/cache/packages" \
-    PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
-    LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-    "$CHARD_ROOT/bin/emerge" --ask=n "$@"
-
-}
-
-chard_python() {
-    if [ $# -lt 1 ]; then
-        echo "Usage: chard python <script.py> [args...]"
-        return 1
-    fi
-    echo "[*] Running Python inside Chard environment..."
     sudo env \
         ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin \
+        PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
+        DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
+        PKGDIR="$CHARD_ROOT/var/cache/packages" \
+        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
         LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-        "$CHARD_ROOT/bin/python3" "$@"
-}
+        HOME="$HOME" \
+        SHELL="$SHELL" \
+        "$CHARD_ROOT/usr/bin/emerge" --ask=n "$@"
 
-chard_reinstall() {
-        echo "${RESET}${GREEN}"
-        echo "[1] Quick Reinstall (Update Chard)"
-        echo "${RESET}${YELLOW}"
-        echo "[2] Full Reinstall (Run Chard Installer)"
-        echo "${RESET}${RED}"
-        echo "[q] Cancel"
-        echo "${RESET}${GREEN}"
-        read -p "Choose an option [1/2/q]: " choice
-        case "$choice" in
-            1)
-                echo "${RESET}"
-                echo "[*] Performing quick reinstall..."
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-                sudo chmod +x "$CHARD_ROOT/bin/chard"
-                echo "[*] Quick reinstall complete."
-                echo "${RESET}"
-                ;;
-            2)
-                echo "${RESET}"
-                echo "[*] Performing full reinstall..."
-                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")
-                echo "${RESET}"
-                ;;
-            q|Q|*)
-                echo "${RESET}"
-                echo "[*] Reinstall cancelled."
-                echo "${RESET}"
-                ;;
-        esac
 }
-
-chard_git() {
-    if [ $# -lt 1 ]; then
-        echo "Usage: chard git <git-args...>"
-        return 1
-    fi
-    echo "[*] Running Git inside Chard environment..."
-    sudo env \
-        ROOT="$CHARD_ROOT" \
-        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
-        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-        "$CHARD_ROOT/bin/git" "$@"
-}
-
 
 
 chard_list() {
@@ -130,9 +59,6 @@ case "$cmd" in
     emerge)
         chard_emerge "$@"
         ;;
-    python)
-        chard_python "$@"
-        ;;
     run)
         if [ $# -lt 1 ]; then
             echo "Usage: chard run <binary> [args...]"
@@ -145,15 +71,43 @@ case "$cmd" in
             LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
             "$@"
         ;;
-    root)
+    shell)
         echo "[*] Entering sandbox shell..."
-        sudo chroot "$CHARD_ROOT" /bin/bash
-        ;;
-    git)
-        chard_git "$@" 
+        exec bash --rcfile <(echo "source $CHARD_RC")
         ;;
     reinstall)
-        chard_reinstall
+        echo "${RESET}${GREEN}"
+        echo "[1] Quick reinstall (Update Chard Scripts and Environment Files)"
+        echo "${RESET}${YELLOW}"
+        echo "[2] Full reinstall (Download Chard Installer)"
+        echo "${RESET}${RED}"
+        echo "[q] Cancel"
+        echo "${RESET}${GREEN}"
+        read -p "Choose an option [1/2/q]: " choice
+        case "$choice" in
+            1)
+                echo "${RESET}"
+                echo "[*] Performing quick reinstall..."
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+                sudo chmod +x "$CHARD_ROOT/bin/chard"
+                echo "[*] Quick reinstall complete."
+                echo "${RESET}"
+                ;;
+            2)
+                echo "${RESET}"
+                echo "[*] Performing full reinstall..."
+                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")
+                echo "${RESET}"
+                ;;
+            q|Q|*)
+                echo "${RESET}"
+                echo "[*] Reinstall cancelled."
+                echo "${RESET}"
+                ;;
+        esac
         ;;
     list)
         chard_list
