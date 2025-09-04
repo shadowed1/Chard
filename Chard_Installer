@@ -293,6 +293,7 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "http://mirror.archlinuxarm.org/aarch64/core/libmpc-1.3.1-2-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/libisl-0.27-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/extra/fastfetch-2.51.1-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/extra/yyjson-0.12.0-1-aarch64.pkg.tar.xz"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
