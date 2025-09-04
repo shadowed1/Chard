@@ -96,37 +96,43 @@ for pkg in "${PACKAGES[@]}"; do
     download_extract "$NAME" "$VERSION" "$EXT" "$URL"
 done
 
+echo "Building GMP"
 cd "$BUILD_DIR/gmp-6.3.0"
 ./configure --prefix="$CHARD_ROOT/usr" --enable-static --disable-shared
 make -j"$(nproc)"
 make install
 
+echo "Building MPFR"
 cd "$BUILD_DIR/mpfr-4.2.2"
 ./configure --prefix="$CHARD_ROOT/usr" --with-gmp="$CHARD_ROOT/usr" --enable-static --disable-shared
 make -j"$(nproc)"
 make install
 
-# Build MPC
+echo "Building MPC"
 cd "$BUILD_DIR/mpc-1.3.1"
 ./configure --prefix="$CHARD_ROOT/usr" --with-gmp="$CHARD_ROOT/usr" --with-mpfr="$CHARD_ROOT/usr" --enable-static --disable-shared
 make -j"$(nproc)"
 make install
 
+echo "Building Binutils"
 cd "$BUILD_DIR/binutils-2.45"
 ./configure --prefix="$CHARD_ROOT/usr" --disable-nls --disable-werror --enable-static --disable-shared
 make -j"$(nproc)"
 make install
 
+echo "Building Make"
 cd "$BUILD_DIR/make-4.4"
 ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 make -j"$(nproc)"
 make install
 
+echo "Building Diffutils"
 cd "$BUILD_DIR/diffutils-3.12"
 ./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
 make -j"$(nproc)"
 make install
 
+echo "Building GCC"
 cd "$BUILD_DIR/gcc-11.5.0"
 ./contrib/download_prerequisites  # Ensures GMP/MPFR/MPC are linked if needed
 mkdir -p build-gcc && cd build-gcc
