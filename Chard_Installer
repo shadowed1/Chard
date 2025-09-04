@@ -57,18 +57,14 @@ mkdir -p "$TOOLCHAIN_DIR"
 tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
 rm -f "$TOOLCHAIN_TAR"
 
-echo "[+] Symlinking musl toolchain binaries into $CHARD_ROOT/usr/bin..."
-for bin in gcc g++ ar ld ranlib strip cc c++; do
-    if [ -f "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" ]; then
-        ln -sf "$TOOLCHAIN_DIR/bin/$MUSL_ARCH-linux-musl-$bin" "$CHARD_ROOT/usr/bin/$bin"
-    fi
-done
+export PATH="$PATH:$CHARD_ROOT/usr/toolchain/bin"
 
-# export CC="$CHARD_ROOT/usr/bin/gcc"
-# export CXX="$CHARD_ROOT/usr/bin/g++"
-# export AR="$CHARD_ROOT/usr/bin/ar"
-# export RANLIB="$CHARD_ROOT/usr/bin/ranlib"
-# export PATH="$CHARD_ROOT/usr/bin:$TOOLCHAIN_DIR/bin:$PATH"
-# export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -static -fPIC"
-# export CXXFLAGS="$CFLAGS"
-# export LDFLAGS="-L$CHARD_ROOT/usr/lib -static"
+export CC="x86_64-linux-musl-gcc"
+export CXX="x86_64-linux-musl-g++"
+export AR="x86_64-linux-musl-ar"
+export RANLIB="x86_64-linux-musl-ranlib"
+
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -fPIC"
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib"
+
