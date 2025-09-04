@@ -210,6 +210,7 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "http://mirror.archlinuxarm.org/aarch64/core/libtirpc-1.3.7-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/libnsl-2.0.1-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/pcre2-10.46-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/extra/zlib-ng-2.2.5-1-aarch64.pkg.tar.xz"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
