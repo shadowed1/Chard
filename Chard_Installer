@@ -67,7 +67,7 @@ extract_to_target() {
             fi
             ;;
         *.xz|*.pkg.tar.xz)
-            echo "${CYAN}Extracting xz package to $target...${RESET}"
+            echo "${YELLOW}Extracting xz package to $target...${RESET}"
             if command -v xz >/dev/null 2>&1 || command -v unxz >/dev/null 2>&1; then
                 sudo tar -xJpf "$archive" -C "$target"
             else
