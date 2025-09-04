@@ -38,7 +38,6 @@ fi
 
 resolve_final_url() {
     local src="$1"
-    # Use curl to follow redirects and report the effective URL
     local final
     final=$(curl -sSL -w '%{url_effective}' -o /dev/null "$src" 2>/dev/null || true)
     echo "$final"
@@ -107,7 +106,7 @@ download_and_install_pkg() {
     echo "${RED} Mirror: $final ${RESET}"
 
     local filename
-    filename=$(basename "${final%%\?*}")    # drop querystring if present
+    filename=$(basename "${final%%\?*}")
     local tmpfile="/tmp/$filename"
 
     echo "${GREEN}[+] Downloading: $final -> $tmpfile${RESET}"
