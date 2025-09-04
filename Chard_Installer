@@ -164,6 +164,12 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/core/x86_64/pkgconf/download"
         "https://archlinux.org/packages/core/x86_64/gettext/download"
         "https://archlinux.org/packages/core/x86_64/expat/download"
+        "https://archlinux.org/packages/core/x86_64/libxcrypt/download"
+        "https://archlinux.org/packages/core/x86_64/gdbm/download"
+        "https://archlinux.org/packages/core/x86_64/db5.3/download"
+        "https://archlinux.org/packages/core/x86_64/perl/download"
+        "https://archlinux.org/packages/extra/any/perl-local-lib/download"
+
     )
 elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
@@ -182,6 +188,28 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "https://archlinux.org/packages/core/any/automake/download"
         "http://mirror.archlinuxarm.org/aarch64/core/pkgconf-2.5.1-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/expat-2.7.1-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/extra/perl-local-lib-2.000029-5-any.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/db5.3-5.3.28-5-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/gdbm-1.26-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libxcrypt-4.4.38-1-aarch64.pkg.tar.xz
+        "http://mirror.archlinuxarm.org/aarch64/core/perl-5.42.0-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/armv7h/extra/perl-mailtools-2.22-2-any.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/armv7h/extra/perl-timedate-2.33-8-any.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/shadow-4.18.0-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/acl-2.3.2-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/extra/git-2.51.0-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/audit-4.0.5-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/keyutils-1.6.3-3-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/krb5-1.21.3-2-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libldap-2.6.10-2-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libsasl-2.1.28-5-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/extra/lmdb-0.9.33-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libcap-ng-0.8.5-3-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/pam-1.7.1-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/pambase-20250719-1-any.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libtirpc-1.3.7-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libnsl-2.0.1-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/pcre2-10.46-1-aarch64.pkg.tar.xz"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
