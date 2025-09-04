@@ -17,8 +17,8 @@ case ":$LD_LIBRARY_PATH:" in
     *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib" ;;
 esac
 
-# export PATH
-# export LD_LIBRARY_PATH
+export PATH
+export LD_LIBRARY_PATH
 
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
