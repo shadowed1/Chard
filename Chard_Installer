@@ -309,7 +309,7 @@ for p in "${PACKS[@]}"; do
         echo "${YELLOW}[!] Warning: failed to download/install package: $p - continuing${RESET}"
     }
 done
-
+source /home/chronos/user/.bashrc
 echo "${YELLOW}[+] Fixing ownership to chronos:chronos (uid 1000) for $CHARD_ROOT${RESET}"
 sudo chown -R 1000:1000 "$CHARD_ROOT" || true
 
