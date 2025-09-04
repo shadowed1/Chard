@@ -82,9 +82,10 @@ LOOP_DEV=$(sudo losetup --show -fP "$BIN_FILE")
 echo "[+] Using loop device: $LOOP_DEV"
 
 ROOT_PART=$(sudo fdisk -l "$LOOP_DEV" \
-    | grep 'Linux filesystem' \
-    | awk '{print $1}' \
-    | head -n1)
+    | awk '/Linux filesystem/ {print $1, $4}' \
+    | sort -k2 -nr \
+    | head -n1 \
+    | awk '{print $1}')
 
 if [ -z "$ROOT_PART" ]; then
     echo "${RED}[!] Could not detect ROOT-A partition${RESET}"
