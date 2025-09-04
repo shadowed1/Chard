@@ -9,24 +9,20 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 CHARD_ROOT="/usr/local/bin/chard"
-MOUNT_DIR="/usr/local/recovery_test"
-BUILD_DIR="$CHARD_ROOT/var/tmp"
-TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
+CHARD_RC="$CHARD_ROOT/.chardrc"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+RECOVERY_DIR="$CHARD_ROOT/var/tmp/recovery"
+MOUNT_DIR="$RECOVERY_DIR/mount"
 
 echo "[+] Creating Chard directories..."
-sudo mkdir -p "$CHARD_ROOT"/{usr/bin,usr/lib,usr/include,usr/toolchain,var/tmp,bin}
-echo "[+] Downloading chard configuration files..."
-sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
-sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
-sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo -E chmod +x "$CHARD_ROOT/bin/chard"
-sudo -E mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo mkdir -p "$BUILD_DIR" "$RECOVERY_DIR" "$MOUNT_DIR"
 
-sudo chown -R 1000:1000 "$CHARD_ROOT"
-
-
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
+echo "[+] Downloading Chard configuration files..."
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -40,112 +36,110 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
+hwid=$(crossystem hwid | awk '{print $1}')
+BOARD=${hwid%%-*}
+BOARD=$(echo "$BOARD" | tr '[:upper:]' '[:lower:]')
+echo "[+] Detected board: $BOARD"
+
+echo "[+] Fetching recovery manifest..."
+MANIFEST=$(curl -s https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.json)
+if [ -z "$MANIFEST" ]; then
+    echo "${RED}Failed to fetch recovery manifest.${RESET}"
+    exit 1
+fi
+
+LINK=$(echo "$MANIFEST" \
+    | tr '\n' ' ' \
+    | sed 's/},/}\n/g' \
+    | grep -i "$hwid" \
+    | grep -o '"url": *"[^"]*"' \
+    | sed -E 's/.*"url": *"([^"]*)".*/\1/' \
+    | tail -n1)
+
+if [ -z "$LINK" ]; then
+    echo "${RED}No recovery image found for HWID $hwid${RESET}"
+    exit 1
+fi
+
+FILENAME=$(basename "$LINK")
+ZIP_PATH="$RECOVERY_DIR/$FILENAME"
+
+echo "[+] Downloading recovery image..."
+sudo curl -L -o "$ZIP_PATH" "$LINK"
+
+echo "[+] Extracting recovery image with bsdtar..."
+sudo bsdtar -xf "$ZIP_PATH" -C "$RECOVERY_DIR"
+
+BIN_FILE=$(find "$RECOVERY_DIR" -name "*.bin" | head -n1)
+if [ -z "$BIN_FILE" ]; then
+    echo "${RED}Failed to extract .bin from zip${RESET}"
+    exit 1
+fi
+echo "[+] Recovery bin: $BIN_FILE"
+
+echo "[+] Attaching loop device..."
+LOOP_DEV=$(sudo losetup --show -fP "$BIN_FILE")
+echo "[+] Using loop device: $LOOP_DEV"
+
+ROOT_PART="${LOOP_DEV}p3"
+if [ ! -b "$ROOT_PART" ]; then
+    echo "${RED}[!] ROOT-A partition not found at ${ROOT_PART}${RESET}"
+    sudo losetup -d "$LOOP_DEV"
+    exit 1
+fi
+
+echo "[+] Mounting ROOT-A partition $ROOT_PART..."
+sudo mount -o ro "$ROOT_PART" "$MOUNT_DIR"
+
+echo "[+] Top-level contents of ROOT-A:"
+ls -l "$MOUNT_DIR"
+
+echo "[+] Copying system files into Chard root..."
+sudo tar -C "$MOUNT_DIR" \
+  --exclude=dev --exclude=proc --exclude=sys --exclude=run --exclude=tmp \
+  --exclude=mnt --exclude=boot --exclude=var --exclude=home --exclude=opt \
+  --exclude=usr/share --exclude=usr/local \
+  --exclude=sbin \
+  --exclude="$CHARD_ROOT" --exclude="$CHARD_ROOT/*" \
+  -cf - bin etc lib lib64 usr \
+| gzip -1 \
+| sudo tar -C "$CHARD_ROOT" -xvzf -
+
+sudo umount "$MOUNT_DIR"
+sudo losetup -d "$LOOP_DEV"
+
+sudo rm -rf "$RECOVERY_DIR"
+
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) MUSL_ARCH="x86_64"; TOOLCHAIN_URL="https://musl.cc/x86_64-linux-musl-native.tgz" ;;
-    aarch64) MUSL_ARCH="aarch64"; TOOLCHAIN_URL="https://musl.cc/aarch64-linux-musl-native.tgz" ;;
-    *) echo "${RED}No musl toolchain available for $ARCH${RESET}"; exit 1 ;;
+    x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
+    aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
+    *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
 
-echo "[+] Downloading musl toolchain..."
-mkdir -p "$BUILD_DIR"
-TOOLCHAIN_TAR="$BUILD_DIR/$(basename "$TOOLCHAIN_URL")"
-curl -L -o "$TOOLCHAIN_TAR" "$TOOLCHAIN_URL"
+MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
+sudo tee "$MAKE_CONF" > /dev/null <<EOF
+CHOST='${CHOST}'
+ARCH='${GENTOO_ARCH}'
+ACCEPT_KEYWORDS='~${GENTOO_ARCH}'
+ROOT='${CHARD_ROOT}'
+CFLAGS='-O2 -pipe'
+CXXFLAGS='\${CFLAGS}'
+PORTAGE_TMPDIR='\${ROOT}/var/tmp'
+DISTDIR='\${ROOT}/var/cache/distfiles'
+PKGDIR='\${ROOT}/var/cache/packages'
+EOF
+echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
-echo "[+] Extracting musl toolchain..."
-mkdir -p "$TOOLCHAIN_DIR"
-tar -xzf "$TOOLCHAIN_TAR" -C "$TOOLCHAIN_DIR" --strip-components=1
-rm -f "$TOOLCHAIN_TAR"
-
-export PATH="$PATH:$CHARD_ROOT/usr/toolchain/bin"
-
-export CC="x86_64-linux-musl-gcc"
-export CXX="x86_64-linux-musl-g++"
-export AR="x86_64-linux-musl-ar"
-export RANLIB="x86_64-linux-musl-ranlib"
-
-export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe -fPIC"
+GCC_DIR="$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+export CC="$GCC_DIR/$CHOST-gcc"
+export CXX="$GCC_DIR/$CHOST-g++"
+export AR="$GCC_DIR/gcc-ar"
+export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
+export PATH="$PATH:$GCC_DIR:$CHARD_ROOT/usr/bin"
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
+export AWK=/usr/bin/mawk
 
-PACKAGES=(
-    "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz"
-    "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
-    "mpc|1.3.1|tar.gz|https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz"
-    "binutils|2.45|tar.xz|https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
-    "make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz"
-    "diffutils|3.12|tar.xz|https://ftp.gnu.org/gnu/diffutils/diffutils-3.12.tar.xz"
-    "gcc|11.5.0|tar.xz|https://ftp.gnu.org/gnu/gcc/gcc-11.5.0/gcc-11.5.0.tar.xz"
-)
-
-mkdir -p "$BUILD_DIR"
-
-download_extract() {
-    local name=$1 version=$2 ext=$3 url=$4
-    local tar_file="$BUILD_DIR/$name-$version.$ext"
-    
-    echo "[+] Downloading $name-$version"
-    curl -L -o "$tar_file" "$url"
-
-    echo "[+] Extracting $name-$version"
-    tar -xf "$tar_file" -C "$BUILD_DIR"
-}
-
-for pkg in "${PACKAGES[@]}"; do
-    IFS="|" read -r NAME VERSION EXT URL <<< "$pkg"
-    download_extract "$NAME" "$VERSION" "$EXT" "$URL"
-done
-
-echo "Building GMP"
-cd "$BUILD_DIR/gmp-6.3.0"
-./configure --prefix="$CHARD_ROOT/usr" --enable-static --disable-shared
-make -j"$(nproc)"
-make install
-
-echo "Building MPFR"
-cd "$BUILD_DIR/mpfr-4.2.2"
-./configure --prefix="$CHARD_ROOT/usr" --with-gmp="$CHARD_ROOT/usr" --enable-static --disable-shared
-make -j"$(nproc)"
-make install
-
-echo "Building MPC"
-cd "$BUILD_DIR/mpc-1.3.1"
-./configure --prefix="$CHARD_ROOT/usr" --with-gmp="$CHARD_ROOT/usr" --with-mpfr="$CHARD_ROOT/usr" --enable-static --disable-shared
-make -j"$(nproc)"
-make install
-
-echo "Building Binutils"
-cd "$BUILD_DIR/binutils-2.45"
-./configure --prefix="$CHARD_ROOT/usr" --disable-nls --disable-werror --enable-static --disable-shared
-make -j"$(nproc)"
-make install
-
-echo "Building Make"
-cd "$BUILD_DIR/make-4.4"
-./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-make -j"$(nproc)"
-make install
-
-echo "Building Diffutils"
-cd "$BUILD_DIR/diffutils-3.12"
-./configure --prefix="$CHARD_ROOT/usr" --disable-dependency-tracking
-make -j"$(nproc)"
-make install
-
-echo "Building GCC"
-cd "$BUILD_DIR/gcc-11.5.0"
-./contrib/download_prerequisites  # Ensures GMP/MPFR/MPC are linked if needed
-mkdir -p build-gcc && cd build-gcc
-../configure \
-    --prefix="$CHARD_ROOT/usr" \
-    --disable-multilib \
-    --enable-languages=c,c++ \
-    --disable-bootstrap \
-    --with-gmp="$CHARD_ROOT/usr" \
-    --with-mpfr="$CHARD_ROOT/usr" \
-    --with-mpc="$CHARD_ROOT/usr"
-make -j"$(nproc)"
-make install
-
-rm -rf "$BUILD_DIR"
-echo "[+] All packages, including GCC, built and installed into $CHARD_ROOT/usr"
+echo "[+] Chard root environment ready!"
