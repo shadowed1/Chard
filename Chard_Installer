@@ -157,11 +157,11 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/core/x86_64/libisl/download"
         "https://archlinux.org/packages/core/x86_64/guile/download"
     )
+elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
     sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/make_ARM64 -o /usr/local/make
     sudo chmod +x /usr/local/make
     sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
-elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     PACKS=(
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-libs-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
