@@ -49,9 +49,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
-# ------------------------------
-# Download correct ChromeOS recovery
-# ------------------------------
 ARCH=$(uname -m)
 RECOVERY_DIR="$HOME/Downloads"
 
