@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -8,19 +10,19 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-CHARD_ROOT="/usr/local/bin/chard"
+CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
-echo "[+] Creating Chard directories..."
+echo "${GREEN}[+] Creating Chard directories...${RESET}"
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp,bin}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo mkdir -p "$BUILD_DIR" "$RECOVERY_DIR" "$MOUNT_DIR"
 
-echo "[+] Downloading Chard configuration files..."
+echo "${GREEN}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -29,8 +31,152 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "[+] Chard sourced to ~/.bashrc"
+    echo "${YELLOW}[+] Chard sourced to ~/.bashrc${RESET}"
 else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
+
+resolve_final_url() {
+    local src="$1"
+    # Use curl to follow redirects and report the effective URL
+    local final
+    final=$(curl -sSL -w '%{url_effective}' -o /dev/null "$src" 2>/dev/null || true)
+    echo "$final"
+}
+
+extract_to_target() {
+    local archive="$1"
+    local target="$2"
+
+    if [[ ! -f "$archive" ]]; then
+        echo "${RED}[!] Archive not found: $archive${RESET}"
+        return 1
+    fi
+
+    mkdir -p "$target"
+
+    case "$archive" in
+        *.zst|*.pkg.tar.zst)
+            echo "${YELLOW}Extracting zst package to $target..."
+            if command -v unzstd >/dev/null 2>&1; then
+                sudo tar --use-compress-program=unzstd -xvpf "$archive" -C "$target"
+            elif command -v zstd >/dev/null 2>&1; then
+                zstd -d -c "$archive" | sudo tar -xpf - -C "$target"
+            else
+                echo "${RED}Missing 'zstd' or 'unzstd' required to extract .zst packages.${RESET}"
+                return 1
+            fi
+            ;;
+        *.xz|*.pkg.tar.xz)
+            echo "${CYAN}Extracting xz package to $target...${RESET}"
+            if command -v xz >/dev/null 2>&1 || command -v unxz >/dev/null 2>&1; then
+                sudo tar -xJpf "$archive" -C "$target"
+            else
+                echo "${RED}Missing 'xz' (or 'unxz') required to extract .xz packages.${RESET}"
+                return 1
+            fi
+            ;;
+        *.tar.gz|*.tgz)
+            echo "${CYAN}Extracting gzip tar to $target...${RESET}"
+            sudo tar -xzf "$archive" -C "$target"
+            ;;
+        *)
+            echo "${YELLOW}Unknown archive type for $archive${RESET}"
+            return 1
+            ;;
+    esac
+
+    sudo find "$target/usr/bin" -type f -exec chmod +x {} + 2>/dev/null || true
+    sudo find "$target/usr/lib" -type f -exec chmod 644 {} + 2>/dev/null || true
+    sudo find "$target/usr/lib64" -type f -exec chmod 644 {} + 2>/dev/null || true
+
+    return 0
+}
+
+download_and_install_pkg() {
+    local src_url="$1"
+    local target="$CHARD_ROOT"
+
+    echo "${GREEN}[+] Resolving final URL for: $src_url${RESET}"
+    local final
+    final=$(resolve_final_url "$src_url")
+    if [[ -z "$final" ]]; then
+        echo "${YELLOW}[!] Could not resolve final URL; trying to download original URL directly${RESET}"
+        final="$src_url"
+    fi
+    echo "${RED} Mirror: $final ${RESET}"
+
+    local filename
+    filename=$(basename "${final%%\?*}")    # drop querystring if present
+    local tmpfile="/tmp/$filename"
+
+    echo "${GREEN}[+] Downloading: $final -> $tmpfile${RESET}"
+    if command -v curl >/dev/null 2>&1; then
+        curl -L --fail --silent --show-error --output "$tmpfile" "$final" || true
+    fi
+    if [[ ! -s "$tmpfile" && $(command -v wget >/dev/null 2>&1) ]]; then
+        wget --no-check-certificate -O "$tmpfile" "$final" || true
+    fi
+
+    if [[ ! -s "$tmpfile" ]]; then
+        echo "${RED}[!] Failed to download $final${RESET}"
+        return 1
+    fi
+
+    if head -c 256 "$tmpfile" | grep -qiE '<html|<!doctype|<head'; then
+        echo "${RED}[!] Download appears to be HTML, not a package. URL: $final${RESET}"
+        rm -f "$tmpfile"
+        return 1
+    fi
+
+    if ! extract_to_target "$tmpfile" "$target"; then
+        echo "${RED}[!] Extraction failed for $tmpfile${RESET}"
+        rm -f "$tmpfile"
+        return 1
+    fi
+
+    rm -f "$tmpfile"
+    echo "${GREEN}[+] Installed package from $final into $target${RESET}"
+    return 0
+}
+
+
+ARCH="$(uname -m)"
+echo "${YELLOW}[+] Detected arch: ${ARCH}${RESET}"
+
+if [[ "$ARCH" == "x86_64" ]]; then
+    PACKS=(
+        "https://archlinux.org/packages/core/x86_64/make/download"
+        "https://archlinux.org/packages/core/x86_64/gcc/download"
+        "https://archlinux.org/packages/core/x86_64/binutils/download"
+        "https://archlinux.org/packages/core/x86_64/gcc-libs/download"
+        "https://archlinux.org/packages/core/x86_64/libmpc/download"
+        "https://archlinux.org/packages/core/x86_64/libisl/download"
+    )
+elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
+    PACKS=(
+        "http://mirror.archlinuxarm.org/aarch64/core/make-4.4.1-2-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/gcc-libs-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/binutils-2.44-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libmpc-1.3.1-2-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/libisl-0.27-1-aarch64.pkg.tar.xz"
+    )
+else
+    echo "${RED}Unsupported architecture: $ARCH${RESET}"
+    exit 1
+fi
+
+for p in "${PACKS[@]}"; do
+    echo
+    echo "${GREEN}==> Processing: $p${RESET}"
+    download_and_install_pkg "$p" || {
+        echo "${YELLOW}[!] Warning: failed to download/install package: $p - continuing${RESET}"
+    }
+done
+
+echo "${YELLOW}[+] Fixing ownership to chronos:chronos (uid 1000) for $CHARD_ROOT${RESET}"
+sudo chown -R 1000:1000 "$CHARD_ROOT" || true
+
+echo "${GREEN}[+] Done. Chard root at: $CHARD_ROOT${RESET}"
