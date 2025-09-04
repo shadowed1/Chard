@@ -280,6 +280,7 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/extra/any/node-gyp/download"
         "https://archlinux.org/packages/extra/x86_64/unzip/download"
         "https://archlinux.org/packages/extra/x86_64/appstream/download"
+        "https://archlinux.org/packages/core/x86_64/systemd-libs/"
     )
 elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
