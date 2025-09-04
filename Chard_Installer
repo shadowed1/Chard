@@ -158,8 +158,8 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/extra/x86_64/yyjson/download"
         "https://archlinux.org/packages/core/x86_64/nano/download"
         "https://archlinux.org/packages/core/x86_64/m4/download"
-        "https://archlinux.org/packages/core/x86_64/autoconf/download"
-        "https://archlinux.org/packages/core/x86_64/automake/download"
+        "https://archlinux.org/packages/core/any/autoconf/download"
+        "https://archlinux.org/packages/core/any/automake/download"
         "https://archlinux.org/packages/core/x86_64/libtool/download"
         "https://archlinux.org/packages/core/x86_64/pkgconf/download"
         "https://archlinux.org/packages/core/x86_64/gettext/download"
@@ -177,6 +177,8 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "http://mirror.archlinuxarm.org/aarch64/core/libisl-0.27-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/extra/fastfetch-2.51.1-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/extra/yyjson-0.12.0-1-aarch64.pkg.tar.xz"
+        "https://archlinux.org/packages/core/any/autoconf/download"
+        "https://archlinux.org/packages/core/any/automake/download"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
