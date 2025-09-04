@@ -16,15 +16,6 @@ echo "${GREEN}[+] Creating Chard directories...${RESET}"
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp,bin,include,usr/include}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-sudo dev_install -y 2>/dev/null || true
-
-cd /usr/local
-sudo curl -LO https://files.pythonhosted.org/packages/8e/7c/6c56e0f58c1b2a8f3e3f04e2c98f2f8a1b1234c7f623d8f1a5b1f0e0b91c/protobuf-4.24.1-py3-none-any.whl
-python3 -m ensurepip --default-pip
-sudo python3 -m pip install /usr/local/protobuf-4.24.1-py3-none-any.whl
-/usr/lib/python-exec/python3.11/python3 -m pip install --upgrade pip
-python3 -m pip install --user protobuf
-
 echo "${GREEN}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
@@ -44,78 +35,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
-sudo chown -R 1000:1000 "$CHARD_ROOT" || true
-
-ARCH=$(uname -m)
-RECOVERY_DIR="$CHARD_ROOT/recovery"
-
-mkdir -p "$RECOVERY_DIR"
-
-if [[ "$ARCH" == "x86_64" ]]; then
-    BIN_URL="https://dl.google.com/chromeos/samus/13816.82.0/stable-channel/chromeos_13816.82.0_samus_stable-channel_full_mp-v3.bin-gyydszjugq3wj4x2vmoatz2fonnr7g3y.signed"
-    BIN_PATH="$RECOVERY_DIR/$(basename "$BIN_URL")"
-else
-    BIN_URL="https://dl.google.com/chromeos/kevin/14526.89.0/stable-channel/chromeos_14526.89.0_kevin_stable-channel_full_mp.bin-gyzdkn3dmqztq6qtgusvmfckvfocpax7.signed"
-    BIN_PATH="$RECOVERY_DIR/$(basename "$BIN_URL")"
-fi
-
-echo "[+] Downloading recovery image for $ARCH..."
-curl -L -o "$BIN_PATH" "$BIN_URL"
-
-
-EXTRACTOR_DIR="/usr/local/extract_android_ota_payload"
-EXTRACT_DIR="$EXTRACTOR_DIR/extracted"
-
-sudo mkdir -p "$EXTRACTOR_DIR"
-sudo chown 1000:1000 "$EXTRACTOR_DIR"
-mkdir -p "$EXTRACT_DIR"
-
-OTA_ZIP="$EXTRACTOR_DIR/extract_android_ota_payload.zip"
-curl -L -o "$OTA_ZIP" https://github.com/cyxx/extract_android_ota_payload/archive/refs/heads/master.zip
-bsdtar -xf "$OTA_ZIP" -C "$EXTRACTOR_DIR"
-EXTRACTOR="$EXTRACTOR_DIR/extract_android_ota_payload-master/extract_android_ota_payload.py"
-
-cp "$BIN_PATH" "$EXTRACTOR_DIR/update.signed"
-ZIP_PATH="$EXTRACTOR_DIR/update.signed"
-
-mkdir -p "$EXTRACT_DIR"
-python3 "$EXTRACTOR" "$ZIP_PATH" "$EXTRACT_DIR" || echo "${YELLOW}[!] Warning: extractor returned non-zero exit code, continuing...${RESET}"
-
-ROOT_IMG=$(find "$EXTRACT_DIR" -name "root.img" | head -n1)
-if [ -z "$ROOT_IMG" ]; then
-    echo "${RED}Failed to extract root.img${RESET}"
-    exit 1
-fi
-echo "[+] root.img found at $ROOT_IMG"
-
-mkdir -p "$MOUNT_DIR"
-sudo mount -o ro "$ROOT_IMG" "$MOUNT_DIR"
-
-echo "[+] Copying system files into Chard root..."
-rsync -aH --info=progress2 \
-  --exclude=dev \
-  --exclude=proc \
-  --exclude=sys \
-  --exclude=run \
-  --exclude=tmp \
-  --exclude=mnt \
-  --exclude=boot \
-  --exclude=var \
-  --exclude=home \
-  --exclude=opt \
-  --exclude=usr/share \
-  --exclude=usr/local \
-  --exclude=sbin \
-  "$MOUNT_DIR"/bin \
-  "$MOUNT_DIR"/etc \
-  "$MOUNT_DIR"/include \
-  "$MOUNT_DIR"/lib \
-  "$MOUNT_DIR"/lib64 \
-  "$MOUNT_DIR"/usr \
-  "$CHARD_ROOT"/
-
-sudo umount "$MOUNT_DIR"
-sudo rm -rf "$RECOVERY_DIR"
 
 resolve_final_url() {
     local src="$1"
