@@ -15,13 +15,16 @@ TOOLCHAIN_DIR="$CHARD_ROOT/usr/toolchain"
 
 echo "[+] Creating Chard directories..."
 sudo mkdir -p "$CHARD_ROOT"/{usr/bin,usr/lib,usr/include,usr/toolchain,var/tmp}
-sudo chown -R 1000:1000 "$CHARD_ROOT"
-
 echo "[+] Downloading chard configuration files..."
 sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/chard.env"
 sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+sudo -E curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo -E chmod +x "$CHARD_ROOT/bin/chard"
 sudo -E mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+
+sudo chown -R 1000:1000 "$CHARD_ROOT"
+
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
 
