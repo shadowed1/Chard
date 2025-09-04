@@ -163,6 +163,7 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/core/x86_64/libtool/download"
         "https://archlinux.org/packages/core/x86_64/pkgconf/download"
         "https://archlinux.org/packages/core/x86_64/gettext/download"
+        "https://archlinux.org/packages/core/x86_64/expat/download"
     )
 elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
@@ -180,6 +181,7 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "https://archlinux.org/packages/core/any/autoconf/download"
         "https://archlinux.org/packages/core/any/automake/download"
         "http://mirror.archlinuxarm.org/aarch64/core/pkgconf-2.5.1-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/expat-2.7.1-1-aarch64.pkg.tar.xz"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
