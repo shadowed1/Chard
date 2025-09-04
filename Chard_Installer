@@ -231,5 +231,6 @@ done
 
 echo "${YELLOW}[+] Fixing ownership to chronos:chronos (uid 1000) for $CHARD_ROOT${RESET}"
 sudo chown -R 1000:1000 "$CHARD_ROOT" || true
+source /home/chronos/user/.bashrc
 
 echo "${GREEN}[+] Done. Chard root at: $CHARD_ROOT${RESET}"
