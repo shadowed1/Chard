@@ -145,8 +145,11 @@ ARCH="$(uname -m)"
 echo "${YELLOW}[+] Detected arch: ${ARCH}${RESET}"
 
 if [[ "$ARCH" == "x86_64" ]]; then
+    echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
+    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/make_x86_64 -o /usr/local/make
+    sudo chmod +x /usr/local/make
+    sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
     PACKS=(
-        "https://archlinux.org/packages/core/x86_64/make/download"
         "https://archlinux.org/packages/core/x86_64/gcc/download"
         "https://archlinux.org/packages/core/x86_64/binutils/download"
         "https://archlinux.org/packages/core/x86_64/gcc-libs/download"
@@ -154,9 +157,12 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/core/x86_64/libisl/download"
         "https://archlinux.org/packages/core/x86_64/guile/download"
     )
+    echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
+    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/make_ARM64 -o /usr/local/make
+    sudo chmod +x /usr/local/make
+    sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     PACKS=(
-        "http://mirror.archlinuxarm.org/aarch64/core/make-4.4.1-2-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-libs-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/binutils-2.44-1-aarch64.pkg.tar.xz"
