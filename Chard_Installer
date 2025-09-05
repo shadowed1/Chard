@@ -181,9 +181,13 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/make_ARM64 -o /usr/local/make
     sudo chmod +x /usr/local/make
     sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
-    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/linux_ARM64.zip /usr/local/chard/usr/include/
-    sudo bsdtar -xf /usr/local/chard/usr/include/linux_ARM64.zip /usr/local/chard/usr/include
+    sudo curl -fsSL -o /usr/local/chard/usr/include/linux_ARM64.zip \
+    https://github.com/shadowed1/Chard/raw/refs/heads/main/linux_ARM64.zip
+    sudo bsdtar -xf /usr/local/chard/usr/include/linux_ARM64.zip -C /usr/local/chard/usr/include
     sudo rm -f /usr/local/chard/usr/include/linux_ARM64.zip
+
+    echo "${YELLOW}[+] linux_ARM64 headers extracted to /usr/local/chard/usr/include${RESET}"
+
     PACKS=(
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-libs-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
