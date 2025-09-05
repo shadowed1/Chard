@@ -241,6 +241,9 @@ Commands:
   root             Start interactive shell sourcing chard env
   reinstall        Quick reinstall chard scripts (pull from github)
   uninstall        Remove entire CHARD_ROOT and un-source .bashrc marker
+
+If <command> is not one of the above, it will be executed inside
+the chard environment with adjusted PATH and LD_LIBRARY_PATH.
 EOF
     exit 1
 fi
@@ -250,8 +253,7 @@ cmd="$1"; shift
 case "$cmd" in
     -S)
         if [[ $# -lt 1 ]]; then err "-S requires a package name"; exit 2; fi
-        pkg="$1"
-        install_by_pkgname "$pkg"
+        install_by_pkgname "$1"
         ;;
     -U)
         if [[ $# -lt 1 ]]; then err "-U requires a URL or file path"; exit 2; fi
@@ -262,8 +264,11 @@ case "$cmd" in
         remove_pkg "$1"
         ;;
     root)
-        echo "[*] Entering chard root"
-        sudo chroot "$CHARD_ROOT" /bin/bash
+        echo "[*] Entering interactive chard shell"
+        env \
+          PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
+          LD_LIBRARY_PATH="$CHARD_ROOT/lib64:$CHARD_ROOT/usr/lib64:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" \
+          bash --noprofile --norc -i
         ;;
     reinstall)
         log "[*] Performing quick reinstall of chard scripts..."
@@ -285,6 +290,14 @@ case "$cmd" in
             log "Cancelled."
         fi
         ;;
+    *)
+        env \
+          PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH" \
+          LD_LIBRARY_PATH="$CHARD_ROOT/lib64:$CHARD_ROOT/usr/lib64:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib:$LD_LIBRARY_PATH" \
+          "$cmd" "$@"
+        ;;
+esac
+
     *)
         err "Unknown command: $cmd"
         exit 2
