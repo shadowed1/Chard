@@ -252,6 +252,7 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/core/x86_64/shadow/download"
         "https://archlinux.org/packages/extra/any/perl-timedate/download"
         "https://archlinux.org/packages/core/x86_64/glibc/download"
+        "https://archlinux.org/packages/extra/x86_64/flatpak/download"
     )
 elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
@@ -301,6 +302,7 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "http://mirror.archlinuxarm.org/aarch64/core/bison-3.8.2-8-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/linux-aarch64-headers-6.16.4-3-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/glibc-2.41+r6+gcf88351b685d-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/extra/flatpak-1:1.16.1-1.1-aarch64.pkg.tar.xz"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
