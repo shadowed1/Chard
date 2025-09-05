@@ -215,6 +215,8 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "http://mirror.archlinuxarm.org/aarch64/core/file-5.46-5-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/libseccomp-2.5.6-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/jansson-2.14.1-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/gawk-5.3.2-1-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/bison-3.8.2-8-aarch64.pkg.tar.xz"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
