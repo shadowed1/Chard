@@ -13,7 +13,7 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 echo "${GREEN}[+] Creating Chard directories...${RESET}"
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp,bin,include,usr/include}
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp,bin,include,usr/include/linux}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 echo "${GREEN}[+] Downloading Chard configuration files...${RESET}"
@@ -145,8 +145,11 @@ echo "${YELLOW}[+] Detected arch: ${ARCH}${RESET}"
 
 if [[ "$ARCH" == "x86_64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
-    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/make_x86_64 -o /usr/local/make
+    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/make_x86_64 -o /usr/local/make
     sudo chmod +x /usr/local/make
+    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/linux_x86_64.zip /usr/local/chard/usr/include/
+    sudo bsdtar -xf /usr/local/chard/usr/include/linux_x86_64.zip /usr/local/chard/usr/include
+    sudo rm -f /usr/local/chard/usr/include/linux_x86_64.zip
     sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
     PACKS=(
         "https://archlinux.org/packages/core/x86_64/gcc/download"
@@ -178,6 +181,9 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/make_ARM64 -o /usr/local/make
     sudo chmod +x /usr/local/make
     sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
+    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/linux_ARM64.zip /usr/local/chard/usr/include/
+    sudo bsdtar -xf /usr/local/chard/usr/include/linux_ARM64.zip /usr/local/chard/usr/include
+    sudo rm -f /usr/local/chard/usr/include/linux_ARM64.zip
     PACKS=(
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-libs-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
