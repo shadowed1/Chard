@@ -37,76 +37,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
-WORK_DIR="$CHARD_ROOT/var/tmp/linux-src"
-INCLUDE_DIR="$CHARD_ROOT/usr/include"
-
-mkdir -p "$WORK_DIR" "$INCLUDE_DIR"
-
-ARCH=$(uname -m)
-LINUX_DIR="$WORK_DIR/linux-master"
-
-echo "${MAGENTA}[+] Downloading Linux source master.zip...${RESET}"
-curl -L -o "$WORK_DIR/linux-master.zip" https://github.com/torvalds/linux/archive/refs/heads/master.zip
-
-echo "${YELLOW}[+] Extracting Linux source...${RESET}"
-bsdtar -xf "$WORK_DIR/linux-master.zip" -C "$WORK_DIR"
-
-case "$ARCH" in
-    x86_64)
-        SRC_PATH="$LINUX_DIR/arch/x86"
-        ;;
-    aarch64|arm64)
-        SRC_PATH="$LINUX_DIR/arch/arm64"
-        ;;
-    *)
-        echo "${RED}Unsupported architecture: $ARCH${RESET}"
-        exit 1
-        ;;
-esac
-
-if [ -d "$SRC_PATH/include/uapi/asm" ]; then
-    mkdir -p "$INCLUDE_DIR/asm"
-    cp -r "$SRC_PATH/include/uapi/asm/"* "$INCLUDE_DIR/asm/"
-fi
-
-if [ -d "$LINUX_DIR/include/linux" ]; then
-    mkdir -p "$INCLUDE_DIR/linux"
-    cp -r "$LINUX_DIR/include/linux/"* "$INCLUDE_DIR/linux/"
-fi
-
-if [ -d "$SRC_PATH/include/asm" ]; then
-    cp -r "$SRC_PATH/include/asm/"* "$INCLUDE_DIR/asm/"
-fi
-
-if [ -d "$LINUX_DIR/include/uapi/linux" ]; then
-    mkdir -p "$INCLUDE_DIR/uapi/linux"
-    cp -r "$LINUX_DIR/include/uapi/linux/"* "$INCLUDE_DIR/uapi/linux/"
-fi
-
-if [ -d "$INCLUDE_DIR/asm-generic" ]; then
-    cd "$INCLUDE_DIR/asm"
-    for f in "$INCLUDE_DIR/asm-generic/"*; do
-        base=$(basename "$f")
-        if [ ! -e "$base" ]; then
-            ln -s "../asm-generic/$base" "$base"
-            echo "  symlinked $base"
-        fi
-    done
-fi
-
-if [ -d "$INCLUDE_DIR/linux" ] && [ -d "$INCLUDE_DIR/uapi/linux" ]; then
-    cd "$INCLUDE_DIR/uapi/linux"
-    for f in "$INCLUDE_DIR/linux/"*; do
-        base=$(basename "$f")
-        if [ ! -e "$base" ]; then
-            ln -s "../../linux/$base" "$base"
-            echo "  symlinked linux/$base"
-        fi
-    done
-fi
-
-echo "${GREEN}[+] Linux headers prepared at $INCLUDE_DIR${RESET}"
-
 resolve_final_url() {
     local src="$1"
     local final
@@ -221,57 +151,7 @@ if [[ "$ARCH" == "x86_64" ]]; then
 
     PACKS=(
         "https://archlinux.org/packages/core/x86_64/gcc/download"
-        "https://archlinux.org/packages/core/x86_64/binutils/download"
-        "https://archlinux.org/packages/core/x86_64/gcc-libs/download"
-        "https://archlinux.org/packages/core/x86_64/libmpc/download"
-        "https://archlinux.org/packages/core/x86_64/libisl/download"
-        "https://archlinux.org/packages/extra/x86_64/fastfetch/download"
-        "https://archlinux.org/packages/extra/x86_64/yyjson/download"
-        "https://archlinux.org/packages/core/x86_64/nano/download"
-        "https://archlinux.org/packages/core/x86_64/m4/download"
-        "https://archlinux.org/packages/core/any/autoconf/download"
-        "https://archlinux.org/packages/core/any/automake/download"
-        "https://archlinux.org/packages/core/x86_64/ncurses/download"
-        "https://archlinux.org/packages/core/x86_64/libtool/download"
-        "https://archlinux.org/packages/core/x86_64/pkgconf/download"
-        "https://archlinux.org/packages/core/x86_64/gettext/download"
-        "https://archlinux.org/packages/core/x86_64/expat/download"
-        "https://archlinux.org/packages/core/x86_64/libxcrypt/download"
-        "https://archlinux.org/packages/core/x86_64/gdbm/download"
-        "https://archlinux.org/packages/core/x86_64/db5.3/download"
-        "https://archlinux.org/packages/core/x86_64/perl/download"
-        "https://archlinux.org/packages/extra/any/perl-local-lib/download"
-        "https://archlinux.org/packages/core/x86_64/linux-headers/download"
-        "https://archlinux.org/packages/extra/x86_64/pahole/download"
-        "https://archlinux.org/packages/core/x86_64/bison/download"
-        "https://archlinux.org/packages/core/x86_64/gawk/download"
-        "https://archlinux.org/packages/core/x86_64/jansson/download"
-        "https://archlinux.org/packages/core/x86_64/libseccomp/download"
-        "https://archlinux.org/packages/core/x86_64/file/download"
-        "https://archlinux.org/packages/extra/x86_64/zlib-ng/download"
-        "https://archlinux.org/packages/core/x86_64/pcre2/download"
-        "https://archlinux.org/packages/core/x86_64/libnsl/download"
-        "https://archlinux.org/packages/core/x86_64/libtirpc/download"
-        "https://archlinux.org/packages/core/x86_64/libcap-ng/download"
-        "https://archlinux.org/packages/extra/x86_64/lmdb/download"
-        "https://archlinux.org/packages/core/x86_64/libsasl/download"
-        "https://archlinux.org/packages/core/x86_64/libldap/download"
-        "https://archlinux.org/packages/core/x86_64/krb5/download"
-        "https://archlinux.org/packages/core/x86_64/keyutils/download"
-        "https://archlinux.org/packages/core/x86_64/audit/download"
-        "https://archlinux.org/packages/extra/x86_64/git/download"
-        "https://archlinux.org/packages/core/x86_64/acl/download"
-        "https://archlinux.org/packages/core/x86_64/shadow/download"
-        "https://archlinux.org/packages/extra/any/perl-timedate/download"
-        "https://archlinux.org/packages/extra/x86_64/flatpak/download"
-        "https://archlinux.org/packages/extra/x86_64/ostree/download"
-        "https://archlinux.org/packages/extra/x86_64/appstream/download"
-        "https://archlinux.org/packages/extra/x86_64/libstemmer/download"
-        "https://archlinux.org/packages/extra/x86_64/cairo/download"
-        "https://archlinux.org/packages/extra/x86_64/bubblewrap/download"
-        "https://archlinux.org/packages/extra/x86_64/json-glib/download"
-        "https://archlinux.org/packages/core/x86_64/systemd-libs/download"
-        "https://archlinux.org/packages/extra/x86_64/xterm/download"
+       
     )
 elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
@@ -282,44 +162,7 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
 
     PACKS=(
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/gcc-libs-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/mpfr-4.2.2-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/binutils-2.44-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libmpc-1.3.1-2-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libisl-0.27-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/extra/fastfetch-2.51.1-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/extra/yyjson-0.12.0-1-aarch64.pkg.tar.xz"
-        "https://archlinux.org/packages/core/any/autoconf/download"
-        "https://archlinux.org/packages/core/any/automake/download"
-        "http://mirror.archlinuxarm.org/aarch64/core/pkgconf-2.5.1-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/expat-2.7.1-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/extra/perl-local-lib-2.000029-5-any.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/db5.3-5.3.28-5-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/gdbm-1.26-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libxcrypt-4.4.38-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/perl-5.42.0-1-aarch64.pkg.tar.xz"
-        "https://archlinux.org/packages/extra/any/perl-mailtools/download"
-        "https://archlinux.org/packages/extra/any/perl-timedate/download"
-        "http://mirror.archlinuxarm.org/aarch64/core/shadow-4.18.0-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/acl-2.3.2-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/extra/git-2.51.0-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/audit-4.0.5-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/keyutils-1.6.3-3-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/krb5-1.21.3-2-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libldap-2.6.10-2-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libsasl-2.1.28-5-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/extra/lmdb-0.9.33-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libcap-ng-0.8.5-3-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libtirpc-1.3.7-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libnsl-2.0.1-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/pcre2-10.46-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/extra/zlib-ng-2.2.5-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/file-5.46-5-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/libseccomp-2.5.6-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/jansson-2.14.1-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/gawk-5.3.2-1-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/bison-3.8.2-8-aarch64.pkg.tar.xz"
-        "http://mirror.archlinuxarm.org/aarch64/core/linux-aarch64-headers-6.16.4-3-aarch64.pkg.tar.xz"
+       
         "http://mirror.archlinuxarm.org/aarch64/extra/flatpak-1:1.16.1-1.1-aarch64.pkg.tar.xz"
     )
 else
@@ -339,39 +182,6 @@ echo "${YELLOW}[+] Fixing ownership to chronos:chronos (uid 1000) for $CHARD_ROO
 sudo chown -R 1000:1000 "$CHARD_ROOT" || true
 
 source /home/chronos/user/.bashrc
-#export CHARD_ROOT="/usr/local/chard"
-#export INSTALL_PREFIX="$CHARD_ROOT/usr"
-#export SRC_DIR="$CHARD_ROOT/var/tmp/glibc-src"
-#export BUILD_DIR="$CHARD_ROOT/var/tmp/glibc-build"
-#GLIBC_VERSION="2.40"
 
-#mkdir -p "$SRC_DIR" "$BUILD_DIR"
-#cd "$SRC_DIR"
-
-#echo "[+] Downloading glibc $GLIBC_VERSION..."
-#curl -fL --progress-bar -O "https://ftp.gnu.org/gnu/libc/glibc-$GLIBC_VERSION.tar.gz"
-
-#echo "[+] Extracting glibc..."
-#tar -xzf "glibc-$GLIBC_VERSION.tar.gz" --strip-components=1
-
-#echo "[+] Creating build directory..."
-#cd "$BUILD_DIR"
-
-#echo "[+] Configuring glibc..."
-#"$SRC_DIR/configure" \
-#    --prefix="$INSTALL_PREFIX" \
-#    --host=aarch64-unknown-linux-gnu \
-#    --build=$(gcc -dumpmachine) \
-#    --with-headers="$INSTALL_PREFIX/include" \
-#    --disable-mathvec \
-#    2>&1 | tee configure.log
-
-#echo "[+] Building glibc..."
-#make -j"$(nproc)" V=1 2>&1 | tee build.log
-
-#echo "[+] Installing glibc..."
-#make install 2>&1 | tee install.log
-
-#echo "[+] glibc installed to $INSTALL_PREFIX"
 
 echo "${GREEN}[+] Done. Chard root at: $CHARD_ROOT${RESET}"
