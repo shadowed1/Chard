@@ -35,6 +35,59 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
+WORK_DIR="$CHARD_ROOT/var/tmp/linux-src"
+INCLUDE_DIR="$CHARD_ROOT/usr/include"
+
+mkdir -p "$WORK_DIR" "$INCLUDE_DIR"
+
+ARCH=$(uname -m)
+LINUX_DIR="$WORK_DIR/linux-master"
+
+echo "${MAGENTA}[+] Downloading Linux source master.zip...${RESET}"
+curl -L -o "$WORK_DIR/linux-master.zip" https://github.com/torvalds/linux/archive/refs/heads/master.zip
+
+echo "${YELLOW}[+] Extracting Linux source...${RESET}"
+bsdtar -xf "$WORK_DIR/linux-master.zip" -C "$WORK_DIR"
+
+case "$ARCH" in
+    x86_64)
+        SRC_PATH="$LINUX_DIR/arch/x86"
+        ;;
+    aarch64|arm64)
+        SRC_PATH="$LINUX_DIR/arch/arm64"
+        ;;
+    *)
+        echo "${RED}Unsupported architecture: $ARCH${RESET}"
+        exit 1
+        ;;
+esac
+
+if [ -d "$SRC_PATH/include/uapi/asm" ]; then
+    mkdir -p "$INCLUDE_DIR/asm"
+    cp -r "$SRC_PATH/include/uapi/asm/"* "$INCLUDE_DIR/asm/"
+fi
+
+if [ -d "$LINUX_DIR/include/linux" ]; then
+    mkdir -p "$INCLUDE_DIR/linux"
+    cp -r "$LINUX_DIR/include/linux/"* "$INCLUDE_DIR/linux/"
+fi
+
+if [ -d "$SRC_PATH/include/asm" ]; then
+    cp -r "$SRC_PATH/include/asm/"* "$INCLUDE_DIR/asm/"
+fi
+
+if [ -d "$INCLUDE_DIR/asm-generic" ]; then
+    cd "$INCLUDE_DIR/asm"
+    for f in "$INCLUDE_DIR/asm-generic/"*; do
+        base=$(basename "$f")
+        if [ ! -e "$base" ]; then
+            ln -s "../asm-generic/$base" "$base"
+            echo "  symlinked $base"
+        fi
+    done
+fi
+
+echo "${GREEN}[+] Linux headers prepared at $INCLUDE_DIR${RESET}"
 
 resolve_final_url() {
     local src="$1"
@@ -159,60 +212,6 @@ if [[ "$ARCH" == "x86_64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
     sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/make_x86_64 -o /usr/local/make
     sudo chmod +x /usr/local/make
-    sudo curl -fsSL -o /usr/local/chard/usr/include/linux_x86_64.zip \
-    https://github.com/shadowed1/Chard/raw/main/linux_x86_64.zip
-    sudo bsdtar -xf /usr/local/chard/usr/include/linux_x86_64.zip -C /usr/local/chard/usr/include
-    sudo rm -f /usr/local/chard/usr/include/linux_x86_64.zip
-
-    sudo curl -fsSL -o /usr/local/chard/usr/include/asm_x86_64.zip \
-    https://github.com/shadowed1/Chard/raw/main/asm_x86_64.zip
-    sudo bsdtar -xf /usr/local/chard/usr/include/asm_x86_64.zip -C /usr/local/chard/usr/include
-    sudo rm -f /usr/local/chard/usr/include/asm_x86_64.zip
-
-    sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
-    echo "${YELLOW}[+] linux_x86_64 headers extracted to /usr/local/chard/usr/include${RESET}"
-    echo "[+] Preparing header directories..."
-    
-
-
-echo "[+] Preparing x86_64 header directories..."
-LINUX_DIR="$WORK_DIR/linux-master"
-INCLUDE_DIR="$CHARD_ROOT/usr/include"
-WORK_DIR="$CHARD_ROOT/var/tmp/linux-src"
-
-    sudo mkdir -p "$WORK_DIR"
-    cd "$WORK_DIR"
-    
-    echo "${MAGENTA}[+] Downloading Linux source master.zip..."
-    sudo curl -L -o linux-master.zip https://github.com/torvalds/linux/archive/refs/heads/master.zip
-    
-    echo "[+] Extracting Linux source...${RESET}"
-    sudo bsdtar -xf linux-master.zip
-
-    if [ -d "$LINUX_DIR/arch/x86/include/uapi/asm" ]; then
-      sudo mkdir -p "$INCLUDE_DIR/asm"
-      sudo cp -r "$LINUX_DIR/arch/x86/include/uapi/asm/"* "$INCLUDE_DIR/asm/"
-    fi
-    
-    if [ -d "$LINUX_DIR/include/linux" ]; then
-      sudo mkdir -p "$INCLUDE_DIR/linux"
-      sudo cp -r "$LINUX_DIR/include/linux/"* "$INCLUDE_DIR/linux/"
-    fi
-    
-    if [ -d "$LINUX_DIR/arch/x86/include/asm" ]; then
-      sudo cp -r "$LINUX_DIR/arch/x86/include/asm/"* "$INCLUDE_DIR/asm/"
-    fi
-    
-    if [ -d "$INCLUDE_DIR/asm-generic" ]; then
-      cd "$INCLUDE_DIR/asm"
-      for f in "$INCLUDE_DIR/asm-generic/"*; do
-        base=$(basename "$f")
-        if [ ! -e "$base" ]; then
-          sudo ln -s "../asm-generic/$base" "$base"
-          echo "  symlinked $base"
-        fi
-      done
-    fi
 
     PACKS=(
         "https://archlinux.org/packages/core/x86_64/gcc/download"
@@ -245,44 +244,6 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     sudo chmod +x /usr/local/make
     sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 
-    sudo curl -fsSL -o /usr/local/chard/usr/include/linux_ARM64.zip \
-    https://github.com/shadowed1/Chard/raw/refs/heads/main/linux_ARM64.zip
-    sudo bsdtar -xf /usr/local/chard/usr/include/linux_ARM64.zip -C /usr/local/chard/usr/include
-    sudo rm -f /usr/local/chard/usr/include/linux_ARM64.zip
-
-    sudo curl -fsSL -o /usr/local/chard/usr/include/asm_ARM64.zip \
-    https://github.com/shadowed1/Chard/raw/refs/heads/main/asm_ARM64.zip
-    sudo bsdtar -xf /usr/local/chard/usr/include/asm_ARM64.zip -C /usr/local/chard/usr/include
-    sudo rm -f /usr/local/chard/usr/include/asm_ARM64.zip
-
-    echo "${YELLOW}[+] linux_ARM64 headers extracted to /usr/local/chard/usr/include${RESET}"
-
-    LINUX_DIR="$WORK_DIR/linux-master"
-        
-        if [ -d "$LINUX_DIR/arch/arm64/include/uapi/asm" ]; then
-          sudo mkdir -p "$INCLUDE_DIR/asm"
-          sudo cp -r "$LINUX_DIR/arch/arm64/include/uapi/asm/"* "$INCLUDE_DIR/asm/"
-        fi
-        
-        if [ -d "$LINUX_DIR/include/linux" ]; then
-          sudo mkdir -p "$INCLUDE_DIR/linux"
-          sudo cp -r "$LINUX_DIR/include/linux/"* "$INCLUDE_DIR/linux/"
-        fi
-        
-        if [ -d "$LINUX_DIR/arch/arm64/include/asm" ]; then
-          sudo cp -r "$LINUX_DIR/arch/arm64/include/asm/"* "$INCLUDE_DIR/asm/"
-        fi
-        
-        if [ -d "$INCLUDE_DIR/asm-generic" ]; then
-          cd "$INCLUDE_DIR/asm"
-          for f in "$INCLUDE_DIR/asm-generic/"*; do
-            base=$(basename "$f")
-            if [ ! -e "$base" ]; then
-              sudo ln -s "../asm-generic/$base" "$base"
-              echo "  symlinked $base"
-            fi
-          done
-        fi
 
     PACKS=(
         "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
