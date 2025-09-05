@@ -251,6 +251,7 @@ if [[ "$ARCH" == "x86_64" ]]; then
         "https://archlinux.org/packages/core/x86_64/acl/download"
         "https://archlinux.org/packages/core/x86_64/shadow/download"
         "https://archlinux.org/packages/extra/any/perl-timedate/download"
+        "https://archlinux.org/packages/core/x86_64/glibc/download"
     )
 elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
     echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
@@ -299,6 +300,7 @@ elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
         "http://mirror.archlinuxarm.org/aarch64/core/gawk-5.3.2-1-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/bison-3.8.2-8-aarch64.pkg.tar.xz"
         "http://mirror.archlinuxarm.org/aarch64/core/linux-aarch64-headers-6.16.4-3-aarch64.pkg.tar.xz"
+        "http://mirror.archlinuxarm.org/aarch64/core/glibc-2.41+r6+gcf88351b685d-1-aarch64.pkg.tar.xz"
     )
 else
     echo "${RED}Unsupported architecture: $ARCH${RESET}"
@@ -317,39 +319,39 @@ echo "${YELLOW}[+] Fixing ownership to chronos:chronos (uid 1000) for $CHARD_ROO
 sudo chown -R 1000:1000 "$CHARD_ROOT" || true
 
 source /home/chronos/user/.bashrc
-export CHARD_ROOT="/usr/local/chard"
-export INSTALL_PREFIX="$CHARD_ROOT/usr"
-export SRC_DIR="$CHARD_ROOT/var/tmp/glibc-src"
-export BUILD_DIR="$CHARD_ROOT/var/tmp/glibc-build"
-GLIBC_VERSION="2.40"
+#export CHARD_ROOT="/usr/local/chard"
+#export INSTALL_PREFIX="$CHARD_ROOT/usr"
+#export SRC_DIR="$CHARD_ROOT/var/tmp/glibc-src"
+#export BUILD_DIR="$CHARD_ROOT/var/tmp/glibc-build"
+#GLIBC_VERSION="2.40"
 
-mkdir -p "$SRC_DIR" "$BUILD_DIR"
-cd "$SRC_DIR"
+#mkdir -p "$SRC_DIR" "$BUILD_DIR"
+#cd "$SRC_DIR"
 
-echo "[+] Downloading glibc $GLIBC_VERSION..."
-curl -fL --progress-bar -O "https://ftp.gnu.org/gnu/libc/glibc-$GLIBC_VERSION.tar.gz"
+#echo "[+] Downloading glibc $GLIBC_VERSION..."
+#curl -fL --progress-bar -O "https://ftp.gnu.org/gnu/libc/glibc-$GLIBC_VERSION.tar.gz"
 
-echo "[+] Extracting glibc..."
-tar -xzf "glibc-$GLIBC_VERSION.tar.gz" --strip-components=1
+#echo "[+] Extracting glibc..."
+#tar -xzf "glibc-$GLIBC_VERSION.tar.gz" --strip-components=1
 
-echo "[+] Creating build directory..."
-cd "$BUILD_DIR"
+#echo "[+] Creating build directory..."
+#cd "$BUILD_DIR"
 
-echo "[+] Configuring glibc..."
-"$SRC_DIR/configure" \
-    --prefix="$INSTALL_PREFIX" \
-    --host=aarch64-unknown-linux-gnu \
-    --build=$(gcc -dumpmachine) \
-    --with-headers="$INSTALL_PREFIX/include" \
-    --disable-mathvec \
-    2>&1 | tee configure.log
+#echo "[+] Configuring glibc..."
+#"$SRC_DIR/configure" \
+#    --prefix="$INSTALL_PREFIX" \
+#    --host=aarch64-unknown-linux-gnu \
+#    --build=$(gcc -dumpmachine) \
+#    --with-headers="$INSTALL_PREFIX/include" \
+#    --disable-mathvec \
+#    2>&1 | tee configure.log
 
-echo "[+] Building glibc..."
-make -j"$(nproc)" V=1 2>&1 | tee build.log
+#echo "[+] Building glibc..."
+#make -j"$(nproc)" V=1 2>&1 | tee build.log
 
-echo "[+] Installing glibc..."
-make install 2>&1 | tee install.log
+#echo "[+] Installing glibc..."
+#make install 2>&1 | tee install.log
 
-echo "[+] glibc installed to $INSTALL_PREFIX"
+#echo "[+] glibc installed to $INSTALL_PREFIX"
 
 echo "${GREEN}[+] Done. Chard root at: $CHARD_ROOT${RESET}"
