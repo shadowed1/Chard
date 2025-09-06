@@ -49,6 +49,7 @@ case "$ARCH" in
             https://github.com/shadowed1/Chard/raw/main/make_x86_64 \
             -o /usr/local/make
         sudo chmod +x /usr/local/make
+        sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
         ;;
     aarch64|arm64)
         echo "${GREEN}[+] Installing bootstrap make binary (ARM64)...${RESET}"
@@ -133,13 +134,23 @@ echo "[+] Downloading Linux headers..."
 KERNEL_VER="6.16"
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
 KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
-KERNEL_SRC="$BUILD_DIR/linux-$KERNEL_VER"
+KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
 
-sudo curl -L -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
+sudo mkdir -p "$BUILD_DIR"
+
+if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
+    echo "[+] Fetching $KERNEL_TAR..."
+    sudo curl -L -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
+else
+    echo "${YELLOW}[!] Kernel tarball already exists, skipping download.${RESET}"
+fi
+
+sudo rm -rf "$KERNEL_BUILD"
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR"
 
 echo "[+] Installing Linux headers into Chard root..."
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
+set -e
 cd /var/tmp/build/linux-$KERNEL_VER
 
 ARCH=\$(uname -m)
@@ -154,12 +165,12 @@ make ARCH=\$ARCH headers_install INSTALL_HDR_PATH=/usr
 "
 
 echo "[+] Linux headers installed to $CHARD_ROOT/usr/include"
-sudo rm -rf "$KERNEL_SRC" "$BUILD_DIR/$KERNEL_TAR"
 
-sudo mkdir -p "$BUILD_DIR"
+sudo rm -rf "$KERNEL_BUILD"
+
 
 PACKAGES=(
-    "make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz"
+    #"make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz"
     "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz"
     "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
     "binutils|2.45|tar.xz|https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
