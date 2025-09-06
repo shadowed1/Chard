@@ -8,7 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-CHARD_ROOT="/usr/local/bin/chard"
+CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
