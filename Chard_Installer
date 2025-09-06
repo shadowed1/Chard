@@ -8,7 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-CHARD_ROOT="/usr/local/bin/chard"
+CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
@@ -39,6 +39,33 @@ case "$ARCH" in
     aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
     *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
+
+echo "${YELLOW}[+] Detected arch: ${ARCH}${RESET}"
+
+case "$ARCH" in
+    x86_64)
+        echo "${GREEN}[+] Installing bootstrap make binary (x86_64)...${RESET}"
+        sudo curl -fsSL \
+            https://github.com/shadowed1/Chard/raw/main/make_x86_64 \
+            -o /usr/local/make
+        sudo chmod +x /usr/local/make
+        ;;
+    aarch64|arm64)
+        echo "${GREEN}[+] Installing bootstrap make binary (ARM64)...${RESET}"
+        sudo curl -fsSL \
+            https://github.com/shadowed1/Chard/raw/main/make_ARM64 \
+            -o /usr/local/make
+        sudo chmod +x /usr/local/make
+        sudo mkdir -p "$CHARD_ROOT/usr/bin"
+        sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
+        ;;
+    *)
+        echo "${RED}[!] Unsupported architecture: ${ARCH}${RESET}"
+        exit 1
+        ;;
+esac
+
+echo "${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 sudo mkdir -p "$(dirname "$MAKE_CONF")"
@@ -101,6 +128,33 @@ export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
 export AWK=/usr/bin/mawk
+
+echo "[+] Downloading Linux headers..."
+KERNEL_VER="6.16"
+KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
+KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
+KERNEL_SRC="$BUILD_DIR/linux-$KERNEL_VER"
+
+sudo curl -L -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
+sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR"
+
+echo "[+] Installing Linux headers into Chard root..."
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+cd /var/tmp/build/linux-$KERNEL_VER
+
+ARCH=\$(uname -m)
+case \"\$ARCH\" in
+    x86_64) CHOST=x86_64-pc-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
+    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+esac
+
+make mrproper
+make ARCH=\$ARCH headers_install INSTALL_HDR_PATH=/usr
+"
+
+echo "[+] Linux headers installed to $CHARD_ROOT/usr/include"
+sudo rm -rf "$KERNEL_SRC" "$BUILD_DIR/$KERNEL_TAR"
 
 sudo mkdir -p "$BUILD_DIR"
 
@@ -187,11 +241,11 @@ sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
-PYTHON_REAL="$CHARD_ROOT/usr/bin/python3.13"
-sudo cp "$PYTHON_REAL" "$CHARD_ROOT/bin/python3"
-sudo chmod +x "$CHARD_ROOT/bin/python3"
+#PYTHON_REAL="$CHARD_ROOT/usr/bin/python3.13"
+#sudo cp "$PYTHON_REAL" "$CHARD_ROOT/bin/python3"
+#sudo chmod +x "$CHARD_ROOT/bin/python3"
 EMERGE_FILE="$CHARD_ROOT/bin/emerge"
-sudo sed -i "1 s|^#!.*|#!$PYTHON_REAL|" "$EMERGE_FILE"
+#sudo sed -i "1 s|^#!.*|#!$PYTHON_REAL|" "$EMERGE_FILE"
 
 sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/bin" \
