@@ -1,5 +1,4 @@
 #!/bin/bash
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -9,21 +8,18 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-CHARD_ROOT="/usr/local/chard"
+CHARD_ROOT="/usr/local/bin/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
-echo "${GREEN}[+] Creating Chard directories...${RESET}"
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp,bin,include,usr/include/linux}
+echo "[+] Creating Chard directories..."
+sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-echo "${GREEN}[+] Downloading Chard configuration files...${RESET}"
+echo "[+] Downloading Chard configuration files..."
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
-sudo chown -R 1000:1000 "$CHARD_ROOT" || true
-
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -32,156 +28,179 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${YELLOW}[+] Chard sourced to ~/.bashrc${RESET}"
+    echo "[+] Chard sourced to ~/.bashrc"
 else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
-resolve_final_url() {
-    local src="$1"
-    local final
-    final=$(curl -sSL -w '%{url_effective}' -o /dev/null "$src" 2>/dev/null || true)
-    echo "$final"
-}
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
+    aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
+    *) echo "Unknown architecture: $ARCH"; exit 1;;
+esac
 
-extract_to_target() {
-    local archive="$1"
-    local target="$2"
+MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
+sudo mkdir -p "$(dirname "$MAKE_CONF")"
+sudo tee "$MAKE_CONF" > /dev/null <<EOF
+CHOST='${CHOST}'
+ARCH='${GENTOO_ARCH}'
+ACCEPT_KEYWORDS='~${GENTOO_ARCH}'
+ROOT='${CHARD_ROOT}'
+CFLAGS='-O2 -pipe'
+CXXFLAGS='\${CFLAGS}'
+PORTAGE_TMPDIR='\${ROOT}/var/tmp'
+DISTDIR='\${ROOT}/var/cache/distfiles'
+PKGDIR='\${ROOT}/var/cache/packages'
+EOF
+echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
 
-    if [[ ! -f "$archive" ]]; then
-        echo "${RED}[!] Archive not found: $archive${RESET}"
-        return 1
-    fi
+PORTAGE_DIR="$CHARD_ROOT/usr/portage"
+SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
+TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
+echo "[+] Downloading Portage tree snapshot..."
+sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
+sudo mkdir -p "$PORTAGE_DIR"
+sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+sudo rm -f "$TMP_TAR"
 
-    mkdir -p "$target"
+case "$GENTOO_ARCH" in
+    amd64) STAGE3_URL="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20250831T170358Z.tar.xz";;
+    arm64) STAGE3_URL="https://gentoo.osuosl.org/releases/arm64/autobuilds/current-stage3-arm64-systemd/stage3-arm64-systemd-20250831T234929Z.tar.xz";;
+    *) echo "Unsupported architecture: $GENTOO_ARCH"; exit 1;;
+esac
+STAGE3_FILE=$(basename "$STAGE3_URL")
+TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
+sudo curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
+sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
+sudo rm -f "$TMP_STAGE3"
 
-    case "$archive" in
-        *.zst|*.pkg.tar.zst)
-            echo "${YELLOW}Extracting zst package to $target..."
-            if command -v unzstd >/dev/null 2>&1; then
-                sudo tar --use-compress-program=unzstd -xvpf "$archive" -C "$target"
-            elif command -v zstd >/dev/null 2>&1; then
-                zstd -d -c "$archive" | sudo tar -xpf - -C "$target"
-            else
-                echo "${RED}Missing 'zstd' or 'unzstd' required to extract .zst packages.${RESET}"
-                return 1
-            fi
-            ;;
-        *.xz|*.pkg.tar.xz)
-            echo "${YELLOW}Extracting xz package to $target...${RESET}"
-            if command -v xz >/dev/null 2>&1 || command -v unxz >/dev/null 2>&1; then
-                sudo tar -xJpf "$archive" -C "$target"
-            else
-                echo "${RED}Missing 'xz' (or 'unxz') required to extract .xz packages.${RESET}"
-                return 1
-            fi
-            ;;
-        *.tar.gz|*.tgz)
-            echo "${CYAN}Extracting gzip tar to $target...${RESET}"
-            sudo tar -xzf "$archive" -C "$target"
-            ;;
-        *)
-            echo "${YELLOW}Unknown archive type for $archive${RESET}"
-            return 1
-            ;;
-    esac
-
-    sudo find "$target/usr/bin" -type f -exec chmod +x {} + 2>/dev/null || true
-    sudo find "$target/usr/lib" -type f -exec chmod 755 {} + 2>/dev/null || true
-    sudo find "$target/usr/lib64" -type f -exec chmod 755 {} + 2>/dev/null || true
-
-    return 0
-}
-
-download_and_install_pkg() {
-    local src_url="$1"
-    local target="$CHARD_ROOT"
-
-    echo "${GREEN}[+] Resolving final URL for: $src_url${RESET}"
-    local final
-    final=$(resolve_final_url "$src_url")
-    if [[ -z "$final" ]]; then
-        echo "${YELLOW}[!] Could not resolve final URL; trying to download original URL directly${RESET}"
-        final="$src_url"
-    fi
-    echo "${RED}==> Mirror:${RESET}${YELLOW} $final ${RESET}"
-
-    local filename
-    filename=$(basename "${final%%\?*}")
-    local tmpfile="/tmp/$filename"
-
-    echo "${GREEN}[+] Downloading: $final -> $tmpfile${RESET}"
-    if command -v curl >/dev/null 2>&1; then
-        curl -L --fail --silent --show-error --output "$tmpfile" "$final" || true
-    fi
-    if [[ ! -s "$tmpfile" && $(command -v wget >/dev/null 2>&1) ]]; then
-        wget --no-check-certificate -O "$tmpfile" "$final" || true
-    fi
-
-    if [[ ! -s "$tmpfile" ]]; then
-        echo "${RED}[!] Failed to download $final${RESET}"
-        return 1
-    fi
-
-    if head -c 256 "$tmpfile" | grep -qiE '<html|<!doctype|<head'; then
-        echo "${RED}[!] Download appears to be HTML, not a package. URL: $final${RESET}"
-        rm -f "$tmpfile"
-        return 1
-    fi
-
-    if ! extract_to_target "$tmpfile" "$target"; then
-        echo "${RED}[!] Extraction failed for $tmpfile${RESET}"
-        rm -f "$tmpfile"
-        return 1
-    fi
-
-    rm -f "$tmpfile"
-    echo "${GREEN}[+] Installed package from $final into $target${RESET}"
-    return 0
-}
-
-
-ARCH="$(uname -m)"
-echo "${YELLOW}[+] Detected arch: ${ARCH}${RESET}"
-
-if [[ "$ARCH" == "x86_64" ]]; then
-    echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
-    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/make_x86_64 -o /usr/local/make
-    sudo chmod +x /usr/local/make
-
-    PACKS=(
-        "https://archlinux.org/packages/core/x86_64/gcc/download"
-       
-    )
-elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
-    echo "${GREEN}[+] Installing bootstrap make binary...${RESET}"
-    sudo curl -fsSL https://github.com/shadowed1/Chard/raw/refs/heads/main/make_ARM64 -o /usr/local/make
-    sudo chmod +x /usr/local/make
-    sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
-
-
-    PACKS=(
-        "http://mirror.archlinuxarm.org/aarch64/core/gcc-14.2.1+r753+g1cd744a6828f-1-aarch64.pkg.tar.xz"
-       
-        "http://mirror.archlinuxarm.org/aarch64/extra/flatpak-1:1.16.1-1.1-aarch64.pkg.tar.xz"
-    )
+PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
+MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
+sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
+if [ -d "$PROFILE_DIR" ]; then
+    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
+    sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
+    echo "[+] Portage profile set to $REL_TARGET"
 else
-    echo "${RED}Unsupported architecture: $ARCH${RESET}"
+    echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
     exit 1
 fi
 
-for p in "${PACKS[@]}"; do
-    echo
-    echo "${RED}==> Processing:${RESET}${YELLOW} $p${RESET}"
-    download_and_install_pkg "$p" || {
-        echo "${YELLOW}[!] Warning: failed to download/install package: $p - continuing${RESET}"
-    }
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
+
+GCC_DIR="$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+
+export CC="$GCC_DIR/$CHOST-gcc"
+export CXX="$GCC_DIR/$CHOST-g++"
+export AR="$GCC_DIR/gcc-ar"
+export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
+export PATH="$PATH:$GCC_DIR:$CHARD_ROOT/usr/bin"
+export CFLAGS="-I$CHARD_ROOT/usr/include -O2 -pipe"
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib"
+export AWK=/usr/bin/mawk
+
+sudo mkdir -p "$BUILD_DIR"
+
+PACKAGES=(
+    "make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz"
+    "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz"
+    "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
+    "binutils|2.45|tar.xz|https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
+    "diffutils|3.12|tar.xz|https://ftp.gnu.org/gnu/diffutils/diffutils-3.12.tar.xz"
+    "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz"
+)
+
+mkdir -p "$BUILD_DIR"
+
+for pkg in "${PACKAGES[@]}"; do
+    NAME="${pkg%%|*}"
+    REST="${pkg#*|}"
+    VERSION="${REST%%|*}"
+    REST="${REST#*|}"
+    EXT="${REST%%|*}"
+    URL="${REST#*|}"
+    TAR_FILE="$BUILD_DIR/$NAME-$VERSION.$EXT"
+
+    echo "[+] Downloading $NAME-$VERSION"
+    sudo curl -L -o "$TAR_FILE" "$URL"
+
+    echo "[+] Extracting $NAME-$VERSION"
+    sudo tar -xf "$TAR_FILE" -C "$BUILD_DIR"
 done
 
-echo "${YELLOW}[+] Fixing ownership to chronos:chronos (uid 1000) for $CHARD_ROOT${RESET}"
-sudo chown -R 1000:1000 "$CHARD_ROOT" || true
+echo "[+] Setting up Chard Chroot..."
+sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
+| gzip -1 \
+| sudo tar -C "$CHARD_ROOT" -xzf - 
 
-source /home/chronos/user/.bashrc
+for pkg in "${PACKAGES[@]}"; do
+    NAME="${pkg%%|*}"
+    REST="${pkg#*|}"
+    VERSION="${REST%%|*}"
 
+    echo "[+] Mounting Chard Chroot"
+    mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
+    mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
+    mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
+    mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
 
-echo "${GREEN}[+] Done. Chard root at: $CHARD_ROOT${RESET}"
+    echo "[+] Building $NAME-$VERSION in chroot"
+    sudo chroot "$CHARD_ROOT" /bin/bash -c "
+
+cd /var/tmp/build/$NAME-$VERSION
+
+ARCH=\$(uname -m)
+case \"\$ARCH\" in
+    x86_64) CHOST=x86_64-pc-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
+    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+esac
+
+GCC_DIR=/usr/\$CHOST/gcc-bin/14
+export CC=\$GCC_DIR/\$CHOST-gcc
+export CXX=\$GCC_DIR/\$CHOST-g++
+export AR=\$GCC_DIR/gcc-ar
+export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
+export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib64\"
+
+./configure --prefix=/usr --disable-dependency-tracking
+make -j\$(nproc)
+make install
+"
+
+    echo "[+] Finished building $NAME-$VERSION"
+    echo
+done
+
+echo "[+] Cleaning up..."
+sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
+
+sudo rm -rf "$BUILD_DIR"
+
+PYTHON_REAL="$CHARD_ROOT/usr/bin/python3.13"
+sudo cp "$PYTHON_REAL" "$CHARD_ROOT/bin/python3"
+sudo chmod +x "$CHARD_ROOT/bin/python3"
+EMERGE_FILE="$CHARD_ROOT/bin/emerge"
+sudo sed -i "1 s|^#!.*|#!$PYTHON_REAL|" "$EMERGE_FILE"
+
+sudo chown -Rf 1000:1000 \
+    "$CHARD_ROOT/bin" \
+    "$CHARD_ROOT/lib" \
+    "$CHARD_ROOT/include" \
+    "$CHARD_ROOT/share" \
+    "$CHARD_ROOT/lib/python$PYTHON_VERSION" \
+    "$CHARD_ROOT/var/tmp" \
+    "$CHARD_ROOT/usr/portage" \
+    "$CHARD_ROOT/var/cache"
+
+echo "[+] Chard Root Environment ready to run!"
