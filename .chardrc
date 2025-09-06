@@ -1,6 +1,6 @@
 # <<< CHARD_ENV <<<
 
-export CHARD_ROOT="/usr/local/bin/chard"
+export CHARD_ROOT="/usr/local/chard"
 
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
