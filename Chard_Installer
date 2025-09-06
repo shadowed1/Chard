@@ -179,6 +179,9 @@ PACKAGES=(
     "binutils|2.45|tar.xz|https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
     "diffutils|3.12|tar.xz|https://ftp.gnu.org/gnu/diffutils/diffutils-3.12.tar.xz"
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz"
+    "coreutils|9.7|tar.xz|https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.xz"
+    "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz"
+    "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz"
 )
 
 mkdir -p "$BUILD_DIR"
