@@ -1,6 +1,6 @@
 # <<< CHARD_ENV <<<
 
-export CHARD_ROOT="/usr/local/chard"
+export CHARD_ROOT="/usr/local/bin/chard"
 
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
@@ -12,13 +12,17 @@ case ":$PATH:" in
     *) PATH="$PATH:$CHARD_ROOT/bin" ;;
 esac
 
-case ":$LD_LIBRARY_PATH:" in
+case ":${LD_LIBRARY_PATH:-}:" in
     *":$CHARD_ROOT/usr/lib:"*) ;;
-    *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib" ;;
+    *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib" ;;
 esac
 
-export PATH
-export LD_LIBRARY_PATH
+case ":${LD_LIBRARY_PATH:-}:" in
+    *":$CHARD_ROOT/lib:"*) ;;
+    *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib" ;;
+esac
+
+export PATH LD_LIBRARY_PATH
 
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
