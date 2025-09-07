@@ -272,7 +272,7 @@ case \"$BUILDSYS\" in
         make install
         ;;
     perl)
-        export PERL5LIB=/usr/local/chard/lib/perl5/site_perl/5.40.0:$PERL5LIB
+        export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
         perl Makefile.PL INSTALL_BASE=/usr/local
         make
         make test || true
