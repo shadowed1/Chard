@@ -301,8 +301,21 @@ case \"$BUILDSYS\" in
         ;;
 esac
 "
-    echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
+
+
+echo
+
+echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
+    
+    if [ "$NAME" = "make" ] && [ -L "$CHARD_ROOT/usr/bin/make" ]; then
+        sudo rm -f "$CHARD_ROOT/usr/bin/make"
+        sudo cp /usr/local/make "$CHARD_ROOT/usr/bin/make"
+        echo "${GREEN}[+] Replaced symlink with real make binary in Chard Root${RESET}"
+    fi
+
+
     echo
+
 done
 
 echo "${RED}[+] Cleaning up${RESET}"
