@@ -236,9 +236,9 @@ for pkg in "${PACKAGES[@]}"; do
     mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
     mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
 
-    echo "[+] Building $NAME-$VERSION in chroot"
+    echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
-set -e
+
 cd /var/tmp/build/$DIR
 
 ARCH=\$(uname -m)
