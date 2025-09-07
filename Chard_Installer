@@ -85,12 +85,12 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF
 
-echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET"
+echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
-echo "[+] Downloading Portage tree snapshot..."
+echo "${CYAN}[+] Downloading Portage tree snapshot${RESET}"
 sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
@@ -103,8 +103,14 @@ case "$GENTOO_ARCH" in
 esac
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
-sudo curl -L -o "$TMP_STAGE3" "$STAGE3_URL"
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
+
+echo "${BLUE}[+] Downloading Stage3 tarball"
+sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
+
+echo "${RESET}${MAGENTA}[+] Extracting Stage3 tarball"
+sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
+    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+
 sudo rm -f "$TMP_STAGE3"
 
 PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
@@ -134,7 +140,7 @@ export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
 export AWK=/usr/bin/mawk
 
-echo "${CYAN}[+] Downloading Linux headers..."
+echo "${RESET}${CYAN}[+] Downloading Linux headers..."
 KERNEL_VER="6.16"
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
 KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
