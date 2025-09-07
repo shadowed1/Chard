@@ -233,6 +233,7 @@ sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    
 
     echo "[+] Mounting Chard Chroot"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
@@ -242,6 +243,7 @@ for pkg in "${PACKAGES[@]}"; do
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
+
 
 cd /var/tmp/build/$DIR
 
@@ -270,7 +272,8 @@ case \"$BUILDSYS\" in
         make install
         ;;
     perl)
-        perl Makefile.PL INSTALL_BASE=/usr
+        export PERL5LIB=/usr/local/chard/lib/perl5/site_perl/5.40.0:$PERL5LIB
+        perl Makefile.PL INSTALL_BASE=/usr/local
         make
         make test || true
         make install
