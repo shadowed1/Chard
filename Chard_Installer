@@ -222,14 +222,14 @@ for pkg in "${SORTED_PACKAGES[@]}"; do
     SRC_DIR="$BUILD_DIR/$DIR"
 
     if [ ! -f "$BUILD_DIR/$ARCHIVE" ]; then
-        echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION${RESET}"
+        echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION"
         sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
     else
-        echo "${YELLOW}[!] $ARCHIVE already downloaded, skipping.${RESET}"
+        echo "${RESET}${YELLOW}[!] $ARCHIVE already downloaded, skipping.${RESET}"
     fi
 
     if [ ! -d "$SRC_DIR" ]; then
-        echo "${RESET}${BLUE}[+] Extracting $NAME-$VERSION${RESET}"
+        echo "${RESET}${BLUE}[+] Extracting $NAME-$VERSION"
         case "$EXT" in
             tar.gz|tgz)
                 sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
@@ -250,7 +250,7 @@ for pkg in "${SORTED_PACKAGES[@]}"; do
                 echo "Unknown archive format: $EXT"; exit 1 ;;
         esac
     else
-        echo "${YELLOW}[!] $DIR already extracted, skipping.${RESET}"
+        echo "${RESET}${YELLOW}[!] $DIR already extracted, skipping.${RESET}"
     fi
 done
 
