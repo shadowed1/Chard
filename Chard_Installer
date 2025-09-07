@@ -12,11 +12,11 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
-echo "[+] Creating Chard directories..."
+echo "${GREEN}[+] Creating Chard directories..."
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
-echo "[+] Downloading Chard configuration files..."
+echo "[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
@@ -31,7 +31,7 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "[+] Chard sourced to ~/.bashrc"
+    echo "${GREEN}[+] Chard sourced to ~/.bashrc ${RESET}"
 else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
@@ -47,7 +47,7 @@ echo "${YELLOW}[+] Detected arch: ${ARCH}${RESET}"
 
 case "$ARCH" in
     x86_64)
-        echo "${GREEN}[+] Installing bootstrap make binary (x86_64)...${RESET}"
+        echo "${BLUE}[+] Installing bootstrap make binary ${RESET}${MAGENTA}(x86_64)${RESET}"
         sudo curl -fsSL \
             https://github.com/shadowed1/Chard/raw/main/make_x86_64 \
             -o /usr/local/make
@@ -55,7 +55,7 @@ case "$ARCH" in
         sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
         ;;
     aarch64|arm64)
-        echo "${GREEN}[+] Installing bootstrap make binary (ARM64)...${RESET}"
+        echo "${BLUE}[+] Installing bootstrap make binary ${RESET}${MAGENTA}(ARM64)${RESET}"
         sudo curl -fsSL \
             https://github.com/shadowed1/Chard/raw/main/make_ARM64 \
             -o /usr/local/make
@@ -84,7 +84,7 @@ PORTAGE_TMPDIR='\${ROOT}/var/tmp'
 DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF
-echo "[+] make.conf created with ARCH=${GENTOO_ARCH}"
+echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET""
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -133,7 +133,7 @@ export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib"
 export AWK=/usr/bin/mawk
 
-echo "[+] Downloading Linux headers..."
+echo "${CYAN}[+] Downloading Linux headers..."
 KERNEL_VER="6.16"
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
 KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
@@ -167,7 +167,7 @@ make mrproper
 make ARCH=\$ARCH headers_install INSTALL_HDR_PATH=/usr
 "
 
-echo "[+] Linux headers installed to $CHARD_ROOT/usr/include"
+echo "${RESET}${MAGENTA}[+] Linux headers installed to $CHARD_ROOT/usr/include${RESET}"
 
 sudo rm -rf "$KERNEL_BUILD"
 
