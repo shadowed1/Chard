@@ -191,7 +191,25 @@ PACKAGES=(
 
 mkdir -p "$BUILD_DIR"
 
+mkdir -p "$BUILD_DIR"
+
+# Separate packages by build system
+PERL_CORE_PACKAGES=()
+PERL_MODULE_PACKAGES=()
+OTHER_PACKAGES=()
+
 for pkg in "${PACKAGES[@]}"; do
+    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    case "$BUILDSYS" in
+        perl-core) PERL_CORE_PACKAGES+=("$pkg") ;;
+        perl)      PERL_MODULE_PACKAGES+=("$pkg") ;;
+        *)         OTHER_PACKAGES+=("$pkg") ;;
+    esac
+done
+
+SORTED_PACKAGES=("${PERL_CORE_PACKAGES[@]}" "${PERL_MODULE_PACKAGES[@]}" "${OTHER_PACKAGES[@]}")
+
+for pkg in "${SORTED_PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
 
@@ -219,6 +237,7 @@ for pkg in "${PACKAGES[@]}"; do
             echo "Unknown archive format: $EXT"; exit 1 ;;
     esac
 done
+
 
 echo "${RESET}${GREEN}[+] Setting up Chard Chroot with progress..."
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
