@@ -326,4 +326,4 @@ sudo chown -R 1000:1000 "$CHARD_ROOT"
 #    "$CHARD_ROOT/usr/portage" \
 #    "$CHARD_ROOT/var/cache"
 
-echo "${RESET}${GREEN}[+] Chard Rootready to run!${RESET}"
+echo "[+] Chard Rootready to run!"
