@@ -213,7 +213,6 @@ sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | gzip -1 \
 | sudo tar -C "$CHARD_ROOT" -xzf - 
 
-# Build inside chroot
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
 
