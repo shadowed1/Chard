@@ -43,8 +43,6 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
 
-echo "${GREEN}[+] Detected arch: ${ARCH}${RESET}"
-
 case "$ARCH" in
     x86_64)
         echo "${BLUE}[+] Installing bootstrap make binary ${RESET}${MAGENTA}(x86_64)${RESET}"
@@ -91,7 +89,7 @@ PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 echo "${CYAN}[+] Downloading Portage tree snapshot${RESET}"
-sudo curl -L -o "$TMP_TAR" "$SNAPSHOT_URL"
+sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
