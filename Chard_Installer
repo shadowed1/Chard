@@ -182,7 +182,7 @@ PACKAGES=(
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|gnu"
     "coreutils|9.7|tar.xz|https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
     "perl|5.40.0|tar.gz|https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz|perl-5.40.0|perl-core"
-    "Config-AutoConf|0.320|tar.gz|https://cpan.metacpan.org/authors/id/A/AM/AMBS/Config-AutoConf-0.320.tar.gz"
+    "Config-AutoConf|0.320|tar.gz|https://cpan.metacpan.org/authors/id/A/AM/AMBS/Config-AutoConf-0.320.tar.gz|Config-AutoConf-0.320|perl"
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
     "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
     "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
@@ -195,20 +195,32 @@ for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
 
-    echo "[+] Downloading $NAME-$VERSION"
-    sudo curl -L -o "$BUILD_DIR/$ARCHIVE" "$URL"
+    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
+    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
 
-    echo "[+] Extracting $NAME-$VERSION"
+    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
     case "$EXT" in
-        tar.gz|tgz)   sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" ;;
-        tar.xz)       sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" ;;
-        tar.bz2)      sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" ;;
-        zip)          sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR" ;;
-        *) echo "Unknown archive format: $EXT"; exit 1 ;;
+        tar.gz|tgz)
+            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.xz)
+            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.bz2)
+            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        zip)
+            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
+            ;;
+        *)
+            echo "Unknown archive format: $EXT"; exit 1 ;;
     esac
 done
 
-echo "[+] Setting up Chard Chroot..."
+echo "${RESET}${GREEN}[+] Setting up Chard Chroot..."
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | gzip -1 \
 | sudo tar -C "$CHARD_ROOT" -xzf - 
@@ -282,12 +294,6 @@ esac
     echo
 done
 
-if [[ "$NAME" == "python" ]]; then
-    echo "[+] Forcing python3 symlink to /usr/bin/python3"
-    sudo ln -sf /usr/bin/python3 "$CHARD_ROOT/usr/bin/python3"
-fi
-
-
 echo "[+] Cleaning up..."
 sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
@@ -312,4 +318,7 @@ sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/usr/portage" \
     "$CHARD_ROOT/var/cache"
 
-echo "[+] Chard Root Environment ready to run!"
+sudo ln -sf /usr/bin/python "$CHARD_ROOT/usr/bin/python3.13"
+
+
+echo "[+] Chard Root Environment ready to run!${RESET}"
