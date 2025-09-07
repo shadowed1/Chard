@@ -186,6 +186,7 @@ PACKAGES=(
     "coreutils|9.7|tar.xz|https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
     "perl|5.40.0|tar.gz|https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz|perl-5.40.0|perl-core"
     "Config-AutoConf|0.320|tar.gz|https://cpan.metacpan.org/authors/id/A/AM/AMBS/Config-AutoConf-0.320.tar.gz|Config-AutoConf-0.320|perl"
+    "Capture-Tiny|0.48|tar.gz|https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-0.48.tar.gz|Capture-Tiny-0.48|perl"
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
     "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
     "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
