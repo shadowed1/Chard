@@ -252,7 +252,7 @@ for pkg in "${SORTED_PACKAGES[@]}"; do
 done
 
 
-echo "${RESET}${GREEN}[+] Setting up Chard Chroot with progress..."
+echo "${RESET}${GREEN}[+] Expanding ${RESET}${RED}Chard Chroot${RESET}${GREEN}"
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | pv -s $(sudo du -sb "$CHARD_ROOT" | awk '{print $1}') \
 | gzip -1 \
@@ -262,13 +262,13 @@ sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
 
-    echo "[+] Mounting Chard Chroot"
+    echo "${BLUE}${[+] Mounting Chard Chroot${RESET}"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
     mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
     mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
 
-    echo "[+] Building $NAME-$VERSION in chroot${RESET}"
+    echo "${YELLOW}[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
 cd /var/tmp/build/$DIR
