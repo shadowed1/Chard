@@ -345,7 +345,4 @@ sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/usr/portage" \
     "$CHARD_ROOT/var/cache"
 
-#sudo ln -sf /usr/bin/python "$CHARD_ROOT/usr/bin/python3.13"
-
-
 echo "[+] Chard Root Environment ready to run!${RESET}"
