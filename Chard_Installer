@@ -220,10 +220,12 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-echo "${RESET}${GREEN}[+] Setting up Chard Chroot..."
+echo "${RESET}${GREEN}[+] Setting up Chard Chroot with progress..."
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
+| pv -s $(sudo du -sb "$CHARD_ROOT" | awk '{print $1}') \
 | gzip -1 \
 | sudo tar -C "$CHARD_ROOT" -xzf - 
+
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
