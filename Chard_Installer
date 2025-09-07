@@ -196,10 +196,8 @@ PACKAGES=(
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
 )
 
-# Ensure build directory exists
 mkdir -p "$BUILD_DIR"
 
-# Separate packages by build system
 PERL_CORE_PACKAGES=()
 PERL_MODULE_PACKAGES=()
 OTHER_PACKAGES=()
@@ -213,7 +211,6 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-# Concatenate in proper build order
 SORTED_PACKAGES=("${PERL_CORE_PACKAGES[@]}" "${PERL_MODULE_PACKAGES[@]}" "${OTHER_PACKAGES[@]}")
 
 for pkg in "${SORTED_PACKAGES[@]}"; do
