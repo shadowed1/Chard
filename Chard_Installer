@@ -181,9 +181,6 @@ sudo rm -rf "$KERNEL_BUILD"
 
 # name|version|ext|url|dir|buildsys
 PACKAGES=(
-   # Recommended build order: build "core" packages first, then modules
-PACKAGES=(
-
     "make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz|make-4.4|gnu"
     "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz|gmp-6.3.0|gnu"
     "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz|mpfr-4.2.2|gnu"
@@ -191,123 +188,67 @@ PACKAGES=(
     "diffutils|3.12|tar.xz|https://ftp.gnu.org/gnu/diffutils/diffutils-3.12.tar.xz|diffutils-3.12|gnu"
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|gnu"
     "coreutils|9.7|tar.xz|https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
-
     "perl|5.40.0|tar.gz|https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz|perl-5.40.0|perl-core"
     "Config-AutoConf|0.320|tar.gz|https://cpan.metacpan.org/authors/id/A/AM/AMBS/Config-AutoConf-0.320.tar.gz|Config-AutoConf-0.320|perl"
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
-    "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
-
     "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
     "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
-)
-
+    "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
 )
 
 mkdir -p "$BUILD_DIR"
 
+PERL_CORE_PACKAGES=()
+PERL_MODULE_PACKAGES=()
+OTHER_PACKAGES=()
+
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
-    ARCHIVE="$NAME-$VERSION.$EXT"
-
-    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
-    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
-
-    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
-    case "$EXT" in
-        tar.gz|tgz)
-            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.xz)
-            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.bz2)
-            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        zip)
-            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
-            ;;
-        *)
-            echo "Unknown archive format: $EXT"; exit 1 ;;
+    case "$BUILDSYS" in
+        perl-core) PERL_CORE_PACKAGES+=("$pkg") ;;
+        perl)      PERL_MODULE_PACKAGES+=("$pkg") ;;
+        *)         OTHER_PACKAGES+=("$pkg") ;;
     esac
 done
 
-echo "${RESET}${GREEN}[+] Setting up Chard Chroot with progress..."
-sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
-| pv -s $(sudo du -sb "$CHARD_ROOT" | awk '{print $1}') \
-| gzip -1 \
-| sudo tar -C "$CHARD_ROOT" -xzf - 
+SORTED_PACKAGES=("${PERL_CORE_PACKAGES[@]}" "${PERL_MODULE_PACKAGES[@]}" "${OTHER_PACKAGES[@]}")
 
-
-for pkg in "${PACKAGES[@]}"; do
+for pkg in "${SORTED_PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    ARCHIVE="$NAME-$VERSION.$EXT"
+    SRC_DIR="$BUILD_DIR/$DIR"
 
-    echo "[+] Mounting Chard Chroot"
-    mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
-    mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
-    mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
-    mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
+    if [ ! -f "$BUILD_DIR/$ARCHIVE" ]; then
+        echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION"
+        sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
+    else
+        echo "${RESET}${RED}[!] $ARCHIVE already downloaded, skipping.${RESET}"
+    fi
 
-    echo "[+] Building $NAME-$VERSION in chroot${RESET}"
-    sudo chroot "$CHARD_ROOT" /bin/bash -c "
-
-cd /var/tmp/build/$DIR
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/usr/lib64\"
-
-case \"$BUILDSYS\" in
-    gnu)
-        ./configure --prefix=/usr --disable-dependency-tracking
-        make -j\$(nproc)
-        make install
-        ;;
-    perl)
-        perl Makefile.PL INSTALL_BASE=/usr
-        make
-        make test || true
-        make install
-        ;;
-    perl-core)
-        sh Configure -des -Dprefix=/usr
-        make -j$(nproc)
-        make install
-        ;;
-    cmake)
-        cmake -DCMAKE_INSTALL_PREFIX=/usr .
-        make -j\$(nproc)
-        make install
-        ;;
-    meson)
-        meson setup build --prefix=/usr
-        ninja -C build
-        ninja -C build install
-        ;;
-    *)
-        echo \"Unknown build system: $BUILDSYS\"
-        exit 1
-        ;;
-esac
-"
-    echo "[+] Finished building $NAME-$VERSION"
-    echo
+    if [ ! -d "$SRC_DIR" ]; then
+        echo "${RESET}${BLUE}[+] Extracting $NAME-$VERSION"
+        case "$EXT" in
+            tar.gz|tgz)
+                sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+                ;;
+            tar.xz)
+                sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+                ;;
+            tar.bz2)
+                sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+                ;;
+            zip)
+                sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
+                ;;
+            *)
+                echo "Unknown archive format: $EXT"; exit 1 ;;
+        esac
+    else
+        echo "${RESET}${YELLOW}[!] $DIR already extracted, skipping.${RESET}"
+    fi
 done
 
 
@@ -407,4 +348,4 @@ sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/usr/portage" \
     "$CHARD_ROOT/var/cache"
 
-echo "${RED}[+] Chard Root${RESET}${GREEN} ready to run!${RESET}"
+echo "${RESET}${RED}[+] Chard Root${RESET}${GREEN} ready to run!${RESET}"
