@@ -173,7 +173,7 @@ sudo rm -rf "$KERNEL_BUILD"
 
 
 PACKAGES=(
-    #"make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz"
+    "make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz"
     "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz"
     "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
     "binutils|2.45|tar.xz|https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
