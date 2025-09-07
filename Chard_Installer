@@ -12,7 +12,7 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
-echo "${RED}[+] Creating Chard directories${RESET}"
+echo "${GREEN}[+] Creating ${RESET}${RED}Chard${RESET}"
 sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
@@ -222,7 +222,7 @@ for pkg in "${SORTED_PACKAGES[@]}"; do
         echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION"
         sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
     else
-        echo "${RESET}${YELLOW}[!] $ARCHIVE already downloaded, skipping.${RESET}"
+        echo "${RESET}${RED}[!] $ARCHIVE already downloaded, skipping.${RESET}"
     fi
 
     if [ ! -d "$SRC_DIR" ]; then
