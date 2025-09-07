@@ -182,6 +182,7 @@ PACKAGES=(
     "coreutils|9.7|tar.xz|https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.xz"
     "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz"
     "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz"
+    "LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz"
 )
 
 mkdir -p "$BUILD_DIR"
