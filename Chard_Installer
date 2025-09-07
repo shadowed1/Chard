@@ -197,61 +197,36 @@ PACKAGES=(
 
 mkdir -p "$BUILD_DIR"
 
-PERL_CORE_PACKAGES=()
-PERL_MODULE_PACKAGES=()
-OTHER_PACKAGES=()
-
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
-    case "$BUILDSYS" in
-        perl-core) PERL_CORE_PACKAGES+=("$pkg") ;;
-        perl)      PERL_MODULE_PACKAGES+=("$pkg") ;;
-        *)         OTHER_PACKAGES+=("$pkg") ;;
+    ARCHIVE="$NAME-$VERSION.$EXT"
+
+    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
+    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
+
+    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
+    case "$EXT" in
+        tar.gz|tgz)
+            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.xz)
+            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.bz2)
+            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        zip)
+            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
+            ;;
+        *)
+            echo "Unknown archive format: $EXT"; exit 1 ;;
     esac
 done
 
-SORTED_PACKAGES=("${PERL_CORE_PACKAGES[@]}" "${PERL_MODULE_PACKAGES[@]}" "${OTHER_PACKAGES[@]}")
-
-for pkg in "${SORTED_PACKAGES[@]}"; do
-    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
-    ARCHIVE="$NAME-$VERSION.$EXT"
-    SRC_DIR="$BUILD_DIR/$DIR"
-
-    if [ ! -f "$BUILD_DIR/$ARCHIVE" ]; then
-        echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION"
-        sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
-    else
-        echo "${RESET}${RED}[!] $ARCHIVE already downloaded, skipping.${RESET}"
-    fi
-
-    if [ ! -d "$SRC_DIR" ]; then
-        echo "${RESET}${BLUE}[+] Extracting $NAME-$VERSION"
-        case "$EXT" in
-            tar.gz|tgz)
-                sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-                ;;
-            tar.xz)
-                sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-                ;;
-            tar.bz2)
-                sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-                ;;
-            zip)
-                sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
-                ;;
-            *)
-                echo "Unknown archive format: $EXT"; exit 1 ;;
-        esac
-    else
-        echo "${RESET}${YELLOW}[!] $DIR already extracted, skipping.${RESET}"
-    fi
-done
-
-
-echo "${RESET}${GREEN}[+] Expanding ${RESET}${RED}Chard Chroot${RESET}${GREEN}"
+echo "${RESET}${GREEN}[+] Setting up Chard Chroot with progress..."
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | pv -s $(sudo du -sb "$CHARD_ROOT" | awk '{print $1}') \
 | gzip -1 \
@@ -261,13 +236,13 @@ sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
 
-    echo "${BLUE}${[+] Mounting Chard Chroot${RESET}"
+    echo "[+] Mounting Chard Chroot"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
     mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
     mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
 
-    echo "${YELLOW}[+] Building $NAME-$VERSION in chroot${RESET}"
+    echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
 cd /var/tmp/build/$DIR
