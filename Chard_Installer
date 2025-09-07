@@ -189,6 +189,7 @@ PACKAGES=(
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
     "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
     "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
+    "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
 )
 
@@ -223,7 +224,7 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-echo "${RESET}${GREEN}[+] Setting up Chard Chroot with progress..."
+echo "${RESET}${GREEN}[+] Setting up Chard Chroot"
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | pv -s $(sudo du -sb "$CHARD_ROOT" | awk '{print $1}') \
 | gzip -1 \
@@ -295,11 +296,11 @@ case \"$BUILDSYS\" in
         ;;
 esac
 "
-    echo "[+] Finished building $NAME-$VERSION"
+    echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
     echo
 done
 
-echo "${RED}[+] Cleaning up...${RESET}"
+echo "${RED}[+] Cleaning up${RESET}"
 sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
@@ -322,4 +323,4 @@ sudo chown -R 1000:1000 "$CHARD_ROOT"
 #    "$CHARD_ROOT/usr/portage" \
 #    "$CHARD_ROOT/var/cache"
 
-echo "${RESET}${RED}[+] Chard Root${RESET}${GREEN} ready to run!${RESET}"
+echo "${RESET}${GREEN}[+] Chard Rootready to run!${RESET}"
