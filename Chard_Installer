@@ -84,7 +84,8 @@ PORTAGE_TMPDIR='\${ROOT}/var/tmp'
 DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF
-echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET""
+
+echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -189,8 +190,7 @@ PACKAGES=(
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
 )
 
-mkdir -p "$BUILD_DIR"
-
+# Ensure build directory exists
 mkdir -p "$BUILD_DIR"
 
 # Separate packages by build system
@@ -207,35 +207,45 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
+# Concatenate in proper build order
 SORTED_PACKAGES=("${PERL_CORE_PACKAGES[@]}" "${PERL_MODULE_PACKAGES[@]}" "${OTHER_PACKAGES[@]}")
 
 for pkg in "${SORTED_PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
+    SRC_DIR="$BUILD_DIR/$DIR"
 
-    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
-    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
+    if [ ! -f "$BUILD_DIR/$ARCHIVE" ]; then
+        echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION${RESET}"
+        sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
+    else
+        echo "${YELLOW}[!] $ARCHIVE already downloaded, skipping.${RESET}"
+    fi
 
-    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
-    case "$EXT" in
-        tar.gz|tgz)
-            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.xz)
-            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.bz2)
-            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        zip)
-            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
-            ;;
-        *)
-            echo "Unknown archive format: $EXT"; exit 1 ;;
-    esac
+    if [ ! -d "$SRC_DIR" ]; then
+        echo "${RESET}${BLUE}[+] Extracting $NAME-$VERSION${RESET}"
+        case "$EXT" in
+            tar.gz|tgz)
+                sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+                ;;
+            tar.xz)
+                sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+                ;;
+            tar.bz2)
+                sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+                ;;
+            zip)
+                sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
+                ;;
+            *)
+                echo "Unknown archive format: $EXT"; exit 1 ;;
+        esac
+    else
+        echo "${YELLOW}[!] $DIR already extracted, skipping.${RESET}"
+    fi
 done
 
 
@@ -323,11 +333,7 @@ sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
-#PYTHON_REAL="$CHARD_ROOT/usr/bin/python3.13"
-#sudo cp "$PYTHON_REAL" "$CHARD_ROOT/bin/python3"
-#sudo chmod +x "$CHARD_ROOT/bin/python3"
 EMERGE_FILE="$CHARD_ROOT/bin/emerge"
-#sudo sed -i "1 s|^#!.*|#!$PYTHON_REAL|" "$EMERGE_FILE"
 
 sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/bin" \
@@ -339,7 +345,7 @@ sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/usr/portage" \
     "$CHARD_ROOT/var/cache"
 
-sudo ln -sf /usr/bin/python "$CHARD_ROOT/usr/bin/python3.13"
+#sudo ln -sf /usr/bin/python "$CHARD_ROOT/usr/bin/python3.13"
 
 
 echo "[+] Chard Root Environment ready to run!${RESET}"
