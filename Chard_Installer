@@ -328,7 +328,7 @@ esac
     echo
 done
 
-echo "[+] Cleaning up..."
+echo "${RED}[+] Cleaning up...${RESET}"
 sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
@@ -348,4 +348,4 @@ sudo chown -Rf 1000:1000 \
     "$CHARD_ROOT/usr/portage" \
     "$CHARD_ROOT/var/cache"
 
-echo "[+] Chard Root Environment ready to run!${RESET}"
+echo "${RED}[+] Chard Root${RESET}${GREEN} ready to run!${RESET}"
