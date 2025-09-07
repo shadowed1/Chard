@@ -182,6 +182,7 @@ PACKAGES=(
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|gnu"
     "coreutils|9.7|tar.xz|https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
     "perl|5.40.0|tar.gz|https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz|perl-5.40.0|perl-core"
+    "Config-AutoConf|0.320|tar.gz|https://cpan.metacpan.org/authors/id/A/AM/AMBS/Config-AutoConf-0.320.tar.gz"
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
     "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
     "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
@@ -190,7 +191,6 @@ PACKAGES=(
 
 mkdir -p "$BUILD_DIR"
 
-# Download + extract all sources
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
@@ -282,6 +282,11 @@ esac
     echo "[+] Finished building $NAME-$VERSION"
     echo
 done
+
+if [[ "$NAME" == "python" ]]; then
+    echo "[+] Forcing python3 symlink to /usr/bin/python3"
+    sudo ln -sf /usr/bin/python3 "$CHARD_ROOT/usr/bin/python3"
+fi
 
 
 echo "[+] Cleaning up..."
