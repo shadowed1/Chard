@@ -94,15 +94,15 @@ sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
-case "$GENTOO_ARCH" in
-    amd64) STAGE3_URL="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20250831T170358Z.tar.xz";;
-    arm64) STAGE3_URL="https://gentoo.osuosl.org/releases/arm64/autobuilds/current-stage3-arm64-systemd/stage3-arm64-systemd-20250831T234929Z.tar.xz";;
-    *) echo "${RESET}${RED}Unsupported architecture: $GENTOO_ARCH ${RESET}"; exit 1;;
-esac
+STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
+
+STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
+STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
+
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 
-echo "${RESET}${BLUE}[+] Downloading Stage3 tarball"
+echo "${RESET}${BLUE}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
 sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
 
 echo "${RESET}${MAGENTA}[+] Extracting Stage3 tarball"
