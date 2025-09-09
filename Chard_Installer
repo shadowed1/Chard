@@ -187,10 +187,9 @@ case \"\$ARCH\" in
 esac
 
 make mrproper
-make ARCH=\$ARCH headers_install INSTALL_HDR_PATH=/usr
+make ARCH=$ARCH defconfig
+make ARCH=$ARCH INSTALL_HDR_PATH= $CHARD_ROOT/usr/ headers_install
 "
-
-
 
 echo "${RESET}${MAGENTA}[+] Linux headers installed to $CHARD_ROOT/usr/include${RESET}"
 
