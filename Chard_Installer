@@ -103,7 +103,7 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF
 
-echo "${YELLOW}[+] make.conf configured for ${GENTOO_ARCH}${RESET}"
+echo "${YELLOW}[+] make.conf configured for ${RESET}${MAGENTA}${GENTOO_ARCH}${RESET}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -251,17 +251,17 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-echo "${RESET}${GREEN}[+] Setting up Chard Chroot"
+echo "${RESET}${CYAN}[+] Setting up Chard Chroot"
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | gzip -1 \
 | sudo tar -C "$CHARD_ROOT" -xzf - \
     --checkpoint=.100 \
-    --checkpoint-action=echo="   extracted %u files"
+    --checkpoint-action=echo="   streamed %u files"
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     
-    echo "[+] Mounting Chard Chroot"
+    echo "${RESET}${GREEN}[+] Mounting Chard Chroot"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
     mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
