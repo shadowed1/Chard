@@ -60,6 +60,7 @@ case "$ARCH" in
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
             --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
         sudo rm -f /tmp/cmake.tar.gz
+        sudo chmod -R +x "$CHARD_ROOT/usr/bin"
         ;;
     aarch64|arm64)
         GENTOO_ARCH="arm64"
@@ -77,6 +78,7 @@ case "$ARCH" in
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
             --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
         sudo rm -f /tmp/cmake.tar.gz
+        sudo chmod -R +x "$CHARD_ROOT/usr/bin"
         ;;
     *)
         echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
