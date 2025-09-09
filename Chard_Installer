@@ -353,5 +353,5 @@ sudo rm -rf "$BUILD_DIR"
 
 EMERGE_FILE="$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "$CHARD_ROOT"
-
+source /home/chronos/user/.bashrc
 echo "[+] Chard Rootready to run!"
