@@ -174,22 +174,24 @@ else
 fi
 
 sudo rm -rf "$KERNEL_BUILD"
-sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR"
+sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
+    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
 echo "${CYAN}[+] Installing Linux headers into Chard Root..."
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+HOST_ARCH=\$(uname -m)
+
+case \"\$HOST_ARCH\" in
+    x86_64) KERNEL_ARCH=x86_64;;
+    aarch64) KERNEL_ARCH=arm64;;
+    *) echo 'Unknown architecture: \$HOST_ARCH'; exit 1;;
 esac
 
 make mrproper
-make ARCH=$ARCH defconfig
-make ARCH=$ARCH INSTALL_HDR_PATH=/usr headers_install
+make HOST_ARCH=$HOST_ARCH defconfig
+make HOST_ARCH=$HOST_ARCH INSTALL_HDR_PATH=/usr headers_install
 "
 
 echo "${RESET}${MAGENTA}[+] Linux headers installed to $CHARD_ROOT/usr/include${RESET}"
