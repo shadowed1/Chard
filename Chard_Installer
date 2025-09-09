@@ -54,7 +54,7 @@ case "$ARCH" in
         sudo chmod +x /usr/local/make
         sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 
-        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)"
+        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)${RESET}${BLUE}"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-x86_64.tar.gz
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
@@ -66,13 +66,13 @@ case "$ARCH" in
         GENTOO_ARCH="arm64"
         CHOST="aarch64-unknown-linux-gnu"
 
-        echo "${BLUE}[+] Installing bootstrap make binary ${RESET}${MAGENTA}(ARM64)${RESET}"
+        echo "${BLUE}[+]Installing bootstrap make binary${RESET}${MAGENTA}(ARM64)${RESET}"
         sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/make_ARM64 -o /usr/local/make
         sudo chmod +x /usr/local/make
         sudo mkdir -p "$CHARD_ROOT/usr/bin"
         sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 
-        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(ARM64)"
+        echo "${CYAN}[+]Installing prebuilt CMake ${MAGENTA}(ARM64)${RESET}${BLUE}"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-aarch64.tar.gz
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
@@ -103,7 +103,7 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF
 
-echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET}"
+echo "${YELLOW}[+] make.conf configured for ${GENTOO_ARCH}${RESET}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -111,7 +111,8 @@ TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 echo "${CYAN}[+] Downloading Portage tree snapshot"
 sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+sudo tar -xJf  "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
+    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
@@ -198,22 +199,23 @@ sudo rm -rf "$KERNEL_BUILD"
 
 # name|version|ext|url|dir|buildsys
 PACKAGES=(
-    "make|4.4|tar.gz|https://ftp.gnu.org/gnu/make/make-4.4.tar.gz|make-4.4|gnu"
+    "make|4.4|tar.gz|https://mirrors.kernel.org//gnu/make/make-4.4.tar.gz|make-4.4|gnu"
     "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz|gmp-6.3.0|gnu"
     "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz|mpfr-4.2.2|gnu"
-    "binutils|2.45|tar.xz|https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz|binutils-2.45|gnu"
-    "diffutils|3.12|tar.xz|https://ftp.gnu.org/gnu/diffutils/diffutils-3.12.tar.xz|diffutils-3.12|gnu"
+    "binutils|2.45|tar.xz|https://mirrors.kernel.org//gnu/binutils/binutils-2.45.tar.xz|binutils-2.45|gnu"
+    "diffutils|3.12|tar.xz|https://mirrors.kernel.org//gnu/diffutils/diffutils-3.12.tar.xz|diffutils-3.12|gnu"
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|gnu"
-    "coreutils|9.7|tar.xz|https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
+    "coreutils|9.7|tar.xz|https://mirrors.kernel.org//gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
     "perl|5.40.0|tar.gz|https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz|perl-5.40.0|perl-core"
     "Config-AutoConf|0.320|tar.gz|https://cpan.metacpan.org/authors/id/A/AM/AMBS/Config-AutoConf-0.320.tar.gz|Config-AutoConf-0.320|perl"
     "Capture-Tiny|0.48|tar.gz|https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-0.48.tar.gz|Capture-Tiny-0.48|perl"
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
-    "findutils|4.10.0|tar.xz|https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
+    "findutils|4.10.0|tar.xz|https://mirrors.kernel.org//gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
     "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
     "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
+    "gtest|1.17.0|git|https://github.com/google/googletest.git|googletest|cmake"
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
 
 )
@@ -267,6 +269,23 @@ for pkg in "${PACKAGES[@]}"; do
     mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
+
+
+    if [[ "$EXT" == "git" ]]; then
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+cd /var/tmp/build
+if [ ! -d \"$DIR\" ]; then
+    git clone --branch release-$VERSION $URL
+fi
+cd $DIR
+mkdir -p build && cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+make -j\$(nproc)
+make install
+"
+    else
+
+
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
 cd /var/tmp/build/$DIR
@@ -351,5 +370,5 @@ sudo rm -rf "$BUILD_DIR"
 
 EMERGE_FILE="$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "$CHARD_ROOT"
-
+source /home/chronos/user/.bashrc
 echo "[+] Chard Rootready to run!"
