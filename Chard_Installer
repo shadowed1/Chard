@@ -186,8 +186,9 @@ case \"\$ARCH\" in
     *) echo 'Unknown architecture: \$ARCH'; exit 1;;
 esac
 
-make mrproper
+make ARCH=$ARCH mrproper
 make ARCH=$ARCH defconfig
+make ARCH=$ARCH headers_check
 make ARCH=$ARCH INSTALL_HDR_PATH= $CHARD_ROOT/usr/ headers_install
 "
 
