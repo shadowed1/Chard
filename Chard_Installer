@@ -54,7 +54,7 @@ case "$ARCH" in
         sudo chmod +x /usr/local/make
         sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 
-        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)${RESET}${BLUE}"
+        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-x86_64.tar.gz
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
@@ -66,13 +66,13 @@ case "$ARCH" in
         GENTOO_ARCH="arm64"
         CHOST="aarch64-unknown-linux-gnu"
 
-        echo "${BLUE}[+]Installing bootstrap make binary${RESET}${MAGENTA}(ARM64)${RESET}"
+        echo "${BLUE}[+] Installing bootstrap make binary ${RESET}${MAGENTA}(ARM64)${RESET}"
         sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/make_ARM64 -o /usr/local/make
         sudo chmod +x /usr/local/make
         sudo mkdir -p "$CHARD_ROOT/usr/bin"
         sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 
-        echo "${CYAN}[+]Installing prebuilt CMake ${MAGENTA}(ARM64)${RESET}${BLUE}"
+        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(ARM64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-aarch64.tar.gz
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
@@ -103,7 +103,7 @@ DISTDIR='\${ROOT}/var/cache/distfiles'
 PKGDIR='\${ROOT}/var/cache/packages'
 EOF
 
-echo "${YELLOW}[+] make.conf configured for ${RESET}${MAGENTA}${GENTOO_ARCH}${RESET}"
+echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET}"
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -111,8 +111,7 @@ TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 echo "${CYAN}[+] Downloading Portage tree snapshot"
 sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf  "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
-    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
@@ -219,7 +218,6 @@ PACKAGES=(
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
 
 )
-
 mkdir -p "$BUILD_DIR"
 
 for pkg in "${PACKAGES[@]}"; do
@@ -255,35 +253,21 @@ echo "${RESET}${CYAN}[+] Setting up Chard Chroot"
 sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | gzip -1 \
 | sudo tar -C "$CHARD_ROOT" -xzf - \
-    --checkpoint=.100 \
-    --checkpoint-action=echo="   streamed %u files"
+    --checkpoint=.1000 \
+    --checkpoint-action=echo="   streaming %u $CHARD_ROOT"
+
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     
-    echo "${RESET}${GREEN}[+] Mounting Chard Chroot"
+
+    echo "[+] Mounting Chard Chroot"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
     mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
     mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
-
-    if [[ "$EXT" == "git" ]]; then
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-cd /var/tmp/build
-if [ ! -d \"$DIR\" ]; then
-    git clone --branch release-$VERSION $URL
-fi
-cd $DIR
-mkdir -p build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-make -j\$(nproc)
-make install
-"
-    else
-
-
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
 cd /var/tmp/build/$DIR
@@ -368,5 +352,5 @@ sudo rm -rf "$BUILD_DIR"
 
 EMERGE_FILE="$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "$CHARD_ROOT"
-source /home/chronos/user/.bashrc
+
 echo "[+] Chard Rootready to run!"
