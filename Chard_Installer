@@ -54,7 +54,7 @@ case "$ARCH" in
         sudo chmod +x /usr/local/make
         sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 
-        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)${RESET}"
+        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-x86_64.tar.gz
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
@@ -72,7 +72,7 @@ case "$ARCH" in
         sudo mkdir -p "$CHARD_ROOT/usr/bin"
         sudo ln -sf /usr/local/make "$CHARD_ROOT/usr/bin/make"
 
-        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(ARM64)${RESET}"
+        echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(ARM64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-aarch64.tar.gz
         sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT/usr/" --strip-components=1 \
@@ -87,7 +87,7 @@ case "$ARCH" in
 esac
 
 
-echo "${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
+echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 sudo mkdir -p "$(dirname "$MAKE_CONF")"
