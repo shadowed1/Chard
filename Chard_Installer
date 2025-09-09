@@ -215,7 +215,7 @@ PACKAGES=(
     "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
-    "gtest|1.17.0|tar.gz|https://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz|googletest|cmake"
+    "gtest|1.16.0|tar.gz|https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz|googletest|cmake"
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
 
 )
@@ -311,9 +311,9 @@ case \"$BUILDSYS\" in
         make install
         ;;
     cmake)
-        cmake -DCMAKE_INSTALL_PREFIX=/usr .
-        make -j\$(nproc)
-        make install
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
+        cmake --build build -j$(nproc)
+        cmake --install build
         ;;
     meson)
         meson setup build --prefix=/usr
