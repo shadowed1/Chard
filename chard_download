@@ -1,0 +1,30 @@
+#!/bin/bash
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+curl -L https://raw.githubusercontent.com/shadowed1/Chard/refs/heads/main/Chard_Installer -o /home/chronos/Chard_Installer
+echo "╔══════════════════════════════════════════════════════════════════════╗"
+echo "║  Downloading to: /home/chronos/Chard_Installer                       ║"
+echo "║  Run the installer with VT-2 or enable sudo in crosh.                ║"
+echo "║  Move it to an executable location or run these commands with VT-2:  ║
+echo "╚══════════════════════════════════════════════════════════════════════╝
+echo ""
+echo "sudo mv /home/chronos/Chard_Installer /usr/local/Chard_Installer"
+echo ""
+echo "sudo bash /usr/local/Chard_Installer"
+echo ""
+echo ""
+echo "╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
+echo ""
+echo "Instead of using VT-2 to manually type commands, I recommend installing sudoCrosh - (copy paste on crosh shell):"
+echo ""
+echo "bash <(curl -s "https://raw.githubusercontent.com/shadowed1/sudoCrosh/main/sudocrosh_downloader.sh?$(date +%s)")"
+echo ""
+echo "╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
+echo ""
