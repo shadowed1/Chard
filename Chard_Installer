@@ -126,7 +126,7 @@ TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 echo "${RESET}${BLUE}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
 sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
 
-echo "${RESET}${MAGENTA}[+] Extracting Stage3 tarball"
+echo "${RESET}${BLUE}[+] Extracting Stage3 tarball"
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
     --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 
