@@ -13,7 +13,20 @@ CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
-sudo mkdir -p "$CHARD_ROOT"/{etc/portage,usr/portage,usr/bin,usr/lib,var/tmp,var/cache/distfiles,var/cache/packages,dev,tmp}
+sudo mkdir -p "$CHARD_ROOT"/etc/portage \
+              "$CHARD_ROOT"/usr/portage \
+              "$CHARD_ROOT"/usr/bin \
+              "$CHARD_ROOT"/usr/lib \
+              "$CHARD_ROOT"/var/tmp/build \
+              "$CHARD_ROOT"/var/cache/distfiles \
+              "$CHARD_ROOT"/var/cache/packages \
+              "$CHARD_ROOT"/dev \
+              "$CHARD_ROOT"/dev/shm \
+              "$CHARD_ROOT"/proc \
+              "$CHARD_ROOT"/sys \
+              "$CHARD_ROOT"/tmp
+
+
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
@@ -223,41 +236,35 @@ PACKAGES=(
 )
 mkdir -p "$BUILD_DIR"
 
+sudo mkdir -p "$CHARD_ROOT/var/tmp/build"
+
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
 
-    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
-    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
+    echo "Downloading $NAME-$VERSION..."
+    sudo curl -L -o "$CHARD_ROOT/var/tmp/build/$ARCHIVE" "$URL"
 
-    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
+    echo "Extracting $NAME-$VERSION..."
     case "$EXT" in
         tar.gz|tgz)
-            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
+            sudo tar -xzf "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -C "$CHARD_ROOT/var/tmp/build" ;;
         tar.xz)
-            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
+            sudo tar -xJf "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -C "$CHARD_ROOT/var/tmp/build" ;;
         tar.bz2)
-            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
+            sudo tar -xjf "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -C "$CHARD_ROOT/var/tmp/build" ;;
         zip)
-            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
-            ;;
-        *)
-            echo "Unknown archive format: $EXT"; exit 1 ;;
+            sudo unzip -q "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -d "$CHARD_ROOT/var/tmp/build" ;;
     esac
 done
 
-echo "${RESET}${CYAN}[+] Setting up Chard Chroot"
-sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
-| gzip -1 \
-| sudo tar -C "$CHARD_ROOT" -xzf - \
-    --checkpoint=.1000 \
-    --checkpoint-action=echo="   streaming %u files to $CHARD_ROOT"
+
+#echo "${RESET}${CYAN}[+] Setting up Chard Chroot"
+#sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
+#| gzip -1 \
+#| sudo tar -C "$CHARD_ROOT" -xzf - \
+#    --checkpoint=.1000 \
+#    --checkpoint-action=echo="   streaming %u files to $CHARD_ROOT"
 
 
 for pkg in "${PACKAGES[@]}"; do
@@ -272,6 +279,7 @@ for pkg in "${PACKAGES[@]}"; do
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
+    
 
 cd /var/tmp/build/$DIR
 
