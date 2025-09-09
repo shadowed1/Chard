@@ -350,17 +350,5 @@ sudo rm -rf "$BUILD_DIR"
 
 EMERGE_FILE="$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "$CHARD_ROOT"
-#sudo chown -Rf 1000:1000 \
-#    "$CHARD_ROOT/bin" \
-#    "$CHARD_ROOT/usr/bin" \
-#    "$CHARD_ROOT/lib" \
-#    "$CHARD_ROOT/usr/lib" \
-#    "$CHARD_ROOT/usr/lib64" \
-#    "$CHARD_ROOT/include" \
-#    "$CHARD_ROOT/share" \
-#    "$CHARD_ROOT/usr/lib/python3."* \
-#    "$CHARD_ROOT/var/tmp" \
-#    "$CHARD_ROOT/usr/portage" \
-#    "$CHARD_ROOT/var/cache"
 
 echo "[+] Chard Rootready to run!"
