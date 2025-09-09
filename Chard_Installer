@@ -255,7 +255,7 @@ sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
 | gzip -1 \
 | sudo tar -C "$CHARD_ROOT" -xzf - \
     --checkpoint=.1000 \
-    --checkpoint-action=echo="   streaming %u $CHARD_ROOT"
+    --checkpoint-action=echo="   streaming %u files to $CHARD_ROOT"
 
 
 for pkg in "${PACKAGES[@]}"; do
