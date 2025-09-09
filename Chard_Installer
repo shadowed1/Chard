@@ -293,6 +293,12 @@ export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/usr/lib64\"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
 
+if [[ "$NAME" == "gtest" ]]; then
+    cd /var/tmp/build/$DIR/googletest
+else
+    cd /var/tmp/build/$DIR
+fi
+
 case \"$BUILDSYS\" in
     gnu)
         ./configure --prefix=/usr --disable-dependency-tracking
