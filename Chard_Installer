@@ -161,7 +161,7 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o 
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 GCC_DIR="$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-
+export PYTHON="$CHARD_ROOT/usr/local/chard/bin/python3"
 export CC="$GCC_DIR/$CHOST-gcc"
 export CXX="$GCC_DIR/$CHOST-g++"
 export AR="$GCC_DIR/gcc-ar"
@@ -211,8 +211,6 @@ echo "${RESET}${MAGENTA}[+] Linux headers installed to $CHARD_ROOT/usr/include${
 
 sudo rm -rf "$KERNEL_BUILD"
 
-
-# name|version|ext|url|dir|buildsys
 PACKAGES=(
     "make|4.4|tar.gz|https://mirrors.kernel.org//gnu/make/make-4.4.tar.gz|make-4.4|gnu"
     "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz|gmp-6.3.0|gnu"
@@ -232,6 +230,8 @@ PACKAGES=(
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
     "gtest|1.16.0|tar.gz|https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz|googletest-1.16.0|cmake"
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
+    "pkg-config|0.29.2|tar.gz|https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz|pkg-config-0.29.2|gnu"
+    "meson|1.9.0|tar.gz|https://github.com/mesonbuild/meson/releases/download/1.9.0/meson-1.9.0.tar.gz|meson-1.9.0|python"
 
 )
 mkdir -p "$BUILD_DIR"
@@ -258,19 +258,9 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-
-#echo "${RESET}${CYAN}[+] Setting up Chard Chroot"
-#sudo tar -C "$CHARD_ROOT" -cf - . 2>/dev/null \
-#| gzip -1 \
-#| sudo tar -C "$CHARD_ROOT" -xzf - \
-#    --checkpoint=.1000 \
-#    --checkpoint-action=echo="   streaming %u files to $CHARD_ROOT"
-
-
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     
-
     echo "[+] Mounting Chard Chroot"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
@@ -302,6 +292,7 @@ export LDFLAGS='-L/usr/lib'
 export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/usr/lib64\"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+PYTHON="/bin/python3"
 
 if [[ "$NAME" == "gtest" ]]; then
     cd /var/tmp/build/${DIR}
@@ -367,7 +358,6 @@ sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
-EMERGE_FILE="$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 source /home/chronos/user/.bashrc
 echo "[+] Chard Rootready to run!"
