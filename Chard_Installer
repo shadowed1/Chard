@@ -341,6 +341,7 @@ case \"$BUILDSYS\" in
         ;;
       python)
         /bin/python3 -m pip install --prefix=/usr .
+        ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
         exit 1
