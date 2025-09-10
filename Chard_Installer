@@ -8,6 +8,9 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+MAX_RETRIES=10
+RETRY_DELAY=30
+
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
@@ -234,7 +237,6 @@ PACKAGES=(
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
     "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
     "pkg-config|0.29.2|tar.gz|https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz|pkg-config-0.29.2|gnu"
-    "meson|1.9.0|tar.gz|https://github.com/mesonbuild/meson/releases/download/1.9.0/meson-1.9.0.tar.gz|meson-1.9.0|meson"
 
 )
 mkdir -p "$BUILD_DIR"
@@ -246,9 +248,22 @@ for pkg in "${PACKAGES[@]}"; do
     ARCHIVE="$NAME-$VERSION.$EXT"
 
     echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
-    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
 
-    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
+    attempt=1
+    while true; do
+        sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL" && break
+
+        echo "${RED}[!] Download failed for $NAME-$VERSION (attempt $attempt/$MAX_RETRIES), retrying in $RETRY_DELAY seconds..."
+        (( attempt++ ))
+
+        if (( attempt > MAX_RETRIES )); then
+            echo "${BOLD}${RED}[!] Failed to download $NAME-$VERSION after $MAX_RETRIES attempts. Aborting.${RESET}"
+            exit 1
+        fi
+        sleep $RETRY_DELAY
+    done
+
+    echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
     case "$EXT" in
         tar.gz|tgz)
             sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
@@ -273,7 +288,7 @@ done
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     
-    echo "[+] Mounting Chard Chroot"
+    echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
     mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
@@ -334,7 +349,8 @@ case \"$BUILDSYS\" in
         cmake --build build -j$(nproc)
         cmake --install build
         ;;
-    meson)
+     meson)
+        rm -rf build
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
@@ -359,19 +375,29 @@ echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
         echo "${GREEN}[+] Replaced symlink with real make binary in Chard Root${RESET}"
     fi
 
-
     echo
 
 done
 
-echo "${RED}[+] Cleaning up${RESET}"
-sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
+MESON_NAME="meson"
+MESON_VERSION="1.9.0"
+MESON_ARCHIVE="$MESON_NAME-$MESON_VERSION.tar.gz"
+MESON_DIR="$MESON_NAME-$MESON_VERSION"
+MESON_URL="https://github.com/mesonbuild/meson/releases/download/$MESON_VERSION/$MESON_ARCHIVE"
 
-sudo rm -rf "$BUILD_DIR"
+echo "${RESET}${GREEN}[+] Downloading $MESON_NAME-$MESON_VERSION"
+sudo curl -L --progress-bar -o "$BUILD_DIR/$MESON_ARCHIVE" "$MESON_URL"
 
-sudo chown -R 1000:1000 "$CHARD_ROOT"
-source /home/chronos/user/.bashrc
-echo "[+] Chard Rootready to run!"
+echo "${RESET}${YELLOW}[+] Extracting $MESON_NAME-$MESON_VERSION"
+sudo tar -xzf "$BUILD_DIR/$MESON_ARCHIVE" -C "$BUILD_DIR"
+
+echo "${RESET}${RED}[+] Installing $MESON_NAME-$MESON_VERSION in chroot${RESET}"
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+cd /var/tmp/build/$MESON_DIR
+
+/bin/python3 -m pip install --prefix=/usr .
+"
+
+echo "${RESET}${MAGENTA}[+] Finished installing $MESON_NAME-$MESON_VERSION${RESET}"
+
+sudo rm -rf "$BUILD_DIR/$MESON_DIR" "$BUILD_DIR/$MESON_ARCHIVE"
