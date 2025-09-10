@@ -31,6 +31,7 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
 
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
@@ -245,49 +246,7 @@ sudo mkdir -p "$CHARD_ROOT/var/tmp/build"
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
-    ARCHIVE="$NAME-$VERSION.$EXT"
 
-    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
-
-    attempt=1
-    while true; do
-        sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL" && break
-
-        echo "${RED}[!] Download failed for $NAME-$VERSION (attempt $attempt/$MAX_RETRIES), retrying in $RETRY_DELAY seconds..."
-        (( attempt++ ))
-
-        if (( attempt > MAX_RETRIES )); then
-            echo "${BOLD}${RED}[!] Failed to download $NAME-$VERSION after $MAX_RETRIES attempts. Aborting.${RESET}"
-            exit 1
-        fi
-        sleep $RETRY_DELAY
-    done
-
-    echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
-    case "$EXT" in
-        tar.gz|tgz)
-            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.xz)
-            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.bz2)
-            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        zip)
-            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
-            ;;
-        *)
-            echo "Unknown archive format: $EXT"; exit 1 ;;
-    esac
-done
-
-for pkg in "${PACKAGES[@]}"; do
-    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
-    
     echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
@@ -296,6 +255,49 @@ for pkg in "${PACKAGES[@]}"; do
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
+        cd /var/tmp/build/$DIR || exit 1
+        case '$BUILDSYS' in
+            gnu)
+                ./configure --prefix=/usr && make -j\$(nproc) && make install
+                ;;
+            cmake)
+                mkdir -p build && cd build
+                cmake .. -DCMAKE_INSTALL_PREFIX=/usr && make -j\$(nproc) && make install
+                ;;
+            meson)
+                if [ -f meson.build ]; then
+                    rm -rf build
+                    meson setup build --prefix=/usr
+                    ninja -C build && ninja -C build install
+                fi
+                ;;
+            perl-core)
+                sh Configure -des -Dprefix=/usr && make -j\$(nproc) && make install
+                ;;
+            perl)
+                perl Makefile.PL PREFIX=/usr && make -j\$(nproc) && make install
+                ;;
+        esac
+    "
+
+    if [[ "$NAME" == "python" ]]; then
+        echo "[+] Creating external python wrapper in /usr/bin/python"
+        sudo tee /usr/bin/python >/dev/null <<'EOF'
+#!/bin/sh
+CHARD_ROOT="/usr/local/chard"
+PYTHON_BIN="$CHARD_ROOT/usr/bin/python3"
+if [ ! -x "$PYTHON_BIN" ]; then
+    echo "python-exec: $PYTHON_BIN not found or not executable" >&2
+    exit 127
+fi
+exec "$PYTHON_BIN" "$@"
+EOF
+        sudo chmod +x /usr/bin/python
+    fi
+done
+
+
+
     
 
 cd /var/tmp/build/$DIR
@@ -378,6 +380,20 @@ echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
     echo
 
 done
+
+sudo tee /usr/bin/python >/dev/null <<'EOF'
+#!/bin/sh
+CHARD_ROOT="/usr/local/chard"
+PYTHON_BIN="$CHARD_ROOT/usr/bin/python3"
+if [ ! -x "$PYTHON_BIN" ]; then
+    echo "python-exec: $PYTHON_BIN not found or not executable" >&2
+    exit 127
+fi
+exec "$PYTHON_BIN" "$@"
+EOF
+sudo chmod +x /usr/bin/python
+
+
 
 MESON_NAME="meson"
 MESON_VERSION="1.9.0"
