@@ -242,19 +242,28 @@ for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
 
-    echo "Downloading $NAME-$VERSION..."
-    sudo curl -L -o "$CHARD_ROOT/var/tmp/build/$ARCHIVE" "$URL"
+    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
+    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
 
-    echo "Extracting $NAME-$VERSION..."
+    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
     case "$EXT" in
         tar.gz|tgz)
-            sudo tar -xzf "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -C "$CHARD_ROOT/var/tmp/build" ;;
+            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
         tar.xz)
-            sudo tar -xJf "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -C "$CHARD_ROOT/var/tmp/build" ;;
+            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
         tar.bz2)
-            sudo tar -xjf "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -C "$CHARD_ROOT/var/tmp/build" ;;
+            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
         zip)
-            sudo unzip -q "$CHARD_ROOT/var/tmp/build/$ARCHIVE" -d "$CHARD_ROOT/var/tmp/build" ;;
+            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
+            ;;
+        *)
+            echo "Unknown archive format: $EXT"; exit 1 ;;
     esac
 done
 
