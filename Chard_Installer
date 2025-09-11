@@ -236,7 +236,6 @@ PACKAGES=(
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
-    "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
     "pkg-config|0.29.2|tar.gz|https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz|pkg-config-0.29.2|gnu"
 
 )
@@ -297,123 +296,49 @@ EOF
 done
 
 
-
-    
-
-cd /var/tmp/build/$DIR
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export MAGIC="/usr/share/misc/magic.mgc"
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/usr/lib64\"
-export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
-PYTHON="/bin/python3"
-
-if [[ "$NAME" == "gtest" ]]; then
-    cd /var/tmp/build/${DIR}
-else
-    cd /var/tmp/build/$DIR
-fi
-
-case \"$BUILDSYS\" in
-    gnu)
-        ./configure --prefix=/usr --disable-dependency-tracking
-        make -j\$(nproc)
-        make install
-        ;;
-    perl)
-        perl Makefile.PL INSTALL_BASE=/usr/local
-        make
-        make test || true
-        make install
-        ;;
-    perl-core)
-        sh Configure -des -Dprefix=/usr
-        make -j$(nproc)
-        make install
-        ;;
-    cmake)
-        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
-        cmake --build build -j$(nproc)
-        cmake --install build
-        ;;
-     meson)
-        rm -rf build
-        meson setup build --prefix=/usr
-        ninja -C build
-        ninja -C build install
-        ;;
-      python)
-        /bin/python3 -m pip install --prefix=/usr .
-        ;;
-    *)
-        echo \"Unknown build system: $BUILDSYS\"
-        exit 1
-        ;;
-esac
-"
-
-echo
-
-echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
-    
-    if [ "$NAME" = "make" ] && [ -L "$CHARD_ROOT/usr/bin/make" ]; then
-        sudo rm -f "$CHARD_ROOT/usr/bin/make"
-        sudo cp /usr/local/make "$CHARD_ROOT/usr/bin/make"
-        echo "${GREEN}[+] Replaced symlink with real make binary in Chard Root${RESET}"
-    fi
-
-    echo
-
-done
-
-sudo tee /usr/bin/python >/dev/null <<'EOF'
-#!/bin/sh
-CHARD_ROOT="/usr/local/chard"
-PYTHON_BIN="$CHARD_ROOT/usr/bin/python3"
-if [ ! -x "$PYTHON_BIN" ]; then
-    echo "python-exec: $PYTHON_BIN not found or not executable" >&2
-    exit 127
-fi
-exec "$PYTHON_BIN" "$@"
-EOF
-sudo chmod +x /usr/bin/python
-
-
-
 MESON_NAME="meson"
 MESON_VERSION="1.9.0"
 MESON_ARCHIVE="$MESON_NAME-$MESON_VERSION.tar.gz"
 MESON_DIR="$MESON_NAME-$MESON_VERSION"
 MESON_URL="https://github.com/mesonbuild/meson/releases/download/$MESON_VERSION/$MESON_ARCHIVE"
 
-echo "${RESET}${GREEN}[+] Downloading $MESON_NAME-$MESON_VERSION"
-sudo curl -L --progress-bar -o "$BUILD_DIR/$MESON_ARCHIVE" "$MESON_URL"
+GLIB_NAME="glib"
+GLIB_VERSION="2.86.0"
+GLIB_ARCHIVE="$GLIB_NAME-$GLIB_VERSION.tar.xz"
+GLIB_DIR="$GLIB_NAME-$GLIB_VERSION"
+GLIB_URL="https://download.gnome.org/sources/glib/2.86/$GLIB_ARCHIVE"
 
-echo "${RESET}${YELLOW}[+] Extracting $MESON_NAME-$MESON_VERSION"
+echo "[+] Downloading Meson $MESON_VERSION"
+sudo curl -L --progress-bar -o "$BUILD_DIR/$MESON_ARCHIVE" "$MESON_URL"
 sudo tar -xzf "$BUILD_DIR/$MESON_ARCHIVE" -C "$BUILD_DIR"
 
-echo "${RESET}${RED}[+] Installing $MESON_NAME-$MESON_VERSION in chroot${RESET}"
+echo "[+] Installing Meson $MESON_VERSION inside chroot"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-cd /var/tmp/build/$MESON_DIR
-
-/bin/python3 -m pip install --prefix=/usr .
+    cd /var/tmp/build/$MESON_DIR
+    /usr/bin/python3 -m pip install --prefix=/usr .
 "
 
-echo "${RESET}${MAGENTA}[+] Finished installing $MESON_NAME-$MESON_VERSION${RESET}"
+echo "[+] Downloading glib $GLIB_VERSION"
+sudo curl -L --progress-bar -o "$BUILD_DIR/$GLIB_ARCHIVE" "$GLIB_URL"
+sudo tar -xf "$BUILD_DIR/$GLIB_ARCHIVE" -C "$BUILD_DIR"
 
-sudo rm -rf "$BUILD_DIR/$MESON_DIR" "$BUILD_DIR/$MESON_ARCHIVE"
+echo "[+] Building glib $GLIB_VERSION with meson"
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+    cd /var/tmp/build/$GLIB_DIR
+    rm -rf build
+    meson setup build --prefix=/usr
+    ninja -C build
+    ninja -C build install
+"
+
+echo "${RED}[+] Cleaning up${RESET}"
+sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
+
+sudo rm -rf "$BUILD_DIR"
+
+sudo chown -R 1000:1000 "$CHARD_ROOT"
+source /home/chronos/user/.bashrc
+echo "[+] Chard Rootready to run!"
