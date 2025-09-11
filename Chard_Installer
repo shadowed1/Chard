@@ -339,6 +339,9 @@ sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
+$CHARD_ROOT/usr/bin/python3.13 -m venv --copies $CHARD_ROOT/chard-venv
+source $CHARD_ROOT/chard-venv/bin/activate
+
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 source /home/chronos/user/.bashrc
 echo "[+] Chard Rootready to run!"
