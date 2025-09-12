@@ -31,7 +31,6 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
 
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
@@ -228,7 +227,7 @@ PACKAGES=(
     "Capture-Tiny|0.48|tar.gz|https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-0.48.tar.gz|Capture-Tiny-0.48|perl"
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
     "findutils|4.10.0|tar.xz|https://mirrors.kernel.org//gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
-    "python|3.12.12|tar.xz|https://www.python.org/ftp/python/3.12.12/Python-3.12.12.tar.xz|Python-3.12.12|gnu"
+    "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
     "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
@@ -236,7 +235,9 @@ PACKAGES=(
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
+    "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
     "pkg-config|0.29.2|tar.gz|https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz|pkg-config-0.29.2|gnu"
+    "meson|1.9.0|tar.gz|https://github.com/mesonbuild/meson/releases/download/1.9.0/meson-1.9.0.tar.gz|meson-1.9.0|meson"
 
 )
 mkdir -p "$BUILD_DIR"
@@ -245,8 +246,37 @@ sudo mkdir -p "$CHARD_ROOT/var/tmp/build"
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    ARCHIVE="$NAME-$VERSION.$EXT"
 
-    echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
+    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
+    sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"
+
+    echo "[+] Extracting $NAME-$VERSION ${RESET}${YELLOW}"
+    case "$EXT" in
+        tar.gz|tgz)
+            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.xz)
+            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.bz2)
+            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        zip)
+            sudo unzip -q "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
+            ;;
+        *)
+            echo "Unknown archive format: $EXT"; exit 1 ;;
+    esac
+done
+
+for pkg in "${PACKAGES[@]}"; do
+    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    
+    echo "[+] Mounting Chard Chroot"
     mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
     mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
     mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
@@ -254,90 +284,87 @@ for pkg in "${PACKAGES[@]}"; do
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "$CHARD_ROOT" /bin/bash -c "
-        cd /var/tmp/build/$DIR || exit 1
-        case '$BUILDSYS' in
-            gnu)
-                ./configure --prefix=/usr && make -j\$(nproc) && make install
-                ;;
-            cmake)
-                mkdir -p build && cd build
-                cmake .. -DCMAKE_INSTALL_PREFIX=/usr && make -j\$(nproc) && make install
-                ;;
-            meson)
-                if [ -f meson.build ]; then
-                    rm -rf build
-                    meson setup build --prefix=/usr
-                    ninja -C build && ninja -C build install
-                fi
-                ;;
-            perl-core)
-                sh Configure -des -Dprefix=/usr && make -j\$(nproc) && make install
-                ;;
-            perl)
-                perl Makefile.PL PREFIX=/usr && make -j\$(nproc) && make install
-                ;;
-        esac
-    "
+    
 
-    if [[ "$NAME" == "python" ]]; then
-    echo "[+] Creating stable python wrapper"
-    sudo tee /usr/local/bin/python >/dev/null <<'EOF'
-#!/bin/sh
-CHARD_ROOT="/usr/local/chard"
-exec "$CHARD_ROOT/usr/bin/python3.12" "$@"
-EOF
-    sudo chmod +x /usr/local/bin/python
+cd /var/tmp/build/$DIR
+
+ARCH=\$(uname -m)
+case \"\$ARCH\" in
+    x86_64) CHOST=x86_64-pc-linux-gnu;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu;;
+    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+esac
+
+GCC_DIR=/usr/\$CHOST/gcc-bin/14
+export MAGIC="/usr/share/misc/magic.mgc"
+export CC=\$GCC_DIR/\$CHOST-gcc
+export CXX=\$GCC_DIR/\$CHOST-g++
+export AR=\$GCC_DIR/gcc-ar
+export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
+export CXXFLAGS='-O2 -pipe -I/usr/include'
+export LDFLAGS='-L/usr/lib'
+export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
+export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/usr/lib64\"
+export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+PYTHON="/bin/python3"
+
+if [[ "$NAME" == "gtest" ]]; then
+    cd /var/tmp/build/${DIR}
+else
+    cd /var/tmp/build/$DIR
 fi
+
+case \"$BUILDSYS\" in
+    gnu)
+        ./configure --prefix=/usr --disable-dependency-tracking
+        make -j\$(nproc)
+        make install
+        ;;
+    perl)
+        perl Makefile.PL INSTALL_BASE=/usr/local
+        make
+        make test || true
+        make install
+        ;;
+    perl-core)
+        sh Configure -des -Dprefix=/usr
+        make -j$(nproc)
+        make install
+        ;;
+    cmake)
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
+        cmake --build build -j$(nproc)
+        cmake --install build
+        ;;
+    meson)
+        meson setup build --prefix=/usr
+        ninja -C build
+        ninja -C build install
+        ;;
+      python)
+        /bin/python3 -m pip install --prefix=/usr .
+    *)
+        echo \"Unknown build system: $BUILDSYS\"
+        exit 1
+        ;;
+esac
+"
+
+echo
+
+echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
+    
+    if [ "$NAME" = "make" ] && [ -L "$CHARD_ROOT/usr/bin/make" ]; then
+        sudo rm -f "$CHARD_ROOT/usr/bin/make"
+        sudo cp /usr/local/make "$CHARD_ROOT/usr/bin/make"
+        echo "${GREEN}[+] Replaced symlink with real make binary in Chard Root${RESET}"
+    fi
+
+
+    echo
+
 done
-
-PORTAGE_VER="3.5.0"
-PORTAGE_ARCHIVE="portage-$PORTAGE_VER.tar.gz"
-PORTAGE_DIR="portage-$PORTAGE_VER"
-PORTAGE_URL="https://github.com/gentoo/portage/releases/download/$PORTAGE_VER/$PORTAGE_ARCHIVE"
-
-cd "$BUILD_DIR"
-curl -L -o "$BUILD_DIR/$PORTAGE_ARCHIVE" "$PORTAGE_URL"
-tar xzf "$BUILD_DIR/$PORTAGE_ARCHIVE" -C "$BUILD_DIR"
-
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-    cd /var/tmp/build/$PORTAGE_DIR
-    /usr/bin/python3 setup.py install --prefix=/usr
-"
-
-MESON_NAME="meson"
-MESON_VERSION="1.9.0"
-MESON_ARCHIVE="$MESON_NAME-$MESON_VERSION.tar.gz"
-MESON_DIR="$MESON_NAME-$MESON_VERSION"
-MESON_URL="https://github.com/mesonbuild/meson/releases/download/$MESON_VERSION/$MESON_ARCHIVE"
-
-GLIB_NAME="glib"
-GLIB_VERSION="2.86.0"
-GLIB_ARCHIVE="$GLIB_NAME-$GLIB_VERSION.tar.xz"
-GLIB_DIR="$GLIB_NAME-$GLIB_VERSION"
-GLIB_URL="https://download.gnome.org/sources/glib/2.86/$GLIB_ARCHIVE"
-
-echo "[+] Downloading Meson $MESON_VERSION"
-sudo curl -L --progress-bar -o "$BUILD_DIR/$MESON_ARCHIVE" "$MESON_URL"
-sudo tar -xzf "$BUILD_DIR/$MESON_ARCHIVE" -C "$BUILD_DIR"
-
-echo "[+] Installing Meson $MESON_VERSION inside chroot"
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-    cd /var/tmp/build/$MESON_DIR
-    /usr/bin/python3 -m pip install --prefix=/usr .
-"
-
-echo "[+] Downloading glib $GLIB_VERSION"
-sudo curl -L --progress-bar -o "$BUILD_DIR/$GLIB_ARCHIVE" "$GLIB_URL"
-sudo tar -xf "$BUILD_DIR/$GLIB_ARCHIVE" -C "$BUILD_DIR"
-
-echo "[+] Building glib $GLIB_VERSION with meson"
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-    cd /var/tmp/build/$GLIB_DIR
-    rm -rf build
-    meson setup build --prefix=/usr
-    ninja -C build
-    ninja -C build install
-"
 
 echo "${RED}[+] Cleaning up${RESET}"
 sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
