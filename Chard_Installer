@@ -288,6 +288,7 @@ exec "$CHARD_ROOT/usr/bin/python3.12" "$@"
 EOF
     sudo chmod +x /usr/local/bin/python
 fi
+done
 
 PORTAGE_VER="3.5.0"
 PORTAGE_ARCHIVE="portage-$PORTAGE_VER.tar.gz"
