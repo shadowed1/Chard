@@ -387,6 +387,5 @@ sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
-sudo chown -R 1000:1000 "$CHARD_ROOT"
-source /home/chronos/user/.bashrc
+sudo chown -R 1000:1000 "$CHARD_ROOT" && source /home/chronos/user/.bashrc
 echo "[+] Chard Rootready to run!"
