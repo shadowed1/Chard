@@ -112,12 +112,13 @@ chard_list() {
 }
 
 chard_categories() {
-    PORTAGE_DIR="$CHARD_ROOT/usr/portage"
+        PORTAGE_DIR="$CHARD_ROOT/usr/portage"
     if [ ! -d "$PORTAGE_DIR" ]; then
         echo "ERROR: Portage tree not found at $PORTAGE_DIR"
         return 1
     fi
     echo "[*] Available Portage categories:"
+    echo "$CHARD_ROOT/usr/portage"
     for cat in "$PORTAGE_DIR"/*/; do
         [ -d "$cat" ] || continue
         basename "$cat"
