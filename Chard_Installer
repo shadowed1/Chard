@@ -528,8 +528,10 @@ export LOGNAME="chronos"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
 EOF
 
+sed -i '1s|.*|#!/usr/local/chard/usr/lib/portage/python3.13/ebuild.sh|' \
+    $CHARD_ROOT/usr/portage/dev-build/meson-format-array/meson-format-array-0.ebuild
+
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
-
