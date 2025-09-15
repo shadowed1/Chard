@@ -230,8 +230,8 @@ PACKAGES=(
     "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnu"
     "pkg-config|0.29.2|tar.gz|https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz|pkg-config-0.29.2|gnu"
     "meson|1.9.0|tar.gz|https://github.com/mesonbuild/meson/releases/download/1.9.0/meson-1.9.0.tar.gz|meson-1.9.0|python"
+    "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
     "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
-    "readline|8.3|tar.gz|https://mirrors.kernel.org//gnu/readline/readline-8.3.tar.gz|readline-8.3|gnu"
     "sqlite|3500400|tar.gz|https://www.sqlite.org/2025/sqlite-autoconf-3500400.tar.gz|sqlite-autoconf-3500400|gnu"
     "util-linux|2.41|tar.xz|https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.xz|util-linux-2.41|gnu"
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
@@ -244,7 +244,6 @@ PACKAGES=(
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
     "gtest|1.16.0|tar.gz|https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz|googletest-1.16.0|cmake"
-    "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
     "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
 )
