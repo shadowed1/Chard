@@ -497,7 +497,7 @@ NM="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
 RANLIB="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ranlib"
 STRIP="/usr/local/chard/usr/x86_64-pc-linux-gnu/binutils-bin/2.44/strip"
 
-FEATURES=""
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
 
 USE="bindist"
 
