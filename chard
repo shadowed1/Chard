@@ -18,146 +18,70 @@ else
     exit 1
 fi
 
-chard_emerge() {
+chard_run() {
     if [ $# -lt 1 ]; then
-        echo "Usage: chard emerge <package> [options]"
+        echo "Usage: chard run <binary> [args...]"
         return 1
     fi
-    echo "[*] Running emerge inside Chard environment..."
-    env \
-    ROOT="$CHARD_ROOT" \
-    PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-    PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp" \
-    DISTDIR="$CHARD_ROOT/var/cache/distfiles" \
-    PKGDIR="$CHARD_ROOT/var/cache/packages" \
-    PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin" \
-    LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-    "$CHARD_ROOT/bin/emerge" --ask=n "$@"
 
-}
+    export ROOT="$CHARD_ROOT"
+    export PORTAGE_CONFIGROOT="$CHARD_ROOT"
+    export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
+    export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
+    export PKGDIR="$CHARD_ROOT/var/cache/packages"
 
-chard_python() {
-    if [ $# -lt 1 ]; then
-        echo "Usage: chard python <script.py> [args...]"
-        return 1
-    fi
-    echo "[*] Running Python inside Chard environment..."
-    sudo env \
-        ROOT="$CHARD_ROOT" \
-        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin"
-        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-        "$CHARD_ROOT/bin/python3" "$@"
-}
+    export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$PATH"
 
-chard_reinstall() {
-        echo "${RESET}${GREEN}"
-        echo "[1] Quick Reinstall (Update Chard)"
-        echo "${RESET}${YELLOW}"
-        echo "[2] Full Reinstall (Run Chard Installer)"
-        echo "${RESET}${RED}"
-        echo "[q] Cancel"
-        echo "${RESET}${GREEN}"
-        read -p "Choose an option [1/2/q]: " choice
-        case "$choice" in
-            1)
-                echo "${RESET}"
-                echo "[*] Performing quick reinstall..."
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
-                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-                sudo chmod +x "$CHARD_ROOT/bin/chard"
-                echo "[*] Quick reinstall complete."
-                echo "${RESET}"
-                ;;
-            2)
-                echo "${RESET}"
-                echo "[*] Performing full reinstall..."
-                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")
-                echo "${RESET}"
-                ;;
-            q|Q|*)
-                echo "${RESET}"
-                echo "[*] Reinstall cancelled."
-                echo "${RESET}"
-                ;;
-        esac
-}
+    export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:${LD_LIBRARY_PATH:-}"
 
-chard_git() {
-    if [ $# -lt 1 ]; then
-        echo "Usage: chard git <git-args...>"
-        return 1
-    fi
-    echo "[*] Running Git inside Chard environment..."
-    sudo env \
-        ROOT="$CHARD_ROOT" \
-        PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-        PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:/usr/bin:/bin"
-        LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-        "$CHARD_ROOT/bin/git" "$@"
-}
+    export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 
+    export FEATURES=$(echo "$FEATURES" | tr ' ' '\n' | grep -v '^sandbox$' | tr '\n' ' ' | sed 's/ $//')
 
-
-chard_list() {
-    echo "[*] Listing installed packages in Chard root..."
-    if [ -x "$CHARD_ROOT/usr/bin/qlist" ]; then
-        sudo env ROOT="$CHARD_ROOT" PATH="$PATH:$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/bin/qlist" -I
-    else
-        echo "[!] qlist not found, falling back to 'emerge --search --installed'"
-        sudo env ROOT="$CHARD_ROOT" PATH="$PATH:$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/bin/emerge" --search --installed
-    fi
-}
-
-chard_categories() {
-        PORTAGE_DIR="$CHARD_ROOT/usr/portage"
-    if [ ! -d "$PORTAGE_DIR" ]; then
-        echo "ERROR: Portage tree not found at $PORTAGE_DIR"
-        return 1
-    fi
-    echo "[*] Available Portage categories:"
-    echo "$CHARD_ROOT/usr/portage"
-    for cat in "$PORTAGE_DIR"/*/; do
-        [ -d "$cat" ] || continue
-        basename "$cat"
-    done | sort
+    echo "[*] Running '$*' inside Chard environment..."
+    sudo env ROOT="$ROOT" \
+        PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
+        PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
+        DISTDIR="$DISTDIR" \
+        PKGDIR="$PKGDIR" \
+        PATH="$PATH" \
+        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+        SANDBOX="$SANDBOX" \
+        FEATURES="$FEATURES" \
+        "$@"
 }
 
 cmd="$1"; shift || true
 
 case "$cmd" in
-    emerge)
-        chard_emerge "$@"
-        ;;
-    python)
-        chard_python "$@"
-        ;;
     run)
-        if [ $# -lt 1 ]; then
-            echo "Usage: chard run <binary> [args...]"
-            exit 1
-        fi
-        sudo env \
-            ROOT="$CHARD_ROOT" \
-            PORTAGE_CONFIGROOT="$CHARD_ROOT" \
-            PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin" \
-            LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib" \
-            "$@"
-        ;;
-    root)
-        echo "[*] Entering sandbox shell..."
-        sudo chroot "$CHARD_ROOT" /bin/bash
-        ;;
-    git)
-        chard_git "$@" 
+        chard_run "$@"
         ;;
     reinstall)
-        chard_reinstall
-        ;;
-    list)
-        chard_list
+        echo "${RESET}${GREEN}"
+        echo "[1] Quick Reinstall (Update Chard)"
+        echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
+        echo "${RESET}${RED}[q] Cancel"
+        echo "${RESET}${GREEN}"
+        read -p "Choose an option [1/2/q]: " choice
+        case "$choice" in
+            1)
+                echo "${RESET}[*] Performing quick reinstall..."
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+                sudo chmod +x "$CHARD_ROOT/bin/chard"
+                echo "[*] Quick reinstall complete.${RESET}"
+                ;;
+            2)
+                echo "${RESET}[*] Performing full reinstall..."
+                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")
+                ;;
+            q|Q|*)
+                echo "${RESET}[*] Reinstall cancelled.${RESET}"
+                ;;
+        esac
         ;;
     uninstall)
         read -r -p "Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] " ans
@@ -167,13 +91,22 @@ case "$cmd" in
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
             echo "[+] Uninstalled.${RESET}"
         else
-            log "Cancelled."
+            echo "[*] Cancelled."
         fi
         ;;
     categories|cat)
-        chard_categories
+        PORTAGE_DIR="$CHARD_ROOT/usr/portage"
+        if [ ! -d "$PORTAGE_DIR" ]; then
+            echo "ERROR: Portage tree not found at $PORTAGE_DIR"
+            exit 1
+        fi
+        echo "[*] Available Portage categories:"
+        for cat in "$PORTAGE_DIR"/*/; do
+            [ -d "$cat" ] || continue
+            basename "$cat"
+        done | sort
         ;;
     *)
-        echo "Usage: chard {emerge|run|shell|reinstall|uninstall} [args...]"
+        echo "Usage: chard {run|reinstall|uninstall|categories} [args...]"
         ;;
 esac
