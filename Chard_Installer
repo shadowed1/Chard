@@ -463,44 +463,41 @@ EOF
 
 chmod +x /usr/local/chard/bin/emerge
 
-#!/bin/bash
+CHARD_ROOT="${CHARD_ROOT:-/usr/local/chard}"
+MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 
-set -e
-
-CHARD_ROOT=${CHARD_ROOT:-/usr/local/chard}
-MAKECONF="$CHARD_ROOT/etc/portage/make.conf"
-
-if [ -f "$MAKECONF" ]; then
-    cp "$MAKECONF" "${MAKECONF}.bak.$(date +%s)"
-    echo "Backup created at ${MAKECONF}.bak.$(date +%s)"
+if [ -f "$MAKE_CONF" ]; then
+    cp -a "$MAKE_CONF" "${MAKE_CONF}.bak.$(date +%Y%m%d%H%M%S)"
+    echo "Backed up original make.conf to ${MAKE_CONF}.bak.*"
 fi
 
-cat > "$MAKECONF" <<'EOF'
+cat > "$MAKE_CONF" <<'EOF'
+# Chard Portage make.conf
+# Manually generated
 
 COMMON_FLAGS="-O2 -pipe"
-CFLAGS="${COMMON_FLAGS}"
-CXXFLAGS="${COMMON_FLAGS}"
-FCFLAGS="${COMMON_FLAGS}"
-FFLAGS="${COMMON_FLAGS}"
+CFLAGS="-O2 -pipe"
+CXXFLAGS="-O2 -pipe"
+FCFLAGS="-O2 -pipe"
+FFLAGS="-O2 -pipe"
 
 LC_MESSAGES=C.utf8
 
 ROOT="/usr/local/chard"
-DISTDIR="${ROOT}/var/cache/distfiles"
-PKGDIR="${ROOT}/var/cache/packages"
-PORTAGE_TMPDIR="${ROOT}/var/tmp"
-PORTDIR="${ROOT}/usr/portage"
+DISTDIR="/usr/local/chard/var/cache/distfiles"
+PKGDIR="/usr/local/chard/var/cache/packages"
+PORTAGE_TMPDIR="/usr/local/chard/var/tmp"
+PORTDIR="/usr/local/chard/usr/portage"
 
-CHOST="$(uname -m)-pc-linux-gnu"
-CC="${ROOT}/usr/${CHOST}/gcc-bin/14/${CHOST}-gcc"
-CXX="${ROOT}/usr/${CHOST}/gcc-bin/14/${CHOST}-g++"
-AR="${ROOT}/usr/${CHOST}/gcc-bin/14/gcc-ar"
-NM="${ROOT}/usr/${CHOST}/gcc-bin/14/gcc-nm"
-RANLIB="${ROOT}/usr/${CHOST}/gcc-bin/14/gcc-ranlib"
-STRIP="${ROOT}/usr/${CHOST}/binutils-bin/2.44/strip"
+CHOST="x86_64-pc-linux-gnu"
+CC="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
+CXX="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
+AR="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
+NM="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
+RANLIB="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ranlib"
+STRIP="/usr/local/chard/usr/x86_64-pc-linux-gnu/binutils-bin/2.44/strip"
 
-FEATURES="${FEATURES//sandbox/}"
-SANDBOX=0
+FEATURES=""
 
 USE="bindist"
 
