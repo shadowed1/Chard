@@ -404,6 +404,6 @@ sudo rm -rf "$BUILD_DIR"
 
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 echo "${GREEN}[+] Chard Rootready to run!"
-echo "[!] To run, please open a new shell or run:
+echo "[!] To run, please open a new shell or run:"
 echo "source /home/chronos/user/.bashrc${RESET}"
 
