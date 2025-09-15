@@ -46,6 +46,7 @@ chard_run() {
         PKGDIR="$PKGDIR" \
         PATH="$PATH" \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+        LD_PRELOAD="$LD_PRELOAD" \
         SANDBOX="$SANDBOX" \
         FEATURES="$FEATURES" \
         "$@"
