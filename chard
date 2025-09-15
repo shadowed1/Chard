@@ -45,7 +45,9 @@ chard_run() {
     export FEATURES=$(echo "$FEATURES" | tr ' ' '\n' | grep -v '^sandbox$' | tr '\n' ' ' | sed 's/ $//')
 
     echo "[*] Running '$*' inside Chard environment..."
-    sudo env ROOT="$ROOT" \
+    sudo env ARCH="$(uname -m)" \
+         CHOST="$(uname -m | sed 's/x86_64/x86_64-pc-linux-gnu/;s/aarch64/aarch64-unknown-linux-gnu/')" \
+        ROOT="$ROOT" ... "$@"
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
