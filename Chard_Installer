@@ -246,6 +246,7 @@ PACKAGES=(
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
     "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
+    "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-3.0.69.1|python"
 )
 mkdir -p "$BUILD_DIR"
 
@@ -503,6 +504,25 @@ FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-pro
 USE="bindist"
 
 PYTHON_TARGETS="python3_13"
+EOF
+
+mkdir -p $CHARD_ROOT/etc
+mkdir -p $CHARD_ROOT/usr/share/sandbox
+
+cat > "$CHARD_ROOT/etc/sandbox.conf" <<'EOF'
+SANDBOX_BASHRC="/usr/local/chard/usr/share/sandbox/sandbox.bashrc"
+SANDBOX_D="/usr/local/chard//etc/sandbox.d"
+ns-mount-off
+ns-pid-off
+ns-ipc-off
+ns-net-off
+ns-user-off
+
+cat <<'EOF' > "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc"
+export HOME="$CHARD_ROOT/root"
+export USER="chronos"
+export LOGNAME="chronos"
+export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
 EOF
 
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
