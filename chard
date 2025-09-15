@@ -101,7 +101,7 @@ case "$cmd" in
             echo "ERROR: Portage tree not found at $PORTAGE_DIR"
             exit 1
         fi
-        echo "[*] Available Portage categories:"
+        echo "[*] Available Portage categories in $CHARD_ROOT/usr/portage:"
         for cat in "$PORTAGE_DIR"/*/; do
             [ -d "$cat" ] || continue
             basename "$cat"
