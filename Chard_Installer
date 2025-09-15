@@ -402,7 +402,67 @@ sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
 sudo rm -rf "$BUILD_DIR"
 
 sudo chown -R 1000:1000 "$CHARD_ROOT"
-sed -i '1c #!/usr/local/chard/lib/python-exec/python-exec2' /usr/local/chard/bin/emerge
+
+cat > /usr/local/chard/bin/emerge <<'EOF'
+#!/usr/local/chard/bin/python3.13
+import os
+import sys
+import errno
+
+EPYTHON = '/usr/local/chard/bin/python3.13'
+
+prev_target = None
+target = sys.argv[0]
+while True:
+    try:
+        next_target = os.path.join(os.path.dirname(target), os.readlink(target))
+    except OSError as e:
+        if e.errno == errno.EINTR:
+            continue
+        if e.errno == errno.EINVAL:
+            if os.path.basename(target) in ('python-exec2', 'python-exec2'):
+                if prev_target is None:
+                    sys.stderr.write('{}: python-exec2 wrapper cannot run directly\n'.format(target))
+                    sys.exit(127)
+                target = prev_target
+            break
+        raise
+    else:
+        prev_target = target
+        target = next_target
+
+target = os.path.join('/usr/local/chard/usr/lib/python-exec', 'python3.13', os.path.basename(target))
+
+data = None
+while data is None:
+    try:
+        kwargs = {}
+        if sys.version_info >= (3,):
+            import tokenize
+            with open(target, 'rb') as f:
+                kwargs['encoding'] = tokenize.detect_encoding(f.readline)[0]
+        with open(target, 'r', **kwargs) as f:
+            data = f.read()
+    except IOError as e:
+        if e.errno == errno.EINTR:
+            continue
+        elif e.errno == errno.ENOENT:
+            sys.stderr.write('{}: Python implementation not supported: {}\n'.format(target, EPYTHON))
+            sys.exit(127)
+        else:
+            raise
+
+sys.argv[0] = target
+if sys.version_info >= (3, 9):
+    target = os.path.abspath(target)
+new_globals = dict(globals())
+new_globals['__file__'] = target
+
+exec(data, new_globals)
+EOF
+
+chmod +x /usr/local/chard/bin/emerge
+
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "source /home/chronos/user/.bashrc${RESET}"
