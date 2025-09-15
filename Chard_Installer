@@ -227,7 +227,12 @@ PACKAGES=(
     "Capture-Tiny|0.48|tar.gz|https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-0.48.tar.gz|Capture-Tiny-0.48|perl"
     "Test-Fatal|0.017|tar.gz|https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.017.tar.gz|Test-Fatal-0.017|perl"
     "findutils|4.10.0|tar.xz|https://mirrors.kernel.org//gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
-    "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
+    "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnu"
+    "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
+    "readline|8.3|tar.gz|https://mirrors.kernel.org//gnu/readline/readline-8.3.tar.gz|readline-8.3|gnu"
+    "sqlite|3500400|tar.gz|https://www.sqlite.org/2025/sqlite-autoconf-3500400.tar.gz|sqlite-autoconf-3500400|gnu"
+    "util-linux|2.41|tar.xz|https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.xz|util-linux-2.41|gnu"
+    "python|3.11.9|tar.xz|https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tar.xz|Python-3.11.9|gnu"
     "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
@@ -356,7 +361,13 @@ case \"$BUILDSYS\" in
         ninja -C build install
         ;;
       python)
-        /bin/python3 -m pip install --prefix=/usr .
+        cd /var/tmp/build/$DIR
+        ./configure --prefix=/usr \
+                    --enable-optimizations \
+                    --with-ensurepip=install \
+                    --with-ssl
+        make -j$(nproc)
+        make install
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
