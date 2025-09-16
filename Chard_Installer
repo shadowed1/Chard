@@ -20,7 +20,7 @@ echo "${RED}Chard Installed can take 15-45 minutes depending on your CPU and sto
 echo
 echo "${YELLOW}Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
 echo
-echo "${GREEN}It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Includes a 2025 toolchain to build and compile stuff with.${RESET}"
+echo "${GREEN}It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Includes a 2025 toolchain to build and compile with.${RESET}"
 echo
 echo "${CYAN}Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation.${RESET}"
 echo
@@ -72,7 +72,7 @@ if (( IS_INTEL == 1 )) && [[ -f "$TURBO_PATH" ]]; then
         echo "${GREEN}[+] Intel Turbo Boost disabled. To re-enable it run:${RESET}"
         echo "${BLUE}${BOLD}echo 0 | sudo tee $TURBO_PATH${RESET}"
     else
-        echo "${RED}Intel Turbo Boost will remain enabled! Please ensure you can keep it cool! ${RESET}"
+        echo "${RED}Intel Turbo Boost will remain enabled! Please ensure you can keep your chromebook cool! ${RESET}"
     fi
 fi
 echo
