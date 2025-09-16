@@ -18,6 +18,12 @@ else
     exit 1
 fi
 
+CHARD_BASH="/bin/bash"
+if [ ! -x "$CHARD_BASH" ]; then
+    echo "ERROR: /bin/bash not found on host system!"
+    return 1
+fi
+
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
@@ -61,7 +67,8 @@ chard_run() {
         FEATURES="${FEATURES//sandbox/}" \
         PYTHON_TARGETS="python3_13" \
         PYTHON_SINGLE_TARGET="python3_13" \
-        PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH"
+        PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
+        BASH="$CHARD_BASH" \
         "$@"
 }
 
