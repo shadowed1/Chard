@@ -15,13 +15,12 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 
-# ---- NOTICE ----
-echo "${GREEN}${BOLD}[NOTICE]${RESET} This installation may take 15-45 minutes depending on your hardware."
+echo "${RED}${BOLD}This installation may take 15-45 minutes depending on your hardware. Supports x86_64 and ARM64!${RESET}"
 echo "${YELLOW}Chard will be installed in /usr/local/chard and will not affect ChromeOS or ChromeOS commands.${RESET}"
 echo "${GREEN}It is semi-sandboxed within itself, but can rely on Host libraries. Includes a 2025 toolchain to build and compile stuff with.${RESET}"
-echo "${CYAN}Chard has not been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation${RESET}
-echo "${BLUE}Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}
-echo "${MAGENTA}Chard is current in early development and Emerge is not working. Use Prepend chard to your commands to run.${RESET}
+echo "${CYAN}Chard has not been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation${RESET}"
+echo "${BLUE}Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
+echo "${MAGENTA}Chard is current in early development and Emerge is not working. Use Prepend chard to your commands to run.${RESET}"
 
 # ---- Detect CPU type ----
 detect_cpu_type() {
