@@ -15,7 +15,7 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 
-echo "${RED}This installation may take 15-45 minutes depending on your hardware. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
+echo "${RED}This installation may take 15-45 minutes depending on your hardware. Requires 2.6 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
 echo "${YELLOW}Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
 echo "${GREEN}It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Includes a 2025 toolchain to build and compile stuff with.${RESET}"
 echo "${CYAN}Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation.${RESET}"
@@ -69,7 +69,7 @@ if (( IS_INTEL == 1 )) && [[ -f "$TURBO_PATH" ]]; then
         echo "${RED}Intel Turbo Boost will remain enabled! Please ensure you can keep it cool! ${RESET}"
     fi
 fi
-echo "${YELLOW}Chard Installation to /usr/local/chard is about to begin. Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
+echo "${YELLOW}Chard Installation to /usr/local/chard starts in 10 seconds. Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
 sleep 10
 
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
