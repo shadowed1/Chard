@@ -87,7 +87,7 @@ case "$cmd" in
         echo "  chard emerge app-misc/foo"
         echo "  chard cat"
         echo "  chard python"
-        echo "${RESET}
+        echo "${RESET}"
         ;;
     reinstall)
         echo "${RESET}${GREEN}"
