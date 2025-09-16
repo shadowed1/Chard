@@ -247,7 +247,7 @@ PACKAGES=(
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
     "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
     "sysprof|1.2.0|tar.gz|https://www.sysprof.com/sysprof-1.2.0.tar.gz|sysprof-1.2.0|meson"
-    "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|python"
+    "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|meson"
 )
 mkdir -p "$BUILD_DIR"
 
@@ -358,6 +358,10 @@ case \"$BUILDSYS\" in
         cmake --install build
         ;;
     meson)
+        MESON_DIR=$(find . -maxdepth 2 -name 'meson.build' | head -n1 | xargs dirname)
+        if [[ -z "$MESON_DIR" ]]; then
+            echo "meson.build not found for $NAME"; exit 1
+        fi
         rm -rf build
         meson setup build --prefix=/usr
         ninja -C build
