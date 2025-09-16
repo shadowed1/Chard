@@ -75,6 +75,20 @@ case "$cmd" in
     ""|run)
         chard_run "$@"
         ;;
+    help)
+        echo "${GREEN}Chard command examples:"
+        echo "  python, gcc, Et al....   - Run all available binaries from the Chard environment!"
+        echo "  reinstall                - Reinstall or update Chard"
+        echo "  uninstall                - Remove Chard environment and entries"
+        echo "  categories | cat         - List available Portage categories"
+        echo "  help                     - Show this help message"
+        echo
+        echo "Examples:"
+        echo "  chard emerge app-misc/foo"
+        echo "  chard cat"
+        echo "  chard python"
+        echo "${RESET}
+        ;;
     reinstall)
         echo "${RESET}${GREEN}"
         echo "[1] Quick Reinstall (Update Chard)"
