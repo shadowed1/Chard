@@ -15,22 +15,80 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 
+# ---- NOTICE ----
+echo "${GREEN}${BOLD}[NOTICE]${RESET} This installation may take 15-45 minutes depending on your hardware."
+echo "${YELLOW}Chard will be installed in /usr/local/chard and will not affect ChromeOS or ChromeOS commands.${RESET}"
+echo "${GREEN}It is semi-sandboxed within itself, but can rely on Host libraries. Includes a 2025 toolchain to build and compile stuff with.${RESET}"
+echo "${CYAN}Chard has not been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation${RESET}
+echo "${BLUE}Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}
+echo "${MAGENTA}Chard is current in early development and Emerge is not working. Use Prepend chard to your commands to run.${RESET}
+
+# ---- Detect CPU type ----
+detect_cpu_type() {
+    CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}' || echo "unknown")
+    IS_INTEL=0
+    IS_AMD=0
+    IS_ARM=0
+    PERF_PATH=""
+    PERF_PATHS=()
+    TURBO_PATH=""
+
+    case "$CPU_VENDOR" in
+        GenuineIntel)
+            IS_INTEL=1
+            if [ -f "/sys/devices/system/cpu/intel_pstate/max_perf_pct" ]; then
+                PERF_PATH="/sys/devices/system/cpu/intel_pstate/max_perf_pct"
+                TURBO_PATH="/sys/devices/system/cpu/intel_pstate/no_turbo"
+            fi
+            ;;
+        AuthenticAMD)
+            IS_AMD=1
+            if [ -f "/sys/devices/system/cpu/amd_pstate/max_perf_pct" ]; then
+                PERF_PATH="/sys/devices/system/cpu/amd_pstate/max_perf_pct"
+            else
+                mapfile -t PERF_PATHS < <(find /sys/devices/system/cpu/cpufreq/ -type f -name 'scaling_max_freq' 2>/dev/null)
+            fi
+            ;;
+        *)
+            IS_ARM=1
+            mapfile -t PERF_PATHS < <(find /sys/devices/system/cpu/cpufreq/ -type f -name 'scaling_max_freq' 2>/dev/null)
+            ;;
+    esac
+}
+
+detect_cpu_type
+
+if (( IS_INTEL == 1 )) && [[ -f "$TURBO_PATH" ]]; then
+    echo
+    read -rp "${CYAN}${BOLD}Intel CPU Detected! Do you want to disable Intel Turbo Boost before continuing? (Y/n): ${RESET}" disable_turbo
+    disable_turbo=${disable_turbo:-Y}
+
+    if [[ "$disable_turbo" =~ ^[Yy]$ ]]; then
+        echo 1 | sudo tee "$TURBO_PATH" >/dev/null
+        echo "${GREEN}[+] Intel Turbo Boost disabled. To re-enable it run:${RESET}"
+        echo "${BLUE}${BOLD}echo 0 | sudo tee $TURBO_PATH${RESET}"
+    else
+        echo "${RED}[+] Intel Turbo Boost will remain enabled! Please ensure you can keep it cool!${RESET}"
+    fi
+fi
+echo "${YELLOW}Chard Installation to /usr/local/chard is about to begin. Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality. 
+sleep 10
+
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
-sudo mkdir -p "/usr/local/chard"/etc/portage \
-              "/usr/local/chard"/usr/portage \
-              "/usr/local/chard"/usr/bin \
-              "/usr/local/chard"/usr/lib \
-              "/usr/local/chard"/var/tmp/build \
-              "/usr/local/chard"/var/cache/distfiles \
-              "/usr/local/chard"/var/cache/packages \
-              "/usr/local/chard"/dev \
-              "/usr/local/chard"/dev/shm \
-              "/usr/local/chard"/proc \
-              "/usr/local/chard"/sys \
-              "/usr/local/chard"/tmp
+sudo mkdir -p "$CHARD_ROOT"/etc/portage \
+              "$CHARD_ROOT"/usr/portage \
+              "$CHARD_ROOT"/usr/bin \
+              "$CHARD_ROOT"/usr/lib \
+              "$CHARD_ROOT"/var/tmp/build \
+              "$CHARD_ROOT"/var/cache/distfiles \
+              "$CHARD_ROOT"/var/cache/packages \
+              "$CHARD_ROOT"/dev \
+              "$CHARD_ROOT"/dev/shm \
+              "$CHARD_ROOT"/proc \
+              "$CHARD_ROOT"/sys \
+              "$CHARD_ROOT"/tmp
 
-
-sudo mkdir -p "/usr/local/chard/etc/portage/repos.conf"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
@@ -38,7 +96,6 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.en
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "/usr/local/chard/.chard.logic"
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
-
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
