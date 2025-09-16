@@ -62,6 +62,7 @@ chard_run() {
         LD_PRELOAD="$LD_PRELOAD" \
         SANDBOX="$CHARD_ROOT/usr/bin/sandbox" \
         FEATURES="${FEATURES//sandbox/}" \
+        USE="$USE" \
         PYTHON_TARGETS="python3_13" \
         PYTHON_SINGLE_TARGET="python3_13" \
         PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
