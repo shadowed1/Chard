@@ -476,27 +476,10 @@ import errno
 
 EPYTHON = '/usr/local/chard/bin/python3.13'
 
-prev_target = None
-target = sys.argv[0]
-while True:
-    try:
-        next_target = os.path.join(os.path.dirname(target), os.readlink(target))
-    except OSError as e:
-        if e.errno == errno.EINTR:
-            continue
-        if e.errno == errno.EINVAL:
-            if os.path.basename(target) in ('python-exec2', 'python-exec2'):
-                if prev_target is None:
-                    sys.stderr.write('{}: python-exec2 wrapper cannot run directly\n'.format(target))
-                    sys.exit(127)
-                target = prev_target
-            break
-        raise
-    else:
-        prev_target = target
-        target = next_target
+CHARD_PYEXEC_DIR = '/usr/local/chard/usr/lib/python-exec/python3.13'
 
-target = os.path.join('/usr/local/chard/usr/lib/python-exec', 'python3.13', os.path.basename(target))
+target_name = os.path.basename(sys.argv[0])
+target_path = os.path.join(CHARD_PYEXEC_DIR, target_name)
 
 data = None
 while data is None:
@@ -504,24 +487,22 @@ while data is None:
         kwargs = {}
         if sys.version_info >= (3,):
             import tokenize
-            with open(target, 'rb') as f:
+            with open(target_path, 'rb') as f:
                 kwargs['encoding'] = tokenize.detect_encoding(f.readline)[0]
-        with open(target, 'r', **kwargs) as f:
+        with open(target_path, 'r', **kwargs) as f:
             data = f.read()
     except IOError as e:
         if e.errno == errno.EINTR:
             continue
         elif e.errno == errno.ENOENT:
-            sys.stderr.write('{}: Python implementation not supported: {}\n'.format(target, EPYTHON))
+            sys.stderr.write(f'{target_path}: Python implementation not supported: {EPYTHON}\n')
             sys.exit(127)
         else:
             raise
 
-sys.argv[0] = target
-if sys.version_info >= (3, 9):
-    target = os.path.abspath(target)
+sys.argv[0] = target_path
 new_globals = dict(globals())
-new_globals['__file__'] = target
+new_globals['__file__'] = target_path
 
 exec(data, new_globals)
 EOF
@@ -563,9 +544,10 @@ NM="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
 RANLIB="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ranlib"
 STRIP="/usr/local/chard/usr/x86_64-pc-linux-gnu/binutils-bin/2.44/strip"
 
-FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
-
-USE="bindist"
+DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
+FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
+DEFAULT_USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
+USE="${USE:-$DEFAULT_USE}
 
 PYTHON_TARGETS="python3_13"
 EOF
