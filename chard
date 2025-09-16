@@ -18,6 +18,13 @@ else
     exit 1
 fi
 
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+esac
+
 chard_run() {
     if [ $# -lt 1 ]; then
         echo "Usage: chard run <binary> [args...]"
@@ -47,7 +54,7 @@ chard_run() {
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
         PKGDIR="$PKGDIR" \
-        PATH="$CHARD_ROOT/usr/bin:$PATH" \
+        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/lib/python-exec:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$PATH" \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         LD_PRELOAD="$LD_PRELOAD" \
         SANDBOX="$CHARD_ROOT/usr/bin/sandbox" \
