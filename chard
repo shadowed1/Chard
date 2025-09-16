@@ -50,7 +50,7 @@ chard_run() {
     export FEATURES=$(echo "$FEATURES" | tr ' ' '\n' | grep -v '^sandbox$' | tr '\n' ' ' | sed 's/ $//')
 
     echo "[*] Running '$*' inside Chard environment..."
-    sudo env ROOT="$ROOT" \
+    env ROOT="$ROOT" \
         PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
         HOME="$CHARD_ROOT/root" \
