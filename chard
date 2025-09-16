@@ -53,7 +53,7 @@ chard_run() {
     sudo env ROOT="$ROOT" \
         PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
-        HOME="$CHARD_ROOT/root"
+        HOME="$CHARD_ROOT/root" \
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
         PKGDIR="$PKGDIR" \
