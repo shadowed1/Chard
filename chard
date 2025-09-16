@@ -29,6 +29,7 @@ chard_run() {
     export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
     export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
     export PKGDIR="$CHARD_ROOT/var/cache/packages"
+    
 
     export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$PATH"
 
@@ -51,6 +52,9 @@ chard_run() {
         LD_PRELOAD="$LD_PRELOAD" \
         SANDBOX="$CHARD_ROOT/usr/bin/sandbox" \
         FEATURES="${FEATURES//sandbox/}" \
+        PYTHON_TARGETS="python3_13" \
+        PYTHON_SINGLE_TARGET="python3_13" \
+        PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH"
         "$@"
 }
 
