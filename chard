@@ -37,6 +37,16 @@ chard_run() {
         return 1
     fi
 
+    DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
+    export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
+    DEFAULT_USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
+    export USE="${USE:-$DEFAULT_USE}"
+
+    export USE="python_targets_python3_13"
+    export PYTHON_TARGETS="python3_13"
+    export PYTHON_SINGLE_TARGET="python3_13"
+
+
     export ROOT="$CHARD_ROOT"
     export PORTAGE_CONFIGROOT="$CHARD_ROOT"
     export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
@@ -46,7 +56,6 @@ chard_run() {
     export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:${LD_LIBRARY_PATH:-}"
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
-    export FEATURES=$(echo "$FEATURES" | tr ' ' '\n' | grep -v '^sandbox$' | tr '\n' ' ' | sed 's/ $//')
 
     echo "[*] Running '$*' inside Chard environment..."
     env ROOT="$ROOT" \
@@ -60,12 +69,13 @@ chard_run() {
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         LD_PRELOAD="$LD_PRELOAD" \
         SANDBOX="$CHARD_ROOT/usr/bin/sandbox" \
-        FEATURES="$FEATURES" \
+        FEATURES="${FEATURES:-$DEFAULT_FEATURES}" \
         USE="$USE" \
         PYTHON_TARGETS="python3_13" \
         PYTHON_SINGLE_TARGET="python3_13" \
         PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
         BASH="$CHARD_BASH" \
+        USE="$USE" \
         "$@"
 }
 
@@ -119,14 +129,7 @@ case "$cmd" in
         read -r -p "Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] " ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             echo "${RED}[*] Removing $CHARD_ROOT"
-            sudo rm -rf /usr/local/chard/usr/bin/python3
-            sudo rm -rf /usr/local/chard/usr/bin/python
-            sudo rm -rf /usr/lib/python-exec/python3.13/python
-            sudo rm -rf /usr/lib/python-exec/python3.13/python3
-            sudo rm -rf /usr/lib/python-exec/python3.13/ebuild
-            sudo rm -rf /usr/lib/python-exec/python3.13/emerge
             sudo rm -rf "$CHARD_ROOT"
-            sudo rm -rf /usr/local/chard
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
             echo "[+] Uninstalled.${RESET}"
         else
