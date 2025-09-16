@@ -15,14 +15,13 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 
-echo "${RED}${BOLD}This installation may take 15-45 minutes depending on your hardware. Supports x86_64 and ARM64!${RESET}"
-echo "${YELLOW}Chard will be installed in /usr/local/chard and will not affect ChromeOS or ChromeOS commands.${RESET}"
-echo "${GREEN}It is semi-sandboxed within itself, but can rely on Host libraries. Includes a 2025 toolchain to build and compile stuff with.${RESET}"
-echo "${CYAN}Chard has not been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation${RESET}"
+echo "${RED}This installation may take 15-45 minutes depending on your hardware. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
+echo "${YELLOW}Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
+echo "${GREEN}It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Includes a 2025 toolchain to build and compile stuff with.${RESET}"
+echo "${CYAN}Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation.${RESET}"
 echo "${BLUE}Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
-echo "${MAGENTA}Chard is current in early development and Emerge is not working. Use Prepend chard to your commands to run.${RESET}"
+echo "${MAGENTA}Chard is current in early development and Emerge is not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a USB backup in case of serious mistakes.${RESET}"
 
-# ---- Detect CPU type ----
 detect_cpu_type() {
     CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}' || echo "unknown")
     IS_INTEL=0
@@ -67,10 +66,10 @@ if (( IS_INTEL == 1 )) && [[ -f "$TURBO_PATH" ]]; then
         echo "${GREEN}[+] Intel Turbo Boost disabled. To re-enable it run:${RESET}"
         echo "${BLUE}${BOLD}echo 0 | sudo tee $TURBO_PATH${RESET}"
     else
-        echo "${RED}[+] Intel Turbo Boost will remain enabled! Please ensure you can keep it cool!${RESET}"
+        echo "${RED}Intel Turbo Boost will remain enabled! Please ensure you can keep it cool! ${RESET}"
     fi
 fi
-echo "${YELLOW}Chard Installation to /usr/local/chard is about to begin. Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality. 
+echo "${YELLOW}Chard Installation to /usr/local/chard is about to begin. Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
 sleep 10
 
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
