@@ -40,15 +40,17 @@ chard_run() {
 
     echo "[*] Running '$*' inside Chard environment..."
     sudo env ROOT="$ROOT" \
+        PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
+        HOME="$CHARD_ROOT/root"
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
         PKGDIR="$PKGDIR" \
-        PATH="$PATH" \
+        PATH="$CHARD_ROOT/usr/bin:$PATH" \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         LD_PRELOAD="$LD_PRELOAD" \
-        SANDBOX="$SANDBOX" \
-        FEATURES="$FEATURES" \
+        SANDBOX="$CHARD_ROOT/usr/bin/sandbox" \
+        FEATURES="${FEATURES//sandbox/}" \
         "$@"
 }
 
