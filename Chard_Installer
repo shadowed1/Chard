@@ -326,7 +326,7 @@ PACKAGES=(
     "libXrandr|1.5.4|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXrandr-1.5.4.tar.xz|libXrandr-1.5.4|gnu"
     "libXinerama|1.1.5|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXinerama-1.1.5.tar.xz|libXinerama-1.1.5|gnu"
     "libXi|1.8.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXi-1.8.2.tar.xz|libXi-1.8.2|gnu"
-    "libsndfile|1.2.0|tar.gz|http://www.mega-nerd.com/libsndfile/files/libsndfile-1.2.0.tar.gz|libsndfile-1.2.0|gnu"
+    "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.0|gnu"
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
