@@ -299,6 +299,8 @@ PACKAGES=(
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
     "freetype|2.14.1|tar.xz|https://download.savannah.gnu.org/releases/freetype/freetype-2.14.1.tar.xz|freetype-2.14.1|gnu"
     "graphite2|1.3.14|tgz|https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz|graphite2-1.3.14|python"
+    "Locale-gettext|1.07|tar.gz|https://cpan.metacpan.org/authors/id/P/PV/PVANDRY/Locale-gettext-1.07.tar.gz|Locale-gettext-1.07|perl"
+    "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
     "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
     "libpng|1.6.50|tar.xz|https://sourceforge.net/projects/libpng/files/libpng16/1.6.50/libpng-1.6.50.tar.xz/download|libpng-1.6.50|gnu"
     "fontconfig|2.16.0|tar.xz|https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.16.0.tar.xz|fontconfig-2.16.0|meson"
@@ -309,7 +311,6 @@ PACKAGES=(
     "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
-    "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
     "sysprof|1.2.0|tar.gz|https://www.sysprof.com/sysprof-1.2.0.tar.gz|sysprof-1.2.0|gnu"
     "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|meson"
 )
@@ -507,32 +508,27 @@ EOF
 chmod +x /usr/local/chard/bin/emerge
 
 CHARD_ROOT="${CHARD_ROOT:-/usr/local/chard}"
-MAKE_CONF="/usr/local/chard/etc/portage/make.conf"
 
 if [ -f "$MAKE_CONF" ]; then
     cp -a "$MAKE_CONF" "${MAKE_CONF}.bak.$(date +%Y%m%d%H%M%S)"
     echo "Backed up original make.conf to ${MAKE_CONF}.bak.*"
 fi
 
-cat > "$MAKE_CONF" <<'EOF'
+sudo tee "$MAKE_CONF" > /dev/null <<EOF
 # Chard Portage make.conf
 # Manually generated
-
 COMMON_FLAGS="-O2 -pipe"
 CFLAGS="-O2 -pipe"
 CXXFLAGS="-O2 -pipe"
 FCFLAGS="-O2 -pipe"
 FFLAGS="-O2 -pipe"
-
 LC_MESSAGES=C.utf8
-
 ROOT="/usr/local/chard"
 DISTDIR="/usr/local/chard/var/cache/distfiles"
 PKGDIR="/usr/local/chard/var/cache/packages"
 PORTAGE_TMPDIR="/usr/local/chard/var/tmp"
 PORTDIR="/usr/local/chard/usr/portage"
 SANDBOX="/usr/local/chard/usr/bin/sandbox"
-
 CHOST="x86_64-pc-linux-gnu"
 CC="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
 CXX="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
@@ -540,57 +536,16 @@ AR="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
 NM="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
 RANLIB="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ranlib"
 STRIP="/usr/local/chard/usr/x86_64-pc-linux-gnu/binutils-bin/2.44/strip"
-
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
+USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
+PYTHON_TARGETS="python3_13"
 MAKE_CONF="/usr/local/chard/etc/portage/make.conf"
-
-if [ -f "$MAKE_CONF" ]; then
-    cp -a "$MAKE_CONF" "${MAKE_CONF}.bak.$(date +%Y%m%d%H%M%S)"
-    echo "Backed up original make.conf to ${MAKE_CONF}.bak.*"
-fi
-
-cat > "$MAKE_CONF" <<'EOF'
-# Chard Portage make.conf
-# Manually generated
-
-COMMON_FLAGS="-O2 -pipe"
-CFLAGS="-O2 -pipe"
-CXXFLAGS="-O2 -pipe"
-FCFLAGS="-O2 -pipe"
-FFLAGS="-O2 -pipe"
-
-LC_MESSAGES=C.utf8
-
-ROOT="/usr/local/chard"
-DISTDIR="/usr/local/chard/var/cache/distfiles"
-PKGDIR="/usr/local/chard/var/cache/packages"
-PORTAGE_TMPDIR="/usr/local/chard/var/tmp"
-PORTDIR="/usr/local/chard/usr/portage"
-SANDBOX="/usr/local/chard/usr/bin/sandbox"
-
-CHOST="x86_64-pc-linux-gnu"
-CC="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
-CXX="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
-AR="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
-NM="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
-RANLIB="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ranlib"
-STRIP="/usr/local/chard/usr/x86_64-pc-linux-gnu/binutils-bin/2.44/strip"
-
-DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
-FEATURES="$DEFAULT_FEATURES"
-
-DEFAULT_USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
-USE="$DEFAULT_USE"
-
-PYTHON_TARGETS="python3_13"
-EOF
-
-PYTHON_TARGETS="python3_13"
 EOF
 
 mkdir -p $CHARD_ROOT/etc
 mkdir -p $CHARD_ROOT/usr/share/sandbox
 
-cat > "$CHARD_ROOT/etc/sandbox.conf" <<'EOF'
+sudo tee > "$CHARD_ROOT/etc/sandbox.conf" <<'EOF 
 SANDBOX_BASHRC="/usr/local/chard/usr/share/sandbox/sandbox.bashrc"
 SANDBOX_D="/usr/local/chard//etc/sandbox.d"
 ns-mount-off
