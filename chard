@@ -146,7 +146,7 @@ chard_build() {
         mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
         mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
         mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
-        mountpoint -q "$CHARD_ROOT/etc/"    || sudo mount --bind /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
+        mountpoint -q "$CHARD_ROOT/etc/"    || sudo mount --bind "$CHARD_ROOT/etc/"
 
         sudo chroot "$CHARD_ROOT" /bin/bash -c "
             cd /tmp/$NAME
