@@ -330,7 +330,7 @@ PACKAGES=(
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
-    "libcap|2.73|tar.xz|https://mirrors.kernel.org/sourceware/libcap/libcap-2.73.tar.xz|libcap-2.73|gnu"
+    "libcap|1.2.76|tar.gz|https://git.kernel.org/pub/scm/libs/libcap/libcap.git/snapshot/libcap-1.2.76.tar.gz|libcap-1.2.76|gnu"
     "libarchive|3.7.3|tar.xz|https://www.libarchive.org/downloads/libarchive-3.7.3.tar.xz|libarchive-3.7.3|gnu"
     "gpgme|2.0.0|tar.bz2|https://gnupg.org/ftp/gcrypt/gpgme/gpgme-2.0.0.tar.bz2|gpgme-2.0.0|gnu"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
