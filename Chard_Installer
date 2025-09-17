@@ -545,21 +545,23 @@ EOF
 mkdir -p $CHARD_ROOT/etc
 mkdir -p $CHARD_ROOT/usr/share/sandbox
 
-sudo tee > "$CHARD_ROOT/etc/sandbox.conf" <<'EOF 
+cat > "$CHARD_ROOT/etc/sandbox.conf" <<'EOF'
 SANDBOX_BASHRC="/usr/local/chard/usr/share/sandbox/sandbox.bashrc"
-SANDBOX_D="/usr/local/chard//etc/sandbox.d"
+SANDBOX_D="/usr/local/chard/etc/sandbox.d"
 ns-mount-off
 ns-pid-off
 ns-ipc-off
 ns-net-off
 ns-user-off
+EOF
 
-cat <<'EOF' > "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc"
+cat <<EOF > "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc"
 export HOME="$CHARD_ROOT/root"
 export USER="chronos"
 export LOGNAME="chronos"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
 EOF
+
 
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
