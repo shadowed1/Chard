@@ -133,7 +133,7 @@ chard_build() {
             rm -rf "$TMP_DIR"
             continue
         fi
-
+        cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
         echo "[*] Detected build system: $BUILD_SYSTEM"
         echo "${GREEN}[+] Mounting Chard Chroot for build...${RESET}"
         mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
