@@ -96,7 +96,7 @@ sudo mkdir -p "$CHARD_ROOT"/{ \
 }
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-
+sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
@@ -232,16 +232,19 @@ export CXX="$GCC_DIR/$CHOST-g++"
 export AR="$GCC_DIR/gcc-ar"
 export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
 export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin"
-export CFLAGS="-I/usr/local/chard/usr/include -O2 -pipe"
+#export CFLAGS="-I/usr/local/chard/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
-export LDFLAGS="-L/usr/local/chard/usr/lib"
+#export LDFLAGS="-L/usr/local/chard/usr/lib"
 export AWK=/usr/bin/mawk
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
-export PKG_CONFIG_PATH="/usr/local/chard/usr/lib/pkgconfig:/usr/local/chard/usr/lib64/pkgconfig:$PKG_CONFIG_PATH"
 export MAKEFLAGS="-j$(nproc)"
 export INSTALL_ROOT="/usr/local/chard"
 export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
 export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
+export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
+export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
+export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
+
 
 
 KERNEL_VER="6.16"
@@ -391,7 +394,7 @@ for pkg in "${PACKAGES[@]}"; do
     mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
     mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
     mountpoint -q "/usr/local/chard/dev/shm" || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
-    mountpoint -q "/usr/local/chard/etc/resolv.conf" || sudo mount --bind /etc/resolv.conf "/usr/local/chard/etc/resolv.conf"
+    mountpoint -q "/usr/local/chard/etc/"    || sudo mount --bind /etc/resolv.conf "/usr/local/chard/etc/resolv.conf"
 
 
 
@@ -421,8 +424,8 @@ export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
 export PKG_CONFIG="/usr/bin/pkg-config"
-export PKG_CONFIG_PATH=/usr/local/chard/usr/lib/pkgconfig:/usr/local/chard/usr/share/pkgconfig
-PYTHON="/bin/python3"
+export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig
+export PYTHON="/bin/python3"
 
 if [[ "$NAME" == "gtest" ]]; then
     cd /var/tmp/build/${DIR}
@@ -489,7 +492,7 @@ sudo umount -l "/usr/local/chard/dev/shm"       2>/dev/null || true
 sudo umount -l "/usr/local/chard/dev"           2>/dev/null || true
 sudo umount -l "/usr/local/chard/sys"           2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"          2>/dev/null || true
-sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
+sudo umount -l "/usr/local/chard/etc/"          2>/dev/null || true
 
 
 
