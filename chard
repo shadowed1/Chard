@@ -94,11 +94,14 @@ chard_build() {
     fi
     for ARCHIVE in "${ARCHIVES[@]}"; do
         BASENAME=$(basename "$ARCHIVE")
-        NAME="${BASENAME%%.*}"
+        NAME="${BASENAME%.*}"
+        NAME="${NAME%.*}"
+
         echo "${YELLOW}[+] Processing $BASENAME${RESET}"
         TMP_DIR="$BUILD_TMP/$NAME"
         mkdir -p "$TMP_DIR"
         echo "[*] Extracting $BASENAME..."
+        
         case "$ARCHIVE" in
             *.tar.gz|*.tgz)
                 tar -xzf "$ARCHIVE" -C "$TMP_DIR"
@@ -116,7 +119,10 @@ chard_build() {
                 echo "${RED}[!] Unknown archive format: $ARCHIVE"; continue
                 ;;
         esac
-
+        
+        SUBDIR=$(find "$TMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n1)
+        [ -n "$SUBDIR" ] && TMP_DIR="$SUBDIR"
+        
         BUILD_SYSTEM=""
         if [ -f "$TMP_DIR/configure" ]; then
             BUILD_SYSTEM="gnu"
@@ -140,7 +146,7 @@ chard_build() {
         mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
         mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
         mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
-        mountpoint -q "$CHARD_ROOT/etc/resolv.conf" || sudo mount --bind /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
+        mountpoint -q "$CHARD_ROOT/etc/"    || sudo mount --bind /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
         sudo chroot "$CHARD_ROOT" /bin/bash -c "
             cd /tmp/$NAME
@@ -184,7 +190,7 @@ chard_build() {
     sudo umount -l "$CHARD_ROOT/dev"           2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/sys"           2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/proc"          2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/"          2>/dev/null || true
 }
 
 cmd="$1"; shift || true
@@ -227,7 +233,7 @@ case "$cmd" in
                 ;;
             2)
                 echo "${RESET}[*] Performing full reinstall..."
-                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)" | bash
                 ;;
             q|Q|*)
                 echo "${RESET}[*] Reinstall cancelled.${RESET}"
