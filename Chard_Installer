@@ -95,7 +95,8 @@ sudo mkdir -p "$CHARD_ROOT"/{ \
     home, \
     mnt \
 }
-
+sudo mkdir -p "$CHARD_ROOT/etc/"
+sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
