@@ -80,18 +80,20 @@ echo "${YELLOW}${BOLD}Chard Installation to /usr/local/chard starts in 10 second
 sleep 10
 
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
-sudo mkdir -p "$CHARD_ROOT"/etc/portage \
-              "$CHARD_ROOT"/usr/portage \
-              "$CHARD_ROOT"/usr/bin \
-              "$CHARD_ROOT"/usr/lib \
-              "$CHARD_ROOT"/var/tmp/build \
-              "$CHARD_ROOT"/var/cache/distfiles \
-              "$CHARD_ROOT"/var/cache/packages \
-              "$CHARD_ROOT"/dev \
-              "$CHARD_ROOT"/dev/shm \
-              "$CHARD_ROOT"/proc \
-              "$CHARD_ROOT"/sys \
-              "$CHARD_ROOT"/tmp
+sudo mkdir -p "$CHARD_ROOT"/{ \
+    etc/portage, \
+    etc/sandbox.d, \
+    etc/ssl, \
+    usr/{bin,lib,lib64,include,share,local/{bin,lib,include}}, \
+    var/{tmp/build,cache/distfiles,cache/packages,log,run}, \
+    dev/{shm,pts}, \
+    proc, \
+    sys, \
+    tmp, \
+    run, \
+    home, \
+    mnt \
+}
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
