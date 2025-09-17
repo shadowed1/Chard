@@ -16,7 +16,7 @@ CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 echo
 echo
-echo "${RED}Chard Installed can take 15-45 minutes depending on your CPU and storage. Requires ~3 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
+echo "${RED}Chard Installed can take 15-45 minutes depending on your CPU and storage. Requires 2.6 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
 echo
 echo "${YELLOW}Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
 echo
@@ -28,7 +28,6 @@ echo "${BLUE}Does not require altering current state of /usr/local/ during Insta
 echo
 echo "${MAGENTA}Chard is current in early development and Emerge is not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a USB backup in case of serious mistakes.${RESET}"
 echo
-
 detect_cpu_type() {
     CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}' || echo "unknown")
     IS_INTEL=0
@@ -95,8 +94,7 @@ sudo mkdir -p "$CHARD_ROOT"/{ \
     home, \
     mnt \
 }
-sudo mkdir -p "$CHARD_ROOT/etc/"
-sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
+
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
@@ -170,8 +168,6 @@ esac
 
 
 echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
-MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-sudo mkdir -p "$(dirname "$MAKE_CONF")"
 
 sudo tee "$MAKE_CONF" > /dev/null <<EOF
 CHOST="${CHOST}"
@@ -334,7 +330,7 @@ PACKAGES=(
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
-    "libcap|1.2.76|tar.gz|https://git.kernel.org/pub/scm/libs/libcap/libcap.git/snapshot/libcap-1.2.76.tar.gz|libcap-1.2.76|gnu"
+    "libcap|2.73|tar.xz|https://mirrors.kernel.org/sourceware/libcap/libcap-2.73.tar.xz|libcap-2.73|gnu"
     "libarchive|3.7.3|tar.xz|https://www.libarchive.org/downloads/libarchive-3.7.3.tar.xz|libarchive-3.7.3|gnu"
     "gpgme|2.0.0|tar.bz2|https://gnupg.org/ftp/gcrypt/gpgme/gpgme-2.0.0.tar.bz2|gpgme-2.0.0|gnu"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
@@ -422,7 +418,8 @@ export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
 export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64"
+export LD_LIBRARY_PATH=/usr/local/chard/usr/lib:/usr/local/chard/usr/lib64
+export LD_DEBUG=libs
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
 export PKG_CONFIG="/usr/bin/pkg-config"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib/pkgconfig:/usr/local/chard/usr/share/pkgconfig
