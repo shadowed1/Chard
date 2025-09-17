@@ -606,13 +606,6 @@ export LOGNAME="chronos"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
 EOF
 
-#ln -sf python3.13 /usr/local/chard/usr/bin/python3
-#ln -sf python3.13 /usr/local/chard/usr/bin/python
-#sudo ln -sf /usr/local/chard/usr/bin/python3.13 /usr/lib/python-exec/python3.13/python
-#sudo ln -sf /usr/local/chard/usr/bin/python3.13 /usr/lib/python-exec/python3.13/python3
-#sudo ln -sf /usr/local/chard/usr/bin/ebuild /usr/lib/python-exec/python3.13/ebuild
-#sudo ln -sf /usr/local/chard/usr/bin/emerge /usr/lib/python-exec/python3.13/emerge
-
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
