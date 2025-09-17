@@ -407,6 +407,8 @@ export LDFLAGS='-L/usr/lib'
 export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/usr/lib64\"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$CHARD_ROOT/lib/pkgconfig:$CHARD_ROOT/usr/share/pkgconfig:$CHARD_ROOT/share/pkgconfig:$PKG_CONFIG_PATH"
+export PKG_CONFIG="/usr/bin/pkg-config"
 PYTHON="/bin/python3"
 
 if [[ "$NAME" == "gtest" ]]; then
@@ -553,6 +555,8 @@ FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-pro
 USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
 PYTHON_TARGETS="python3_13"
 MAKE_CONF="/usr/local/chard/etc/portage/make.conf"
+PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/lib/pkgconfig:$CHARD_ROOT/usr/share/pkgconfig:$CHARD_ROOT/share/pkgconfig:$PKG_CONFIG_PATH"
+PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
 EOF
 
 mkdir -p $CHARD_ROOT/etc
