@@ -320,10 +320,13 @@ PACKAGES=(
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
+    "libcap|2.73|tar.xz|https://mirrors.kernel.org/sourceware/libcap/libcap-2.73.tar.xz|libcap-2.73|gnu"
+    "libarchive|3.7.3|tar.xz|https://www.libarchive.org/downloads/libarchive-3.7.3.tar.xz|libarchive-3.7.3|gnu"
+    "gpgme|1.17.0|tar.gz|https://gnupg.org/ftp/gcrypt/gpgme/gpgme-1.17.0.tar.gz|gpgme-1.17.0|gnu"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
-
 )
+
 mkdir -p "$BUILD_DIR"
 
 sudo mkdir -p "/usr/local/chard/var/tmp/build"
