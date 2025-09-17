@@ -470,12 +470,12 @@ case \"$BUILDSYS\" in
         "/usr/bin/python3.13" setup.py install --prefix=/usr
         ;;
     libcap)
-        make -j$(nproc)
+        make -j$(nproc) prefix=/usr
         make test || true
-        make install
+        make install prefix=/usr
         ;;
     icu)
-        cd source
+        cd /var/tmp/build/$DIR/source/
         chmod +x runConfigureICU configure install-sh
         ./runConfigureICU Linux --prefix=/usr --disable-dependency-tracking
         make -j$(nproc)
