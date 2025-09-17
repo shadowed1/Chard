@@ -318,6 +318,8 @@ PACKAGES=(
     "libpng|1.6.50|tar.xz|https://sourceforge.net/projects/libpng/files/libpng16/1.6.50/libpng-1.6.50.tar.xz/download|libpng-1.6.50|gnu"
     "fontconfig|2.16.0|tar.xz|https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.16.0.tar.xz|fontconfig-2.16.0|meson"
     "pixman|0.46.4|tar.xz|https://cairographics.org/releases/pixman-0.46.4.tar.xz|pixman-0.46.4|meson"
+    "icu|76.1|tar.gz|https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-src.tgz|icu-76.1|gnu"
+    "chafa|1.14.5|tar.xz|https://github.com/hpjansson/chafa/releases/download/1.14.5/chafa-1.14.5.tar.xz|chafa-1.14.5|meson"
     "cairo|1.18.4|tar.xz|https://cairographics.org/releases/cairo-1.18.4.tar.xz|cairo-1.18.4|meson"
     "harfbuzz|11.5.0|tar.xz|https://github.com/harfbuzz/harfbuzz/releases/download/11.5.0/harfbuzz-11.5.0.tar.xz|harfbuzz-11.5.0|meson"
     "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
@@ -337,6 +339,7 @@ PACKAGES=(
     "libarchive|3.7.3|tar.xz|https://www.libarchive.org/downloads/libarchive-3.7.3.tar.xz|libarchive-3.7.3|gnu"
     "gpgme|2.0.0|tar.bz2|https://gnupg.org/ftp/gcrypt/gpgme/gpgme-2.0.0.tar.bz2|gpgme-2.0.0|gnu"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
+    "curl|8.11.0|tar.xz|https://curl.se/download/curl-8.11.0.tar.xz|curl-8.11.0|gnu"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
