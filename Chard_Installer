@@ -331,11 +331,11 @@ PACKAGES=(
     "libXrandr|1.5.4|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXrandr-1.5.4.tar.xz|libXrandr-1.5.4|gnu"
     "libXinerama|1.1.5|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXinerama-1.1.5.tar.xz|libXinerama-1.1.5|gnu"
     "libXi|1.8.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXi-1.8.2.tar.xz|libXi-1.8.2|gnu"
-    "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
+    "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/d    ownload/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
-    "libcap|2.73|tar.xz|https://mirrors.kernel.org/sourceware/libcap/libcap-2.73.tar.xz|libcap-2.73|gnu"
+    "libcap|1.2.76|tar.xz|https://git.kernel.org/pub/scm/libs/libcap/libcap.git/snapshot/libcap-1.2.76.tar.gz|libcap-1.2.76|libcap"
     "libarchive|3.7.3|tar.xz|https://www.libarchive.org/downloads/libarchive-3.7.3.tar.xz|libarchive-3.7.3|gnu"
     "gpgme|2.0.0|tar.bz2|https://gnupg.org/ftp/gcrypt/gpgme/gpgme-2.0.0.tar.bz2|gpgme-2.0.0|gnu"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
@@ -468,6 +468,11 @@ case \"$BUILDSYS\" in
         cd /var/tmp/build/$DIR
         "/usr/bin/python3.13" setup.py build
         "/usr/bin/python3.13" setup.py install --prefix=/usr
+        ;;
+    libcap)
+        make -j$(nproc)
+        make test || true
+        make install
         ;;
     icu)
         cd source
