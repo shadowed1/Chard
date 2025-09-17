@@ -234,6 +234,13 @@ export CFLAGS="-I/usr/local/chard/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib"
 export AWK=/usr/bin/mawk
+export LD_LIBRARY_PATH="/usr/local/chard/usr/lib:/usr/local/chard/usr/lib64:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/usr/local/chard/usr/lib/pkgconfig:/usr/local/chard/usr/lib64/pkgconfig:$PKG_CONFIG_PATH"
+export MAKEFLAGS="-j$(nproc)"
+export INSTALL_ROOT="/usr/local/chard"
+export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
+export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
+
 
 KERNEL_VER="6.16"
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
@@ -406,10 +413,10 @@ export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
 export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/usr/lib64\"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
-export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$CHARD_ROOT/lib/pkgconfig:$CHARD_ROOT/usr/share/pkgconfig:$CHARD_ROOT/share/pkgconfig:$PKG_CONFIG_PATH"
 export PKG_CONFIG="/usr/bin/pkg-config"
+export PKG_CONFIG_PATH=/usr/local/chard/usr/lib/pkgconfig:/usr/local/chard/usr/share/pkgconfig
 PYTHON="/bin/python3"
 
 if [[ "$NAME" == "gtest" ]]; then
