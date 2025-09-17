@@ -79,6 +79,114 @@ chard_run() {
         "$@"
 }
 
+
+chard_build() {
+    BUILD_SOURCE="/home/chronos/user/MyFiles/Downloads/chard_build"
+    BUILD_TMP="$CHARD_ROOT/tmp"
+    mkdir -p "$BUILD_TMP"
+    echo "${GREEN}[*] Scanning $BUILD_SOURCE for archives...${RESET}"
+    shopt -s nullglob
+    ARCHIVES=("$BUILD_SOURCE"/*.{tar.gz,tgz,tar.xz,tar.bz2,zip})
+    shopt -u nullglob
+    if [ ${#ARCHIVES[@]} -eq 0 ]; then
+        echo "${RED}[!] No archives found in $BUILD_SOURCE${RESET}"
+        exit 1
+    fi
+    for ARCHIVE in "${ARCHIVES[@]}"; do
+        BASENAME=$(basename "$ARCHIVE")
+        NAME="${BASENAME%%.*}"
+        echo "${YELLOW}[+] Processing $BASENAME${RESET}"
+        TMP_DIR="$BUILD_TMP/$NAME"
+        mkdir -p "$TMP_DIR"
+        echo "[*] Extracting $BASENAME..."
+        case "$ARCHIVE" in
+            *.tar.gz|*.tgz)
+                tar -xzf "$ARCHIVE" -C "$TMP_DIR"
+                ;;
+            *.tar.xz)
+                tar -xJf "$ARCHIVE" -C "$TMP_DIR"
+                ;;
+            *.tar.bz2)
+                tar -xjf "$ARCHIVE" -C "$TMP_DIR"
+                ;;
+            *.zip)
+                unzip -q "$ARCHIVE" -d "$TMP_DIR"
+                ;;
+            *)
+                echo "${RED}[!] Unknown archive format: $ARCHIVE"; continue
+                ;;
+        esac
+
+        BUILD_SYSTEM=""
+        if [ -f "$TMP_DIR/configure" ]; then
+            BUILD_SYSTEM="gnu"
+        elif [ -f "$TMP_DIR/meson.build" ]; then
+            BUILD_SYSTEM="meson"
+        elif [ -f "$TMP_DIR/setup.py" ]; then
+            BUILD_SYSTEM="python"
+        elif [ -f "$TMP_DIR/Makefile.PL" ]; then
+            BUILD_SYSTEM="perl"
+        elif [ -f "$TMP_DIR/Makefile" ]; then
+            BUILD_SYSTEM="makefile"
+        else
+            echo "${RED}[!] Could not detect build system for $NAME, skipping.${RESET}"
+            rm -rf "$TMP_DIR"
+            continue
+        fi
+
+        echo "[*] Detected build system: $BUILD_SYSTEM"
+        echo "${GREEN}[+] Mounting Chard Chroot for build...${RESET}"
+        mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
+        mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
+        mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
+        mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
+        mountpoint -q "$CHARD_ROOT/etc/resolv.conf" || sudo mount --bind /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
+
+        sudo chroot "$CHARD_ROOT" /bin/bash -c "
+            cd /tmp/$NAME
+            case \"$BUILD_SYSTEM\" in
+                gnu)
+                    ./configure --prefix=/usr --disable-dependency-tracking
+                    make -j\$(nproc)
+                    make install
+                    ;;
+                meson)
+                    meson setup build --prefix=/usr
+                    ninja -C build
+                    ninja -C build install
+                    ;;
+                python)
+                    /usr/bin/python3 setup.py build
+                    /usr/bin/python3 setup.py install --prefix=/usr
+                    ;;
+                perl)
+                    perl Makefile.PL INSTALL_BASE=/usr/local
+                    make
+                    make test || true
+                    make install
+                    ;;
+                makefile)
+                    make -j\$(nproc)
+                    make install
+                    ;;
+                *)
+                    echo 'Unknown build system'
+                    exit 1
+                    ;;
+            esac
+        "
+        echo "${MAGENTA}[+] Finished building $NAME${RESET}"
+        echo "[*] Cleaning up temporary build directory..."
+        sudo rm -rf "$TMP_DIR"
+    done
+    echo "${GREEN}[+] All builds complete.${RESET}"
+    sudo umount -l "$CHARD_ROOT/dev/shm"       2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"           2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"           2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"          2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null || true
+    ;;
+
 cmd="$1"; shift || true
 
 case "$cmd" in
@@ -91,6 +199,7 @@ case "$cmd" in
         echo "  reinstall                - Reinstall or update Chard"
         echo "  uninstall                - Remove Chard environment and entries"
         echo "  categories | cat         - List available Portage categories"
+        echo    chard build              - Place downloads in your Downloads/chard_build folder and chard will build them to $CHARD_ROOT"
         echo "  help                     - Show this help message"
         echo
         echo "Examples:"
@@ -147,6 +256,9 @@ case "$cmd" in
             [ -d "$cat" ] || continue
             basename "$cat"
         done | sort
+        ;;
+    build)
+        chard_build
         ;;
     *)
         chard_run "$cmd" "$@"
