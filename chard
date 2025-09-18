@@ -54,7 +54,7 @@ chard_run() {
     export PKGDIR="$CHARD_ROOT/var/cache/packages"
     export PATH="$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$PATH"
     export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:${LD_LIBRARY_PATH:-}"
-    export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
+    export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0:$CHARD_ROOT/usr/lib64/libunistring.so.5"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 
     echo "[*] Running '$*' inside Chard environment..."
