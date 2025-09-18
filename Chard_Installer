@@ -454,7 +454,7 @@ fi
 
 case \"$BUILDSYS\" in
     gnu)
-        ./configure --prefix=/usr --disable-dependency-tracking
+        ./configure --prefix=/usr
         make -j\$(nproc)
         make install
         ;;
