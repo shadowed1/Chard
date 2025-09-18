@@ -353,7 +353,7 @@ PACKAGES=(
     "expat|2.5.0|tar.gz|https://github.com/libexpat/libexpat/releases/download/R_2_7_2/expat-2.7.2.tar.gz|expat-2.5.0|gnu"
     "duktape|2.9.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.9.0|duktape"
     "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
-    "dconf|0.49.0|tar.gz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
+    "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
     "malcontent|0.13.1|tar.gz|https://gitlab.freedesktop.org/pwithnall/malcontent/-/archive/0.13.1/malcontent-0.13.1.tar.gz|malcontent-0.13.1|meson"
     "polkit|124|tar.gz|https://gitlab.freedesktop.org/polkit/polkit/-/archive/125/polkit-124.tar.gz|polkit-124|meson"
