@@ -97,6 +97,7 @@ sudo mkdir -p "$CHARD_ROOT"/{ \
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
+sudo cp -r /etc/ssl /usr/local/chard/etc/
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
