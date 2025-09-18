@@ -330,7 +330,7 @@ PACKAGES=(
     "util-linux|2.41|tar.xz|https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.xz|util-linux-2.41|gnu"
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
     "freetype|2.14.1|tar.xz|https://download.savannah.gnu.org/releases/freetype/freetype-2.14.1.tar.xz|freetype-2.14.1|gnu"
-    "graphite2|1.3.14|tgz|https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz|graphite2-1.3.14|python"
+    "graphite2|1.3.14|tgz|https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz|graphite2-1.3.14|cmakepython"
     "Locale-gettext|1.07|tar.gz|https://cpan.metacpan.org/authors/id/P/PV/PVANDRY/Locale-gettext-1.07.tar.gz|Locale-gettext-1.07|perl"
     "sysprof|1.2.0|tar.gz|https://www.sysprof.com/sysprof-1.2.0.tar.gz|sysprof-1.2.0|gnu"
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
@@ -429,7 +429,7 @@ for pkg in "${PACKAGES[@]}"; do
     mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
     mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
     mountpoint -q "/usr/local/chard/dev/shm" || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
-    mountpoint -q "/usr/local/chard/etc/"    || sudo mount --bind /etc/ "/usr/local/chard/etc/"
+    mountpoint -q "/usr/local/chard/etc/"    || sudo mount --bind /etc/resolv.conf "/usr/local/chard/etc/resolv.conf"
 
 
 
@@ -503,10 +503,20 @@ case \"$BUILDSYS\" in
         ninja -C build
         ninja -C build install
         ;;
-      python)
+    python)
         cd /var/tmp/build/$DIR
         "/usr/bin/python3.13" setup.py build
         "/usr/bin/python3.13" setup.py install --prefix=/usr
+        ;;
+   cmakepython)
+        cd /var/tmp/build/$DIR
+        cmake -S . -B build \
+              -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr \
+              -DCMAKE_BUILD_TYPE=Release
+        cmake --build build -j"$(nproc)"
+        cmake --install build
+        /usr/bin/python3.13 setup.py build
+        /usr/bin/python3.13 setup.py install --prefix=/usr/local/chard/usr
         ;;
     libcap)
         make -j$(nproc) prefix=/usr
@@ -545,7 +555,6 @@ esac
 "
 
 echo
-
 echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
     
     if [ "$NAME" = "make" ] && [ -L "/usr/local/chard/usr/bin/make" ]; then
