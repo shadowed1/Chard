@@ -16,7 +16,7 @@ CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 echo
 echo
-echo "${RED}Chard Installed can take 15-45 minutes depending on your CPU and storage. Requires 2.6 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
+echo "${RED}Chard Installed can take 15-120 minutes depending on your CPU and storage speed. Requires ~3 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
 echo
 echo "${YELLOW}Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
 echo
@@ -64,15 +64,15 @@ detect_cpu_type
 
 if (( IS_INTEL == 1 )) && [[ -f "$TURBO_PATH" ]]; then
     echo
-    read -rp "${CYAN}${BOLD}Intel CPU Detected! Do you want to disable Intel Turbo Boost before continuing? (Y/n): ${RESET}" disable_turbo
+    read -rp "${CYAN}${BOLD}Intel CPU Detected! Do you want to keep Intel Turbo Boost on before continuing? (Y/n): ${RESET}" disable_turbo
     disable_turbo=${disable_turbo:-Y}
 
     if [[ "$disable_turbo" =~ ^[Yy]$ ]]; then
-        echo 1 | sudo tee "$TURBO_PATH" >/dev/null
-        echo "${GREEN}[+] Intel Turbo Boost disabled. To re-enable it run:${RESET}"
-        echo "${BLUE}${BOLD}echo 0 | sudo tee $TURBO_PATH${RESET}"
+        echo 0 | sudo tee "$TURBO_PATH" >/dev/null
+        echo "${GREEN}[+] Intel Turbo Boost enabled. To disable it run:${RESET}"
+        echo "${BLUE}${BOLD}echo 1 | sudo tee $TURBO_PATH${RESET}"
     else
-        echo "${RED}Intel Turbo Boost will remain enabled! Please ensure you can keep your chromebook cool! ${RESET}"
+        echo "${GREEN}Intel Turbo Boost is disabled! ${RESET}"
     fi
 fi
 
