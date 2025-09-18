@@ -320,7 +320,7 @@ PACKAGES=(
     "util-linux|2.41|tar.xz|https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.xz|util-linux-2.41|gnu"
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
     "freetype|2.14.1|tar.xz|https://download.savannah.gnu.org/releases/freetype/freetype-2.14.1.tar.xz|freetype-2.14.1|gnu"
-    "graphite2|1.3.14|tgz|https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz|graphite2-1.3.14|cmakeG"
+    "graphite2|1.3.14|tgz|https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz|graphite2-1.3.14|python"
     "Locale-gettext|1.07|tar.gz|https://cpan.metacpan.org/authors/id/P/PV/PVANDRY/Locale-gettext-1.07.tar.gz|Locale-gettext-1.07|perl"
     "sysprof|1.2.0|tar.gz|https://www.sysprof.com/sysprof-1.2.0.tar.gz|sysprof-1.2.0|gnu"
     "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
@@ -352,10 +352,13 @@ PACKAGES=(
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
     "libpsl|0.21.5|tar.gz|https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz|libpsl-0.21.5|gnussl"
     "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
+    "expat|2.5.0|tar.xz|https://github.com/libexpat/libexpat/releases/download/R_2_7_2/expat-2.7.2.tar.gz|expat-2.5.0|gnu"
+    "duktape|2.9.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.9.0|duktape"
+    "p11-kit|0.25.8|tar.gz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
     "dconf|0.49.0|tar.gz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
-    "polkit|124|tar.gz|https://gitlab.freedesktop.org/polkit/polkit/-/archive/125/polkit-124.tar.gz|polkit-124|meson"
     "malcontent|0.13.1|tar.xz|https://gitlab.freedesktop.org/pwithnall/malcontent/-/archive/0.13.1/malcontent-0.13.1.tar.gz|malcontent-0.13.1|meson"
+    "polkit|124|tar.gz|https://gitlab.freedesktop.org/polkit/polkit/-/archive/125/polkit-124.tar.gz|polkit-124|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
@@ -513,6 +516,13 @@ case \"$BUILDSYS\" in
         ./Configure --prefix=/usr
         make -j\$(nproc)
         make install
+        ;;
+    duktape)
+        cd /var/tmp/build/$DIR
+        make -f Makefile.sharedlibrary -j$(nproc)
+        mkdir -p /usr/include/duktape /usr/lib
+        cp src/duktape.h /usr/include/duktape/
+        cp libduktape.so* /usr/lib/
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
