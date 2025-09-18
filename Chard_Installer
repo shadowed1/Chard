@@ -75,8 +75,20 @@ if (( IS_INTEL == 1 )) && [[ -f "$TURBO_PATH" ]]; then
         echo "${RED}Intel Turbo Boost will remain enabled! Please ensure you can keep your chromebook cool! ${RESET}"
     fi
 fi
+
+if (( IS_INTEL == 1 )) || (( IS_AMD == 1 )) || (( ARM == 1 )); then
+    echo
+    read -rp "${GREEN}${BOLD}Install Chard (Y/n): ${RESET}" continue
+    continue=${continue:-Y}
+
+    if [[ "$continue" =~ ^[Yy]$ ]]; then
+        echo "${YELLOW}${BOLD}Chard Installation to /usr/local/chard starts in 10 seconds. Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
+    else
+        exit 1
+    fi
+fi
+
 echo
-echo "${YELLOW}${BOLD}Chard Installation to /usr/local/chard starts in 10 seconds. Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
 sleep 10
 
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
@@ -442,7 +454,7 @@ fi
 
 case \"$BUILDSYS\" in
     gnu)
-        ./configure --prefix=/usr --disable-dependency-tracking --openssldir=/etc/ssl
+        ./configure --prefix=/usr --disable-dependency-tracking
         make -j\$(nproc)
         make install
         ;;
@@ -485,8 +497,7 @@ case \"$BUILDSYS\" in
         make install
         ;;
     gnussl)
-        echo "[*] Building $NAME with OpenSSL-style flags..."
-        ./config --prefix=/usr --openssldir=/etc/ssl
+        ./configure --prefix=/usr --openssldir=/etc/ssl
         make -j$(nproc)
         make install
         ;;
