@@ -97,7 +97,7 @@ sudo mkdir -p "$CHARD_ROOT"/{ \
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
-sudo cp -r /etc/ssl /usr/local/chard/etc/
+sudo cp /etc/ssl /usr/local/chard/etc/
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
@@ -442,14 +442,8 @@ fi
 
 case \"$BUILDSYS\" in
     gnu)
-        ./configure --prefix=/usr --disable-dependency-tracking
+        ./configure --prefix=/usr --disable-dependency-tracking --openssldir=/etc/ssl
         make -j\$(nproc)
-        make install
-        ;;
-    gnussl)
-        echo "[*] Building $NAME with OpenSSL-style flags..."
-        ./config --prefix=/usr --openssldir=/etc/ssl
-        make -j$(nproc)
         make install
         ;;
     perl)
@@ -487,6 +481,12 @@ case \"$BUILDSYS\" in
         cd /var/tmp/build/$DIR/source/
         chmod +x runConfigureICU configure install-sh
         ./runConfigureICU Linux --prefix=/usr --disable-dependency-tracking
+        make -j$(nproc)
+        make install
+        ;;
+    gnussl)
+        echo "[*] Building $NAME with OpenSSL-style flags..."
+        ./config --prefix=/usr --openssldir=/etc/ssl
         make -j$(nproc)
         make install
         ;;
