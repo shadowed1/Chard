@@ -81,7 +81,7 @@ fi
     continue=${continue:-Y}
 
     if [[ "$continue" =~ ^[Yy]$ ]]; then
-        echo "${Red}Chard Installation to /usr/local/chard starts in 10 seconds.${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
+        echo "${RED}Chard Installation to /usr/local/chard starts in 10 seconds.${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
     else
         exit 0
     fi
