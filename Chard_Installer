@@ -527,11 +527,14 @@ case \"$BUILDSYS\" in
         exit 1
         ;;
 esac
-"
+echo "${RESET}${BOLD}${YELLOW}#####################################################################${RESET}"
+echo "${RESET}${BOLD}${GREEN}#####################################################################${RESET}"
+echo "${RESET}${BOLD}${CYAN}#####################################################################${RESET}"
+echo "${RESET}{BOLD}            [+] Finished building $NAME-$VERSION${RESET}"
+echo "${RESET}${BOLD}${BLUE}#####################################################################${RESET}"
+echo "${RESET}${BOLD}${MAGENTA}#####################################################################${RESET}"
+echo "${RESET}${BOLD}${RED}#####################################################################${RESET}"
 
-echo
-
-echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
     
     if [ "$NAME" = "make" ] && [ -L "/usr/local/chard/usr/bin/make" ]; then
         sudo rm -f "/usr/local/chard/usr/bin/make"
