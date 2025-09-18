@@ -369,6 +369,8 @@ PACKAGES=(
     "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
+    "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
+    "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|cmakeG"
     "extra-cmake-modules|5.107.0|tar.xz|https://download.kde.org/stable/frameworks/5.107/extra-cmake-modules-5.107.0.tar.xz|extra-cmake-modules-5.107.0|cmakeG"
     "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
@@ -518,6 +520,10 @@ case \"$BUILDSYS\" in
         cd /var/tmp/build/$DIR
         "/usr/bin/python3.13" setup.py build
         "/usr/bin/python3.13" setup.py install --prefix=/usr
+        ;;
+     pythonbuild)
+        cd /var/tmp/build/$DIR
+        /usr/bin/python3.13 -m pip install . --prefix=/usr
         ;;
    cmakepython)
         cd /var/tmp/build/$DIR
