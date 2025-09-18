@@ -82,11 +82,7 @@ fi
 
     if [[ "$continue" =~ ^[Yy]$ ]]; then
         echo "${RED}Chard Installation to /usr/local/chard starts in 10 seconds.${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
-    else
-        exit 0
-    fi
-
-echo
+        echo
 sleep 10
 
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
@@ -641,3 +637,8 @@ echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
+    else
+        exit 0
+    fi
+
+
