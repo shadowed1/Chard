@@ -366,7 +366,7 @@ PACKAGES=(
     "expat|2.5.0|tar.gz|https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.gz|expat-2.5.0|gnu"
     "duktape|2.7.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.7.0|duktape"
     "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
-    "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|meson"
+    "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
@@ -502,6 +502,12 @@ case \"$BUILDSYS\" in
         cmake --install build
         ;;
      meson)
+        meson setup build --prefix=/usr
+        ninja -C build
+        ninja -C build install
+        ;;
+    mesongvdb)
+        cd /var/tmp/build/gvdb-main/gvdb-main
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
