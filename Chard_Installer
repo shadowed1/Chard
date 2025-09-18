@@ -83,18 +83,30 @@ fi
     echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
     echo
     echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
-    sudo mkdir -p "$CHARD_ROOT"/{ \
-    etc/portage, \
-    etc/sandbox.d, \
-    etc/ssl, \
-    usr/{bin,lib,lib64,include,share,local/{bin,lib,include}}, \
-    var/{tmp/build,cache/distfiles,cache/packages,log,run}, \
-    dev/{shm,pts}, \
-    proc, \
-    sys, \
-    tmp, \
-    run, \
-    home/{user}, \
+sudo mkdir -p "$CHARD_ROOT"/{ \
+    etc/portage \
+    etc/sandbox.d \
+    etc/ssl \
+    usr/bin \
+    usr/lib \
+    usr/lib64 \
+    usr/include \
+    usr/share \
+    usr/local/bin \
+    usr/local/lib \
+    usr/local/include \
+    var/tmp/build \
+    var/cache/distfiles \
+    var/cache/packages \
+    var/log \
+    var/run \
+    dev/shm \
+    dev/pts \
+    proc \
+    sys \
+    tmp \
+    run \
+    home/user \
     mnt \
 }
 
@@ -132,7 +144,7 @@ case "$ARCH" in
     x86_64)
         GENTOO_ARCH="amd64"
         CHOST="x86_64-pc-linux-gnu"
-
+        sudo mkdir -p "$CHARD_ROOT/usr/bin"
         echo "${BLUE}[+] Installing bootstrap make binary and cmake ${RESET}${MAGENTA}(x86_64)${RESET}"
         sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/make_x86_64 -o /usr/local/make
         sudo chmod +x /usr/local/make
@@ -149,7 +161,7 @@ case "$ARCH" in
     aarch64|arm64)
         GENTOO_ARCH="arm64"
         CHOST="aarch64-unknown-linux-gnu"
-
+        sudo mkdir -p "$CHARD_ROOT/usr/bin"
         echo "${BLUE}[+] Installing bootstrap make binary ${RESET}${MAGENTA}(ARM64)${RESET}"
         sudo curl -fsSL https://github.com/shadowed1/Chard/raw/main/make_ARM64 -o /usr/local/make
         sudo chmod +x /usr/local/make
