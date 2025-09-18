@@ -143,7 +143,6 @@ case "$cmd" in
             echo "${RED}[*] Cancelled.${RESET}"
         fi
         ;;
-        ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
         if [ ! -d "$PORTAGE_DIR" ]; then
