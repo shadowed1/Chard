@@ -438,7 +438,7 @@ fi
 
 case \"$BUILDSYS\" in
     gnu)
-        ./configure --prefix=/usr --disable-dependency-tracking
+        ./configure --prefix=/usr --disable-dependency-tracking --openssldir=/etc/ssl
         make -j\$(nproc)
         make install
         ;;
@@ -459,7 +459,6 @@ case \"$BUILDSYS\" in
         cmake --install build
         ;;
      meson)
-        #rm -rf build
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
