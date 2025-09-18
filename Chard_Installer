@@ -308,7 +308,7 @@ PACKAGES=(
     "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz|mpfr-4.2.2|gnu"
     "binutils|2.45|tar.xz|https://mirrors.kernel.org//gnu/binutils/binutils-2.45.tar.xz|binutils-2.45|gnu"
     "diffutils|3.12|tar.xz|https://mirrors.kernel.org//gnu/diffutils/diffutils-3.12.tar.xz|diffutils-3.12|gnu"
-    "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnu"
+    "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|gnu"
     "coreutils|9.7|tar.xz|https://mirrors.kernel.org//gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
     "perl|5.40.0|tar.gz|https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz|perl-5.40.0|perl-core"
@@ -499,6 +499,11 @@ case \"$BUILDSYS\" in
     gnussl)
         ./configure --prefix=/usr --with-ssl=/usr
         make -j$(nproc)
+        make install
+        ;;
+    gnusslcore)
+        ./Configure --prefix=/usr
+        make -j\$(nproc)
         make install
         ;;
     *)
