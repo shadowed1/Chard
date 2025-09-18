@@ -369,6 +369,7 @@ PACKAGES=(
     "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
+    "extra-cmake-modules|5.107.0|tar.xz|https://download.kde.org/stable/frameworks/5.107/extra-cmake-modules-5.107.0.tar.xz|extra-cmake-modules-5.107.0|cmakeG"
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
