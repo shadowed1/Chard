@@ -342,7 +342,7 @@ PACKAGES=(
     "libarchive|3.7.3|tar.xz|https://www.libarchive.org/downloads/libarchive-3.7.3.tar.xz|libarchive-3.7.3|gnu"
     "gpgme|2.0.0|tar.bz2|https://gnupg.org/ftp/gcrypt/gpgme/gpgme-2.0.0.tar.bz2|gpgme-2.0.0|gnu"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
-    "curl|8.11.0|tar.xz|https://curl.se/download/curl-8.11.0.tar.xz|curl-8.11.0|gnu"
+    "curl|8.11.0|tar.xz|https://curl.se/download/curl-8.11.0.tar.xz|curl-8.11.0|gnussl"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
@@ -441,8 +441,14 @@ fi
 
 case \"$BUILDSYS\" in
     gnu)
-        ./configure --prefix=/usr --disable-dependency-tracking --openssldir=/etc/ssl
+        ./configure --prefix=/usr --disable-dependency-tracking
         make -j\$(nproc)
+        make install
+        ;;
+    gnussl)
+        echo "[*] Building $NAME with OpenSSL-style flags..."
+        ./config --prefix=/usr --openssldir=/etc/ssl
+        make -j$(nproc)
         make install
         ;;
     perl)
