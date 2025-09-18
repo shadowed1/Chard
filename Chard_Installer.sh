@@ -350,12 +350,12 @@ PACKAGES=(
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
     "libpsl|0.21.5|tar.gz|https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz|libpsl-0.21.5|gnussl"
     "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
-    "expat|2.5.0|tar.xz|https://github.com/libexpat/libexpat/releases/download/R_2_7_2/expat-2.7.2.tar.gz|expat-2.5.0|gnu"
+    "expat|2.5.0|tar.gz|https://github.com/libexpat/libexpat/releases/download/R_2_7_2/expat-2.7.2.tar.gz|expat-2.5.0|gnu"
     "duktape|2.9.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.9.0|duktape"
-    "p11-kit|0.25.8|tar.gz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
+    "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
     "dconf|0.49.0|tar.gz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
-    "malcontent|0.13.1|tar.xz|https://gitlab.freedesktop.org/pwithnall/malcontent/-/archive/0.13.1/malcontent-0.13.1.tar.gz|malcontent-0.13.1|meson"
+    "malcontent|0.13.1|tar.gz|https://gitlab.freedesktop.org/pwithnall/malcontent/-/archive/0.13.1/malcontent-0.13.1.tar.gz|malcontent-0.13.1|meson"
     "polkit|124|tar.gz|https://gitlab.freedesktop.org/polkit/polkit/-/archive/125/polkit-124.tar.gz|polkit-124|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
@@ -527,14 +527,11 @@ case \"$BUILDSYS\" in
         exit 1
         ;;
 esac
-echo "${RESET}${BOLD}${YELLOW}#####################################################################${RESET}"
-echo "${RESET}${BOLD}${GREEN}#####################################################################${RESET}"
-echo "${RESET}${BOLD}${CYAN}#####################################################################${RESET}"
-echo "${RESET}{BOLD}            [+] Finished building $NAME-$VERSION${RESET}"
-echo "${RESET}${BOLD}${BLUE}#####################################################################${RESET}"
-echo "${RESET}${BOLD}${MAGENTA}#####################################################################${RESET}"
-echo "${RESET}${BOLD}${RED}#####################################################################${RESET}"
+"
 
+echo
+
+echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
     
     if [ "$NAME" = "make" ] && [ -L "/usr/local/chard/usr/bin/make" ]; then
         sudo rm -f "/usr/local/chard/usr/bin/make"
@@ -662,5 +659,3 @@ echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
-
-
