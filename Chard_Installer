@@ -169,6 +169,9 @@ esac
 
 echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
 
+
+MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
+sudo mkdir -p "$(dirname "$MAKE_CONF")"
 sudo tee "$MAKE_CONF" > /dev/null <<EOF
 CHOST="${CHOST}"
 ARCH="${GENTOO_ARCH}"
