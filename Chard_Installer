@@ -80,11 +80,10 @@ fi
     read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" continue
     continue=${continue:-Y}
 
-    if [[ "$continue" =~ ^[Yy]$ ]]; then
-        echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
-        echo
-echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
-sudo mkdir -p "$CHARD_ROOT"/{ \
+    echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
+    echo
+    echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
+    sudo mkdir -p "$CHARD_ROOT"/{ \
     etc/portage, \
     etc/sandbox.d, \
     etc/ssl, \
@@ -191,6 +190,7 @@ EOF
 
 echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET}"
 
+sudo mkdir -p "/usr/local/chard/var/tmp"
 PORTAGE_DIR="/usr/local/chard/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="/usr/local/chard/var/tmp/portage-latest.tar.xz"
@@ -659,8 +659,5 @@ echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
-    else
-        exit 0
-    fi
 
 
