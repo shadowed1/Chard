@@ -46,7 +46,8 @@ chard_run() {
     export PYTHON_TARGETS="python3_13"
     export PYTHON_SINGLE_TARGET="python3_13"
 
-
+    export CFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include -I$CHARD_ROOT/usr/include/duktape $CFLAGS"
+    export CXXFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include -I$CHARD_ROOT/usr/include/duktape $CXXFLAGS"
     export ROOT="$CHARD_ROOT"
     export PORTAGE_CONFIGROOT="$CHARD_ROOT"
     export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
