@@ -497,7 +497,7 @@ case \"$BUILDSYS\" in
         make install
         ;;
     gnussl)
-        ./configure --prefix=/usr --openssldir=/etc/ssl
+        ./configure --prefix=/usr --with-ssl=/usr
         make -j$(nproc)
         make install
         ;;
