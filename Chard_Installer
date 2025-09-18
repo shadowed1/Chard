@@ -355,6 +355,7 @@ PACKAGES=(
     "dconf|0.49.0|tar.gz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
     "polkit|124|tar.gz|https://gitlab.freedesktop.org/polkit/polkit/-/archive/125/polkit-124.tar.gz|polkit-124|meson"
+    "malcontent|0.13.1|tar.xz|https://gitlab.freedesktop.org/pwithnall/malcontent/-/archive/0.13.1/malcontent-0.13.1.tar.gz|malcontent-0.13.1|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
