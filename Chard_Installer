@@ -429,7 +429,7 @@ for pkg in "${PACKAGES[@]}"; do
     mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
     mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
     mountpoint -q "/usr/local/chard/dev/shm" || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
-    mountpoint -q "/usr/local/chard/etc/"    || sudo mount --bind /etc/resolv.conf "/usr/local/chard/etc/resolv.conf"
+    mountpoint -q "/usr/local/chard/etc/"    || sudo mount --bind /etc/ "/usr/local/chard/etc/"
 
 
 
