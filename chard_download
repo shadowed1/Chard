@@ -20,7 +20,3 @@ echo "${RED}${BOLD}sudo mv /home/chronos/Chard_Installer /usr/local/Chard_Instal
 echo "sudo bash /usr/local/Chard_Installer${RESET}"
 echo ""
 echo ""
-echo "${BLUE}Instead of using VT-2 to manually type commands, I recommend installing sudoCrosh - (copy paste on crosh shell):"
-echo "bash <(curl -s "https://raw.githubusercontent.com/shadowed1/sudoCrosh/main/sudocrosh_downloader.sh?$(date +%s)")${RESET}"
-echo ""
-echo ""
