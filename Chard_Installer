@@ -28,13 +28,12 @@ echo "${BLUE}Does not require altering current state of /usr/local/ during Insta
 echo
 echo "${MAGENTA}Chard is current in early development and Emerge is not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a USB backup in case of serious mistakes.${RESET}"
 echo
-read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" continue
-continue=${continue:-Y}
+    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" continue
+    continue=${continue:-Y}
 
-echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
-echo
-echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
-
+    echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
+    echo
+    echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 sudo mkdir -p "$CHARD_ROOT"/{ \
     etc/portage \
     etc/sandbox.d \
@@ -298,6 +297,7 @@ PACKAGES=(
     "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
     "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
+    "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18.0/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
     "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|meson"
     "libXcursor|1.2.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXcursor-1.2.2.tar.xz|libXcursor-1.2.2|gnu"
@@ -323,7 +323,6 @@ PACKAGES=(
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
     "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|cmakeG"
     "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
-    "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18.0/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
     "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
