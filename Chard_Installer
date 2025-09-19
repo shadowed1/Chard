@@ -293,6 +293,7 @@ PACKAGES=(
     "pixman|0.46.4|tar.xz|https://cairographics.org/releases/pixman-0.46.4.tar.xz|pixman-0.46.4|meson"
     "icu|76.1|tar.gz|https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-src.tgz|icu-76.1|icu"
     "chafa|1.14.5|tar.xz|https://github.com/hpjansson/chafa/releases/download/1.14.5/chafa-1.14.5.tar.xz|chafa-1.14.5|gnu"
+    "lzo2|0.22|zip|https://github.com/damageboy/lzo2/archive/refs/heads/master.zip|lzo2-master|gnu"
     "cairo|1.18.4|tar.xz|https://cairographics.org/releases/cairo-1.18.4.tar.xz|cairo-1.18.4|meson"
     "harfbuzz|11.5.0|tar.xz|https://github.com/harfbuzz/harfbuzz/releases/download/11.5.0/harfbuzz-11.5.0.tar.xz|harfbuzz-11.5.0|meson"
     "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
