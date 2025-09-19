@@ -542,9 +542,54 @@ sudo umount -l "/usr/local/chard/sys"           2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"          2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/"          2>/dev/null || true
 
-
-
 sudo rm -rf "$BUILD_DIR"
+
+CHARD_ROOT="${CHARD_ROOT:-/usr/local/chard}"
+PYEXEC="/usr/lib/python-exec"
+PYVER="python3.13"
+PYEXEC_DIR="$PYEXEC/$PYVER"
+CHARD_BIN="$CHARD_ROOT/usr/bin"
+
+if [ -L "$PYEXEC" ] && [ ! -e "$PYEXEC" ]; then
+    echo "[*] Removing broken $PYEXEC"
+    sudo rm "$PYEXEC"
+fi
+
+sudo mkdir -p "$PYEXEC"
+
+if [ -d "$PYEXEC_DIR" ]; then
+    sudo rm -rf "$PYEXEC_DIR"
+fi
+
+sudo mkdir -p "$PYEXEC_DIR"
+
+declare -A SYMLINKS=(
+    [python3]="python3.13"
+    [python]="python3"
+    [pydoc]="pydoc3.13"
+    [python-config]="python3-config"
+)
+
+for link in "${!SYMLINKS[@]}"; do
+    target="${SYMLINKS[$link]}"
+    if [ -f "$CHARD_BIN/$target" ]; then
+        sudo ln -s "$CHARD_BIN/$target" "$PYEXEC_DIR/$link"
+        echo "[+] Linked $PYEXEC_DIR/$link -> $CHARD_BIN/$target"
+    else
+        echo "[!] Missing $CHARD_BIN/$target"
+    fi
+done
+
+WRAPPERS=(emerge ebuild)
+for script in "${WRAPPERS[@]}"; do
+    if [ -f "$CHARD_BIN/$script" ]; then
+        sudo cp "$CHARD_BIN/$script" "$PYEXEC_DIR/$script"
+        sudo chmod +x "$PYEXEC_DIR/$script"
+        echo "[+] Copied wrapper $script"
+    else
+        echo "[!] Missing wrapper $script"
+    fi
+done
 
 sudo chown -R 1000:1000 "/usr/local/chard"
 
