@@ -263,6 +263,7 @@ sudo rm -rf "$KERNEL_BUILD"
 
 PACKAGES=(
     "make|4.4|tar.gz|https://mirrors.kernel.org//gnu/make/make-4.4.tar.gz|make-4.4|gnu"
+    "glibc|2.39|tar.xz|https://mirrors.kernel.org//gnu/libc/glibc-2.39.tar.xz|glibc-2.39|gnu2b"
     "gmp|6.3.0|tar.xz|https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz|gmp-6.3.0|gnu"
     "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz|mpfr-4.2.2|gnu"
     "binutils|2.45|tar.xz|https://mirrors.kernel.org//gnu/binutils/binutils-2.45.tar.xz|binutils-2.45|gnu"
@@ -438,6 +439,13 @@ case \"$BUILDSYS\" in
         make -j\$(nproc)
         make install
         ;;
+    gnu2b)
+    ./configure --prefix=/usr/local/chard/usr \
+                 --disable-werror \
+                 --enable-kernel=5.4
+    make -j$(nproc)
+    make install
+    ;;
     perl)
         perl Makefile.PL INSTALL_BASE=/usr/local
         make
