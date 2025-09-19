@@ -28,61 +28,13 @@ echo "${BLUE}Does not require altering current state of /usr/local/ during Insta
 echo
 echo "${MAGENTA}Chard is current in early development and Emerge is not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a USB backup in case of serious mistakes.${RESET}"
 echo
-detect_cpu_type() {
-    CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}' || echo "unknown")
-    IS_INTEL=0
-    IS_AMD=0
-    IS_ARM=0
-    PERF_PATH=""
-    PERF_PATHS=()
-    TURBO_PATH=""
+read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" continue
+continue=${continue:-Y}
 
-    case "$CPU_VENDOR" in
-        GenuineIntel)
-            IS_INTEL=1
-            if [ -f "/sys/devices/system/cpu/intel_pstate/max_perf_pct" ]; then
-                PERF_PATH="/sys/devices/system/cpu/intel_pstate/max_perf_pct"
-                TURBO_PATH="/sys/devices/system/cpu/intel_pstate/no_turbo"
-            fi
-            ;;
-        AuthenticAMD)
-            IS_AMD=1
-            if [ -f "/sys/devices/system/cpu/amd_pstate/max_perf_pct" ]; then
-                PERF_PATH="/sys/devices/system/cpu/amd_pstate/max_perf_pct"
-            else
-                mapfile -t PERF_PATHS < <(find /sys/devices/system/cpu/cpufreq/ -type f -name 'scaling_max_freq' 2>/dev/null)
-            fi
-            ;;
-        *)
-            IS_ARM=1
-            mapfile -t PERF_PATHS < <(find /sys/devices/system/cpu/cpufreq/ -type f -name 'scaling_max_freq' 2>/dev/null)
-            ;;
-    esac
-}
+echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
+echo
+echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 
-detect_cpu_type
-
-if (( IS_INTEL == 1 )) && [[ -f "$TURBO_PATH" ]]; then
-    echo
-    read -rp "${CYAN}${BOLD}Intel CPU Detected! Do you want to keep Intel Turbo Boost on before continuing? (Y/n): ${RESET}" disable_turbo
-    disable_turbo=${disable_turbo:-Y}
-
-    if [[ "$disable_turbo" =~ ^[Yy]$ ]]; then
-        echo 0 | sudo tee "$TURBO_PATH" >/dev/null
-        echo "${GREEN}[+] Intel Turbo Boost enabled. To disable it run:${RESET}"
-        echo "${BLUE}${BOLD}echo 1 | sudo tee $TURBO_PATH${RESET}"
-    else
-        echo "${GREEN}Intel Turbo Boost is disabled! ${RESET}"
-    fi
-fi
-
-    echo
-    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" continue
-    continue=${continue:-Y}
-
-    echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} Install will eventually chroot into chard. This means / will be /usr/local/chard/ in reality.${RESET}"
-    echo
-    echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 sudo mkdir -p "$CHARD_ROOT"/{ \
     etc/portage \
     etc/sandbox.d \
