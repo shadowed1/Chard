@@ -441,9 +441,9 @@ export CC=\$GCC_DIR/\$CHOST-gcc
 export CXX=\$GCC_DIR/\$CHOST-g++
 export AR=\$GCC_DIR/gcc-ar
 export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
+export CFLAGS='-O2 -pipe -I/usr/include'
 export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64:/usr/local/chard/usr/lib/gcc/$CHOST/14"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
@@ -588,11 +588,14 @@ case \"$BUILDSYS\" in
         make install
         ;;
     duktape)
-        cd /var/tmp/build/$DIR
         make -f Makefile.sharedlibrary -j$(nproc)
-        mkdir -p /usr/include/duktape /usr/lib
+        mkdir -p /usr/include/duktape /usr/lib /usr/lib/pkgconfig
         cp src/duktape.h /usr/include/duktape/
         cp libduktape.so* /usr/lib/
+        sed -e "s|@PREFIX@|/usr|" \
+            -e "s|@LIBDIR@|/usr/lib|" \
+            -e "s|@VERSION@|2.7.0|" \
+            duktape.pc.in > /usr/lib/pkgconfig/duktape.pc
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
