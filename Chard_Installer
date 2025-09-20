@@ -79,8 +79,6 @@ mkdir -p "$(dirname "$LOG_FILE")"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-#sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf 2>/dev/null
-#sudo cp -r /etc/ssl /usr/local/chard/etc/ 2>/dev/null
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
@@ -218,9 +216,7 @@ export CXX="$GCC_DIR/$CHOST-g++"
 export AR="$GCC_DIR/gcc-ar"
 export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
 export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin"
-#export CFLAGS="-I/usr/local/chard/usr/include -O2 -pipe"
 export CXXFLAGS="$CFLAGS"
-#export LDFLAGS="-L/usr/local/chard/usr/lib"
 export AWK=/usr/bin/mawk
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
 export MAKEFLAGS="-j$(nproc)"
