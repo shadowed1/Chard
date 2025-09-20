@@ -241,7 +241,7 @@ sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
 echo "${CYAN}[+] Installing Linux headers into Chard Root..."
-sudo chroot "/usr/local/chard" /bin/bash -c "
+sudo -E chroot "/usr/local/chard" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
 HOST_ARCH=\$(uname -m)
@@ -399,7 +399,7 @@ for pkg in "${PACKAGES[@]}"; do
 
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
-    sudo chroot "/usr/local/chard" /bin/bash -c "
+    sudo -E chroot "/usr/local/chard" /bin/bash -c "
     
 
 cd /var/tmp/build/$DIR
