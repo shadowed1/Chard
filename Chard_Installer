@@ -526,38 +526,16 @@ case \"$BUILDSYS\" in
         ninja -C build
         ninja -C build install
         ;;
-    asyncns86)
-        ARCH=$(uname -m)
-        if [[ "$ARCH" == "x86_64" ]]; then
-            sudo mkdir -p /usr/lib/x86_64-linux-gnu
-    
-            sudo cp libasyncns.so.0.3.1 /usr/lib/x86_64-linux-gnu/
-            sudo cp libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
-        else
-            echo "[*] Not x86_64, skipping libasyncns x86_64 copy"
-        fi
-        ;;
-    asyncnsARM64)
-        ARCH=$(uname -m)
-        if [[ "$ARCH" == "aarch64" ]]; then
-            sudo mkdir -p /usr/lib/aarch64-linux-gnu
-    
-            sudo cp libasyncns.so.0.3.1 /usr/lib/aarch64-linux-gnu/
-            sudo cp libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
-        else
-            echo "[*] Not aarch64, skipping libasyncns x86_64 copy"
-        fi
-        ;;
     python)
         cd /var/tmp/build/$DIR
         "/usr/bin/python3.13" setup.py build
         "/usr/bin/python3.13" setup.py install --prefix=/usr
         ;;
-     pythonbuild)
+    pythonbuild)
         cd /var/tmp/build/$DIR
         /usr/bin/python3.13 -m pip install . --prefix=/usr
         ;;
-   cmakepython)
+    cmakepython)
         cd /var/tmp/build/$DIR
         cmake -S . -B build \
               -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr \
@@ -595,6 +573,28 @@ case \"$BUILDSYS\" in
         mkdir -p /usr/include/duktape /usr/lib
         cp src/duktape.h /usr/include/duktape/
         cp libduktape.so* /usr/lib/
+        ;;
+    asyncns86)
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "x86_64" ]]; then
+            sudo mkdir -p /usr/lib/x86_64-linux-gnu
+    
+            sudo cp libasyncns.so.0.3.1 /usr/lib/x86_64-linux-gnu/
+            sudo cp libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
+        else
+            echo "[*] Not x86_64, skipping libasyncns x86_64 copy"
+        fi
+        ;;
+    asyncnsARM64)
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "aarch64" ]]; then
+            sudo mkdir -p /usr/lib/aarch64-linux-gnu
+    
+            sudo cp libasyncns.so.0.3.1 /usr/lib/aarch64-linux-gnu/
+            sudo cp libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
+        else
+            echo "[*] Not aarch64, skipping libasyncns x86_64 copy"
+        fi
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
