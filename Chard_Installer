@@ -515,7 +515,7 @@ case \"$BUILDSYS\" in
         cmake --build build -j$(nproc)
         cmake --install build
         ;;
-     meson)
+    meson)
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
