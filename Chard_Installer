@@ -476,15 +476,15 @@ case \"$BUILDSYS\" in
         ;;
     gnuOOS)
         cd /var/tmp/build
-        BUILD_SUBDIR=build-$DIR
-        mkdir -p "$BUILD_SUBDIR"
-        cd "$BUILD_SUBDIR"
-    
-        ../$DIR/configure --prefix=/usr \
-                          --disable-werror \
-                          --enable-kernel=5.4
-    
-        make -j$(nproc)
+        BUILD_SUBDIR=build-\$DIR
+        mkdir -p "\$BUILD_SUBDIR"
+        cd "\$BUILD_SUBDIR"
+        
+        ../\$DIR/configure --prefix=/usr \
+                           --disable-werror \
+                           --enable-kernel=5.4
+        
+        make -j\$(nproc)
         make install
         ;;
     perl)
