@@ -305,7 +305,7 @@ PACKAGES=(
     "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
     "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
-    "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18.0/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
+    "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
     "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|meson"
     "libXcursor|1.2.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXcursor-1.2.2.tar.xz|libXcursor-1.2.2|gnu"
@@ -440,9 +440,14 @@ case \"$BUILDSYS\" in
         make install
         ;;
     gnuOOS)
-        ./configure --prefix=/usr \
-                --disable-werror \
-                --enable-kernel=5.4
+        BUILD_SUBDIR=build-$NAME
+        mkdir -p "$BUILD_SUBDIR"
+        cd "$BUILD_SUBDIR"
+    
+        ../$DIR/configure --prefix=/usr \
+                          --disable-werror \
+                          --enable-kernel=5.4
+    
         make -j$(nproc)
         make install
         ;;
