@@ -34,9 +34,9 @@ echo
 
     echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be /usr/local/chard/ in reality.${RESET}"
     echo
-    echo "${YELLOW}[+] Creating ${RESET}${RED}Chard Root${RESET}"
+    echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 
-    echo "${RESET}${GREEN}[*] Unmounting active bind mounts in case of reinstall...${RESET}"
+    echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts in case of reinstall...${RESET}"
             sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
@@ -44,7 +44,7 @@ echo
             sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     
-            echo "${RED}[*] Removing $CHARD_ROOT in case of reinstall...${RESET}"
+            echo "${BLUE}[*] Removing $CHARD_ROOT in case of reinstall...${RESET}"
             sudo rm -rf "$CHARD_ROOT"
     
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
@@ -295,7 +295,7 @@ PACKAGES=(
     "gtest|1.16.0|tar.gz|https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz|googletest-1.16.0|cmake"
     "re2c|4.3|tar.xz|https://github.com/skvadrik/re2c/releases/download/4.3/re2c-4.3.tar.xz|re2c-4.3|gnu"
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
-    "gtk-doc|1.42.0|tar.xz|https://download.gnome.org/sources/gtk-doc/1.34/gtk-doc-1.34.0.tar.xz|gtk-doc-1.42.0|meson"
+    "gtk-doc|1.34.0|tar.xz|https://download.gnome.org/sources/gtk-doc/1.34/gtk-doc-1.34.0.tar.xz|gtk-doc-1.34.0|meson"
     "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
     "sqlite|3500400|tar.gz|https://www.sqlite.org/2025/sqlite-autoconf-3500400.tar.gz|sqlite-autoconf-3500400|gnu"
@@ -335,6 +335,8 @@ PACKAGES=(
     "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
     "libtool|2.5.4|tar.xz|https://mirrors.ibiblio.org/gnu/libtool/libtool-2.5.4.tar.xz|libtool-2.5.4|gnu"
     "fftw|3.3.10|tar.gz|http://www.fftw.org/fftw-3.3.10.tar.gz|fftw-3.3.10|gnu"
+    "libasyncns|0.8|tar.gz|https://github.com/shadowed1/Chard/raw/refs/heads/main/libasyncns_x86_64-0.8.tar.gz|libasyncns-0.8|asyncns86"
+    "libasyncns|0.8|tar.gz|https://github.com/shadowed1/Chard/raw/refs/heads/main/libasyncns_ARM64-0.8.tar.gz|libasyncns-0.8|asyncnsARM64"
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
@@ -524,6 +526,13 @@ case \"$BUILDSYS\" in
         ninja -C build
         ninja -C build install
         ;;
+    gtk-doc)
+        cd /var/tmp/build/$DIR
+        chmod +x autogen.sh
+        ./autogen.sh --prefix=/usr
+        make -j$(nproc)
+        make install
+    ;;
     python)
         cd /var/tmp/build/$DIR
         "/usr/bin/python3.13" setup.py build
@@ -571,6 +580,28 @@ case \"$BUILDSYS\" in
         mkdir -p /usr/include/duktape /usr/lib
         cp src/duktape.h /usr/include/duktape/
         cp libduktape.so* /usr/lib/
+        ;;
+    asyncns86)
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "x86_64" ]]; then
+            sudo mkdir -p /usr/lib/x86_64-linux-gnu
+    
+            sudo cp libasyncns.so.0.3.1 /usr/lib/x86_64-linux-gnu/
+            sudo cp libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
+        else
+            echo "[*] Not x86_64, skipping libasyncns x86_64 copy"
+        fi
+        ;;
+    asyncnsARM64)
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "aarch64" ]]; then
+            sudo mkdir -p /usr/lib/aarch64-linux-gnu
+    
+            sudo cp libasyncns.so.0.3.1 /usr/lib/aarch64-linux-gnu/
+            sudo cp libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
+        else
+            echo "[*] Not aarch64, skipping libasyncns x86_64 copy"
+        fi
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
