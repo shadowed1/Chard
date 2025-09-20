@@ -35,6 +35,20 @@ echo
     echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be /usr/local/chard/ in reality.${RESET}"
     echo
     echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
+
+    echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
+            sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
+    
+            echo "${BLUE}[*] Removing $CHARD_ROOT in case of reinstall...${RESET}"
+            sudo rm -rf "$CHARD_ROOT"
+    
+            sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
+
 sudo mkdir -p "$CHARD_ROOT"/{ \
     etc/portage \
     etc/sandbox.d \
@@ -72,8 +86,6 @@ echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "/usr/local/chard/.chard.logic"
-
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
