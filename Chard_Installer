@@ -66,8 +66,8 @@ mkdir -p "$(dirname "$LOG_FILE")"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf 2>/dev/null
-sudo cp -r /etc/ssl /usr/local/chard/etc/ 2>/dev/null
+#sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf 2>/dev/null
+#sudo cp -r /etc/ssl /usr/local/chard/etc/ 2>/dev/null
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
@@ -399,23 +399,19 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-for pkg in "${PACKAGES[@]}"; do
-    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
-    
+
     echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 
-    sudo mount --make-private /usr/local/chard
+sudo mount --make-private /usr/local/chard
+mountpoint -q "/usr/local/chard/proc"    || sudo mount -t proc proc "/usr/local/chard/proc"
+mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
+mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
+mountpoint -q "/usr/local/chard/dev/shm" || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
+mountpoint -q "/usr/local/chard/etc/resolv.conf" || sudo mount --bind /etc/resolv.conf /usr/local/chard/etc/resolv.conf
+mountpoint -q "/usr/local/chard/etc/ssl" ||     sudo mount --bind /etc/ssl /usr/local/chard/etc/ssl
 
-    mountpoint -q "/usr/local/chard/proc"    || sudo mount -t proc proc "/usr/local/chard/proc"
-    mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
-    mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
-    mountpoint -q "/usr/local/chard/dev/shm" || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
-    mountpoint -q "/usr/local/chard/etc/resolv.conf" || sudo mount --bind /etc/resolv.conf /usr/local/chard/etc/resolv.conf
-    mountpoint -q "/usr/local/chard/etc/ssl" ||     sudo mount --bind /etc/ssl /usr/local/chard/etc/ssl
-
-
-
-
+for pkg in "${PACKAGES[@]}"; do
+    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"    
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "/usr/local/chard" /bin/bash -c "
     
