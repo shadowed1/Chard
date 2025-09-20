@@ -338,7 +338,6 @@ PACKAGES=(
     "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
     "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
-    "qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|cmakeG"
     "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|cmakeG"
     "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
     "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
@@ -363,7 +362,6 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-    sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 
 }
 
@@ -443,9 +441,9 @@ export CC=\$GCC_DIR/\$CHOST-gcc
 export CXX=\$GCC_DIR/\$CHOST-g++
 export AR=\$GCC_DIR/gcc-ar
 export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
+export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
 export LDFLAGS='-L/usr/lib'
-export CFLAGS='-O2 -pipe -I/usr/include'
 export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64:/usr/local/chard/usr/lib/gcc/$CHOST/14"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
@@ -512,7 +510,7 @@ case \"$BUILDSYS\" in
         ninja -C build
         ninja -C build install
         ;;
-    asyncns86)
+     asyncns86)
         ARCH=$(uname -m)
         if [[ "$ARCH" == "x86_64" ]]; then
             sudo mkdir -p /usr/lib/x86_64-linux-gnu
@@ -571,12 +569,12 @@ case \"$BUILDSYS\" in
         make install
         ;;
     duktape)
+        cd /var/tmp/build/$DIR
         make -f Makefile.sharedlibrary -j$(nproc)
-        mkdir -p /usr/include/duktape /usr/lib /usr/lib/pkgconfig
+        mkdir -p /usr/include/duktape /usr/lib
         cp src/duktape.h /usr/include/duktape/
         cp libduktape.so* /usr/lib/
         ;;
-
     *)
         echo \"Unknown build system: $BUILDSYS\"
         exit 1
