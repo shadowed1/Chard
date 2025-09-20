@@ -130,10 +130,12 @@ case "$cmd" in
         read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] " ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             echo "${RED}[*] Unmounting active bind mounts...${RESET}"
-            sudo umount -l "$CHARD_ROOT/etc/" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     
             echo "${RED}[*] Removing $CHARD_ROOT${RESET}"
             sudo rm -rf "$CHARD_ROOT"
