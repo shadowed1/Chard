@@ -532,7 +532,7 @@ case \"$BUILDSYS\" in
         ./autogen.sh --prefix=/usr
         make -j$(nproc)
         make install
-    ;;
+        ;;
     python)
         cd /var/tmp/build/$DIR
         "/usr/bin/python3.13" setup.py build
