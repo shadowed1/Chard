@@ -211,7 +211,7 @@ export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin"
 export CXXFLAGS="$CFLAGS"
 #export LDFLAGS="-L/usr/local/chard/usr/lib"
 export AWK=/usr/bin/mawk
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64:$GCC_DIR:/usr/local/chard/usr/lib64:/usr/local/chard/usr/lib"
 export MAKEFLAGS="-j$(nproc)"
 export INSTALL_ROOT="/usr/local/chard"
 export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
@@ -219,7 +219,6 @@ export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
 export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
-
 
 
 KERNEL_VER="6.16"
@@ -404,27 +403,34 @@ for pkg in "${PACKAGES[@]}"; do
 
 cd /var/tmp/build/$DIR
 
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
+    aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
+    *) echo "Unknown architecture: $ARCH"; exit 1;;
 esac
 
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
+GCC_BIN="/usr/$CHOST/gcc-bin/14"
+GCC_LIB="/usr/$CHOST/lib64/gcc/14"
+GCC_LOCAL_LIB="/usr/local/chard/usr/lib/gcc/$CHOST/14"
+
+export CC="$GCC_BIN/$CHOST-gcc"
+export CXX="$GCC_BIN/$CHOST-g++"
+export AR="$GCC_BIN/gcc-ar"
+export RANLIB="$GCC_BIN/$CHOST-gcc-ranlib"
+
+export CFLAGS="-O2 -pipe -I/usr/include"
+export CXXFLAGS="-O2 -pipe -I/usr/include"
+export LDFLAGS="-L/usr/lib -L/usr/lib64 -L$GCC_LIB -L$GCC_LOCAL_LIB"
+
+export PATH="$GCC_BIN:/usr/bin:/bin:/usr/local/bin"
+
+export LD_LIBRARY_PATH="$GCC_LIB:$GCC_LOCAL_LIB:/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH:-}"
+
 export MAGIC="/usr/share/misc/magic.mgc"
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export CFLAGS='-O2 -pipe -I/usr/include'
-export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS='-L/usr/lib'
-export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64"
-export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+export PERL5LIB="/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB"
 export PKG_CONFIG="/usr/bin/pkg-config"
-export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
+export PKG_CONFIG_PATH="/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH"
 export PYTHON="/bin/python3"
 
 if [[ "$NAME" == "gtest" ]]; then
