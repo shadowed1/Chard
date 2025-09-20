@@ -439,10 +439,13 @@ case \"$BUILDSYS\" in
         make -j\$(nproc)
         make install
         ;;
-    gnu2b)
-    ./configure --prefix=/usr/local/chard/usr \
-                 --disable-werror \
-                 --enable-kernel=5.4
+    BUILD_SUBDIR=build-$NAME
+    mkdir -p $BUILD_SUBDIR
+    cd $BUILD_SUBDIR
+
+    ../$DIR/configure --prefix=/usr/ \
+                      --disable-werror \
+                      --enable-kernel=5.4
     make -j$(nproc)
     make install
     ;;
