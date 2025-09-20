@@ -658,13 +658,6 @@ new_globals['__file__'] = target_path
 exec(data, new_globals)
 EOF
 
-#!/bin/bash
-set -e
-
-CHARD_ROOT="${CHARD_ROOT:-/usr/local/chard}"
-MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
-
 chmod +x "$CHARD_ROOT/bin/emerge"
 
 if [ -f "$MAKE_CONF" ]; then
