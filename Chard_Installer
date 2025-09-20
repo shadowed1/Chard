@@ -735,7 +735,7 @@ EOF
 
 cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
-
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
