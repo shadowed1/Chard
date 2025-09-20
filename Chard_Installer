@@ -440,7 +440,7 @@ case \"$BUILDSYS\" in
         make install
         ;;
     gnuOOS)
-        .configure --prefix=/usr \
+        ./configure --prefix=/usr \
                 --disable-werror \
                 --enable-kernel=5.4
         make -j$(nproc)
