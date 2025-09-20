@@ -27,7 +27,7 @@ echo "${CYAN}Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolcha
 echo
 echo "${BLUE}Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
 echo
-echo "${MAGENTA}Chard is current in early development and Emerge is not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a USB backup in case of serious mistakes.${RESET}"
+echo "${MAGENTA}Chard is current in early development and Emerge is not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a ${BOLD}USB backup${RESET}${MAGENTA} in case of serious mistakes.${RESET}"
 echo
     read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" continue
     continue=${continue:-Y}
