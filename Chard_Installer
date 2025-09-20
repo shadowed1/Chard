@@ -63,7 +63,7 @@ sudo mkdir -p "$CHARD_ROOT"/{ \
 }
 
 mkdir -p "$(dirname "$LOG_FILE")"
-exec > >(tee -a "$LOG_FILE") 2>&1
+exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf 2>/dev/null
