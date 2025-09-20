@@ -424,7 +424,7 @@ export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
 export PKG_CONFIG="/usr/bin/pkg-config"
-export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig
+export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
 export PYTHON="/bin/python3"
 
 if [[ "$NAME" == "gtest" ]]; then
