@@ -14,7 +14,7 @@ RETRY_DELAY=30
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
-LOG_FILE=/usr/local/chard/build.log
+LOG_FILE=/usr/local/chard/chardbuild.log
 echo
 echo
 echo "${RED}Chard Installed can take 15-120 minutes depending on your CPU and storage speed. Requires ~3 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
@@ -733,6 +733,9 @@ export USER="chronos"
 export LOGNAME="chronos"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
 EOF
+
+cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
+echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. 
 
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
