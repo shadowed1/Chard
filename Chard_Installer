@@ -512,7 +512,8 @@ case \"$BUILDSYS\" in
         ninja -C build install
         ;;
     PKGBUILD)
-        cd /var/tmp/build/$DIR
+        cd /var/tmp/build/$DIR || { echo "[!] Build dir $DIR not found"; exit 1; }
+    
         if [[ ! -f PKGBUILD ]]; then
             echo "[!] PKGBUILD not found in $DIR"
             exit 1
@@ -520,14 +521,13 @@ case \"$BUILDSYS\" in
     
         source PKGBUILD
     
-        BUILD_SUBDIR=build-$NAME
-        mkdir -p "$BUILD_SUBDIR"
-        cd "$BUILD_SUBDIR"
+        if declare -f prepare >/dev/null; then
+            echo "[+] Running prepare()..."
+            prepare
+        fi
     
-        bash -c "
-        set -e
-        cd /var/tmp/build/$DIR
         if declare -f build >/dev/null; then
+            echo "[+] Running build()..."
             build
         else
             echo "[!] No build() function in PKGBUILD"
@@ -535,11 +535,13 @@ case \"$BUILDSYS\" in
         fi
     
         if declare -f package >/dev/null; then
+            echo "[+] Running package()..."
+            pkgdir="$CHARD_ROOT/var/tmp/pkg-$pkgname"
+            mkdir -p "$pkgdir"
             package
         else
             echo "[!] No package() function in PKGBUILD"
         fi
-        "
         ;;
     mesongvdb)
         cd /var/tmp/build/gvdb-main/gvdb-main
