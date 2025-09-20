@@ -476,10 +476,10 @@ case \"$BUILDSYS\" in
         ;;
     glibcgnuOOS)
         cd /var/tmp/build
-        mkdir -p build-glibc-2.39
-        cd build-glibc-2.39
+        mkdir -p build-glibc-2.42
+        cd build-glibc-2.42
     
-        ../glibc-2.39/configure --prefix=/usr \
+        ../glibc-2.42/configure --prefix=/usr \
                                 --disable-werror \
                                 --enable-kernel=5.4
         
