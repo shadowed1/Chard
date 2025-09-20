@@ -299,7 +299,7 @@ PACKAGES=(
     "pixman|0.46.4|tar.xz|https://cairographics.org/releases/pixman-0.46.4.tar.xz|pixman-0.46.4|meson"
     "icu|76.1|tar.gz|https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-src.tgz|icu-76.1|icu"
     "chafa|1.14.5|tar.xz|https://github.com/hpjansson/chafa/releases/download/1.14.5/chafa-1.14.5.tar.xz|chafa-1.14.5|gnu"
-    "lzo2|0.22|zip|https://github.com/damageboy/lzo2/archive/refs/heads/master.zip|lzo2-master|gnu"
+    "lzo|2.10|tar.gz|https://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz|lzo-2.10|gnu"
     "cairo|1.18.4|tar.xz|https://cairographics.org/releases/cairo-1.18.4.tar.xz|cairo-1.18.4|meson"
     "harfbuzz|11.5.0|tar.xz|https://github.com/harfbuzz/harfbuzz/releases/download/11.5.0/harfbuzz-11.5.0.tar.xz|harfbuzz-11.5.0|meson"
     "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
@@ -308,11 +308,21 @@ PACKAGES=(
     "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
     "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|meson"
+    "util-macros|1.20.2|tar.xz|https://www.x.org/releases/individual/util/util-macros-1.20.2.tar.xz|util-macros-1.20.2|gnu"
+    "xorgproto|2024.1|tar.xz|https://www.x.org/releases/individual/proto/xorgproto-2024.1.tar.xz|xorgproto-2024.1|gnu"
+    "libX11|1.8.12|tar.xz|https://www.x.org/releases/individual/lib/libX11-1.8.12.tar.xz|libX11-1.8.12|gnu"
+    "libXext|1.3.6|tar.xz|https://www.x.org/releases/individual/lib/libXext-1.3.6.tar.xz|libXext-1.3.6|gnu"
+    "libXrender|0.9.11|tar.xz|https://www.x.org/releases/individual/lib/libXrender-0.9.12.tar.xz|libXrender-0.9.12|gnu"
+    "libXfixes|6.0.2|tar.xz|https://www.x.org/releases/individual/lib/libXfixes-6.0.2.tar.xz|libXfixes-6.0.2|gnu"
     "libXcursor|1.2.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXcursor-1.2.2.tar.xz|libXcursor-1.2.2|gnu"
     "libXrandr|1.5.4|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXrandr-1.5.4.tar.xz|libXrandr-1.5.4|gnu"
     "libXinerama|1.1.5|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXinerama-1.1.5.tar.xz|libXinerama-1.1.5|gnu"
     "libXi|1.8.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXi-1.8.2.tar.xz|libXi-1.8.2|gnu"
+    "libxcb|1.17.0|tar.xz|https://xcb.freedesktop.org/dist/libxcb-1.17.0.tar.xz|libxcb-1.17.0|gnu"
     "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
+    "libtool|2.5.4|tar.xz|https://mirrors.ibiblio.org/gnu/libtool/libtool-2.5.4.tar.xz|libtool-2.5.4|gnu"
+    "fftw|3.3.10|tar.gz|http://www.fftw.org/fftw-3.3.10.tar.gz|fftw-3.3.10|gnufloat"
+    "libasyncns|0.8|tar.gz|https://gitlab.archlinux.org/archlinux/packaging/packages/libasyncns/-/archive/main/libasyncns-main.tar.gz?ref_type=heads|libasyncns-main|PKGBUILD"
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
@@ -453,6 +463,11 @@ case \"$BUILDSYS\" in
         make -j\$(nproc)
         make install
         ;;
+    gnufloat)
+        ./configure --prefix=/usr --enable-float
+        make -j$(nproc)
+        make install
+        ;;
     gnuOOS)
         cd /var/tmp/build
         BUILD_SUBDIR=build-$DIR
@@ -494,6 +509,36 @@ case \"$BUILDSYS\" in
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
+        ;;
+    PKGBUILD)
+        cd /var/tmp/build/$DIR
+        if [[ ! -f PKGBUILD ]]; then
+            echo "[!] PKGBUILD not found in $DIR"
+            exit 1
+        fi
+    
+        source PKGBUILD
+    
+        BUILD_SUBDIR=build-$NAME
+        mkdir -p "$BUILD_SUBDIR"
+        cd "$BUILD_SUBDIR"
+    
+        bash -c "
+        set -e
+        cd /var/tmp/build/$DIR
+        if declare -f build >/dev/null; then
+            build
+        else
+            echo "[!] No build() function in PKGBUILD"
+            exit 1
+        fi
+    
+        if declare -f package >/dev/null; then
+            package
+        else
+            echo "[!] No package() function in PKGBUILD"
+        fi
+        "
         ;;
     mesongvdb)
         cd /var/tmp/build/gvdb-main/gvdb-main
