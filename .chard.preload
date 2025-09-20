@@ -1,0 +1,5 @@
+# <<< CHARD_ENV <<<
+
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0:$CHARD_ROOT/usr/lib64/libunistring.so.5"
+
+# <<< END CHARD_ENV <<<
