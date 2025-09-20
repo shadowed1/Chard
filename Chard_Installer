@@ -49,32 +49,31 @@ echo
     
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
 
-sudo mkdir -p "$CHARD_ROOT"/{ \
-    etc/portage \
-    etc/sandbox.d \
-    etc/ssl \
-    usr/bin \
-    usr/lib \
-    usr/lib64 \
-    usr/include \
-    usr/share \
-    usr/local/bin \
-    usr/local/lib \
-    usr/local/include \
-    var/tmp/build \
-    var/cache/distfiles \
-    var/cache/packages \
-    var/log \
-    var/run \
-    dev/shm \
-    dev/pts \
-    proc \
-    sys \
-    tmp \
-    run \
-    home/user \
-    mnt \
-}
+sudo mkdir -p "$CHARD_ROOT"/etc/portage \
+                 "$CHARD_ROOT"/etc/sandbox.d \
+                 "$CHARD_ROOT"/etc/ssl \
+                 "$CHARD_ROOT"/usr/bin \
+                 "$CHARD_ROOT"/usr/lib \
+                 "$CHARD_ROOT"/usr/lib64 \
+                 "$CHARD_ROOT"/usr/include \
+                 "$CHARD_ROOT"/usr/share \
+                 "$CHARD_ROOT"/usr/local/bin \
+                 "$CHARD_ROOT"/usr/local/lib \
+                 "$CHARD_ROOT"/usr/local/include \
+                 "$CHARD_ROOT"/var/tmp/build \
+                 "$CHARD_ROOT"/var/cache/distfiles \
+                 "$CHARD_ROOT"/var/cache/packages \
+                 "$CHARD_ROOT"/var/log \
+                 "$CHARD_ROOT"/var/run \
+                 "$CHARD_ROOT"/dev/shm \
+                 "$CHARD_ROOT"/dev/pts \
+                 "$CHARD_ROOT"/proc \
+                 "$CHARD_ROOT"/sys \
+                 "$CHARD_ROOT"/tmp \
+                 "$CHARD_ROOT"/run \
+                 "$CHARD_ROOT"/home/user \
+                 "$CHARD_ROOT"/mnt
+
 
 mkdir -p "$(dirname "$LOG_FILE")"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
