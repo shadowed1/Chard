@@ -322,7 +322,7 @@ PACKAGES=(
     "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
     "libtool|2.5.4|tar.xz|https://mirrors.ibiblio.org/gnu/libtool/libtool-2.5.4.tar.xz|libtool-2.5.4|gnu"
     "fftw|3.3.10|tar.gz|http://www.fftw.org/fftw-3.3.10.tar.gz|fftw-3.3.10|gnufloat"
-    "libasyncns|0.8|tar.gz|https://gitlab.archlinux.org/archlinux/packaging/packages/libasyncns/-/archive/main/libasyncns-main.tar.gz?ref_type=heads|libasyncns-main|PKGBUILD"
+    "libasyncns|0.8|tar.gz|https://github.com/shadowed1/Chard/raw/refs/heads/main/libasyncns_x86_64-0.8.tar.gz|libasyncns-0.8|asyncns86"
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
@@ -363,6 +363,7 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
+    sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 
 }
 
@@ -511,36 +512,15 @@ case \"$BUILDSYS\" in
         ninja -C build
         ninja -C build install
         ;;
-    PKGBUILD)
-        cd /var/tmp/build/$DIR || { echo "[!] Build dir $DIR not found"; exit 1; }
+    asyncns86)
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "x86_64" ]]; then
+            sudo mkdir -p /usr/lib/x86_64-linux-gnu
     
-        if [[ ! -f PKGBUILD ]]; then
-            echo "[!] PKGBUILD not found in $DIR"
-            exit 1
-        fi
-    
-        source PKGBUILD
-    
-        if declare -f prepare >/dev/null; then
-            echo "[+] Running prepare()..."
-            prepare
-        fi
-    
-        if declare -f build >/dev/null; then
-            echo "[+] Running build()..."
-            build
+            sudo cp libasyncns.so.0.3.1 /usr/lib/x86_64-linux-gnu/
+            sudo cp libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
         else
-            echo "[!] No build() function in PKGBUILD"
-            exit 1
-        fi
-    
-        if declare -f package >/dev/null; then
-            echo "[+] Running package()..."
-            pkgdir="$CHARD_ROOT/var/tmp/pkg-$pkgname"
-            mkdir -p "$pkgdir"
-            package
-        else
-            echo "[!] No package() function in PKGBUILD"
+            echo "[*] Not x86_64, skipping libasyncns x86_64 copy"
         fi
         ;;
     mesongvdb)
