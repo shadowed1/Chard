@@ -127,9 +127,9 @@ case "$cmd" in
         esac
         ;;
     uninstall)
-        read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] " ans
+        read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] ${RESET}" ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
-            echo "${RED}[*] Unmounting active bind mounts...${RESET}"
+            echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
             sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
@@ -137,11 +137,11 @@ case "$cmd" in
             sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     
-            echo "${RED}[*] Removing $CHARD_ROOT${RESET}"
+            echo "${BLUE}[*] Removing $CHARD_ROOT${RESET}"
             sudo rm -rf "$CHARD_ROOT"
     
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
-            echo "${GREEN}[+] Uninstalled.${RESET}"
+            echo "${CYAN}[+] Uninstalled.${RESET}"
         else
             echo "${RED}[*] Cancelled.${RESET}"
         fi
