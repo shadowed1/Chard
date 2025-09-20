@@ -278,7 +278,7 @@ PACKAGES=(
     "findutils|4.10.0|tar.xz|https://mirrors.kernel.org//gnu/findutils/findutils-4.10.0.tar.xz|findutils-4.10.0|gnu"
     "pkg-config|0.29.2|tar.gz|https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz|pkg-config-0.29.2|gnu"
     "gtest|1.16.0|tar.gz|https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz|googletest-1.16.0|cmake"
-    "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu"
+    "python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|gnu2b"
     "meson|1.9.0|tar.gz|https://github.com/mesonbuild/meson/releases/download/1.9.0/meson-1.9.0.tar.gz|meson-1.9.0|python"
     "re2c|4.3|tar.xz|https://github.com/skvadrik/re2c/releases/download/4.3/re2c-4.3.tar.xz|re2c-4.3|gnu"
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
@@ -735,7 +735,7 @@ export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
 EOF
 
 cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
-echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. 
+echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
 
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
