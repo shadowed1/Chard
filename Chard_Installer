@@ -241,7 +241,7 @@ sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
 echo "${CYAN}[+] Installing Linux headers into Chard Root..."
-sudo -E chroot "/usr/local/chard" /bin/bash -c "
+sudo chroot "/usr/local/chard" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
 HOST_ARCH=\$(uname -m)
@@ -284,6 +284,7 @@ PACKAGES=(
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
     "gtk-doc|1.42.0|tar.xz|https://download.gnome.org/sources/gtk-doc/1.34/gtk-doc-1.34.0.tar.xz|gtk-doc-1.42.0|meson"
     "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
+    "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
     "glib|2.86.0|tar.xz|https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz|glib-2.86.0|meson"
     "sqlite|3500400|tar.gz|https://www.sqlite.org/2025/sqlite-autoconf-3500400.tar.gz|sqlite-autoconf-3500400|gnu"
     "util-linux|2.41|tar.xz|https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.xz|util-linux-2.41|gnu"
@@ -327,7 +328,6 @@ PACKAGES=(
     "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
     "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
-    "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
     "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|cmakeG"
     "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
     "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
@@ -399,7 +399,7 @@ for pkg in "${PACKAGES[@]}"; do
 
 
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
-    sudo -E chroot "/usr/local/chard" /bin/bash -c "
+    sudo chroot "/usr/local/chard" /bin/bash -c "
     
 
 cd /var/tmp/build/$DIR
@@ -440,14 +440,9 @@ case \"$BUILDSYS\" in
         make install
         ;;
     gnuOOS)
-        BUILD_SUBDIR=build-$NAME
-        mkdir -p "$BUILD_SUBDIR"
-        cd "$BUILD_SUBDIR"
-    
-        ../$DIR/configure --prefix=/usr \
-                          --disable-werror \
-                          --enable-kernel=5.4
-    
+        .configure --prefix=/usr \
+                --disable-werror \
+                --enable-kernel=5.4
         make -j$(nproc)
         make install
         ;;
