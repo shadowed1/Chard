@@ -577,26 +577,10 @@ case \"$BUILDSYS\" in
         cp libduktape.so* /usr/lib/
         ;;
     asyncns86)
-        ARCH=$(uname -m)
-        if [[ "$ARCH" == "x86_64" ]]; then
-            sudo mkdir -p /usr/lib/x86_64-linux-gnu
-    
-            sudo cp libasyncns.so.0.3.1 /usr/lib/x86_64-linux-gnu/
-            sudo cp libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
-        else
-            echo "[*] Not x86_64, skipping libasyncns x86_64 copy"
-        fi
+            [ -d /usr/lib/x86_64-linux-gnu ] && sudo cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
         ;;
     asyncnsARM64)
-        ARCH=$(uname -m)
-        if [[ "$ARCH" == "aarch64" ]]; then
-            sudo mkdir -p /usr/lib/aarch64-linux-gnu
-    
-            sudo cp libasyncns.so.0.3.1 /usr/lib/aarch64-linux-gnu/
-            sudo cp libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
-        else
-            echo "[*] Not aarch64, skipping libasyncns x86_64 copy"
-        fi
+           [ -d /usr/lib/aarch64-linux-gnu ] && sudo cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
