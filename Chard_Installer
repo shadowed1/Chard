@@ -378,7 +378,7 @@ for pkg in "${PACKAGES[@]}"; do
                 --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
             ;;
         zip)
-            sudo unzip "$BUILD_DIR/$ARCHIVE" -d "$BUILD_DIR"
+            sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
             ;;
         *)
             echo "Unknown archive format: $EXT"; exit 1 ;;
