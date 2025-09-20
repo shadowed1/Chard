@@ -575,10 +575,7 @@ case \"$BUILDSYS\" in
         mkdir -p /usr/include/duktape /usr/lib /usr/lib/pkgconfig
         cp src/duktape.h /usr/include/duktape/
         cp libduktape.so* /usr/lib/
-        sed -e "s|@PREFIX@|/usr|" \
-            -e "s|@LIBDIR@|/usr/lib|" \
-            -e "s|@VERSION@|2.7.0|" \
-            duktape.pc.in > /usr/lib/pkgconfig/duktape.pc
+        sed -e "s|@PREFIX@|/usr|" -e "s|@LIBDIR@|/usr/lib|" -e "s|@VERSION@|2.7.0|" duktape.pc.in > /usr/lib/pkgconfig/duktape.pc
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
