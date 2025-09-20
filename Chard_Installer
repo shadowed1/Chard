@@ -233,7 +233,7 @@ if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
     echo "[+] Fetching $KERNEL_TAR..."
     sudo curl -L --progress-bar -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
 else
-    echo "${RESET}${YELLOW}[!] Kernel tarball already exists, skipping download.${RESET}"
+    echo "${RESET}${YELLOW}[!] Kernel tarball already exists, skipping download."
 fi
 
 sudo rm -rf "$KERNEL_BUILD"
