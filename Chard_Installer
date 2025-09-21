@@ -508,19 +508,6 @@ export PYTHON="/bin/python3"
 export FORCE_UNSAFE_CONFIGURE=1
 export XDG_DATA_DIRS="/usr/share:/usr/local/share"
 
-case "$DIR" in
-    cairo-*|harfbuzz-*|freetype-*|pixman-*|glib-*|libffi-*|libpng-*|fontconfig-*|icu-*|pcre2-*)
-        export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
-        export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
-        export LDFLAGS="-L/usr/lib"
-        ;;
-    *)
-        export CFLAGS="-O2 -pipe -I/usr/include"
-        export CXXFLAGS="-O2 -pipe -I/usr/include"
-        export LDFLAGS="-L/usr/lib"
-        ;;
-esac
-
 if [[ "$NAME" == "gtest" ]]; then
     cd /var/tmp/build/${DIR}
 else
@@ -695,7 +682,6 @@ sudo umount -l "/usr/local/chard/sys"           2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"          2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-
 
 sudo rm -rf "$BUILD_DIR"
 
