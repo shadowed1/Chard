@@ -98,6 +98,13 @@ fi
 
 ARCH=$(uname -m)
 case "$ARCH" in
+    x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
+    aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
+    *) echo "Unknown architecture: $ARCH"; exit 1;;
+esac
+
+ARCH=$(uname -m)
+case "$ARCH" in
     x86_64)
         GENTOO_ARCH="amd64"
         CHOST="x86_64-pc-linux-gnu"
@@ -110,10 +117,11 @@ case "$ARCH" in
         echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-x86_64.tar.gz
-        sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT" --strip-components=1 \
+        sudo tar -xzf /tmp/cmake.tar.gz -C "/usr/local/chard/" --strip-components=1 \
             --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
         sudo rm -f /tmp/cmake.tar.gz
-        sudo chmod -R +x "$CHARD_ROOT/bin"
+        sudo chmod -R +x "/usr/local/chard/usr/bin"
+        sudo chmod -R +x "/usr/local/chard/bin"
         ;;
     aarch64|arm64)
         GENTOO_ARCH="arm64"
@@ -128,16 +136,18 @@ case "$ARCH" in
         echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(ARM64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-aarch64.tar.gz
-        sudo tar -xzf /tmp/cmake.tar.gz -C "$CHARD_ROOT" --strip-components=1 \
+        sudo tar -xzf /tmp/cmake.tar.gz -C "/usr/local/chard/" --strip-components=1 \
             --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
         sudo rm -f /tmp/cmake.tar.gz
-        sudo chmod -R +x "$CHARD_ROOT/bin"
+        sudo chmod -R +x "/usr/local/chard/usr/bin"
+        sudo chmod -R +x "/usr/local/chard/bin"
         ;;
     *)
         echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
         exit 1
         ;;
 esac
+
 
 echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
 
@@ -560,7 +570,7 @@ case \"$BUILDSYS\" in
         make install prefix=/usr
         ;;
     icu)
-        cd /var/tmp/build/icu/source/
+        cd /var/tmp/build/$DIR/source/
         chmod +x runConfigureICU configure install-sh
         ./runConfigureICU Linux --prefix=/usr --disable-dependency-tracking
         make -j$(nproc)
@@ -590,9 +600,9 @@ case \"$BUILDSYS\" in
            [ -d /usr/lib/aarch64-linux-gnu ] && sudo cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
         ;;
     docbook-xml-4.3)
-        cd /var/tmp/build/
+        cd /var/tmp/build/$DIR
         sudo cp -r docbook-5.0.9/* /usr/share/xml/docbook/5.0/
-        #sudo xmlcatalog --noout --add 'public' '-//OASIS//DTD DocBook V5.0//EN' /usr/share/xml/docbook/5.0/catalog.xml
+        sudo xmlcatalog --noout --add 'public' '-//OASIS//DTD DocBook V5.0//EN' /usr/share/xml/docbook/5.0/catalog.xml
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
