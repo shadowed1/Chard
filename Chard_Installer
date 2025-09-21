@@ -117,11 +117,10 @@ case "$ARCH" in
         echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(x86_64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-x86_64.tar.gz
-        sudo tar -xzf /tmp/cmake.tar.gz -C "/usr/local/chard/" --strip-components=1 \
+        sudo tar -xzf /tmp/cmake.tar.gz -C "/usr/local/chard/usr/" --strip-components=1 \
             --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
         sudo rm -f /tmp/cmake.tar.gz
         sudo chmod -R +x "/usr/local/chard/usr/bin"
-        sudo chmod -R +x "/usr/local/chard/bin"
         ;;
     aarch64|arm64)
         GENTOO_ARCH="arm64"
@@ -136,11 +135,10 @@ case "$ARCH" in
         echo "${CYAN}[+] Installing prebuilt CMake ${MAGENTA}(ARM64)"
         sudo curl -L --progress-bar -o /tmp/cmake.tar.gz \
             https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-linux-aarch64.tar.gz
-        sudo tar -xzf /tmp/cmake.tar.gz -C "/usr/local/chard/" --strip-components=1 \
+        sudo tar -xzf /tmp/cmake.tar.gz -C "/usr/local/chard/usr/" --strip-components=1 \
             --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
         sudo rm -f /tmp/cmake.tar.gz
         sudo chmod -R +x "/usr/local/chard/usr/bin"
-        sudo chmod -R +x "/usr/local/chard/bin"
         ;;
     *)
         echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
@@ -337,7 +335,6 @@ PACKAGES=(
     "fftw|3.3.10|tar.gz|http://www.fftw.org/fftw-3.3.10.tar.gz|fftw-3.3.10|gnu"
     "libasyncns|0.8|tar.gz|https://github.com/shadowed1/Chard/raw/refs/heads/main/libasyncns_x86_64-0.8.tar.gz|libasyncns-0.8|asyncns86"
     "libasyncns|0.8|tar.gz|https://github.com/shadowed1/Chard/raw/refs/heads/main/libasyncns_ARM64-0.8.tar.gz|libasyncns-0.8|asyncnsARM64"
-    "tdb|1.4.14|tar.xz|https://download.samba.org/pub/tdb/tdb-1.4.14.tar.gz|tdb-1.4.14|gnu"
     "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
     "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
     "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
@@ -570,7 +567,7 @@ case \"$BUILDSYS\" in
         make install prefix=/usr
         ;;
     icu)
-        cd /var/tmp/build/$DIR/source/
+        cd /var/tmp/build/icu/source/
         chmod +x runConfigureICU configure install-sh
         ./runConfigureICU Linux --prefix=/usr --disable-dependency-tracking
         make -j$(nproc)
