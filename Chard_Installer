@@ -605,6 +605,9 @@ case \"$BUILDSYS\" in
         make -f Makefile.sharedlibrary -j$(nproc)
         mkdir -p /usr/include/duktape /usr/lib
         cp src/duktape.h /usr/include/duktape/
+        cp src/duk_config.h /usr/include/duktape/ 
+        cp src/duktape.c /usr/include/duktape/
+        cp src/duk_source_meta.json /usr/include/duktape/
         cp libduktape.so* /usr/lib/
         ;;
     asyncns86)
