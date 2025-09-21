@@ -465,10 +465,7 @@ Libs: -L${libdir} -lduktape
 Cflags: -I${includedir}/duktape
 EOF
 
-
-
-
-    echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
+echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 
 sudo mount --make-private /usr/local/chard
 mountpoint -q "/usr/local/chard/proc"    || sudo mount -t proc proc "/usr/local/chard/proc"
@@ -482,7 +479,7 @@ for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"    
     echo "[+] Building $NAME-$VERSION in chroot${RESET}"
     sudo chroot "/usr/local/chard" /bin/bash -c "
-    
+
 
 cd /var/tmp/build/$DIR
 
@@ -510,6 +507,19 @@ export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pk
 export PYTHON="/bin/python3"
 export FORCE_UNSAFE_CONFIGURE=1
 export XDG_DATA_DIRS="/usr/share:/usr/local/share"
+
+case "$DIR" in
+    cairo-*|harfbuzz-*|freetype-*|pixman-*|glib-*|libffi-*|libpng-*|fontconfig-*|icu-*|pcre2-*)
+        export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
+        export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
+        export LDFLAGS="-L/usr/lib"
+        ;;
+    *)
+        export CFLAGS="-O2 -pipe -I/usr/include"
+        export CXXFLAGS="-O2 -pipe -I/usr/include"
+        export LDFLAGS="-L/usr/lib"
+        ;;
+esac
 
 if [[ "$NAME" == "gtest" ]]; then
     cd /var/tmp/build/${DIR}
