@@ -317,16 +317,20 @@ PACKAGES=(
     "smartmontools|7.5|tar.gz|https://downloads.sourceforge.net/project/smartmontools/smartmontools/7.5/smartmontools-7.5.tar.gz|smartmontools-7.5|gnu"
     "xorgproto|2024.1|tar.xz|https://www.x.org/releases/individual/proto/xorgproto-2024.1.tar.xz|xorgproto-2024.1|gnu"
     "xtrans|1.4.0|tar.xz|https://www.x.org/releases/individual/proto/xtrans-1.4.0.tar.xz|xtrans-1.4.0|gnu"
+    "xcb-proto|1.16.0|tar.xz|https://xcb.freedesktop.org/dist/xcb-proto-1.16.0.tar.xz|xcb-proto-1.16.0|python"
     "libxcb|1.17.0|tar.xz|https://xcb.freedesktop.org/dist/libxcb-1.17.0.tar.xz|libxcb-1.17.0|gnu"
     "xextproto|7.3.0|tar.xz|https://www.x.org/releases/individual/proto/xextproto-7.3.0.tar.xz|xextproto-7.3.0|gnu"
     "libX11|1.8.12|tar.xz|https://www.x.org/releases/individual/lib/libX11-1.8.12.tar.xz|libX11-1.8.12|gnu"
     "libXext|1.3.6|tar.xz|https://www.x.org/releases/individual/lib/libXext-1.3.6.tar.xz|libXext-1.3.6|gnu"
     "libXrender|0.9.11|tar.xz|https://www.x.org/releases/individual/lib/libXrender-0.9.12.tar.xz|libXrender-0.9.12|gnu"
     "libXfixes|6.0.2|tar.xz|https://www.x.org/releases/individual/lib/libXfixes-6.0.2.tar.xz|libXfixes-6.0.2|gnu"
+    "libXi|1.8.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXi-1.8.2.tar.xz|libXi-1.8.2|gnu"
     "libXcursor|1.2.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXcursor-1.2.2.tar.xz|libXcursor-1.2.2|gnu"
     "libXrandr|1.5.4|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXrandr-1.5.4.tar.xz|libXrandr-1.5.4|gnu"
     "libXinerama|1.1.5|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXinerama-1.1.5.tar.xz|libXinerama-1.1.5|gnu"
-    "libXi|1.8.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXi-1.8.2.tar.xz|libXi-1.8.2|gnu"
+    "libdrm|2.4.123|tar.xz|https://dri.freedesktop.org/libdrm/libdrm-2.4.123.tar.xz|libdrm-2.4.123|meson"
+    "mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|meson"
+    "glu|9.0.3|tar.xz|https://mesa.freedesktop.org/archive/glu/glu-9.0.3.tar.xz|glu-9.0.3|gnu"
     "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
     "libtool|2.5.4|tar.xz|https://mirrors.ibiblio.org/gnu/libtool/libtool-2.5.4.tar.xz|libtool-2.5.4|gnu"
     "fftw|3.3.10|tar.gz|http://www.fftw.org/fftw-3.3.10.tar.gz|fftw-3.3.10|gnu"
@@ -350,7 +354,7 @@ PACKAGES=(
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
     "sysprof|1.2.0|tar.gz|https://www.sysprof.com/sysprof-1.2.0.tar.gz|sysprof-1.2.0|gnu"
-    "qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|cmakeG"
+    "qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|cmakeOpenGL"
     "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|cmakeG"
     "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
     "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
@@ -538,6 +542,14 @@ case \"$BUILDSYS\" in
               -DCMAKE_INSTALL_PREFIX=/usr \
               -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_GMOCK=OFF
+        cmake --build build -j$(nproc)
+        cmake --install build
+        ;;
+    cmakeOpenGL)
+        cmake -S . -B build \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DFEATURE_opengl=desktop
         cmake --build build -j$(nproc)
         cmake --install build
         ;;
