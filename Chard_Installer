@@ -423,6 +423,22 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
+sudo mkdir -p "$CHARD_ROOT/usr/lib/pkgconfig"
+
+cat > "$CHARD_ROOT/usr/lib/pkgconfig/duktape.pc" <<EOF
+prefix=/usr
+exec_prefix=\${prefix}
+libdir=/lib
+includedir=\${prefix}/include
+
+Name: duktape
+Description: Embeddable Javascript engine
+Version: 2.7.0
+Libs: -L\${libdir} -lduktape
+Cflags: -I\${includedir}/duktape
+EOF
+
+
 
     echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 
