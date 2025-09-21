@@ -441,6 +441,9 @@ Libs: -L${libdir} -lduktape
 Cflags: -I${includedir}/duktape
 EOF
 
+
+
+
     echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 
 sudo mount --make-private /usr/local/chard
@@ -474,7 +477,7 @@ export AR=\$GCC_DIR/gcc-ar
 export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
 export CFLAGS='-O2 -pipe -I/usr/include'
 export CXXFLAGS='-O2 -pipe -I/usr/include'
-export LDFLAGS="-L/usr/lib64 -L/usr/lib -Wl,-rpath=/usr/lib64"
+export LDFLAGS='-L/usr/lib'
 export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64:/usr/local/chard/usr/lib/gcc/$CHOST/14"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
@@ -489,19 +492,6 @@ if [[ "$NAME" == "gtest" ]]; then
 else
     cd /var/tmp/build/$DIR
 fi
-
-case "$DIR" in
-    cairo-*|harfbuzz-*|freetype-*|pixman-*|glib-*|libffi-*|libpng-*|fontconfig-*|icu-*|pcre2-*)
-        export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
-        export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
-        export LDFLAGS="-L/usr/lib"
-        ;;
-    *)
-        export CFLAGS="-O2 -pipe -I/usr/include"
-        export CXXFLAGS="-O2 -pipe -I/usr/include"
-        export LDFLAGS="-L/usr/lib"
-        ;;
-esac
 
 case \"$BUILDSYS\" in
     gnu)
@@ -640,10 +630,9 @@ case \"$BUILDSYS\" in
         ;;
     xml)
         cd /var/tmp/build/$DIR
-        mkdir -p /usr/share/xml/docbook/5.0
-        cp -r ./* /usr/share/xml/docbook/5.0/
-        xmlcatalog --noout --add 'public' '-//OASIS//DTD DocBook V5.0//EN' \
-        /usr/share/xml/docbook/5.0/catalog.xml
+        sudo mkdir -p /usr/share/xml/docbook/5.0
+        sudo cp -r docbook-5.0.9/* /usr/share/xml/docbook/5.0/
+        sudo xmlcatalog --noout --add 'public' '-//OASIS//DTD DocBook V5.0//EN' /usr/share/xml/docbook/5.0/catalog.xml
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
