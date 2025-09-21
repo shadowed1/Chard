@@ -1,4 +1,5 @@
 #!/bin/bash
+START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -10,6 +11,28 @@ RESET=$(tput sgr0)
 
 MAX_RETRIES=10
 RETRY_DELAY=30
+
+format_time() {
+    local total_seconds=$1
+    local hours=$((total_seconds / 3600))
+    local minutes=$(((total_seconds % 3600) / 60))
+    local seconds=$((total_seconds % 60))
+    
+    if [ $hours -gt 0 ]; then
+        printf "%dh %dm %ds" $hours $minutes $seconds
+    elif [ $minutes -gt 0 ]; then
+        printf "%dm %ds" $minutes $seconds
+    else
+        printf "%ds" $seconds
+    fi
+}
+
+show_progress() {
+    local current_time=$(date +%s)
+    local elapsed=$((current_time - START_TIME))
+    local formatted_time=$(format_time $elapsed)
+    echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
+}
 
 CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
@@ -379,7 +402,8 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-
+    show_progress
+    sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 }
 
 trap cleanup_chroot EXIT INT TERM
@@ -830,3 +854,4 @@ echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Rootready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
+show_progress
