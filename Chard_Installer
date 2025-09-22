@@ -37,27 +37,28 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 LOG_FILE=/usr/local/chard/chardbuild.log
+echo "${RESET}${GREEN}                                         
+echo "                                                             AA
+echo "                                                            A::A
+echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHH               A::::A               RRRRRRRRRRRRRRRRR   DDDDDDDDDDDDD 
+echo "     CCC::::::::::::CH:::::::H     H:::::::H              A::::::A              R::::::::::::::::R  D::::::::::::DDD  
+echo "   CC:::::::::::::::CH:::::::H     H:::::::H             A::::::::A             R::::::RRRRRR:::::R D:::::::::::::::DD  
+echo "  C:::::CCCCCCCC::::CHH::::::H     H::::::HH            A::::::::::A            RR:::::R     R:::::RDDD:::::DDDDD:::::D  
+echo " C:::::C       CCCCCC  H:::::H     H:::::H             A::::::::::::A           R::::R     R:::::R  D:::::D    D:::::D  
+echo "C:::::C                H:::::H     H:::::H            A::::::::::::::A          R::::R     R:::::R  D:::::D     D:::::D
+echo "C:::::C                H::::::HHHHH::::::H           A::            ::A         R::::RRRRRR:::::R   D:::::D     D:::::D  
+echo "C:::::C                H:::::::::::::::::H          A:::            :::A        R:::::::::::::RR    D:::::D     D:::::D
+echo "C:::::C                H:::::::::::::::::H         A::::            ::::A       R::::RRRRRR:::::R   D:::::D     D:::::D    
+echo "C:::::C                H::::::HHHHH::::::H        A:::::            :::x:A      R::::R     R:::::R  D:::::D     D:::::D    
+echo "C:::::C                H:::::H     H:::::H       A::::::            ::::::A     R::::R     R:::::R  D:::::D     D:::::D   
+echo "C:::::C       CCCCCC  H:::::H     H:::::H      A:::::                :::::A    R::::R     R:::::R  D:::::D    D:::::D  
+echo "C:::::CCCCCCCC::::CHH::::::H     H::::::HH   A::::::::=          =:::::::-A   RR:::::R     R:::::RDDD:::::DDDDD:::::D 
+echo "   CC:::::::::::::::CH:::::::H     H:::::::H  A::::::::=            =::::::::A  R::::::R     R:::::RD:::::::::::::::DD  
+echo "     CCC::::::::::::CH:::::::H     H:::::::H A::::::==                ==-:::::A R::::::R     R:::::RD::::::::::::DDD  
+echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHHA======                      ======ARRRRRRRR     RRRRRRRDDDDDDDDDDDDD   
+
 echo "${RESET}${GREEN}"
-echo "                                        o\ "
-echo "                                       so^\ "
-echo "                                      sssss\ "
-echo "                                     a^oooox\ "
-echo "                                    g^oooooo:\ "
-echo "                                   jssoooooo+:\ "
-echo "                                  sssssssssss+X\ "
-echo "                                 chmodxCHARDROOT\ "
-echo "                                sso            ss\ "
-echo "                               ssss            oo/\ "
-echo "                              ssooo            ssos\ "
-echo "                             ssssss            sssxs\ "
-echo "                            sssssss            sqssos\ "
-echo "                           ssssss                ssoss\ "
-echo "                          sossssssss          ssssooo/-\ "
-echo "                         ssspsnsoi=           =:/osssso+\ "
-echo "                        sssosss==                ==-/+oso\ "
-echo "                       ssscc==                      ==c==#\ "
-echo "                      ssss                            ==sss\ "                        
-echo ""
+                      
 echo "${RESET}"
 echo "${RED}Chard Installed can take ${BOLD}30-240 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~3 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
 echo
