@@ -505,10 +505,19 @@ Libs: -L${libdir} -lduktape
 Cflags: -I${includedir}/duktape
 EOF
 
-     # download and extract to / (chard chroot) 
-    https://archlinux.org/packages/extra/x86_64/polkit/download
-    https://archlinux.org/packages/extra/x86_64/polkit-kde-agent/download
-    https://archlinux.org/packages/extra/x86_64/malcontent/download
+sudo tee "$CHARD_ROOT/usr/lib/pkgconfig/malcontent-0.pc" > /dev/null <<'EOF'
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: malcontent-0
+Description: Dummy malcontent-0 for Meson build
+Version: 0.13.1
+Requires: 
+Libs: -L${libdir} -lmalcontent-ui-1
+Cflags: -I${includedir}/malcontent-ui-1
+EOF
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 
