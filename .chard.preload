@@ -1,5 +1,7 @@
 # <<< CHARD_PRELOAD <<<
 
-export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0:$CHARD_ROOT/usr/lib64/libunistring.so.5"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpkgconf.so.7"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
 
 # <<< END CHARD_PRELOAD <<<
