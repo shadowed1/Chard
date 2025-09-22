@@ -412,8 +412,8 @@ PACKAGES=(
     "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
     "libXau|1.0.12|tar.xz|https://www.x.org/pub/individual/lib/libXau-1.0.12.tar.xz|libXau-1.0.12|gnu"
-    "qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|gnu"
-    "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|gnuqt"
+    #"qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|gnu"
+    #"qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|gnuqt"
     "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
     "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
@@ -455,6 +455,8 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/malcontent/download"
             "https://archlinux.org/packages/extra/x86_64/sysprof/download"
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
+            "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
+            "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
         )
         ;;
     aarch64|arm64)
@@ -466,6 +468,8 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/malcontent-0.13.1-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/sysprof-48.1-2-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
