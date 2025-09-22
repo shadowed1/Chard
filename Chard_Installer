@@ -295,7 +295,6 @@ PACKAGES=(
     "gmp|6.3.0|tar.xz|https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz|gmp-6.3.0|gnu"
     "mpfr|4.2.2|tar.xz|https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz|mpfr-4.2.2|gnu"
     "binutils|2.45|tar.xz|https://mirrors.kernel.org//gnu/binutils/binutils-2.45.tar.xz|binutils-2.45|gnu"
-    "glibc|2.42|tar.xz|https://mirrors.kernel.org//gnu/glibc/glibc-2.42.tar.xz|glibc-2.42|glibccustom"
     "diffutils|3.12|tar.xz|https://mirrors.kernel.org//gnu/diffutils/diffutils-3.12.tar.xz|diffutils-3.12|gnu"
     "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|gnu"
@@ -531,29 +530,6 @@ case \"$BUILDSYS\" in
         
         make -j\$(nproc)
         make install
-        ;;
-    glibccustom)
-        cd /var/tmp/build
-        mkdir -p build-glibc-2.42
-        cd build-glibc-2.42
-        ../glibc-2.42/configure \
-            --prefix=/usr \
-            --build=\$CHOST \
-            --host=\$CHOST \
-            --disable-werror \
-            --enable-kernel=5.4 \
-            --enable-shared \
-            --with-headers=/usr/include \
-            --enable-bind-now \
-            --disable-profile \
-            --enable-stackguard-randomization \
-            --enable-lock-elision \
-            --enable-multi-arch \
-            --disable-experimental-malloc
-        
-        make -j\$(nproc)    
-        make install    
-        ldconfig    
         ;;
     pythongnuOOS)
         cd /var/tmp/build
