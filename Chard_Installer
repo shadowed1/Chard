@@ -363,9 +363,9 @@ PACKAGES=(
     "libXrandr|1.5.4|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXrandr-1.5.4.tar.xz|libXrandr-1.5.4|gnu"
     "libXinerama|1.1.5|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXinerama-1.1.5.tar.xz|libXinerama-1.1.5|gnu"
     "libdrm|2.4.123|tar.xz|https://dri.freedesktop.org/libdrm/libdrm-2.4.123.tar.xz|libdrm-2.4.123|meson"
-    "libglvnd|1.7.0|tar.gz|https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v1.7.0/libglvnd-v1.7.0.tar.gz|libglvnd-1.7.0|gnu"
+    "libglvnd|1.7.0|tar.gz|https://sources.voidlinux.org/libglvnd-1.7.0/libglvnd-v1.7.0.tar.gz|libglvnd-1.7.0|gnu"
     "libvdpau|1.5|tar.gz|https://gitlab.freedesktop.org/vdpau/libvdpau/-/archive/1.5/libvdpau-1.5.tar.gz|libvdpau-1.5|gnu"
-    "glslang|15.0.0|tar.gz|https://github.com/KhronosGroup/glslang/archive/refs/tags/15.0.0.tar.gz|glslang-15.0.0|cmake"
+    "glslang|15.0.0|tar.gz|https://github.com/KhronosGroup/glslang/archive/refs/tags/15.0.0.tar.gz|glslang-15.0.0|cmakeGLS"
     "mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|meson"
     "glu|9.0.3|tar.xz|https://mesa.freedesktop.org/archive/glu/glu-9.0.3.tar.xz|glu-9.0.3|gnu"
     "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
@@ -399,7 +399,7 @@ PACKAGES=(
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
-    "appstream-glib|0.14.13|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.14.13|meson"
+    "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
@@ -659,6 +659,11 @@ case \"$BUILDSYS\" in
     cmake)
         cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
         cmake --build build -j\$(nproc)
+        cmake --install build
+        ;;
+    cmakeGLS)
+        cmake -S glslang -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
+        cmake --build build -j$(nproc)
         cmake --install build
         ;;
     cmakeG)
