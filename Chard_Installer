@@ -896,7 +896,25 @@ fi
 
 mkdir -p "$(dirname "$MAKE_CONF")"
 
-sudo tee "$MAKE_CONF" > /dev/null <<'EOF'
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)
+        CHOST="x86_64-pc-linux-gnu"
+        GCC_PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+        ;;
+    aarch64|arm64)
+        CHOST="aarch64-unknown-linux-gnu"
+        GCC_PATH="$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+        ;;
+    *)
+        echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
+        exit 1
+        ;;
+esac
+
+MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
+
+sudo tee "$MAKE_CONF" > /dev/null <<EOF
 # Chard Portage make.conf
 # Manually generated
 COMMON_FLAGS="-O2 -pipe"
@@ -905,23 +923,23 @@ CXXFLAGS="-O2 -pipe"
 FCFLAGS="-O2 -pipe"
 FFLAGS="-O2 -pipe"
 LC_MESSAGES=C.utf8
-ROOT="/usr/local/chard"
-DISTDIR="/usr/local/chard/var/cache/distfiles"
-PKGDIR="/usr/local/chard/var/cache/packages"
-PORTAGE_TMPDIR="/usr/local/chard/var/tmp"
-PORTDIR="/usr/local/chard/usr/portage"
-SANDBOX="/usr/local/chard/usr/bin/sandbox"
-CHOST="x86_64-pc-linux-gnu"
-CC="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc"
-CXX="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++"
-AR="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar"
-NM="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-nm"
-RANLIB="/usr/local/chard/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ranlib"
-STRIP="/usr/local/chard/usr/x86_64-pc-linux-gnu/binutils-bin/2.44/strip"
+ROOT="$CHARD_ROOT"
+DISTDIR="$CHARD_ROOT/var/cache/distfiles"
+PKGDIR="$CHARD_ROOT/var/cache/packages"
+PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
+PORTDIR="$CHARD_ROOT/usr/portage"
+SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
+CHOST="$CHOST"
+CC="$GCC_PATH/$CHOST-gcc"
+CXX="$GCC_PATH/$CHOST-g++"
+AR="$GCC_PATH/gcc-ar"
+NM="$GCC_PATH/gcc-nm"
+RANLIB="$GCC_PATH/gcc-ranlib"
+STRIP="$CHARD_ROOT/usr/$CHOST/binutils-bin/2.44/strip"
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
 USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
 PYTHON_TARGETS="python3_13"
-PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/lib/pkgconfig:$CHARD_ROOT/usr/share/pkgconfig:$CHARD_ROOT/share/pkgconfig:$PKG_CONFIG_PATH"
+PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/lib/pkgconfig:$CHARD_ROOT/usr/share/pkgconfig:$CHARD_ROOT/share/pkgconfig:\$PKG_CONFIG_PATH"
 PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
 EOF
 
