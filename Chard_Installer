@@ -323,7 +323,6 @@ PACKAGES=(
     "re2c|4.3|tar.xz|https://github.com/skvadrik/re2c/releases/download/4.3/re2c-4.3.tar.xz|re2c-4.3|gnu"
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
     "docbook|5.0.9|zip|https://github.com/docbook/xslt10-stylesheets/releases/download/snapshot%2F2020-06-03/docbook-xsl-snapshot.zip|docbook-xsl-snapshot|docbook"
-    "docbook-xml|4.3|zip|https://docbook.org/xml/4.3/docbook-xml-4.3.zip|docbook-xml-4.3|docbookxml"
     "gtk-doc|1.34.0|tar.xz|https://download.gnome.org/sources/gtk-doc/1.34/gtk-doc-1.34.0.tar.xz|gtk-doc-1.34.0|gtk-doc"
     "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
@@ -400,6 +399,7 @@ PACKAGES=(
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
+    "shared-mime-info|2.4|tar.xz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
@@ -778,18 +778,6 @@ case \"$BUILDSYS\" in
         xmlcatalog --noout --add 'public' \
             '-//OASIS//DTD DocBook V5.0//EN' \
             /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null
-        ;;
-    docbookxml)
-        mkdir -p /usr/share/xml/docbook/xml-dtd-4.3
-        cp -r /var/tmp/build/$DIR/* /usr/share/xml/docbook/xml-dtd-4.3/
-        xmlcatalog --noout --add "public" \
-            "-//OASIS//DTD DocBook XML V4.3//EN" \
-            "/usr/share/xml/docbook/xml-dtd-4.3/docbookx.dtd" \
-            /etc/xml/catalog
-        xmlcatalog --noout --add "system" \
-            "/usr/share/xml/docbook/xml-dtd-4.3/docbookx.dtd" \
-            "/usr/share/xml/docbook/xml-dtd-4.3/docbookx.dtd" \
-            /etc/xml/catalog
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
