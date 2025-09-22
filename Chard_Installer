@@ -40,7 +40,7 @@ BUILD_DIR="/usr/local/chard/var/tmp/build"
 LOG_FILE=/usr/local/chard/chardbuild.log
 echo
 echo
-echo "${RED}Chard Installed can take 15-120 minutes depending on your CPU and storage speed. Requires ~3 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
+echo "${RED}Chard Installed can take ${BOLD}30-240 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~3 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
 echo
 echo "${YELLOW}Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
 echo
@@ -50,10 +50,21 @@ echo "${CYAN}Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolcha
 echo
 echo "${BLUE}Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
 echo
-echo "${MAGENTA}Chard is current in early development and Emerge is not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a ${BOLD}USB backup${RESET}${MAGENTA} in case of serious mistakes.${RESET}"
+echo "${MAGENTA}Chard is current in early development and Flatpak + Emerge are not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a ${BOLD}USB backup${RESET}${MAGENTA} in case of serious mistakes.${RESET}"
 echo
-    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" continue
-    continue=${continue:-Y}
+   read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
+response=${response:-Y}
+
+case "$response" in
+    y|Y|yes|YES|Yes)
+        echo "${GREEN}[CONTINUE]${RESET}"
+        ;;
+    *)
+        echo "${RED}[EXIT]${RESET}"
+        exit 1
+        ;;
+esac
+
 
     echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be /usr/local/chard/ in reality.${RESET}"
     echo
