@@ -660,8 +660,14 @@ case \"$BUILDSYS\" in
        [ -d /usr/lib/aarch64-linux-gnu ] && cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
         ;;
     docbook)
-        ./install.sh
-        xmlcatalog --noout --add 'public' '-//OASIS//DTD DocBook V5.0//EN' /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null || true
+        mkdir -p /usr/local/share/xml/docbook-xsl
+        cp -r /var/tmp/build/$DIR /usr/local/share/xml/docbook-xsl/$DIR
+        cd /usr/local/share/xml/docbook-xsl/$DIR
+        chmod +x install.sh
+        ./install.sh --batch
+        xmlcatalog --noout --add 'public' \
+            '-//OASIS//DTD DocBook V5.0//EN' \
+            /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
