@@ -385,9 +385,6 @@ PACKAGES=(
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
-    "polkit|124|tar.gz|https://gitlab.freedesktop.org/polkit/polkit/-/archive/124/polkit-124.tar.gz|polkit-124|meson"
-    "polkit-kde-agent|6.4.90|tar.gz|https://github.com/KDE/polkit-kde-agent-1/archive/refs/tags/v6.4.90.tar.gz|polkit-kde-agent-1-6.4.90|cmakeG"
-    "malcontent|0.13.1|tar.gz|https://gitlab.freedesktop.org/pwithnall/malcontent/-/archive/0.13.1/malcontent-0.13.1.tar.gz|malcontent-0.13.1|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
@@ -408,6 +405,37 @@ cleanup_chroot() {
 }
 
 trap cleanup_chroot EXIT INT TERM
+
+ARCH_PKGS=(
+    "https://archlinux.org/packages/extra/x86_64/polkit/download"
+    "https://archlinux.org/packages/extra/x86_64/polkit-kde-agent/download"
+    "https://archlinux.org/packages/extra/x86_64/malcontent/download"
+)
+
+for url in "${ARCH_PKGS[@]}"; do
+    FILE_NAME=$(basename "$url")
+    DEST="$CHARD_ROOT/$FILE_NAME"
+
+    echo "${GREEN}[+] Downloading $FILE_NAME from Arch${RESET}"
+    attempt=1
+    while true; do
+        sudo curl -L --progress-bar -o "$DEST" "$url" && break
+        echo "${RED}[!] Download failed for $FILE_NAME (attempt $attempt/$MAX_RETRIES), retrying in $RETRY_DELAY seconds..."
+        (( attempt++ ))
+        if (( attempt > MAX_RETRIES )); then
+            echo "${BOLD}${RED}[!] Failed to download $FILE_NAME after $MAX_RETRIES attempts. Aborting.${RESET}"
+            exit 1
+        fi
+        sleep $RETRY_DELAY
+    done
+
+    echo "${YELLOW}[+] Extracting $FILE_NAME into chroot${RESET}"
+    if [[ "$DEST" == *.zst ]]; then
+        sudo tar --use-compress-program=unzstd -xf "$DEST" -C "$CHARD_ROOT"
+    else
+        sudo tar -xf "$DEST" -C "$CHARD_ROOT"
+    fi
+done
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
@@ -465,6 +493,11 @@ Version: 2.7.0
 Libs: -L${libdir} -lduktape
 Cflags: -I${includedir}/duktape
 EOF
+
+     # download and extract to / (chard chroot) 
+    https://archlinux.org/packages/extra/x86_64/polkit/download
+    https://archlinux.org/packages/extra/x86_64/polkit-kde-agent/download
+    https://archlinux.org/packages/extra/x86_64/malcontent/download
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 
