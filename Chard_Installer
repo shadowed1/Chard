@@ -772,7 +772,7 @@ case \"$BUILDSYS\" in
         cp -r /var/tmp/build/$DIR /usr/local/share/xml/docbook-xsl/$DIR
         cd /usr/local/share/xml/docbook-xsl/$DIR
         chmod +x install.sh
-        ./install.sh --batch
+        printf 'Y\n' | ./install.sh --batch
         xmlcatalog --noout --add 'public' \
             '-//OASIS//DTD DocBook V5.0//EN' \
             /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null
