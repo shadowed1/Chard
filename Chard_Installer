@@ -323,6 +323,7 @@ PACKAGES=(
     "re2c|4.3|tar.xz|https://github.com/skvadrik/re2c/releases/download/4.3/re2c-4.3.tar.xz|re2c-4.3|gnu"
     "ninja|1.13.1|tar.gz|https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz|ninja-1.13.1|cmake"
     "docbook|5.0.9|zip|https://github.com/docbook/xslt10-stylesheets/releases/download/snapshot%2F2020-06-03/docbook-xsl-snapshot.zip|docbook-xsl-snapshot|docbook"
+    "docbook-xml|4.3|tar.gz|https://www.docbook.org/xml/4.3/docbook-xml-4.3.tar.gz|docbook-xml-4.3|docbookxml"
     "gtk-doc|1.34.0|tar.xz|https://download.gnome.org/sources/gtk-doc/1.34/gtk-doc-1.34.0.tar.xz|gtk-doc-1.34.0|gtk-doc"
     "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
@@ -777,6 +778,19 @@ case \"$BUILDSYS\" in
         xmlcatalog --noout --add 'public' \
             '-//OASIS//DTD DocBook V5.0//EN' \
             /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null
+        ;;
+    docbookxml)
+        mkdir -p /usr/share/xml/docbook/xml-dtd-4.3
+        cp -r /var/tmp/build/$DIR/* /usr/share/xml/docbook/xml-dtd-4.3/
+        # Register DTD in system XML catalog
+        xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML V4.3//EN" \
+            "/usr/share/xml/docbook/xml-dtd-4.3/docbookx.dtd" \
+            /etc/xml/catalog
+        xmlcatalog --noout --add "system" \
+            "/usr/share/xml/docbook/xml-dtd-4.3/docbookx.dtd" \
+            "/usr/share/xml/docbook/xml-dtd-4.3/docbookx.dtd" \
+            /etc/xml/catalog
         ;;
     *)
         echo \"Unknown build system: $BUILDSYS\"
