@@ -399,6 +399,7 @@ PACKAGES=(
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
+    "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
