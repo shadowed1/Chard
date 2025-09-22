@@ -420,19 +420,41 @@ cleanup_chroot() {
 
 trap cleanup_chroot EXIT INT TERM
 
-ARCH_PKGS=(
-    "https://archlinux.org/packages/extra/x86_64/polkit/download"
-    "https://archlinux.org/packages/extra/x86_64/polkit-kde-agent/download"
-    "https://archlinux.org/packages/extra/x86_64/malcontent/download"
-    "https://archlinux.org/packages/extra/x86_64/sysprof/download"
-    "https://archlinux.org/packages/extra/x86_64/libxau/download"
-)
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)
+        GENTOO_ARCH="amd64"
+        CHOST="x86_64-pc-linux-gnu"
+        ARCH_PKGS=(
+            "https://archlinux.org/packages/extra/x86_64/polkit/download"
+            "https://archlinux.org/packages/extra/x86_64/polkit-kde-agent/download"
+            "https://archlinux.org/packages/extra/x86_64/malcontent/download"
+            "https://archlinux.org/packages/extra/x86_64/sysprof/download"
+            "https://archlinux.org/packages/extra/x86_64/libxau/download"
+        )
+        ;;
+    aarch64|arm64)
+        GENTOO_ARCH="arm64"
+        CHOST="aarch64-unknown-linux-gnu"
+        ARCH_PKGS=(
+            "http://mirror.archlinuxarm.org/aarch64/extra/polkit-126-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/polkit-kde-agent-6.4.5-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/malcontent-0.13.1-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/sysprof-48.1-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
+        )
+        ;;
+    *)
+        echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
+        exit 1
+        ;;
+esac
 
 for url in "${ARCH_PKGS[@]}"; do
     FILE_NAME=$(basename "$url")
     DEST="$CHARD_ROOT/$FILE_NAME"
 
-    echo "${CYAN}[+] Downloading $FILE_NAME from Arch"
+    echo "${CYAN}[+] Downloading $FILE_NAME"
     attempt=1
     while true; do
         sudo curl -L --progress-bar -o "$DEST" "$url" && break
@@ -446,11 +468,20 @@ for url in "${ARCH_PKGS[@]}"; do
     done
 
     echo "${RESET}${YELLOW}[+] Extracting $FILE_NAME"
-    if [[ "$DEST" == *.zst ]]; then
-        sudo tar --use-compress-program=unzstd -xf "$DEST" -C "$CHARD_ROOT"
-    else
-        sudo tar -xf "$DEST" -C "$CHARD_ROOT"
-    fi
+    case "$DEST" in
+        *.zst)
+            sudo tar --use-compress-program=unzstd -xf "$DEST" -C "$CHARD_ROOT"
+            ;;
+        *.xz)
+            sudo tar -xJf "$DEST" -C "$CHARD_ROOT"
+            ;;
+        *.tar.gz|*.tgz)
+            sudo tar -xzf "$DEST" -C "$CHARD_ROOT"
+            ;;
+        *)
+            sudo tar -xf "$DEST" -C "$CHARD_ROOT"
+            ;;
+    esac
 done
 
 for pkg in "${PACKAGES[@]}"; do
