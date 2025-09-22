@@ -389,6 +389,7 @@ PACKAGES=(
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
     "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
     "sysprof|1.2.0|tar.gz|https://www.sysprof.com/sysprof-1.2.0.tar.gz|sysprof-1.2.0|gnu"
+    "libXau|1.0.12|tar.xz|https://www.x.org/pub/individual/lib/libXau-1.0.12.tar.xz|libXau-1.0.12|gnu"
     "qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|cmakeOpenGL"
     "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|cmakeG"
     "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
