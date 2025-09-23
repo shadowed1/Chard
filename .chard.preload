@@ -3,13 +3,27 @@
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpkgconf.so.7"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libunistring.so.5"
+
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libassuan.so.9"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libassuan.so"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libassuan.so.9.0.0"
+
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libsystemd.so.0"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libsystemd.so.0.40.0"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libsystemd-core-257.so"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libsystemd-shared-257.so"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libsystemd.so.0"
+
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libffi.la"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libffi"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libffi.so.8"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libffi.a"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libffi.so.8.2.0"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libffi.so"
+
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libxml2"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libxml2.so.2.13.9"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libxml2.so.2"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libxml2.so"
 
 # <<< END CHARD_PRELOAD <<<
