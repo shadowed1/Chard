@@ -423,6 +423,7 @@ PACKAGES=(
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
     "shared-mime-info|2.4|tar.gz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
+    "rust|1.82.0|tar.gz|https://static.rust-lang.org/dist/rustc-1.82.0-src.tar.gz|rustc-1.82.0-src|pythonwrap"
     "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|meson"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
@@ -734,6 +735,11 @@ case \"$BUILDSYS\" in
         cd /var/tmp/build/$DIR
         \"/usr/bin/python3.13\" setup.py build
         \"/usr/bin/python3.13\" setup.py install --prefix=/usr
+        ;;
+   pythonwrap)
+        cd /var/tmp/build/$DIR
+         \"/usr/bin/python3.13\" x.py build
+         \"/usr/bin/python3.13\" x.py install --prefix=/usr
         ;;
     pythonbuild)
         cd /var/tmp/build/$DIR
