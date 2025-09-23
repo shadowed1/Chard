@@ -38,13 +38,7 @@ CHARD_ROOT="/usr/local/chard"
 CHARD_RC="/usr/local/chard/.chardrc"
 BUILD_DIR="/usr/local/chard/var/tmp/build"
 LOG_FILE=/usr/local/chard/chardbuild.log
-echo "${RESET}${GREEN}"
-echo
-echo
-echo
-echo
-echo
-echo
+echo "${RESET}${GREEN}"                                         
 echo "                                                             AA"
 echo "                                                            A${RESET}${RED}::${RESET}${GREEN}A"
 echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHH               A${RESET}${RED}::::${RESET}${GREEN}A               RRRRRRRRRRRRRRRRR   DDDDDDDDDDDDD" 
@@ -53,29 +47,33 @@ echo "   CC${RESET}${YELLOW}:::::::::::::::${RESET}${GREEN}CH${RESET}${YELLOW}::
 echo "  C${RESET}${YELLOW}:::::${RESET}${GREEN}CCCCCCCC${RESET}${YELLOW}::::${RESET}${GREEN}CHH${RESET}${YELLOW}::::::${RESET}${GREEN}H     H${RESET}${YELLOW}::::::${RESET}${GREEN}HH            A${RESET}${RED}::::::::::${RESET}${GREEN}A            RR${RESET}${YELLOW}:::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}RDDD${RESET}${YELLOW}:::::${RESET}${GREEN}DDDDD${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
 echo " C${RESET}${YELLOW}:::::${RESET}${GREEN}C       CCCCCC  H${RESET}${YELLOW}:::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::${RESET}${GREEN}H             A${RESET}${RED}::::::::::::${RESET}${GREEN}A             R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
 echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}:::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::${RESET}${GREEN}H            A${RESET}${RED}::::::::::::::${RESET}${GREEN}A            R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"
-echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}::::::${RESET}${GREEN}HHHHH${RESET}${YELLOW}::::::${RESET}${GREEN}H           A${RESET}${RED}::            ::${RESET}${GREEN}A           R${RESET}${YELLOW}::::${RESET}${GREEN}RRRRRR${RESET}${YELLOW}:::::${RESET}${GREEN}R   D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
-echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}:::::::::::::::::${RESET}${GREEN}H          A${RESET}${RED}:::            :::${RESET}${GREEN}A          R${RESET}${YELLOW}:::::::::::::${RESET}${GREEN}RR    D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"
-echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}:::::::::::::::::${RESET}${GREEN}H         A${RESET}${RED}::::            ::::${RESET}${GREEN}A         R${RESET}${YELLOW}::::${RESET}${GREEN}RRRRRR${RESET}${YELLOW}:::::${RESET}${GREEN}R   D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"    
-echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}::::::${RESET}${GREEN}HHHHH${RESET}${YELLOW}::::::${RESET}${GREEN}H        A${RESET}${RED}:::::            :::::${RESET}${GREEN}A        R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"    
-echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}:::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::${RESET}${GREEN}H       A${RESET}${RED}::::::            ::::::${RESET}${GREEN}A       R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"   
-echo " C${RESET}${YELLOW}:::::${RESET}${GREEN}C       CCCCCC  H${RESET}${YELLOW}:::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::${RESET}${GREEN}H      A${RESET}${RED}:::::                :::::${RESET}${GREEN}A      R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
-echo "  C${RESET}${YELLOW}:::::${RESET}${GREEN}CCCCCCCC${RESET}${YELLOW}::::${RESET}${GREEN}CHH${RESET}${YELLOW}::::::${RESET}${GREEN}H     H${RESET}${YELLOW}::::::${RESET}${GREEN}HH   A${RESET}${RED}:::::::::          :::::::::${RESET}${GREEN}A   RR${RESET}${YELLOW}:::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}RDDD${RESET}${YELLOW}:::::${RESET}${GREEN}DDDDD${RESET}${YELLOW}:::::${RESET}${GREEN}D" 
-echo "   CC${RESET}${YELLOW}:::::::::::::::${RESET}${GREEN}CH${RESET}${YELLOW}:::::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::::${RESET}${GREEN}H  A${RESET}${RED}:::::::::            :::::::::${RESET}${GREEN}A  R${RESET}${YELLOW}::::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}RD${RESET}${YELLOW}:::::::::::::::${RESET}${GREEN}DD"  
-echo "     CCC${RESET}${YELLOW}::::::::::::${RESET}${GREEN}CH${RESET}${YELLOW}:::::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::::${RESET}${GREEN}H A${RESET}${RED}::::::::                ::::::::${RESET}${GREEN}A R${RESET}${YELLOW}::::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}RD${RESET}${YELLOW}::::::::::::${RESET}${GREEN}DDD"  
-echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHHA${BOLD}======                      ======${RESET}${GREEN}ARRRRRRRR     RRRRRRRDDDDDDDDDDDDD"   
-echo "                                           ${BOLD}A====                            ====A"
-echo "                                          A====                              ====A"
+echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}::::::${RESET}${GREEN}HHHHH${RESET}${YELLOW}::::::${RESET}${GREEN}H           A::            ::A           R::::RRRRRR:::::R   D:::::D     D:::::D"  
+echo "C:::::C                H:::::::::::::::::H          A:::            :::A          R:::::::::::::RR    D:::::D     D:::::D"
+echo "C:::::C                H:::::::::::::::::H         A::::            ::::A         R::::RRRRRR:::::R   D:::::D     D:::::D"    
+echo "C:::::C                H::::::HHHHH::::::H        A:::::            :::::A        R::::R     R:::::R  D:::::D     D:::::D"    
+echo "C:::::C                H:::::H     H:::::H       A::::::            ::::::A       R::::R     R:::::R  D:::::D     D:::::D"   
+echo " C:::::C       CCCCCC  H:::::H     H:::::H      A:::::                :::::A      R::::R     R:::::R  D:::::D     D:::::D"  
+echo "  C:::::CCCCCCCC::::CHH::::::H     H::::::HH   A::::::::=          =::::::::A   RR:::::R     R:::::RDDD:::::DDDDD:::::D" 
+echo "   CC:::::::::::::::CH:::::::H     H:::::::H  A::::::::=            =::::::::A  R::::::R     R:::::RD:::::::::::::::DD"  
+echo "     CCC::::::::::::CH:::::::H     H:::::::H A::::::==                ==-:::::A R::::::R     R:::::RD::::::::::::DDD"  
+echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHHA======                      ======ARRRRRRRR     RRRRRRRDDDDDDDDDDDDD"   
+echo "                                           A=:=|                            |=:=A"
+echo "                                          A=:=|                              |=:=A"
 echo "${RESET}"
 
                
 echo "${RESET}"
-echo "${RED}- Chard Installer can take ${BOLD}30-240 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~4 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
-echo "${YELLOW}- Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
-echo "${GREEN}- It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Includes a 2025 toolchain to build and compile with.${RESET}"
-echo "${CYAN}- Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${CYAN} require dev_install.${RESET}"
-echo "${BLUE}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
-echo "${MAGENTA}- Chard is current in early development and Flatpak + Emerge are not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a ${BOLD}USB backup${RESET}${MAGENTA} in case of serious mistakes.${RESET}"
+echo "${RED}Chard Installer can take ${BOLD}30-240 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~4 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
 echo
+echo "${YELLOW}Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
+echo
+echo "${GREEN}It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Includes a 2025 toolchain to build and compile with.${RESET}"
+echo
+echo "${CYAN}Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${CYAN} require dev_install.${RESET}"
+echo
+echo "${BLUE}Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
+echo
+echo "${MAGENTA}Chard is current in early development and Flatpak + Emerge are not working. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a ${BOLD}USB backup${RESET}${MAGENTA} in case of serious mistakes.${RESET}"
 echo
    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
 response=${response:-Y}
@@ -89,32 +87,6 @@ case "$response" in
         exit 1
         ;;
 esac
-    
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-######################################################################################### STAGE 1 ############################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
 
 
     echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be /usr/local/chard/ in reality.${RESET}"
@@ -300,7 +272,7 @@ export CC="$GCC_DIR/$CHOST-gcc"
 export CXX="$GCC_DIR/$CHOST-g++"
 export AR="$GCC_DIR/gcc-ar"
 export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
-export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin"
+export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin"
 export CXXFLAGS="$CFLAGS"
 export AWK=/usr/bin/mawk
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
@@ -311,6 +283,7 @@ export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
 export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
+
 
 KERNEL_VER="6.16"
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
@@ -351,70 +324,6 @@ echo "${RESET}${MAGENTA}[+] Linux headers installed to /usr/local/chard/usr/incl
 
 sudo rm -rf "$KERNEL_BUILD"
 
-HOST_ARCH=$(uname -m)
-case "$HOST_ARCH" in
-    x86_64) KERNEL_ARCH=x86_64 ;;
-    aarch64) KERNEL_ARCH=arm64 ;;
-    *) echo "Unknown architecture: $HOST_ARCH"; exit 1 ;;
-esac
-
-CURL_BIN="/usr/bin/curl"
-
-if [ ! -x "$CURL_BIN" ]; then
-    echo "ERROR: curl not found on host system!"
-    exit 1
-fi
-
-echo "${MAGENTA}[*] Host architecture detected: $KERNEL_ARCH"
-echo "[*] Copying curl and its dependencies to $CHARD_ROOT"
-
-sudo cp --parents "$CURL_BIN" "$CHARD_ROOT"
-sudo chmod +x "$CHARD_ROOT/usr/bin/curl"
-
-LD_LIBS=$(ldd "$CURL_BIN" | awk '{
-    for(i=1;i<=NF;i++) if($i ~ /^\//) print $i
-}' | sort -u)
-
-for lib in $LD_LIBS; do
-    if [ -f "$lib" ]; then
-        echo "Copying $lib"
-        sudo cp --parents "$lib" "$CHARD_ROOT"
-        sudo chmod 755 "$CHARD_ROOT$lib"
-    else
-        echo "WARNING: Library $lib not found!"
-    fi
-done
-
-echo "[*] Done. curl and all detected dependencies copied.${RESET}"
-
-
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-######################################################################################### STAGE 2 ############################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-
-
 PACKAGES=(
     "make|4.4|tar.gz|https://mirrors.kernel.org//gnu/make/make-4.4.tar.gz|make-4.4|gnu"
     "gmp|6.3.0|tar.xz|https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz|gmp-6.3.0|gnu"
@@ -440,7 +349,6 @@ PACKAGES=(
     "docbook|5.0.9|zip|https://github.com/docbook/xslt10-stylesheets/releases/download/snapshot%2F2020-06-03/docbook-xsl-snapshot.zip|docbook-xsl-snapshot|docbook"
     "gtk-doc|1.34.0|tar.xz|https://download.gnome.org/sources/gtk-doc/1.34/gtk-doc-1.34.0.tar.xz|gtk-doc-1.34.0|gtk-doc"
     "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
-    "libunistring|1.3|tar.xz|https://mirrors.kernel.org//gnu/libunistring/libunistring-1.3.tar.xz|libunistring-1.3|gnu"
     "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
     "sqlite|3500400|tar.gz|https://www.sqlite.org/2025/sqlite-autoconf-3500400.tar.gz|sqlite-autoconf-3500400|gnu"
     "util-linux|2.41|tar.xz|https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.xz|util-linux-2.41|gnu"
@@ -459,6 +367,7 @@ PACKAGES=(
     "harfbuzz|11.5.0|tar.xz|https://github.com/harfbuzz/harfbuzz/releases/download/11.5.0/harfbuzz-11.5.0.tar.xz|harfbuzz-11.5.0|meson"
     "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
     "libseccomp|2.5gnu).5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
+    "libunistring|1.3|tar.xz|https://mirrors.kernel.org//gnu/libunistring/libunistring-1.3.tar.xz|libunistring-1.3|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
@@ -501,21 +410,23 @@ PACKAGES=(
     "fuse|3.17.4|tar.gz|https://github.com/libfuse/libfuse/releases/download/fuse-3.17.4/fuse-3.17.4.tar.gz|fuse-3.17.4|meson"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
     "libpsl|0.21.5|tar.gz|https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz|libpsl-0.21.5|gnussl"
-    #"curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
+    "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
     "expat|2.5.0|tar.gz|https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.gz|expat-2.5.0|gnu"
     "duktape|2.7.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.7.0|duktape"
     "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
     "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
     "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
     "libXau|1.0.12|tar.xz|https://www.x.org/pub/individual/lib/libXau-1.0.12.tar.xz|libXau-1.0.12|gnu"
-    #"qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|gnu"
-    #"qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|gnuqt"
     "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
     "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
     "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
     "shared-mime-info|2.4|tar.gz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
+    "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|meson"
+    "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
+    "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
+    "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
 mkdir -p "$BUILD_DIR"
@@ -549,10 +460,6 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
-            "https://archlinux.org/packages/extra/x86_64/llvm/download"
-            "https://archlinux.org/packages/extra/x86_64/llvm-libs/download"
-            "https://archlinux.org/packages/extra/x86_64/double-conversion/download"
-            "https://archlinux.org/packages/extra/x86_64/gd/download"
             "https://archlinux.org/packages/extra/x86_64/rust/download"
             "https://archlinux.org/packages/extra/x86_64/rustup/download"
         )
@@ -568,10 +475,6 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/llvm-20.1.8-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/llvm-libs-20.1.8-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/double-conversion-3.3.1-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/gd-2.3.3-8-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/rustup-1.28.2-3-aarch64.pkg.tar.xz"
         )
@@ -586,7 +489,7 @@ for url in "${ARCH_PKGS[@]}"; do
     FILE_NAME=$(basename "$url")
     DEST="$CHARD_ROOT/$FILE_NAME"
 
-    echo "${CYAN}[+] Downloading $url"
+    echo "${CYAN}[+] Downloading $FILE_NAME"
     attempt=1
     while true; do
         sudo curl -L --progress-bar -o "$DEST" "$url" && break
@@ -599,7 +502,7 @@ for url in "${ARCH_PKGS[@]}"; do
         sleep $RETRY_DELAY
     done
 
-    echo "${RESET}${YELLOW}[+] Extracting $url"
+    echo "${RESET}${YELLOW}[+] Extracting $FILE_NAME"
     case "$DEST" in
         *.zst)
             sudo tar --use-compress-program=unzstd -xf "$DEST" -C "$CHARD_ROOT"
@@ -934,360 +837,6 @@ sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
-
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-######################################################################################### STAGE 3 ############################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-
-rustup toolchain install stable
-rustup default stable
-
-PACKAGES=(
-
-    "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|meson"
-    "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
-    "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
-    "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
-
-)
-
-for pkg in "${PACKAGES[@]}"; do
-    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
-    ARCHIVE="$NAME-$VERSION.$EXT"
-
-    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
-
-    attempt=1
-    while true; do
-        sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL" && break
-
-        echo "${RED}[!] Download failed for $NAME-$VERSION (attempt $attempt/$MAX_RETRIES), retrying in $RETRY_DELAY seconds..."
-        (( attempt++ ))
-
-        if (( attempt > MAX_RETRIES )); then
-            echo "${BOLD}${RED}[!] Failed to download $NAME-$VERSION after $MAX_RETRIES attempts. Aborting.${RESET}"
-            exit 1
-        fi
-        sleep $RETRY_DELAY
-    done
-
-    echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
-    case "$EXT" in
-        tar.gz|tgz)
-            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.xz)
-            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        tar.bz2)
-            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-            ;;
-        zip)
-            sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
-            ;;
-        *)
-            echo "Unknown archive format: $EXT"; exit 1 ;;
-    esac
-done
-
-echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
-
-sudo mount --make-private /usr/local/chard
-mountpoint -q "/usr/local/chard/proc"    || sudo mount -t proc proc "/usr/local/chard/proc"
-mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
-mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
-mountpoint -q "/usr/local/chard/dev/shm" || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
-mountpoint -q "/usr/local/chard/etc/resolv.conf" || sudo mount --bind /etc/resolv.conf /usr/local/chard/etc/resolv.conf
-mountpoint -q "/usr/local/chard/etc/ssl" ||     sudo mount --bind /etc/ssl /usr/local/chard/etc/ssl
-
-for pkg in "${PACKAGES[@]}"; do
-    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"    
-    echo "[+] Building $NAME-$VERSION in chroot${RESET}"
-    sudo chroot "/usr/local/chard" /bin/bash -c "
-
-cd /var/tmp/build/$DIR
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
-esac
-
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export MAGIC=\"/usr/share/misc/magic.mgc\"
-export CC=\$GCC_DIR/\$CHOST-gcc
-export CXX=\$GCC_DIR/\$CHOST-g++
-export AR=\$GCC_DIR/gcc-ar
-export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
-export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14\"
-export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\$PERL5LIB
-export PKG_CONFIG=/usr/bin/pkg-config
-export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
-export PYTHON=\"/bin/python3\"
-export FORCE_UNSAFE_CONFIGURE=1
-export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
-export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-export LDFLAGS=\"-L/usr/lib\"
-export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\$GI_TYPELIB_PATH
-if [[ \"$NAME\" == \"gtest\" ]]; then
-    cd /var/tmp/build/${DIR}
-else
-    cd /var/tmp/build/$DIR
-fi
-
-case \"$BUILDSYS\" in
-    gnu)
-        ./configure --prefix=/usr
-        make -j\$(nproc)
-        make install
-        ;;
-    gnuqt)
-        ./configure -prefix /usr \
-                    -release \
-                    -opensource -confirm-license \
-                    -nomake examples -nomake tests \
-                    -system-zlib \
-                    -system-libjpeg -system-libpng \
-                    -system-freetype \
-                    -system-harfbuzz \
-                    -system-pcre2
-        make -j$(nproc)
-        make install
-        ;;
-    glibcgnuOOS)
-        cd /var/tmp/build
-        mkdir -p build-glibc-2.42
-        cd build-glibc-2.42
-    
-        ../glibc-2.42/configure --prefix=/usr \
-                                --disable-werror \
-                                --enable-kernel=5.4
-        
-        make -j\$(nproc)
-        make install
-        ;;
-    pythongnuOOS)
-        cd /var/tmp/build
-        mkdir -p build-Python-3.13.7
-        cd build-Python-3.13.7
-        ../Python-3.13.7/configure --prefix=/usr \
-                                   --enable-optimizations \
-                                   --with-lto
-        make -j\$(nproc)
-        make install
-        ;;
-    perl)
-        perl Makefile.PL INSTALL_BASE=/usr/local
-        make
-        make test || true
-        make install
-        ;;
-    perl-core)
-        sh Configure -des -Dprefix=/usr
-        make -j\$(nproc)
-        make install
-        ;;
-    cmake)
-        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
-        cmake --build build -j\$(nproc)
-        cmake --install build
-        ;;
-    cmakeGLS)
-        cmake -S glslang -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
-        cmake --build build -j$(nproc)
-        cmake --install build
-        ;;
-    cmakeG)
-        cmake -S . -B build \
-              -DCMAKE_INSTALL_PREFIX=/usr \
-              -DCMAKE_BUILD_TYPE=Release \
-              -DBUILD_GMOCK=OFF
-        cmake --build build -j\$(nproc)
-        cmake --install build
-        ;;
-    cmakeOpenGL)
-        cmake -S . -B build \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DFEATURE_opengl=desktop
-        cmake --build build -j\$(nproc)
-        cmake --install build
-        ;;
-    meson)
-        meson setup build --prefix=/usr
-        ninja -C build
-        ninja -C build install
-        ;;
-    mesongvdb)
-        cd /var/tmp/build/gvdb-main/gvdb-main
-        meson setup build --prefix=/usr
-        ninja -C build
-        ninja -C build install
-        ;;
-    gtk-doc)
-        cd /var/tmp/build/$DIR
-        chmod +x autogen.sh
-        ./autogen.sh --prefix=/usr
-        make -j\$(nproc)
-        make install
-        ;;
-    python)
-        cd /var/tmp/build/$DIR
-        \"/usr/bin/python3.13\" setup.py build
-        \"/usr/bin/python3.13\" setup.py install --prefix=/usr
-        ;;
-    pythonbuild)
-        cd /var/tmp/build/$DIR
-        /usr/bin/python3.13 -m pip install . --prefix=/usr
-        ;;
-    cmakepython)
-        cd /var/tmp/build/$DIR
-        cmake -S . -B build \
-              -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr \
-              -DCMAKE_BUILD_TYPE=Release
-        cmake --build build -j\"\$(nproc)\"
-        cmake --install build
-        /usr/bin/python3.13 setup.py build
-        /usr/bin/python3.13 setup.py install --prefix=/usr
-        ;;
-    libcap)
-        make -j\$(nproc) prefix=/usr
-        make test || true
-        make install prefix=/usr
-        ;;
-    icu)
-        cd /var/tmp/build/icu/source/
-        chmod +x runConfigureICU configure install-sh
-        ./runConfigureICU Linux --prefix=/usr --disable-dependency-tracking
-        make -j\$(nproc)
-        make install
-        ;;
-    gnussl)
-        ./configure --prefix=/usr --with-ssl=/usr
-        make -j\$(nproc)
-        make install
-        ;;
-    gnusslcore)
-        ./Configure --prefix=/usr
-        make -j\$(nproc)
-        make install
-        ;;
-    duktape)
-        cd /var/tmp/build/$DIR
-        make -f Makefile.sharedlibrary -j$(nproc)
-        make -f Makefile.static -j$(nproc)
-        mkdir -p /usr/include/duktape /usr/lib /usr/lib64
-        cp src/duktape.h /usr/include/duktape/
-        cp src/duk_config.h /usr/include/duktape/ 
-        cp src/duktape.c /usr/include/duktape/
-        cp src/duk_source_meta.json /usr/include/duktape/
-        cp libduktape.so* /usr/lib/
-        cp libduktape.so* /usr/lib64/
-        cp libduktape.a /usr/lib/
-        cp libduktape.a /usr/lib64/
-        cp /usr/lib/pkgconfig/duktape.pc /usr/lib64/pkgconfig/
-        cd /usr/lib
-        ln -sf libduktape.so.* libduktape.so 2>/dev/null || true
-        cd /usr/lib64
-        ln -sf libduktape.so.* libduktape.so 2>/dev/null || true
-        ldconfig
-        ;;
-    asyncns86)
-        [ -d /usr/lib/x86_64-linux-gnu ] && cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
-        ;;
-    asyncnsARM64)
-       [ -d /usr/lib/aarch64-linux-gnu ] && cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
-        ;;
-    docbook)
-        mkdir -p /usr/local/share/xml/docbook-xsl
-        cp -r /var/tmp/build/$DIR /usr/local/share/xml/docbook-xsl/$DIR
-        cd /usr/local/share/xml/docbook-xsl/$DIR
-        chmod +x install.sh
-        printf 'Y\n' | ./install.sh --batch
-        xmlcatalog --noout --add 'public' \
-            '-//OASIS//DTD DocBook V5.0//EN' \
-            /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null
-        ;;
-    *)
-        echo \"Unknown build system: $BUILDSYS\"
-        exit 1
-        ;;
-esac
-"
-    echo
-    echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
-        
-    if [ "$NAME" = "make" ] && [ -L "/usr/local/chard/usr/bin/make" ]; then
-        sudo rm -f "/usr/local/chard/usr/bin/make"
-        sudo cp /usr/local/make "/usr/local/chard/usr/bin/make"
-        echo "${GREEN}[+] Replaced symlink with real make binary in Chard Root${RESET}"
-    fi
-
-done
-
-echo "${RED}[+] Cleaning up${RESET}"
-sudo umount -l "/usr/local/chard/dev/shm"       2>/dev/null || true
-sudo umount -l "/usr/local/chard/dev"           2>/dev/null || true
-sudo umount -l "/usr/local/chard/sys"           2>/dev/null || true
-sudo umount -l "/usr/local/chard/proc"          2>/dev/null || true
-sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
-sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-
-sudo rm -rf "$BUILD_DIR"
-
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-######################################################################################### STAGE 4 ############################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
-##############################################################################################################################################################################################
 
 CHARD_ROOT="${CHARD_ROOT:-/usr/local/chard}"
 PYEXEC="/usr/lib/python-exec"
