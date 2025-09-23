@@ -508,7 +508,7 @@ PACKAGES=(
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
     "shared-mime-info|2.4|tar.gz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
     "rust|1.90.0|tar.xz|https://static.rust-lang.org/dist/rust-1.90.0-x86_64-unknown-linux-gnu.tar.xz|rust-1.90.0-x86_64-unknown-linux-gnu|rust-precompiled"
-    "rust|1.90.0|tar.xz|"https://static.rust-lang.org/dist/rust-1.90.0-aarch64-unknown-linux-gnu.tar.xz|rust-1.90.0-aarch64-unknown-linux-gnu|rust-precompiled"
+    "rust|1.90.0|tar.xz|https://static.rust-lang.org/dist/rust-1.90.0-aarch64-unknown-linux-gnu.tar.xz|rust-1.90.0-aarch64-unknown-linux-gnu|rust-precompiled"
 
 )
 
