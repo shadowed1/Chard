@@ -272,7 +272,7 @@ export CC="$GCC_DIR/$CHOST-gcc"
 export CXX="$GCC_DIR/$CHOST-g++"
 export AR="$GCC_DIR/gcc-ar"
 export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
-export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin"
+export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin"
 export CXXFLAGS="$CFLAGS"
 export AWK=/usr/bin/mawk
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
@@ -461,7 +461,7 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
-            "https://archlinux.org/packages/extra/x86_64/rust/download"
+            "https://archlinux.org/packages/extra/x86_64/rustup//download"
             "https://archlinux.org/packages/extra/x86_64/llvm/download"
             "https://archlinux.org/packages/extra/x86_64/llvm-libs/download"
             "https://archlinux.org/packages/extra/x86_64/double-conversion/download"
@@ -479,7 +479,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/rustup-1.28.2-3-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/llvm-20.1.8-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/llvm-libs-20.1.8-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/double-conversion-3.3.1-1-aarch64.pkg.tar.xz"
@@ -525,6 +525,9 @@ for url in "${ARCH_PKGS[@]}"; do
             ;;
     esac
 done
+
+rustup toolchain install stable
+rustup default stable
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
