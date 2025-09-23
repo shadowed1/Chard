@@ -548,6 +548,10 @@ for url in "${ARCH_PKGS[@]}"; do
     esac
 done
 
+export TMPDIR=/usr/local/chard/tmp
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /usr/local/chard/tmp/rustup-init.sh
+sh /usr/local/chard/tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
+
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
