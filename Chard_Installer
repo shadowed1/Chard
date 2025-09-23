@@ -53,7 +53,7 @@ echo "C:::::C                H:::::::::::::::::H         A::::            ::::A 
 echo "C:::::C                H::::::HHHHH::::::H        A:::::            :::::A        R::::R     R:::::R  D:::::D     D:::::D"    
 echo "C:::::C                H:::::H     H:::::H       A::::::            ::::::A       R::::R     R:::::R  D:::::D     D:::::D"   
 echo " C:::::C       CCCCCC  H:::::H     H:::::H      A:::::                :::::A      R::::R     R:::::R  D:::::D     D:::::D"  
-echo "  C:::::CCCCCCCC::::CHH::::::H     H::::::HH   A::::::::=          =:::::::-A   RR:::::R     R:::::RDDD:::::DDDDD:::::D" 
+echo "  C:::::CCCCCCCC::::CHH::::::H     H::::::HH   A::::::::=          =::::::::A   RR:::::R     R:::::RDDD:::::DDDDD:::::D" 
 echo "   CC:::::::::::::::CH:::::::H     H:::::::H  A::::::::=            =::::::::A  R::::::R     R:::::RD:::::::::::::::DD"  
 echo "     CCC::::::::::::CH:::::::H     H:::::::H A::::::==                ==-:::::A R::::::R     R:::::RD::::::::::::DDD"  
 echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHHA======                      ======ARRRRRRRR     RRRRRRRDDDDDDDDDDDDD"   
