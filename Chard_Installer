@@ -462,6 +462,7 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
             "https://archlinux.org/packages/extra/x86_64/rust/download"
+            "https://archlinux.org/packages/extra/x86_64/rustup/download"
         )
         ;;
     aarch64|arm64)
@@ -476,6 +477,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/rustup-1.28.2-3-aarch64.pkg.tar.xz"
         )
         ;;
     *)
