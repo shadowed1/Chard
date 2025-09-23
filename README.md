@@ -2,6 +2,7 @@
 ## Goal: Run any Linux program/app natively in ChromeOS in a semi-sandboxed environment in /usr/local/chard <br>
 ### Please do not install without a usb recovery as this is under rapid development and mistakes happen.<br>
 *Requires Developer Mode* <br>
+*Untested with Brunch Toolchain, Chromebrew, and dev_install* <br>
 *After install, chard commands will be available, along with many apps; like nano.* <br>
 `nano` <--- to launch nano. <br>
 `gcc` <br>
