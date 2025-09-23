@@ -2,7 +2,10 @@
 
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpkgconf.so.7"
+
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libunistring.so.5"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libunistring.so.5.2.0"
+export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libunistring.so"
 
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libassuan.so.9"
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libassuan.so"
