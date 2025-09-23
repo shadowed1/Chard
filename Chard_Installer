@@ -997,13 +997,13 @@ PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
 EOF
 
 if [ ! -d "$PORTAGE_PROFILE_DIR" ]; then
-    echo "Creating /usr/local/etc/portage/make.profile..."
+    echo "${RESET}${MAGENTA}Creating /usr/local/etc/portage/make.profile...${RESET}"
     sudo mkdir -p "$PORTAGE_PROFILE_DIR"
     sudo tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null <<'EOF'
 /etc/portage/make.profile
 EOF
     sudo touch "$PORTAGE_PROFILE_DIR/package.provided"
-    echo "Portage profile created at $PORTAGE_PROFILE_DIR"
+    echo "${RESET}${CYAN}Portage profile created at $PORTAGE_PROFILE_DIR ${RESET}"
 fi
 
 mkdir -p $CHARD_ROOT/etc
@@ -1029,9 +1029,8 @@ EOF
 cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
-
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
-echo "${GREEN}[+] Chard Rootready to run!"
+echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 show_progress
