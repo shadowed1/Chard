@@ -1,4 +1,4 @@
-# Chard - Chrome Arch Development
+# Chard - Chrome-Arch Development
 ## Goal: Run any Linux program/app natively in ChromeOS in a semi-sandboxed environment in /usr/local/chard <br>
 ### Please do not install without a usb recovery as this is under rapid development and mistakes happen.<br>
 *Requires Developer Mode* <br>
