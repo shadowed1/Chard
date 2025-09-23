@@ -58,7 +58,7 @@ echo "   CC:::::::::::::::CH:::::::H     H:::::::H  A::::::::=            =:::::
 echo "     CCC::::::::::::CH:::::::H     H:::::::H A::::::==                ==-:::::A R::::::R     R:::::RD::::::::::::DDD"  
 echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHHA======                      ======ARRRRRRRR     RRRRRRRDDDDDDDDDDDDD"   
 echo "                                           A=:=|                            |=:=A"
-echo "                                          A=:=|                              |=:=A
+echo "                                          A=:=|                              |=:=A"
 echo "${RESET}"
 
                
