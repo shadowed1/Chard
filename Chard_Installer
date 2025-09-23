@@ -903,6 +903,7 @@ case \"$BUILDSYS\" in
         [ -d rls-preview ] && cp -r rls-preview /usr/lib/
         chmod +x /usr/bin/rustc /usr/bin/cargo /usr/bin/rustfmt /usr/bin/rls /usr/bin/clippy 2>/dev/null
         ;;
+    
     rustarm64)
         [ -d /usr/lib/aarch64-linux-gnu ] 
         echo "[+] Installing precompiled Rust ARM64 into chroot"
