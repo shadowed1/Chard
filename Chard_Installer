@@ -490,7 +490,7 @@ for url in "${ARCH_PKGS[@]}"; do
     FILE_NAME=$(basename "$url")
     DEST="$CHARD_ROOT/$FILE_NAME"
 
-    echo "${CYAN}[+] Downloading $FILE_NAME"
+    echo "${CYAN}[+] Downloading $url"
     attempt=1
     while true; do
         sudo curl -L --progress-bar -o "$DEST" "$url" && break
@@ -503,7 +503,7 @@ for url in "${ARCH_PKGS[@]}"; do
         sleep $RETRY_DELAY
     done
 
-    echo "${RESET}${YELLOW}[+] Extracting $FILE_NAME"
+    echo "${RESET}${YELLOW}[+] Extracting $url"
     case "$DEST" in
         *.zst)
             sudo tar --use-compress-program=unzstd -xf "$DEST" -C "$CHARD_ROOT"
