@@ -606,9 +606,6 @@ for url in "${ARCH_PKGS[@]}"; do
     esac
 done
 
-rustup toolchain install stable
-rustup default stable
-
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
