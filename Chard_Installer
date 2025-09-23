@@ -464,6 +464,8 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/rust/download"
             "https://archlinux.org/packages/extra/x86_64/llvm/download"
             "https://archlinux.org/packages/extra/x86_64/llvm-libs/download"
+            "https://archlinux.org/packages/extra/x86_64/double-conversion/download"
+            "https://archlinux.org/packages/extra/x86_64/gd/download"
         )
         ;;
     aarch64|arm64)
@@ -480,6 +482,8 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/llvm-20.1.8-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/llvm-libs-20.1.8-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/double-conversion-3.3.1-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/gd-2.3.3-8-aarch64.pkg.tar.xz"
         )
         ;;
     *)
