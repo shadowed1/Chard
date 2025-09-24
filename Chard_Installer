@@ -611,12 +611,13 @@ case \"\$ARCH\" in
 esac
 
 GCC_DIR=/usr/\$CHOST/gcc-bin/14
+export HOME=/home/user
 export MAGIC=\"/usr/share/misc/magic.mgc\"
 export CC=\$GCC_DIR/\$CHOST-gcc
 export CXX=\$GCC_DIR/\$CHOST-g++
 export AR=\$GCC_DIR/gcc-ar
 export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin
+export PATH=/usr/\$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
 export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14\"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\$PERL5LIB
 export PKG_CONFIG=/usr/bin/pkg-config
@@ -628,8 +629,6 @@ export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
 export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
 export LDFLAGS=\"-L/usr/lib\"
 export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\$GI_TYPELIB_PATH
-export HOME=/home/user
-export PATH="$HOME/.cargo/bin:$PATH"
 
 if [[ \"$NAME\" == \"gtest\" ]]; then
     cd /var/tmp/build/${DIR}
@@ -721,8 +720,10 @@ case \"$BUILDSYS\" in
         ninja -C build install
         ;;
      mesonrust)
+        mount -t proc proc /proc
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
         sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
+        
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
