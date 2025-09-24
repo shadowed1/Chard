@@ -99,7 +99,6 @@ esac
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-            sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     
             echo "${BLUE}[*] Removing $CHARD_ROOT in case of reinstall...${RESET}"
@@ -440,7 +439,6 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-    sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     show_progress
     sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
