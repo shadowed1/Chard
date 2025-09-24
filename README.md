@@ -6,7 +6,7 @@
 *After install, chard commands will be available, along with many apps; like nano.* <br>
 `nano` <--- to launch nano. <br>
 `gcc` <br>
-`python` <br>
+`python` <--- Creates custom python3.13 wrapper.<br>
 `chard emerge` <--- prepend chard to command of your choice to have a custom wrapper only use paths in `/usr/local/chard` <br>
 `chard rustc` <br>
 `chard cargo` <--- Rust apps must require chard prepend to isolate from system. <br>
