@@ -82,7 +82,11 @@ response=${response:-Y}
 
 case "$response" in
     y|Y|yes|YES|Yes)
+        echo
+        echo
         echo "${GREEN}[CONTINUE]${RESET}"
+        echo
+        echo
         ;;
     *)
         echo "${RED}[EXIT]${RESET}"
