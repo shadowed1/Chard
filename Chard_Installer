@@ -89,6 +89,7 @@ case "$response" in
         exit 1
         ;;
 esac
+
     echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be /usr/local/chard/ in reality.${RESET}"
     echo
     echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
@@ -98,6 +99,7 @@ esac
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     
             echo "${BLUE}[*] Removing $CHARD_ROOT in case of reinstall...${RESET}"
@@ -426,6 +428,7 @@ PACKAGES=(
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
+)
 
 mkdir -p "$BUILD_DIR"
 
@@ -437,6 +440,7 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
+    sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     show_progress
     sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
@@ -457,7 +461,7 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
-            #"https://archlinux.org/packages/extra/x86_64/rust/download"
+            "https://archlinux.org/packages/extra/x86_64/rust/download"
         )
         ;;
     aarch64|arm64)
@@ -471,7 +475,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
-            #"http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
         )
         ;;
     *)
@@ -513,6 +517,10 @@ for url in "${ARCH_PKGS[@]}"; do
             ;;
     esac
 done
+
+export TMPDIR=/usr/local/chard/tmp
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /usr/local/chard/tmp/rustup-init.sh
+sh /usr/local/chard/tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
