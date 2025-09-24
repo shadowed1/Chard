@@ -12,6 +12,7 @@
 `chard cargo` <--- Rust apps must require chard prepend to isolate from system. <br>
 `nano` <br>
 `ldd` <br>
+`file` <br>
 `Et Al` <br>
 
 Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br> <br>
