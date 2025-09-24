@@ -57,27 +57,17 @@ chard_run() {
     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0:$CHARD_ROOT/usr/lib64/libunistring.so.5"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
+    export HOME=$CHARD_ROOT/home/user/
 
     echo "[*] Running '$*' inside Chard environment..."
     env ROOT="$ROOT" \
         PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
-        HOME="$CHARD_ROOT/root" \
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
         PKGDIR="$PKGDIR" \
         PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/lib/python-exec:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$PATH" \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-
-        LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0 \
-            $CHARD_ROOT/usr/lib64/libpkgconf.so.7 \
-            $CHARD_ROOT/usr/lib64/libunistring.so.5 \
-            $CHARD_ROOT/usr/lib64/libassuan.so.9 \
-            $CHARD_ROOT/usr/lib64/libsystemd.so.0 \
-            $CHARD_ROOT/usr/lib64/libffi.so.8 \
-            $CHARD_ROOT/usr/lib64/libxml2.so.2 \
-            $CHARD_ROOT/usr/lib64/libcrypto.so.3"
-
         SANDBOX="$CHARD_ROOT/usr/bin/sandbox" \
         FEATURES="${FEATURES:-$DEFAULT_FEATURES}" \
         USE="$USE" \
