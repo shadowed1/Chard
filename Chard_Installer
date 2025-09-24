@@ -522,7 +522,7 @@ for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
 
-    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION-$URL "
+    echo "${RESET}${GREEN}[+] Downloading $URL "
 
     attempt=1
     while true; do
@@ -538,7 +538,7 @@ for pkg in "${PACKAGES[@]}"; do
         sleep $RETRY_DELAY
     done
 
-    echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION-$URL"
+    echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
     case "$EXT" in
         tar.gz|tgz)
             sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
