@@ -414,7 +414,7 @@ PACKAGES=(
     "fuse|3.17.4|tar.gz|https://github.com/libfuse/libfuse/releases/download/fuse-3.17.4/fuse-3.17.4.tar.gz|fuse-3.17.4|meson"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
     "libpsl|0.21.5|tar.gz|https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz|libpsl-0.21.5|gnussl"
-    "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
+    "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnusslrust"
     "expat|2.5.0|tar.gz|https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.gz|expat-2.5.0|gnu"
     "duktape|2.7.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.7.0|duktape"
     "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
@@ -634,8 +634,7 @@ export CARGO_HOME="$HOME/.cargo"
 export RUSTUP_HOME="$HOME/.rustup"
 
 if [ ! -x \$CARGO_HOME/bin/rustc ]; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
-    sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
+   
 fi
 "
 
@@ -822,6 +821,14 @@ case \"$BUILDSYS\" in
         ./configure --prefix=/usr --with-ssl=/usr
         make -j\$(nproc)
         make install
+        ;;
+    gnusslrust)
+        ./configure --prefix=/usr --with-ssl=/usr
+        make -j\$(nproc)
+        make install
+        mkdir -p /tmp/
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
+        sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
         ;;
     gnusslcore)
         ./Configure --prefix=/usr
