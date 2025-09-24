@@ -561,7 +561,7 @@ for pkg in "${PACKAGES[@]}"; do
             sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
             ;;
         *)
-            echo "Unknown archive format: $EXT"; exit 1 ;;
+            echo "Unknown archive format: $EXT"
     esac
 done
 
@@ -598,7 +598,6 @@ ARCH=$(uname -m)
 
 case "$ARCH" in
     x86_64)
-        # x86_64 version
         sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<'EOF'
 [binaries]
 c = 'gcc'
@@ -620,7 +619,6 @@ endian = 'little'
 EOF
         ;;
     aarch64|arm64)
-        # ARM64 version
         sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<'EOF'
 [binaries]
 c = 'gcc'
