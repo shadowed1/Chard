@@ -310,19 +310,21 @@ echo "${CYAN}[+] Installing Linux headers into Chard Root..."
 sudo chroot "/usr/local/chard" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
+HOST_ARCH=\$(uname -m)
+
 case \"\$HOST_ARCH\" in
-    x86_64) KERNEL_ARCH=x86_64;;
-    aarch64) KERNEL_ARCH=arm64;;
-    *) echo 'Unknown architecture: \$HOST_ARCH'; exit 1;;
+    x86_64) KERNEL_ARCH=x86_64 ;;
+    aarch64) KERNEL_ARCH=arm64 ;;
+    *) echo \"Unknown architecture: \$HOST_ARCH\"; exit 1 ;;
 esac
 
-
 make mrproper
-make HOST_ARCH=$HOST_ARCH defconfig
-make HOST_ARCH=$HOST_ARCH INSTALL_HDR_PATH=/usr headers_install
+make HOST_ARCH=\$HOST_ARCH defconfig
+make HOST_ARCH=\$HOST_ARCH INSTALL_HDR_PATH=/usr headers_install
 "
 
 echo "${RESET}${MAGENTA}[+] Linux headers installed to /usr/local/chard/usr/include${RESET}"
+
 
 sudo rm -rf "$KERNEL_BUILD"
 
