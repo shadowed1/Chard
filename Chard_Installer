@@ -588,11 +588,11 @@ EOF
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 sudo mount --make-private /usr/local/chard
-mountpoint -q "/usr/local/chard/proc"         || sudo mount --bind /proc "/usr/local/chard/proc"
-mountpoint -q "/usr/local/chard/sys"          || sudo mount --bind /sys "/usr/local/chard/sys"
-mountpoint -q "/usr/local/chard/dev"          || sudo mount --bind /dev "/usr/local/chard/dev"
-mountpoint -q "/usr/local/chard/dev/shm"      || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
-mountpoint -q "/usr/local/chard/etc/ssl"      || sudo mount --bind /etc/ssl /usr/local/chard/etc/ssl
+mountpoint -q "/usr/local/chard/proc"    || sudo mount -t proc proc "/usr/local/chard/proc"
+mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
+mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
+mountpoint -q "/usr/local/chard/dev/shm" || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
+mountpoint -q "/usr/local/chard/etc/ssl" || sudo mount --bind /etc/ssl /usr/local/chard/etc/ssl
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"    
