@@ -724,7 +724,12 @@ case \"$BUILDSYS\" in
         ninja -C build install
         ;;
      mesonrust)
-        meson setup build --prefix=/usr
+        export CARGO_HOME="$HOME/.cargo"
+        export RUSTUP_HOME="$HOME/.rustup"
+        export PATH="$CARGO_HOME/bin:$PATH"
+        meson setup build --prefix=/usr \
+        -Drustc="$CARGO_HOME/bin/rustc" \
+        -Dcargo="$CARGO_HOME/bin/cargo"
         ninja -C build
         ninja -C build install
         ;;
