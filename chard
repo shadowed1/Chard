@@ -57,18 +57,6 @@ chard_run() {
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0:$CHARD_ROOT/usr/lib64/libunistring.so.5"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 
-
-    MOUNTS=("$CHARD_ROOT/proc" "$CHARD_ROOT/sys" "$CHARD_ROOT/dev" "$CHARD_ROOT/dev/shm")
-    for m in "${MOUNTS[@]}"; do
-        [ ! -d "$m" ] && mkdir -p "$m"
-        case "$m" in
-            */proc) mountpoint -q "$m" || mount -t proc proc "$m" ;;
-            */sys)  mountpoint -q "$m" || mount -t sysfs sys "$m" ;;
-            */dev)  mountpoint -q "$m" || mount --bind /dev "$m" ;;
-            */shm)  mountpoint -q "$m" || mount --bind /dev/shm "$m" ;;
-        esac
-    done
-
     echo "[*] Running '$*' inside Chard environment..."
     env \
         ROOT="$ROOT" \
@@ -86,10 +74,6 @@ chard_run() {
         PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
         HOME="$HOME" \
         "$@"
-
-    for m in "${MOUNTS[@]}"; do
-        umount -l "$m" 2>/dev/null || true
-    done
 }
 
 cmd="$1"; shift || true
