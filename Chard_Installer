@@ -428,7 +428,7 @@ PACKAGES=(
     "shared-mime-info|2.4|tar.gz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
     "libheif|1.20.2|tar.gz|https://github.com/strukturag/libheif/releases/download/v1.20.2/libheif-1.20.2.tar.gz|libheif-1.20.2|cmakeG"
     "brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|cmakeG"
-    "highway|1.3.0|tar.gz|https://github.com/google/highway/archive/1.3.0/highway-1.3.0.tar.gz|highway-1.3.0|cmakeGhighway"
+    #"highway|1.3.0|tar.gz|https://github.com/google/highway/archive/1.3.0/highway-1.3.0.tar.gz|highway-1.3.0|cmakeGhighway"
     "libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakeG"
     "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
@@ -466,7 +466,7 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
-            #"https://archlinux.org/packages/extra/x86_64/rust/download"
+            "https://archlinux.org/packages/extra/x86_64/highway/download"
         )
         ;;
     aarch64|arm64)
@@ -480,7 +480,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
-            #"http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/highway-1.3.0-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
