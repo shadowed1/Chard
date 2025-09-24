@@ -68,9 +68,6 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-
-
-# Prepare chroot mounts
 echo "${GREEN}[+] Mounting chroot${RESET}"
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
@@ -79,7 +76,6 @@ mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
 mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
 mountpoint -q "$CHARD_ROOT/etc/ssl" || sudo mount --bind /etc/ssl "$CHARD_ROOT/etc/ssl"
 
-# Build inside chroot
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     echo "${GREEN}[+] Building $NAME-$VERSION in chroot${RESET}"
@@ -145,7 +141,6 @@ esac
     echo "${MAGENTA}[+] Finished $NAME-$VERSION${RESET}"
 done
 
-# Cleanup
 echo "${RED}[+] Cleaning up${RESET}"
 sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev" 2>/dev/null || true
