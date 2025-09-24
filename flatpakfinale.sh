@@ -1,0 +1,158 @@
+#!/bin/bash
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+set -euo pipefail
+
+CHARD_ROOT="/usr/local/chard"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+GCC_DIR="/usr/local/chard/usr/$CHOST/gcc-bin/14"
+export PYTHON="/usr/local/chard/bin/python3"
+export CC="$GCC_DIR/$CHOST-gcc"
+export CXX="$GCC_DIR/$CHOST-g++"
+export AR="$GCC_DIR/gcc-ar"
+export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
+export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin"
+export CXXFLAGS="$CFLAGS"
+export AWK=/usr/bin/mawk
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
+export MAKEFLAGS="-j$(nproc)"
+export INSTALL_ROOT="/usr/local/chard"
+export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
+export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
+export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
+export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
+export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
+
+
+MAX_RETRIES=5
+RETRY_DELAY=10
+
+PACKAGES=(
+    "libheif|1.20.2|tar.gz|https://github.com/strukturag/libheif/releases/download/v1.20.2/libheif-1.20.2.tar.gz|libheif-1.20.2|cmakeG"
+    "brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|cmakeG"
+    "libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakeG"
+    "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
+    "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
+)
+
+sudo mkdir -p "$BUILD_DIR"
+
+for pkg in "${PACKAGES[@]}"; do
+    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    ARCHIVE="$NAME-$VERSION.$EXT"
+
+    echo "[+] Downloading $NAME-$VERSION"
+    attempt=1
+    until sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL"; do
+        echo "[!] Download failed (attempt $attempt/$MAX_RETRIES)"
+        (( attempt++ ))
+        if (( attempt > MAX_RETRIES )); then
+            echo "[!] Aborting download of $NAME-$VERSION"
+            exit 1
+        fi
+        sleep $RETRY_DELAY
+    done
+
+    echo "[+] Extracting $NAME-$VERSION"
+    case "$EXT" in
+        tar.gz|tgz) sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" ;;
+        tar.xz)     sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" ;;
+        tar.bz2)    sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" ;;
+        zip)        sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" ;;
+    esac
+done
+
+
+
+# Prepare chroot mounts
+echo "${GREEN}[+] Mounting chroot${RESET}"
+sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
+mountpoint -q "$CHARD_ROOT/proc"    || sudo mount -t proc proc "$CHARD_ROOT/proc"
+mountpoint -q "$CHARD_ROOT/sys"     || sudo mount -t sysfs sys "$CHARD_ROOT/sys"
+mountpoint -q "$CHARD_ROOT/dev"     || sudo mount --bind /dev "$CHARD_ROOT/dev"
+mountpoint -q "$CHARD_ROOT/dev/shm" || sudo mount --bind /dev/shm "$CHARD_ROOT/dev/shm"
+mountpoint -q "$CHARD_ROOT/etc/ssl" || sudo mount --bind /etc/ssl "$CHARD_ROOT/etc/ssl"
+
+# Build inside chroot
+for pkg in "${PACKAGES[@]}"; do
+    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    echo "${GREEN}[+] Building $NAME-$VERSION in chroot${RESET}"
+
+    sudo chroot "$CHARD_ROOT" /bin/bash -c '
+DIR="'"$DIR"'"
+BUILDSYS="'"$BUILDSYS"'"
+
+cd /var/tmp/build/"$DIR" || { echo "Failed to cd into /var/tmp/build/$DIR"; exit 1; }
+
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH" ;;
+esac
+
+GCC_DIR=/usr/\$CHOST/gcc-bin/14
+export HOME=/home/chronos/user
+export MAGIC="/usr/share/misc/magic.mgc"
+export CC=$GCC_DIR/$CHOST-gcc
+export CXX=$GCC_DIR/$CHOST-g++
+export AR=$GCC_DIR/gcc-ar
+export RANLIB=$GCC_DIR/$CHOST-gcc-ranlib
+export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14"
+export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+export PKG_CONFIG=/usr/bin/pkg-config
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
+export PYTHON="/bin/python3"
+export FORCE_UNSAFE_CONFIGURE=1
+export XDG_DATA_DIRS="/usr/share:/usr/local/share"
+export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
+export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
+export LDFLAGS="-L/usr/lib"
+export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:$GI_TYPELIB_PATH
+export CARGO_HOME="$HOME/.cargo"
+export RUSTUP_HOME="$HOME/.rustup"
+
+
+case "$BUILDSYS" in
+    cmakeG)
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_GMOCK=OFF
+        cmake --build build -j$(nproc)
+        cmake --install build
+        ;;
+    meson)
+        meson setup build --prefix=/usr
+        ninja -C build
+        ninja -C build install
+        ;;
+    mesonrust)
+        meson setup build --prefix=/usr --buildtype=release --native-file=/mesonrust.ini
+        ninja -C build
+        ninja -C build install
+        ;;
+    *)
+        echo "Unknown build system: $BUILDSYS"
+        exit 1x
+        ;;
+esac
+'
+    echo "${MAGENTA}[+] Finished $NAME-$VERSION${RESET}"
+done
+
+# Cleanup
+echo "${RED}[+] Cleaning up${RESET}"
+sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
+
+sudo rm -rf "$BUILD_DIR"
+
+echo "${GREEN}[+] All packages built successfully!${RESET}"
