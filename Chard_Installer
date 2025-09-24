@@ -459,7 +459,6 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
-            #"https://archlinux.org/packages/extra/x86_64/rust/download"
         )
         ;;
     aarch64|arm64)
@@ -473,7 +472,6 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
-            #"http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
         )
         ;;
     *)
@@ -720,10 +718,8 @@ case \"$BUILDSYS\" in
         ninja -C build install
         ;;
      mesonrust)
-        mount -t proc proc /proc
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
         sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
-        
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
