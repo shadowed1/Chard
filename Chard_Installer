@@ -128,10 +128,10 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
                  "$CHARD_ROOT"/sys \
                  "$CHARD_ROOT"/tmp \
                  "$CHARD_ROOT"/run \
-                 "$CHARD_ROOT"/home/user/.cargo \
-                 "$CHARD_ROOT"/home/user/.rustup \
-                 "$CHARD_ROOT"/home/user/.local/share \
-                 "$CHARD_ROOT"/home/user/Desktop \
+                 "$CHARD_ROOT"/home/chronos/user/.cargo \
+                 "$CHARD_ROOT"/home/chronos/user/.rustup \
+                 "$CHARD_ROOT"/home/chronos/user/.local/share \
+                 "$CHARD_ROOT"/home/chronos/user/Desktop \
                  "$CHARD_ROOT"/mnt
 
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -613,7 +613,7 @@ case \"\$ARCH\" in
 esac
 
 GCC_DIR=/usr/\$CHOST/gcc-bin/14
-export HOME=/home/user
+export HOME=/home/chronos/user
 export MAGIC=\"/usr/share/misc/magic.mgc\"
 export CC=\$GCC_DIR/\$CHOST-gcc
 export CXX=\$GCC_DIR/\$CHOST-g++
