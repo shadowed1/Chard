@@ -145,6 +145,7 @@ case "$cmd" in
         ;;
     root)
         sudo chroot /usr/local/chard /bin/bash
+        ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
         if [ ! -d "$PORTAGE_DIR" ]; then
