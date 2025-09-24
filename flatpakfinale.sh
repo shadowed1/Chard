@@ -35,7 +35,8 @@ RETRY_DELAY=10
 
 PACKAGES=(
     "libheif|1.20.2|tar.gz|https://github.com/strukturag/libheif/releases/download/v1.20.2/libheif-1.20.2.tar.gz|libheif-1.20.2|cmakeG"
-    "brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|cmakeG"
+    "brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|python"
+    "highway|1.3.0|tar.gz|https://github.com/google/highway/archive/1.3.0/highway-1.3.0.tar.gz|highway-1.3.0|cmakeG"
     "libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakeG"
     "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
@@ -80,7 +81,7 @@ for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     echo "${GREEN}[+] Building $NAME-$VERSION in chroot${RESET}"
 
-    sudo chroot "$CHARD_ROOT" /bin/bash -c '
+sudo chroot "/usr/local/chard" /bin/bash -c '
 DIR="'"$DIR"'"
 BUILDSYS="'"$BUILDSYS"'"
 
@@ -90,10 +91,10 @@ ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
     aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH" ;;
+    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
-GCC_DIR=/usr/\$CHOST/gcc-bin/14
+GCC_DIR=/usr/$CHOST/gcc-bin/14
 export HOME=/home/chronos/user
 export MAGIC="/usr/share/misc/magic.mgc"
 export CC=$GCC_DIR/$CHOST-gcc
@@ -104,22 +105,86 @@ export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14"
 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
 export PKG_CONFIG=/usr/bin/pkg-config
-export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
 export PYTHON="/bin/python3"
 export FORCE_UNSAFE_CONFIGURE=1
 export XDG_DATA_DIRS="/usr/share:/usr/local/share"
 export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
 export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
 export LDFLAGS="-L/usr/lib"
-export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:$GI_TYPELIB_PATH
+export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
 export CARGO_HOME="$HOME/.cargo"
 export RUSTUP_HOME="$HOME/.rustup"
 
-
+# Build-system selection
 case "$BUILDSYS" in
+    gnu)
+        ./configure --prefix=/usr
+        make -j"$(nproc)"
+        make install
+        ;;
+    gnuqt)
+        ./configure -prefix /usr \
+                    -release \
+                    -opensource -confirm-license \
+                    -nomake examples -nomake tests \
+                    -system-zlib \
+                    -system-libjpeg -system-libpng \
+                    -system-freetype \
+                    -system-harfbuzz \
+                    -system-pcre2
+        make -j"$(nproc)"
+        make install
+        ;;
+    glibcgnuOOS)
+        cd /var/tmp/build
+        mkdir -p build-glibc-2.42
+        cd build-glibc-2.42
+        ../glibc-2.42/configure --prefix=/usr \
+                                --disable-werror \
+                                --enable-kernel=5.4
+        make -j"$(nproc)"
+        make install
+        ;;
+    pythongnuOOS)
+        cd /var/tmp/build
+        mkdir -p build-Python-3.13.7
+        cd build-Python-3.13.7
+        ../Python-3.13.7/configure --prefix=/usr \
+                                   --enable-optimizations \
+                                   --with-lto
+        make -j"$(nproc)"
+        make install
+        ;;
+    perl)
+        perl Makefile.PL INSTALL_BASE=/usr/local
+        make
+        make test || true
+        make install
+        ;;
+    perl-core)
+        sh Configure -des -Dprefix=/usr
+        make -j"$(nproc)"
+        make install
+        ;;
+    cmake)
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
+        cmake --build build -j"$(nproc)"
+        cmake --install build
+        ;;
+    cmakeGLS)
+        cmake -S glslang -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
+        cmake --build build -j"$(nproc)"
+        cmake --install build
+        ;;
     cmakeG)
         cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_GMOCK=OFF
-        cmake --build build -j$(nproc)
+        cmake --build build -j"$(nproc)"
+        cmake --install build
+        ;;
+    cmakeOpenGL)
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DFEATURE_opengl=desktop
+        cmake --build build -j"$(nproc)"
         cmake --install build
         ;;
     meson)
@@ -128,16 +193,107 @@ case "$BUILDSYS" in
         ninja -C build install
         ;;
     mesonrust)
-        meson setup build --prefix=/usr --buildtype=release --native-file=/mesonrust.ini
+        cd /var/tmp/build/"$DIR"
+        meson setup build --prefix=/usr --buildtype=release --native-file=/mesonrust.ini -Drustc="$CARGO_HOME/bin/rustc" -Dcargo="$CARGO_HOME/bin/cargo"
         ninja -C build
         ninja -C build install
         ;;
+    mesongvdb)
+        cd /var/tmp/build/gvdb-main/gvdb-main
+        meson setup build --prefix=/usr
+        ninja -C build
+        ninja -C build install
+        ;;
+    gtk-doc)
+        cd /var/tmp/build/"$DIR"
+        chmod +x autogen.sh
+        ./autogen.sh --prefix=/usr
+        make -j"$(nproc)"
+        make install
+        ;;
+    python)
+        cd /var/tmp/build/"$DIR"
+        /usr/bin/python3.13 setup.py build
+        /usr/bin/python3.13 setup.py install --prefix=/usr
+        ;;
+    pythonbuild)
+        cd /var/tmp/build/"$DIR"
+        /usr/bin/python3.13 -m pip install . --prefix=/usr
+        ;;
+    cmakepython)
+        cd /var/tmp/build/"$DIR"
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr -DCMAKE_BUILD_TYPE=Release
+        cmake --build build -j"$(nproc)"
+        cmake --install build
+        /usr/bin/python3.13 setup.py build
+        /usr/bin/python3.13 setup.py install --prefix=/usr
+        ;;
+    libcap)
+        make -j"$(nproc)" prefix=/usr
+        make test || true
+        make install prefix=/usr
+        ;;
+    icu)
+        cd /var/tmp/build/icu/source/
+        chmod +x runConfigureICU configure install-sh
+        ./runConfigureICU Linux --prefix=/usr --disable-dependency-tracking
+        make -j"$(nproc)"
+        make install
+        ;;
+    gnussl)
+        ./configure --prefix=/usr --with-ssl=/usr
+        make -j"$(nproc)"
+        make install
+        ;;
+    gnusslcore)
+        ./Configure --prefix=/usr
+        make -j"$(nproc)"
+        make install
+        ;;
+    duktape)
+        cd /var/tmp/build/"$DIR"
+        make -f Makefile.sharedlibrary -j"$(nproc)"
+        make -f Makefile.static -j"$(nproc)"
+        mkdir -p /usr/include/duktape /usr/lib /usr/lib64
+        cp src/duktape.h /usr/include/duktape/
+        cp src/duk_config.h /usr/include/duktape/
+        cp src/duktape.c /usr/include/duktape/
+        cp src/duk_source_meta.json /usr/include/duktape/
+        cp libduktape.so* /usr/lib/
+        cp libduktape.so* /usr/lib64/
+        cp libduktape.a /usr/lib/
+        cp libduktape.a /usr/lib64/
+        cp /usr/lib/pkgconfig/duktape.pc /usr/lib64/pkgconfig/
+        cd /usr/lib
+        ln -sf libduktape.so.* libduktape.so 2>/dev/null || true
+        cd /usr/lib64
+        ln -sf libduktape.so.* libduktape.so 2>/dev/null || true
+        ldconfig
+        mkdir -p /tmp
+        curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
+        sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
+        ;;
+    asyncns86)
+        [ -d /usr/lib/x86_64-linux-gnu ] && cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
+        ;;
+    asyncnsARM64)
+        [ -d /usr/lib/aarch64-linux-gnu ] && cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
+        ;;
+    docbook)
+        mkdir -p /usr/local/share/xml/docbook-xsl
+        cp -r /var/tmp/build/"$DIR" /usr/local/share/xml/docbook-xsl/"$DIR"
+        cd /usr/local/share/xml/docbook-xsl/"$DIR"
+        chmod +x install.sh
+        printf "Y\n" | ./install.sh --batch
+        xmlcatalog --noout --add "public" "-//OASIS//DTD DocBook V5.0//EN" /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null
+        ;;
     *)
         echo "Unknown build system: $BUILDSYS"
-        exit 1x
+        exit 1
         ;;
 esac
 '
+
     echo "${MAGENTA}[+] Finished $NAME-$VERSION${RESET}"
 done
 
