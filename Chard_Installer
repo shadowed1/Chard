@@ -589,18 +589,23 @@ Libs: -L${libdir} -lmalcontent-ui-1
 Cflags: -I${includedir}/malcontent-ui-1
 EOF
 
-sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<EOF
+ARCH=$(uname -m)
+
+case "$ARCH" in
+    x86_64)
+        # x86_64 version
+        sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<'EOF'
 [binaries]
-c = gcc
-cpp = g++
-ar = ar
-strip = strip
-pkg-config = pkg-config
-cargo = /home/chronos/user/.cargo/bin/cargo
-rust = /home/chronos/user/.cargo/bin/rustc
+c = 'gcc'
+cpp = 'g++'
+ar = 'ar'
+strip = 'strip'
+pkgconfig = 'pkg-config'
+cargo = '/home/chronos/user/.cargo/bin/cargo'
+rust = '/home/chronos/user/.cargo/bin/rustc'
 
 [properties]
-rust_target = x86_64-pc-linux-gnu
+rust_target = 'x86_64-pc-linux-gnu'
 
 [host_machine]
 system = 'linux'
@@ -608,6 +613,37 @@ cpu_family = 'x86_64'
 cpu = 'x86_64'
 endian = 'little'
 EOF
+        ;;
+    aarch64|arm64)
+        # ARM64 version
+        sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<'EOF'
+[binaries]
+c = 'gcc'
+cpp = 'g++'
+ar = 'ar'
+strip = 'strip'
+pkgconfig = 'pkg-config'
+cargo = '/home/chronos/user/.cargo/bin/cargo'
+rust = '/home/chronos/user/.cargo/bin/rustc'
+
+[properties]
+rust_target = 'aarch64-unknown-linux-gnu'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'aarch64'
+cpu = 'aarch64'
+endian = 'little'
+EOF
+        ;;
+    *)
+        echo "Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
+
+echo "Created $CHARD_ROOT/mesonrust.ini for $ARCH"
+
 
 echo "${RED}Created $CHARD_ROOT/usr/local/chard/mesonrust.ini${RESET}"
 
@@ -746,12 +782,9 @@ case \"$BUILDSYS\" in
         ninja -C build install
         ;;
      mesonrust)
-        export CARGO_HOME="$HOME/.cargo"
-        export RUSTUP_HOME="$HOME/.rustup"
-        export PATH="$CARGO_HOME/bin:$PATH"
-        meson setup build --prefix=/usr \
-        -Drustc="$CARGO_HOME/bin/rustc" \
-        -Dcargo="$CARGO_HOME/bin/cargo"
+        mkdir -p build
+        cd build
+        meson setup --prefix=/us --buildtype=release --native-file=/mesonrust.ini ..
         ninja -C build
         ninja -C build install
         ;;
