@@ -8,6 +8,10 @@
 `gcc` <br>
 `python` <br>
 `chard emerge` <--- prepend chard to command of your choice to have a custom wrapper only use paths in `/usr/local/chard` <br>
+`chard rustc` <br>
+`chard cargo` <--- Rust apps must require chard prepend to isolate from system. <br>
+`nano` <br>
+`ldd` <br>
 `Et Al` <br>
 
 Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br> <br>
