@@ -56,7 +56,7 @@ chard_run() {
     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0:$CHARD_ROOT/usr/lib64/libunistring.so.5"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox
-    echo "${RED}[${RESET}${GREEN}*${RESET}${RED}] Running ${RESET}${YELLOW}'$*'${RESET}${RED} inside Chard Root${RESET}"
+    echo "${RED}[${RESET}${GREEN}*${RESET}${RED}] Running${RESET}${YELLOW} '$*' ${RESET}${RED}inside Chard Root${RESET}"
     env \
         ROOT="$ROOT" \
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
