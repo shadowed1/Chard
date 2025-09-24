@@ -425,6 +425,7 @@ PACKAGES=(
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
     "shared-mime-info|2.4|tar.gz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
+    "libheif|1.20.2|tar.gz|https://github.com/strukturag/libheif/releases/download/v1.20.2/libheif-1.20.2.tar.gz|libheif-1.20.2|cmakeG"
     "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
@@ -649,7 +650,6 @@ echo "${RED}Created $CHARD_ROOT/usr/local/chard/mesonrust.ini${RESET}"
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
-sudo mount --make-private /usr/local/chard
 mountpoint -q "/usr/local/chard/proc"    || sudo mount -t proc proc "/usr/local/chard/proc"
 mountpoint -q "/usr/local/chard/sys"     || sudo mount -t sysfs sys "/usr/local/chard/sys"
 mountpoint -q "/usr/local/chard/dev"     || sudo mount --bind /dev "/usr/local/chard/dev"
@@ -782,9 +782,12 @@ case \"$BUILDSYS\" in
         ninja -C build install
         ;;
      mesonrust)
-        mkdir -p build
-        cd build
-        meson setup --prefix=/us --buildtype=release --native-file=/mesonrust.ini ..
+        cd /var/tmp/build/$DIR
+        meson setup build --prefix=/usr \
+            --buildtype=release \
+            --native-file=/mesonrust.ini \
+            -Drustc="$CARGO_HOME/bin/rustc" \
+            -Dcargo="$CARGO_HOME/bin/cargo"
         ninja -C build
         ninja -C build install
         ;;
