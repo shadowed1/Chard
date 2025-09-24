@@ -157,9 +157,9 @@ fi
 
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) GENTOO_ARCH="amd64"; CHOST="x86_64-pc-linux-gnu";;
-    aarch64) GENTOO_ARCH="arm64"; CHOST="aarch64-unknown-linux-gnu";;
-    *) echo "Unknown architecture: $ARCH"; exit 1;;
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH" ;;
 esac
 
 ARCH=$(uname -m)
@@ -309,13 +309,13 @@ echo "${CYAN}[+] Installing Linux headers into Chard Root..."
 sudo chroot "/usr/local/chard" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
-HOST_ARCH=\$(uname -m)
-
-case \"\$HOST_ARCH\" in
+HOST_ARCH=$(uname -m)
+case "$HOST_ARCH" in
     x86_64) KERNEL_ARCH=x86_64;;
     aarch64) KERNEL_ARCH=arm64;;
-    *) echo 'Unknown architecture: \$HOST_ARCH'; exit 1;;
+    *) echo "Unknown architecture: $HOST_ARCH" ;;
 esac
+
 
 make mrproper
 make HOST_ARCH=$HOST_ARCH defconfig
@@ -605,11 +605,11 @@ for pkg in "${PACKAGES[@]}"; do
 
 cd /var/tmp/build/$DIR
 
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu;;
-    *) echo 'Unknown architecture: \$ARCH'; exit 1;;
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH" ;;
 esac
 
 GCC_DIR=/usr/\$CHOST/gcc-bin/14
