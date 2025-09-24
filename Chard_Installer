@@ -628,7 +628,7 @@ export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
 export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
 export LDFLAGS=\"-L/usr/lib\"
 export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\$GI_TYPELIB_PATH
-export HOME=/home/user     # inside chroot, this is /usr/local/chard/home/user on host
+export HOME=/home/user
 export PATH="$HOME/.cargo/bin:$PATH"
 
 if [[ \"$NAME\" == \"gtest\" ]]; then
