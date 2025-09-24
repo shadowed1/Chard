@@ -589,6 +589,28 @@ Libs: -L${libdir} -lmalcontent-ui-1
 Cflags: -I${includedir}/malcontent-ui-1
 EOF
 
+sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<EOF
+[binaries]
+c = gcc
+cpp = g++
+ar = ar
+strip = strip
+pkg-config = pkg-config
+cargo = /home/chronos/user/.cargo/bin/cargo
+rust = /home/chronos/user/.cargo/bin/rustc
+
+[properties]
+rust_target = x86_64-pc-linux-gnu
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+EOF
+
+echo "${RED}Created $CHARD_ROOT/usr/local/chard/mesonrust.ini${RESET}"
+
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 sudo mount --make-private /usr/local/chard
