@@ -1,8 +1,14 @@
 # Chard (Chrome-Arch Development)
 ## Goal: Run any Linux program/app natively in ChromeOS in a semi-sandboxed environment in /usr/local/chard <br>
 ### Please do not install without a usb recovery as this is under rapid development and mistakes happen.<br>
-*Requires Developer Mode* <br>
-*Untested with Brunch Toolchain, Chromebrew, and dev_install* <br>
+*Requires Developer Mode* <br> <br>
+*Untested with Brunch Toolchain, Chromebrew, and dev_install* 
+
+
+To install, open up crosh, type in shell: <br>
+
+<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
+
 *After install, chard commands will be available, along with many apps; like nano.* <br>
 `nano` <--- to launch nano. <br>
 `gcc` <br>
@@ -13,13 +19,9 @@
 `nano` <br>
 `ldd` <br>
 `file` <br>
-`Et Al` <br>
-
-Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br> <br>
-
-To install, open up crosh, type in shell: <br>
-
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
+`Et Al` <br> <br>
+Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
+Entering `chard root` will chroot into chard, becoming a fully sandboxed environment.<br><br><br>
 
 Gentoo Linux /bin
 make 
