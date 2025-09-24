@@ -16,7 +16,7 @@ To install, open up crosh, type in shell: <br>
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
 
-### Packages:
+### Packages - Not all working yet:
 
 
 make 
