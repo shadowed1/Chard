@@ -1436,7 +1436,7 @@ for link in "${!SYMLINKS[@]}"; do
     target="${SYMLINKS[$link]}"
     if [ -f "$CHARD_BIN/$target" ]; then
         sudo ln -s "$CHARD_BIN/$target" "$PYEXEC_DIR/$link"
-        echo "${GREEN}[+] Linked $PYEXEC_DIR/$link -> $CHARD_BIN/$target ${RESET}"
+        echo "${MAGENTA}[+] Linked $PYEXEC_DIR/$link -> $CHARD_BIN/$target ${RESET}"
     else
         echo "${RED}[!] Missing $CHARD_BIN/$target ${RESET}"
     fi
@@ -1498,7 +1498,7 @@ chmod +x "$CHARD_ROOT/bin/emerge"
 
 if [ -f "$MAKE_CONF" ]; then
     cp -a "$MAKE_CONF" "${MAKE_CONF}.bak.$(date +%Y%m%d%H%M%S)"
-    echo "Backed up original make.conf to ${MAKE_CONF}.bak.*"
+    echo "${CYAN}Backed up original make.conf to ${MAKE_CONF}.bak.* ${RESET}"
 fi
 
 mkdir -p "$(dirname "$MAKE_CONF")"
@@ -1580,7 +1580,7 @@ export LOGNAME="chronos"
 export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
 EOF
 
-cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
+sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
