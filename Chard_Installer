@@ -127,7 +127,6 @@ esac
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-            sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     
             echo "${BLUE}[*] Removing $CHARD_ROOT in case of reinstall...${RESET}"
@@ -452,11 +451,10 @@ PACKAGES=(
     "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
     "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
     "shared-mime-info|2.4|tar.gz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
-    "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|meson"
+    "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
-)
 
 mkdir -p "$BUILD_DIR"
 
@@ -468,7 +466,6 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-    sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
     show_progress
     sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
@@ -489,7 +486,7 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
-            "https://archlinux.org/packages/extra/x86_64/rust/download"
+            #"https://archlinux.org/packages/extra/x86_64/rust/download"
         )
         ;;
     aarch64|arm64)
@@ -503,7 +500,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
+            #"http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
         )
         ;;
     *)
@@ -545,10 +542,6 @@ for url in "${ARCH_PKGS[@]}"; do
             ;;
     esac
 done
-
-export TMPDIR=/usr/local/chard/tmp
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /usr/local/chard/tmp/rustup-init.sh
-sh /usr/local/chard/tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
@@ -622,15 +615,13 @@ Cflags: -I${includedir}/malcontent-ui-1
 EOF
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
-sudo touch /usr/local/chard/etc/resolv.conf
+sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 sudo mount --make-private /usr/local/chard
 mountpoint -q "/usr/local/chard/proc"         || sudo mount --bind /proc "/usr/local/chard/proc"
 mountpoint -q "/usr/local/chard/sys"          || sudo mount --bind /sys "/usr/local/chard/sys"
 mountpoint -q "/usr/local/chard/dev"          || sudo mount --bind /dev "/usr/local/chard/dev"
 mountpoint -q "/usr/local/chard/dev/shm"      || sudo mount --bind /dev/shm "/usr/local/chard/dev/shm"
-mountpoint -q "/usr/local/chard/etc/resolv.conf" || sudo mount --bind /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 mountpoint -q "/usr/local/chard/etc/ssl"      || sudo mount --bind /etc/ssl /usr/local/chard/etc/ssl
-
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"    
@@ -664,6 +655,7 @@ export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
 export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
 export LDFLAGS=\"-L/usr/lib\"
 export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\$GI_TYPELIB_PATH
+
 if [[ \"$NAME\" == \"gtest\" ]]; then
     cd /var/tmp/build/${DIR}
 else
@@ -749,6 +741,13 @@ case \"$BUILDSYS\" in
         cmake --install build
         ;;
     meson)
+        meson setup build --prefix=/usr
+        ninja -C build
+        ninja -C build install
+        ;;
+     mesonrust)
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
+        sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
         meson setup build --prefix=/usr
         ninja -C build
         ninja -C build install
@@ -865,7 +864,6 @@ sudo umount -l "/usr/local/chard/dev/shm"       2>/dev/null || true
 sudo umount -l "/usr/local/chard/dev"           2>/dev/null || true
 sudo umount -l "/usr/local/chard/sys"           2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"          2>/dev/null || true
-sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
