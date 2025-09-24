@@ -16,9 +16,7 @@ To install, open up crosh, type in shell: <br>
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
 
-### Packages - Not all working yet:
-
-
+Gentoo Linux /bin
 make 
 gmp
 mpfr
