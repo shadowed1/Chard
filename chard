@@ -133,9 +133,7 @@ case "$cmd" in
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-            sudo umount -l "/usr/local/chard/etc/resolv.conf" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-    
             echo "${BLUE}[*] Removing $CHARD_ROOT${RESET}"
             sudo rm -rf "$CHARD_ROOT"
     
@@ -145,6 +143,8 @@ case "$cmd" in
             echo "${RED}[*] Cancelled.${RESET}"
         fi
         ;;
+    root)
+        sudo chroot /usr/local/chard /bin/bash
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
         if [ ! -d "$PORTAGE_DIR" ]; then
