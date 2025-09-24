@@ -461,7 +461,7 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libxau/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-base/download"
             "https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
-            "https://archlinux.org/packages/extra/x86_64/rust/download"
+            #"https://archlinux.org/packages/extra/x86_64/rust/download"
         )
         ;;
     aarch64|arm64)
@@ -475,7 +475,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
+            #"http://mirror.archlinuxarm.org/aarch64/extra/rust-1:1.90.0-2-aarch64.pkg.tar.xz"
         )
         ;;
     *)
@@ -488,7 +488,7 @@ for url in "${ARCH_PKGS[@]}"; do
     FILE_NAME=$(basename "$url")
     DEST="$CHARD_ROOT/$FILE_NAME"
 
-    echo "${CYAN}[+] Downloading $FILE_NAME"
+    echo "${CYAN}[+] Downloading $url"
     attempt=1
     while true; do
         sudo curl -L --progress-bar -o "$DEST" "$url" && break
@@ -501,7 +501,7 @@ for url in "${ARCH_PKGS[@]}"; do
         sleep $RETRY_DELAY
     done
 
-    echo "${RESET}${YELLOW}[+] Extracting $FILE_NAME"
+    echo "${RESET}${YELLOW}[+] Extracting $url"
     case "$DEST" in
         *.zst)
             sudo tar --use-compress-program=unzstd -xf "$DEST" -C "$CHARD_ROOT"
@@ -518,15 +518,11 @@ for url in "${ARCH_PKGS[@]}"; do
     esac
 done
 
-export TMPDIR=/usr/local/chard/tmp
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /usr/local/chard/tmp/rustup-init.sh
-sh /usr/local/chard/tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
-
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
     ARCHIVE="$NAME-$VERSION.$EXT"
 
-    echo "${RESET}${GREEN}[+] Downloading $url "
+    echo "${RESET}${GREEN}[+] Downloading $NAME-$VERSION "
 
     attempt=1
     while true; do
@@ -542,7 +538,7 @@ for pkg in "${PACKAGES[@]}"; do
         sleep $RETRY_DELAY
     done
 
-    echo "${RESET}${YELLOW}[+] Extracting $url"
+    echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
     case "$EXT" in
         tar.gz|tgz)
             sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
