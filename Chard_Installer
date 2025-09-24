@@ -334,7 +334,8 @@ PACKAGES=(
     "binutils|2.45|tar.xz|https://mirrors.kernel.org//gnu/binutils/binutils-2.45.tar.xz|binutils-2.45|gnu"
     "diffutils|3.12|tar.xz|https://mirrors.kernel.org//gnu/diffutils/diffutils-3.12.tar.xz|diffutils-3.12|gnu"
     "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
-    "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|gnu"
+    "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
+    "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|git"
     "coreutils|9.7|tar.xz|https://mirrors.kernel.org//gnu/coreutils/coreutils-9.7.tar.xz|coreutils-9.7|gnu"
     "perl|5.40.0|tar.gz|https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz|perl-5.40.0|perl-core"
     "Capture-Tiny|0.48|tar.gz|https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-0.48.tar.gz|Capture-Tiny-0.48|perl"
@@ -369,7 +370,7 @@ PACKAGES=(
     "cairo|1.18.4|tar.xz|https://cairographics.org/releases/cairo-1.18.4.tar.xz|cairo-1.18.4|meson"
     "harfbuzz|11.5.0|tar.xz|https://github.com/harfbuzz/harfbuzz/releases/download/11.5.0/harfbuzz-11.5.0.tar.xz|harfbuzz-11.5.0|meson"
     "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
-    "libseccomp|2.5gnu).5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
+    "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "libunistring|1.3|tar.xz|https://mirrors.kernel.org//gnu/libunistring/libunistring-1.3.tar.xz|libunistring-1.3|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
@@ -413,7 +414,6 @@ PACKAGES=(
     "fuse|3.17.4|tar.gz|https://github.com/libfuse/libfuse/releases/download/fuse-3.17.4/fuse-3.17.4.tar.gz|fuse-3.17.4|meson"
     "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
     "libpsl|0.21.5|tar.gz|https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz|libpsl-0.21.5|gnussl"
-    "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
     "expat|2.5.0|tar.gz|https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.gz|expat-2.5.0|gnu"
     "duktape|2.7.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.7.0|duktape"
     "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
@@ -678,7 +678,6 @@ for pkg in "${PACKAGES[@]}"; do
         *) echo "Unknown architecture: $ARCH" ;;
     esac
     
-    export SAFE_GTEST_DIR="/usr/local/src/gtest-1.16.0"
     GCC_DIR=/usr/$CHOST/gcc-bin/14
     export HOME=/home/chronos/user
     export MAGIC="/usr/share/misc/magic.mgc"
@@ -704,6 +703,11 @@ for pkg in "${PACKAGES[@]}"; do
     case "$BUILDSYS" in
         gnu)
             ./configure --prefix=/usr
+            make -j"$(nproc)"
+            make install
+            ;;
+        git)
+            ./configure --prefix=/usr --with-curl
             make -j"$(nproc)"
             make install
             ;;
@@ -772,14 +776,11 @@ for pkg in "${PACKAGES[@]}"; do
             cmake --install build
             ;;
         cmakegtest)
-            cp -r . "$SAFE_GTEST_DIR"
             cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_GMOCK=OFF
             cmake --build build -j"$(nproc)"
             cmake --install build
             ;;
         cmakeGhighway)
-            mkdir -p /var/tmp/build/"$DIR"/externals
-            cp -r "$SAFE_GTEST_DIR" /var/tmp/build/"$DIR"/externals/googletest
             cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_GMOCK=OFF
             cmake --build build -j"$(nproc)"
             cmake --install build
