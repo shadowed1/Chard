@@ -381,7 +381,7 @@ case "$BUILDSYS" in
             ninja -C build
             ninja -C build install
             ;;
-         meson)
+         mesonpix)
             meson setup build --prefix=/usr -Dglycin=disabled
             ninja -C build
             ninja -C build install
