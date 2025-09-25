@@ -500,4 +500,7 @@ sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
+sudo chown -R 1000:1000 "/usr/local/chard"
+
+
 echo "${GREEN}[+] All packages built successfully!${RESET}"
