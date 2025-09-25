@@ -83,12 +83,16 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/cairo/download/"
             #"https://archlinux.org/packages/extra/x86_64/egl-wayland/download/"
             #"https://archlinux.org/packages/extra/x86_64/libepoxy/download/"
-            "https://archlinux.org/packages/extra/x86_64/glslang/download/"
-            "https://archlinux.org/packages/extra/any/libclc/download/"
+            #"https://archlinux.org/packages/extra/x86_64/glslang/download/"
+            #"https://archlinux.org/packages/extra/any/libclc/download/"
             #"https://archlinux.org/packages/extra/x86_64/gtk3/download/"
-            "https://archlinux.org/packages/extra/x86_64/libstemmer/download/"
-            "https://archlinux.org/packages/extra/x86_64/appstream/download/"
-            "https://archlinux.org/packages/extra/x86_64/flatpak/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libstemmer/download/"
+            #"https://archlinux.org/packages/extra/x86_64/appstream/download/"
+            #"https://archlinux.org/packages/extra/x86_64/dconf/download/"
+            #"https://archlinux.org/packages/core/x86_64/libxml2/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libmalcontent/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libfyaml/download/"
+            #"https://archlinux.org/packages/extra/x86_64/flatpak/download/"
 
 
         )
