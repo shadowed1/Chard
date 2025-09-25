@@ -52,20 +52,20 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/highway/download"
             #"https://archlinux.org/packages/extra/x86_64/libavif/download"
             #"https://archlinux.org/packages/extra/x86_64/libwebp/download"
-            "https://archlinux.org/packages/extra/x86_64/dav1d/download/"
-            "https://archlinux.org/packages/extra/x86_64/rav1e/download"
-            "https://archlinux.org/packages/extra/x86_64/svt-av1/download"
-            "https://archlinux.org/packages/extra/x86_64/aom/download"
-            "https://archlinux.org/packages/extra/x86_64/libjpeg-turbo/download/"
-            "https://archlinux.org/packages/extra/x86_64/libpng/download/"
-            "https://archlinux.org/packages/extra/x86_64/libxshmfence/download/"
-            "https://archlinux.org/packages/extra/x86_64/lm_sensors/download"
-            "https://archlinux.org/packages/extra/x86_64/spirv-tools/download"
-            "https://archlinux.org/packages/extra/x86_64/freeglut/download/"
-            "https://archlinux.org/packages/extra/x86_64/libxxf86vm/download/"
-            "https://archlinux.org/packages/extra/x86_64/giflib/download/"
-            "https://archlinux.org/packages/extra/x86_64/openexr/download/"
-            "https://archlinux.org/packages/extra/x86_64/benchmark/download/"
+            #"https://archlinux.org/packages/extra/x86_64/dav1d/download/"
+            #"https://archlinux.org/packages/extra/x86_64/rav1e/download"
+            #"https://archlinux.org/packages/extra/x86_64/svt-av1/download"
+            #"https://archlinux.org/packages/extra/x86_64/aom/download"
+            #"https://archlinux.org/packages/extra/x86_64/libjpeg-turbo/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libpng/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxshmfence/download/"
+            #"https://archlinux.org/packages/extra/x86_64/lm_sensors/download"
+            #"https://archlinux.org/packages/extra/x86_64/spirv-tools/download"
+            #"https://archlinux.org/packages/extra/x86_64/freeglut/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxxf86vm/download/"
+            #"https://archlinux.org/packages/extra/x86_64/giflib/download/"
+            #"https://archlinux.org/packages/extra/x86_64/openexr/download/"
+            #"https://archlinux.org/packages/extra/x86_64/benchmark/download/"
 
         )
         ;;
@@ -350,7 +350,8 @@ case "$BUILDSYS" in
                 -DCMAKE_INSTALL_PREFIX=/usr \
                 -DJPEGXL_ENABLE_BENCHMARKS=OFF \
                 -DJPEGXL_ENABLE_TOOLS=ON \
-                -DJPEGXL_ENABLE_JPEG=OFF
+                -DJPEGXL_ENABLE_JPEG=OFF \
+                -DCMAKE_POLICY_VERSION_MINIMUM=3.5
         
             make -j"$(nproc)"
             make install
