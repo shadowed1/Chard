@@ -53,7 +53,8 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/libwebp/download"
             #"https://archlinux.org/packages/extra/x86_64/dav1d/download/"
             #"https://archlinux.org/packages/extra/x86_64/rav1e/download"
-            "https://archlinux.org/packages/extra/x86_64/svt-av1/download"
+            #"https://archlinux.org/packages/extra/x86_64/svt-av1/download"
+            #"https://archlinux.org/packages/extra/x86_64/aom/download"
         )
         ;;
     aarch64|arm64)
@@ -73,6 +74,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/dav1d-1.5.1-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/rav1e-0.7.1-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/av1an-0.4.2-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/aom-3.13.1-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
