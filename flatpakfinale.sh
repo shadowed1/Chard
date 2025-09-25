@@ -66,6 +66,7 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/giflib/download/"
             #"https://archlinux.org/packages/extra/x86_64/openexr/download/"
             #"https://archlinux.org/packages/extra/x86_64/benchmark/download/"
+            "https://archlinux.org/packages/extra/x86_64/libyuv/download/"
 
         )
         ;;
@@ -97,6 +98,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/giflib-5.2.2-2-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/openexr-3.4.0-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/benchmark-1.9.4-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libyuv-r2426+464c51a03-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
@@ -378,7 +380,7 @@ case "$BUILDSYS" in
             ;;
         mesonrust)
             cd /var/tmp/build/"$DIR"
-            meson setup build --prefix=/usr --buildtype=release --native-file=/mesonrust.ini -Drustc="$CARGO_HOME/bin/rustc" -Dcargo="$CARGO_HOME/bin/cargo"
+            meson setup build --prefix=/usr --buildtype=release --native-file=/mesonrust.ini
             ninja -C build
             ninja -C build install
             ;;
