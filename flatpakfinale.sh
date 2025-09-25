@@ -9,6 +9,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 set -euo pipefail
 sudo mkdir -p /usr/local/chard/tmp/safe/gtest
+sudo mkdir -p /usr/local/chard/usr/share/git-core/templates
 sudo cp /etc/resolv.conf /usr/local/chard/etc/
 CHARD_ROOT="/usr/local/chard"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
