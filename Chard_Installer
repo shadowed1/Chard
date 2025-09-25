@@ -602,6 +602,24 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
+sudo tee /usr/local/chard/usr/lib/pkgconfig/gtk+-3.0.pc > /dev/null <<'EOF'
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/gtk-3.0
+
+Name: GTK+
+Description: GTK+ Graphical UI Library
+Version: 3.24.50
+
+Requires: gdk-3.0 >= 3.24.0, atk >= 2.35.1, cairo >= 1.14.0, cairo-gobject >= 1.14.0, gdk-pixbuf-2.0 >= 2.30.0, gio-2.0 >= 2.57.2, pango >= 1.50.0
+
+Requires.private: atk-bridge-2.0, wayland-client >= 1.14.91, xkbcommon >= 0.2.0, wayland-cursor >= 1.14.91, wayland-egl, epoxy >= 1.4, fribidi >= 0.19.7, pangoft2, gio-unix-2.0 >= 2.57.2
+
+Libs: -L${libdir} -lgtk-3
+Cflags: -I${includedir}
+EOF
+
 sudo tee /usr/local/chard/usr/lib/pkgconfig/gdk-pixbuf-2.0.pc > /dev/null <<'EOF'
 prefix=/usr
 bindir=${prefix}/bin
