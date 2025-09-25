@@ -66,7 +66,8 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/giflib/download/"
             #"https://archlinux.org/packages/extra/x86_64/openexr/download/"
             #"https://archlinux.org/packages/extra/x86_64/benchmark/download/"
-            "https://archlinux.org/packages/extra/x86_64/libyuv/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libyuv/download/"
+            "https://archlinux.org/packages/extra/x86_64/librsvg/download/"
 
         )
         ;;
@@ -99,6 +100,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/openexr-3.4.0-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/benchmark-1.9.4-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/libyuv-r2426+464c51a03-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/librsvg-2:2.61.1-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
@@ -191,7 +193,7 @@ PACKAGES=(
     #"brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|python"
     #"libwebp|1.3.0|tar.gz|https://github.com/webmproject/libwebp/archive/refs/tags/v1.3.0.tar.gz|libwebp-1.3.0|webp"
     #"libavif|1.2.2|tar.gz|https://github.com/AOMediaCodec/libavif/archive/refs/tags/v1.2.2.tar.gz|libavif-1.2.2|avif"
-    "libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakejxl"
+    #"libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakejxl"
     "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
 )
