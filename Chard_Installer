@@ -1040,25 +1040,6 @@ for pkg in "${PACKAGES[@]}"; do
             make install
             ;;
         duktape)
-            cd /var/tmp/build/"$DIR"
-            make -f Makefile.sharedlibrary -j"$(nproc)"
-            make -f Makefile.static -j"$(nproc)"
-            mkdir -p /usr/include/duktape /usr/lib /usr/lib64
-            cp src/duktape.h /usr/include/duktape/
-            cp src/duk_config.h /usr/include/duktape/
-            cp src/duktape.c /usr/include/duktape/
-            cp src/duk_source_meta.json /usr/include/duktape/
-            cp libduktape.so* /usr/lib/
-            cp libduktape.so* /usr/lib64/
-            cp libduktape.a /usr/lib/
-            cp libduktape.a /usr/lib64/
-            cp /usr/lib/pkgconfig/duktape.pc /usr/lib64/pkgconfig/
-            cd /usr/lib
-            ln -sf libduktape.so.* libduktape.so 2>/dev/null || true
-            cd /usr/lib64
-            ln -sf libduktape.so.* libduktape.so 2>/dev/null || true
-            ldconfig
-            mkdir -p /tmp
             curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
             sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
             ;;
@@ -1082,7 +1063,6 @@ for pkg in "${PACKAGES[@]}"; do
             ;;
     esac
     '
-
 
     echo
     echo "${RESET}${MAGENTA}[+] Finished building $NAME-$VERSION${RESET}"
