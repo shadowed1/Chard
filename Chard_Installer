@@ -449,7 +449,6 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-    show_progress
     sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 }
 
