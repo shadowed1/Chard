@@ -55,6 +55,7 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/rav1e/download"
             #"https://archlinux.org/packages/extra/x86_64/svt-av1/download"
             #"https://archlinux.org/packages/extra/x86_64/aom/download"
+            "https://archlinux.org/packages/extra/x86_64/libjpeg-turbo/download/"
         )
         ;;
     aarch64|arm64)
@@ -75,6 +76,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/rav1e-0.7.1-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/av1an-0.4.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/aom-3.13.1-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libjpeg-turbo-3.1.2-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
