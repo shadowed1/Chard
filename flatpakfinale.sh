@@ -86,6 +86,10 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/glslang/download/"
             "https://archlinux.org/packages/extra/any/libclc/download/"
             #"https://archlinux.org/packages/extra/x86_64/gtk3/download/"
+            "https://archlinux.org/packages/extra/x86_64/libstemmer/download/"
+            "https://archlinux.org/packages/extra/x86_64/appstream/download/"
+            "https://archlinux.org/packages/extra/x86_64/flatpak/download/"
+
 
         )
         ;;
@@ -242,11 +246,11 @@ PACKAGES=(
     #"librsvg|2.57.1|tar.xz|https://download.gnome.org/sources/librsvg/2.57/librsvg-2.57.1.tar.xz|librsvg-2.57.1|gnu"
     #"glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     #"gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|mesonpix"
-    "fontconfig|2.17.1|tar.xz|https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.17.1/fontconfig-2.17.1.tar.xz|fontconfig-2.17.1|meson"
+    #"fontconfig|2.17.1|tar.xz|https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.17.1/fontconfig-2.17.1.tar.xz|fontconfig-2.17.1|meson"
     #"python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|pythongnuOOS"
-    "mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|mesonmesa"
-    "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
-    "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
+    #"mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|mesonmesa"
+    #"appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
+    #"flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
 sudo mkdir -p "$BUILD_DIR"
