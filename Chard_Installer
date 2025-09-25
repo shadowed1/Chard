@@ -633,6 +633,21 @@ Libs.private: -lm
 Cflags: -I${includedir}/pango-1.0
 EOF
 
+sudo tee /usr/local/chard/usr/lib/pkgconfig/pangocairo.pc > /dev/null <<'EOF'
+prefix=/usr
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: Pango Cairo
+Description: Cairo rendering support for Pango
+Version: 1.57.0
+Requires: pango, cairo >= 1.18.0
+Requires.private: pangoft2, glib-2.0 >= 2.82, gobject-2.0 >= 2.82, gio-2.0 >= 2.82, fribidi >= 1.0.6, libthai >= 0.1.9, harfbuzz >= 8.4.0, fontconfig >= 2.16.0, freetype2, xrender, xft >= 2.0.0, sysprof-capture-4, harfbuzz-gobject >= 8.4.0
+Libs: -L${libdir} -lpangocairo-1.0
+Libs.private: -lm
+Cflags: -I${includedir}/pango-1.0
+EOF
+
 sudo tee /usr/local/chard/usr/lib/pkgconfig/gtk+-3.0.pc > /dev/null <<'EOF'
 prefix=/usr
 exec_prefix=${prefix}
