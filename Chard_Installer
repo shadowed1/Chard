@@ -1700,7 +1700,7 @@ esac
 
 MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
 
-sudo tee "$MAKE_CONF" > /dev/null <<EOF
+tee "$MAKE_CONF" > /dev/null <<EOF
 # Chard Portage make.conf
 # Manually generated
 COMMON_FLAGS="-O2 -pipe"
@@ -1731,11 +1731,11 @@ EOF
 
 if [ ! -d "$PORTAGE_PROFILE_DIR" ]; then
     echo "${RESET}${MAGENTA}Creating /usr/local/etc/portage/make.profile...${RESET}"
-    sudo mkdir -p "$PORTAGE_PROFILE_DIR"
-    sudo tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null <<'EOF'
+    mkdir -p "$PORTAGE_PROFILE_DIR"
+    tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null <<'EOF'
 /etc/portage/make.profile
 EOF
-    sudo touch "$PORTAGE_PROFILE_DIR/package.provided"
+    touch "$PORTAGE_PROFILE_DIR/package.provided"
     echo "${RESET}${CYAN}Portage profile created at $PORTAGE_PROFILE_DIR ${RESET}"
 fi
 
@@ -1761,7 +1761,7 @@ EOF
 
 sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
