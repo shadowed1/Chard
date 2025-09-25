@@ -51,11 +51,21 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/highway/download"
             #"https://archlinux.org/packages/extra/x86_64/libavif/download"
             #"https://archlinux.org/packages/extra/x86_64/libwebp/download"
-            #"https://archlinux.org/packages/extra/x86_64/dav1d/download/"
-            #"https://archlinux.org/packages/extra/x86_64/rav1e/download"
-            #"https://archlinux.org/packages/extra/x86_64/svt-av1/download"
-            #"https://archlinux.org/packages/extra/x86_64/aom/download"
+            "https://archlinux.org/packages/extra/x86_64/dav1d/download/"
+            "https://archlinux.org/packages/extra/x86_64/rav1e/download"
+            "https://archlinux.org/packages/extra/x86_64/svt-av1/download"
+            "https://archlinux.org/packages/extra/x86_64/aom/download"
             "https://archlinux.org/packages/extra/x86_64/libjpeg-turbo/download/"
+            "https://archlinux.org/packages/extra/x86_64/libpng/download/"
+            "https://archlinux.org/packages/extra/x86_64/lm_sensors/download"
+            "https://archlinux.org/packages/extra/x86_64/spirv-tools/download"
+            "https://archlinuxarm.org/packages/aarch64/libxshmfence/download"
+            "https://archlinux.org/packages/extra/x86_64/freeglut/download/"
+            "https://archlinux.org/packages/extra/x86_64/libxxf86vm/download/"
+            "https://archlinux.org/packages/extra/x86_64/giflib/download/"
+            "https://archlinux.org/packages/extra/x86_64/openexr/download/"
+            "https://archlinux.org/packages/extra/x86_64/benchmark/download/"
+
         )
         ;;
     aarch64|arm64)
@@ -77,6 +87,15 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/av1an-0.4.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/aom-3.13.1-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/libjpeg-turbo-3.1.2-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libpng-1.6.50-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/lm_sensors-1:3.6.2-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/spirv-tools-1:1.4.321.0-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libxshmfence-1.3.3-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/freeglut-3.6.0-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libxxf86vm-1.1.6-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/giflib-5.2.2-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/openexr-3.4.0-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/benchmark-1.9.4-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
