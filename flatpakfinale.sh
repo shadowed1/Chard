@@ -29,19 +29,138 @@ export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
 export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
+export GIT_TEMPLATE_DIR=/usr/local/chard/usr/share/git-core/templates
 
 
 MAX_RETRIES=5
 RETRY_DELAY=10
 
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)
+        GENTOO_ARCH="amd64"
+        CHOST="x86_64-pc-linux-gnu"
+        ARCH_PKGS=(
+            #"https://archlinux.org/packages/extra/x86_64/polkit/download"
+            #"https://archlinux.org/packages/extra/x86_64/polkit-kde-agent/download"
+            #"https://archlinux.org/packages/extra/x86_64/malcontent/download"
+            #"https://archlinux.org/packages/extra/x86_64/sysprof/download"
+            #"https://archlinux.org/packages/extra/x86_64/libxau/download"
+            #"https://archlinux.org/packages/extra/x86_64/qt6-base/download"
+            #"https://archlinux.org/packages/extra/x86_64/qt6-tools/download"
+            #"https://archlinux.org/packages/extra/x86_64/highway/download"
+            "https://archlinux.org/packages/extra/x86_64/libavif/download"
+            "https://archlinux.org/packages/extra/x86_64/libwebp/download"
+            "https://archlinux.org/packages/extra/x86_64/dav1d/download/"
+        )
+        ;;
+    aarch64|arm64)
+        GENTOO_ARCH="arm64"
+        CHOST="aarch64-unknown-linux-gnu"
+        ARCH_PKGS=(
+            "http://mirror.archlinuxarm.org/aarch64/extra/polkit-126-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/polkit-kde-agent-6.4.5-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/malcontent-0.13.1-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/sysprof-48.1-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libxau-1.0.12-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/qt6-base-6.9.2-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/qt6-tools-6.9.2-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/highway-1.3.0-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libavif-1.3.0-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/libwebp-1.6.0-2-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/dav1d-1.5.1-1-aarch64.pkg.tar.xz"
+        )
+        ;;
+    *)
+        echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
+        exit 1
+        ;;
+esac
+
+for url in "${ARCH_PKGS[@]}"; do
+    FILE_NAME=$(basename "$url")
+    DEST="$CHARD_ROOT/$FILE_NAME"
+
+    echo "${CYAN}[+] Downloading $url"
+    attempt=1
+    while true; do
+        sudo curl -L --progress-bar -o "$DEST" "$url" && break
+        echo "${RED}[!] Download failed for $FILE_NAME (attempt $attempt/$MAX_RETRIES), retrying in $RETRY_DELAY seconds..."
+        (( attempt++ ))
+        if (( attempt > MAX_RETRIES )); then
+            echo "${BOLD}${RED}[!] Failed to download $FILE_NAME after $MAX_RETRIES attempts. Aborting.${RESET}"
+            exit 1
+        fi
+        sleep $RETRY_DELAY
+    done
+
+    echo "${RESET}${YELLOW}[+] Extracting $url"
+    case "$DEST" in
+        *.zst)
+            sudo tar --use-compress-program=unzstd -xf "$DEST" -C "$CHARD_ROOT"
+            ;;
+        *.xz)
+            sudo tar -xJf "$DEST" -C "$CHARD_ROOT"
+            ;;
+        *.tar.gz|*.tgz)
+            sudo tar -xzf "$DEST" -C "$CHARD_ROOT"
+            ;;
+        *)
+            sudo tar -xf "$DEST" -C "$CHARD_ROOT"
+            ;;
+    esac
+done
+
+for pkg in "${PACKAGES[@]}"; do
+    IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
+    ARCHIVE="$NAME-$VERSION.$EXT"
+
+    echo "${RESET}${GREEN}[+] Downloading $URL "
+
+    attempt=1
+    while true; do
+        sudo curl -L --progress-bar -o "$BUILD_DIR/$ARCHIVE" "$URL" && break
+
+        echo "${RED}[!] Download failed for $NAME-$VERSION (attempt $attempt/$MAX_RETRIES), retrying in $RETRY_DELAY seconds..."
+        (( attempt++ ))
+
+        if (( attempt > MAX_RETRIES )); then
+            echo "${BOLD}${RED}[!] Failed to download $NAME-$VERSION after $MAX_RETRIES attempts. Aborting.${RESET}"
+            exit 1
+        fi
+        sleep $RETRY_DELAY
+    done
+
+    echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
+    case "$EXT" in
+        tar.gz|tgz)
+            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.xz)
+            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        tar.bz2)
+            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            ;;
+        zip)
+            sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
+            ;;
+        *)
+            echo "Unknown archive format: $EXT"
+    esac
+done
+
 PACKAGES=(
-    "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
-    "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
-    "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|git"
-    "libheif|1.20.2|tar.gz|https://github.com/strukturag/libheif/releases/download/v1.20.2/libheif-1.20.2.tar.gz|libheif-1.20.2|cmakeG"
-    "brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|python"
-    "libwebp|1.3.0|tar.gz|https://github.com/webmproject/libwebp/archive/refs/tags/v1.3.0.tar.gz|libwebp-1.3.0|webp"
-    "libavif|1.2.2|tar.gz|https://github.com/AOMediaCodec/libavif/archive/refs/tags/v1.2.2.tar.gz|libavif-1.2.2|avif"
+    #"openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
+    #"curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
+    #"git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|git"
+    #"libheif|1.20.2|tar.gz|https://github.com/strukturag/libheif/releases/download/v1.20.2/libheif-1.20.2.tar.gz|libheif-1.20.2|cmakeG"
+    #"brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|python"
+    #"libwebp|1.3.0|tar.gz|https://github.com/webmproject/libwebp/archive/refs/tags/v1.3.0.tar.gz|libwebp-1.3.0|webp"
+    #"libavif|1.2.2|tar.gz|https://github.com/AOMediaCodec/libavif/archive/refs/tags/v1.2.2.tar.gz|libavif-1.2.2|avif"
     "libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakejxl"
     "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
@@ -99,27 +218,28 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
-GCC_DIR=/usr/$CHOST/gcc-bin/14
-export HOME=/home/chronos/user
-export MAGIC="/usr/share/misc/magic.mgc"
-export CC=$GCC_DIR/$CHOST-gcc
-export CXX=$GCC_DIR/$CHOST-g++
-export AR=$GCC_DIR/gcc-ar
-export RANLIB=$GCC_DIR/$CHOST-gcc-ranlib
-export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14"
-export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
-export PKG_CONFIG=/usr/bin/pkg-config
-export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
-export PYTHON="/bin/python3"
-export FORCE_UNSAFE_CONFIGURE=1
-export XDG_DATA_DIRS="/usr/share:/usr/local/share"
-export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
-export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
-export LDFLAGS="-L/usr/lib"
-export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
-export CARGO_HOME="$HOME/.cargo"
-export RUSTUP_HOME="$HOME/.rustup"
+   GCC_DIR=/usr/$CHOST/gcc-bin/14
+    export HOME=/home/chronos/user
+    export MAGIC="/usr/share/misc/magic.mgc"
+    export CC=$GCC_DIR/$CHOST-gcc
+    export CXX=$GCC_DIR/$CHOST-g++
+    export AR=$GCC_DIR/gcc-ar
+    export RANLIB=$GCC_DIR/$CHOST-gcc-ranlib
+    export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14"
+    export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+    export PKG_CONFIG=/usr/bin/pkg-config
+    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
+    export PYTHON="/bin/python3"
+    export FORCE_UNSAFE_CONFIGURE=1
+    export XDG_DATA_DIRS="/usr/share:/usr/local/share"
+    export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
+    export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
+    export LDFLAGS="-L/usr/lib"
+    export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
+    export CARGO_HOME="$HOME/.cargo"
+    export RUSTUP_HOME="$HOME/.rustup"
+    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 
 case "$BUILDSYS" in
         gnu)
