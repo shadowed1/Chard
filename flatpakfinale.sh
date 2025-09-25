@@ -78,8 +78,13 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/libxdamage/download/"
             #"https://archlinux.org/packages/extra/x86_64/libxcomposite/download/"
             #"https://archlinux.org/packages/extra/x86_64/wayland/download/"
-            "https://archlinux.org/packages/extra/x86_64/libxkbcommon/download/"
-            "https://archlinux.org/packages/extra/x86_64/libxkbcommon-x11/download"
+            #"https://archlinux.org/packages/extra/x86_64/libxkbcommon/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxkbcommon-x11/download"
+            #"https://archlinux.org/packages/extra/x86_64/cairo/download/"
+            #"https://archlinux.org/packages/extra/x86_64/egl-wayland/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libepoxy/download/"
+            "https://archlinux.org/packages/extra/x86_64/glslang/download/"
+            "https://archlinux.org/packages/extra/any/libclc/download/"
             #"https://archlinux.org/packages/extra/x86_64/gtk3/download/"
 
         )
@@ -237,6 +242,9 @@ PACKAGES=(
     #"librsvg|2.57.1|tar.xz|https://download.gnome.org/sources/librsvg/2.57/librsvg-2.57.1.tar.xz|librsvg-2.57.1|gnu"
     #"glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
     #"gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|mesonpix"
+    "fontconfig|2.17.1|tar.xz|https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.17.1/fontconfig-2.17.1.tar.xz|fontconfig-2.17.1|meson"
+    #"python|3.13.7|tar.xz|https://www.python.org/ftp/python/3.13.7/Python-3.13.7.tar.xz|Python-3.13.7|pythongnuOOS"
+    "mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|mesonmesa"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
@@ -350,16 +358,6 @@ case "$BUILDSYS" in
             make -j"$(nproc)"
             make install
             ;;
-        pythongnuOOS)
-            cd /var/tmp/build
-            mkdir -p build-Python-3.13.7
-            cd build-Python-3.13.7
-            ../Python-3.13.7/configure --prefix=/usr \
-                                       --enable-optimizations \
-                                       --with-lto
-            make -j"$(nproc)"
-            make install
-            ;;
         perl)
             perl Makefile.PL INSTALL_BASE=/usr/local
             make
@@ -413,6 +411,16 @@ case "$BUILDSYS" in
             cmake --build build -j"$(nproc)"
             cmake --install build
             ;;
+        mesonmesa)
+            meson setup build \
+              --prefix=/usr \
+              -Dplatforms=x11,wayland \
+              -Degl=true \
+              -Dopengl=true \
+              -Dgallium-drivers=swrast
+            ninja -C build
+            ninja -C build install
+            ;;
         cmakeGhighway)
             cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_GMOCK=OFF
             cmake --build build -j"$(nproc)"
@@ -445,6 +453,17 @@ case "$BUILDSYS" in
             cd /var/tmp/build/"$DIR"
             chmod +x autogen.sh
             ./autogen.sh --prefix=/usr
+            make -j"$(nproc)"
+            make install
+            ;;
+        pythongnuOOS)
+            cd /var/tmp/build
+            mkdir -p build-Python-3.13.7
+            cd build-Python-3.13.7
+            ../Python-3.13.7/configure --prefix=/usr \
+                                       --enable-optimizations \
+                                       --with-lto
+                                       --with-openssl=/usr
             make -j"$(nproc)"
             make install
             ;;
