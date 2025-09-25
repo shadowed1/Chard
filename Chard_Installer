@@ -897,7 +897,7 @@ for pkg in "${PACKAGES[@]}"; do
             cd build-Python-3.13.7
             ../Python-3.13.7/configure --prefix=/usr \
                                        --enable-optimizations \
-                                       --with-lto
+                                       --with-lto \
                                        --with-openssl=/usr
             make -j"$(nproc)"
             make install
@@ -1337,7 +1337,7 @@ for pkg in "${PACKAGES[@]}"; do
             cd build-Python-3.13.7
             ../Python-3.13.7/configure --prefix=/usr \
                                        --enable-optimizations \
-                                       --with-lto
+                                       --with-lto \
                                        --with-openssl=/usr
             make -j"$(nproc)"
             make install
