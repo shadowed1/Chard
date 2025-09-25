@@ -136,6 +136,7 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
 
 sudo mkdir -p /usr/local/chard/usr/local/src/gtest-1.16.0
 sudo mkdir -p "$(dirname "$LOG_FILE")"
+sudo mkdir -p /usr/local/chard/usr/share/git-core/templates/hooks
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
@@ -286,6 +287,7 @@ export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
 export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
+export GIT_TEMPLATE_DIR=/usr/local/chard/usr/share/git-core/templates
 
 
 KERNEL_VER="6.16"
@@ -696,6 +698,7 @@ for pkg in "${PACKAGES[@]}"; do
     export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
     export CARGO_HOME="$HOME/.cargo"
     export RUSTUP_HOME="$HOME/.rustup"
+    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
     
     case "$BUILDSYS" in
         gnu)
@@ -1115,6 +1118,7 @@ for pkg in "${PACKAGES[@]}"; do
     export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
     export CARGO_HOME="$HOME/.cargo"
     export RUSTUP_HOME="$HOME/.rustup"
+    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
     
     case "$BUILDSYS" in
         gnu)
