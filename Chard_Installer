@@ -399,7 +399,7 @@ PACKAGES=(
     "libglvnd|1.7.0|tar.gz|https://sources.voidlinux.org/libglvnd-1.7.0/libglvnd-v1.7.0.tar.gz|libglvnd-1.7.0|gnu"
     "libvdpau|1.5|tar.gz|https://gitlab.freedesktop.org/vdpau/libvdpau/-/archive/1.5/libvdpau-1.5.tar.gz|libvdpau-1.5|gnu"
     "glslang|15.0.0|tar.gz|https://github.com/KhronosGroup/glslang/archive/refs/tags/15.0.0.tar.gz|glslang-15.0.0|cmakeGLS"
-    "mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|meson"
+    "mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|mesonmesa"
     "glu|9.0.3|tar.xz|https://mesa.freedesktop.org/archive/glu/glu-9.0.3.tar.xz|glu-9.0.3|gnu"
     "wayland|1.24.0|tar.xz|https://gitlab.freedesktop.org/wayland/wayland/-/releases/1.24.0/downloads/wayland-1.24.0.tar.xz|wayland-1.24.0|meson"
     "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
@@ -484,6 +484,23 @@ case "$ARCH" in
             "https://archlinux.org/packages/extra/x86_64/libyuv/download/"
             "https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/download/"
             "https://archlinux.org/packages/extra/x86_64/glycin/download/"
+            #"https://archlinux.org/packages/extra/x86_64/fribidi/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libdatrie/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libthai/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxft/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libsysprof-capture/download/"
+            #"https://archlinux.org/packages/extra/x86_64/pango/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxdamage/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxcomposite/download/"
+            #"https://archlinux.org/packages/extra/x86_64/wayland/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxkbcommon/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxkbcommon-x11/download"
+            #"https://archlinux.org/packages/extra/x86_64/cairo/download/"
+            #"https://archlinux.org/packages/extra/x86_64/egl-wayland/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libepoxy/download/"
+            "https://archlinux.org/packages/extra/x86_64/glslang/download/"
+            "https://archlinux.org/packages/extra/any/libclc/download/"
+            #"https://archlinux.org/packages/extra/x86_64/gtk3/download/"
 
         )
         ;;
@@ -864,6 +881,7 @@ for pkg in "${PACKAGES[@]}"; do
             ../Python-3.13.7/configure --prefix=/usr \
                                        --enable-optimizations \
                                        --with-lto
+                                       --with-openssl=/usr
             make -j"$(nproc)"
             make install
             ;;
@@ -927,6 +945,15 @@ for pkg in "${PACKAGES[@]}"; do
             ;;
         meson)
             meson setup build --prefix=/usr
+            ninja -C build
+            ninja -C build install
+            ;;
+        mesonmesa)
+            meson setup build \
+              --prefix=/usr \
+              -Dplatforms=x11,wayland \
+              -Degl=true \
+              -Dopengl=desktop
             ninja -C build
             ninja -C build install
             ;;
@@ -1293,6 +1320,7 @@ for pkg in "${PACKAGES[@]}"; do
             ../Python-3.13.7/configure --prefix=/usr \
                                        --enable-optimizations \
                                        --with-lto
+                                       --with-openssl=/usr
             make -j"$(nproc)"
             make install
             ;;
