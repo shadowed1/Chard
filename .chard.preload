@@ -2,5 +2,7 @@
 export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0 \
 $CHARD_ROOT/usr/lib64/libb2.so.1 \
 $CHARD_ROOT/usr/lib64/libcrypto.so.3 \
-$CHARD_ROOT/usr/lib64/libsystemd.so.0"
+$CHARD_ROOT/usr/lib64/libsystemd.so.0 \
+$CHARD_ROOT/usr/lib64/libassuan.so.9 \
+$CHARD_ROOT/usr/lib64/libffi.so.8"
 # <<< END CHARD_PRELOAD <<<
