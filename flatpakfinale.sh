@@ -67,8 +67,6 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/openexr/download/"
             #"https://archlinux.org/packages/extra/x86_64/benchmark/download/"
             #"https://archlinux.org/packages/extra/x86_64/libyuv/download/"
-            "https://archlinux.org/packages/extra/x86_64/librsvg/download/"
-            "https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/download/"
 
         )
         ;;
@@ -196,8 +194,9 @@ PACKAGES=(
     #"libwebp|1.3.0|tar.gz|https://github.com/webmproject/libwebp/archive/refs/tags/v1.3.0.tar.gz|libwebp-1.3.0|webp"
     #"libavif|1.2.2|tar.gz|https://github.com/AOMediaCodec/libavif/archive/refs/tags/v1.2.2.tar.gz|libavif-1.2.2|avif"
     #"libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakejxl"
+    "librsvg|2.57.1|tar.xz|https://download.gnome.org/sources/librsvg/2.57/librsvg-2.57.1.tar.xz|librsvg-2.57.1|gnu"
     "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
-    "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|meson"
+    "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|mesonpix"
 )
 
 sudo mkdir -p "$BUILD_DIR"
@@ -379,6 +378,11 @@ case "$BUILDSYS" in
             ;;
         meson)
             meson setup build --prefix=/usr
+            ninja -C build
+            ninja -C build install
+            ;;
+         meson)
+            meson setup build --prefix=/usr -Dglycin=disabled
             ninja -C build
             ninja -C build install
             ;;
