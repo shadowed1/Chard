@@ -67,8 +67,9 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/openexr/download/"
             #"https://archlinux.org/packages/extra/x86_64/benchmark/download/"
             #"https://archlinux.org/packages/extra/x86_64/libyuv/download/"
-            "https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/download/"
-            "https://archlinux.org/packages/extra/x86_64/glycin/download/"
+            #"https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/download/"
+            #"https://archlinux.org/packages/extra/x86_64/glycin/download/"
+            "https://archlinux.org/packages/extra/x86_64/gtk3/download/"
 
         )
         ;;
@@ -101,9 +102,9 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/openexr-3.4.0-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/benchmark-1.9.4-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/libyuv-r2426+464c51a03-1-aarch64.pkg.tar.xz"
-            "http://mirror.archlinuxarm.org/aarch64/extra/librsvg-2:2.61.1-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/gdk-pixbuf2-2.44.2-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/glycin-2.0.0-4-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/gtk3-1:3.24.50-1-aarch64.pkg.tar.xz"
             
         )
         ;;
