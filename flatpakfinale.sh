@@ -67,6 +67,8 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/openexr/download/"
             #"https://archlinux.org/packages/extra/x86_64/benchmark/download/"
             #"https://archlinux.org/packages/extra/x86_64/libyuv/download/"
+            "https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/download/"
+            "https://archlinux.org/packages/extra/x86_64/glycin/download/"
 
         )
         ;;
@@ -101,6 +103,8 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/libyuv-r2426+464c51a03-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/librsvg-2:2.61.1-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/gdk-pixbuf2-2.44.2-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/glycin-2.0.0-4-aarch64.pkg.tar.xz"
+            
         )
         ;;
     *)
@@ -185,6 +189,30 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
+sudo tee /usr/local/chard/usr/lib/pkgconfig/gdk-pixbuf-2.0.pc > /dev/null <<'EOF'
+prefix=/usr
+bindir=${prefix}/bin
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+gdk_pixbuf_binary_version=2.10.0
+gdk_pixbuf_binarydir=${libdir}/gdk-pixbuf-2.0/2.10.0
+gdk_pixbuf_moduledir=${gdk_pixbuf_binarydir}/loaders
+gdk_pixbuf_cache_file=${gdk_pixbuf_binarydir}/loaders.cache
+gdk_pixbuf_csource=${bindir}/gdk-pixbuf-csource
+gdk_pixbuf_pixdata=${bindir}/gdk-pixbuf-pixdata
+gdk_pixbuf_query_loaders=${bindir}/gdk-pixbuf-query-loaders
+
+Name: GdkPixbuf
+Description: Image loading and scaling
+Version: 2.44.2
+Requires: gobject-2.0 >=  2.56.0
+Libs: -L${libdir} -lgdk_pixbuf-2.0
+Libs.private: -lm
+Cflags: -I${includedir}/gdk-pixbuf-2.0
+EOF
+
+
 PACKAGES=(
     #"openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
     #"curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
@@ -194,9 +222,11 @@ PACKAGES=(
     #"libwebp|1.3.0|tar.gz|https://github.com/webmproject/libwebp/archive/refs/tags/v1.3.0.tar.gz|libwebp-1.3.0|webp"
     #"libavif|1.2.2|tar.gz|https://github.com/AOMediaCodec/libavif/archive/refs/tags/v1.2.2.tar.gz|libavif-1.2.2|avif"
     #"libjxl|0.11.1|tar.gz|https://github.com/libjxl/libjxl/archive/refs/tags/v0.11.1.tar.gz|libjxl-0.11.1|cmakejxl"
-    "librsvg|2.57.1|tar.xz|https://download.gnome.org/sources/librsvg/2.57/librsvg-2.57.1.tar.xz|librsvg-2.57.1|gnu"
-    "glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
-    "gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|mesonpix"
+    #"librsvg|2.57.1|tar.xz|https://download.gnome.org/sources/librsvg/2.57/librsvg-2.57.1.tar.xz|librsvg-2.57.1|gnu"
+    #"glycin|2.0.0|tar.gz|https://gitlab.gnome.org/GNOME/glycin/-/archive/2.0.0/glycin-2.0.0.tar.gz|glycin-2.0.0|mesonrust"
+    #"gdk-pixbuf|2.44.1|tar.xz|https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.1.tar.xz|gdk-pixbuf-2.44.1|mesonpix"
+    "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
+    "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
 )
 
 sudo mkdir -p "$BUILD_DIR"
@@ -387,8 +417,9 @@ case "$BUILDSYS" in
             ninja -C build install
             ;;
         mesonrust)
-            cd /var/tmp/build/"$DIR"
-            meson setup build --prefix=/usr --buildtype=release --native-file=/mesonrust.ini
+            meson setup build --prefix=/usr --buildtype=release \
+                --native-file=/mesonrust.ini \
+                -Ddefault_library=shared
             ninja -C build
             ninja -C build install
             ;;
