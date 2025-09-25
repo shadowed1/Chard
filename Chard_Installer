@@ -953,7 +953,8 @@ for pkg in "${PACKAGES[@]}"; do
               --prefix=/usr \
               -Dplatforms=x11,wayland \
               -Degl=true \
-              -Dopengl=desktop
+              -Dopengl=true \
+              -Dgallium-drivers=swrast
             ninja -C build
             ninja -C build install
             ;;
@@ -1420,6 +1421,16 @@ for pkg in "${PACKAGES[@]}"; do
         pythonbuild)
             cd /var/tmp/build/"$DIR"
             /usr/bin/python3.13 -m pip install . --prefix=/usr
+            ;;
+        mesonmesa)
+            meson setup build \
+              --prefix=/usr \
+              -Dplatforms=x11,wayland \
+              -Degl=true \
+              -Dopengl=true \
+              -Dgallium-drivers=swrast
+            ninja -C build
+            ninja -C build install
             ;;
         cmakepython)
             cd /var/tmp/build/"$DIR"
