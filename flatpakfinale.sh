@@ -68,6 +68,7 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/benchmark/download/"
             #"https://archlinux.org/packages/extra/x86_64/libyuv/download/"
             "https://archlinux.org/packages/extra/x86_64/librsvg/download/"
+            "https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/download/"
 
         )
         ;;
@@ -101,6 +102,7 @@ case "$ARCH" in
             "http://mirror.archlinuxarm.org/aarch64/extra/benchmark-1.9.4-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/libyuv-r2426+464c51a03-1-aarch64.pkg.tar.xz"
             "http://mirror.archlinuxarm.org/aarch64/extra/librsvg-2:2.61.1-1-aarch64.pkg.tar.xz"
+            "http://mirror.archlinuxarm.org/aarch64/extra/gdk-pixbuf2-2.44.2-1-aarch64.pkg.tar.xz"
         )
         ;;
     *)
