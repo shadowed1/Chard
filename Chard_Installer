@@ -602,6 +602,22 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
+sudo tee /usr/local/chard/usr/lib/pkgconfig/pango.pc > /dev/null <<'EOF'
+prefix=/usr
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: Pango
+Description: Internationalized text handling
+Version: 1.57.0
+Requires: gobject-2.0 >= 2.82, harfbuzz >= 8.4.0
+Requires.private: glib-2.0 >= 2.82, gio-2.0 >= 2.82, fribidi >= 1.0.6, libthai >= 0.1.9, fontconfig >= 2.16.0, freetype2, xrender, xft >= 2.0.0, cairo >= 1.18.0, sysprof-capture-4
+Libs: -L${libdir} -lpango-1.0
+Libs.private: -lm
+Cflags: -I${includedir}/pango-1.0
+EOF
+
+
 sudo tee /usr/local/chard/usr/lib/pkgconfig/gtk+-3.0.pc > /dev/null <<'EOF'
 prefix=/usr
 exec_prefix=${prefix}
