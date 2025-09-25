@@ -69,7 +69,18 @@ case "$ARCH" in
             #"https://archlinux.org/packages/extra/x86_64/libyuv/download/"
             #"https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/download/"
             #"https://archlinux.org/packages/extra/x86_64/glycin/download/"
-            "https://archlinux.org/packages/extra/x86_64/gtk3/download/"
+            #"https://archlinux.org/packages/extra/x86_64/fribidi/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libdatrie/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libthai/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxft/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libsysprof-capture/download/"
+            #"https://archlinux.org/packages/extra/x86_64/pango/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxdamage/download/"
+            #"https://archlinux.org/packages/extra/x86_64/libxcomposite/download/"
+            #"https://archlinux.org/packages/extra/x86_64/wayland/download/"
+            "https://archlinux.org/packages/extra/x86_64/libxkbcommon/download/"
+            "https://archlinux.org/packages/extra/x86_64/libxkbcommon-x11/download"
+            #"https://archlinux.org/packages/extra/x86_64/gtk3/download/"
 
         )
         ;;
