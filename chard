@@ -41,7 +41,9 @@ chard_run() {
     export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
     DEFAULT_USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
     export USE="${USE:-$DEFAULT_USE}"
+    export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
     export HOME="$CHARD_ROOT/home/chronos/user"
+    export PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
     export PYTHON_TARGETS="python3_13"
     export PYTHON_SINGLE_TARGET="python3_13"
     export CFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include -I$CHARD_ROOT/usr/include/duktape $CFLAGS"
@@ -51,7 +53,7 @@ chard_run() {
     export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
     export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
     export PKGDIR="$CHARD_ROOT/var/cache/packages"
-    export PATH="$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$HOME/.cargo/bin:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:$PATH"
+    export PATH="$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$HOME/.cargo/bin:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:$CHARD_ROOT/usr/lib/python-exec:$PATH"
     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0:$CHARD_ROOT/usr/lib64/libunistring.so.5"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
@@ -63,14 +65,14 @@ chard_run() {
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
         PKGDIR="$PKGDIR" \
-        PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/lib/python-exec:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$PATH" \
+        PATH="$PATH" \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         SANDBOX="$SANDBOX" \
         FEATURES="$FEATURES" \
         USE="$USE" \
         PYTHON_TARGETS="$PYTHON_TARGETS" \
         PYTHON_SINGLE_TARGET="$PYTHON_SINGLE_TARGET" \
-        PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
+        PYTHONPATH="$PYTHONPATH" \
         HOME="$HOME" \
         "$@"
 }
