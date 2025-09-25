@@ -1590,7 +1590,7 @@ PYVER="python3.13"
 PYEXEC_DIR="$PYEXEC/$PYVER"
 CHARD_BIN="$CHARD_ROOT/usr/bin"
 PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
-
+# Improve this
 if [ -L "$PYEXEC" ] && [ ! -e "$PYEXEC" ]; then
     echo "${YELLOW}[*] Removing broken $PYEXEC ${RESET}"
     sudo rm "$PYEXEC"
