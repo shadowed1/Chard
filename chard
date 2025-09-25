@@ -59,6 +59,10 @@ chard_run() {
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
     export GIT_TEMPLATE_DIR=$CHARD_ROOT/usr/share/git-core/templates
 
+    export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0 \
+                                 $CHARD_ROOT/usr/lib64/libb2.so.1 \
+                            $CHARD_ROOD/usr/lib64/libcrypto.so.3"
+
     echo "[*] Running '$*' inside Chard environment..."
     env \
         ROOT="$ROOT" \
