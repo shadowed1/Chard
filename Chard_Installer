@@ -137,6 +137,7 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
 sudo mkdir -p /usr/local/chard/usr/local/src/gtest-1.16.0
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p /usr/local/chard/usr/share/git-core/templates/hooks
+sudo mkdir -p /usr/local/chard/usr/lib/python-exec
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
@@ -379,7 +380,7 @@ PACKAGES=(
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
-    "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|meson"
+    "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|mesonportage"
     "util-macros|1.20.2|tar.xz|https://www.x.org/releases/individual/util/util-macros-1.20.2.tar.xz|util-macros-1.20.2|gnu"
     "smartmontools|7.5|tar.gz|https://downloads.sourceforge.net/project/smartmontools/smartmontools/7.5/smartmontools-7.5.tar.gz|smartmontools-7.5|gnu"
     "xorgproto|2024.1|tar.xz|https://www.x.org/releases/individual/proto/xorgproto-2024.1.tar.xz|xorgproto-2024.1|gnu"
@@ -810,6 +811,10 @@ for pkg in "${PACKAGES[@]}"; do
     export CARGO_HOME="$HOME/.cargo"
     export RUSTUP_HOME="$HOME/.rustup"
     export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+    export PYEXEC="/usr/lib/python-exec"
+    export PYVER="python3.13"
+    export PYEXEC_DIR="$PYEXEC/$PYVER"
+PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
     
     case "$BUILDSYS" in
         gnu)
@@ -947,6 +952,109 @@ for pkg in "${PACKAGES[@]}"; do
             ninja -C build
             ninja -C build install
             ;;
+        mesonportage)
+            meson setup build --prefix=/usr
+            ninja -C build
+            ninja -C build install
+            cat > /bin/emerge <<'EOF'
+#!/bin/python3.13
+import os
+import sys
+import errno
+
+EPYTHON = '/bin/python3.13'
+
+PYEXEC_DIR = '/usr/lib/python-exec/python3.13'
+
+target_name = os.path.basename(sys.argv[0])
+target_path = os.path.join(PYEXEC_DIR, target_name)
+
+data = None
+while data is None:
+    try:
+        kwargs = {}
+        if sys.version_info >= (3,):
+            import tokenize
+            with open(target_path, 'rb') as f:
+                kwargs['encoding'] = tokenize.detect_encoding(f.readline)[0]
+        with open(target_path, 'r', **kwargs) as f:
+            data = f.read()
+    except IOError as e:
+        if e.errno == errno.EINTR:
+            continue
+        elif e.errno == errno.ENOENT:
+            sys.stderr.write(f'{target_path}: Python implementation not supported: {EPYTHON}\n')
+            sys.exit(127)
+        else:
+            raise
+
+sys.argv[0] = target_path
+new_globals = dict(globals())
+new_globals['__file__'] = target_path
+
+exec(data, new_globals)
+EOF
+
+
+MAKE_CONF="/etc/portage/make.conf"
+
+tee "$MAKE_CONF" > /dev/null <<EOF
+# Chard Portage make.conf
+# Manually generated
+COMMON_FLAGS="-O2 -pipe"
+CFLAGS="-O2 -pipe"
+CXXFLAGS="-O2 -pipe"
+FCFLAGS="-O2 -pipe"
+FFLAGS="-O2 -pipe"
+LC_MESSAGES=C.utf8
+DISTDIR="/var/cache/distfiles"
+PKGDIR="/var/cache/packages"
+PORTAGE_TMPDIR="/var/tmp"
+PORTDIR="/usr/portage"
+SANDBOX="/usr/bin/sandbox"
+CHOST="$CHOST"
+CC="$GCC_PATH/$CHOST-gcc"
+CXX="$GCC_PATH/$CHOST-g++"
+AR="$GCC_PATH/gcc-ar"
+NM="$GCC_PATH/gcc-nm"
+RANLIB="$GCC_PATH/gcc-ranlib"
+STRIP="/usr/$CHOST/binutils-bin/2.44/strip"
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
+USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
+PYTHON_TARGETS="python3_13"
+PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH"
+PKG_CONFIG="/usr/bin/pkg-config"
+EOF
+
+if [ ! -d "$PORTAGE_PROFILE_DIR" ]; then
+    echo "${RESET}${MAGENTA}Creating /usr/local/etc/portage/make.profile...${RESET}"
+    mkdir -p "$PORTAGE_PROFILE_DIR"
+    tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null <<'EOF'
+/etc/portage/make.profile
+EOF
+    touch "$PORTAGE_PROFILE_DIR/package.provided"
+    echo "${RESET}${CYAN}Portage profile created at $PORTAGE_PROFILE_DIR ${RESET}"
+fi
+
+mkdir -p /usr/share/sandbox
+
+cat > "/etc/sandbox.conf" <<'EOF'
+SANDBOX_BASHRC="/usr/share/sandbox/sandbox.bashrc"
+SANDBOX_D="/etc/sandbox.d"
+ns-mount-off
+ns-pid-off
+ns-ipc-off
+ns-net-off
+ns-user-off
+EOF
+
+cat <<EOF > "/usr/share/sandbox/sandbox.bashrc"
+export HOME="/root"
+export USER="chronos"
+export LOGNAME="chronos"
+export PATH="/usr/bin:/bin:$PATH"
+EOF
+
         gtk-doc)
             cd /var/tmp/build/"$DIR"
             chmod +x autogen.sh
@@ -965,7 +1073,7 @@ for pkg in "${PACKAGES[@]}"; do
             ;;
         cmakepython)
             cd /var/tmp/build/"$DIR"
-            cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr -DCMAKE_BUILD_TYPE=Release
+            cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
             cmake --build build -j"$(nproc)"
             cmake --install build
             /usr/bin/python3.13 setup.py build
@@ -1056,7 +1164,6 @@ echo "${RED}[+] Cleaning up${RESET}"
 #sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
-
 
 ############################
 ############################
@@ -1170,8 +1277,6 @@ export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
 export GIT_TEMPLATE_DIR=/usr/local/chard/usr/share/git-core/templates
 
-
-
 PACKAGES=(
     "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
     "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
@@ -1189,7 +1294,6 @@ PACKAGES=(
     "libxft|2.3.9|tar.gz|https://gitlab.freedesktop.org/xorg/lib/libxft/-/archive/libXft-2.3.9/libxft-libXft-2.3.9.tar.gz|libxft-libXft-2.3.9|meson"
     "appstream-glib|0.8.3|tar.xz|https://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-0.8.3.tar.xz|appstream-glib-0.8.3|meson"
     "flatpak|1.15.8|tar.xz|https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz|flatpak-1.15.8|meson"
-    
 )
 
 mkdir -p "$BUILD_DIR"
@@ -1577,99 +1681,13 @@ sudo rm -rf "$BUILD_DIR"
 ############################
 
 CHARD_ROOT="${CHARD_ROOT:-/usr/local/chard}"
-PYEXEC="/usr/lib/python-exec"
-PYVER="python3.13"
-PYEXEC_DIR="$PYEXEC/$PYVER"
-CHARD_BIN="$CHARD_ROOT/usr/bin"
-PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
-# Improve this
-if [ -L "$PYEXEC" ] && [ ! -e "$PYEXEC" ]; then
-    echo "${YELLOW}[*] Removing broken $PYEXEC ${RESET}"
-    sudo rm "$PYEXEC"
-fi
-
-sudo mkdir -p "$PYEXEC"
-
-if [ -d "$PYEXEC_DIR" ]; then
-    sudo rm -rf "$PYEXEC_DIR"
-fi
-
-sudo mkdir -p "$PYEXEC_DIR"
-
-declare -A SYMLINKS=(
-    [python3]="python3.13"
-    [python]="python3"
-    [pydoc]="pydoc3.13"
-    [python-config]="python3-config"
-)
-
-for link in "${!SYMLINKS[@]}"; do
-    target="${SYMLINKS[$link]}"
-    if [ -f "$CHARD_BIN/$target" ]; then
-        sudo ln -s "$CHARD_BIN/$target" "$PYEXEC_DIR/$link"
-        echo "${MAGENTA}[+] Linked $PYEXEC_DIR/$link -> $CHARD_BIN/$target ${RESET}"
-    else
-        echo "${RED}[!] Missing $CHARD_BIN/$target ${RESET}"
-    fi
-done
-
-WRAPPERS=(emerge ebuild)
-for script in "${WRAPPERS[@]}"; do
-    if [ -f "$CHARD_BIN/$script" ]; then
-        sudo cp "$CHARD_BIN/$script" "$PYEXEC_DIR/$script"
-        sudo chmod +x "$PYEXEC_DIR/$script"
-        echo "${GREEN}[+] Copied wrapper $script ${RESET}"
-    else
-        echo "${RED}[!] Missing wrapper $script ${RESET}"
-    fi
-done
-
 sudo chown -R 1000:1000 "/usr/local/chard"
-
-cat > /usr/local/chard/bin/emerge <<'EOF'
-#!/usr/local/chard/bin/python3.13
-import os
-import sys
-import errno
-
-EPYTHON = '/usr/local/chard/bin/python3.13'
-
-CHARD_PYEXEC_DIR = '/usr/local/chard/usr/lib/python-exec/python3.13'
-
-target_name = os.path.basename(sys.argv[0])
-target_path = os.path.join(CHARD_PYEXEC_DIR, target_name)
-
-data = None
-while data is None:
-    try:
-        kwargs = {}
-        if sys.version_info >= (3,):
-            import tokenize
-            with open(target_path, 'rb') as f:
-                kwargs['encoding'] = tokenize.detect_encoding(f.readline)[0]
-        with open(target_path, 'r', **kwargs) as f:
-            data = f.read()
-    except IOError as e:
-        if e.errno == errno.EINTR:
-            continue
-        elif e.errno == errno.ENOENT:
-            sys.stderr.write(f'{target_path}: Python implementation not supported: {EPYTHON}\n')
-            sys.exit(127)
-        else:
-            raise
-
-sys.argv[0] = target_path
-new_globals = dict(globals())
-new_globals['__file__'] = target_path
-
-exec(data, new_globals)
-EOF
 
 chmod +x "$CHARD_ROOT/bin/emerge"
 
 if [ -f "$MAKE_CONF" ]; then
     cp -a "$MAKE_CONF" "${MAKE_CONF}.bak.$(date +%Y%m%d%H%M%S)"
-    echo "${CYAN}Backed up original make.conf to ${MAKE_CONF}.bak.* ${RESET}"
+    echo "${CYAN}Backed up original make.conf to ${MAKE_CONF}.bak.*"
 fi
 
 mkdir -p "$(dirname "$MAKE_CONF")"
@@ -1690,71 +1708,10 @@ case "$ARCH" in
         ;;
 esac
 
-MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-
-tee "$MAKE_CONF" > /dev/null <<EOF
-# Chard Portage make.conf
-# Manually generated
-COMMON_FLAGS="-O2 -pipe"
-CFLAGS="-O2 -pipe"
-CXXFLAGS="-O2 -pipe"
-FCFLAGS="-O2 -pipe"
-FFLAGS="-O2 -pipe"
-LC_MESSAGES=C.utf8
-ROOT="$CHARD_ROOT"
-DISTDIR="$CHARD_ROOT/var/cache/distfiles"
-PKGDIR="$CHARD_ROOT/var/cache/packages"
-PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
-PORTDIR="$CHARD_ROOT/usr/portage"
-SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
-CHOST="$CHOST"
-CC="$GCC_PATH/$CHOST-gcc"
-CXX="$GCC_PATH/$CHOST-g++"
-AR="$GCC_PATH/gcc-ar"
-NM="$GCC_PATH/gcc-nm"
-RANLIB="$GCC_PATH/gcc-ranlib"
-STRIP="$CHARD_ROOT/usr/$CHOST/binutils-bin/2.44/strip"
-FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
-USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
-PYTHON_TARGETS="python3_13"
-PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/lib/pkgconfig:$CHARD_ROOT/usr/share/pkgconfig:$CHARD_ROOT/share/pkgconfig:\$PKG_CONFIG_PATH"
-PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
-EOF
-
-if [ ! -d "$PORTAGE_PROFILE_DIR" ]; then
-    echo "${RESET}${MAGENTA}Creating /usr/local/etc/portage/make.profile...${RESET}"
-    mkdir -p "$PORTAGE_PROFILE_DIR"
-    tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null <<'EOF'
-/etc/portage/make.profile
-EOF
-    touch "$PORTAGE_PROFILE_DIR/package.provided"
-    echo "${RESET}${CYAN}Portage profile created at $PORTAGE_PROFILE_DIR ${RESET}"
-fi
-
-mkdir -p $CHARD_ROOT/etc
-mkdir -p $CHARD_ROOT/usr/share/sandbox
-
-cat > "$CHARD_ROOT/etc/sandbox.conf" <<'EOF'
-SANDBOX_BASHRC="/usr/local/chard/usr/share/sandbox/sandbox.bashrc"
-SANDBOX_D="/usr/local/chard/etc/sandbox.d"
-ns-mount-off
-ns-pid-off
-ns-ipc-off
-ns-net-off
-ns-user-off
-EOF
-
-cat <<EOF > "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc"
-export HOME="$CHARD_ROOT/root"
-export USER="chronos"
-export LOGNAME="chronos"
-export PATH="$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$PATH"
-EOF
-
 sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
-echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
+echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing."
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
-echo "${YELLOW}make.conf successfully updated for Chard.${RESET}"
+echo "${RESET}${YELLOW}make.conf successfully updated for Chard.${RESET}"
 echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
