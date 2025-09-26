@@ -1545,16 +1545,16 @@ done
 ########################################################################################################################################################################
 ########################################################################################################################################################################
 
-sudo chroot /usr/local/chard /bin/bash -c "
+sudo chroot /usr/local/chard /bin/bash -c '
 
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
+ARCH=$(uname -m)
+case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
     aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo \"Unknown architecture: \$ARCH\" ;;
+    *) echo "Unknown architecture: $ARCH" ;;
 esac
 
-GCC_DIR=\"/usr/\$CHOST/gcc-bin/14\"
+GCC_DIR="/usr/$CHOST/gcc-bin/14"
 
 tee /bin/emerge > /dev/null <<'EOF'
 #!/bin/python
@@ -1562,9 +1562,9 @@ import os
 import sys
 import errno
 
-EPYTHON = '/bin/python3'
+EPYTHON = "/bin/python3"
 
-PYEXEC_DIR = '/usr/lib/python-exec/python3.13'
+PYEXEC_DIR = "/usr/lib/python-exec/python3.13"
 
 target_name = os.path.basename(sys.argv[0])
 target_path = os.path.join(PYEXEC_DIR, target_name)
@@ -1575,26 +1575,26 @@ while data is None:
         kwargs = {}
         if sys.version_info >= (3,):
             import tokenize
-            with open(target_path, 'rb') as f:
-                kwargs['encoding'] = tokenize.detect_encoding(f.readline)[0]
-        with open(target_path, 'r', **kwargs) as f:
+            with open(target_path, "rb") as f:
+                kwargs["encoding"] = tokenize.detect_encoding(f.readline)[0]
+        with open(target_path, "r", **kwargs) as f:
             data = f.read()
     except IOError as e:
         if e.errno == errno.EINTR:
             continue
         elif e.errno == errno.ENOENT:
-            sys.stderr.write(f'{target_path}: Python implementation not supported: {EPYTHON}\n')
+            sys.stderr.write(f"{target_path}: Python implementation not supported: {EPYTHON}\n")
             sys.exit(127)
         else:
             raise
 
 sys.argv[0] = target_path
 new_globals = dict(globals())
-new_globals['__file__'] = target_path
+new_globals["__file__"] = target_path
 
 exec(data, new_globals)
 EOF
-"
+'
 
 ########################################################################################################################################################################
 
@@ -1816,7 +1816,7 @@ sudo rm -rf "$BUILD_DIR"
 ############################
 ############################
 
-chmod +x "$CHARD_ROOT/bin/emerge"
+sudo chmod +x "$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "/usr/local/chard"
 sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing."
