@@ -1557,12 +1557,12 @@ esac
 GCC_DIR=\"/usr/\$CHOST/gcc-bin/14\"
 
 tee /bin/emerge > /dev/null <<'EOF'
-#!python-exec
+#!/bin/python
 import os
 import sys
 import errno
 
-EPYTHON = 'python-exec'
+EPYTHON = '/bin/python3'
 
 PYEXEC_DIR = '/usr/lib/python-exec/python3.13'
 
