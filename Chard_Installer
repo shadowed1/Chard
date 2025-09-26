@@ -822,10 +822,10 @@ for pkg in "${PACKAGES[@]}"; do
     export CARGO_HOME="$HOME/.cargo"
     export RUSTUP_HOME="$HOME/.rustup"
     export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
-    export PYEXEC="/usr/lib/python-exec"
-    export PYVER="python3.13"
-    export PYEXEC_DIR="$PYEXEC/$PYVER"
-    export PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
+    #export PYEXEC="/usr/lib/python-exec"
+    #export PYVER="python3.13"
+    #export PYEXEC_DIR="$PYEXEC/$PYVER"
+    #export PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
     
     case "$BUILDSYS" in
         gnu)
