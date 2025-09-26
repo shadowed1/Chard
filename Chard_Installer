@@ -1173,7 +1173,6 @@ export GIT_TEMPLATE_DIR=/usr/local/chard/usr/share/git-core/templates
 
 
 PACKAGES=(
-    "duktape|2.7.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.7.0|duktape"
     "openssl|3.5.2|tar.gz|https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz|openssl-3.5.2|gnusslcore"
     "curl|8.16.0|tar.gz|https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.gz|curl-8.16.0|gnussl"
     "git|2.51.0|tar.gz|https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.51.0.tar.gz|git-2.51.0|git"
