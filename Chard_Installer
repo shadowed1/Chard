@@ -975,20 +975,20 @@ for pkg in "${PACKAGES[@]}"; do
             ;;
         python)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python3.13 setup.py build
-            /usr/bin/python3.13 setup.py install --prefix=/usr
+            /usr/bin/python-exec2c setup.py build
+            /usr/bin/python-exec2c setup.py install --prefix=/usr
             ;;
         pythonbuild)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python3.13 -m pip install . --prefix=/usr
+            /usr/bin/python-exec2c -m pip install . --prefix=/usr
             ;;
         cmakepython)
             cd /var/tmp/build/"$DIR"
             cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
             cmake --build build -j"$(nproc)"
             cmake --install build
-            /usr/bin/python3.13 setup.py build
-            /usr/bin/python3.13 setup.py install --prefix=/usr
+            /usr/bin/python-exec2c setup.py build
+            /usr/bin/python-exec2c setup.py install --prefix=/usr
             ;;
         libcap)
             make -j"$(nproc)" prefix=/usr
@@ -1433,12 +1433,12 @@ for pkg in "${PACKAGES[@]}"; do
             ;;
         python)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python3.13 setup.py build
-            /usr/bin/python3.13 setup.py install --prefix=/usr
+            /usr/bin/python-exec2c setup.py build
+            /usr/bin/python-exec2c setup.py install --prefix=/usr
             ;;
         pythonbuild)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python3.13 -m pip install . --prefix=/usr
+            /usr/bin/python-exec2c -m pip install . --prefix=/usr
             ;;
         mesonmesa)
             meson setup build \
@@ -1455,8 +1455,8 @@ for pkg in "${PACKAGES[@]}"; do
             cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr -DCMAKE_BUILD_TYPE=Release
             cmake --build build -j"$(nproc)"
             cmake --install build
-            /usr/bin/python3.13 setup.py build
-            /usr/bin/python3.13 setup.py install --prefix=/usr
+            /usr/bin/python-exec2c setup.py build
+            /usr/bin/python-exec2c setup.py install --prefix=/usr
             ;;
         libcap)
             make -j"$(nproc)" prefix=/usr
