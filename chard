@@ -153,6 +153,7 @@ case "$cmd" in
         ;;
     root)
         sudo chroot /usr/local/chard /bin/bash -c '
+            mountpoint -q /proc || mount -t proc proc /proc
             ARCH=$(uname -m)
                     case "$ARCH" in
                         x86_64) CHOST=x86_64-pc-linux-gnu ;;
@@ -184,7 +185,8 @@ case "$cmd" in
                     export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
             
             
-            exec /bin/bash
+            /bin/bash
+            umount /proc
             '
         
         ;;
