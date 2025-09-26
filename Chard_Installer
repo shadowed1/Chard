@@ -332,13 +332,13 @@ echo "${RESET}${MAGENTA}[+] Linux headers installed to /usr/local/chard/usr/incl
 sudo rm -rf "$KERNEL_BUILD"
 
 sudo mkdir -p /usr/local/chard/tmp/docbook-4.3
-sudo curl -L --progress-bar -o "https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip" -o "/usr/local/chard/tmp/docbook-xml-4.3.zip"
+cd /usr/local/chard/tmp/docbook-4.3
+sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
 sudo mkdir -p "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo mkdir -p "$CHARD_ROOT/etc/xml"
-sudo bsdtar -xf "/usr/local/chard/tmp/docbook-xml-4.3.zip" -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
+sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo touch "$CHARD_ROOT/etc/xml/catalog"
-rm -rf "$TMPDIR"
 
 PACKAGES=(
     "make|4.4|tar.gz|https://mirrors.kernel.org//gnu/make/make-4.4.tar.gz|make-4.4|gnu"
@@ -922,7 +922,7 @@ for pkg in "${PACKAGES[@]}"; do
     #export PYEXEC_DIR="$PYEXEC/$PYVER"
     #export PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
     
-    case "$BUILDSYS" in
+     case "$BUILDSYS" in
         gnu)
             ./configure --prefix=/usr
             make -j"$(nproc)"
@@ -1058,11 +1058,6 @@ for pkg in "${PACKAGES[@]}"; do
             ninja -C build
             ninja -C build install
             ;;
-        mesonportage)
-            meson setup build --prefix=/usr
-            ninja -C build
-            ninja -C build install
-            ;;
         gtk-doc)
             cd /var/tmp/build/"$DIR"
             chmod +x autogen.sh
@@ -1072,20 +1067,20 @@ for pkg in "${PACKAGES[@]}"; do
             ;;
         python)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python-exec2c setup.py build
-            /usr/bin/python-exec2c setup.py install --prefix=/usr
+            /usr/bin/python setup.py build
+            /usr/bin/python setup.py install --prefix=/usr
             ;;
         pythonbuild)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python-exec2c -m pip install . --prefix=/usr
+            /usr/bin/python3.13 -m pip install . --prefix=/usr
             ;;
         cmakepython)
             cd /var/tmp/build/"$DIR"
-            cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+            cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr -DCMAKE_BUILD_TYPE=Release
             cmake --build build -j"$(nproc)"
             cmake --install build
-            /usr/bin/python-exec2c setup.py build
-            /usr/bin/python-exec2c setup.py install --prefix=/usr
+            /usr/bin/python setup.py build
+            /usr/bin/python setup.py install --prefix=/usr
             ;;
         libcap)
             make -j"$(nproc)" prefix=/usr
@@ -1139,20 +1134,11 @@ for pkg in "${PACKAGES[@]}"; do
             [ -d /usr/lib/aarch64-linux-gnu ] && cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/aarch64-linux-gnu/
             ;;
         docbook)
-            mkdir -p /usr/local/share/xml/docbook-xsl/docbook-5.0.9
-            mkdir -p /usr/share/xml/docbook/5.0
-            mkdir -p /usr/share/xml/docbook/4.3
             mkdir -p /usr/local/share/xml/docbook-xsl
-            mkdir -p /etc/xml
             cp -r /var/tmp/build/"$DIR" /usr/local/share/xml/docbook-xsl/"$DIR"
             cd /usr/local/share/xml/docbook-xsl/"$DIR"
             chmod +x install.sh
             printf "Y\n" | ./install.sh --batch
-            touch /etc/xml/catalog
-            xmlcatalog --noout --create /etc/xml/catalog
-            xmlcatalog --noout --add "public" "-//OASIS//DTD DocBook V4.3//EN" \
-                                      /usr/share/xml/docbook/4.3/docbookx.dtd" \
-                                                   /etc/xml/catalog" 2>/dev/null            
             xmlcatalog --noout --add "public" "-//OASIS//DTD DocBook V5.0//EN" /usr/share/xml/docbook/5.0/catalog.xml 2>/dev/null
             ;;
         *)
@@ -1395,7 +1381,7 @@ for pkg in "${PACKAGES[@]}"; do
     export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
     export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
     
-    case "$BUILDSYS" in
+     case "$BUILDSYS" in
         gnu)
             ./configure --prefix=/usr
             make -j"$(nproc)"
@@ -1503,6 +1489,16 @@ for pkg in "${PACKAGES[@]}"; do
             ninja -C build
             ninja -C build install
             ;;
+        mesonmesa)
+            meson setup build \
+              --prefix=/usr \
+              -Dplatforms=x11,wayland \
+              -Degl=true \
+              -Dopengl=true \
+              -Dgallium-drivers=swrast
+            ninja -C build
+            ninja -C build install
+            ;;
          mesonpix)
             meson setup build --prefix=/usr -Dglycin=disabled
             ninja -C build
@@ -1530,30 +1526,20 @@ for pkg in "${PACKAGES[@]}"; do
             ;;
         python)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python-exec2c setup.py build
-            /usr/bin/python-exec2c setup.py install --prefix=/usr
+            /usr/bin/python setup.py build
+            /usr/bin/python setup.py install --prefix=/usr
             ;;
         pythonbuild)
             cd /var/tmp/build/"$DIR"
-            /usr/bin/python-exec2c -m pip install . --prefix=/usr
-            ;;
-        mesonmesa)
-            meson setup build \
-              --prefix=/usr \
-              -Dplatforms=x11,wayland \
-              -Degl=true \
-              -Dopengl=true \
-              -Dgallium-drivers=swrast
-            ninja -C build
-            ninja -C build install
+            /usr/bin/python3.13 -m pip install . --prefix=/usr
             ;;
         cmakepython)
             cd /var/tmp/build/"$DIR"
             cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local/chard/usr -DCMAKE_BUILD_TYPE=Release
             cmake --build build -j"$(nproc)"
             cmake --install build
-            /usr/bin/python-exec2c setup.py build
-            /usr/bin/python-exec2c setup.py install --prefix=/usr
+            /usr/bin/python setup.py build
+            /usr/bin/python setup.py install --prefix=/usr
             ;;
         libcap)
             make -j"$(nproc)" prefix=/usr
