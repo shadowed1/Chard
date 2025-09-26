@@ -49,8 +49,6 @@ chard_run() {
     export CFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include -I$CHARD_ROOT/usr/include/duktape $CFLAGS"
     export CXXFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include -I$CHARD_ROOT/usr/include/duktape $CXXFLAGS"
     export ROOT="$CHARD_ROOT"
-    export PORTAGE_CONFIGROOT="$CHARD_ROOT"
-    export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
     export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
     export PKGDIR="$CHARD_ROOT/var/cache/packages"
     export PATH="$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$HOME/.cargo/bin:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:$CHARD_ROOT/usr/lib/python-exec:$PATH"
@@ -58,8 +56,7 @@ chard_run() {
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
     export GIT_TEMPLATE_DIR=$CHARD_ROOT/usr/share/git-core/templates
     export CPPFLAGS="-I$CHARD_ROOT/usr/include"
-    export PORTAGE_LOGDIR="$CHARD_ROOT/var/log/portage"
-    export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp/portage"
+
 
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0 \
     $CHARD_ROOT/usr/lib64/libb2.so.1 \
@@ -191,6 +188,12 @@ case "$cmd" in
                     export CARGO_HOME="$HOME/.cargo"
                     export RUSTUP_HOME="$HOME/.rustup"
                     export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+                    export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
+                    export PORTAGE_LOGDIR="/var/log/portage"
+                    export PORTAGE_CONFIGROOT="/"
+                    export PORTAGE_TMPDIR="/var/tmp"
+
+
             
             
             /bin/bash
