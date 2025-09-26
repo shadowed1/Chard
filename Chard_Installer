@@ -1471,6 +1471,8 @@ for pkg in "${PACKAGES[@]}"; do
         duktape)
             curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
             sh /tmp/rustup-init.sh -y --no-modify-path --default-toolchain stable
+            curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+            python3 get-pip.py --prefix=/usr
             ;;
         asyncns86)
             [ -d /usr/lib/x86_64-linux-gnu ] && cp libasyncns.so.0.3.1 libasyncns.so.0 /usr/lib/x86_64-linux-gnu/
