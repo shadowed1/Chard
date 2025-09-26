@@ -58,6 +58,8 @@ chard_run() {
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
     export GIT_TEMPLATE_DIR=$CHARD_ROOT/usr/share/git-core/templates
     export CPPFLAGS="-I$CHARD_ROOT/usr/include"
+    export PORTAGE_LOGDIR="$CHARD_ROOT/var/log/portage"
+    export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp/portage"
 
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0 \
     $CHARD_ROOT/usr/lib64/libb2.so.1 \
