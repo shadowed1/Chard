@@ -134,6 +134,7 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
                  "$CHARD_ROOT"/home/chronos/user/Desktop \
                  "$CHARD_ROOT"/mnt
 
+sudo mkdir -p /usr/local/chard/etc/portage/make.conf
 sudo mkdir -p /usr/local/chard/usr/local/src/gtest-1.16.0
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p /usr/local/chard/usr/share/git-core/templates/hooks
@@ -1545,18 +1546,7 @@ done
 ########################################################################################################################################################################
 ########################################################################################################################################################################
 
-sudo chroot /usr/local/chard /bin/bash -c '
-
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH" ;;
-esac
-
-GCC_DIR="/usr/$CHOST/gcc-bin/14"
-
-tee /bin/emerge > /dev/null <<'EOF'
+sudo tee /usr/local/chard/bin/emerge > /dev/null <<'EOF'
 #!/bin/python
 import os
 import sys
@@ -1594,22 +1584,8 @@ new_globals["__file__"] = target_path
 
 exec(data, new_globals)
 EOF
-'
 
-########################################################################################################################################################################
-
-sudo chroot /usr/local/chard /bin/bash -c "
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo \"Unknown architecture: \$ARCH\" ;;
-esac
-
-GCC_DIR=\"/usr/\$CHOST/gcc-bin/14\"
-
-tee \"/etc/portage/make.conf\" > /dev/null <<'EOF'
+sudo tee \"/usr/local/chard/etc/portage/make.conf\" > /dev/null <<'EOF'
 # Chard Portage make.conf
 # Manually generated
 COMMON_FLAGS=\"-O2 -pipe\"
@@ -1637,49 +1613,22 @@ PKG_CONFIG_PATH=\"/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/
 PKG_CONFIG=\"/usr/bin/pkg-config\"
 PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
 EOF
-"
 
-########################################################################################################################################################################
 
-sudo chroot /usr/local/chard /bin/bash -c "
+PORTAGE_PROFILE_DIR=\"/usr/local/chard/usr/local/etc/portage/make.profile\"
+sudo mkdir -p \"\$PORTAGE_PROFILE_DIR\"
 
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo \"Unknown architecture: \$ARCH\" ;;
-esac
-
-GCC_DIR=\"/usr/\$CHOST/gcc-bin/14\"
-
-PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
-mkdir -p \"\$PORTAGE_PROFILE_DIR\"
-
-tee \"\$PORTAGE_PROFILE_DIR/parent\" > /dev/null <<'EOF'
+sudo tee \"\$PORTAGE_PROFILE_DIR/parent\" > /dev/null <<'EOF'
 /etc/portage/make.profile
 EOF
-"
 
-########################################################################################################################################################################
-
-sudo chroot /usr/local/chard /bin/bash -c "
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo \"Unknown architecture: \$ARCH\" ;;
-esac
-
-GCC_DIR=\"/usr/\$CHOST/gcc-bin/14\"
-
-PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
-mkdir -p \"\$PORTAGE_PROFILE_DIR\"
-touch \"\$PORTAGE_PROFILE_DIR/package.provided\"
+PORTAGE_PROFILE_DIR=\"/usr/local/chard/usr/local/etc/portage/make.profile\"
+sudo mkdir -p \"\$PORTAGE_PROFILE_DIR\"
+sudo touch \"\$PORTAGE_PROFILE_DIR/package.provided\"
 
 mkdir -p /usr/share/sandbox
 
-tee /etc/sandbox.conf > /dev/null <<'EOF'
+sudo tee /usr/local/chard/etc/sandbox.conf > /dev/null <<'EOF'
 SANDBOX_BASHRC="/usr/share/sandbox/sandbox.bashrc"
 SANDBOX_D="/etc/sandbox.d"
 ns-mount-off
@@ -1688,28 +1637,13 @@ ns-ipc-off
 ns-net-off
 ns-user-off
 EOF
-"
 
-########################################################################################################################################################################
-
-sudo chroot /usr/local/chard /bin/bash -c "
-
-ARCH=\$(uname -m)
-case \"\$ARCH\" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo \"Unknown architecture: \$ARCH\" ;;
-esac
-
-GCC_DIR=\"/usr/\$CHOST/gcc-bin/14\"
-
-tee "/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
+sudo tee "/usr/local/chard/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
 export HOME="/home/chronos/user/"
 export USER="chronos"
 export LOGNAME="chronos"
 export PATH=$GCC_DIR:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
 EOF
-"
 
 ########################################################################################################################################################################
 ########################################################################################################################################################################
