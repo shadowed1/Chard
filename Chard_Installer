@@ -1065,7 +1065,7 @@ export USER="chronos"
 export LOGNAME="chronos"
 export PATH="/usr/bin:/bin:$PATH"
 EOF
-
+            ;;
         gtk-doc)
             cd /var/tmp/build/"$DIR"
             chmod +x autogen.sh
