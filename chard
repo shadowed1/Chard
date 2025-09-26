@@ -155,7 +155,13 @@ case "$cmd" in
         ;;
     root)
         sudo chroot /usr/local/chard /bin/bash -c '
-            mountpoint -q /proc || mount -t proc proc /proc
+                
+            mountpoint -q /proc    || mount -t proc proc /proc
+            mountpoint -q /sys     || mount -t sysfs sys /sys
+            mountpoint -q /dev     || mount -t devtmpfs devtmpfs /dev
+            mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+            mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+
             ARCH=$(uname -m)
                     case "$ARCH" in
                         x86_64) CHOST=x86_64-pc-linux-gnu ;;
@@ -188,6 +194,10 @@ case "$cmd" in
             
             
             /bin/bash
+            umount /etc/ssl
+            umount /dev/shm
+            umount /dev
+            umount /sys
             umount /proc
             '
         
