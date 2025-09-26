@@ -330,13 +330,11 @@ echo "${RESET}${MAGENTA}[+] Linux headers installed to /usr/local/chard/usr/incl
 
 sudo rm -rf "$KERNEL_BUILD"
 
-DOCBOOK_URL="https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip"
-TMPDIR="usr/local/chard/tmp/docbook-4.3"
-mkdir -p "$TMPDIR"
-sudo curl -L "$DOCBOOK_URL" -o "$TMPDIR/docbook-xml-4.3.zip"
+sudo mkdir -p /usr/local/chard/tmp/docbook-4.3
+sudo curl -L --progress-bar -o "https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip" -o "/usr/local/chard/tmp/docbook-xml-4.3.zip"
 sudo mkdir -p "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo mkdir -p "$CHARD_ROOT/etc/xml"
-sudo bsdtar -xf "$TMPDIR/docbook-xml-4.3.zip" -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
+sudo bsdtar -xf "/usr/local/chard/tmp/docbook-xml-4.3.zip" -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo touch "$CHARD_ROOT/etc/xml/catalog"
 rm -rf "$TMPDIR"
