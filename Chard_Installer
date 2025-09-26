@@ -1705,11 +1705,11 @@ esac
 
 GCC_DIR=\"/usr/\$CHOST/gcc-bin/14\"
 
-cat <<EOF > \"/usr/share/sandbox/sandbox.bashrc\"
-export HOME=\"/home/chronos/user/\"
-export USER=\"chronos\"
-export LOGNAME=\"chronos\"
-export PATH=\$GCC_DIR:/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin:\$PATH
+tee "/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
+export HOME="/home/chronos/user/"
+export USER="chronos"
+export LOGNAME="chronos"
+export PATH=$GCC_DIR:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
 EOF
 "
 
