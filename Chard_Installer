@@ -1482,9 +1482,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
 
     emerge --sync && \
     emerge --oneshot --nodeps dev-python/docutils \
-    emerge --verbose --with-bdeps=y flatpak --ask=n \
-    emerge -1 dev-lang/perl --ask=n && \
-    emerge --verbose --with-bdeps=y flatpak --ask=n
+    emerge -1 dev-lang/perl --ask=n
 
     umount /etc/ssl
     umount /dev/pts
