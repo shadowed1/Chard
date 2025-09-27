@@ -1458,7 +1458,11 @@ sudo chroot /usr/local/chard /bin/bash -c '
     export PORTAGE_CONFIGROOT="/"
     export PORTAGE_TMPDIR="/var/tmp"
 
-    emerge --sync && emerge --verbose --update --deep --newuse @world && emerge --verbose --with-bdeps=y flatpak
+    emerge --sync && \
+    emerge --verbose --update --deep --newuse @world --ask=n && \
+    emerge -1 dev-lang/perl --ask=n && \
+    emerge -1 sys-apps/systemd --ask=n && \
+    emerge --verbose --with-bdeps=y flatpak --ask=n
 
     umount /etc/ssl
     umount /dev/pts
