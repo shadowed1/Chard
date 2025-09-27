@@ -342,9 +342,28 @@ cp .config /usr/src/linux/.config
 "
 
 echo "${RESET}${CYAN}[+] Linux headers and sources installed to /usr/local/chard/usr/src/linux"
-
-
 sudo rm -rf "$KERNEL_BUILD"
+
+CONFIG_FILE="/usr/local/chard/usr/src/linux/.config"
+OPTIONS=(
+    "CONFIG_CGROUP_BPF"
+    "CONFIG_FANOTIFY"
+    "CONFIG_USER_NS"
+    "CONFIG_CRYPTO_USER_API_HASH"
+    "CONFIG_INPUT_MOUSEDEV"
+)
+
+for opt in "${OPTIONS[@]}"; do
+    sudo sed -i -E "s/^# $opt is not set/$opt=y/" "$CONFIG_FILE"
+done
+
+for opt in "${OPTIONS[@]}"; do
+    if ! sudo grep -q "^$opt=" "$CONFIG_FILE"; then
+        echo "$opt=y" | sudo tee -a "$CONFIG_FILE" >/dev/null
+    fi
+done
+
+sudo grep -E "CONFIG_CGROUP_BPF|CONFIG_FANOTIFY|CONFIG_USER_NS|CONFIG_CRYPTO_USER_API_HASH|CONFIG_INPUT_MOUSEDEV" /usr/local/chard/usr/src/linux/.config | wc -l
 
 sudo mkdir -p /usr/local/chard/tmp/docbook-4.3
 cd /usr/local/chard/tmp/docbook-4.3
