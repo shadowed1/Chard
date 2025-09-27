@@ -158,7 +158,7 @@ case "$cmd" in
                 
             mountpoint -q /proc    || mount -t proc proc /proc
             mountpoint -q /sys     || mount -t sysfs sys /sys
-            mountpoint -q /dev     || mount --bind /dev /dev
+            mountpoint -q /dev || mount -t devtmpfs devtmpfs /dev
             mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
             mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
             mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
