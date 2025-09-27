@@ -9,9 +9,16 @@
 - *Requires Developer Mode* <br>
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install.* <br>
 
-To install, open up crosh, type in shell: <br>
+<br>
+
+- To install, open up crosh, type in shell: <br>
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
+
+<br>
+
+- Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
+
 
 # Functioning Tools: <br>
 - Boostrapped Stage3 Gentoo Linux
@@ -36,9 +43,6 @@ To install, open up crosh, type in shell: <br>
 - `chard uninstall` Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` List Portage catalogues.
 - `chard help` Show help examples. 
-
-Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
-Entering `chard root` will chroot into chard, becoming a fully sandboxed environment.<br>
 
 *Does not alter files ouside of /usr/local/* <br>
 *When Installer finishes or exits the log file, 'chardbuild.log', is copied to ChromeOS Downloads folder.* <br> 
