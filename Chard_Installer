@@ -232,6 +232,9 @@ sys-apps/shadow -elogind systemd
 sys-apps/util-linux -elogind systemd
 EOF
 
+echo "dev-build/cmake -gui" | sudo tee -a /usr/local/chard/etc/portage/package.use/cmake-fix
+
+
 echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET}"
 
 sudo mkdir -p "/usr/local/chard/var/tmp"
