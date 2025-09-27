@@ -305,22 +305,21 @@ KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
 sudo mkdir -p "$BUILD_DIR"
 
 if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
-    echo "[+] Fetching $KERNEL_TAR..."
+    echo "${RESET}${BLUE}[+] Fetching $KERNEL_TAR..."
     sudo curl -L --progress-bar -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
 else
-    echo "${RESET}${YELLOW}[!] Kernel tarball already exists, skipping download."
+    echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
 
 sudo rm -rf "$KERNEL_BUILD"
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
-echo "${CYAN}[+] Installing Linux headers into Chard Root..."
+echo "${RESET}${BLUE}[+] Installing Linux headers into Chard Root..."
 sudo chroot "/usr/local/chard" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
 HOST_ARCH=\$(uname -m)
-
 case \"\$HOST_ARCH\" in
     x86_64) KERNEL_ARCH=x86_64 ;;
     aarch64) KERNEL_ARCH=arm64 ;;
@@ -328,11 +327,18 @@ case \"\$HOST_ARCH\" in
 esac
 
 make mrproper
-make HOST_ARCH=\$HOST_ARCH defconfig
-make HOST_ARCH=\$HOST_ARCH INSTALL_HDR_PATH=/usr headers_install
+make defconfig
+
+make INSTALL_HDR_PATH=/usr headers_install
+
+rm -rf /usr/src/linux
+cp -a . /usr/src/linux
+
+cp .config /usr/src/linux/.config
 "
 
-echo "${RESET}${MAGENTA}[+] Linux headers installed to /usr/local/chard/usr/include"
+echo "${RESET}${CYAN}[+] Linux headers and sources installed to /usr/local/chard/usr/src/linux"
+
 
 sudo rm -rf "$KERNEL_BUILD"
 
