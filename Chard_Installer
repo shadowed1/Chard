@@ -102,10 +102,6 @@ esac
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-            unset LD_PRELOAD
-            unset CHARD_ROOT
-            export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "$CHARD_ROOT" | paste -sd ':' -)
-            export LD_LIBRARY_PATH=$(echo "${LD_LIBRARY_PATH:-}" | tr ':' '\n' | grep -v "$CHARD_ROOT" | paste -sd ':' -)
     
             echo "${BLUE}[*] Removing $CHARD_ROOT in case of reinstall...${RESET}"
             sudo rm -rf "$CHARD_ROOT"
