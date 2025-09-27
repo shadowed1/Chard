@@ -45,5 +45,11 @@
 - `chard cat` List Portage catalogues.
 - `chard help` Show help examples. 
 
-*Does not alter files ouside of /usr/local/* <br>
-*When Installer finishes or exits the log file, 'chardbuild.log', is copied to ChromeOS Downloads folder.* <br> 
+- Does not alter files ouside of /usr/local/* <br>
+- When Installer finishes or exits the log file, 'chardbuild.log', is copied to ChromeOS Downloads folder.* <br> 
+- Chard Installer  runs: emerge --sync near the end of install to finish setup. <br>
+- Please do not run emerge --sync more than once a day due to this built-in Emerge warning: <br>
+
+`Please note: common gentoo-netiquette says you should not
+sync more than once a day.  Excessive requests may lead
+automatic temporary bans on rsync.gentoo.org service.`
