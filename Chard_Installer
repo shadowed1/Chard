@@ -136,8 +136,6 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
 
 sudo mkdir -p /usr/local/chard/usr/local/src/gtest-1.16.0
 sudo mkdir -p "$(dirname "$LOG_FILE")"
-sudo mkdir -p /usr/local/chard/usr/share/git-core/templates/hooks"
-#sudo mkdir -p /usr/local/chard/usr/lib/python-exec"
 sudo mkdir -p /usr/local/chard/etc/portage/repos.conf"
 sudo mkdir -p /usr/local/chard/var/db/repos/gentoo/profiles"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
@@ -213,19 +211,25 @@ esac
 
 echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
 
+sudo mkdir -p /usr/local/chard/etc/portage/package.use
 
-MAKE_CONF="$CHARD_ROOT/etc/portage/make.conf"
-sudo mkdir -p "$(dirname "$MAKE_CONF")"
-sudo tee "$MAKE_CONF" > /dev/null <<EOF
-CHOST="${CHOST}"
-ARCH="${GENTOO_ARCH}"
-ACCEPT_KEYWORDS="~${GENTOO_ARCH}"
-ROOT="${CHARD_ROOT}"
-CFLAGS="-O2 -pipe"
-CXXFLAGS="\${CFLAGS}"
-PORTAGE_TMPDIR="${CHARD_ROOT}/var/tmp"
-DISTDIR="${CHARD_ROOT}/var/cache/distfiles"
-PKGDIR="${CHARD_ROOT}/var/cache/packages"
+sudo tee /etc/portage/package.use/systemd-overrides <<EOF
+sys-auth/elogind -systemd
+media-video/pipewire -elogind
+media-video/wireplumber -elogind
+sys-auth/polkit -elogind
+sys-apps/dbus -elogind
+EOF
+
+sudo tee /etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
+sys-auth/elogind -systemd
+media-video/pipewire -elogind
+media-video/wireplumber -elogind
+sys-auth/polkit -elogind
+sys-apps/dbus -elogind
+sys-libs/pam -elogind systemd
+sys-apps/shadow -elogind systemd
+sys-apps/util-linux -elogind systemd
 EOF
 
 echo "${YELLOW}[+] make.conf created with ARCH=${GENTOO_ARCH}${RESET}"
@@ -328,7 +332,7 @@ make HOST_ARCH=\$HOST_ARCH defconfig
 make HOST_ARCH=\$HOST_ARCH INSTALL_HDR_PATH=/usr headers_install
 "
 
-echo "${RESET}${MAGENTA}[+] Linux headers installed to /usr/local/chard/usr/include${RESET}"
+echo "${RESET}${MAGENTA}[+] Linux headers installed to /usr/local/chard/usr/include"
 
 sudo rm -rf "$KERNEL_BUILD"
 
@@ -367,85 +371,13 @@ PACKAGES=(
     "docbook|5.0.9|zip|https://github.com/docbook/xslt10-stylesheets/releases/download/snapshot%2F2020-06-03/docbook-xsl-snapshot.zip|docbook-xsl-snapshot|docbook"
     "gtk-doc|1.34.0|tar.xz|https://download.gnome.org/sources/gtk-doc/1.34/gtk-doc-1.34.0.tar.xz|gtk-doc-1.34.0|gtk-doc"
     "zlib|1.3.1|tar.gz|https://zlib.net/zlib-1.3.1.tar.gz|zlib-1.3.1|gnu"
-    "bash-completion|2.15.0|tar.xz|https://github.com/scop/bash-completion/releases/download/2.15.0/bash-completion-2.15.0.tar.xz|bash-completion-2.15.0|gnu"
-    "sqlite|3500400|tar.gz|https://www.sqlite.org/2025/sqlite-autoconf-3500400.tar.gz|sqlite-autoconf-3500400|gnu"
-    "util-linux|2.41|tar.xz|https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.xz|util-linux-2.41|gnu"
-    "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
-    "freetype|2.14.1|tar.xz|https://download.savannah.gnu.org/releases/freetype/freetype-2.14.1.tar.xz|freetype-2.14.1|cmake"
-    "graphite2|1.3.14|tgz|https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz|graphite2-1.3.14|cmakepython"
-    "Locale-gettext|1.07|tar.gz|https://cpan.metacpan.org/authors/id/P/PV/PVANDRY/Locale-gettext-1.07.tar.gz|Locale-gettext-1.07|perl"
-    "pcre2|10.46|tar.gz|https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz|pcre2-10.46|gnu"
-    "libpng|1.6.50|tar.xz|https://sourceforge.net/projects/libpng/files/libpng16/1.6.50/libpng-1.6.50.tar.xz/download|libpng-1.6.50|gnu"
-    #"fontconfig|2.16.0|tar.xz|https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.16.0.tar.xz|fontconfig-2.16.0|meson"
-    "fontconfig|2.17.1|tar.xz|https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.17.1/fontconfig-2.17.1.tar.xz|fontconfig-2.17.1|meson"
-    "pixman|0.46.4|tar.xz|https://cairographics.org/releases/pixman-0.46.4.tar.xz|pixman-0.46.4|meson"
-    "icu|76.1|tar.gz|https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-src.tgz|icu-76.1|icu"
-    "chafa|1.14.5|tar.xz|https://github.com/hpjansson/chafa/releases/download/1.14.5/chafa-1.14.5.tar.xz|chafa-1.14.5|gnu"
-    "lzo|2.10|tar.gz|https://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz|lzo-2.10|gnu"
-    "cairo|1.18.4|tar.xz|https://cairographics.org/releases/cairo-1.18.4.tar.xz|cairo-1.18.4|meson"
-    "harfbuzz|11.5.0|tar.xz|https://github.com/harfbuzz/harfbuzz/releases/download/11.5.0/harfbuzz-11.5.0.tar.xz|harfbuzz-11.5.0|meson"
-    "texinfo|7.2|tar.xz|https://mirrors.kernel.org/gnu/texinfo/texinfo-7.2.tar.xz|texinfo-7.2|gnu"
-    "libseccomp|2.5.5|tar.gz|https://github.com/seccomp/libseccomp/releases/download/v2.5.5/libseccomp-2.5.5.tar.gz|libseccomp-2.5.5|gnu"
     "libunistring|1.3|tar.xz|https://mirrors.kernel.org//gnu/libunistring/libunistring-1.3.tar.xz|libunistring-1.3|gnu"
     "file|5.45|tar.gz|https://astron.com/pub/file/file-5.45.tar.gz|file-5.45|gnu"
     "extra-cmake-modules|6.18.0|tar.xz|https://download.kde.org/stable/frameworks/6.18/extra-cmake-modules-6.18.0.tar.xz|extra-cmake-modules-6.18.0|cmakeG"
     "File-LibMagic|1.23|tar.gz|https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/File-LibMagic-1.23.tar.gz|File-LibMagic-1.23|perl"
-    "portage|3.0.69.1|tar.gz|https://github.com/gentoo/portage/archive/refs/tags/portage-3.0.69.1.tar.gz|portage-portage-3.0.69.1|mesonportage"
-    "util-macros|1.20.2|tar.xz|https://www.x.org/releases/individual/util/util-macros-1.20.2.tar.xz|util-macros-1.20.2|gnu"
-    "smartmontools|7.5|tar.gz|https://downloads.sourceforge.net/project/smartmontools/smartmontools/7.5/smartmontools-7.5.tar.gz|smartmontools-7.5|gnu"
-    "xorgproto|2024.1|tar.xz|https://www.x.org/releases/individual/proto/xorgproto-2024.1.tar.xz|xorgproto-2024.1|gnu"
-    "xtrans|1.5.2|tar.gz|https://www.x.org/archive/individual/lib/xtrans-1.5.2.tar.gz|xtrans-1.5.2|gnu"
-    "xcb-proto|1.17.0|tar.xz|https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.17.0.tar.xz|xcb-proto-1.17.0|gnu"
-    "libxcb|1.17.0|tar.xz|https://xcb.freedesktop.org/dist/libxcb-1.17.0.tar.xz|libxcb-1.17.0|gnu"
-    "xextproto|7.3.0|tar.gz|https://xorg.freedesktop.org/releases/individual/proto/xextproto-7.3.0.tar.gz|xextproto-7.3.0|gnu"
-    "libX11|1.8.12|tar.xz|https://www.x.org/releases/individual/lib/libX11-1.8.12.tar.xz|libX11-1.8.12|gnu"
-    "libXext|1.3.6|tar.xz|https://www.x.org/releases/individual/lib/libXext-1.3.6.tar.xz|libXext-1.3.6|gnu"
-    "libXrender|0.9.11|tar.xz|https://www.x.org/releases/individual/lib/libXrender-0.9.12.tar.xz|libXrender-0.9.12|gnu"
-    "libXfixes|6.0.2|tar.xz|https://www.x.org/releases/individual/lib/libXfixes-6.0.2.tar.xz|libXfixes-6.0.2|gnu"
-    "libXi|1.8.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXi-1.8.2.tar.xz|libXi-1.8.2|gnu"
-    "libXcursor|1.2.2|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXcursor-1.2.2.tar.xz|libXcursor-1.2.2|gnu"
-    "libXrandr|1.5.4|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXrandr-1.5.4.tar.xz|libXrandr-1.5.4|gnu"
-    "libXinerama|1.1.5|tar.xz|https://xorg.freedesktop.org/archive/individual/lib/libXinerama-1.1.5.tar.xz|libXinerama-1.1.5|gnu"
-    "libdrm|2.4.123|tar.xz|https://dri.freedesktop.org/libdrm/libdrm-2.4.123.tar.xz|libdrm-2.4.123|meson"
-    "libglvnd|1.7.0|tar.gz|https://sources.voidlinux.org/libglvnd-1.7.0/libglvnd-v1.7.0.tar.gz|libglvnd-1.7.0|gnu"
-    "libvdpau|1.5|tar.gz|https://gitlab.freedesktop.org/vdpau/libvdpau/-/archive/1.5/libvdpau-1.5.tar.gz|libvdpau-1.5|gnu"
-    "glslang|15.0.0|tar.gz|https://github.com/KhronosGroup/glslang/archive/refs/tags/15.0.0.tar.gz|glslang-15.0.0|cmakeGLS"
-    "mesa|24.1.5|tar.xz|https://archive.mesa3d.org/mesa-24.1.5.tar.xz|mesa-24.1.5|mesonmesa"
-    "glu|9.0.3|tar.xz|https://mesa.freedesktop.org/archive/glu/glu-9.0.3.tar.xz|glu-9.0.3|gnu"
-    "wayland|1.24.0|tar.xz|https://gitlab.freedesktop.org/wayland/wayland/-/releases/1.24.0/downloads/wayland-1.24.0.tar.xz|wayland-1.24.0|meson"
-    "libsndfile|1.2.2|tar.xz|https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz|libsndfile-1.2.2|gnu"
-    "libtool|2.5.4|tar.xz|https://mirrors.ibiblio.org/gnu/libtool/libtool-2.5.4.tar.xz|libtool-2.5.4|gnu"
-    "fftw|3.3.10|tar.gz|http://www.fftw.org/fftw-3.3.10.tar.gz|fftw-3.3.10|gnu"
-    "libasyncns|0.8|tar.gz|https://github.com/shadowed1/Chard/raw/refs/heads/main/libasyncns_x86_64-0.8.tar.gz|libasyncns-0.8|asyncns86"
-    "libasyncns|0.8|tar.gz|https://github.com/shadowed1/Chard/raw/refs/heads/main/libasyncns_ARM64-0.8.tar.gz|libasyncns-0.8|asyncnsARM64"
-    "tdb|1.4.14|tar.gz|https://download.samba.org/pub/tdb/tdb-1.4.14.tar.gz|tdb-1.4.14|gnu"
-    "check|0.15.2|tar.gz|https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz|check-0.15.2|gnu"
-    "pulseaudio|17.0|tar.xz|https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz|pulseaudio-17.0|meson"
-    "json-glib|1.8.0|tar.xz|https://download.gnome.org/sources/json-glib/1.8/json-glib-1.8.0.tar.xz|json-glib-1.8.0|meson"
-    "bubblewrap|0.10.0|tar.xz|https://github.com/containers/bubblewrap/releases/download/v0.10.0/bubblewrap-0.10.0.tar.xz|bubblewrap-0.10.0|meson"
-    "libcap|1.2.76|tar.gz|https://git.kernel.org/pub/scm/libs/libcap/libcap.git/snapshot/libcap-1.2.76.tar.gz|libcap-1.2.76|libcap"
-    "libarchive|3.7.3|tar.xz|https://www.libarchive.org/downloads/libarchive-3.7.3.tar.xz|libarchive-3.7.3|gnu"
-    "gpgme|2.0.0|tar.bz2|https://gnupg.org/ftp/gcrypt/gpgme/gpgme-2.0.0.tar.bz2|gpgme-2.0.0|gnu"
-    "libiconv|1.18|tar.gz|https://mirrors.kernel.org/gnu/libiconv/libiconv-1.18.tar.gz|libiconv-1.18|gnu"
-    "fuse|3.17.4|tar.gz|https://github.com/libfuse/libfuse/releases/download/fuse-3.17.4/fuse-3.17.4.tar.gz|fuse-3.17.4|meson"
-    "libostree|2025.2|tar.xz|https://github.com/ostreedev/ostree/releases/download/v2025.2/libostree-2025.2.tar.xz|libostree-2025.2|gnu"
     "libpsl|0.21.5|tar.gz|https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz|libpsl-0.21.5|gnussl"
     "expat|2.5.0|tar.gz|https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.gz|expat-2.5.0|gnu"
     "duktape|2.7.0|tar.xz|https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz|duktape-2.7.0|duktape"
-    "p11-kit|0.25.8|tar.xz|https://github.com/p11-glue/p11-kit/releases/download/0.25.8/p11-kit-0.25.8.tar.xz|p11-kit-0.25.8|gnu"
-    "gvdb|0.52.0|zip|https://github.com/GNOME/gvdb/archive/refs/heads/main.zip|gvdb-main|mesongvdb"
-    "gobject-introspection|1.86.0|tar.xz|https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz|gobject-introspection-1.86.0|meson"
-    "libffi|3.5.2|tar.gz|https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz|libffi-3.5.2|gnu"
-    "sysprof|1.2.0|tar.gz|https://www.sysprof.com/sysprof-1.2.0.tar.gz|sysprof-1.2.0|gnu"
-    "qtbase|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtbase-everywhere-src-6.9.2.tar.xz|qtbase-everywhere-src-6.9.2|cmakeOpenGL"
-    "qttools|6.9.2|tar.xz|https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qttools-everywhere-src-6.9.2.tar.xz|qttools-everywhere-src-6.9.2|cmakeG"
-    "libXau|1.0.12|tar.xz|https://www.x.org/pub/individual/lib/libXau-1.0.12.tar.xz|libXau-1.0.12|gnu"
-    "sphinx|7.3.7|tar.gz|https://files.pythonhosted.org/packages/source/s/sphinx/sphinx-7.3.7.tar.gz|sphinx-7.3.7|pythonbuild"
-    "graphviz|13.1.2|tar.xz|https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/graphviz-13.1.2.tar.xz|graphviz-13.1.2|gnu"
-    "vala|0.56.18|tar.xz|https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz|vala-0.56.18|gnu"
-    "dconf|0.49.0|tar.xz|https://download.gnome.org/sources/dconf/0.49/dconf-0.49.0.tar.xz|dconf-0.49.0|meson"
-    "gsettings-desktop-schemas|49.0|tar.xz|https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-49.0.tar.xz|gsettings-desktop-schemas-49.0|meson"
-    "shared-mime-info|2.4|tar.gz|https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.4/shared-mime-info-2.4.tar.gz|shared-mime-info-2.4|meson"
     "brotli|1.1.0|tar.gz|https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz|brotli-1.1.0|cmakeG"
 )
 
@@ -554,33 +486,44 @@ sync-uri = rsync://rsync.gentoo.org/gentoo-portage
 auto-sync = yes
 EOF
 
-sudo tee \"/usr/local/chard/etc/portage/make.conf\" > /dev/null <<'EOF'
+
+ ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+esac
+
+GCC_DIR=/usr/$CHOST/gcc-bin/14
+
+sudo tee /usr/local/chard/etc/portage/make.conf > /dev/null <<EOF
 # Chard Portage make.conf
 # Manually generated
-COMMON_FLAGS=\"-O2 -pipe\"
-CFLAGS=\"-O2 -pipe\"
-CXXFLAGS=\"-O2 -pipe\"
-FCFLAGS=\"-O2 -pipe\"
-FFLAGS=\"-O2 -pipe\"
+COMMON_FLAGS="-O2 -pipe"
+CFLAGS="-O2 -pipe"
+CXXFLAGS="-O2 -pipe"
+FCFLAGS="-O2 -pipe"
+FFLAGS="-O2 -pipe"
 LC_MESSAGES=C.utf8
-DISTDIR=\"/var/cache/distfiles\"
-PKGDIR=\"/var/cache/packages\"
-PORTAGE_TMPDIR=\"/var/tmp\"
-PORTDIR=\"/usr/portage\"
-SANDBOX=\"/usr/bin/sandbox\"
-CHOST=\"\$CHOST\"
-CC=\"\$GCC_DIR/\$CHOST-gcc\"
-CXX=\"\$GCC_DIR/\$CHOST-g++\"
-AR=\"\$GCC_DIR/gcc-ar\"
-NM=\"\$GCC_DIR/gcc-nm\"
-RANLIB=\"\$GCC_DIR/gcc-ranlib\"
-STRIP=\"/usr/\$CHOST/binutils-bin/2.44/strip\"
-FEATURES=\"assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr\"
-USE=\"X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13\"
-PYTHON_TARGETS=\"python3_13\"
-PKG_CONFIG_PATH=\"/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH\"
-PKG_CONFIG=\"/usr/bin/pkg-config\"
-PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
+DISTDIR="/var/cache/distfiles"
+PKGDIR="/var/cache/packages"
+PORTAGE_TMPDIR="/var/tmp"
+PORTDIR="/usr/portage"
+SANDBOX="/usr/bin/sandbox"
+CHOST="$CHOST"
+CC="$GCC_DIR/$CHOST-gcc"
+CXX="$GCC_DIR/$CHOST-g++"
+AR="$GCC_DIR/gcc-ar"
+NM="$GCC_DIR/gcc-nm"
+RANLIB="$GCC_DIR/gcc-ranlib"
+STRIP="/usr/$CHOST/binutils-bin/2.44/strip"
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
+USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
+PYTHON_TARGETS="python3_13"
+PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:$PKG_CONFIG_PATH"
+PKG_CONFIG="/usr/bin/pkg-config"
+PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
+FEATURES="-sandbox -usersandbox"
 EOF
 
 PORTAGE_PROFILE_DIR=\"/usr/local/chard/usr/local/etc/portage/make.profile\"
@@ -1102,95 +1045,8 @@ for pkg in "${PACKAGES[@]}"; do
 
 done
 
-echo "${RED}[+] Cleaning up${RESET}"
 sudo rm -rf "$BUILD_DIR"
 sleep 2
-
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -1526,69 +1382,6 @@ for pkg in "${PACKAGES[@]}"; do
         
 done
 
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-
-
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-########################################################################################################################################################################
-
 echo "${RED}[+] Cleaning up${RESET}"
 sudo umount -l "/usr/local/chard/dev/shm"       2>/dev/null || true
 sudo umount -l "/usr/local/chard/dev"           2>/dev/null || true
@@ -1598,79 +1391,80 @@ sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
 
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-############################
-
 sudo chmod +x "$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "/usr/local/chard"
 sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing."
 curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 echo "${RESET}${YELLOW}make.conf successfully updated for Chard.${RESET}"
+echo "${BLUE}Setting up Emerge!${RESET}
+
+# Mount pseudo-filesystems
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t devtmpfs dev /dev
+mount -t tmpfs tmpfs /dev/shm
+
+# Create essential devices if missing
+
+
+
+sudo chroot /usr/local/chard /bin/bash -c '
+
+            mountpoint -q /proc    || mount -t proc proc /proc
+            mountpoint -q /sys     || mount -t sysfs sys /sys
+            mountpoint -q /dev     || mount --bind /dev /dev
+            mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+            mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+            mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+            [ -e /dev/null ] || mknod -m 666 /dev/null c 1 3
+            [ -e /dev/tty  ] || mknod -m 666 /dev/tty  c 5 0
+            [ -e /dev/random ] || mknod -m 666 /dev/random c 1 8
+            [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+
+            ARCH=$(uname -m)
+                    case "$ARCH" in
+                        x86_64) CHOST=x86_64-pc-linux-gnu ;;
+                        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+                        *) echo "Unknown architecture: $ARCH" ;;
+                    esac
+                    
+                    GCC_DIR=/usr/$CHOST/gcc-bin/14
+                    export HOME=/home/chronos/user
+                    export MAGIC="/usr/share/misc/magic.mgc"
+                    export CC=$GCC_DIR/$CHOST-gcc
+                    export CXX=$GCC_DIR/$CHOST-g++
+                    export AR=$GCC_DIR/gcc-ar
+                    export RANLIB=$GCC_DIR/$CHOST-gcc-ranlib
+                    export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
+                    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14"
+                    export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+                    export PKG_CONFIG=/usr/bin/pkg-config
+                    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
+                    export PYTHON="/bin/python3"
+                    export FORCE_UNSAFE_CONFIGURE=1
+                    export XDG_DATA_DIRS="/usr/share:/usr/local/share"
+                    export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
+                    export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
+                    export LDFLAGS="-L/usr/lib"
+                    export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
+                    export CARGO_HOME="$HOME/.cargo"
+                    export RUSTUP_HOME="$HOME/.rustup"
+                    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+                    export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
+                    export PORTAGE_LOGDIR="/var/log/portage"
+                    export PORTAGE_CONFIGROOT="/"
+                    export PORTAGE_TMPDIR="/var/tmp"
+            
+            /bin/bash emerge --sync
+                              umount /etc/ssl
+                              umount /dev/pts
+                              umount /dev/shm
+                              umount /dev
+                              umount /sys
+                              umount /proc
+            '
+
 echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
