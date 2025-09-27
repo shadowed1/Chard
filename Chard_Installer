@@ -213,7 +213,7 @@ echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
 
 sudo mkdir -p /usr/local/chard/etc/portage/package.use
 
-sudo tee /etc/portage/package.use/systemd-overrides <<EOF
+sudo tee /usr/local/chard/etc/portage/package.use/systemd-overrides <<EOF
 sys-auth/elogind -systemd
 media-video/pipewire -elogind
 media-video/wireplumber -elogind
@@ -221,7 +221,7 @@ sys-auth/polkit -elogind
 sys-apps/dbus -elogind
 EOF
 
-sudo tee /etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
+sudo tee /usr/local/chard/etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
 sys-auth/elogind -systemd
 media-video/pipewire -elogind
 media-video/wireplumber -elogind
