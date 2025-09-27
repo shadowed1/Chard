@@ -3,8 +3,8 @@
 </p>  
 
 
-# *Chard (Chrome-Arch Development) for x86_64 and ARM64*
-## Goal: Run any Linux program/app natively all ChromeOS devices in a semi-sandboxed environment in /usr/local/chard <br>
+# *Chrome-Arch Development for x86_64 and ARM64*
+## Goal: Run any Linux program/app natively on ChromeOS devices in a sandboxed environment. <br>
 ### Please do not install without a usb recovery as this is under rapid development and mistakes happen.<br> 
 *Requires Developer Mode* <br> <br>
 *Untested with Brunch Toolchain, Chromebrew, and dev_install* 
