@@ -209,7 +209,7 @@ case "$ARCH" in
 esac
 
 
-echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make${RESET}"
+echo "${RESET}${GREEN}[+] Bootstrap make ready at /usr/local/make"
 
 sudo mkdir -p /usr/local/chard/etc/portage/package.use
 
