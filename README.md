@@ -14,7 +14,7 @@ To install, open up crosh, type in shell: <br>
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
 
 # Functioning Tools: <br>
-- Boostrapped Stage 3 Gentoo Linux + Linux Headers
+- Boostrapped Stage3 Gentoo Linux
 - Emerge
 - Python
 - Git
