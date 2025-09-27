@@ -28,7 +28,7 @@ To install, open up crosh, type in shell: <br>
 `nano` <--- to launch nano. <br>
 `gcc` <br>
 `python`
-`emerge` <-- Requires being in `chard root`
+`emerge` <-- Requires being in `chard root` <br>
 `chard rustc` <br>
 `chard cargo` <--- Rust apps must require chard prepend to isolate from system. <br>
 `nano` <br>
