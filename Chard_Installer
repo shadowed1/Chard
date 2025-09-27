@@ -294,7 +294,7 @@ export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
 export MAKEFLAGS="-j$(nproc)"
 export INSTALL_ROOT="/usr/local/chard"
 export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
-export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
+export PYTHONPATH="/usr/local/chard/usr/lib/python3.13/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
 export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
@@ -783,37 +783,36 @@ for pkg in "${PACKAGES[@]}"; do
     
     ARCH=$(uname -m)
     case "$ARCH" in
-        x86_64) CHOST=x86_64-pc-linux-gnu ;;
-        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-        *) echo "Unknown architecture: $ARCH" ;;
+        x86_64) CHOST="x86_64-pc-linux-gnu" ;;
+        aarch64) CHOST="aarch64-unknown-linux-gnu" ;;
+        *) echo "Unknown architecture: $ARCH"; exit 1 ;;
     esac
     
-    GCC_DIR=/usr/$CHOST/gcc-bin/14
-    export HOME=/home/chronos/user
+    GCC_DIR="/usr/$CHOST/gcc-bin/14"
+    
+    export HOME="/home/chronos/user"
     export MAGIC="/usr/share/misc/magic.mgc"
-    export CC=$GCC_DIR/$CHOST-gcc
-    export CXX=$GCC_DIR/$CHOST-g++
-    export AR=$GCC_DIR/gcc-ar
-    export RANLIB=$GCC_DIR/$CHOST-gcc-ranlib
-    export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14"
-    export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
-    export PKG_CONFIG=/usr/bin/pkg-config
-    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
+    export CC="$GCC_DIR/$CHOST-gcc"
+    export CXX="$GCC_DIR/$CHOST-g++"
+    export AR="$GCC_DIR/gcc-ar"
+    export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
+    
+    export PATH="$GCC_DIR:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin${PATH:+:$PATH}"
+    export LD_LIBRARY_PATH="/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    export PERL5LIB="/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5${PERL5LIB:+:$PERL5LIB}"
+    export PKG_CONFIG="/usr/bin/pkg-config"
+    export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
     export PYTHON="/bin/python3"
     export FORCE_UNSAFE_CONFIGURE=1
     export XDG_DATA_DIRS="/usr/share:/usr/local/share"
     export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
     export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
     export LDFLAGS="-L/usr/lib"
-    export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
+    export GI_TYPELIB_PATH="/usr/lib64/girepository-1.0${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"
     export CARGO_HOME="$HOME/.cargo"
     export RUSTUP_HOME="$HOME/.rustup"
-    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
-    #export PYEXEC="/usr/lib/python-exec"
-    #export PYVER="python3.13"
-    #export PYEXEC_DIR="$PYEXEC/$PYVER"
-    #export PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
+    export GIT_TEMPLATE_DIR="/usr/share/git-core/templates"
+    export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
     
      case "$BUILDSYS" in
         gnu)
@@ -1078,7 +1077,7 @@ export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
 export MAKEFLAGS="-j$(nproc)"
 export INSTALL_ROOT="/usr/local/chard"
 export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
-export PYTHONPATH="/usr/local/chard/usr/lib/python3.*/site-packages:$PYTHONPATH"
+export PYTHONPATH="/usr/local/chard/usr/lib/python3.13/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
 export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
@@ -1149,34 +1148,36 @@ for pkg in "${PACKAGES[@]}"; do
     
     ARCH=$(uname -m)
     case "$ARCH" in
-        x86_64) CHOST=x86_64-pc-linux-gnu ;;
-        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-        *) echo "Unknown architecture: $ARCH" ;;
+        x86_64) CHOST="x86_64-pc-linux-gnu" ;;
+        aarch64) CHOST="aarch64-unknown-linux-gnu" ;;
+        *) echo "Unknown architecture: $ARCH"; exit 1 ;;
     esac
-    
-    GCC_DIR=/usr/$CHOST/gcc-bin/14
-    export HOME=/home/chronos/user
-    export MAGIC="/usr/share/misc/magic.mgc"
-    export CC=$GCC_DIR/$CHOST-gcc
-    export CXX=$GCC_DIR/$CHOST-g++
-    export AR=$GCC_DIR/gcc-ar
-    export RANLIB=$GCC_DIR/$CHOST-gcc-ranlib
-    export PATH=/usr/$CHOST/gcc-bin/14:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14"
-    export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
-    export PKG_CONFIG=/usr/bin/pkg-config
-    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
-    export PYTHON="/bin/python3"
-    export FORCE_UNSAFE_CONFIGURE=1
-    export XDG_DATA_DIRS="/usr/share:/usr/local/share"
-    export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
-    export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
-    export LDFLAGS="-L/usr/lib"
-    export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
-    export CARGO_HOME="$HOME/.cargo"
-    export RUSTUP_HOME="$HOME/.rustup"
-    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
-    export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
+
+GCC_DIR="/usr/$CHOST/gcc-bin/14"
+
+export HOME="/home/chronos/user"
+export MAGIC="/usr/share/misc/magic.mgc"
+export CC="$GCC_DIR/$CHOST-gcc"
+export CXX="$GCC_DIR/$CHOST-g++"
+export AR="$GCC_DIR/gcc-ar"
+export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
+
+export PATH="$GCC_DIR:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin${PATH:+:$PATH}"
+export LD_LIBRARY_PATH="/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export PERL5LIB="/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5${PERL5LIB:+:$PERL5LIB}"
+export PKG_CONFIG="/usr/bin/pkg-config"
+export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+export PYTHON="/bin/python3"
+export FORCE_UNSAFE_CONFIGURE=1
+export XDG_DATA_DIRS="/usr/share:/usr/local/share"
+export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
+export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
+export LDFLAGS="-L/usr/lib"
+export GI_TYPELIB_PATH="/usr/lib64/girepository-1.0${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"
+export CARGO_HOME="$HOME/.cargo"
+export RUSTUP_HOME="$HOME/.rustup"
+export GIT_TEMPLATE_DIR="/usr/share/git-core/templates"
+export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
     
      case "$BUILDSYS" in
         gnu)
@@ -1422,55 +1423,59 @@ sudo chroot /usr/local/chard /bin/bash -c '
             [ -e /dev/random ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
 
+    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
 
-            ARCH=$(uname -m)
-                    case "$ARCH" in
-                        x86_64)  CHOST=x86_64-pc-linux-gnu ;;
-                        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-                        *) echo "Unknown architecture: $ARCH"; exit 1 ;;
-                    esac
-                    
-            GCC_DIR="/usr/$CHOST/gcc-bin/14"        
-            export HOME=/home/chronos/user
-            export MAGIC="/usr/share/misc/magic.mgc"
-            export CC="$GCC_DIR/$CHOST-gcc"
-            export CXX="$GCC_DIR/$CHOST-g++"
-            export AR="$GCC_DIR/gcc-ar"
-            export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
-            
-            export PATH="$GCC_DIR:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin"
-            export LD_LIBRARY_PATH="/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-            export PERL5LIB="/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5${PERL5LIB:+:$PERL5LIB}"
-            export PKG_CONFIG=/usr/bin/pkg-config
-            export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-            export PYTHON="/bin/python3"
-            export FORCE_UNSAFE_CONFIGURE=1
-            export XDG_DATA_DIRS="/usr/share:/usr/local/share"
-            export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
-            export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
-            export LDFLAGS="-L/usr/lib"
-            export GI_TYPELIB_PATH="/usr/lib64/girepository-1.0${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"
-            export CARGO_HOME="$HOME/.cargo"
-            export RUSTUP_HOME="$HOME/.rustup"
-            export GIT_TEMPLATE_DIR="/usr/share/git-core/templates"
-            export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
-            export PORTAGE_LOGDIR="/var/log/portage"
-            export PORTAGE_CONFIGROOT="/"
-            export PORTAGE_TMPDIR="/var/tmp"
-        
-            emerge --sync && \
-            emerge --verbose --update --deep --newuse @world --ask=n && \
-            emerge -1 dev-lang/perl --ask=n && \
-            emerge -1 sys-apps/systemd --ask=n && \
-            emerge --verbose --with-bdeps=y flatpak --ask=n
-        
-            umount /etc/ssl
-            umount /dev/pts
-            umount /dev/shm
-            umount /dev
-            umount /sys
-            umount /proc
-        '
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        x86_64)  CHOST=x86_64-pc-linux-gnu ;;
+        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+        *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    esac
+
+    GCC_DIR=/usr/$CHOST/gcc-bin/14
+
+    export HOME=/home/chronos/user
+    export MAGIC="/usr/share/misc/magic.mgc"
+    export CC=$GCC_DIR/$CHOST-gcc
+    export CXX=$GCC_DIR/$CHOST-g++
+    export AR=$GCC_DIR/gcc-ar
+    export RANLIB=$GCC_DIR/$CHOST-gcc-ranlib
+    export PATH=$GCC_DIR:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin
+    export LD_LIBRARY_PATH="/lib:/lib64:/usr/lib:/usr/lib64:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/$CHOST/14${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:$PERL5LIB
+    export PKG_CONFIG=/usr/bin/pkg-config
+    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
+    export PYTHON="/bin/python3"
+    export FORCE_UNSAFE_CONFIGURE=1
+    export XDG_DATA_DIRS="/usr/share:/usr/local/share"
+    export CFLAGS="-O2 -pipe -fPIC -I/usr/include"
+    export CXXFLAGS="-O2 -pipe -fPIC -I/usr/include"
+    export LDFLAGS="-L/usr/lib"
+    export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:${GI_TYPELIB_PATH:-}
+    export CARGO_HOME="$HOME/.cargo"
+    export RUSTUP_HOME="$HOME/.rustup"
+    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+    export PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
+    export PORTAGE_LOGDIR="/var/log/portage"
+    export PORTAGE_CONFIGROOT="/"
+    export PORTAGE_TMPDIR="/var/tmp"
+
+    emerge --sync && \
+    emerge --oneshot --nodeps dev-python/docutils \
+    emerge --verbose --with-bdeps=y flatpak --ask=n \
+    emerge -1 dev-lang/perl --ask=n && \
+    emerge --verbose --with-bdeps=y flatpak --ask=n
+
+    umount /etc/ssl
+    umount /dev/pts
+    umount /dev/shm
+    umount /dev
+    umount /sys
+    umount /proc
+'
 
 echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
