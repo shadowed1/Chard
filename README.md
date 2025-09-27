@@ -20,7 +20,9 @@ To install, open up crosh, type in shell: <br>
 - Git
 - GCC
 - Make
+- File + LDD
 - CMake
+- Perl
 - Meson
 - Ninja
 - Rust
