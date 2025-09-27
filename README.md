@@ -3,12 +3,11 @@
 </p>  
 
 
-# Chard (Chrome-Arch Development)
+# *Chard (Chrome-Arch Development) for x86_64 and ARM64*
 ## Goal: Run any Linux program/app natively in ChromeOS in a semi-sandboxed environment in /usr/local/chard <br>
-### Please do not install without a usb recovery as this is under rapid development and mistakes happen.<br>
+### Please do not install without a usb recovery as this is under rapid development and mistakes happen.<br> 
 *Requires Developer Mode* <br> <br>
 *Untested with Brunch Toolchain, Chromebrew, and dev_install* 
-
 
 To install, open up crosh, type in shell: <br>
 
@@ -26,10 +25,9 @@ To install, open up crosh, type in shell: <br>
 - Ninja
 - Rust
 - OpenSSL
-- And More
+- And Many More
 
-
-*After install, chard commands will be available, along with many apps; like nano.* <br>
+# *After install, open a new shell for all commands to become available.* <br>
 `nano` <--- to launch nano. <br>
 `gcc` <br>
 `python`
@@ -42,3 +40,6 @@ To install, open up crosh, type in shell: <br>
 `Et Al` <br> <br>
 Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
 Entering `chard root` will chroot into chard, becoming a fully sandboxed environment.<br><br><br>
+
+*Features an uninstall command to clean up after itself. Does not alter files ouside of /usr/local/* <br>
+*When Installer finishes or exits the log file, 'chardbuild.log', is copied to ChromeOS Downloads folder.* <br> 
