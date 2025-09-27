@@ -41,5 +41,5 @@ To install, open up crosh, type in shell: <br>
 Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
 Entering `chard root` will chroot into chard, becoming a fully sandboxed environment.<br><br><br>
 
-*Features an uninstall command to clean up after itself. Does not alter files ouside of /usr/local/* <br>
+*Features an uninstall command, `chard uninstall` to clean up after itself. Does not alter files ouside of /usr/local/* <br>
 *When Installer finishes or exits the log file, 'chardbuild.log', is copied to ChromeOS Downloads folder.* <br> 
