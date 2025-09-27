@@ -29,19 +29,16 @@ To install, open up crosh, type in shell: <br>
 - OpenSSL
 - And Many More
 
-# *After install, open a new shell for all commands to become available.* <br>
-`nano` <--- to launch nano. <br>
-`gcc` <br>
-`python`
-`emerge` <-- Requires being in `chard root` <br>
-`chard rustc` <br>
-`chard cargo` <--- Rust apps must require chard prepend to isolate from system. <br>
-`nano` <br>
-`ldd` <br>
-`file` <br>
-`Et Al` <br> <br>
-Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
-Entering `chard root` will chroot into chard, becoming a fully sandboxed environment.<br><br><br>
+# Commands <br>
+- `chard <binary> <arguments>` to run a command wrapped within /usr/local/chard paths outside of chroot.
+- `chard root` Enter Chard Chroot for a fully sandboxed Gentoo environment.
+- `chard reinstall` Option 1 updates chard scripts to latest version. Option 2 is a full reinstall.
+- `chard uninstall` Remove Chard. Refresh shell to remove .bashrc entries.
+- `chard cat` List Portage catalogues.
+- `chard help` Show help examples. 
 
-*Features an uninstall command, `chard uninstall` to clean up after itself. Does not alter files ouside of /usr/local/* <br>
+Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
+Entering `chard root` will chroot into chard, becoming a fully sandboxed environment.<br>
+
+*Does not alter files ouside of /usr/local/* <br>
 *When Installer finishes or exits the log file, 'chardbuild.log', is copied to ChromeOS Downloads folder.* <br> 
