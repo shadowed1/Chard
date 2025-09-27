@@ -906,6 +906,9 @@ for pkg in "${PACKAGES[@]}"; do
                                        --with-openssl=/usr
             make -j"$(nproc)"
             make install
+            rm /usr/bin/emerge
+            ln -s /usr/lib/python-exec/python3.13/emerge /usr/bin/emerge
+
             ;;
         perl)
             perl Makefile.PL INSTALL_BASE=/usr/local
