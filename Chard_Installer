@@ -1504,9 +1504,24 @@ sudo chroot /usr/local/chard /bin/bash -c "
     export PORTAGE_TMPDIR=\"/var/tmp\"
 
     emerge --sync && \
-    emerge --oneshot --nodeps dev-python/docutils \
-    emerge -1 dev-lang/perl --ask=n \
-    #emerge --fetchonly sys-apps/systemd
+    emerge --oneshot --nodeps dev-python/docutils && \
+    emerge -1 dev-build/make --ask=n && \
+    emerge -1 dev-libs/gmp --ask=n && \
+    emerge -1 dev-libs/mpfr --ask=n && \
+    emerge -1 sys-devel/binutils --ask=n && \
+    emerge -1 sys-apps/diffutils --ask=n && \
+    emerge -1 sys-apps/coreutils --ask=n && \   
+    emerge -1 dev-lang/perl --ask=n && \
+    emerge -1 dev-lang/python --ask=n && \
+    emerge -1 dev-build/meson --ask=n && \
+    emerge -1 dev-libs/glib --ask=n && \
+    emerge -1 dev-ruby/pkg-config --ask=n && \
+    emerge -1 dev-cpp/gtest --ask=n && \
+    emerge -1 dev-util/re2c --ask=n && \
+    emerge -1 dev-build/ninja --ask=n && \
+    emerge -1 licenses/docbook --ask=n && \
+    emerge -1 dev-util/gtk-doc --ask=n
+
 
     umount /etc/ssl
     umount /dev/pts
