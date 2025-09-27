@@ -5,9 +5,10 @@
 
 # *Chrome-Arch Development for x86_64 and ARM64*
 ## Goal: Run any Linux program/app natively on ChromeOS devices in a sandboxed environment. <br>
-- *Please do not install without a USB recovery as this is under rapid development and mistakes happen.* <br> 
 - *Requires Developer Mode* <br>
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install.* <br>
+- *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist!* <br>
+
 
 <br>
 
