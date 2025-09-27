@@ -221,6 +221,7 @@ media-video/pipewire -elogind
 media-video/wireplumber -elogind
 sys-auth/polkit -elogind
 sys-apps/dbus -elogind
+dev-python/pillow -truetype
 EOF
 
 sudo tee /usr/local/chard/etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
@@ -232,6 +233,7 @@ sys-apps/dbus -elogind
 sys-libs/pam -elogind systemd
 sys-apps/shadow -elogind systemd
 sys-apps/util-linux -elogind systemd
+dev-python/pillow -truetype
 EOF
 
 echo "dev-build/cmake -gui" | sudo tee -a /usr/local/chard/etc/portage/package.use/cmake-fix
