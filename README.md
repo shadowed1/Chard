@@ -9,10 +9,26 @@ To install, open up crosh, type in shell: <br>
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
 
+# Functioning Tools: <br>
+- Boostrapped Stage 3 Gentoo Linux + Linux Headers
+- Emerge
+- Python
+- Git
+- GCC
+- Make
+- CMake
+- Meson
+- Ninja
+- Rust
+- OpenSSL
+- And More
+
+
 *After install, chard commands will be available, along with many apps; like nano.* <br>
 `nano` <--- to launch nano. <br>
 `gcc` <br>
 `python`
+`emerge` <-- Requires being in `chard root`
 `chard rustc` <br>
 `chard cargo` <--- Rust apps must require chard prepend to isolate from system. <br>
 `nano` <br>
