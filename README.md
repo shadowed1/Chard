@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="https://i.imgur.com/h12e32A.png" alt="logo" width="5000" />
+</p>  
+
+
 # Chard (Chrome-Arch Development)
 ## Goal: Run any Linux program/app natively in ChromeOS in a semi-sandboxed environment in /usr/local/chard <br>
 ### Please do not install without a usb recovery as this is under rapid development and mistakes happen.<br>
