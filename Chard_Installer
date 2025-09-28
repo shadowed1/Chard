@@ -1485,7 +1485,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
     export AR=\$GCC_DIR/gcc-ar
     export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
     export PATH=\$GCC_DIR:/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
-    export LD_LIBRARY_PATH=\"/xlib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/\$CHOST/14\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
+    export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/\$CHOST/14\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
     export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
     export PKG_CONFIG=/usr/bin/pkg-config
     export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
