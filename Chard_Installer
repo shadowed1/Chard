@@ -1557,6 +1557,8 @@ EOF
     meson setup build --cross-file=/var/tmp/portage/sys-apps/systemd-257.9/temp/meson.x86_64-pc-linux-gnu.amd64.ini && \
     ninja -C build && \
     ninja -C build install && \
+    emerge --nodeps dev-lang/python && \
+    emerge --nodeps sys-apps/flatpak && \
     emerge --ask --verbose --update --deep --with-bdeps=y @world
 
     umount /etc/ssl
