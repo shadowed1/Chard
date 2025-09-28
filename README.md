@@ -24,6 +24,9 @@
 # Functioning Tools: <br>
 - Boostrapped Stage3 Gentoo Linux
 - Emerge
+
+# Use Emerge to build: <br>
+
 - Python
 - Git
 - GCC
