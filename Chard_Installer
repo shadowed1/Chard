@@ -1552,11 +1552,12 @@ cpu = 'x86_64'
 endian = 'little'
 EOF
 
-    
+    export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
     cd /var/tmp/portage/sys-apps/systemd-257.9/work/systemd-257.9 && \
     meson setup build --cross-file=/var/tmp/portage/sys-apps/systemd-257.9/temp/meson.x86_64-pc-linux-gnu.amd64.ini && \
     ninja -C build && \
     ninja -C build install && \
+    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
     emerge --nodeps dev-lang/python && \
     emerge --nodeps sys-apps/flatpak && \
     emerge --ask --verbose --update --deep --with-bdeps=y @world
