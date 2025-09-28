@@ -782,28 +782,66 @@ echo "${RED}Created $CHARD_ROOT/usr/local/chard/mesonrust.ini${RESET}"
 
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    x86_64)
+        CHOST=x86_64-pc-linux-gnu
+        CPU_FAMILY=x86_64
+        ;;
+    aarch64)
+        CHOST=aarch64-unknown-linux-gnu
+        CPU_FAMILY=arm64
+        ;;
+    *)
+        echo "Unknown architecture: $ARCH"
+        exit 1
+        ;;
 esac
 
 GCC_DIR="/usr/$CHOST/gcc-bin/14"
-CROSS_FILE="/usr/local/chard/meson-cross.ini"
+MESON_FILE="/usr/local/chard/meson-cross.ini"
 
-sudo tee "$CROSS_FILE" > /dev/null <<EOF
+sudo tee "$MESON_FILE" > /dev/null <<EOF
 [binaries]
 c = '$GCC_DIR/$CHOST-gcc'
 cpp = '$GCC_DIR/$CHOST-g++'
 ar = '$GCC_DIR/gcc-ar'
 ranlib = '$GCC_DIR/gcc-ranlib'
 strip = '$GCC_DIR/gcc-strip'
+pkgconfig = '/usr/bin/pkg-config'
+pkg-config = '/usr/bin/pkg-config'
+llvm-config = 'llvm-config'
+fortran = 'false'
+objc = 'false'
+objcpp = 'false'
+objcopy = '$GCC_DIR/gcc-objcopy'
+windres = '$GCC_DIR/gcc-windres'
+python = '/usr/local/chard/usr/bin/python3'
+ninja = '/usr/local/chard/usr/bin/ninja'
 
 [built-in options]
 c_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
 c_link_args = ['-L/usr/lib64']
 cpp_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
 cpp_link_args = ['-L/usr/lib64']
+fortran_args = []
+fortran_link_args = []
+objc_args = []
+objc_link_args = []
+objcpp_args = []
+objcpp_link_args = []
+
+[properties]
+needs_exe_wrapper = false
+pkg_config_libdir = '/usr/lib64/pkgconfig'
+
+[build_machine]
+system = 'linux'
+cpu_family = '$CPU_FAMILY'
+cpu = '$CPU_FAMILY'
+endian = 'little'
 EOF
+
+echo "${RESET}${GREEN}[+] Meson file created at $MESON_FILE for architecture $ARCH ${RESET}"
+
 
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
