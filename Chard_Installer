@@ -800,9 +800,9 @@ strip = '$GCC_DIR/gcc-strip'
 
 [built-in options]
 c_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
-c_link_args = ['-L/usr/lib']
+c_link_args = ['-L/usr/lib64']
 cpp_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
-cpp_link_args = ['-L/usr/lib']
+cpp_link_args = ['-L/usr/lib64']
 EOF
 
 
@@ -1507,8 +1507,56 @@ sudo chroot /usr/local/chard /bin/bash -c "
 
     emerge --sync && \
     emerge --oneshot --nodeps dev-python/docutils && \
-    emerge -1 dev-lang/perl --ask=n && \
-    emerge -1 dev-build/meson --ask=n && \
+    emerge dev-lang/perl --ask=n && \
+    emerge dev-build/meson --ask=n && \
+    emerge =sys-devel/binutils-2.44* --ask=n && \
+    binutils-config 1 && \
+    emerge --fetchonly =sys-apps/systemd-257.9 && \
+
+    tee /var/tmp/portage/sys-apps/systemd-257.9/temp/meson.x86_64-pc-linux-gnu.amd64.ini > /dev/null <<'EOF'
+[binaries]
+c = '/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-gcc'
+cpp = '/usr/x86_64-pc-linux-gnu/gcc-bin/14/x86_64-pc-linux-gnu-g++'
+ar = '/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ar'
+ranlib = '/usr/x86_64-pc-linux-gnu/gcc-bin/14/gcc-ranlib'
+strip = '/usr/x86_64-pc-linux-gnu/binutils-bin/2.45/strip'
+pkgconfig = '/usr/bin/pkg-config'
+pkg-config = '/usr/bin/pkg-config'
+llvm-config = 'llvm-config'
+fortran = 'false'
+objc = 'false'
+objcpp = 'false'
+objcopy = '/usr/x86_64-pc-linux-gnu/binutils-bin/2.45/objcopy'
+windres = '/usr/x86_64-pc-linux-gnu/binutils-bin/2.45/windres'
+
+[built-in options]
+c_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
+c_link_args = ['-L/usr/lib64']
+cpp_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
+cpp_link_args = ['-L/usr/lib64']
+fortran_args = []
+fortran_link_args = []
+objc_args = []
+objc_link_args = []
+objcpp_args = []
+objcpp_link_args = []
+
+[properties]
+needs_exe_wrapper = false
+pkg_config_libdir = '/usr/lib64/pkgconfig'
+
+[build_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+EOF
+
+    
+    cd /var/tmp/portage/sys-apps/systemd-257.9/work/systemd-257.9 && \
+    meson setup build --cross-file=/var/tmp/portage/sys-apps/systemd-257.9/temp/meson.x86_64-pc-linux-gnu.amd64.ini && \
+    ninja -C build && \
+    ninja -C build install && \
     emerge --ask --verbose --update --deep --with-bdeps=y @world
 
     umount /etc/ssl
