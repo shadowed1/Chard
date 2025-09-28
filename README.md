@@ -20,9 +20,8 @@
 
 - Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
 
-
 # Functioning Tools: <br>
-- Autoupdated Boostrapped Stage3 Gentoo Linux + Linux Kernel
+- Latest Boostrapped Stage3 Gentoo Linux + Linux Kernel
 - Emerge
 
 # Use Emerge to build: <br>
