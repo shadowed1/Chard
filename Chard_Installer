@@ -295,10 +295,10 @@ esac
 make mrproper
 make defconfig
 
-make INSTALL_HDR_PATH=/usr headers_install
-
 rm -rf /usr/src/linux
 cp -a . /usr/src/linux
+
+make INSTALL_HDR_PATH=/usr headers_install
 
 cp .config /usr/src/linux/.config
 "
