@@ -91,7 +91,7 @@ case "$response" in
         exit 1
         ;;
 esac
-
+    unset LD_PRELOAD
     echo "${RED}Chard Installs to /usr/local/chard${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be /usr/local/chard/ in reality.${RESET}"
     echo
     echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
