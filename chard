@@ -145,8 +145,8 @@ case "$cmd" in
             sudo rm -rf "$CHARD_ROOT"
     
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
-
-            echo "${CYAN}[+] Uninstalled - Exit the shell to clear LD_PRELOAD paths. Otherwise harmless errors will appear. ${RESET}"
+            unset LD_PRELOAD
+            echo "${CYAN}[+] Uninstalled ${RESET}"
         else
             echo "${RED}[*] Cancelled.${RESET}"
         fi
