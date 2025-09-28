@@ -724,12 +724,14 @@ echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 echo 
-echo "${MAGENTA}${BOLD}Emerge is ready.${RESET}${MAGENTA} Installer ends here because building takes a long time."
-echo "To start compiling apps, open a new shell and copy paste each command or run all in one go:${RESET}"
+echo "${MAGENTA}${BOLD}Emerge is ready.${RESET}${MAGENTA} Chard Installer ends here because building takes a long time."
 echo "${RED}Compiling takes a long time, so please be patient if you have a slow CPU.${RESET}"
+echo "To start compiling apps, open a new shell and copy paste each command or run all in one go if patient:${RESET}"
 echo
-echo "${CYAN}chard root"
-echo "emerge sys-devel/gcc"
-echo "I will fill in more, but use 'find /usr/portage -name <app*> to find your app to build in meantime"
+echo "${CYAN}${BOLD}chard root${RESET}${CYAN"
+echo "emerge gcc"
+echo "emerge make"
+echo "emerge cmake"
+
 echo "${RESET}"
 show_progress
