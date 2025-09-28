@@ -282,11 +282,11 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o 
 sudo chmod +x "/usr/local/chard/bin/chard"
 
 export PYTHON="/usr/local/chard/bin/python3"
-export CC="$GCC_DIR/$CHOST-gcc"
-export CXX="$GCC_DIR/$CHOST-g++"
-export AR="$GCC_DIR/gcc-ar"
-export RANLIB="$GCC_DIR/$CHOST-gcc-ranlib"
-export PATH="$PATH:$GCC_DIR:/usr/local/chard/usr/bin"
+export CC="/usr/local/chard/usr/bin/gcc"
+export CXX="/usr/local/chard/usr/bin/g++"
+export AR="/usr/local/chard/usr/bin/gcc-ar"
+export RANLIB="/usr/local/chard/usr/bin/gcc-ranlib"
+export PATH="$PATH:/usr/local/chard/usr/bin"
 export CXXFLAGS="$CFLAGS"
 export AWK=/usr/bin/mawk
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
@@ -300,7 +300,8 @@ export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS
 export GIT_TEMPLATE_DIR=/usr/local/chard/usr/share/git-core/templates
 
 
-KERNEL_VER="6.16"
+KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ | grep -oP 'href="linux-\K6\.\d+\.\d+(?=\.tar\.xz")')
+KERNEL_VER=$(echo "$KERNEL_INDEX" | sort -V | tail -n2 | head -n1)
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
 KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
 KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
@@ -313,6 +314,7 @@ if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
 else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
+
 
 sudo rm -rf "$KERNEL_BUILD"
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
@@ -540,7 +542,7 @@ sudo tee "/usr/local/chard/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
 export HOME="/home/chronos/user/"
 export USER="chronos"
 export LOGNAME="chronos"
-export PATH=$GCC_DIR:/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
+export PATH=/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
 EOF
 
 ARCH=$(uname -m)
@@ -656,8 +658,8 @@ llvm-config = 'llvm-config'
 fortran = 'false'
 objc = 'false'
 objcpp = 'false'
-objcopy = '$GCC_DIR/gcc-objcopy'
-windres = '$GCC_DIR/gcc-windres'
+objcopy = '/usr/bin/gcc-objcopy'
+windres = '/usr/bin/gcc-windres'
 python = '/usr/local/chard/usr/bin/python3'
 ninja = '/usr/local/chard/usr/bin/ninja'
 
@@ -726,7 +728,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
     export AR=/usr/bin/gcc-ar
     export RANLIB=/usr/bin/gcc-ranlib
     export STRIP=/usr/bin/strip
-    export PATH=/usr/bin:/bin:\$GCC_DIR:/usr/local/bin:\$HOME/.cargo/bin
+    export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
     export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/\$CHOST/14\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
     export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
     export PKG_CONFIG=/usr/bin/pkg-config
