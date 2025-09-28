@@ -656,7 +656,6 @@ sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 
 sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
-curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 echo "${RESET}${YELLOW}make.conf successfully updated for Chard. ${RESET}"
 echo "${RESET}${BLUE}Setting up Emerge!${RESET}"
 
@@ -722,6 +721,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
 echo "${RESET}${CYAN}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
+curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 echo 
 echo "${MAGENTA}${BOLD}Emerge is ready.${RESET}${MAGENTA} Chard Installer complete! ${RESET}"
