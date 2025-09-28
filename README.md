@@ -8,6 +8,7 @@
 - *Requires Developer Mode* <br>
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install.* <br>
 - *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist!* <br>
+- GUI apps are still being worked on. 
 
 
 <br>
@@ -26,10 +27,11 @@
 
 # Use Emerge to build: <br>
 
+- Make
+- CMake
 - Python
 - Git
 - GCC
-- Make
 - File + LDD
 - CMake
 - Perl
@@ -37,6 +39,7 @@
 - Ninja
 - Rust
 - OpenSSL
+- Curl
 - And Many More
 
 # Commands <br>
