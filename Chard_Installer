@@ -724,7 +724,7 @@ echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 echo 
-echo "${MAGENTA}${BOLD}Emerge is ready!${RESET}${MAGENTA}Installer ends here because building takes a long time."
+echo "${MAGENTA}${BOLD}Emerge is ready.${RESET}${MAGENTA} Installer ends here because building takes a long time."
 echo "To start compiling apps, open a new shell and copy paste each command or run all in one go:${RESET}"
 echo "${RED}Compiling takes a long time, so please be patient if you have a slow CPU.${RESET}"
 echo
