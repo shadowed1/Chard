@@ -795,7 +795,7 @@ sudo tee "$CROSS_FILE" > /dev/null <<EOF
 c = '$GCC_DIR/$CHOST-gcc'
 cpp = '$GCC_DIR/$CHOST-g++'
 ar = '$GCC_DIR/gcc-ar'
-ranlib = '$GCC_DIR/$CHOST-gcc-ranlib'
+ranlib = '$GCC_DIR/gcc-ranlib'
 strip = '$GCC_DIR/gcc-strip'
 
 [built-in options]
@@ -804,6 +804,7 @@ c_link_args = ['-L/usr/lib']
 cpp_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
 cpp_link_args = ['-L/usr/lib']
 EOF
+
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
