@@ -1484,8 +1484,6 @@ sudo umount -l "/usr/local/chard/proc"          2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
 sudo rm -rf "$BUILD_DIR"
-
-sudo chmod +x "$CHARD_ROOT/bin/emerge"
 sudo chown -R 1000:1000 "/usr/local/chard"
 sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing."
