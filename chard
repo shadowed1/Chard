@@ -51,8 +51,8 @@ chard_run() {
     export ROOT="$CHARD_ROOT"
     export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
     export PKGDIR="$CHARD_ROOT/var/cache/packages"
-    export PATH="$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$HOME/.cargo/bin:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:$CHARD_ROOT/usr/lib/python-exec:$PATH"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+    export PATH="$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin:$HOME/.cargo/bin:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:$CHARD_ROOT/usr/lib/python-exec:$PATH"
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
     export GIT_TEMPLATE_DIR=$CHARD_ROOT/usr/share/git-core/templates
     export CPPFLAGS="-I$CHARD_ROOT/usr/include"
@@ -183,7 +183,7 @@ case "$cmd" in
             export RANLIB=/usr/bin/gcc-ranlib
             export STRIP=/usr/bin/strip
             export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
-            export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/\$CHOST/14\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
+            export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
             export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
             export PKG_CONFIG=/usr/bin/pkg-config
             export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
