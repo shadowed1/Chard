@@ -1519,11 +1519,12 @@ sudo chroot /usr/local/chard /bin/bash -c "
     export GCC_DIR
     export HOME=/home/chronos/user
     export MAGIC=\"/usr/share/misc/magic.mgc\"
-    export CC=\$GCC_DIR/\$CHOST-gcc
-    export CXX=\$GCC_DIR/\$CHOST-g++
-    export AR=\$GCC_DIR/gcc-ar
-    export RANLIB=\$GCC_DIR/\$CHOST-gcc-ranlib
-    export PATH=\$GCC_DIR:/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
+    export CC=\"/usr/bin/gcc"
+    export CXX=\"/usr/bin/g++"
+    export AR=\"/usr/bin/gcc-ar"
+    export RANLIB=\"/usr/bin/gcc-ranlib"
+    export STRIP=\"/usr/bin/strip\"
+    export PATH=\"/usr/bin:/bin:$GCC_DIR:/usr/local/bin:\$HOME/.cargo/bin
     export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/\$CHOST/14\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
     export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
     export PKG_CONFIG=/usr/bin/pkg-config
@@ -1543,7 +1544,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
     export PORTAGE_CONFIGROOT=\"/\"
     export PORTAGE_TMPDIR=\"/var/tmp\"
     export MESON_CROSS_FILE=\"/meson-cross.ini\"
-    export STRIP=\"/usr/bin/strip\"
 
     emerge --sync
 
