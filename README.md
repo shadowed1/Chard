@@ -22,7 +22,7 @@
 
 
 # Functioning Tools: <br>
-- Boostrapped Stage3 Gentoo Linux
+- Autoupdated Boostrapped Stage3 Gentoo Linux + Linux Kernel
 - Emerge
 
 # Use Emerge to build: <br>
