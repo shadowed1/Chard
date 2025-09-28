@@ -1506,7 +1506,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
     emerge --sync && \
     emerge --oneshot --nodeps dev-python/docutils && \
     emerge -1 dev-lang/perl --ask=n && \
-    emerge -1 dev-build/meson --ask=n &&
+    emerge -1 dev-build/meson --ask=n && \
+    emerge --ask --verbose --update --deep --with-bdeps=y @world
 
     umount /etc/ssl
     umount /dev/pts
