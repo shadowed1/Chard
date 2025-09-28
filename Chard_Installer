@@ -732,6 +732,12 @@ echo "${CYAN}${BOLD}chard root${RESET}${CYAN"
 echo "emerge gcc"
 echo "emerge make"
 echo "emerge cmake"
+echo "emerge gmp"
+echo "emerge mpfr"
+echo "emerge binutils"
+echo "emerge diffutils"
+echo "emerge openssl"
+echo "emerge curl"
 
 echo "${RESET}"
 show_progress
