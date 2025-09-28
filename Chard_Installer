@@ -69,7 +69,7 @@ echo "${RESET}"
 
                
 echo "${RESET}"
-echo "${RED}- Chard Installer can take ${BOLD}30-240 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~8 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
+echo "${RED}- Chard Installer can take ${BOLD}3-10 minutes${RESET}${RED} depending on your CPU, internet connection, and storage speed. Requires ~4 GB of space. Supports ${RESET}${BOLD}${YELLOW}x86_64${RESET}${RED} and ${RESET}${BOLD}${MAGENTA}ARM64${RESET}${RED}! ${RESET}"
 echo "${YELLOW}- Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
 echo "${GREEN}- It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Includes a 2025 toolchain to build and compile with.${RESET}"
 echo "${CYAN}- Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${CYAN} require dev_install.${RESET}"
@@ -254,11 +254,18 @@ export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS
 export GIT_TEMPLATE_DIR=/usr/local/chard/usr/share/git-core/templates
 
 
-KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ | grep -oP 'href="linux-\K6\.\d+\.\d+(?=\.tar\.xz")')
+KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
+    | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
+    | sed 's/href="linux-\(.*\)\.tar\.xz"/\1/' )
+
 KERNEL_VER=$(echo "$KERNEL_INDEX" | sort -V | tail -n2 | head -n1)
+
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
 KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
 KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
+
+echo "Fetching kernel version: $KERNEL_VER"
+echo "URL: $KERNEL_URL"
 
 sudo mkdir -p "$BUILD_DIR"
 
