@@ -716,4 +716,6 @@ echo "${RED}Compiling takes a long time, so please be patient if you have a slow
 echo
 echo "${CYAN}chard root"
 echo "emerge sys-devel/gcc"
+echo "I will fill in more, but use 'find /usr/portage -name <app*> to find your app to build in meantime"
+echo "${RESET}"
 show_progress
