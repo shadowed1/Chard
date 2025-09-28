@@ -540,11 +540,10 @@ PORTAGE_TMPDIR="/var/tmp"
 PORTDIR="/usr/portage"
 SANDBOX="/usr/bin/sandbox"
 CHOST="$CHOST"
-CC="$GCC_DIR/$CHOST-gcc"
-CXX="$GCC_DIR/$CHOST-g++"
-AR="$GCC_DIR/gcc-ar"
-NM="$GCC_DIR/gcc-nm"
-RANLIB="$GCC_DIR/gcc-ranlib"
+CC="/usr/bin/gcc"
+CXX="/usr/bin/g++"
+AR="/usr/bin/gcc-ar"
+RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
 USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd -elogind"
@@ -707,10 +706,11 @@ case "$ARCH" in
     x86_64)
         sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<'EOF'
 [binaries]
-c = 'gcc'
-cpp = 'g++'
-ar = 'ar'
-strip = 'strip'
+c = '/usr/bin/gcc'
+cpp = '/usr/bin/g++'
+ar = '/usr/bin/gcc-ar'
+ranlib = '/usr/bin/gcc-ranlib'
+strip = '/usr/bin/strip'
 pkgconfig = 'pkg-config'
 cargo = '/home/chronos/user/.cargo/bin/cargo'
 rust = '/home/chronos/user/.cargo/bin/rustc'
@@ -728,10 +728,11 @@ EOF
     aarch64|arm64)
         sudo tee "$CHARD_ROOT/mesonrust.ini" > /dev/null <<'EOF'
 [binaries]
-c = 'gcc'
-cpp = 'g++'
-ar = 'ar'
-strip = 'strip'
+c = '/usr/bin/gcc'
+cpp = '/usr/bin/g++'
+ar = '/usr/bin/gcc-ar'
+ranlib = '/usr/bin/gcc-ranlib'
+strip = '/usr/bin/strip'
 pkgconfig = 'pkg-config'
 cargo = '/home/chronos/user/.cargo/bin/cargo'
 rust = '/home/chronos/user/.cargo/bin/rustc'
@@ -801,11 +802,11 @@ GCC_DIR="/usr/$CHOST/gcc-bin/14"
 MESON_FILE="/usr/local/chard/meson-cross.ini"
 
 sudo tee "$MESON_FILE" > /dev/null <<EOF
-[binaries]
-c = '$GCC_DIR/$CHOST-gcc'
-cpp = '$GCC_DIR/$CHOST-g++'
-ar = '$GCC_DIR/gcc-ar'
-ranlib = '$GCC_DIR/gcc-ranlib'
+
+c = '/usr/bin/gcc'
+cpp = '/usr/bin/g++'
+ar = '/usr/bin/gcc-ar'
+ranlib = '/usr/bin/gcc-ranlib'
 strip = '/usr/bin/strip'
 pkgconfig = '/usr/bin/pkg-config'
 pkg-config = '/usr/bin/pkg-config'
