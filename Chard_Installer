@@ -870,6 +870,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
     export MESON_CROSS_FILE=\"/meson-cross.ini\"
 
     emerge --sync
+    emerge sys-devel/gcc
 
     umount /etc/ssl
     umount /dev/pts
