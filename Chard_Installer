@@ -463,6 +463,11 @@ sync-uri = rsync://rsync.gentoo.org/gentoo-portage
 auto-sync = yes
 EOF
 
+sudo tee /usr/local/chard/etc/profile.d/display.sh > /dev/null <<'EOF'
+export DISPLAY=:0
+EOF
+sudo chmod +x /usr/local/chard/etc/profile.d/display.sh
+
 
  ARCH=$(uname -m)
 case "$ARCH" in
