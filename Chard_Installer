@@ -186,6 +186,8 @@ dev-python/pillow -truetype
 EOF
 
 echo "dev-build/cmake -gui" | sudo tee -a /usr/local/chard/etc/portage/package.use/cmake-fix
+echo "sys-auth/polkit systemd -elogind" | sudo tee -a /usr/local/chard/etc/portage/package.use/polkit
+
 
 ARCH=$(uname -m)
 case "$ARCH" in
