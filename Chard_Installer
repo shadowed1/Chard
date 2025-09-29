@@ -676,9 +676,9 @@ echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 
 sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
-echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing.${RESET}"
+echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${YELLOW}make.conf successfully updated for Chard. ${RESET}"
-echo "${RESET}${BLUE}Setting up Emerge!${RESET}"
+echo "${RESET}${BLUE}Setting up Emerge! ${RESET}"
 
 sudo chroot /usr/local/chard /bin/bash -c "
 
