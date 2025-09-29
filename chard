@@ -205,13 +205,8 @@ case "$cmd" in
             export DISPLAY=:0
             #export VK_ICD_FILENAMES=/usr/local/chard/usr/share/vulkan/icd.d/*.json
             export LD=\"/usr/bin/ld\"
+            export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed -Wl,--hash-style=both\"
 
-            ARCH=\$(uname -m)
-            case \"\$ARCH\" in
-                x86_64)  export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu\" ;;
-                aarch64) export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed\" ;;
-                *)       export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed\" ;;
-            esac
 
             /bin/bash
             umount /etc/ssl
