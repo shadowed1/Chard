@@ -739,13 +739,15 @@ sudo chroot /usr/local/chard /bin/bash -c "
     umount /sys
     umount /proc
 "
+
+sudo mv /usr/lib/libcrypto.so /usr/lib/libcrypto.so.bak
 echo "${RESET}${CYAN}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${GREEN}Chard Root is ready!"
 echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 echo 
 echo "${YELLOW}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
-echo "${BLUE}To start compiling apps, open a new shell and run the following (emerge commands might not be 100% accurate): ${RESET}"
+echo "${BLUE}To start compiling apps, open a new shell and run chard root, and then run the following (emerge commands might not be 100% accurate): ${RESET}"
 echo
 echo "${CYAN}${BOLD}chard root${RESET}${CYAN}"
 echo
@@ -784,6 +786,6 @@ echo "emerge libpsl"
 echo "emerge expat"
 echo "emerge duktape"
 echo "emerge brotli"
-echo "emerge libxcrypt"
+echo "mv /usr/lib/libcrypto.so /usr/lib/libcrypto.so.bak"
 echo "${RESET}"
 show_progress
