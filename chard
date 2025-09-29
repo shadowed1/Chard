@@ -192,7 +192,7 @@ case "$cmd" in
             export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
             export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
             export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-            export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
+            export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed\"
             export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
             export CARGO_HOME=\$HOME/.cargo
             export RUSTUP_HOME=\$HOME/.rustup
