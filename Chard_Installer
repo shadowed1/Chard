@@ -745,7 +745,7 @@ echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 echo 
 echo "${YELLOW}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
-echo "To start compiling apps, open a new shell and run the following (commands might not be 100% accurate): ${RESET}"
+echo "${BLUE}To start compiling apps, open a new shell and run the following (emerge commands might not be 100% accurate): ${RESET}"
 echo
 echo "${CYAN}${BOLD}chard root${RESET}${CYAN}"
 echo
