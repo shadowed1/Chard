@@ -800,5 +800,6 @@ echo "emerge sys-apps/bubblewrap"
 echo "emerge --autounmask-write www-client/firefox"
 echo "etc-update"
 echo "-3"
+echo "emerge www-client/firefox"
 echo "${RESET}"
 show_progress
