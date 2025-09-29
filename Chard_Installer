@@ -784,6 +784,6 @@ echo "emerge libpsl"
 echo "emerge expat"
 echo "emerge duktape"
 echo "emerge brotli"
-echo "ln -
+echo "emerge libxcrypt"
 echo "${RESET}"
 show_progress
