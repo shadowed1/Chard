@@ -183,7 +183,7 @@ case "$cmd" in
             export RANLIB=/usr/bin/gcc-ranlib
             export STRIP=/usr/bin/strip
             export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
-            export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
+            export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
             export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
             export PKG_CONFIG=/usr/bin/pkg-config
             export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
@@ -192,7 +192,7 @@ case "$cmd" in
             export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
             export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
             export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-            export LDFLAGS=\"-L/usr/lib\"
+            export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
             export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
             export CARGO_HOME=\$HOME/.cargo
             export RUSTUP_HOME=\$HOME/.rustup
