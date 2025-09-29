@@ -742,7 +742,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
     umount /proc
 "
 
-sudo mv /usr/local/chard/usr/lib/libcrypto.so /usr/local/chard/usr/lib/libcrypto.so.bak 2>/dev/null
+sudo mv /usr/local/chard/usr/lib/libcrypt.so /usr/local/chard/usr/lib/libcrypt.so.bak 2>/dev/null
 echo "${RESET}${CYAN}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${GREEN}Chard Root is ready!"
 echo "[!] To run, please open a new shell or run:"
@@ -788,7 +788,7 @@ echo "emerge libpsl"
 echo "emerge expat"
 echo "emerge duktape"
 echo "emerge brotli"
-echo "mv /usr/lib/libcrypto.so /usr/lib/libcrypto.so.bak"
+echo "mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak"
 echo "emerge sys-auth/polkit"
 echo "${RESET}"
 show_progress
