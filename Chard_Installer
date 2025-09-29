@@ -707,36 +707,38 @@ sudo chroot /usr/local/chard /bin/bash -c "
         aarch64) CHOST=aarch64-unknown-linux-gnu ;;
         *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
     esac
-    export ARCH
-    export CHOST
-    export GCC_DIR
-    export HOME=/home/chronos/user
-    export MAGIC=\"/usr/share/misc/magic.mgc\"
-    export CC=/usr/bin/gcc
-    export CXX=/usr/bin/g++
-    export AR=/usr/bin/gcc-ar
-    export RANLIB=/usr/bin/gcc-ranlib
-    export STRIP=/usr/bin/strip
-    export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
-    export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:/usr/local/lib:/usr/local/lib64:/usr/lib/gcc/\$CHOST/14\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
-    export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
-    export PKG_CONFIG=/usr/bin/pkg-config
-    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
-    export PYTHON=\"/bin/python3\"
-    export FORCE_UNSAFE_CONFIGURE=1
-    export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
-    export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-    export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-    export LDFLAGS=\"-L/usr/lib\"
-    export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
-    export CARGO_HOME=\$HOME/.cargo
-    export RUSTUP_HOME=\$HOME/.rustup
-    export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
-    export PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
-    export PORTAGE_LOGDIR=\"/var/log/portage\"
-    export PORTAGE_CONFIGROOT=\"/\"
-    export PORTAGE_TMPDIR=\"/var/tmp\"
-    export MESON_CROSS_FILE=\"/meson-cross.ini\"
+            export ARCH
+            export CHOST
+            export HOME=/home/chronos/user
+            export MAGIC=\"/usr/share/misc/magic.mgc\"
+            export CC=/usr/bin/gcc
+            export CXX=/usr/bin/g++
+            export AR=/usr/bin/gcc-ar
+            export RANLIB=/usr/bin/gcc-ranlib
+            export STRIP=/usr/bin/strip
+            export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
+            export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
+            export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
+            export PKG_CONFIG=/usr/bin/pkg-config
+            export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
+            export PYTHON=\"/bin/python3\"
+            export FORCE_UNSAFE_CONFIGURE=1
+            export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
+            export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+            export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+            export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
+            export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
+            export CARGO_HOME=\$HOME/.cargo
+            export RUSTUP_HOME=\$HOME/.rustup
+            export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+            export PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
+            export PORTAGE_LOGDIR=\"/var/log/portage\"
+            export PORTAGE_CONFIGROOT=\"/\"
+            export PORTAGE_TMPDIR=\"/var/tmp\"
+            export MESON_CROSS_FILE=\"/meson-cross.ini\"
+            export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
+            export DISPLAY=:0
+            export LD=\"/usr/bin/ld\"
 
     emerge --sync
 
