@@ -678,7 +678,15 @@ EOF
 
 echo "${RESET}${GREEN}[+] Meson file created at $MESON_FILE for architecture $ARCH ${RESET}"
 
+sudo mkdir -p /usr/local/chard/etc/X11/xorg.conf.d
 
+sudo tee /usr/local/chard/etc/X11/xorg.conf.d/20-noglamor.conf > /dev/null <<'EOF'
+Section "Device"
+    Identifier "modesetting"
+    Driver "modesetting"
+    Option "AccelMethod" "none"
+EndSection
+EOF
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
