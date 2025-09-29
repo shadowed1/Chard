@@ -203,6 +203,7 @@ case "$cmd" in
             export PORTAGE_TMPDIR=\"/var/tmp\"
             export MESON_CROSS_FILE=\"/meson-cross.ini\"
             export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
+            export DISPLAY=:0
 
             /bin/bash
             umount /etc/ssl
