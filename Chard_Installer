@@ -507,7 +507,7 @@ PORTAGE_PROFILE_DIR=\"/usr/local/chard/usr/local/etc/portage/make.profile\"
 sudo mkdir -p \"\$PORTAGE_PROFILE_DIR\"
 sudo touch \"\$PORTAGE_PROFILE_DIR/package.provided\"
 
-mkdir -p /usr/share/sandbox
+sudo mkdir -p /usr/share/sandbox
 
 sudo tee /usr/local/chard/etc/sandbox.conf > /dev/null <<'EOF'
 SANDBOX_BASHRC="/usr/share/sandbox/sandbox.bashrc"
