@@ -652,6 +652,7 @@ objcopy = '/usr/bin/gcc-objcopy'
 windres = '/usr/bin/gcc-windres'
 python = '/usr/bin/python3'
 ninja = '/usr/bin/ninja'
+ld = '/usr/bin/ld'
 
 [built-in options]
 c_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
