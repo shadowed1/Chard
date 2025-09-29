@@ -741,7 +741,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
 echo "${RESET}${CYAN}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${GREEN}[+] Chard Root ready to run!"
 echo "[!] To run, please open a new shell or run:"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
+#sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 echo 
 echo "${MAGENTA}${BOLD}Emerge is ready.${RESET}${MAGENTA} Chard Installer complete! ${RESET}"
