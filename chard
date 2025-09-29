@@ -205,6 +205,7 @@ case "$cmd" in
             export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
             export DISPLAY=:0
             #export VK_ICD_FILENAMES=/usr/local/chard/usr/share/vulkan/icd.d/*.json
+            export LD=\"/usr/bin/ld\"
 
             /bin/bash
             umount /etc/ssl
