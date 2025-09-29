@@ -689,6 +689,7 @@ EndSection
 EOF
 
 sudo mkdir -p /usr/local/chard/run/dbus
+sudo mkdir -p /usr/local/chard/tmp/.X11-unix
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
