@@ -749,13 +749,15 @@ sudo chroot /usr/local/chard /bin/bash -c "
 "
 
 sudo mv /usr/local/chard/usr/lib/libcrypt.so /usr/local/chard/usr/lib/libcrypt.so.bak 2>/dev/null
-echo "${RESET}${CYAN}Emerge is ready! Please do not sync more than once a day.${RESET}"
-echo "${GREEN}Chard Root is ready!"
+echo "${RESET}${RED}Emerge is ready! Please do not sync more than once a day.${RESET}"
+echo "${YELLOW}Chard Root is ready!"
 echo "[!] To run, please open a new shell or run:"
-echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
+echo "${RESET}${BOLD}${GREEN}source /home/chronos/user/.bashrc${RESET}"
 echo 
-echo "${YELLOW}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
+echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps, open a new shell and run chard root, and then run the following (still working on the list, so expect issues): ${RESET}"
+echo "${RESET}${MAGENTA}The following list's goal is to provide a complete user environment. It is overkill. Please pick and choose or do whatever. Emerge is yours."${RESET}
+echo "${RESET}${RED}Eventually a precompiled version will be made once thorough testing is done."${RESET}
 echo
 echo "${CYAN}${BOLD}chard root${RESET}${CYAN}"
 echo
