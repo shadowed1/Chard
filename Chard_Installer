@@ -740,7 +740,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
     umount /proc
 "
 
-sudo mv /usr/lib/libcrypto.so /usr/lib/libcrypto.so.bak
+sudo mv /usr/lib/libcrypto.so /usr/lib/libcrypto.so.bak 2>/dev/null
 echo "${RESET}${CYAN}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${GREEN}Chard Root is ready!"
 echo "[!] To run, please open a new shell or run:"
