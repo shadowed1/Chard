@@ -503,7 +503,7 @@ PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/p
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 FEATURES="-sandbox -usersandbox"
-MESON_NATIVE_FILE="/usr/local/chard/meson-cross.ini"
+MESON_NATIVE_FILE="/meson-cross.ini"
 EOF
 
 PORTAGE_PROFILE_DIR=\"/usr/local/chard/etc/portage/make.profile\"
@@ -651,8 +651,8 @@ objc = 'false'
 objcpp = 'false'
 objcopy = '/usr/bin/gcc-objcopy'
 windres = '/usr/bin/gcc-windres'
-python = '/usr/local/chard/usr/bin/python3'
-ninja = '/usr/local/chard/usr/bin/ninja'
+python = '/usr/bin/python3'
+ninja = '/usr/bin/ninja'
 
 [built-in options]
 c_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
