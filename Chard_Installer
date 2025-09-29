@@ -160,12 +160,6 @@ else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH" ;;
-esac
 
 sudo mkdir -p /usr/local/chard/etc/portage/package.use
 
@@ -191,6 +185,33 @@ dev-python/pillow -truetype
 EOF
 
 echo "dev-build/cmake -gui" | sudo tee -a /usr/local/chard/etc/portage/package.use/cmake-fix
+
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH" ;;
+esac
+
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)
+        GENTOO_ARCH="amd64"
+        CHOST="x86_64-pc-linux-gnu"
+        sudo mkdir -p "$CHARD_ROOT/usr/bin"
+        sudo chmod -R +x "/usr/local/chard/usr/bin"
+        ;;
+    aarch64|arm64)
+        GENTOO_ARCH="arm64"
+        CHOST="aarch64-unknown-linux-gnu"
+        sudo mkdir -p "$CHARD_ROOT/usr/bin"
+        sudo chmod -R +x "/usr/local/chard/usr/bin"
+        ;;
+    *)
+        echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
+        exit 1
+        ;;
+esac
 
 sudo mkdir -p "/usr/local/chard/var/tmp"
 PORTAGE_DIR="/usr/local/chard/usr/portage"
