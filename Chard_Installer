@@ -229,7 +229,6 @@ if [ -d "$PROFILE_DIR" ]; then
     echo "[+] Portage profile set to $REL_TARGET"
 else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
-    exit 1
 fi
 
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "/usr/local/chard/bin/chard"
