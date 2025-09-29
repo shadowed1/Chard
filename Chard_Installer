@@ -141,6 +141,8 @@ sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p /usr/local/chard/etc/portage/repos.conf"
 sudo mkdir -p /usr/local/chard/var/db/repos/gentoo/profiles"
 sudo mkdir -p "/usr/local/chard/etc/portage/make.profile"
+sudo mkdir -p /usr/local/chard/run/user/0
+sudo chmod 700 /usr/local/chard/run/user/0
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
