@@ -789,5 +789,6 @@ echo "emerge expat"
 echo "emerge duktape"
 echo "emerge brotli"
 echo "mv /usr/lib/libcrypto.so /usr/lib/libcrypto.so.bak"
+echo "emerge sys-auth/polkit"
 echo "${RESET}"
 show_progress
