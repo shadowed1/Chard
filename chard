@@ -192,7 +192,6 @@ case "$cmd" in
             export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
             export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
             export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-            export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed\"
             export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
             export CARGO_HOME=\$HOME/.cargo
             export RUSTUP_HOME=\$HOME/.rustup
@@ -206,6 +205,13 @@ case "$cmd" in
             export DISPLAY=:0
             #export VK_ICD_FILENAMES=/usr/local/chard/usr/share/vulkan/icd.d/*.json
             export LD=\"/usr/bin/ld\"
+
+            ARCH=\$(uname -m)
+            case \"\$ARCH\" in
+                x86_64)  export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu\" ;;
+                aarch64) export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed\" ;;
+                *)       export LDFLAGS=\"-L/usr/lib -L/usr/lib64 -Wl,-O1 -Wl,--as-needed\" ;;
+            esac
 
             /bin/bash
             umount /etc/ssl
