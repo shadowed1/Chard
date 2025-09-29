@@ -726,7 +726,7 @@ echo "${RESET}${BOLD}${RED}source /home/chronos/user/.bashrc${RESET}"
 echo 
 echo "${MAGENTA}${BOLD}Emerge is ready.${RESET}${MAGENTA} Chard Installer complete! ${RESET}"
 echo "${YELLOW}Compiling takes a long time, so please be patient if you have a slow CPU.${RESET}"
-echo "To start compiling apps, open a new shell and copy paste each command or run all in one go if patient: ${RESET}"
+echo "To start compiling apps, open a new shell and copy paste each command or run all in one go if patient (commands might not be accurate): ${RESET}"
 echo
 echo "${CYAN}${BOLD}chard root${RESET}${CYAN}"
 echo "emerge gcc"
