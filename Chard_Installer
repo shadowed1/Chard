@@ -755,11 +755,11 @@ echo "[!] To run, please open a new shell or run:"
 echo "${RESET}${BOLD}${GREEN}source /home/chronos/user/.bashrc${RESET}"
 echo 
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
-echo "${BLUE}To start compiling apps, open a new shell and run chard root, and then run the following (still working on the list, so expect issues): ${RESET}"
+echo "${BLUE}To start compiling apps, open a new shell and run ${BOLD}chard root${RESET}${BLUE}, and then run the following (still working on the list, so expect issues): ${RESET}"
 echo "${RESET}${MAGENTA}The following list's goal is to provide a complete user environment. It is overkill. Please pick and choose or do whatever. Emerge is yours."${RESET}
 echo "${RESET}${RED}Eventually a precompiled version will be made once thorough testing is done."${RESET}
 echo
-echo "${CYAN}${BOLD}chard root${RESET}${CYAN}"
+echo "${YELLOW}chard root${RESET}${GREEN}"
 echo
 echo "emerge make"
 echo "emerge cmake"
@@ -797,6 +797,8 @@ echo "emerge expat"
 echo "emerge duktape"
 echo "emerge brotli"
 echo "mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak"
+echo "emerge dev-lang/rust"
+echo "${RESET}${CYAN}"
 echo "emerge sys-auth/polkit"
 echo "emerge sys-apps/bubblewrap"
 echo "emerge x11-base/xorg-drivers"
