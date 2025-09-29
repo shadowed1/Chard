@@ -204,6 +204,7 @@ case "$cmd" in
             export MESON_CROSS_FILE=\"/meson-cross.ini\"
             export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
             export DISPLAY=:0
+            #export VK_ICD_FILENAMES=/usr/local/chard/usr/share/vulkan/icd.d/*.json
 
             /bin/bash
             umount /etc/ssl
