@@ -155,7 +155,7 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${GREEN}[+] Chard sourced to ~/.bashrc ${RESET}"
+    echo "${GREEN}[+] Chard sourced to ~/.bashrc ${RESET}${YELLOW}"
 else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
