@@ -496,8 +496,8 @@ CXX="/usr/bin/g++"
 AR="/usr/bin/gcc-ar"
 RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
-FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs buildpkg getbinpkg config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned sandbox usersandbox splitdebug installsources strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr candy"
-USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds pulseaudio qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd networkmanager -elogind"
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr -sandbox -usersandbox"
+USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd -elogind"
 PYTHON_TARGETS="python3_13"
 PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:$PKG_CONFIG_PATH"
 PKG_CONFIG="/usr/bin/pkg-config"
@@ -652,7 +652,6 @@ objcopy = '/usr/bin/gcc-objcopy'
 windres = '/usr/bin/gcc-windres'
 python = '/usr/bin/python3'
 ninja = '/usr/bin/ninja'
-ld = '/usr/bin/ld'
 
 [built-in options]
 c_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
@@ -677,9 +676,7 @@ cpu = '$CPU_FAMILY'
 endian = 'little'
 EOF
 
-echo "${RESET}${GREEN}[+] Meson file created at $MESON_FILE for architecture $ARCH "
-
-echo "dev-libs/libdbusmenu gtk3" | sudo tee -a /usr/local/chard/etc/portage/package.use/libdbusmenu
+echo "${RESET}${GREEN}[+] Meson file created at $MESON_FILE for architecture $ARCH ${RESET}"
 
 
 
@@ -801,10 +798,6 @@ echo "mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak"
 echo "emerge sys-auth/polkit"
 echo "emerge sys-apps/bubblewrap"
 echo "emerge mesa"
-echo "emerge x11-base/xorg-drivers"
-echo "emerge x11-base/xorg-server"
-echo "emerge x11-apps/xinit"
-echo "emerge xfce-base/xfce4-meta"
 #echo "${RESET}${YELLOW}emerge --autounmask-write www-client/firefox"
 #echo "etc-update"
 #echo "-3"
