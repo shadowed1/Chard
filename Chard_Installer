@@ -859,7 +859,6 @@ echo "emerge app-arch/xz-utils"
 echo "emerge net-libs/gnutls"
 echo "emerge net-libs/glib-networking"
 echo "emerge sys-libs/libseccomp"
-echo "emerge app-eselect/eselect-repository
 echo "emerge dev-vcs/git app-eselect/eselect-repository"
 echo "emerge flatpak"
 #echo "emerge xfce-extra/xfce4-screensaver"
