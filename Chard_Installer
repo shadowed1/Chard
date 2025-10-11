@@ -890,6 +890,7 @@ echo "emerge --noreplace xfce-extra/xfce4-screensaver"
 echo "emerge --noreplace xfce-base/xfce4-meta"
 echo "emerge --noreplace x11-misc/sommelier"
 echo "emerge --noreplace flatpak"
+echo "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
 echo "emerge --noreplace www-client/firefox"
 echo "${RESET}"
 show_progress
