@@ -4,11 +4,13 @@
 
 
 # *Chrome-Arch Development for x86_64 and ARM64*
-## Goal: Run any Linux program/app natively on ChromeOS devices in a sandboxed environment. <br>
+## Running a sandboxed chroot Gentoo Linux environment inside ChromeOS without a performance hit. 
+### Goal: Run any Linux program/app natively on all ChromeOS devices. <br>
 - *Requires Developer Mode* <br>
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install.* <br>
-- *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist!* <br>
-- GUI apps are still being worked on. 
+- *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist (for now)!* <br>
+- GUI apps are still being worked on.
+- Can technically work on any Linux based distro; not just ChromeOS.
 
 
 <br>
