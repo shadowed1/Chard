@@ -503,6 +503,7 @@ PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/p
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
+MAKEOPTS="-j$(($(($(grep MemTotal /proc/meminfo | awk '{print $2}') + 1024*1024 - 1)) / 1024 / 1024 / 2))"
 EOF
 
 PORTAGE_PROFILE_DIR=\"/usr/local/chard/etc/portage/make.profile\"
