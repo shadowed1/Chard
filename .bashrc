@@ -38,7 +38,7 @@ export AR="$ROOT/usr/bin/ar"
 export NM="$ROOT/usr/bin/gcc-nm"
 export RANLIB="$ROOT/usr/bin/gcc-ranlib"
 export STRIP="$ROOT/usr/bin/strip"
-export XDG_DATA_DIRS="/usr/share://usr/share"
+export XDG_DATA_DIRS="/usr/share:/usr/share"
 
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
 
