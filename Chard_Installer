@@ -507,16 +507,9 @@ PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
 EOF
 
-PORTAGE_PROFILE_DIR=\"/usr/local/chard/etc/portage/make.profile\"
-sudo mkdir -p \"\$PORTAGE_PROFILE_DIR\"
-
-sudo tee \"\$PORTAGE_PROFILE_DIR/parent\" > /dev/null <<'EOF'
-/etc/portage/make.profile
-EOF
-
-PORTAGE_PROFILE_DIR=\"/usr/local/chard/usr/local/etc/portage/make.profile\"
-sudo mkdir -p \"\$PORTAGE_PROFILE_DIR\"
-sudo touch \"\$PORTAGE_PROFILE_DIR/package.provided\"
+PORTAGE_PROFILE_DIR="/usr/local/chard/etc/portage/make.profile"
+sudo mkdir -p "$PORTAGE_PROFILE_DIR"
+echo "/etc/portage/make.profile" | sudo tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null
 
 sudo mkdir -p /usr/share/sandbox
 
