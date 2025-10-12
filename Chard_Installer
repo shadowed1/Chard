@@ -763,7 +763,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
 "
 
 sudo mv /usr/local/chard/usr/lib/libcrypt.so /usr/local/chard/usr/lib/libcrypt.so.bak 2>/dev/null
-echo "dev-perl/File-LibMagic ~arm64" >> /usr/local/chard/etc/portage/package.accept_keywords/perl
+echo "dev-perl/File-LibMagic ~arm64" | sudo tee -a /usr/local/chard/etc/portage/package.accept_keywords/perl
+echo "dev-lang/python -bluetooth" | sudo tee -a /usr/local/chard/etc/portage/package.use/python
 
 MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
