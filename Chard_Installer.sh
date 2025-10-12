@@ -499,7 +499,7 @@ STRIP="/usr/bin/strip"
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr -sandbox -usersandbox"
 USE="X a52 aac acl acpi alsa bash-completion bindist bluetooth branding bzip2 cairo cdda cdr cet \
 crypt cups curl dbus dri dts dvd dvdr egl encode exif ffmpeg flac gdbm gif gpm gstreamer gtk gtk3 openssl \
-gui gnutls iconv icu introspection ipv6 jpeg lcms libnotify libtirpc lzma mad man mng mp3 mp4 mpeg idn \
+gui iconv icu introspection ipv6 jpeg lcms libnotify libtirpc lzma mad man mng mp3 mp4 mpeg idn \
 multilib ncurses networkmanager nls ogg opengl openmp opus pam pango pcre pdf pipewire png policykit brotli \
 ppds pulseaudio qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust adns \
 threads tiff truetype udev udisks unicode upower usb verify-sig vorbis vulkan wayland webp wxwidgets \
@@ -874,7 +874,7 @@ echo "emerge --noreplace libwnck"
 echo "emerge --noreplace xfce-base/exo"
 echo "emerge --noreplace app-arch/tar"
 echo "emerge --noreplace app-arch/xz-utils"
-echo "emerge --noreplace net-libs/gnutls"
+#echo "emerge --noreplace net-libs/gnutls"
 echo "emerge --noreplace net-libs/glib-networking"
 echo "emerge --noreplace sys-libs/libseccomp"
 echo "emerge --noreplace dev-vcs/git app-eselect/eselect-repository"
