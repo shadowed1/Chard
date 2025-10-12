@@ -274,7 +274,7 @@ export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
 export MAKEFLAGS="-j$(nproc)"
 export INSTALL_ROOT="/usr/local/chard"
 export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
-export PYTHONPATH="/usr/local/chard/usr/lib/python3.13/site-packages:$PYTHONPATH"
+    export PYTHONPATH="/usr/local/chard/usr/lib/python3.13/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
 export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
 export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
@@ -507,9 +507,9 @@ PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
 EOF
 
-PORTAGE_PROFILE_DIR="/usr/local/chard/etc/portage/make.profile"
-sudo mkdir -p "$PORTAGE_PROFILE_DIR"
-echo "/etc/portage/make.profile" | sudo tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null
+#PORTAGE_PROFILE_DIR="/usr/local/chard/etc/portage/make.profile"
+#sudo mkdir -p "$PORTAGE_PROFILE_DIR"
+#echo "/etc/portage/make.profile" | sudo tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null
 
 sudo mkdir -p /usr/share/sandbox
 
@@ -606,7 +606,7 @@ sudo tee "$CHARD_ROOT/var/db/repos/gentoo/profiles/repo_name" > /dev/null <<'EOF
 gentoo
 EOF
 
-sudo touch "$PROFILE_DIR/parent"
+#sudo touch "$PROFILE_DIR/parent"
 
 echo "Created $CHARD_ROOT/mesonrust.ini for $ARCH"
 
