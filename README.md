@@ -3,7 +3,7 @@
 </p>  
 
 
-# Running a sandboxed change-root Gentoo Linux environment inside ChromeOS without a performance hit. 
+# Running a sandboxed Linux Environment inside ChromeOS without a performance hit. 
 ## *Supports x86_64 & ARM64*
 ### Goal: Run any Linux program/app natively on all ChromeOS devices. <br>
 - *Requires Developer Mode* <br>
