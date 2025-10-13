@@ -48,8 +48,27 @@ export LDFLAGS="-L/usr/lib -L/lib $LDFLAGS"
 export ACLOCAL_PATH="/usr/share/aclocal:$ACLOCAL_PATH"
 export M4PATH="/usr/share/m4:$M4PATH"
 export MANPATH="/usr/share/man:$MANPATH"
-export MAKEOPTS="-j$(($(($(grep MemTotal /proc/meminfo | awk '{print $2}') + 1024*1024 - 1)) / 1024 / 1024 / 2))"
 export DISPLAY=":0"
 export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
+
+MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
+THREADS=$((MEM_GB / 2))
+((THREADS < 1)) && THREADS=1
+
+mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
+
+if (( ${#CORES[@]} )); then
+    CORE_LIST=$(printf '%s\n' "${CORES[@]}" | head -n "$THREADS" | cut -d: -f1 | paste -sd, -)
+else
+    CORE_LIST=$(seq 0 $((THREADS-1)) | paste -sd, -)
+fi
+
+export MAKEOPTS="-j$THREADS"
+export TASKSET="taskset -c $CORE_LIST"
+
+alias make='$TASKSET make $MAKEOPTS'
+alias emerge='$TASKSET emerge $MAKEOPTS'
+
 # <<< END CHARD .BASHRC >>>
