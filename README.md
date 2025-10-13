@@ -9,6 +9,7 @@
 - *Requires Developer Mode* <br>
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install.* <br>
 - *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist (for now)!* <br>
+- *Requires 8GB of storage, 2GB of RAM, and an internet connection.*
 - GUI apps are still being worked on.
 - Can technically work on any Linux based distro; not just ChromeOS.
 
@@ -52,7 +53,7 @@
 - `chard cat` List Portage catalogues.
 - `chard help` Show help examples. 
 
-- Does not alter files ouside of /usr/local/* <br>
+- Does *not* alter files ouside of /usr/local/ <br>
 - When Installer finishes or exits the log file, 'chardbuild.log', is copied to ChromeOS Downloads folder.* <br> 
 - Chard Installer  runs: emerge --sync near the end of install to finish setup. <br>
 - Please do not run emerge --sync more than once a day due to this built-in Emerge warning: <br>
