@@ -820,16 +820,6 @@ for tool in "${serial_tools[@]}"; do
     fi
 done
 
-if [[ -t 1 ]]; then
-    echo "${BLUE}────────────────────────────────────────────${RESET}"
-    echo "${RED}Chard${RESET}${YELLOW} Root ${RESET}${MAGENTA}CPU Profile:${RESET}
-    echo "${GREEN}Cores assigned:        $WEAK_CORES ${RESET}"
-    echo "${CYAN}E-core ratio:          $(awk "BEGIN {print $ECORE_RATIO*100}")% ${RESET}"
-    echo "${GREEN}Parallel jobs:         $MAKEOPTS ${RESET}"
-    echo "${CYAN}Taskset command:       $TASKSET ${RESET}"
-    echo "${BLUE}────────────────────────────────────────────${RESET}"
-fi
-
 echo "${RESET}${YELLOW}[+] Detected $MEM_GB GB RAM → using MAKEOPTS=$MAKEOPTS ${RESET}"
 
 echo "${RESET}${RED}Emerge is ready! Please do not sync more than once a day.${RESET}"
