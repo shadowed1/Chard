@@ -820,13 +820,17 @@ for tool in "${serial_tools[@]}"; do
     fi
 done
 
-echo "${RESET}${YELLOW}[+] Detected $MEM_GB GB RAM → using MAKEOPTS=$MAKEOPTS ${RESET}"
+sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
+sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
+sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
+sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
-echo "${RESET}${RED}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${YELLOW}Chard Root is ready!"
-echo "[!] To run, please open a new shell or run:"
+echo "${RESET}${RED}Emerge is ready! Please do not sync more than once a day.${RESET}"
+echo "[!] Please open a new shell or run:"
 echo "${RESET}${BOLD}${GREEN}source /home/chronos/user/.bashrc${RESET}"
-echo 
+echo
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps, open a new shell and run ${BOLD}chard root${RESET}${BLUE}, and then run the following (still working on the list, so expect issues): ${RESET}"
 echo "${RESET}${MAGENTA}The following list's goal is to provide a complete user environment. It is overkill. Please pick and choose or do whatever. Emerge is yours. ${RESET}"
