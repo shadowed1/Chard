@@ -104,7 +104,7 @@ ECORE_COUNT=$(echo "$WEAK_CORES" | tr ',' '\n' | wc -l)
 ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
 
 if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.5)}") )); then
-    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 2)}')
+    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 2.0)}')
 fi
 
 export MAKEOPTS="-j$THREADS"
@@ -124,13 +124,13 @@ for tool in "${serial_tools[@]}"; do
 done
 
 if [[ -t 1 ]]; then
-    echo "${BLUE}────────────────────────────────────────────${RESET}"
-    echo "${RED}Chard Root ${RESET}${CYAN}CPU Profile:${RESET}"
-    echo "${GREEN}Cores assigned:        $WEAK_CORES ${RESET}"
-    echo "${CYAN}E-core ratio:          $(awk "BEGIN {print $ECORE_RATIO*100}")% ${RESET}"
-    echo "${GREEN}Parallel jobs:         $MAKEOPTS ${RESET}"
-    echo "${CYAN}Taskset command:       $TASKSET ${RESET}"
-    echo "${BLUE}────────────────────────────────────────────${RESET}"
+    echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
+    echo "${CYAN}Chard Root CPU Profile:${RESET}"
+    echo "${GREEN}Cores assigned:               ${BOLD}$WEAK_CORES ${RESET}"
+    echo "${CYAN}E-core ratio:                 ${BOLD}$(awk "BEGIN {print $ECORE_RATIO*100}")% ${RESET}"
+    echo "${GREEN}Parallelized threads:         ${BOLD}$MAKEOPTS ${RESET}"
+    echo "${CYAN}Taskset:                      ${BOLD}$TASKSET ${RESET}"
+    echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
 fi
 
 # <<< END CHARD .BASHRC >>>
