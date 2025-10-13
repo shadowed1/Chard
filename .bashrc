@@ -53,21 +53,43 @@ export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 
-MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+if ! lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
+    echo "Error: lscpu -e=CPU,MAXMHZ not supported on this system."
+    return 0
+fi
+
+mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
+    awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
+
+if (( ${#CORES[@]} == 0 )); then
+    echo "No CPU frequency data found."
+    return 0
+fi
+
+mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
+count=${#mhz_values[@]}
+mid=$((count / 2))
+if (( count % 2 == 0 )); then
+    threshold=$(awk "BEGIN {print (${mhz_values[mid-1]} + ${mhz_values[mid]}) / 2}")
+else
+    threshold="${mhz_values[mid]}"
+fi
+
+WEAK_CORES=$(printf '%s\n' "${CORES[@]}" | \
+    awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
+
+if [[ -z "$WEAK_CORES" ]]; then
+    echo "Warning: Could not determine weak cores, defaulting to all cores."
+    WEAK_CORES=$(seq 0 $(( $(nproc) - 1 )) | paste -sd, -)
+fi
+
+export TASKSET="taskset -c $WEAK_CORES"
+
+MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
 THREADS=$((MEM_GB / 2))
 ((THREADS < 1)) && THREADS=1
-
-mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
-
-if (( ${#CORES[@]} )); then
-    CORE_LIST=$(printf '%s\n' "${CORES[@]}" | head -n "$THREADS" | cut -d: -f1 | paste -sd, -)
-else
-    CORE_LIST=$(seq 0 $((THREADS-1)) | paste -sd, -)
-fi
-
 export MAKEOPTS="-j$THREADS"
-export TASKSET="taskset -c $CORE_LIST"
 
 parallel_tools=(make emerge ninja scons meson cmake)
 for tool in "${parallel_tools[@]}"; do
@@ -82,6 +104,5 @@ for tool in "${serial_tools[@]}"; do
         alias "$tool"="$TASKSET $tool"
     fi
 done
-
 
 # <<< END CHARD .BASHRC >>>
