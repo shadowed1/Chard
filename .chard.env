@@ -125,7 +125,7 @@ done
 
 if [[ -t 1 ]]; then
     echo "${BLUE}────────────────────────────────────────────${RESET}"
-    echo "${RED}Chard Root ${RESET}${CYAN}CPU profile:${RESET}
+    echo "${RED}Chard Root ${RESET}${CYAN}CPU Profile:${RESET}
     echo "${GREEN}Cores assigned:        $WEAK_CORES ${RESET}"
     echo "${CYAN}E-core ratio:          $(awk "BEGIN {print $ECORE_RATIO*100}")% ${RESET}"
     echo "${GREEN}Parallel jobs:         $MAKEOPTS ${RESET}"
