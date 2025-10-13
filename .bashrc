@@ -1,4 +1,5 @@
 # CHARD .BASHRC
+
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -112,5 +113,13 @@ for tool in "${serial_tools[@]}"; do
         alias "$tool"="$TASKSET $tool"
     fi
 done
+
+if [[ -t 1 ]]; then
+    echo "${RESET}${GREEN}────────────────────────────────────────────"
+    echo "Cores assigned:  $WEAK_CORES"
+    echo "Parallel jobs (MAKEOPTS): $MAKEOPTS"
+    echo "Taskset command:          $TASKSET"
+    echo "────────────────────────────────────────────${RESET}"
+fi
 
 # <<< END CHARD .BASHRC >>>
