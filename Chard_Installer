@@ -813,7 +813,7 @@ done
 
 if [[ -t 1 ]]; then
     echo "${RESET}${GREEN}────────────────────────────────────────────"
-    echo "Efficiency cores assigned:  $WEAK_CORES"
+    echo "Cores assigned:  $WEAK_CORES"
     echo "Parallel jobs (MAKEOPTS): $MAKEOPTS"
     echo "Taskset command:          $TASKSET"
     echo "────────────────────────────────────────────${RESET}"
