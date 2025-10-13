@@ -68,7 +68,11 @@ fi
 export MAKEOPTS="-j$THREADS"
 export TASKSET="taskset -c $CORE_LIST"
 
-alias make='$TASKSET make $MAKEOPTS'
-alias emerge='$TASKSET emerge $MAKEOPTS'
+for tool in make emerge ninja meson cmake cargo go rustc gcc g++ clang clang++ ccache scons waf \
+             python setup.py pip install npm yarn node gyp bazel b2 bjam dune dune-build; do
+    if command -v "$tool" >/dev/null 2>&1; then
+        alias "$tool"="$TASKSET $tool $MAKEOPTS"
+    fi
+done
 
 # <<< END CHARD .BASHRC >>>
