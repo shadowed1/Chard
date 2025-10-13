@@ -51,6 +51,7 @@ export MANPATH="/usr/share/man:$MANPATH"
 export DISPLAY=":0"
 export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
+export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64 ~aarch64"
 
 MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
