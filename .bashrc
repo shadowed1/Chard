@@ -29,7 +29,11 @@ export PKGDIR="/var/cache/packages"
 export PORTAGE_TMPDIR="/var/tmp"
 export SANDBOX="/usr/bin/sandbox"
 export GIT_EXEC_PATH="/usr/libexec/git-core"
-export PERL5LIB="/lib/perl5/5.40.0:$PERL5LIB"
+perl_version=$(perl -V:version | cut -d"'" -f2)
+perl_archlib=$(perl -V:archlib | cut -d"'" -f2)
+perl_sitelib=$(perl -V:sitelib | cut -d"'" -f2)
+perl_vendorlib=$(perl -V:vendorlib | cut -d"'" -f2)
+export PERL5LIB="${perl_archlib}:${perl_sitelib}:${perl_vendorlib}:${PERL5LIB}"
 export PATH="$PATH:/usr/bin:/bin:/usr/$CHOST/gcc-bin/14"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib:/usr/lib/gcc/$CHOST/14:/usr/$CHOST/gcc-bin/14"
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
@@ -37,9 +41,12 @@ export MAGIC="/usr/share/misc/magic.mgc"
 export PKG_CONFIG=/usr/bin/pkg-config
 export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 export CPPFLAGS="-I/usr/include"
-export PYTHON_TARGETS="python3_13"
-export PYTHON_SINGLE_TARGET="python3_13"
-export PYTHONPATH="/usr/lib/python3.13/site-packages"
+python_ver=$(python3 -c "import sys; print(f'{sys.version_info.major}_{sys.version_info.minor}')")
+python_dot=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+export PYTHON_TARGETS="python${python_ver}"
+export PYTHON_SINGLE_TARGET="python${python_ver}"
+export PYTHONPATH="/usr/lib/python${python_dot}/site-packages:$PYTHONPATH"
+
 
 export CC="/usr/bin/gcc"
 export CXX="/usr/bin/g++"
@@ -160,13 +167,14 @@ FIRST_TIME_SETUP() {
             "emerge dev-vcs/git"
             "emerge sys-apps/coreutils"
             "emerge app-misc/fastfetch"
+            "emerge -1 dev-lang/perl"
             "emerge virtual/perl-Digest"
             "emerge virtual/perl-CPAN"
             "emerge virtual/perl-CPAN-Meta"
             "emerge virtual/perl-Data-Dumper"
             "emerge virtual/perl-Math-BigInt"
             "emerge virtual/perl-Scalar-List-Utils"
-            "emerge dev-lang/perl"
+            "emerge -1av $(perl-cleaner --reallyall)"
             "emerge dev-perl/Capture-Tiny"
             "emerge dev-perl/Try-Tiny"
             "emerge dev-perl/Config-AutoConf"
