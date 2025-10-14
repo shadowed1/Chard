@@ -828,15 +828,14 @@ sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
-echo "${RESET}$${YELLOW}Chard Root is ready!"
+echo "${RESET}${YELLOW}Chard Root is ready!"
 echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${RESET}${MAGENTA}[!] Open a new shell and run:"
 echo "${RESET}${BOLD}${GREEN}chard root${RESET}"
 echo
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
-echo "${BLUE}To start compiling apps, open a new shell and run ${BOLD}chard root${RESET}${BLUE}, and then run the following (still working on the list, so expect issues): ${RESET}"
-echo "${RESET}${MAGENTA}The following list's goal is to provide a complete user environment. It is overkill. Please pick and choose or do whatever. Emerge is yours. ${RESET}"
-echo "${RESET}${RED}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chroot environment right not for testing purposes. ${RESET}"
+echo "${BLUE}To start compiling apps, run ${BOLD}chard root${RESET}${BLUE}${RESET}"
+echo "${RESET}${RED}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
 echo
 show_progress
 sleep 1
