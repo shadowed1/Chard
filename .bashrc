@@ -176,7 +176,6 @@ FIRST_TIME_SETUP() {
         mkdir -p /var/log
         echo "${RESET}${MAGENTA} $(date) - Starting Chard first-time setup" > "$LOGFILE"
 
-        # All your emerge commands go here:
         COMMANDS=(
             "emerge dev-build/make"
             "emerge dev-build/cmake"
@@ -302,7 +301,7 @@ FIRST_TIME_SETUP() {
 
         for cmd in "${COMMANDS[@]}"; do
             echo "${YELLOW}>>> Running: ${RESET}${cmd}"
-            eval "$cmd" >> "$LOGFILE" 2>&1
+            eval "$cmd" 2>&1 | tee -a "$LOGFILE"
             if [[ $? -ne 0 ]]; then
                 echo "${RED}!!! Command failed: ${cmd}${RESET}"
                 echo "Check log at $LOGFILE"
@@ -314,9 +313,9 @@ FIRST_TIME_SETUP() {
         touch "$MARKER_FILE"
 
         echo ""
-        echo "${BOLD}${GREEN}────────────────────────────────────────────${RESET}"
+        echo "${BOLD}${GREEN}──────────────────────────────────────────────────────${RESET}"
         echo "${BOLD}${YELLOW}Chard setup completed successfully!${RESET}"
-        echo "${BOLD}${GREEN}────────────────────────────────────────────${RESET}"
+        echo "${BOLD}${GREEN}──────────────────────────────────────────────────────${RESET}"
         echo "Log saved to ${YELLOW}$LOGFILE${RESET}"
         echo ""
     fi
