@@ -29,13 +29,36 @@ export PKGDIR="/var/cache/packages"
 export PORTAGE_TMPDIR="/var/tmp"
 export SANDBOX="/usr/bin/sandbox"
 export GIT_EXEC_PATH="/usr/libexec/git-core"
+
 perl_version=$(perl -V:version | cut -d"'" -f2)
 perl_archlib=$(perl -V:archlib | cut -d"'" -f2)
 perl_sitelib=$(perl -V:sitelib | cut -d"'" -f2)
 perl_vendorlib=$(perl -V:vendorlib | cut -d"'" -f2)
+
 export PERL5LIB="${perl_archlib}:${perl_sitelib}:${perl_vendorlib}:${PERL5LIB}"
-export PATH="$PATH:/usr/bin:/bin:/usr/$CHOST/gcc-bin/14"
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib:/usr/lib/gcc/$CHOST/14:/usr/$CHOST/gcc-bin/14"
+
+gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
+if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
+    gcc_bin_path="/usr/$CHOST/gcc-bin/${gcc_version}"
+    gcc_lib_path="/usr/lib/gcc/$CHOST/$gcc_version"
+
+    if [[ -d "$gcc_bin_path" ]]; then
+        export PATH="$PATH:/usr/bin:/bin:$gcc_bin_path"
+    else
+        export PATH="$PATH:/usr/bin:/bin"
+    fi
+
+    if [[ -d "$gcc_lib_path" ]]; then
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib:$gcc_lib_path:$gcc_bin_path"
+    else
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib"
+    fi
+else
+    export PATH="$PATH:/usr/bin:/bin"
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib"
+fi
+
+
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
 export MAGIC="/usr/share/misc/magic.mgc"
 export PKG_CONFIG=/usr/bin/pkg-config
