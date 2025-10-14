@@ -305,7 +305,6 @@ FIRST_TIME_SETUP() {
             if [[ $? -ne 0 ]]; then
                 echo "${RED}!!! Command failed: ${cmd}${RESET}"
                 echo "Check log at $LOGFILE"
-                return 1
             fi
         done
 
