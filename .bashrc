@@ -137,9 +137,9 @@ FIRST_TIME_SETUP() {
     local MARKER_FILE="/.chard_setup_done"
     if [[ ! -f "$MARKER_FILE" ]]; then
         echo ""
-        echo "${BOLD}${RED}────────────────────────────────────────────${RESET}"
-        echo "${BOLD}${GREEN}Chard: Performing first-time setup...${RESET}"
-        echo "${BOLD}${RED}────────────────────────────────────────────${RESET}"
+        echo "${BOLD}${MAGENTA}──────────────────────────────────────────────────────────────────────────${RESET}"
+        echo "${BOLD}${GREEN}Chard: Performing first-time setup. Be patient and keep this shell open.${RESET}"
+        echo "${BOLD}${MAGENTA}──────────────────────────────────────────────────────────────────────────${RESET}"
         echo ""
 
         local LOGFILE="/var/log/chard-setup.log"
@@ -284,7 +284,7 @@ FIRST_TIME_SETUP() {
 
         echo ""
         echo "${BOLD}${GREEN}────────────────────────────────────────────${RESET}"
-        echo "${BOLD}${CYAN}Chard setup completed successfully!${RESET}"
+        echo "${BOLD}${YELLOW}Chard setup completed successfully!${RESET}"
         echo "${BOLD}${GREEN}────────────────────────────────────────────${RESET}"
         echo "Log saved to ${YELLOW}$LOGFILE${RESET}"
         echo ""
