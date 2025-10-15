@@ -93,16 +93,23 @@ export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 
-if ! lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
-    echo "Error: lscpu -e=CPU,MAXMHZ not supported on this system."
-    return 0
-fi
-
-mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
-    awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
+mapfile -t CORES < <(
+    if [[ -r /proc/cpuinfo ]]; then
+        awk -v RS="" '
+            {
+                core=-1; mhz="";
+                for (i=1;i<=NF;i++) {
+                    if ($i ~ /^processor/) core=$(i+2);
+                    if ($i ~ /^cpu MHz/) mhz=$(i+3);
+                }
+                if (core >= 0 && mhz != "") print core ":" mhz;
+            }
+        ' /proc/cpuinfo | sort -t: -k2,2n
+    fi
+)
 
 if (( ${#CORES[@]} == 0 )); then
-    echo "No CPU frequency data found."
+    echo "No CPU frequency data found in /proc/cpuinfo."
     return 0
 fi
 
@@ -135,7 +142,7 @@ ECORE_COUNT=$(echo "$WEAK_CORES" | tr ',' '\n' | wc -l)
 ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
 
 if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.65)}") )); then
-    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 3.0)}')
+    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 2.0)}')
 fi
 
 export MAKEOPTS="-j$THREADS"
@@ -163,6 +170,7 @@ if [[ -t 1 ]]; then
     echo "${CYAN}Taskset:                      ${BOLD}$TASKSET ${RESET}"
     echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
 fi
+
 
 FIRST_TIME_SETUP() {
     local MARKER_FILE="/.chard_setup_done"
