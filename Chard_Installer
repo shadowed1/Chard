@@ -368,7 +368,7 @@ sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
 cleanup_chroot() {
     echo "${GREEN}[+] Chard Root is ready!${RESET}"
-    echo "${RED}Open a new shell and run: ${BOLD}chard root to continue setup.${RESET}
+    echo "${RED}Open a new shell and run: ${BOLD}chard root to continue setup.${RESET}"
     sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
