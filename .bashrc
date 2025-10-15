@@ -174,146 +174,145 @@ FIRST_TIME_SETUP() {
 
         local LOGFILE="/var/log/chard-setup.log"
         mkdir -p /var/log
-        echo "${RESET}${MAGENTA} $(date) - Starting Chard first-time setup" > "$LOGFILE"
+        echo "$(date) - Starting Chard first-time setup" > "$LOGFILE"
 
         COMMANDS=(
-            "emerge dev-build/make"
-            "emerge dev-build/cmake"
-            "emerge sys-devel/gcc"
-            "emerge dev-libs/gmp"
-            "emerge dev-libs/mpfr"
-            "emerge sys-devel/binutils"
-            "emerge sys-apps/diffutils"
-            "emerge dev-libs/openssl"
-            "emerge net-misc/curl"
-            "emerge dev-vcs/git"
-            "emerge sys-apps/coreutils"
-            "emerge app-misc/fastfetch"
-            "emerge -1 dev-lang/perl"
-            "emerge virtual/perl-Digest"
-            "emerge virtual/perl-CPAN"
-            "emerge virtual/perl-CPAN-Meta"
-            "emerge virtual/perl-Data-Dumper"
-            "emerge virtual/perl-Math-BigInt"
-            "emerge virtual/perl-Scalar-List-Utils"
-            "emerge -1av $(perl-cleaner --reallyall)"
-            "emerge dev-perl/Capture-Tiny"
-            "emerge dev-perl/Try-Tiny"
-            "emerge dev-perl/Config-AutoConf"
-            "emerge dev-perl/Test-Fatal"
-            "emerge sys-apps/findutils"
-            "emerge dev-lang/python"
-            "emerge dev-build/meson"
-            "emerge dev-libs/glib"
-            "emerge dev-lang/ruby"
-            "emerge dev-ruby/pkg-config"
-            "emerge dev-cpp/gtest"
-            "emerge dev-util/gtest-parallel"
-            "emerge dev-util/re2c"
-            "emerge dev-build/ninja"
-            "emerge licenses/docbook"
-            "emerge app-text/docbook2X"
-            "emerge docbook"
-            "emerge app-text/build-docbook-catalog"
-            "emerge dev-util/gtk-doc"
-            "emerge sys-libs/zlib"
-            "emerge dev-libs/libunistring"
-            "emerge sys-apps/file"
-            "emerge kde-frameworks/extra-cmake-modules"
-            "emerge dev-perl/File-LibMagic"
-            "emerge net-libs/libpsl"
-            "emerge dev-libs/expat"
-            "emerge dev-lang/duktape"
-            "emerge app-arch/brotli"
-            "mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak"
-            "emerge dev-lang/rust"
-            "emerge sys-auth/polkit"
-            "emerge sys-apps/bubblewrap"
-            "emerge app-portage/gentoolkit"
-            "emerge x11-base/xorg-drivers"
-            "emerge x11-base/xorg-server"
-            "emerge x11-base/xorg-apps"
-            "emerge x11-libs/libX11"
-            "emerge x11-libs/libXft"
-            "emerge x11-libs/libXrender"
-            "emerge x11-libs/libXrandr"
-            "emerge x11-libs/libXcursor"
-            "emerge x11-libs/libXi"
-            "emerge x11-libs/libXinerama"
-            "emerge dev-libs/wayland"
-            "emerge dev-libs/wayland-protocols"
-            "emerge x11-base/xwayland"
-            "emerge x11-libs/libxkbcommon"
-            "emerge gui-libs/gtk"
-            "emerge xfce-base/libxfce4util"
-            "emerge xfce-base/xfconf"
-            "emerge sys-apps/xdg-desktop-portal"
-            "emerge gui-libs/xdg-desktop-portal-wlr"
-            "emerge media-libs/mesa"
-            "emerge x11-apps/mesa-progs"
-            "emerge media-sound/pulseaudio-daemon"
-            "emerge media-sound/pulseaudio-ctl"
-            "emerge dev-qt/qtbase"
-            "emerge dev-qt/qttools"
-            "emerge media-libs/pulseaudio-qt"
-            "emerge media-sound/alsa-utils"
-            "emerge sys-apps/dbus"
-            "emerge app-accessibility/at-spi2-core"
-            "emerge app-accessibility/at-spi2-atk"
-            "emerge media-libs/fontconfig"
-            "emerge media-fonts/dejavu"
-            "emerge media-libs/freetype"
-            "emerge x11-themes/gtk-engines"
-            "emerge x11-themes/gtk-engines-murrine"
-            "emerge sys-fs/udisks"
-            "emerge sys-power/upower"
-            "emerge x11-libs/libnotify"
-            "emerge dev-libs/libdbusmenu"
-            "emerge x11-libs/libSM"
-            "emerge x11-libs/libICE"
-            "emerge x11-libs/libwnck"
-            "emerge app-admin/exo"
-            "emerge app-arch/tar"
-            "emerge app-arch/xz-utils"
-            "emerge net-libs/gnutls"
-            "emerge net-libs/glib-networking"
-            "emerge sys-libs/libseccomp"
-            "emerge app-eselect/eselect-repository"
-            "emerge dev-libs/appstream-glib"
-            "emerge app-crypt/gpgme"
-            "emerge dev-libs/json-glib"
-            "emerge dev-util/ostree"
-            "emerge sys-apps/xdg-dbus-proxy"
-            "emerge x11-libs/gdk-pixbuf"
-            "emerge sys-fs/fuse"
-            "emerge dev-python/pygobject"
-            "emerge gnome-base/dconf"
-            "emerge x11-misc/xdg-utils"
-            "emerge x11-apps/xinit"
-            "emerge x11-terms/xterm"
-            "emerge x11-wm/twm"
-            "emerge xfce-extra/xfce4-screensaver"
-            "emerge xfce-base/xfce4-meta"
-            "emerge www-client/firefox"
-            "emerge sys-apps/flatpak"
-            "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
+            emerge dev-build/make
+            emerge dev-build/cmake
+            emerge sys-devel/gcc
+            emerge dev-libs/gmp
+            emerge dev-libs/mpfr
+            emerge sys-devel/binutils
+            emerge sys-apps/diffutils
+            emerge dev-libs/openssl
+            emerge net-misc/curl
+            emerge dev-vcs/git
+            emerge sys-apps/coreutils
+            emerge app-misc/fastfetch
+            emerge -1 dev-lang/perl
+            emerge virtual/perl-Digest
+            emerge virtual/perl-CPAN
+            emerge virtual/perl-CPAN-Meta
+            emerge virtual/perl-Data-Dumper
+            emerge virtual/perl-Math-BigInt
+            emerge virtual/perl-Scalar-List-Utils
+            emerge -1av $(perl-cleaner --reallyall)
+            emerge dev-perl/Capture-Tiny
+            emerge dev-perl/Try-Tiny
+            emerge dev-perl/Config-AutoConf
+            emerge dev-perl/Test-Fatal
+            emerge sys-apps/findutils
+            emerge dev-lang/python
+            emerge dev-build/meson
+            emerge dev-libs/glib
+            emerge dev-lang/ruby
+            emerge dev-ruby/pkg-config
+            emerge dev-cpp/gtest
+            emerge dev-util/gtest-parallel
+            emerge dev-util/re2c
+            emerge dev-build/ninja
+            emerge licenses/docbook
+            emerge app-text/docbook2X
+            emerge docbook
+            emerge app-text/build-docbook-catalog
+            emerge dev-util/gtk-doc
+            emerge sys-libs/zlib
+            emerge dev-libs/libunistring
+            emerge sys-apps/file
+            emerge kde-frameworks/extra-cmake-modules
+            emerge dev-perl/File-LibMagic
+            emerge net-libs/libpsl
+            emerge dev-libs/expat
+            emerge dev-lang/duktape
+            emerge app-arch/brotli
+            mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak
+            emerge dev-lang/rust
+            emerge sys-auth/polkit
+            emerge sys-apps/bubblewrap
+            emerge app-portage/gentoolkit
+            emerge x11-base/xorg-drivers
+            emerge x11-base/xorg-server
+            emerge x11-base/xorg-apps
+            emerge x11-libs/libX11
+            emerge x11-libs/libXft
+            emerge x11-libs/libXrender
+            emerge x11-libs/libXrandr
+            emerge x11-libs/libXcursor
+            emerge x11-libs/libXi
+            emerge x11-libs/libXinerama
+            emerge dev-libs/wayland
+            emerge dev-libs/wayland-protocols
+            emerge x11-base/xwayland
+            emerge x11-libs/libxkbcommon
+            emerge gui-libs/gtk
+            emerge xfce-base/libxfce4util
+            emerge xfce-base/xfconf
+            emerge sys-apps/xdg-desktop-portal
+            emerge gui-libs/xdg-desktop-portal-wlr
+            emerge media-libs/mesa
+            emerge x11-apps/mesa-progs
+            emerge media-sound/pulseaudio-daemon
+            emerge media-sound/pulseaudio-ctl
+            emerge dev-qt/qtbase
+            emerge dev-qt/qttools
+            emerge media-libs/pulseaudio-qt
+            emerge media-sound/alsa-utils
+            emerge sys-apps/dbus
+            emerge app-accessibility/at-spi2-core
+            emerge app-accessibility/at-spi2-atk
+            emerge media-libs/fontconfig
+            emerge media-fonts/dejavu
+            emerge media-libs/freetype
+            emerge x11-themes/gtk-engines
+            emerge x11-themes/gtk-engines-murrine
+            emerge sys-fs/udisks
+            emerge sys-power/upower
+            emerge x11-libs/libnotify
+            emerge dev-libs/libdbusmenu
+            emerge x11-libs/libSM
+            emerge x11-libs/libICE
+            emerge x11-libs/libwnck
+            emerge app-admin/exo
+            emerge app-arch/tar
+            emerge app-arch/xz-utils
+            emerge net-libs/gnutls
+            emerge net-libs/glib-networking
+            emerge sys-libs/libseccomp
+            emerge app-eselect/eselect-repository
+            emerge dev-libs/appstream-glib
+            emerge app-crypt/gpgme
+            emerge dev-libs/json-glib
+            emerge dev-util/ostree
+            emerge sys-apps/xdg-dbus-proxy
+            emerge x11-libs/gdk-pixbuf
+            emerge sys-fs/fuse
+            emerge dev-python/pygobject
+            emerge gnome-base/dconf
+            emerge x11-misc/xdg-utils
+            emerge x11-apps/xinit
+            emerge x11-terms/xterm
+            emerge x11-wm/twm
+            emerge xfce-extra/xfce4-screensaver
+            emerge xfce-base/xfce4-meta
+            emerge www-client/firefox
+            emerge sys-apps/flatpak
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
         )
 
         for cmd in "${COMMANDS[@]}"; do
-            echo "${YELLOW}>>> Running: ${RESET}${cmd}"
-            eval "$cmd" 2>&1 | tee -a "$LOGFILE"
+            echo "${YELLOW}>>> Running: ${RESET}$cmd"
+            $cmd
             if [[ $? -ne 0 ]]; then
                 echo "${RED}!!! Command failed: ${cmd}${RESET}"
                 echo "Check log at $LOGFILE"
             fi
         done
 
-        echo "$(date) - Setup completed successfully" >> "$LOGFILE"
         touch "$MARKER_FILE"
 
         echo ""
         echo "${BOLD}${GREEN}──────────────────────────────────────────────────────${RESET}"
-        echo "${BOLD}${YELLOW}Chard setup completed successfully!${RESET}"
+        echo "${BOLD}${YELLOW}Chard setup completed (check log for any failed commands)${RESET}"
         echo "${BOLD}${GREEN}──────────────────────────────────────────────────────${RESET}"
         echo "Log saved to ${YELLOW}$LOGFILE${RESET}"
         echo ""
@@ -321,5 +320,6 @@ FIRST_TIME_SETUP() {
 }
 
 FIRST_TIME_SETUP
+
 
 # <<< END CHARD .BASHRC >>>
