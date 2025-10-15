@@ -104,7 +104,6 @@ else
 fi
 
 if (( ${#CORES[@]} == 0 )); then
-    echo "Warning: Could not determine CPU frequency data — using first half of cores."
     total=$(nproc)
     half=$(( total / 2 ))
     WEAK_CORES=$(seq 0 $((half - 1)) | paste -sd, -)
