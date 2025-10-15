@@ -93,41 +93,39 @@ export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 
-mapfile -t CORES < <(
-    if [[ -r /proc/cpuinfo ]]; then
-        awk -v RS="" '
-            {
-                core=-1; mhz="";
-                for (i=1;i<=NF;i++) {
-                    if ($i ~ /^processor/) core=$(i+2);
-                    if ($i ~ /^cpu MHz/) mhz=$(i+3);
-                }
-                if (core >= 0 && mhz != "") print core ":" mhz;
-            }
-        ' /proc/cpuinfo | sort -t: -k2,2n
-    fi
-)
+if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
+    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
+        awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
+else
+    mapfile -t CORES < <(awk -v c=-1 '
+        /^processor/ {c=$3}
+        /cpu MHz/ && c>=0 {print c ":" $4; c=-1}
+    ' /proc/cpuinfo | sort -t: -k2,2n)
+fi
 
 if (( ${#CORES[@]} == 0 )); then
-    echo "No CPU frequency data found in /proc/cpuinfo."
-    return 0
-fi
-
-mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
-count=${#mhz_values[@]}
-mid=$((count / 2))
-if (( count % 2 == 0 )); then
-    threshold=$(awk "BEGIN {print (${mhz_values[mid-1]} + ${mhz_values[mid]}) / 2}")
+    echo "Warning: Could not determine CPU frequency data — using first half of cores."
+    total=$(nproc)
+    half=$(( total / 2 ))
+    WEAK_CORES=$(seq 0 $((half - 1)) | paste -sd, -)
 else
-    threshold="${mhz_values[mid]}"
-fi
+    mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
+    count=${#mhz_values[@]}
+    mid=$((count / 2))
+    if (( count % 2 == 0 )); then
+        threshold=$(awk "BEGIN {print (${mhz_values[mid-1]} + ${mhz_values[mid]}) / 2}")
+    else
+        threshold="${mhz_values[mid]}"
+    fi
 
-WEAK_CORES=$(printf '%s\n' "${CORES[@]}" | \
-    awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
+    WEAK_CORES=$(printf '%s\n' "${CORES[@]}" | \
+        awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
 
-if [[ -z "$WEAK_CORES" ]]; then
-    echo "Warning: Could not determine weak cores, defaulting to all cores."
-    WEAK_CORES=$(seq 0 $(( $(nproc) - 1 )) | paste -sd, -)
+    if [[ -z "$WEAK_CORES" || "$WEAK_CORES" == "$(seq -s, 0 $(( $(nproc)-1 )))" ]]; then
+        total=$(nproc)
+        half=$(( total / 2 ))
+        WEAK_CORES=$(seq 0 $((half - 1)) | paste -sd, -)
+    fi
 fi
 
 export TASKSET="taskset -c $WEAK_CORES"
@@ -142,10 +140,11 @@ ECORE_COUNT=$(echo "$WEAK_CORES" | tr ',' '\n' | wc -l)
 ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
 
 if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.65)}") )); then
-    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 2.0)}')
+    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 3.0)}')
 fi
 
 export MAKEOPTS="-j$THREADS"
+
 
 parallel_tools=(make emerge ninja scons meson cmake)
 for tool in "${parallel_tools[@]}"; do
@@ -176,7 +175,6 @@ FIRST_TIME_SETUP() {
     local MARKER_FILE="/.chard_setup_done"
     local LOGFILE="/var/log/chard-setup.log"
 
-    # Only run once
     if [[ -f "$MARKER_FILE" ]]; then
         return 0
     fi
@@ -190,7 +188,6 @@ FIRST_TIME_SETUP() {
     mkdir -p /var/log
     echo "$(date) - Starting Chard first-time setup" > "$LOGFILE"
 
-    # List of commands to run once
     COMMANDS=(
         "emerge dev-build/make"
         "emerge dev-build/cmake"
@@ -314,7 +311,6 @@ FIRST_TIME_SETUP() {
         "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
     )
 
-    # Run each command and show normal progress
     for cmd in "${COMMANDS[@]}"; do
         echo ""
         echo "${YELLOW}>>> Running:${RESET} ${cmd}"
