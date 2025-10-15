@@ -611,10 +611,7 @@ EOF
 
 #sudo touch "$PROFILE_DIR/parent"
 
-echo "Created $CHARD_ROOT/mesonrust.ini for $ARCH"
-
-echo "${RED}Created $CHARD_ROOT/usr/local/chard/mesonrust.ini${RESET}"
-
+echo "${RESET}${MAGENTA}Created $CHARD_ROOT/mesonrust.ini for $ARCH ${RESET}"
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)
