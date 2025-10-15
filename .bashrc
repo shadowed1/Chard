@@ -187,7 +187,7 @@ FIRST_TIME_SETUP() {
 
     echo ""
     echo "${BOLD}${MAGENTA}──────────────────────────────────────────────────────────────────────────${RESET}"
-    echo "${BOLD}${GREEN}        Chard: Performing first-time setup. This may take awhile.${RESET}"
+    echo "${BOLD}${GREEN}      Chard Root: Performing first-time setup. This may take awhile!${RESET}"
     echo "${BOLD}${MAGENTA}──────────────────────────────────────────────────────────────────────────${RESET}"
     echo ""
 
