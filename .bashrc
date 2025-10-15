@@ -176,7 +176,6 @@ FIRST_TIME_SETUP() {
         mkdir -p /var/log
         echo "$(date) - Starting Chard first-time setup" > "$LOGFILE"
 
-        COMMANDS=(
             emerge dev-build/make
             emerge dev-build/cmake
             emerge sys-devel/gcc
@@ -297,16 +296,6 @@ FIRST_TIME_SETUP() {
             emerge www-client/firefox
             emerge sys-apps/flatpak
             flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-        )
-
-        for cmd in "${COMMANDS[@]}"; do
-            echo "${YELLOW}>>> Running: ${RESET}$cmd"
-            $cmd
-            if [[ $? -ne 0 ]]; then
-                echo "${RED}!!! Command failed: ${cmd}${RESET}"
-                echo "Check log at $LOGFILE"
-            fi
-        done
 
         touch "$MARKER_FILE"
 
