@@ -67,9 +67,16 @@ export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 export CPPFLAGS="-I/usr/include"
 python_ver=$(python3 -c "import sys; print(f'{sys.version_info.major}_{sys.version_info.minor}')")
 python_dot=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+
 export PYTHON_TARGETS="python${python_ver}"
 export PYTHON_SINGLE_TARGET="python${python_ver}"
-export PYTHONPATH="/usr/lib/python${python_dot}/site-packages:$PYTHONPATH"
+
+python_site="/usr/lib/python${python_dot}/site-packages"
+if [[ -n "$PYTHONPATH" ]]; then
+    export PYTHONPATH="${python_site}:$(realpath -m $PYTHONPATH)"
+else
+    export PYTHONPATH="${python_site}"
+fi
 
 
 export CC="/usr/bin/gcc"
