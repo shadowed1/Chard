@@ -14,7 +14,7 @@ CHARD_RC="$CHARD_ROOT/.chardrc"
 if [ -f "$CHARD_RC" ]; then
     source "$CHARD_RC"
 else
-    echo "ERROR: Chard environment missing. Run installer first."
+    echo "Please run Chard commands outside of Chard Root"
     exit 1
 fi
 
