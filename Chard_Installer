@@ -918,12 +918,12 @@ EndSection
 EOF
 
 if [[ -n "$GPU_VENDOR" && "$GPU_VENDOR" != "unknown" ]]; then
-    echo "${MAGENTA}Detected GPU:${RESET} $GPU_VENDOR ($ARCH)"
+    echo "${MAGENTA}Detected GPU:${RESET}${GREEN} $GPU_VENDOR ($ARCH)${RESET}"
 else
-    echo "${YELLOW}Warning:${RESET} GPU not detected. Using generic Xorg configuration."
+    echo "${YELLOW}Warning:${RESET}${RED} GPU not detected. Using generic Xorg configuration.${RESET}"
 fi
 
-echo "${MAGENTA}Generated:${RESET} $XORG_CONF_DIR/20-glamor.conf for ${GREEN}$IDENTIFIER${RESET} (${CPU_FAMILY})"
+echo "${MAGENTA}Generated:${RESET}${YELLOW} $XORG_CONF_DIR/20-glamor.conf for ${RESET}${GREEN}$IDENTIFIER${RESET} (${CPU_FAMILY})"
 
 sudo mkdir -p /usr/local/chard/run/dbus
 sudo mkdir -p /usr/local/chard/tmp/.X11-unix
