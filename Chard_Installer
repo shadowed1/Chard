@@ -772,15 +772,9 @@ echo "${RESET}${GREEN}[+] Meson file created at $MESON_FILE for architecture $AR
 sudo mkdir -p /usr/local/chard/etc/X11/xorg.conf.d
 
 XORG_CONF_DIR="/usr/local/chard/etc/X11/xorg.conf.d"
-mkdir -p "$XORG_CONF_DIR"
+sudo mkdir -p "$XORG_CONF_DIR"
 
 ARCH=$(uname -m)
-GPU_VENDOR=$(lspci -nnk | grep -E "VGA|Display" | head -1 | awk '{print tolower($0)}')
-
-DRIVER="modesetting"
-IDENTIFIER="Generic GPU"
-ACCEL="glamor"
-
 case "$ARCH" in
     x86_64)
         CHOST="x86_64-pc-linux-gnu"
@@ -795,40 +789,119 @@ case "$ARCH" in
         CPU_FAMILY="arm"
         ;;
     *)
-        echo "Unknown architecture: $ARCH"
+        echo "${YELLOW}Unknown architecture:${RESET} $ARCH"
         ;;
 esac
 
-if echo "$GPU_VENDOR" | grep -q "intel"; then
-    IDENTIFIER="Intel Graphics"
-    DRIVER="modesetting"
-    ACCEL="glamor"
+detect_gpu_freq() {
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+    GPU_TYPE="unknown"
 
-elif echo "$GPU_VENDOR" | grep -q "amd"; then
-    IDENTIFIER="AMD Graphics"
-    DRIVER="amdgpu"
-    ACCEL="glamor"
+    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        GPU_TYPE="intel"
+        return
+    fi
 
-elif echo "$GPU_VENDOR" | grep -q "nvidia"; then
-    IDENTIFIER="NVIDIA Graphics"
-    DRIVER="nvidia"
-    ACCEL=""
+    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
+        GPU_TYPE="amd"
+        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
+            if [[ -n "$MAX_MHZ" ]]; then
+                GPU_MAX_FREQ="$MAX_MHZ"
+            fi
+        fi
+        GPU_FREQ_PATH="$PP_OD_FILE"
+        return
+    fi
 
-elif echo "$GPU_VENDOR" | grep -q -E "mali|panfrost"; then
-    IDENTIFIER="ARM Mali Graphics"
-    DRIVER="panfrost"
-    ACCEL="glamor"
+    for d in /sys/class/devfreq/*; do
+        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
+            if [ -f "$d/max_freq" ]; then
+                GPU_FREQ_PATH="$d/max_freq"
+                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                GPU_TYPE="mali"
+                return
+            elif [ -f "$d/available_frequencies" ]; then
+                GPU_FREQ_PATH="$d/available_frequencies"
+                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
+                GPU_TYPE="mali"
+                return
+            fi
+        fi
+    done
 
-elif echo "$GPU_VENDOR" | grep -q "adreno"; then
-    IDENTIFIER="Qualcomm Adreno Graphics"
-    DRIVER="modesetting"
-    ACCEL="glamor"
+    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            return
+        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            return
+        fi
+    fi
 
-else
-    IDENTIFIER="Generic GPU"
-    DRIVER="modesetting"
-    ACCEL="glamor"
-fi
+    if [[ -d /sys/class/drm ]]; then
+        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mediatek"
+        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="vivante"
+        fi
+    fi
+
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+}
+
+detect_gpu_freq
+GPU_VENDOR="$GPU_TYPE"
+IDENTIFIER="Generic GPU"
+DRIVER="modesetting"
+ACCEL="glamor"
+
+case "$GPU_VENDOR" in
+    intel)
+        IDENTIFIER="Intel Graphics"
+        DRIVER="modesetting"
+        ;;
+    amd)
+        IDENTIFIER="AMD Graphics"
+        DRIVER="amdgpu"
+        ;;
+    nvidia)
+        IDENTIFIER="NVIDIA Graphics"
+        DRIVER="nvidia"
+        ACCEL=""
+        ;;
+    mali)
+        IDENTIFIER="ARM Mali Graphics"
+        DRIVER="panfrost"
+        ;;
+    adreno)
+        IDENTIFIER="Qualcomm Adreno Graphics"
+        DRIVER="modesetting"
+        ;;
+    mediatek)
+        IDENTIFIER="MediaTek GPU"
+        DRIVER="modesetting"
+        ;;
+    vivante)
+        IDENTIFIER="Vivante GPU"
+        DRIVER="etnaviv"
+        ;;
+    *)
+        IDENTIFIER="Generic GPU"
+        DRIVER="modesetting"
+        ;;
+esac
 
 sudo tee "$XORG_CONF_DIR/20-glamor.conf" > /dev/null <<EOF
 Section "Device"
@@ -844,7 +917,13 @@ cat <<EOF | sudo tee -a "$XORG_CONF_DIR/20-glamor.conf" > /dev/null
 EndSection
 EOF
 
-echo "${RESET}${MAGENTA}Generated $XORG_CONF_DIR/20-glamor.conf for $IDENTIFIER ($ARCH) ${RESET}"
+if [[ -n "$GPU_VENDOR" && "$GPU_VENDOR" != "unknown" ]]; then
+    echo "${MAGENTA}Detected GPU:${RESET} $GPU_VENDOR ($ARCH)"
+else
+    echo "${YELLOW}Warning:${RESET} GPU not detected. Using generic Xorg configuration."
+fi
+
+echo "${MAGENTA}Generated:${RESET} $XORG_CONF_DIR/20-glamor.conf for ${GREEN}$IDENTIFIER${RESET} (${CPU_FAMILY})"
 
 sudo mkdir -p /usr/local/chard/run/dbus
 sudo mkdir -p /usr/local/chard/tmp/.X11-unix
