@@ -8,6 +8,7 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libassuan.so.9"
     "$CHARD_ROOT/usr/lib64/libffi.so.8"
     "$CHARD_ROOT/usr/lib64/libperl.so.5.40"
+    "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
     "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
     "$CHARD_ROOT/usr/lib64/libappstream.so.5"
     "$CHARD_ROOT/usr/lib64/libostree-1.so.1"
