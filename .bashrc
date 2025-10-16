@@ -112,8 +112,8 @@ fi
 
 if (( ${#CORES[@]} == 0 )); then
     total=$(nproc)
-    half=$(( total / 2 ))
-    WEAK_CORES=$(seq 0 $((half - 1)) | paste -sd, -)
+    half=$(( total / 1 ))
+    WEAK_CORES=$half
 else
     mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
     count=${#mhz_values[@]}
