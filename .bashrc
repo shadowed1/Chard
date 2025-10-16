@@ -152,8 +152,16 @@ export RANLIB="$ROOT/usr/bin/gcc-ranlib"
 export STRIP="$ROOT/usr/bin/strip"
 export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/share"
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
-export CFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CFLAGS"
-export CXXFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CXXFLAGS"
+
+CFLAGS="-O2 -pipe "
+[[ -d /usr/include ]] && CFLAGS+="-I/usr/include "
+[[ -d /include ]] && CFLAGS+="-I/include "
+export CFLAGS
+
+CXXFLAGS="-O2 -pipe "
+[[ -d /usr/include ]] && CXXFLAGS+="-I/usr/include "
+[[ -d /include ]] && CXXFLAGS+="-I/include "
+export CXXFLAGS
 
 LDFLAGS=""
 [[ -d /usr/lib ]] && LDFLAGS+="-L/usr/lib "
