@@ -151,7 +151,7 @@ case "$cmd" in
             echo "${RED}[*] Cancelled.${RESET}"
         fi
         ;;
-    root)
+    root|cr)
         sudo chroot /usr/local/chard /bin/bash -c "
 
             mountpoint -q /proc    || mount -t proc proc /proc
