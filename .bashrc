@@ -64,40 +64,36 @@ export MAGIC="/usr/share/misc/magic.mgc"
 export PKG_CONFIG=/usr/bin/pkg-config
 export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 export CPPFLAGS="-I/usr/include"
-python_ver=$(python3 -c "import sys; print(f'{sys.version_info.major}_{sys.version_info.minor}')")
-python_dot=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-
-export PYTHON_TARGETS="python${python_ver}"
-export PYTHON_SINGLE_TARGET="python${python_ver}"
-python_site="/usr/lib/python${python_dot}/site-packages"
-if [[ -n "$PYTHONPATH" ]]; then
-    export PYTHONPATH="${python_site}:$(realpath -m $PYTHONPATH)"
-else
-    export PYTHONPATH="${python_site}"
-fi
-
 PYEXEC_BASE="/usr/lib/python-exec"
-latest_python=$(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V | tail -n1)
 
-if [[ -n "$latest_python" ]]; then
-    python_ver="${latest_python#python}"
-    python_major="${python_ver%%.*}"
-    python_minor="${python_ver#*.}"
-    python_dot="${python_major}.${python_minor}"
-    python_underscore="${python_major}_${python_minor}"
+all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
 
-    export PYTHON_TARGETS="python${python_underscore}"
-    export PYTHON_SINGLE_TARGET="python${python_underscore}"
+latest_python="${all_python_dirs[-1]}"
+second_latest_python="${all_python_dirs[-2]}"
 
-    python_site="/usr/lib/python${python_dot}/site-packages"
-    if [[ -n "$PYTHONPATH" ]]; then
-        export PYTHONPATH="${python_site}:$PYTHONPATH"
-    else
-        export PYTHONPATH="${python_site}"
-    fi
+latest_underscore="${latest_python#python}"
+latest_underscore="${latest_underscore//./_}"  # e.g. 3.14 -> 3_14
+latest_dot="${latest_python#python}"           # e.g. 3.14
 
-    export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
+second_underscore="${second_latest_python#python}"
+second_underscore="${second_underscore//./_}"
+second_dot="${second_latest_python#python}"
+
+export PYTHON_TARGETS="python${second_underscore} python${latest_underscore}"
+
+export PYTHON_SINGLE_TARGET="python${latest_underscore}"
+
+python_site_second="/usr/lib/python${second_dot}/site-packages"
+python_site_latest="/usr/lib/python${latest_dot}/site-packages"
+
+if [[ -n "$PYTHONPATH" ]]; then
+    export PYTHONPATH="${python_site_second}:${python_site_latest}:$(realpath -m $PYTHONPATH)"
+else
+    export PYTHONPATH="${python_site_second}:${python_site_latest}"
 fi
+
+export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
+
 
 export CC="/usr/bin/gcc"
 export CXX="/usr/bin/g++"
