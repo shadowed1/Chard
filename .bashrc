@@ -170,7 +170,6 @@ if [[ -t 1 ]]; then
     echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
     echo "${CYAN}Chard Root CPU Profile:${RESET}"
     echo "${GREEN}Cores assigned:               ${BOLD}$WEAK_CORES ${RESET}"
-    echo "${CYAN}E-core ratio:                 ${BOLD}$(awk "BEGIN {print $ECORE_RATIO*100}")% ${RESET}"
     echo "${GREEN}Parallelized threads:         ${BOLD}$MAKEOPTS ${RESET}"
     echo "${CYAN}Taskset:                      ${BOLD}$TASKSET ${RESET}"
     echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
