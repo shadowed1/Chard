@@ -38,7 +38,7 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
-ROOT="${ROOT%/}"
+ROOT="/usr/local/chard"
 export CHARD_RC="$ROOT/.chardrc"
 
 PERL_BASE="$ROOT/usr/lib/perl5"
@@ -68,7 +68,6 @@ for ver in "${all_perl_versions[@]}"; do
     CORE_LIB="$PERL_BASE/$ver/$CHOST/CORE"
     [[ -d "$CORE_LIB" ]] && PERL_LIBS+=("$CORE_LIB")
 
-    # Optional: track perl binary dirs
     BIN_DIR="$ROOT/usr/bin"
     [[ -d "$BIN_DIR" ]] && PERL_BIN_DIRS+=("$BIN_DIR")
 done
@@ -79,12 +78,10 @@ export PERL6LIB="$PERL6LIB"
 if [[ ${#PERL_LIBS[@]} -gt 0 ]]; then
     LD_LIBRARY_PATH="$(IFS=:; echo "${PERL_LIBS[*]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
-export LD_LIBRARY_PATH
 
 if [[ ${#PERL_BIN_DIRS[@]} -gt 0 ]]; then
     PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
 fi
-export PATH
 
 gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
 if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
@@ -92,9 +89,9 @@ if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
     gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/$gcc_version"
 
     if [[ -d "$gcc_bin_path" ]]; then
-        export PATH="$PATH:$ROOT/usr/bin:$ROOT/bin:$gcc_bin_path"
+        export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:$ROOT/bin:$gcc_bin_path"
     else
-        export PATH="$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
+        export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
     fi
 
     if [[ -d "$gcc_lib_path" ]]; then
@@ -103,7 +100,7 @@ if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$ROOT/usr/lib:$ROOT/lib:$ROOT/usr/lib/gcc/$CHOST/14:$ROOT/usr/$CHOST/gcc-bin/14"
     fi
 else
-    export PATH="$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
+    export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$ROOT/usr/lib:$ROOT/lib:$ROOT/usr/lib/gcc/$CHOST/14:$ROOT/usr/$CHOST/gcc-bin/14"
 fi
 
