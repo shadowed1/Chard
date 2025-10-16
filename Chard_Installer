@@ -876,8 +876,8 @@ sudo chroot /usr/local/chard /bin/bash --login -c "
                 emerge sys-apps/findutils
                 emerge dev-lang/python
                 emerge dev-build/meson
-                USE=-truetype emerge dev-python/pillow
-                USE=-introspection -glib emerge media-libs/harfbuzz
+                USE="-truetype" emerge -1 dev-python/pillow
+                USE="-introspection -glib" emerge -1 media-libs/harfbuzz
                 emerge dev-libs/glib
                 emerge dev-util/pkgconf
                 emerge app-text/doxygen
