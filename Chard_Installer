@@ -75,7 +75,6 @@ echo "${GREEN}- It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but c
 echo "${CYAN}- Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${CYAN} require dev_install.${RESET}"
 echo "${BLUE}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
 echo "${MAGENTA}- Chard is current in early development. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a ${BOLD}USB backup${RESET}${MAGENTA} in case of serious mistakes.${RESET}"
-echo "${RED}- On completetion, installer will close the active shell and will require user to re-enter shell and run: ${BOLD}chard root${RESET}${RED} to begin part 2 of the install.${RESET}"
 echo
    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
 response=${response:-Y}
