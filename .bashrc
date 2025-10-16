@@ -68,25 +68,35 @@ PYEXEC_BASE="$ROOT/usr/lib/python-exec"
 
 all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
 
-if [[ ${#all_python_dirs[@]} -gt 1 ]]; then
-    python_dir="${all_python_dirs[-2]}"
+latest_python="${all_python_dirs[-1]}"
+
+if [[ ${#all_python_dirs[@]} -lt 2 ]]; then
+    second_latest_python="${all_python_dirs[-1]}"
 else
-    python_dir="${all_python_dirs[-1]}"
+    second_latest_python="${all_python_dirs[-2]}"
 fi
 
-python_ver="${python_dir#python}"
-python_underscore="${python_ver//./_}"
+latest_underscore="${latest_python#python}"
+latest_underscore="${latest_underscore//./_}"
+latest_dot="${latest_python#python}"
 
-export PYEXEC_DIR="${PYEXEC_BASE}/${python_dir}"
-export PYTHON_SINGLE_TARGET="python${python_underscore}"
-export PYTHON_TARGETS="python${python_underscore}"
+second_underscore="${second_latest_python#python}"
+second_underscore="${second_underscore//./_}"
+second_dot="${second_latest_python#python}"
 
-python_site="$ROOT/usr/lib/python${python_ver}/site-packages"
+export PYTHON_TARGETS="python${second_underscore} python${latest_underscore}"
+export PYTHON_SINGLE_TARGET="python${latest_underscore}"
+
+python_site_second="$ROOT/usr/lib/python${second_dot}/site-packages"
+python_site_latest="$ROOT/usr/lib/python${latest_dot}/site-packages"
+
 if [[ -n "$PYTHONPATH" ]]; then
-    export PYTHONPATH="${python_site}:$PYTHONPATH"
+    export PYTHONPATH="${python_site_second}:${python_site_latest}:$(realpath -m $PYTHONPATH)"
 else
-    export PYTHONPATH="${python_site}"
+    export PYTHONPATH="${python_site_second}:${python_site_latest}"
 fi
+
+export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
 
 export CC="$ROOT/usr/bin/gcc"
 export CXX="$ROOT/usr/bin/g++"
