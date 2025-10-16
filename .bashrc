@@ -70,7 +70,6 @@ python_dot=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.versi
 
 export PYTHON_TARGETS="python${python_ver}"
 export PYTHON_SINGLE_TARGET="python${python_ver}"
-export PYEXEC_DIR=/usr/lib/python-exec/python${python_ver}
 python_site="/usr/lib/python${python_dot}/site-packages"
 if [[ -n "$PYTHONPATH" ]]; then
     export PYTHONPATH="${python_site}:$(realpath -m $PYTHONPATH)"
@@ -78,6 +77,28 @@ else
     export PYTHONPATH="${python_site}"
 fi
 
+PYEXEC_BASE="/usr/lib/python-exec"
+latest_python=$(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V | tail -n1)
+
+if [[ -n "$latest_python" ]]; then
+    python_ver="${latest_python#python}"           # e.g., 3.13
+    python_major="${python_ver%%.*}"              # 3
+    python_minor="${python_ver#*.}"               # 13
+    python_dot="${python_major}.${python_minor}"  # 3.13
+    python_underscore="${python_major}_${python_minor}"  # 3_13
+
+    export PYTHON_TARGETS="python${python_underscore}"
+    export PYTHON_SINGLE_TARGET="python${python_underscore}"
+
+    python_site="/usr/lib/python${python_dot}/site-packages"
+    if [[ -n "$PYTHONPATH" ]]; then
+        export PYTHONPATH="${python_site}:$PYTHONPATH"
+    else
+        export PYTHONPATH="${python_site}"
+    fi
+
+    export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
+fi
 
 export CC="/usr/bin/gcc"
 export CXX="/usr/bin/g++"
