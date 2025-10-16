@@ -515,7 +515,7 @@ EOF
 #sudo mkdir -p "$PORTAGE_PROFILE_DIR"
 #echo "/etc/portage/make.profile" | sudo tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null
 
-sudo mkdir -p /usr/share/sandbox
+sudo mkdir -p /usr/local/chard/usr/share/sandbox
 
 sudo tee /usr/local/chard/etc/sandbox.conf > /dev/null <<'EOF'
 SANDBOX_BASHRC="/usr/share/sandbox/sandbox.bashrc"
