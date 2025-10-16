@@ -162,6 +162,15 @@ esac
         fi
     done
 
+    if [[ -t 1 ]]; then
+        echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
+        echo "${CYAN}Chard Root CPU Profile:${RESET}"
+        echo "${GREEN}Cores assigned:               ${BOLD}$WEAK_CORES ${RESET}"
+        echo "${GREEN}Parallelized threads:         ${BOLD}$MAKEOPTS ${RESET}"
+        echo "${CYAN}Taskset:                      ${BOLD}$TASKSET ${RESET}"
+        echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
+    fi
+
     echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts in case of reinstall...${RESET}"
             sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
