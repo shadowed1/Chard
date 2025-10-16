@@ -19,7 +19,7 @@ esac
 
 DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
 export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
-DEFAULT_USE="X a52 aac acl acpi alsa bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds python_single_target_python_3_13 python_targets_python_3_13 qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
+DEFAULT_USE="X a52 aac acl acpi alsa bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
 export USE="${USE:-$DEFAULT_USE}"
 
 export ROOT="/"
@@ -68,28 +68,24 @@ PYEXEC_BASE="/usr/lib/python-exec"
 
 all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
 
-latest_python="${all_python_dirs[-1]}"
-second_latest_python="${all_python_dirs[-2]}"
-
-latest_underscore="${latest_python#python}"
-latest_underscore="${latest_underscore//./_}"  # e.g. 3.14 -> 3_14
-latest_dot="${latest_python#python}"           # e.g. 3.14
-
-second_underscore="${second_latest_python#python}"
-second_underscore="${second_underscore//./_}"
-second_dot="${second_latest_python#python}"
-
-export PYTHON_TARGETS="python${second_underscore} python${latest_underscore}"
-
-export PYTHON_SINGLE_TARGET="python${latest_underscore}"
-
-python_site_second="/usr/lib/python${second_dot}/site-packages"
-python_site_latest="/usr/lib/python${latest_dot}/site-packages"
-
-if [[ -n "$PYTHONPATH" ]]; then
-    export PYTHONPATH="${python_site_second}:${python_site_latest}:$(realpath -m $PYTHONPATH)"
+if [[ ${#all_python_dirs[@]} -gt 1 ]]; then
+    python_dir="${all_python_dirs[-2]}"
 else
-    export PYTHONPATH="${python_site_second}:${python_site_latest}"
+    python_dir="${all_python_dirs[-1]}"
+fi
+
+python_ver="${python_dir#python}"
+python_underscore="${python_ver//./_}"
+
+export PYEXEC_DIR="${PYEXEC_BASE}/${python_dir}"
+export PYTHON_SINGLE_TARGET="python${python_underscore}"
+export PYTHON_TARGETS="python${python_underscore}"
+
+python_site="/usr/lib/python${python_ver}/site-packages"
+if [[ -n "$PYTHONPATH" ]]; then
+    export PYTHONPATH="${python_site}:$PYTHONPATH"
+else
+    export PYTHONPATH="${python_site}"
 fi
 
 export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
