@@ -596,8 +596,8 @@ CXX="/usr/bin/g++"
 AR="/usr/bin/gcc-ar"
 RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
-DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr -sandbox -usersandbox"
-USE="X a52 aac acl acpi alsa bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
+USE="X a52 aac acl acpi alsa bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11 -network-sandbox -sandbox -usersandbox"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:$PKG_CONFIG_PATH"
@@ -988,9 +988,12 @@ sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
 
 echo "${RESET}${YELLOW}Chard Root is ready!"
 echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
+echo "${RESET}${MAGENTA}[!] Open a new shell and run:"
+echo "${RESET}${BOLD}${GREEN}chard root${RESET}"
 echo
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
-echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
+echo "${BLUE}To start compiling apps, run ${BOLD}chard root${RESET}${BLUE}${RESET}"
+echo "${RESET}${RED}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
 echo
 sudo chroot /usr/local/chard /bin/bash -c "
 
@@ -1071,14 +1074,14 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge dev-perl/Config-AutoConf
                 emerge dev-perl/Test-Fatal
                 emerge sys-apps/findutils
-                USE="-bluetooth" emerge -1 dev-lang/python
+                emerge dev-lang/python
                 emerge dev-build/meson
-                USE="-truetype" emerge -1 dev-python/pillow
-                USE="-introspection -glib" emerge -1 media-libs/harfbuzz
+                emerge dev-python/pillow
+                emerge media-libs/harfbuzz
                 emerge dev-libs/glib
                 emerge dev-util/pkgconf
-                emerge -1 dev-lang/ruby --autounmask-backtrack=y
-                emerge dev-ruby/pkg-config
+                #emerge -1 dev-lang/ruby --autounmask-backtrack=y
+                #emerge dev-ruby/pkg-config
                 emerge dev-cpp/gtest
                 emerge dev-util/gtest-parallel
                 emerge dev-util/re2c
@@ -1100,8 +1103,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge sys-auth/polkit
                 emerge sys-apps/bubblewrap
                 emerge app-portage/gentoolkit
-                emerge media-libs/freetype
-                emerge dev-python/pillow
                 emerge media-libs/harfbuzz
                 emerge x11-base/xorg-drivers
                 emerge x11-base/xorg-server
