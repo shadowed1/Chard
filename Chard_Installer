@@ -176,7 +176,6 @@ media-video/pipewire -elogind
 media-video/wireplumber -elogind
 sys-auth/polkit -elogind
 sys-apps/dbus -elogind
-dev-python/pillow -truetype
 EOF
 
 sudo tee /usr/local/chard/etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
@@ -188,7 +187,6 @@ sys-apps/dbus -elogind
 sys-libs/pam -elogind systemd
 sys-apps/shadow -elogind systemd
 sys-apps/util-linux -elogind systemd
-dev-python/pillow -truetype
 EOF
 
 echo "dev-build/cmake -gui" | sudo tee -a /usr/local/chard/etc/portage/package.use/cmake-fix
@@ -880,7 +878,6 @@ sudo chroot /usr/local/chard /bin/bash --login -c "
                 USE="-introspection -glib" emerge -1 media-libs/harfbuzz
                 emerge dev-libs/glib
                 emerge dev-util/pkgconf
-                emerge app-text/doxygen
                 emerge -1 dev-lang/ruby --autounmask-backtrack=y
                 emerge dev-ruby/pkg-config
                 emerge dev-cpp/gtest
@@ -937,6 +934,9 @@ sudo chroot /usr/local/chard /bin/bash --login -c "
                 emerge media-libs/fontconfig
                 emerge media-fonts/dejavu
                 emerge media-libs/freetype
+                emerge dev-python/pillow
+                emerge media-libs/harfbuzz
+                emerge app-text/doxygen
                 emerge x11-themes/gtk-engines
                 emerge x11-themes/gtk-engines-murrine
                 emerge sys-fs/udisks
