@@ -323,6 +323,7 @@ case "$cmd" in
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "$CHARD_ROOT/chard.preload"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+                sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc -o "$CHARD_ROOT/home/chronos/user/.bashrc"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 echo "[*] Quick reinstall complete.${RESET}"
                 ;;
