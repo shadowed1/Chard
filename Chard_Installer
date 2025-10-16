@@ -846,9 +846,8 @@ sudo chroot /usr/local/chard /bin/bash --login -c "
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-        
-            dbus-daemon --system --fork 2>/dev/null
-            
+                source /home/chronos/user/.bashrc
+                dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
                 emerge dev-build/cmake
                 emerge sys-devel/gcc
