@@ -19,7 +19,7 @@ esac
 
 DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
 export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
-DEFAULT_USE="X a52 aac acl acpi alsa bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
+DEFAULT_USE="X a52 aac acl acpi alsa bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust -truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
 export USE="${USE:-$DEFAULT_USE}"
 
 export ROOT="/"
@@ -222,6 +222,8 @@ FIRST_TIME_SETUP() {
         "emerge sys-apps/findutils"
         "emerge dev-lang/python"
         "emerge dev-build/meson"
+        "USE="-truetype" emerge dev-python/pillow"
+        "USE="-introspection -glib" emerge media-libs/harfbuzz"
         "emerge dev-libs/glib"
         "emerge dev-lang/ruby"
         "emerge dev-ruby/pkg-config"
@@ -231,7 +233,6 @@ FIRST_TIME_SETUP() {
         "emerge dev-build/ninja"
         "emerge licenses/docbook"
         "emerge app-text/docbook2X"
-        "emerge docbook"
         "emerge app-text/build-docbook-catalog"
         "emerge dev-util/gtk-doc"
         "emerge sys-libs/zlib"
@@ -319,7 +320,7 @@ FIRST_TIME_SETUP() {
 
     for cmd in "${COMMANDS[@]}"; do
         echo ""
-        echo "${RESET}${YELLOW}>>> Running:${RESET}${GREEN} ${cmd}"
+        echo "${RESET}${YELLOW}>>> Running:${RESET} ${cmd}"
         echo "------------------------------------------------------------"
         eval "$cmd" 2>&1 | tee -a "$LOGFILE"
         local status=${PIPESTATUS[0]}
