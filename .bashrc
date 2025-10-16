@@ -319,13 +319,13 @@ FIRST_TIME_SETUP() {
 
     for cmd in "${COMMANDS[@]}"; do
         echo ""
-        echo "${YELLOW}>>> Running:${RESET} ${cmd}"
+        echo "${RESET}${YELLOW}>>> Running:${RESET}${GREEN} ${cmd}"
         echo "------------------------------------------------------------"
         eval "$cmd" 2>&1 | tee -a "$LOGFILE"
         local status=${PIPESTATUS[0]}
         echo "------------------------------------------------------------"
         if (( status != 0 )); then
-            echo "${RED}!!! Command failed: ${cmd}${RESET}"
+            echo "${RESET}${RED}!!! Command failed: ${cmd}${RESET}"
             echo "See ${YELLOW}$LOGFILE${RESET} for details."
         fi
     done
