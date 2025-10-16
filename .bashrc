@@ -31,12 +31,62 @@ export PORTAGE_TMPDIR="$ROOT/var/tmp"
 export SANDBOX="$ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
 
-perl_version=$(perl -V:version | cut -d"'" -f2)
-perl_archlib=$(perl -V:archlib | cut -d"'" -f2)
-perl_sitelib=$(perl -V:sitelib | cut -d"'" -f2)
-perl_vendorlib=$(perl -V:vendorlib | cut -d"'" -f2)
+# Determine architecture
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+esac
 
-export PERL5LIB="${perl_archlib}:${perl_sitelib}:${perl_vendorlib}:${PERL5LIB}"
+ROOT="${ROOT%/}"
+export CHARD_RC="$ROOT/.chardrc"
+
+PERL_BASE="$ROOT/usr/lib/perl5"
+PERL_LIB_DIRS=()
+PERL_BIN_DIRS=()
+PERL_LIBS=()
+
+if [[ -d "$PERL_BASE" ]]; then
+    mapfile -t all_perl_versions < <(ls -1 "$PERL_BASE" 2>/dev/null | grep -E '^[0-9]+\.[0-9]+$' | sort -V)
+else
+    all_perl_versions=()
+fi
+
+for ver in "${all_perl_versions[@]}"; do
+    archlib="$PERL_BASE/$ver/$CHOST"
+    sitelib="$PERL_BASE/$ver/site_perl"
+    vendorlib="$PERL_BASE/$ver/vendor_perl"
+
+    PERL5LIB_PARTS=()
+    [[ -d "$archlib" ]] && PERL5LIB_PARTS+=("$archlib")
+    [[ -d "$sitelib" ]] && PERL5LIB_PARTS+=("$sitelib")
+    [[ -d "$vendorlib" ]] && PERL5LIB_PARTS+=("$vendorlib")
+    if [[ ${#PERL5LIB_PARTS[@]} -gt 0 ]]; then
+        PERL5LIB="$(IFS=:; echo "${PERL5LIB_PARTS[*]}")${PERL5LIB:+:$PERL5LIB}"
+    fi
+
+    CORE_LIB="$PERL_BASE/$ver/$CHOST/CORE"
+    [[ -d "$CORE_LIB" ]] && PERL_LIBS+=("$CORE_LIB")
+
+    # Optional: track perl binary dirs
+    BIN_DIR="$ROOT/usr/bin"
+    [[ -d "$BIN_DIR" ]] && PERL_BIN_DIRS+=("$BIN_DIR")
+done
+
+export PERL5LIB="$PERL5LIB"
+export PERL6LIB="$PERL6LIB"
+
+if [[ ${#PERL_LIBS[@]} -gt 0 ]]; then
+    LD_LIBRARY_PATH="$(IFS=:; echo "${PERL_LIBS[*]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
+export LD_LIBRARY_PATH
+
+if [[ ${#PERL_BIN_DIRS[@]} -gt 0 ]]; then
+    PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
+fi
+export PATH
+
 
 gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
 if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
@@ -65,6 +115,8 @@ export PKG_CONFIG="$ROOT/usr/bin/pkg-config"
 export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
 export CPPFLAGS="-I${ROOT}usr/include"
 PYEXEC_BASE="$ROOT/usr/lib/python-exec"
+PYTHON_EXEC_PREFIX="$ROOT/usr"
+PYTHON_EXECUTABLES="$PYEXEC_BASE"
 
 all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
 
