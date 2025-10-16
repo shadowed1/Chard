@@ -901,6 +901,9 @@ sudo chroot /usr/local/chard /bin/bash --login -c "
                 emerge sys-auth/polkit
                 emerge sys-apps/bubblewrap
                 emerge app-portage/gentoolkit
+                emerge media-libs/freetype
+                emerge dev-python/pillow
+                emerge media-libs/harfbuzz
                 emerge x11-base/xorg-drivers
                 emerge x11-base/xorg-server
                 emerge x11-base/xorg-apps
@@ -911,6 +914,7 @@ sudo chroot /usr/local/chard /bin/bash --login -c "
                 emerge x11-libs/libXcursor
                 emerge x11-libs/libXi
                 emerge x11-libs/libXinerama
+                emerge x11-libs/pango
                 emerge dev-libs/wayland
                 emerge dev-libs/wayland-protocols
                 emerge x11-base/xwayland
@@ -933,9 +937,6 @@ sudo chroot /usr/local/chard /bin/bash --login -c "
                 emerge app-accessibility/at-spi2-atk
                 emerge media-libs/fontconfig
                 emerge media-fonts/dejavu
-                emerge media-libs/freetype
-                emerge dev-python/pillow
-                emerge media-libs/harfbuzz
                 emerge app-text/doxygen
                 emerge x11-themes/gtk-engines
                 emerge x11-themes/gtk-engines-murrine
