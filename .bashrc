@@ -59,7 +59,6 @@ else
     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib"
 fi
 
-
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
 export MAGIC="/usr/share/misc/magic.mgc"
 export PKG_CONFIG=/usr/bin/pkg-config
@@ -81,11 +80,11 @@ PYEXEC_BASE="/usr/lib/python-exec"
 latest_python=$(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V | tail -n1)
 
 if [[ -n "$latest_python" ]]; then
-    python_ver="${latest_python#python}"           # e.g., 3.13
-    python_major="${python_ver%%.*}"              # 3
-    python_minor="${python_ver#*.}"               # 13
-    python_dot="${python_major}.${python_minor}"  # 3.13
-    python_underscore="${python_major}_${python_minor}"  # 3_13
+    python_ver="${latest_python#python}"
+    python_major="${python_ver%%.*}"
+    python_minor="${python_ver#*.}"
+    python_dot="${python_major}.${python_minor}"
+    python_underscore="${python_major}_${python_minor}"
 
     export PYTHON_TARGETS="python${python_underscore}"
     export PYTHON_SINGLE_TARGET="python${python_underscore}"
