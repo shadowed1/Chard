@@ -181,9 +181,8 @@ else
 fi
 
 if (( ${#CORES[@]} == 0 )); then
-    total=$(nproc)
-    half=$(( total / 1 ))
-    WEAK_CORES=$half
+    TOTAL_CORES=$(nproc)
+    WEAK_CORES=$(seq 0 $((TOTAL_CORES-1)) | paste -sd, -)
 else
     mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
     count=${#mhz_values[@]}
@@ -196,30 +195,28 @@ else
 
     WEAK_CORES=$(printf '%s\n' "${CORES[@]}" | \
         awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
-
-    if [[ -z "$WEAK_CORES" || "$WEAK_CORES" == "$(seq -s, 0 $(( $(nproc)-1 )))" ]]; then
-        total=$(nproc)
-        half=$(( total / 1 ))
-        WEAK_CORES=$half
-    fi
 fi
-
-export TASKSET="taskset -c $WEAK_CORES"
-
-MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
-THREADS=$((MEM_GB / 2))
-((THREADS < 1)) && THREADS=1
 
 TOTAL_CORES=$(nproc)
-ECORE_COUNT=$(echo "$WEAK_CORES" | tr ',' '\n' | wc -l)
-ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
 
-if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.5)}") )); then
-    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 3.0)}')
-fi
+MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+MEM_GB=$((MEM_KB / 1024 / 1024))
+MEM_CORE_LIMIT=$(( MEM_GB * 2 / 3 ))
+(( MEM_CORE_LIMIT < 1 )) && MEM_CORE_LIMIT=1
+(( MEM_CORE_LIMIT > TOTAL_CORES )) && MEM_CORE_LIMIT=$TOTAL_CORES
 
-export MAKEOPTS="-j$THREADS"
+IFS=',' read -r -a WEAK_ARRAY <<< "$WEAK_CORES"
+ALLOC_CORES=("${WEAK_ARRAY[@]}")
+
+for c in $(seq 0 $((TOTAL_CORES-1))); do
+    [[ " ${ALLOC_CORES[*]} " == *" $c "* ]] && continue
+    ALLOC_CORES+=("$c")
+    (( ${#ALLOC_CORES[@]} >= MEM_CORE_LIMIT )) && break
+done
+
+ALLOC_CORES_CSV=$(IFS=,; echo "${ALLOC_CORES[*]}")
+export TASKSET="taskset -c $ALLOC_CORES_CSV"
+export MAKEOPTS="-j${#ALLOC_CORES[@]}"
 
 parallel_tools=(make emerge ninja scons meson cmake)
 for tool in "${parallel_tools[@]}"; do
@@ -238,7 +235,7 @@ done
 if [[ -t 1 ]]; then
     echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
     echo "${CYAN}Chard Root CPU Profile:${RESET}"
-    echo "${GREEN}Cores assigned:               ${BOLD}$WEAK_CORES ${RESET}"
+    echo "${GREEN}Cores allocated:               ${BOLD}$ALLOC_CORES_CSV ${RESET}"
     echo "${GREEN}Parallelized threads:         ${BOLD}$MAKEOPTS ${RESET}"
     echo "${CYAN}Taskset:                      ${BOLD}$TASKSET ${RESET}"
     echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
