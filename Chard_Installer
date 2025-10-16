@@ -419,14 +419,29 @@ for pkg in "${PACKAGES[@]}"; do
 done
 
 sudo tee /usr/local/chard/bin/emerge > /dev/null <<'EOF'
-#!/bin/python
+#!/usr/bin/env python3
 import os
 import sys
 import errno
+import glob
+import tokenize
 
-EPYTHON = "/bin/python3"
+CHROOT_PYTHON = "/usr/local/chard/usr/sbin/python"
+if os.path.exists(CHROOT_PYTHON):
+    python_exec = CHROOT_PYTHON
+else:
+    python_exec = sys.executable
 
-PYEXEC_DIR = "/usr/lib/python-exec/python3.13"
+major = sys.version_info.major
+minor = sys.version_info.minor
+dotver = f"{major}.{minor}"
+
+PYEXEC_BASE = "/usr/local/chard/usr/lib/python-exec"
+if not os.path.isdir(PYEXEC_BASE):
+    PYEXEC_BASE = "/usr/lib/python-exec"  # fallback outside chroot
+
+exec_dirs = sorted(glob.glob(os.path.join(PYEXEC_BASE, "python[0-9]*.[0-9]*")))
+PYEXEC_DIR = exec_dirs[-1] if exec_dirs else os.path.join(PYEXEC_BASE, f"python{dotver}")
 
 target_name = os.path.basename(sys.argv[0])
 target_path = os.path.join(PYEXEC_DIR, target_name)
@@ -435,17 +450,15 @@ data = None
 while data is None:
     try:
         kwargs = {}
-        if sys.version_info >= (3,):
-            import tokenize
-            with open(target_path, "rb") as f:
-                kwargs["encoding"] = tokenize.detect_encoding(f.readline)[0]
+        with open(target_path, "rb") as f:
+            kwargs["encoding"] = tokenize.detect_encoding(f.readline)[0]
         with open(target_path, "r", **kwargs) as f:
             data = f.read()
     except IOError as e:
         if e.errno == errno.EINTR:
             continue
         elif e.errno == errno.ENOENT:
-            sys.stderr.write(f"{target_path}: Python implementation not supported: {EPYTHON}\n")
+            sys.stderr.write(f"{target_path}: Python implementation not supported: {python_exec}\n")
             sys.exit(127)
         else:
             raise
@@ -456,6 +469,8 @@ new_globals["__file__"] = target_path
 
 exec(data, new_globals)
 EOF
+
+chmod +x /usr/local/chard/bin/emerge
 
 sudo tee "$CHARD_ROOT/etc/portage/repos.conf/gentoo.conf" > /dev/null <<'EOF'
 [gentoo]
