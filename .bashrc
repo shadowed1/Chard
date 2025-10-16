@@ -70,7 +70,7 @@ python_dot=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.versi
 
 export PYTHON_TARGETS="python${python_ver}"
 export PYTHON_SINGLE_TARGET="python${python_ver}"
-
+export PYEXEC_DIR=/usr/lib/python-exec/python${python_ver}
 python_site="/usr/lib/python${python_dot}/site-packages"
 if [[ -n "$PYTHONPATH" ]]; then
     export PYTHONPATH="${python_site}:$(realpath -m $PYTHONPATH)"
