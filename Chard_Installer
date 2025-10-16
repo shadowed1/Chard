@@ -486,7 +486,7 @@ new_globals["__file__"] = target_path
 exec(data, new_globals)
 EOF
 
-chmod +x /usr/local/chard/bin/emerge
+sudo chmod +x /usr/local/chard/bin/emerge
 
 sudo tee "$CHARD_ROOT/etc/portage/repos.conf/gentoo.conf" > /dev/null <<'EOF'
 [gentoo]
