@@ -1300,7 +1300,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 make INSTALL_PATH=/boot install
                 emerge dev-lang/python
                 emerge dev-build/meson
-                emerge dev-python/pillow
+                USE="-truetype" emerge -1 dev-python/pillow
                 emerge media-libs/harfbuzz
                 emerge dev-libs/glib
                 emerge dev-util/pkgconf
@@ -1337,8 +1337,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge x11-libs/libXcursor
                 emerge x11-libs/libXi
                 emerge x11-libs/libXinerama
-                USE="-truetype" emerge -1 dev-python/pillow
-                emerge media-libs/harfbuzz
                 emerge x11-libs/pango
                 emerge dev-libs/wayland
                 emerge dev-libs/wayland-protocols
@@ -1400,6 +1398,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge xfce-extra/xfce4-screensaver
                 emerge xfce-base/xfce4-meta
                 emerge media-gfx/chafa
+                emerge dev-python/pillow
+                
                 cd /tmp
                 git clone https://chromium.googlesource.com/chromiumos/platform2
                 cd vm_tools/sommelier
