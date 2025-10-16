@@ -674,13 +674,80 @@ echo "${RESET}${GREEN}[+] Meson file created at $MESON_FILE for architecture $AR
 
 sudo mkdir -p /usr/local/chard/etc/X11/xorg.conf.d
 
-sudo tee /usr/local/chard/etc/X11/xorg.conf.d/20-glamor.conf > /dev/null <<'EOF'
+XORG_CONF_DIR="/usr/local/chard/etc/X11/xorg.conf.d"
+mkdir -p "$XORG_CONF_DIR"
+
+ARCH=$(uname -m)
+GPU_VENDOR=$(lspci -nnk | grep -E "VGA|Display" | head -1 | awk '{print tolower($0)}')
+
+DRIVER="modesetting"
+IDENTIFIER="Generic GPU"
+ACCEL="glamor"
+
+case "$ARCH" in
+    x86_64)
+        CHOST="x86_64-pc-linux-gnu"
+        CPU_FAMILY="x86_64"
+        ;;
+    aarch64)
+        CHOST="aarch64-unknown-linux-gnu"
+        CPU_FAMILY="arm64"
+        ;;
+    armv7*|armhf)
+        CHOST="armv7a-unknown-linux-gnueabihf"
+        CPU_FAMILY="arm"
+        ;;
+    *)
+        echo "Unknown architecture: $ARCH"
+        ;;
+esac
+
+if echo "$GPU_VENDOR" | grep -q "intel"; then
+    IDENTIFIER="Intel Graphics"
+    DRIVER="modesetting"
+    ACCEL="glamor"
+
+elif echo "$GPU_VENDOR" | grep -q "amd"; then
+    IDENTIFIER="AMD Graphics"
+    DRIVER="amdgpu"
+    ACCEL="glamor"
+
+elif echo "$GPU_VENDOR" | grep -q "nvidia"; then
+    IDENTIFIER="NVIDIA Graphics"
+    DRIVER="nvidia"
+    ACCEL=""
+
+elif echo "$GPU_VENDOR" | grep -q -E "mali|panfrost"; then
+    IDENTIFIER="ARM Mali Graphics"
+    DRIVER="panfrost"
+    ACCEL="glamor"
+
+elif echo "$GPU_VENDOR" | grep -q "adreno"; then
+    IDENTIFIER="Qualcomm Adreno Graphics"
+    DRIVER="modesetting"
+    ACCEL="glamor"
+
+else
+    IDENTIFIER="Generic GPU"
+    DRIVER="modesetting"
+    ACCEL="glamor"
+fi
+
+sudo tee "$XORG_CONF_DIR/20-glamor.conf" > /dev/null <<EOF
 Section "Device"
-    Identifier "Intel Graphics"
-    Driver "modesetting"
-    Option "AccelMethod" "glamor"
+    Identifier "$IDENTIFIER"
+    Driver "$DRIVER"
+EOF
+
+if [[ -n "$ACCEL" ]]; then
+    echo "    Option \"AccelMethod\" \"$ACCEL\"" | sudo tee -a "$XORG_CONF_DIR/20-glamor.conf" > /dev/null
+fi
+
+cat <<EOF | sudo tee -a "$XORG_CONF_DIR/20-glamor.conf" > /dev/null
 EndSection
 EOF
+
+echo "${RESET}${MAGENTA}Generated $XORG_CONF_DIR/20-glamor.conf for $IDENTIFIER ($ARCH) ${RESET}"
 
 sudo mkdir -p /usr/local/chard/run/dbus
 sudo mkdir -p /usr/local/chard/tmp/.X11-unix
