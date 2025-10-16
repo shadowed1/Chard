@@ -1097,7 +1097,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 make -j\$(nproc) tools/objtool
                 make -j\$(nproc)
                 make modules_install
-                make install
+                make INSTALL_PATH=/boot install
                 emerge dev-lang/python
                 emerge dev-build/meson
                 emerge dev-python/pillow
