@@ -995,7 +995,7 @@ echo "${CYAN}Compiling takes a long time, so please be patient if you have a slo
 echo "${BLUE}To start compiling apps, run ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${RED}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
 echo
-sudo tee /usr/local/chard/usr/src/linux/enable_bt_crypto.cfg > /dev/null <<'EOF'
+sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<'EOF'
 CONFIG_BT=y
 CONFIG_BT_RFCOMM=y
 CONFIG_BT_RFCOMM_TTY=y
@@ -1010,7 +1010,14 @@ CONFIG_CRYPTO_USER_API_AEAD=y
 CONFIG_CRYPTO_SHA1=y
 CONFIG_KEY_DH_OPERATIONS=y
 CONFIG_UHID=y
+CONFIG_FUSE=y
+CONFIG_FUSE_FS=y
+CONFIG_VIRTIO_FS=y
+CONFIG_9P_FS=y
+CONFIG_9P_FS_POSIX_ACL=y
+CONFIG_9P_FS_SECURITY=y
 EOF
+
 sudo chroot /usr/local/chard /bin/bash -c "
 
         mountpoint -q /proc    || mount -t proc proc /proc
@@ -1092,7 +1099,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge sys-apps/findutils
                 emerge dev-libs/elfutils
                 cd /usr/src/linux
-                scripts/kconfig/merge_config.sh -m .config enable_bt_crypto.cfg
+                scripts/kconfig/merge_config.sh -m .config enable_features.cfg
                 make olddefconfig
                 make -j\$(nproc) tools/objtool
                 make -j\$(nproc)
