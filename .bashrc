@@ -31,7 +31,6 @@ export PORTAGE_TMPDIR="$ROOT/var/tmp"
 export SANDBOX="$ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
 
-# Determine architecture
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
@@ -86,7 +85,6 @@ if [[ ${#PERL_BIN_DIRS[@]} -gt 0 ]]; then
     PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
 fi
 export PATH
-
 
 gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
 if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
