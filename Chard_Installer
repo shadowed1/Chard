@@ -1121,4 +1121,4 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 umount /sys
                 umount /proc
             "
-            echo "${RESET}Done."
+            show_progress
