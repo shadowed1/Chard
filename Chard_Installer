@@ -425,7 +425,6 @@ import sys
 import errno
 import glob
 import tokenize
-import re
 
 CHROOT_PYTHON = "/usr/local/chard/usr/sbin/python"
 if os.path.exists(CHROOT_PYTHON):
@@ -439,40 +438,29 @@ dotver = f"{major}.{minor}"
 
 PYEXEC_BASE = "/usr/local/chard/usr/lib/python-exec"
 if not os.path.isdir(PYEXEC_BASE):
-    PYEXEC_BASE = "/usr/lib/python-exec"  # fallback
+    PYEXEC_BASE = "/usr/lib/python-exec"
 
 exec_dirs = sorted(glob.glob(os.path.join(PYEXEC_BASE, "python[0-9]*.[0-9]*")))
 if not exec_dirs:
     exec_dirs = [os.path.join(PYEXEC_BASE, f"python{dotver}")]
 
-latest_python = exec_dirs[-1]
-second_python = exec_dirs[-2] if len(exec_dirs) > 1 else exec_dirs[-1]
+python_dir = exec_dirs[-2] if len(exec_dirs) > 1 else exec_dirs[-1]
 
-def underscore(ver):
-    return ver.replace(".", "_").replace("python", "")
+python_ver = python_dir.split('/')[-1].replace("python", "")
+python_underscore = python_ver.replace(".", "_")
 
-latest_underscore = underscore(latest_python.split("/")[-1])
-second_underscore = underscore(second_python.split("/")[-1])
+os.environ["PYEXEC_DIR"] = python_dir
+os.environ["PYTHON_SINGLE_TARGET"] = f"python{python_underscore}"
+os.environ["PYTHON_TARGETS"] = f"python{python_underscore}"
 
-os.environ["PYTHON_TARGETS"] = f"python{second_underscore} python{latest_underscore}"
-os.environ["PYTHON_SINGLE_TARGET"] = f"python{latest_underscore}"
-
-latest_dot = latest_python.split("/")[-1].replace("python", "")
-second_dot = second_python.split("/")[-1].replace("python", "")
-
-python_site_second = f"/usr/lib/python{second_dot}/site-packages"
-python_site_latest = f"/usr/lib/python{latest_dot}/site-packages"
-
+python_site = f"/usr/lib/python{python_ver}/site-packages"
 if os.environ.get("PYTHONPATH"):
-    os.environ["PYTHONPATH"] = f"{python_site_second}:{python_site_latest}:{os.environ['PYTHONPATH']}"
+    os.environ["PYTHONPATH"] = f"{python_site}:{os.environ['PYTHONPATH']}"
 else:
-    os.environ["PYTHONPATH"] = f"{python_site_second}:{python_site_latest}"
-
-PYEXEC_DIR = latest_python
-os.environ["PYEXEC_DIR"] = PYEXEC_DIR
+    os.environ["PYTHONPATH"] = python_site
 
 target_name = os.path.basename(sys.argv[0])
-target_path = os.path.join(PYEXEC_DIR, target_name)
+target_path = os.path.join(python_dir, target_name)
 
 data = None
 while data is None:
