@@ -37,15 +37,6 @@ chard_run() {
         return 1
     fi
 
-    RED=$(tput setaf 1)
-    GREEN=$(tput setaf 2)
-    YELLOW=$(tput setaf 3)
-    BLUE=$(tput setaf 4)
-    MAGENTA=$(tput setaf 5)    
-    CYAN=$(tput setaf 6)
-    BOLD=$(tput bold)
-    RESET=$(tput sgr0)
-    
     ARCH=$(uname -m)
     case "$ARCH" in
         x86_64) CHOST=x86_64-pc-linux-gnu ;;
@@ -74,9 +65,6 @@ chard_run() {
         aarch64) CHOST=aarch64-unknown-linux-gnu ;;
         *) echo "Unknown architecture: $ARCH"; exit 1 ;;
     esac
-    
-    ROOT="${ROOT%/}"
-    export CHARD_RC="$CHARD_ROOT/.chardrc"
     
     PERL_BASE="$CHARD_ROOT/usr/lib/perl5"
     PERL_LIB_DIRS=()
@@ -115,12 +103,10 @@ chard_run() {
     if [[ ${#PERL_LIBS[@]} -gt 0 ]]; then
         LD_LIBRARY_PATH="$(IFS=:; echo "${PERL_LIBS[*]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     fi
-    export LD_LIBRARY_PATH
     
     if [[ ${#PERL_BIN_DIRS[@]} -gt 0 ]]; then
         PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
     fi
-    export PATH
     
     gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
     if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
@@ -128,9 +114,9 @@ chard_run() {
         gcc_lib_path="$CHARD_ROOT/usr/lib/gcc/$CHOST/$gcc_version"
     
         if [[ -d "$gcc_bin_path" ]]; then
-            export PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$gcc_bin_path"
+            export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$gcc_bin_path"
         else
-            export PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+            export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
         fi
     
         if [[ -d "$gcc_lib_path" ]]; then
@@ -139,7 +125,7 @@ chard_run() {
             export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
         fi
     else
-        export PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+        export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
     fi
     
@@ -147,7 +133,7 @@ chard_run() {
     export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
     export PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
     export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
-    export CPPFLAGS="-I${ROOT}usr/include"
+    export CPPFLAGS="-I${CHARD_ROOT}usr/include"
     PYEXEC_BASE="$CHARD_ROOT/usr/lib/python-exec"
     PYTHON_EXEC_PREFIX="$CHARD_ROOT/usr"
     PYTHON_EXECUTABLES="$PYEXEC_BASE"
@@ -192,9 +178,9 @@ chard_run() {
     export STRIP="$CHARD_ROOT/usr/bin/strip"
     export XDG_DATA_DIRS="$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/share"
     export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
-    export CFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CFLAGS"
-    export CXXFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CXXFLAGS"
-    export LDFLAGS="-L${ROOT}usr/lib -L${ROOT}lib -L${ROOT}usr/local/lib $LDFLAGS"
+    export CFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CFLAGS"
+    export CXXFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CXXFLAGS"
+    export LDFLAGS="-L${CHARD_ROOT}usr/lib -L${CHARD_ROOT}lib -L${CHARD_ROOT}usr/local/lib $LDFLAGS"
     export LD="$CHARD_ROOT/usr/bin/ld"
     export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal:$ACLOCAL_PATH"
     export M4PATH="$CHARD_ROOT/usr/share/m4:$M4PATH"
