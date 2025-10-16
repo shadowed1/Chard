@@ -154,7 +154,13 @@ export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/share"
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
 export CFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CFLAGS"
 export CXXFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CXXFLAGS"
-export LDFLAGS="-L${ROOT}usr/lib -L${ROOT}lib -L${ROOT}usr/local/lib $LDFLAGS"
+
+LDFLAGS=""
+[[ -d /usr/lib ]] && LDFLAGS+="-L/usr/lib "
+[[ -d /lib ]] && LDFLAGS+="-L/lib "
+[[ -d /usr/local/lib ]] && LDFLAGS+="-L/usr/local/lib "
+export LDFLAGS
+
 export LD="$ROOT/usr/bin/ld"
 export ACLOCAL_PATH="$ROOT/usr/share/aclocal:$ACLOCAL_PATH"
 export M4PATH="$ROOT/usr/share/m4:$M4PATH"
