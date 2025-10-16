@@ -1166,4 +1166,5 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 umount /dev
                 umount /sys
                 umount /proc
-            
+            "
+            echo "${RESET}Done."
