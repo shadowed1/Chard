@@ -176,7 +176,6 @@ media-video/pipewire -elogind
 media-video/wireplumber -elogind
 sys-auth/polkit -elogind
 sys-apps/dbus -elogind
-dev-python/pillow -truetype
 EOF
 
 sudo tee /usr/local/chard/etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
@@ -188,10 +187,8 @@ sys-apps/dbus -elogind
 sys-libs/pam -elogind systemd
 sys-apps/shadow -elogind systemd
 sys-apps/util-linux -elogind systemd
-dev-python/pillow -truetype
 EOF
 
-echo "dev-build/cmake -gui" | sudo tee -a /usr/local/chard/etc/portage/package.use/cmake-fix
 echo "sys-auth/polkit systemd -elogind" | sudo tee -a /usr/local/chard/etc/portage/package.use/polkit
 
 
@@ -367,7 +364,8 @@ sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
 
 cleanup_chroot() {
-    echo "${RED}[+] Cleaning up Chard mounts${RESET}"
+    echo "${GREEN}[+] Chard Root is ready! ${RESET}"
+    echo "${RED}Open a new shell and run: ${BOLD}chard root${RESET}${RED} to continue setup.${RESET}"
     sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
@@ -421,14 +419,29 @@ for pkg in "${PACKAGES[@]}"; do
 done
 
 sudo tee /usr/local/chard/bin/emerge > /dev/null <<'EOF'
-#!/bin/python
+#!/usr/bin/env python3
 import os
 import sys
 import errno
+import glob
+import tokenize
 
-EPYTHON = "/bin/python3"
+CHROOT_PYTHON = "/usr/local/chard/usr/sbin/python"
+if os.path.exists(CHROOT_PYTHON):
+    python_exec = CHROOT_PYTHON
+else:
+    python_exec = sys.executable
 
-PYEXEC_DIR = "/usr/lib/python-exec/python3.13"
+major = sys.version_info.major
+minor = sys.version_info.minor
+dotver = f"{major}.{minor}"
+
+PYEXEC_BASE = "/usr/local/chard/usr/lib/python-exec"
+if not os.path.isdir(PYEXEC_BASE):
+    PYEXEC_BASE = "/usr/lib/python-exec"  # fallback outside chroot
+
+exec_dirs = sorted(glob.glob(os.path.join(PYEXEC_BASE, "python[0-9]*.[0-9]*")))
+PYEXEC_DIR = exec_dirs[-1] if exec_dirs else os.path.join(PYEXEC_BASE, f"python{dotver}")
 
 target_name = os.path.basename(sys.argv[0])
 target_path = os.path.join(PYEXEC_DIR, target_name)
@@ -437,17 +450,15 @@ data = None
 while data is None:
     try:
         kwargs = {}
-        if sys.version_info >= (3,):
-            import tokenize
-            with open(target_path, "rb") as f:
-                kwargs["encoding"] = tokenize.detect_encoding(f.readline)[0]
+        with open(target_path, "rb") as f:
+            kwargs["encoding"] = tokenize.detect_encoding(f.readline)[0]
         with open(target_path, "r", **kwargs) as f:
             data = f.read()
     except IOError as e:
         if e.errno == errno.EINTR:
             continue
         elif e.errno == errno.ENOENT:
-            sys.stderr.write(f"{target_path}: Python implementation not supported: {EPYTHON}\n")
+            sys.stderr.write(f"{target_path}: Python implementation not supported: {python_exec}\n")
             sys.exit(127)
         else:
             raise
@@ -458,6 +469,8 @@ new_globals["__file__"] = target_path
 
 exec(data, new_globals)
 EOF
+
+chmod +x /usr/local/chard/bin/emerge
 
 sudo tee "$CHARD_ROOT/etc/portage/repos.conf/gentoo.conf" > /dev/null <<'EOF'
 [gentoo]
@@ -514,7 +527,7 @@ EOF
 #sudo mkdir -p "$PORTAGE_PROFILE_DIR"
 #echo "/etc/portage/make.profile" | sudo tee "$PORTAGE_PROFILE_DIR/parent" > /dev/null
 
-sudo mkdir -p /usr/share/sandbox
+sudo mkdir -p /usr/local/chard/usr/share/sandbox
 
 sudo tee /usr/local/chard/etc/sandbox.conf > /dev/null <<'EOF'
 SANDBOX_BASHRC="/usr/share/sandbox/sandbox.bashrc"
@@ -747,6 +760,8 @@ fi
 cat <<EOF | sudo tee -a "$XORG_CONF_DIR/20-glamor.conf" > /dev/null
 EndSection
 EOF
+
+echo "${RESET}${MAGENTA}Generated $XORG_CONF_DIR/20-glamor.conf for $IDENTIFIER ($ARCH) ${RESET}"
 
 sudo mkdir -p /usr/local/chard/run/dbus
 sudo mkdir -p /usr/local/chard/tmp/.X11-unix
@@ -1088,4 +1103,3 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 umount /proc
             "
             echo "${RESET}Done."
-            show_progress
