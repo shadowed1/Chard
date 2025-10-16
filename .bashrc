@@ -22,8 +22,7 @@ export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
 DEFAULT_USE="X a52 aac acl acpi alsa bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
 export USE="${USE:-$DEFAULT_USE}"
 
-ROOT="${ROOT%/}"
-export CHARD_RC="$ROOT/.chardrc"
+ export CHARD_RC="$ROOT/.chardrc"
 export PORTDIR="$ROOT/usr/portage"
 export DISTDIR="$ROOT/var/cache/distfiles"
 export PKGDIR="$ROOT/var/cache/packages"
@@ -37,9 +36,6 @@ case "$ARCH" in
     aarch64) CHOST=aarch64-unknown-linux-gnu ;;
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
-
-ROOT="/usr/local/chard"
-export CHARD_RC="$ROOT/.chardrc"
 
 PERL_BASE="$ROOT/usr/lib/perl5"
 PERL_LIB_DIRS=()
