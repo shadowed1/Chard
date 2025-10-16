@@ -853,7 +853,6 @@ sudo mkdir -p /usr/local/chard/tmp/.X11-unix
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
 
-sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${YELLOW}make.conf successfully updated for Chard. ${RESET}"
 echo "${RESET}${BLUE}Setting up Emerge!"
@@ -1195,3 +1194,11 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 umount /proc
             "
             show_progress
+            echo "${GREEN}[+] Chard Root is ready! ${RESET}"
+            echo "${RED}Open a new shell and run: ${BOLD}chard root${RESET}${RED} to continue setup.${RESET}"
+            sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
+            sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
