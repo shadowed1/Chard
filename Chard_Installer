@@ -1350,7 +1350,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge media-libs/mesa
                 emerge x11-apps/mesa-progs
                 emerge --autounmask-write media-sound/pulseaudio-daemon
-                etc-update --automode -3
+                etc-update --automode -5
                 emerge media-sound/pulseaudio-daemon
                 emerge media-sound/pulseaudio-ctl
                 emerge dev-qt/qtbase
