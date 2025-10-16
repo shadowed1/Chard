@@ -37,33 +37,188 @@ chard_run() {
         return 1
     fi
 
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        x86_64) CHOST=x86_64-pc-linux-gnu ;;
+        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+        *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    esac
+    
     DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
     export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
-    DEFAULT_USE="X a52 aac acl acpi alsa amd64 bindist bluetooth branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13"
+    
+    DEFAULT_USE="X a52 aac acl acpi alsa bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
     export USE="${USE:-$DEFAULT_USE}"
-    export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
-    export HOME="$CHARD_ROOT/home/chronos/user"
-    export PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH" \
-    export PYTHON_TARGETS="python3_13"
-    export PYTHON_SINGLE_TARGET="python3_13"
-    export CFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include -I$CHARD_ROOT/usr/include/duktape $CFLAGS"
-    export CXXFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include -I$CHARD_ROOT/usr/include/duktape $CXXFLAGS"
-    export ROOT="$CHARD_ROOT"
+    
+    export CHARD_ROOT="/"
+    export CHARD_RC="$CHARD_ROOT/.chardrc"
+    export PORTDIR="$CHARD_ROOT/usr/portage"
     export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
     export PKGDIR="$CHARD_ROOT/var/cache/packages"
-    export PATH="$CHARD_ROOT/bin:$CHARD_ROOT/usr/bin:$HOME/.cargo/bin:$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:$CHARD_ROOT/usr/lib/python-exec:$PATH"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib"
+    export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
     export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
-    export GIT_TEMPLATE_DIR=$CHARD_ROOT/usr/share/git-core/templates
-    export CPPFLAGS="-I$CHARD_ROOT/usr/include"
-
+    export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
+    
+    perl_version=$(perl -V:version | cut -d"'" -f2)
+    perl_archlib=$(perl -V:archlib | cut -d"'" -f2)
+    perl_sitelib=$(perl -V:sitelib | cut -d"'" -f2)
+    perl_vendorlib=$(perl -V:vendorlib | cut -d"'" -f2)
+    
+    export PERL5LIB="${perl_archlib}:${perl_sitelib}:${perl_vendorlib}:${PERL5LIB}"
+    
+    gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
+    if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
+        gcc_bin_path="$CHARD_ROOT/usr/$CHOST/gcc-bin/${gcc_version}"
+        gcc_lib_path="$CHARD_ROOT/usr/lib/gcc/$CHOST/$gcc_version"
+    
+        if [[ -d "$gcc_bin_path" ]]; then
+            export PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$gcc_bin_path"
+        else
+            export PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+        fi
+    
+        if [[ -d "$gcc_lib_path" ]]; then
+            export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$gcc_lib_path:$gcc_bin_path"
+        else
+            export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+        fi
+    else
+        export PATH="$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
+    fi
+    
+    export PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/usr/lib64/pkgconfig:$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/usr/local/lib/pkgconfig:$CHARD_ROOT/usr/local/share/pkgconfig"
+    export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
+    export PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
+    export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
+    export CPPFLAGS="-I${ROOT}usr/include"
+    PYEXEC_BASE="$CHARD_ROOT/usr/lib/python-exec"
+    
+    all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
+    
+    if [[ ${#all_python_dirs[@]} -gt 1 ]]; then
+        python_dir="${all_python_dirs[-2]}"
+    else
+        python_dir="${all_python_dirs[-1]}"
+    fi
+    
+    python_ver="${python_dir#python}"
+    python_underscore="${python_ver//./_}"
+    
+    export PYEXEC_DIR="${PYEXEC_BASE}/${python_dir}"
+    export PYTHON_SINGLE_TARGET="python${python_underscore}"
+    export PYTHON_TARGETS="python${python_underscore}"
+    
+    python_site="$CHARD_ROOT/usr/lib/python${python_ver}/site-packages"
+    if [[ -n "$PYTHONPATH" ]]; then
+        export PYTHONPATH="${python_site}:$PYTHONPATH"
+    else
+        export PYTHONPATH="${python_site}"
+    fi
+    
+    export CC="$CHARD_ROOT/usr/bin/gcc"
+    export CXX="$CHARD_ROOT/usr/bin/g++"
+    export AR="$CHARD_ROOT/usr/bin/ar"
+    export NM="$CHARD_ROOT/usr/bin/gcc-nm"
+    export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
+    export STRIP="$CHARD_ROOT/usr/bin/strip"
+    export XDG_DATA_DIRS="$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/share"
+    export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
+    export CFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CFLAGS"
+    export CXXFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CXXFLAGS"
+    export LDFLAGS="-L${ROOT}usr/lib -L${ROOT}lib -L${ROOT}usr/local/lib $LDFLAGS"
+    export LD="$CHARD_ROOT/usr/bin/ld"
+    export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal:$ACLOCAL_PATH"
+    export M4PATH="$CHARD_ROOT/usr/share/m4:$M4PATH"
+    export MANPATH="$CHARD_ROOT/usr/share/man:$CHARD_ROOT/usr/local/share/man:$MANPATH"
+    export DISPLAY=":0"
+    export GDK_BACKEND="x11"
+    export CLUTTER_BACKEND="x11"
+    export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
+    
+    if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
+        mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
+            awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
+    else
+        mapfile -t CORES < <(awk -v c=-1 '
+            /^processor/ {c=$3}
+            /cpu MHz/ && c>=0 {print c ":" $4; c=-1}
+        ' /proc/cpuinfo | sort -t: -k2,2n)
+    fi
+    
+    if (( ${#CORES[@]} == 0 )); then
+        total=$(nproc)
+        half=$(( total / 1 ))
+        WEAK_CORES=$half
+    else
+        mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
+        count=${#mhz_values[@]}
+        mid=$((count / 2))
+        if (( count % 2 == 0 )); then
+            threshold=$(awk "BEGIN {print (${mhz_values[mid-1]} + ${mhz_values[mid]}) / 2}")
+        else
+            threshold="${mhz_values[mid]}"
+        fi
+    
+        WEAK_CORES=$(printf '%s\n' "${CORES[@]}" | \
+            awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
+    
+        if [[ -z "$WEAK_CORES" || "$WEAK_CORES" == "$(seq -s, 0 $(( $(nproc)-1 )))" ]]; then
+            total=$(nproc)
+            half=$(( total / 1 ))
+            WEAK_CORES=$half
+        fi
+    fi
+    
+    export TASKSET="taskset -c $WEAK_CORES"
+    
+    MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+    MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
+    THREADS=$((MEM_GB / 2))
+    ((THREADS < 1)) && THREADS=1
+    
+    TOTAL_CORES=$(nproc)
+    ECORE_COUNT=$(echo "$WEAK_CORES" | tr ',' '\n' | wc -l)
+    ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
+    
+    if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.65)}") )); then
+        THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 3.0)}')
+    fi
+    
+    export MAKEOPTS="-j$THREADS"
+    
+    parallel_tools=(make emerge ninja scons meson cmake)
+    for tool in "${parallel_tools[@]}"; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            alias "$tool"="$TASKSET $tool $MAKEOPTS"
+        fi
+    done
+    
+    serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build)
+    for tool in "${serial_tools[@]}"; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            alias "$tool"="$TASKSET $tool"
+        fi
+    done
+    
+    if [[ -t 1 ]]; then
+        echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
+        echo "${CYAN}Chard Root CPU Profile:${RESET}"
+        echo "${GREEN}Cores assigned:               ${BOLD}$WEAK_CORES ${RESET}"
+        echo "${GREEN}Parallelized threads:         ${BOLD}$MAKEOPTS ${RESET}"
+        echo "${CYAN}Taskset:                      ${BOLD}$TASKSET ${RESET}"
+        echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
+    fi
+    
+    
 
     export LD_PRELOAD="$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0 \
     $CHARD_ROOT/usr/lib64/libb2.so.1 \
     $CHARD_ROOT/usr/lib64/libcrypto.so.3 \
     $CHARD_ROOT/usr/lib64/libsystemd.so.0 \
     $CHARD_ROOT/usr/lib64/libassuan.so.9 \
-    $CHARD_ROOT/usr/lib64/libffi.so.8"
+    $CHARD_ROOT/usr/lib64/libffi.so.8 \
+    $CHARD_ROOT/usr/lib64/libperl.so.5.40"
 
 
     echo "[*] Running '$*' inside Chard environment..."
