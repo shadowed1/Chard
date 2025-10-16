@@ -1072,7 +1072,7 @@ echo "${RESET}${BOLD}${GREEN}chard root${RESET}"
 echo
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps, run ${BOLD}chard root${RESET}${BLUE}${RESET}"
-echo "${RESET}${RED}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
+echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
 echo
 
 ARCH=$(uname -m)
