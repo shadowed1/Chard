@@ -189,7 +189,6 @@ sys-apps/shadow -elogind systemd
 sys-apps/util-linux -elogind systemd
 EOF
 
-echo "dev-build/cmake -gui" | sudo tee -a /usr/local/chard/etc/portage/package.use/cmake-fix
 echo "sys-auth/polkit systemd -elogind" | sudo tee -a /usr/local/chard/etc/portage/package.use/polkit
 
 
@@ -1054,6 +1053,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge x11-libs/libSM
                 emerge x11-libs/libICE
                 emerge x11-libs/libwnck
+                emerge cmake
                 emerge app-admin/exo
                 emerge app-arch/tar
                 emerge app-arch/xz-utils
