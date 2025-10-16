@@ -317,6 +317,7 @@ case "$cmd" in
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc -o "$CHARD_ROOT/home/chronos/user/.bashrc"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
+                sleep 1
                 echo "[*] Quick reinstall complete.${RESET}"
                 ;;
             2)
