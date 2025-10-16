@@ -1,4 +1,3 @@
-
 # CHARD .BASHRC
 
 RED=$(tput setaf 1)
@@ -19,17 +18,18 @@ esac
 
 DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
 export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
+
 DEFAULT_USE="X a52 aac acl acpi alsa bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
 export USE="${USE:-$DEFAULT_USE}"
 
 export ROOT="/"
-export CHARD_RC="/.chardrc"
-export PORTDIR="/usr/portage"
-export DISTDIR="/var/cache/distfiles"
-export PKGDIR="/var/cache/packages"
-export PORTAGE_TMPDIR="/var/tmp"
-export SANDBOX="/usr/bin/sandbox"
-export GIT_EXEC_PATH="/usr/libexec/git-core"
+export CHARD_RC="$ROOT/.chardrc"
+export PORTDIR="$ROOT/usr/portage"
+export DISTDIR="$ROOT/var/cache/distfiles"
+export PKGDIR="$ROOT/var/cache/packages"
+export PORTAGE_TMPDIR="$ROOT/var/tmp"
+export SANDBOX="$ROOT/usr/bin/sandbox"
+export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
 
 perl_version=$(perl -V:version | cut -d"'" -f2)
 perl_archlib=$(perl -V:archlib | cut -d"'" -f2)
@@ -40,31 +40,31 @@ export PERL5LIB="${perl_archlib}:${perl_sitelib}:${perl_vendorlib}:${PERL5LIB}"
 
 gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
 if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
-    gcc_bin_path="/usr/$CHOST/gcc-bin/${gcc_version}"
-    gcc_lib_path="/usr/lib/gcc/$CHOST/$gcc_version"
+    gcc_bin_path="$ROOT/usr/$CHOST/gcc-bin/${gcc_version}"
+    gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/$gcc_version"
 
     if [[ -d "$gcc_bin_path" ]]; then
-        export PATH="$PATH:/usr/bin:/bin:$gcc_bin_path"
+        export PATH="$PATH:$ROOT/usr/bin:$ROOT/bin:$gcc_bin_path"
     else
-        export PATH="$PATH:/usr/bin:/bin"
+        export PATH="$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
     fi
 
     if [[ -d "$gcc_lib_path" ]]; then
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib:$gcc_lib_path:$gcc_bin_path"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$ROOT/usr/lib:$ROOT/lib:$gcc_lib_path:$gcc_bin_path"
     else
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$ROOT/usr/lib:$ROOT/lib:$ROOT/usr/lib/gcc/$CHOST/14:$ROOT/usr/$CHOST/gcc-bin/14"
     fi
 else
-    export PATH="$PATH:/usr/bin:/bin"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:/usr/lib:/lib"
+    export PATH="$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$ROOT/usr/lib:$ROOT/lib:$ROOT/usr/lib/gcc/$CHOST/14:$ROOT/usr/$CHOST/gcc-bin/14"
 fi
 
-export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
-export MAGIC="/usr/share/misc/magic.mgc"
-export PKG_CONFIG=/usr/bin/pkg-config
-export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
-export CPPFLAGS="-I/usr/include"
-PYEXEC_BASE="/usr/lib/python-exec"
+export PKG_CONFIG_PATH="$ROOT/usr/lib/pkgconfig:$ROOT/usr/lib64/pkgconfig:$ROOT/usr/lib/pkgconfig:$ROOT/usr/local/lib/pkgconfig:$ROOT/usr/local/share/pkgconfig"
+export MAGIC="$ROOT/usr/share/misc/magic.mgc"
+export PKG_CONFIG="$ROOT/usr/bin/pkg-config"
+export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
+export CPPFLAGS="-I${ROOT}usr/include"
+PYEXEC_BASE="$ROOT/usr/lib/python-exec"
 
 all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
 
@@ -81,33 +81,28 @@ export PYEXEC_DIR="${PYEXEC_BASE}/${python_dir}"
 export PYTHON_SINGLE_TARGET="python${python_underscore}"
 export PYTHON_TARGETS="python${python_underscore}"
 
-python_site="/usr/lib/python${python_ver}/site-packages"
+python_site="$ROOT/usr/lib/python${python_ver}/site-packages"
 if [[ -n "$PYTHONPATH" ]]; then
     export PYTHONPATH="${python_site}:$PYTHONPATH"
 else
     export PYTHONPATH="${python_site}"
 fi
 
-export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
-
-
-export CC="/usr/bin/gcc"
-export CXX="/usr/bin/g++"
-export AR="/usr/bin/ar"
-export NM="/usr/bin/gcc-nm"
-export RANLIB="/usr/bin/gcc-ranlib"
-export STRIP="/usr/bin/strip"
-export XDG_DATA_DIRS="/usr/share:/usr/share"
-
+export CC="$ROOT/usr/bin/gcc"
+export CXX="$ROOT/usr/bin/g++"
+export AR="$ROOT/usr/bin/ar"
+export NM="$ROOT/usr/bin/gcc-nm"
+export RANLIB="$ROOT/usr/bin/gcc-ranlib"
+export STRIP="$ROOT/usr/bin/strip"
+export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/share"
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
-
-export CFLAGS="-O2 -pipe -I/usr/include -I/include $CFLAGS"
-export CXXFLAGS="-O2 -pipe -I/usr/include -I/include $CXXFLAGS"
-export LDFLAGS="-L/usr/lib -L/lib $LDFLAGS"
-export LD="/usr/bin/ld"
-export ACLOCAL_PATH="/usr/share/aclocal:$ACLOCAL_PATH"
-export M4PATH="/usr/share/m4:$M4PATH"
-export MANPATH="/usr/share/man:$MANPATH"
+export CFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CFLAGS"
+export CXXFLAGS="-O2 -pipe -I${ROOT}usr/include -I${ROOT}include $CXXFLAGS"
+export LDFLAGS="-L${ROOT}usr/lib -L${ROOT}lib -L${ROOT}usr/local/lib $LDFLAGS"
+export LD="$ROOT/usr/bin/ld"
+export ACLOCAL_PATH="$ROOT/usr/share/aclocal:$ACLOCAL_PATH"
+export M4PATH="$ROOT/usr/share/m4:$M4PATH"
+export MANPATH="$ROOT/usr/share/man:$ROOT/usr/local/share/man:$MANPATH"
 export DISPLAY=":0"
 export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
@@ -163,7 +158,6 @@ if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.65)}") )); then
 fi
 
 export MAKEOPTS="-j$THREADS"
-
 
 parallel_tools=(make emerge ninja scons meson cmake)
 for tool in "${parallel_tools[@]}"; do
