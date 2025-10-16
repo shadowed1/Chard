@@ -129,8 +129,8 @@ else
 
     if [[ -z "$WEAK_CORES" || "$WEAK_CORES" == "$(seq -s, 0 $(( $(nproc)-1 )))" ]]; then
         total=$(nproc)
-        half=$(( total / 2 ))
-        WEAK_CORES=$(seq 0 $((half - 1)) | paste -sd, -)
+        half=$(( total / 1 ))
+        WEAK_CORES=$half
     fi
 fi
 
