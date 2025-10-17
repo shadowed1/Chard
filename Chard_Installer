@@ -1444,6 +1444,78 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 source /home/chronos/user/.bashrc
+
+
+                if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
+                    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && \$2 ~ /^[0-9.]+\$/ {print \$1\":\"\$2}' | sort -t: -k2,2n)
+                else
+                    mapfile -t CORES < <(awk -v c=-1 '/^processor/ {c=\$3} /cpu MHz/ && c>=0 {print c\":\"\$4; c=-1}' /proc/cpuinfo | sort -t: -k2,2n)
+                fi
+                
+                if (( \${#CORES[@]} == 0 )); then
+                    total=\$(nproc)
+                    half=\$(( total / 1 ))
+                    WEAK_CORES=\$half
+                else
+                    mhz_values=(\$(printf '%s\n' \"\${CORES[@]}\" | cut -d: -f2 | sort -n))
+                    count=\${#mhz_values[@]}
+                    mid=\$((count / 2))
+                    if (( count % 2 == 0 )); then
+                        threshold=\$(awk 'BEGIN {print ('\${mhz_values[mid-1]}' + '\${mhz_values[mid]}') / 2}')
+                    else
+                        threshold=\"\${mhz_values[mid]}\"
+                    fi
+                
+                    WEAK_CORES=\$(printf '%s\n' \"\${CORES[@]}\" | awk -v t=\"\$threshold\" -F: '{if (\$2 <= t) print \$1}' | paste -sd, -)
+                
+                    if [[ -z \"\$WEAK_CORES\" || \"\$WEAK_CORES\" == \"\$(seq -s, 0 \$(( \$(nproc)-1 )))\" ]]; then
+                        total=\$(nproc)
+                        half=\$(( total / 1 ))
+                        WEAK_CORES=\$half
+                    fi
+                fi
+                
+                export TASKSET=\"taskset -c \$WEAK_CORES\"
+                
+                MEM_KB=\$(awk '/MemTotal/ {print \$2}' /proc/meminfo)
+                MEM_GB=\$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
+                THREADS=\$((MEM_GB / 2))
+                ((THREADS < 1)) && THREADS=1
+                
+                TOTAL_CORES=\$(nproc)
+                ECORE_COUNT=\$(echo \"\$WEAK_CORES\" | tr ',' '\n' | wc -l)
+                ECORE_RATIO=\$(awk 'BEGIN {print '\$ECORE_COUNT' / '\$TOTAL_CORES'}')
+                
+                if (( \$(awk 'BEGIN {print (\$ECORE_RATIO >= 0.65)}') )); then
+                    THREADS=\$(awk -v t=\"\$THREADS\" 'BEGIN {printf(\"%d\", t * 2.0)}')
+                fi
+                
+                export MAKEOPTS=\"-j\$THREADS\"
+                
+                parallel_tools=(make emerge ninja scons meson cmake)
+                for tool in \"\${parallel_tools[@]}\"; do
+                    if command -v \"\$tool\" >/dev/null 2>&1; then
+                        alias \"\$tool\"=\"\$TASKSET \$tool \$MAKEOPTS\"
+                    fi
+                done
+                
+                serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build)
+                for tool in \"\${serial_tools[@]}\"; do
+                    if command -v \"\$tool\" >/dev/null 2>&1; then
+                        alias \"\$tool\"=\"\$TASKSET \$tool\"
+                    fi
+                done
+                
+                if [[ -t 1 ]]; then
+                    echo \"${MAGENTA}}────────────────────────────────────────────────────────\"
+                    echo \"Chard Root CPU Profile:\"
+                    echo \"Cores assigned:               \$WEAK_CORES\"
+                    echo \"Parallelized threads:         \$MAKEOPTS\"
+                    echo \"Taskset:                      \$TASKSET\"
+                    echo \"────────────────────────────────────────────────────────${RESET}\"
+                fi
+
+
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
                 USE="-gui" emerge -1 dev-build/cmake
@@ -1617,3 +1689,4 @@ sudo chroot /usr/local/chard /bin/bash -c "
             #app-accessibility/at-spi2-atk
             #xfce-extra/xfce4-screensaver
             #sys-apps/xdg-dbus-proxy
+
