@@ -156,9 +156,12 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc -
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
 
-# <<< CHARD ENV MARKER <<<
-source "$CHARD_RC"
-# <<< END CHARD ENV MARKER <<<
+# <<< CHARD ENV MARKER >>>
+if [[ -f "/usr/local/chard/.chardrc" ]]; then
+    source "/usr/local/chard/.chardrc"
+fi
+# <<< END CHARD ENV MARKER >>>
+
 EOF
     echo "${GREEN}[+] Chard sourced to ~/.bashrc ${RESET}${YELLOW}"
 else
