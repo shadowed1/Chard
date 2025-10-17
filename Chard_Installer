@@ -1659,3 +1659,11 @@ sudo chroot /usr/local/chard /bin/bash -c "
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
             sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
+            
+            #sys-auth/polkit
+            #sys-power/upower
+            #sys-fs/udisks
+            #app-accessibility/at-spi2-core
+            #app-accessibility/at-spi2-atk
+            #xfce-extra/xfce4-screensaver
+            #sys-apps/xdg-dbus-proxy
