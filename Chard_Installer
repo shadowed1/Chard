@@ -1286,6 +1286,37 @@ echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 echo
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
+
+CHARD_ROOT=/usr/local/chard
+
+LD_PRELOAD_LIBS=(
+    "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
+    "$CHARD_ROOT/usr/lib64/libb2.so.1"
+    "$CHARD_ROOT/usr/lib64/libcrypto.so.3"
+    "$CHARD_ROOT/usr/lib64/libsystemd.so.0"
+    "$CHARD_ROOT/usr/lib64/libassuan.so.9"
+    "$CHARD_ROOT/usr/lib64/libffi.so.8"
+    "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
+    "$CHARD_ROOT/usr/lib64/libperl.so.5.42"
+    "$CHARD_ROOT/usr/lib64/libperl.so.5.40"
+    "$CHARD_ROOT/usr/lib64/libappstream.so.5"
+    "$CHARD_ROOT/usr/lib64/libostree-1.so.1"
+    "$CHARD_ROOT/usr/lib64/libpolkit-agent-1.so.0"
+    "$CHARD_ROOT/usr/lib64/libpolkit-gobject-1.so.0"
+    "$CHARD_ROOT/usr/lib64/libgpgme.so.45"
+    "$CHARD_ROOT/usr/lib64/libyyjson.so.0"
+)
+
+LD_PRELOAD=""
+
+for lib in "${LD_PRELOAD_LIBS[@]}"; do
+    if [[ -f "$lib" ]]; then
+        LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
+    fi
+done
+
+export LD_PRELOAD
+
 sudo chroot /usr/local/chard /bin/bash -c "
 
         mountpoint -q /proc    || mount -t proc proc /proc
