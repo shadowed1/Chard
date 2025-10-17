@@ -309,7 +309,7 @@ case "$cmd" in
         read -p "Choose an option [1/2/q]: " choice
         case "$choice" in
             1)
-                echo "${RESET}[*] Performing quick reinstall..."
+                echo "${RESET}${GREEN}[*] Performing quick reinstall..."
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc -o "$CHARD_ROOT/.chardrc"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env -o "$CHARD_ROOT/chard.env"
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/chard.logic"
@@ -321,11 +321,11 @@ case "$cmd" in
                 echo "[*] Quick reinstall complete.${RESET}"
                 ;;
             2)
-                echo "${RESET}[*] Performing full reinstall..."
+                echo "${RESET}${YELLOW}[*] Performing full reinstall..."
                 bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer?$(date +%s)")
                 ;;
             q|Q|*)
-                echo "${RESET}[*] Reinstall cancelled.${RESET}"
+                echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
                 ;;
         esac
         ;;
