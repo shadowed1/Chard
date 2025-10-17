@@ -1286,7 +1286,6 @@ echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 echo
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
-source /home/chronos/user/.bashrc
 sudo chroot /usr/local/chard /bin/bash -c "
 
         mountpoint -q /proc    || mount -t proc proc /proc
