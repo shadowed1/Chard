@@ -416,6 +416,30 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
+BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
+
+sudo tee /usr/local/chard/root/.chard_prompt.sh >/dev/null <<EOF
+#!/bin/bash
+
+RED=\$(tput setaf 1)
+GREEN=\$(tput setaf 2)
+YELLOW=\$(tput setaf 3)
+BOLD=\$(tput bold)
+RESET=\$(tput sgr0)
+
+PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
+export PS1
+EOF
+
+sudo chmod +x /usr/local/chard/root/.chard_prompt.sh
+
+if ! grep -q '/root/.chard_prompt.sh' /usr/local/chard/root/.bashrc 2>/dev/null; then
+    sudo tee -a /usr/local/chard/root/.bashrc >/dev/null <<'EOF'
+source /root/.chard_prompt.sh
+EOF
+fi
+
 sudo tee /usr/local/chard/bin/emerge > /dev/null <<'EOF'
 #!/usr/bin/env python3
 import os
