@@ -1573,7 +1573,19 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge media-sound/pulseaudio-ctl
                 emerge dev-qt/qtbase
                 emerge dev-qt/qttools
+                emerge dev-qt/qtnetwork
+                emerge dev-qt/qtconcurrent
+                emerge dev-qt/qtxml
+                emerge dev-qt/qtgui
+                emerge dev-qt/qtcore
                 emerge dev-build/cmake
+                emerge dev-qt/qtbase
+                emerge dev-qt/qttools
+                emerge dev-qt/qtnetwork
+                emerge dev-qt/qtconcurrent
+                emerge dev-qt/qtxml
+                emerge dev-qt/qtgui
+                emerge dev-qt/qtcore
                 emerge media-libs/pulseaudio-qt
                 emerge media-sound/alsa-utils
                 emerge sys-apps/dbus
@@ -1581,7 +1593,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge app-accessibility/at-spi2-atk
                 emerge media-libs/fontconfig
                 emerge media-fonts/dejavu
-                emerge app-text/doxygen
                 emerge x11-themes/gtk-engines
                 emerge x11-themes/gtk-engines-murrine
                 emerge sys-fs/udisks
@@ -1622,6 +1633,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge xfce-base/xfce4-meta
                 emerge media-gfx/chafa
                 emerge dev-python/pillow
+                emerge app-text/doxygen
                 cd /tmp
                 git clone https://chromium.googlesource.com/chromiumos/platform2
                 cd vm_tools/sommelier
