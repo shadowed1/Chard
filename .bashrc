@@ -258,12 +258,18 @@ for tool in "${serial_tools[@]}"; do
 done
 
 if [[ -t 1 ]]; then
-    echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
-    echo "${CYAN}Chard Root CPU Profile:${RESET}"
-    echo "${GREEN}Cores assigned:               ${BOLD}$WEAK_CORES ${RESET}"
-    echo "${GREEN}Parallelized threads:         ${BOLD}$MAKEOPTS ${RESET}"
-    echo "${CYAN}Taskset:                      ${BOLD}$TASKSET ${RESET}"
-    echo "${BLUE}────────────────────────────────────────────────────────${RESET}"
+    echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
+    echo "${BOLD}${RED}Chard Root ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} CPU Profile:${RESET}"
+    echo "${GREEN}Detected Cores:         ${BOLD}${CORES[*]} ${RESET}"
+    echo "${CYAN}E-Cores:                ${BOLD}$WEAK_CORES_ALL ${RESET}"
+    echo "${GREEN}Available Cores:        ${BOLD}$AVAILABLE_CORES ${RESET}"
+    echo "${CYAN}Average MHz:            ${BOLD}$threshold MHz ${RESET}"
+    echo "${GREEN}Allocated Memory:       ${BOLD}${MEM_GB} GB ${RESET}"
+    echo "${CYAN}Allocated threads:      ${BOLD}$THREADS ${RESET}"
+    echo "${GREEN}Cores assigned:         ${BOLD}$WEAK_CORES ${RESET}"
+    echo "${CYAN}Makeopts:              ${BOLD}$MAKEOPTS ${RESET}"
+    echo "${GREEN}Taskset:                ${BOLD}$TASKSET ${RESET}"
+    echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 fi
 
 # <<< END CHARD .BASHRC >>>
