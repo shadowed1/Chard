@@ -1033,14 +1033,6 @@ ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)
         sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<'EOF'
-CONFIG_BT=y
-CONFIG_BT_RFCOMM=y
-CONFIG_BT_RFCOMM_TTY=y
-CONFIG_BT_BNEP=y
-CONFIG_BT_BNEP_MC_FILTER=y
-CONFIG_BT_BNEP_PROTO_FILTER=y
-CONFIG_BT_HIDP=y
-CONFIG_UHID=y
 
 CONFIG_CRYPTO_USER=y
 CONFIG_CRYPTO_USER_API=y
@@ -1216,14 +1208,6 @@ EOF
 
     aarch64)
         sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<'EOF'
-CONFIG_BT=y
-CONFIG_BT_RFCOMM=y
-CONFIG_BT_RFCOMM_TTY=y
-CONFIG_BT_BNEP=y
-CONFIG_BT_BNEP_MC_FILTER=y
-CONFIG_BT_BNEP_PROTO_FILTER=y
-CONFIG_BT_HIDP=y
-CONFIG_UHID=y
 
 CONFIG_CRYPTO_USER=y
 CONFIG_CRYPTO_USER_API=y
@@ -1553,8 +1537,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge x11-themes/gtk-engines-murrine
                 emerge sys-fs/udisks
                 emerge sys-power/upower
-                emerge sys-apps/bluez
-                emerge dev-python/pybluez
+                #emerge sys-apps/bluez
+                #emerge dev-python/pybluez
                 emerge dev-lang/python
                 emerge x11-libs/libnotify
                 emerge --autounmask-write media-sound/pulseaudio-daemon
