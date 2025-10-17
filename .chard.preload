@@ -1,7 +1,6 @@
 # <<< CHARD_PRELOAD <<<
 CHARD_ROOT=/usr/local/chard
 
-# List of libraries to preload
 LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
     "$CHARD_ROOT/usr/lib64/libb2.so.1"
