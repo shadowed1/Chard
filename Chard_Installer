@@ -67,14 +67,16 @@ echo "                                           ${BOLD}A====                   
 echo "                                          A====                              ====A"
 echo "${RESET}"
 
-               
+echo               
 echo "${RESET}"
 echo "${RED}- Chard Installer can take ${BOLD}5-20 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~8 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
-echo "${YELLOW}- Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${YELLOW} and will not affect ChromeOS or system commands.${RESET}"
-echo "${GREEN}- It is ${BOLD}semi-sandboxed within itself${RESET}${GREEN}, but can rely on Host libraries. Automatically updates itself build and compile with.${RESET}"
-echo "${CYAN}- Chard has ${BOLD}not${RESET}${CYAN} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${CYAN} require dev_install.${RESET}"
-echo "${BLUE}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
-echo "${MAGENTA}- Chard is current in early development. ${BOLD}Bugs will exist${RESET}${MAGENTA}, so please have a ${BOLD}USB backup${RESET}${MAGENTA} in case of serious mistakes.${RESET}"
+echo "${RED}- Chard will be installed in ${RESET}${YELLOW}${BOLD}${CHARD_ROOT}${RESET}${RED} and will not affect ChromeOS or system commands.${RESET}"
+echo
+echo "${YELLOW}- It is ${BOLD}semi-sandboxed within itself${RESET}${YELLOW}, but can rely on Host libraries. Automatically updates itself build and compile with.${RESET}"
+echo "${YELLOW}- Chard has ${BOLD}not${RESET}${YELLOW} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${YELLOW} require dev_install.${RESET}"
+echo
+echo "${GREEN}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
+echo "${GREEN}- Chard is current in early development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
 echo
    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
 response=${response:-Y}
