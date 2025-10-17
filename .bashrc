@@ -215,7 +215,7 @@ fi
 export TASKSET="taskset -c $WEAK_CORES"
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
+MEM_GB=$(( MEM_KB / 1024 / 1024 ))
 THREADS=$((MEM_GB / 2))
 ((THREADS < 1)) && THREADS=1
 
