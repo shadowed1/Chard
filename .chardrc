@@ -28,4 +28,6 @@ export PATH LD_LIBRARY_PATH
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
 
+alias cr='chard root'
+
 # <<< END CHARD_ENV <<<
