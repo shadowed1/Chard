@@ -993,13 +993,18 @@ echo "${BLUE}To start compiling apps, run ${BOLD}chard root${RESET}${BLUE}${RESE
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
 echo
 
+#!/bin/bash
 ARCH=$(uname -m)
 
+# ------------------------
+# GPU detection function
+# ------------------------
 detect_gpu_freq() {
     GPU_FREQ_PATH=""
     GPU_MAX_FREQ=""
     GPU_TYPE="unknown"
 
+    # Intel iGPU
     if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
         GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
         GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
@@ -1007,6 +1012,7 @@ detect_gpu_freq() {
         return
     fi
 
+    # AMD GPU
     if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
         GPU_TYPE="amd"
         PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
@@ -1019,24 +1025,72 @@ detect_gpu_freq() {
         return
     fi
 
-    GPU_TYPE="unknown"
+    # ARM Mali GPU
+    for d in /sys/class/devfreq/*; do
+        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
+            if [ -f "$d/max_freq" ]; then
+                GPU_FREQ_PATH="$d/max_freq"
+                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                GPU_TYPE="mali"
+                return
+            elif [ -f "$d/available_frequencies" ]; then
+                GPU_FREQ_PATH="$d/available_frequencies"
+                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
+                GPU_TYPE="mali"
+                return
+            fi
+        fi
+    done
+
+    # Qualcomm Adreno
+    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            return
+        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            return
+        fi
+    fi
+
+    # Mediatek / Vivante detection
+    if [[ -d /sys/class/drm ]]; then
+        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mediatek"
+        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="vivante"
+        fi
+    fi
 }
 
+# Detect GPU
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
 
+# ------------------------
+# Kernel config generation
+# ------------------------
 case "$ARCH" in
     x86_64)
-        if [[ "$GPU_VENDOR" == "amd" ]]; then
-            DRM_AMDGPU=y
-            DRM_I915=n
-        elif [[ "$GPU_VENDOR" == "intel" ]]; then
-            DRM_AMDGPU=n
-            DRM_I915=y
-        else
-            DRM_AMDGPU=y
-            DRM_I915=y
-        fi
+        # Set only the required DRM drivers
+        case "$GPU_VENDOR" in
+            amd)
+                DRM_AMDGPU=y
+                DRM_I915=n
+                ;;
+            intel)
+                DRM_AMDGPU=n
+                DRM_I915=y
+                ;;
+            *)
+                DRM_AMDGPU=y
+                DRM_I915=y   # fallback: compile both
+                ;;
+        esac
 
         sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<EOF
 CONFIG_CRYPTO_SHA1=y
@@ -1129,7 +1183,36 @@ EOF
         ;;
 
     aarch64)
-        sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<'EOF'
+        # Set ARM DRM drivers based on GPU
+        case "$GPU_VENDOR" in
+            mali)
+                DRM_MALI=y
+                DRM_ROCKCHIP=n
+                DRM_ARM_DC=n
+                ;;
+            adreno)
+                DRM_MALI=y
+                DRM_ROCKCHIP=n
+                DRM_ARM_DC=n
+                ;;
+            mediatek)
+                DRM_MALI=y
+                DRM_ROCKCHIP=n
+                DRM_ARM_DC=n
+                ;;
+            vivante)
+                DRM_MALI=n
+                DRM_ROCKCHIP=n
+                DRM_ARM_DC=n
+                ;;
+            *)
+                DRM_MALI=y
+                DRM_ROCKCHIP=y
+                DRM_ARM_DC=y
+                ;;
+        esac
+
+        sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<EOF
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
@@ -1166,8 +1249,8 @@ CONFIG_DRM_KMS_HELPER=y
 CONFIG_DRM_FBDEV_EMULATION=y
 CONFIG_DRM_TTM=y
 CONFIG_DRM_VMA_MANAGER=y
-CONFIG_DRM_ROCKCHIP=y
-CONFIG_DRM_ARM_DC=y
+CONFIG_DRM_ROCKCHIP=$DRM_ROCKCHIP
+CONFIG_DRM_ARM_DC=$DRM_ARM_DC
 CONFIG_NAMESPACES=y
 CONFIG_UTS_NS=y
 CONFIG_IPC_NS=y
@@ -1217,12 +1300,12 @@ CONFIG_SECCOMP_FILTER=y
 EOF
         ;;
     *)
-        echo "Unknown architecture: $ARCH"
+        echo "${RED}Unknown architecture: $ARCH ${RESET}"
         exit 1
         ;;
 esac
 
-echo "${GREEN}Detected GPU: $GPU_VENDOR ($ARCH) ${RESET}"
+echo "${YELLOW}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
 
 sudo chroot /usr/local/chard /bin/bash -c "
 
