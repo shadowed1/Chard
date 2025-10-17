@@ -569,42 +569,70 @@ export DISPLAY=:0
 EOF
 sudo chmod +x /usr/local/chard/etc/profile.d/display.sh
 
- ARCH=$(uname -m)
+#!/bin/bash
+# Generate /usr/local/chard/etc/portage/make.conf based on system architecture
+
+ARCH=$(uname -m)
+MAKECONF_DIR="/usr/local/chard/etc/portage"
+MAKECONF_FILE="$MAKECONF_DIR/make.conf"
+
+# Ensure directory exists
+sudo mkdir -p "$MAKECONF_DIR"
+
 case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    x86_64)
+        CHOST="x86_64-pc-linux-gnu"
+        ACCEPT_KEYWORDS="~amd64"
+        ;;
+    aarch64)
+        CHOST="aarch64-unknown-linux-gnu"
+        ACCEPT_KEYWORDS="~arm64"
+        ;;
+    *)
+        echo "Unknown architecture: $ARCH"
+        exit 1
+        ;;
 esac
 
-sudo tee /usr/local/chard/etc/portage/make.conf > /dev/null <<EOF
+sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
-# Manually generated
+# Automatically generated based on detected architecture ($ARCH)
+
 COMMON_FLAGS="-O2 -pipe"
-CFLAGS="-O2 -pipe"
-CXXFLAGS="-O2 -pipe"
-FCFLAGS="-O2 -pipe"
-FFLAGS="-O2 -pipe"
+CFLAGS="\${COMMON_FLAGS}"
+CXXFLAGS="\${COMMON_FLAGS}"
+FCFLAGS="\${COMMON_FLAGS}"
+FFLAGS="\${COMMON_FLAGS}"
+
 LC_MESSAGES=C.utf8
 DISTDIR="/var/cache/distfiles"
 PKGDIR="/var/cache/packages"
 PORTAGE_TMPDIR="/var/tmp"
 PORTDIR="/usr/portage"
 SANDBOX="/usr/bin/sandbox"
+
 CHOST="$CHOST"
 CC="/usr/bin/gcc"
 CXX="/usr/bin/g++"
 AR="/usr/bin/gcc-ar"
 RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
+
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
-USE="X a52 aac acl acpi alsa bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg systemd test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11 -network-sandbox -sandbox -usersandbox"
+
+USE="X a52 aac acl acpi alsa -bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg systemd test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11 -network-sandbox -sandbox -usersandbox"
+
 PYTHON_TARGETS="python3_13"
-ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
-PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:$PKG_CONFIG_PATH"
+ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
+
+PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH"
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
 EOF
+
+echo "${RESET}${BLUE}make.conf generated successfully for $ARCH → $MAKECONF_FILE ${RESET}"
+
 
 #PORTAGE_PROFILE_DIR="/usr/local/chard/etc/portage/make.profile"
 #sudo mkdir -p "$PORTAGE_PROFILE_DIR"
