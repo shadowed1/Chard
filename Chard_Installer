@@ -991,18 +991,67 @@ echo "${BLUE}To start compiling apps, run ${BOLD}chard root${RESET}${BLUE}${RESE
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done. Chard is only supporting chard chroot for testing purposes. ${RESET}"
 echo
 
+#!/bin/bash
+
 ARCH=$(uname -m)
+
+# ------------------------
+# GPU detection function
+# ------------------------
+detect_gpu_freq() {
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+    GPU_TYPE="unknown"
+
+    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        GPU_TYPE="intel"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
+        GPU_TYPE="amd"
+        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
+            [[ -n "$MAX_MHZ" ]] && GPU_MAX_FREQ="$MAX_MHZ"
+        fi
+        GPU_FREQ_PATH="$PP_OD_FILE"
+        return
+    fi
+
+    # Other GPU types (Mali, Adreno, etc.) omitted for brevity
+    GPU_TYPE="unknown"
+}
+
+# Detect GPU
+detect_gpu_freq
+GPU_VENDOR="$GPU_TYPE"
+
+# ------------------------
+# Write kernel config
+# ------------------------
 case "$ARCH" in
     x86_64)
-        sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<'EOF'
+        if [[ "$GPU_VENDOR" == "amd" ]]; then
+            DRM_AMDGPU=y
+            DRM_I915=n
+        elif [[ "$GPU_VENDOR" == "intel" ]]; then
+            DRM_AMDGPU=n
+            DRM_I915=y
+        else
+            DRM_AMDGPU=n
+            DRM_I915=y   # fallback to Intel driver if unknown
+        fi
 
+        sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<EOF
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
-
 CONFIG_SECURITY=y
 CONFIG_SECURITY_FILE_CAPABILITIES=y
-
 CONFIG_SYSFS=y
 CONFIG_TMPFS=y
 CONFIG_TMPFS_POSIX_ACL=y
@@ -1014,7 +1063,6 @@ CONFIG_INOTIFY_USER=y
 CONFIG_PROC_FS=y
 CONFIG_FUSE=y
 CONFIG_FUSE_FS=y
-
 CONFIG_MEDIA_SUPPORT=y
 CONFIG_VIDEO_DEV=y
 CONFIG_VIDEOBUF2_CORE=y
@@ -1030,49 +1078,40 @@ CONFIG_SND_PCM=y
 CONFIG_SND_MIXER_OSS=y
 CONFIG_SND_PCM_OSS=y
 CONFIG_SND_HWDEP=y
-
 CONFIG_DRM=y
 CONFIG_DRM_KMS_HELPER=y
 CONFIG_DRM_FBDEV_EMULATION=y
 CONFIG_DRM_TTM=y
 CONFIG_DRM_VMA_MANAGER=y
-CONFIG_DRM_I915=y
-CONFIG_DRM_AMDGPU=y
+CONFIG_DRM_I915=$DRM_I915
+CONFIG_DRM_AMDGPU=$DRM_AMDGPU
 CONFIG_DRM_NOUVEAU=n
-
 CONFIG_NAMESPACES=y
 CONFIG_UTS_NS=y
 CONFIG_IPC_NS=y
 CONFIG_MNT_NS=y
-
 CONFIG_CGROUPS=y
 CONFIG_CGROUP_SCHED=y
 CONFIG_CFS_BANDWIDTH=y
 CONFIG_RT_GROUP_SCHED=y
 CONFIG_CGROUP_PIDS=y
-
 CONFIG_BPF=y
 CONFIG_BPF_SYSCALL=y
 CONFIG_BPF_JIT=y
-
 CONFIG_NET=y
 CONFIG_NET_SCHED=y
 CONFIG_NET_CLS_ACT=y
 CONFIG_NET_CLS_ROUTE=y
 CONFIG_NET_CLS_U32=y
 CONFIG_NET_SCH_INGRESS=y
-
 CONFIG_HIGH_RES_TIMERS=y
 CONFIG_HZ_250=y
-
 CONFIG_ZONE_DMA32=y
-
 CONFIG_INPUT=y
 CONFIG_INPUT_EVDEV=y
 CONFIG_INPUT_MOUSE=y
 CONFIG_INPUT_KEYBOARD=y
 CONFIG_INPUT_TOUCHSCREEN=y
-
 CONFIG_BLK_DEV_SD=y
 CONFIG_BLK_DEV_NVME=y
 CONFIG_BLK_DEV_LOOP=y
@@ -1081,7 +1120,6 @@ CONFIG_DM_THIN_PROVISIONING=y
 CONFIG_SCSI=y
 CONFIG_SCSI_MOD=y
 CONFIG_SCSI_LOWLEVEL=y
-
 CONFIG_EXT4_FS=y
 CONFIG_EXT4_USE_FOR_EXT2=y
 CONFIG_XFS=y
@@ -1089,7 +1127,6 @@ CONFIG_BTRFS_FS=y
 CONFIG_BTRFS_FS_POSIX_ACL=y
 CONFIG_FS_POSIX_ACL=y
 CONFIG_FS_SECURITY=y
-
 CONFIG_DEBUG_FS=y
 CONFIG_KALLSYMS=y
 CONFIG_MAGIC_SYSRQ=y
@@ -1206,6 +1243,8 @@ EOF
         exit 1
         ;;
 esac
+
+echo "${GREEN}Detected GPU: $GPU_VENDOR ($ARCH) ${RESET}"
 
 sudo chroot /usr/local/chard /bin/bash -c "
 
