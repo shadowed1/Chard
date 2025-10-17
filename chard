@@ -375,6 +375,220 @@ case "$cmd" in
             "
 
         ;;
+    remerge)
+        sudo chroot /usr/local/chard /bin/bash -c "
+
+        mountpoint -q /proc    || mount -t proc proc /proc
+        mountpoint -q /sys     || mount -t sysfs sys /sys
+        mountpoint -q /dev     || mount -t devtmpfs devtmpfs /dev
+        mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+        mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+        mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+        [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+        [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+        [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+        [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+    
+        ARCH=\$(uname -m)
+        case \"\$ARCH\" in
+            x86_64)  CHOST=x86_64-pc-linux-gnu ;;
+            aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+            *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
+        esac
+                export ARCH
+                export CHOST
+                export HOME=/home/chronos/user
+                export MAGIC=\"/usr/share/misc/magic.mgc\"
+                export CC=/usr/bin/gcc
+                export CXX=/usr/bin/g++
+                export AR=/usr/bin/gcc-ar
+                export RANLIB=/usr/bin/gcc-ranlib
+                export STRIP=/usr/bin/strip
+                export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
+                export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
+                export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
+                export PKG_CONFIG=/usr/bin/pkg-config
+                export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
+                export PYTHON=\"/bin/python3\"
+                export FORCE_UNSAFE_CONFIGURE=1
+                export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
+                export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+                export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+                export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
+                export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
+                export CARGO_HOME=\$HOME/.cargo
+                export RUSTUP_HOME=\$HOME/.rustup
+                export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+                export PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
+                export PORTAGE_LOGDIR=\"/var/log/portage\"
+                export PORTAGE_CONFIGROOT=\"/\"
+                export PORTAGE_TMPDIR=\"/var/tmp\"
+                export MESON_CROSS_FILE=\"/meson-cross.ini\"
+                export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
+                export DISPLAY=:0
+                export LD=\"/usr/bin/ld\"
+                source /home/chronos/user/.bashrc
+                dbus-daemon --system --fork 2>/dev/null
+                emerge dev-build/make
+                USE="-gui" emerge -1 dev-build/cmake
+                emerge sys-devel/gcc
+                emerge dev-libs/gmp
+                emerge dev-libs/mpfr
+                emerge sys-devel/binutils
+                emerge sys-apps/diffutils
+                emerge dev-libs/openssl
+                emerge net-misc/curl
+                emerge dev-vcs/git
+                emerge sys-apps/coreutils
+                emerge app-misc/fastfetch
+                echo dev-lang/perl ~$(portageq envvar ARCH) >> /etc/portage/package.accept_keywords/perl
+                emerge -1 dev-lang/perl
+                perl-cleaner --reallyall
+                emerge virtual/perl-Digest
+                emerge virtual/perl-CPAN
+                emerge virtual/perl-CPAN-Meta
+                emerge virtual/perl-Data-Dumper
+                emerge virtual/perl-Math-BigInt
+                emerge virtual/perl-Scalar-List-Utils
+                emerge dev-perl/Capture-Tiny
+                emerge dev-perl/Try-Tiny
+                emerge dev-perl/Config-AutoConf
+                emerge dev-perl/Test-Fatal
+                emerge sys-apps/findutils
+                emerge dev-libs/elfutils
+                cd /usr/src/linux
+                scripts/kconfig/merge_config.sh -m .config enable_features.cfg
+                make olddefconfig
+                make -j\$(nproc) tools/objtool
+                make -j\$(nproc)
+                make modules_install
+                make INSTALL_PATH=/boot install
+                emerge dev-lang/python
+                emerge dev-build/meson
+                USE="-truetype" emerge -1 dev-python/pillow
+                emerge media-libs/harfbuzz
+                emerge dev-libs/glib
+                emerge dev-util/pkgconf
+                #emerge -1 dev-lang/ruby --autounmask-backtrack=y
+                #emerge dev-ruby/pkg-config
+                emerge dev-cpp/gtest
+                emerge dev-util/gtest-parallel
+                emerge dev-util/re2c
+                emerge dev-build/ninja
+                emerge app-text/docbook2X
+                emerge app-text/build-docbook-catalog
+                emerge dev-util/gtk-doc
+                emerge sys-libs/zlib
+                emerge dev-libs/libunistring
+                emerge sys-apps/file
+                emerge kde-frameworks/extra-cmake-modules
+                emerge dev-perl/File-LibMagic
+                emerge net-libs/libpsl
+                emerge dev-libs/expat
+                emerge dev-lang/duktape
+                emerge app-arch/brotli
+                mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
+                emerge dev-lang/rust
+                emerge sys-auth/polkit
+                emerge sys-apps/bubblewrap
+                emerge app-portage/gentoolkit
+                emerge x11-base/xorg-drivers
+                emerge x11-base/xorg-server
+                emerge x11-base/xorg-apps
+                emerge x11-libs/libX11
+                emerge x11-libs/libXft
+                emerge x11-libs/libXrender
+                emerge x11-libs/libXrandr
+                emerge x11-libs/libXcursor
+                emerge x11-libs/libXi
+                emerge x11-libs/libXinerama
+                emerge x11-libs/pango
+                emerge dev-libs/wayland
+                emerge dev-libs/wayland-protocols
+                emerge x11-base/xwayland
+                emerge x11-libs/libxkbcommon
+                emerge gui-libs/gtk
+                emerge xfce-base/libxfce4util
+                emerge xfce-base/xfconf
+                emerge sys-apps/xdg-desktop-portal
+                emerge gui-libs/xdg-desktop-portal-wlr
+                emerge media-libs/mesa
+                emerge x11-apps/mesa-progs
+                emerge --autounmask-write media-sound/pulseaudio-daemon
+                etc-update --automode -5
+                emerge media-sound/pulseaudio-daemon
+                emerge media-sound/pulseaudio-ctl
+                emerge dev-qt/qtbase
+                emerge dev-qt/qttools
+                emerge dev-build/cmake
+                emerge media-libs/pulseaudio-qt
+                emerge media-sound/alsa-utils
+                emerge sys-apps/dbus
+                emerge app-accessibility/at-spi2-core
+                emerge app-accessibility/at-spi2-atk
+                emerge media-libs/fontconfig
+                emerge media-fonts/dejavu
+                emerge app-text/doxygen
+                emerge x11-themes/gtk-engines
+                emerge x11-themes/gtk-engines-murrine
+                emerge sys-fs/udisks
+                emerge sys-power/upower
+                emerge sys-apps/bluez
+                emerge dev-python/pybluez
+                emerge dev-lang/python
+                emerge x11-libs/libnotify
+                emerge dev-libs/libdbusmenu
+                emerge x11-libs/libSM
+                emerge x11-libs/libICE
+                emerge x11-libs/libwnck
+                emerge cmake
+                emerge app-admin/exo
+                emerge app-arch/tar
+                emerge app-arch/xz-utils
+                emerge net-libs/gnutls
+                emerge net-libs/glib-networking
+                emerge sys-libs/libseccomp
+                emerge app-eselect/eselect-repository
+                emerge dev-libs/appstream-glib
+                emerge app-crypt/gpgme
+                emerge dev-libs/json-glib
+                emerge dev-util/ostree
+                emerge sys-apps/xdg-dbus-proxy
+                emerge x11-libs/gdk-pixbuf
+                emerge sys-fs/fuse
+                emerge dev-python/pygobject
+                emerge gnome-base/dconf
+                emerge x11-misc/xdg-utils
+                emerge x11-apps/xinit
+                emerge x11-terms/xterm
+                emerge x11-wm/twm
+                emerge xfce-extra/xfce4-screensaver
+                emerge xfce-base/xfce4-meta
+                emerge media-gfx/chafa
+                emerge dev-python/pillow
+                cd /tmp
+                git clone https://chromium.googlesource.com/chromiumos/platform2
+                cd vm_tools/sommelier
+                meson setup build --prefix=/usr
+                ninja -C build
+                ninja -C build install
+                emerge www-client/firefox
+                emerge sys-apps/flatpak
+                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+                umount /etc/ssl
+                umount /dev/pts
+                umount /dev/shm
+                umount /dev
+                umount /sys
+                umount /proc
+            "
+            echo "${GREEN}[+] Chard Root is ready! ${RESET}"
+            sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
+        ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
         if [ ! -d "$PORTAGE_DIR" ]; then
