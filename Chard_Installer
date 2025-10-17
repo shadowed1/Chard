@@ -1249,7 +1249,6 @@ CONFIG_EPOLL=y
 CONFIG_INOTIFY_USER=y
 CONFIG_PERSISTENT_KEYRINGS=y
 CONFIG_PROC_FS=y
-
 EOF
         ;;
     *)
@@ -1450,7 +1449,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge xfce-base/xfce4-meta
                 emerge media-gfx/chafa
                 emerge dev-python/pillow
-                
                 cd /tmp
                 git clone https://chromium.googlesource.com/chromiumos/platform2
                 cd vm_tools/sommelier
