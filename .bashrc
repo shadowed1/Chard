@@ -260,9 +260,9 @@ done
 if [[ -t 1 ]]; then
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
     echo "${BOLD}${RED}Chard Root ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} CPU Profile:${RESET}"
-    echo "${GREEN}Detected Cores:         ${BOLD}${CORES[*]} ${RESET}"
+    echo "${GREEN}Detected Threads:       ${BOLD}${CORES[*]} ${RESET}"
+    echo "${GREEN}Total Threads:          ${BOLD}$AVAILABLE_CORES ${RESET}"
     echo "${CYAN}E-Cores:                ${BOLD}$WEAK_CORES_ALL ${RESET}"
-    echo "${GREEN}Available Cores:        ${BOLD}$AVAILABLE_CORES ${RESET}"
     echo "${CYAN}Average MHz:            ${BOLD}$threshold MHz ${RESET}"
     echo "${GREEN}Allocated Memory:       ${BOLD}${MEM_GB} GB ${RESET}"
     echo "${CYAN}Allocated threads:      ${BOLD}$THREADS ${RESET}"
