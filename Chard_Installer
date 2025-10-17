@@ -151,6 +151,7 @@ echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "/usr/local/chard/.chardrc"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "/usr/local/chard/.chard.logic"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc -o "/usr/local/chard/home/chronos/user/.bashrc"
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
