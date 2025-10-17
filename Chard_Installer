@@ -421,12 +421,11 @@ BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/de
 
 sudo tee /usr/local/chard/root/.chard_prompt.sh >/dev/null <<EOF
 #!/bin/bash
-
-RED=\$(tput setaf 1)
-GREEN=\$(tput setaf 2)
-YELLOW=\$(tput setaf 3)
-BOLD=\$(tput bold)
-RESET=\$(tput sgr0)
+BOLD='\\[\\e[1m\\]'
+RED='\\[\\e[31m\\]'
+YELLOW='\\[\\e[33m\\]'
+GREEN='\\[\\e[32m\\]'
+RESET='\\[\\e[0m\\]'
 
 PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
 export PS1
