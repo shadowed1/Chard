@@ -1595,8 +1595,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge media-fonts/dejavu
                 emerge x11-themes/gtk-engines
                 emerge x11-themes/gtk-engines-murrine
-                emerge sys-fs/udisks
-                emerge sys-power/upower
+                #emerge sys-fs/udisks
+                #emerge sys-power/upower
                 #emerge sys-apps/bluez
                 #emerge dev-python/pybluez
                 emerge dev-lang/python
@@ -1628,9 +1628,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge x11-apps/xinit
                 emerge x11-terms/xterm
                 emerge x11-wm/twm
-                emerge -1 sys-apps/dbus dev-libs/dbus-glib
-                emerge xfce-extra/xfce4-screensaver
-                emerge xfce-base/xfce4-meta
+                #emerge xfce-extra/xfce4-screensaver
+                #emerge xfce-base/xfce4-meta
                 emerge media-gfx/chafa
                 emerge dev-python/pillow
                 emerge app-text/doxygen
@@ -1640,6 +1639,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 meson setup build --prefix=/usr
                 ninja -C build
                 ninja -C build install
+                emerge --autounmask-write www-client/firefox
+                etc-update --automode -5
                 emerge www-client/firefox
                 emerge sys-apps/flatpak
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
