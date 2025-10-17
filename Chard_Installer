@@ -417,6 +417,7 @@ done
 
 BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
 BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
+BOARD_NAME=${BOARD_NAME%%-*}
 
 sudo tee /usr/local/chard/root/.chard_prompt.sh >/dev/null <<EOF
 #!/bin/bash
