@@ -171,26 +171,26 @@ fi
 
 sudo mkdir -p /usr/local/chard/etc/portage/package.use
 
-sudo tee /usr/local/chard/etc/portage/package.use/systemd-overrides <<EOF
-sys-auth/elogind -systemd
-media-video/pipewire -elogind
-media-video/wireplumber -elogind
-sys-auth/polkit -elogind
-sys-apps/dbus -elogind
-EOF
+#sudo tee /usr/local/chard/etc/portage/package.use/systemd-overrides <<EOF
+#sys-auth/elogind -systemd
+#media-video/pipewire -elogind
+#media-video/wireplumber -elogind
+#sys-auth/polkit -elogind
+#sys-apps/dbus -elogind
+#EOF
 
-sudo tee /usr/local/chard/etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
-sys-auth/elogind -systemd
-media-video/pipewire -elogind
-media-video/wireplumber -elogind
-sys-auth/polkit -elogind
-sys-apps/dbus -elogind
-sys-libs/pam -elogind systemd
-sys-apps/shadow -elogind systemd
-sys-apps/util-linux -elogind systemd
-EOF
+#sudo tee /usr/local/chard/etc/portage/package.use/flatpak-systemd > /dev/null <<'EOF'
+#sys-auth/elogind -systemd
+#media-video/pipewire -elogind
+#media-video/wireplumber -elogind
+#sys-auth/polkit -elogind
+#sys-apps/dbus -elogind
+#sys-libs/pam -elogind systemd
+#sys-apps/shadow -elogind systemd
+#sys-apps/util-linux -elogind systemd
+#EOF
 
-echo "sys-auth/polkit systemd -elogind" | sudo tee -a /usr/local/chard/etc/portage/package.use/polkit
+#echo "sys-auth/polkit systemd -elogind" | sudo tee -a /usr/local/chard/etc/portage/package.use/polkit
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -574,7 +574,7 @@ STRIP="/usr/bin/strip"
 
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles ipc-sandbox merge-sync multilib-strict network-sandbox news parallel-fetch pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch userpriv usersync xattr"
 
-USE="X a52 aac acl acpi alsa -bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg systemd test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11 -network-sandbox -sandbox -usersandbox"
+USE="X a52 aac acl acpi alsa -bluetooth bindist branding bzip2 cairo cdda cdr cet crypt dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11 -systemd -network-sandbox -sandbox -usersandbox"
 
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
