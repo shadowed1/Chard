@@ -1220,15 +1220,16 @@ sudo chroot /usr/local/chard /bin/bash -c "
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
         [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
 
-        RED=$(tput setaf 1)
-        GREEN=$(tput setaf 2)
-        YELLOW=$(tput setaf 3)
-        BLUE=$(tput setaf 4)
-        MAGENTA=$(tput setaf 5)
-        CYAN=$(tput setaf 6)
-        BOLD=$(tput bold)
-        RESET=$(tput sgr0)
-    
+        RED='\[\e[31m\]'
+        GREEN='\[\e[32m\]'
+        YELLOW='\[\e[33m\]'
+        BLUE='\[\e[34m\]'
+        MAGENTA='\[\e[35m\]'
+        CYAN='\[\e[36m\]'
+        BOLD='\[\e[1m\]'
+        RESET='\[\e[0m\]'
+        
+            
         ARCH=\$(uname -m)
         case \"\$ARCH\" in
             x86_64)  CHOST=x86_64-pc-linux-gnu ;;
