@@ -1289,6 +1289,34 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.pr
 
 CHARD_ROOT=/usr/local/chard
 
+export CHARD_ROOT="/usr/local/chard"
+
+case ":$PATH:" in
+    *":$CHARD_ROOT/usr/bin:"*) ;;
+    *) PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
+esac
+
+case ":$PATH:" in
+    *":$CHARD_ROOT/bin:"*) ;;
+    *) PATH="$PATH:$CHARD_ROOT/bin" ;;
+esac
+
+case ":${LD_LIBRARY_PATH:-}:" in
+    *":$CHARD_ROOT/usr/lib:"*) ;;
+    *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib" ;;
+esac
+
+case ":${LD_LIBRARY_PATH:-}:" in
+    *":$CHARD_ROOT/lib:"*) ;;
+    *) LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/lib" ;;
+esac
+
+export PATH LD_LIBRARY_PATH
+
+[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
+[ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
+[ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
+
 LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
     "$CHARD_ROOT/usr/lib64/libb2.so.1"
