@@ -523,14 +523,10 @@ export DISPLAY=:0
 EOF
 sudo chmod +x /usr/local/chard/etc/profile.d/display.sh
 
-#!/bin/bash
-# Generate /usr/local/chard/etc/portage/make.conf based on system architecture
-
 ARCH=$(uname -m)
 MAKECONF_DIR="/usr/local/chard/etc/portage"
 MAKECONF_FILE="$MAKECONF_DIR/make.conf"
 
-# Ensure directory exists
 sudo mkdir -p "$MAKECONF_DIR"
 
 case "$ARCH" in
