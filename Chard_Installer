@@ -1285,6 +1285,7 @@ echo "${CYAN}Compiling takes a long time, so please be patient if you have a slo
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 echo
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
 source /home/chronos/user/.bashrc
 sudo chroot /usr/local/chard /bin/bash -c "
 
@@ -1614,8 +1615,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
             sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
-            sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
-
             # Check
             #sys-auth/polkit
             #sys-power/upower
