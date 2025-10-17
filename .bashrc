@@ -265,7 +265,6 @@ if [[ -t 1 ]]; then
     echo "${BLUE}Available Threads:               ${BOLD}$WEAK_CORES_ALL ${RESET}"
     echo ""
     echo "${GREEN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
-    echo "${GREEN}Allocated Threads:               ${BOLD}$THREADS ${RESET}"
     echo "${GREEN}Allocated Threads:               ${BOLD}$WEAK_CORES ${RESET}"
     echo ""
     echo "${MAGENTA}Makeopts:                       ${BOLD}$MAKEOPTS ${RESET}"
