@@ -829,7 +829,8 @@ detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
 IDENTIFIER="Generic GPU"
 DRIVER="modesetting"
-ACCEL="glamor"
+ACCEL="none"
+# Change Accel to glamor for acceleration soon
 
 case "$GPU_VENDOR" in
     intel)
