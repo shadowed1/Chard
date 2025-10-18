@@ -1213,15 +1213,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
         [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-
-        RED='\[\e[31m\]'
-        GREEN='\[\e[32m\]'
-        YELLOW='\[\e[33m\]'
-        BLUE='\[\e[34m\]'
-        MAGENTA='\[\e[35m\]'
-        CYAN='\[\e[36m\]'
-        BOLD='\[\e[1m\]'
-        RESET='\[\e[0m\]'
         
         ARCH=\$(uname -m)
         case \"\$ARCH\" in
@@ -1262,65 +1253,66 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
 
-                if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
-                    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && \$2 ~ /^[0-9.]+\$/ {print \$1\":\"\$2}' | sort -t: -k2,2n)
-                else
-                    mapfile -t CORES < <(awk -v c=-1 '/^processor/ {c=\$3} /cpu MHz/ && c>=0 {print c\":\"\$4; c=-1}' /proc/cpuinfo | sort -t: -k2,2n)
-                fi
-                
-                if (( \${#CORES[@]} == 0 )); then
-                    total=\$(nproc)
-                    half=\$(( total / 1 ))
-                    WEAK_CORES_ALL=\$half
-                else
-                    WEAK_CORES_ALL=\$(printf '%s\n' \"\${CORES[@]}\" | cut -d: -f1 | paste -sd, -)
-                fi
-                
-                MEM_KB=\$(awk '/MemTotal/ {print \$2}' /proc/meminfo)
-                MEM_GB=\$(( MEM_KB / 1024 / 1024 ))
-                THREADS=\$((MEM_GB / 2))
-                ((THREADS < 1)) && THREADS=1
-                
-                IFS=',' read -ra CORE_ARRAY <<< \"\$WEAK_CORES_ALL\"
-                AVAILABLE_CORES=\${#CORE_ARRAY[@]}
-                if (( THREADS < AVAILABLE_CORES )); then
-                    WEAK_CORES=\$(printf '%s,' \"\${CORE_ARRAY[@]:0:\$THREADS}\" | sed 's/,\$//')
-                else
-                    WEAK_CORES=\"\$WEAK_CORES_ALL\"
-                fi
-                
-                export TASKSET=\"taskset -c \$WEAK_CORES\"
-                export MAKEOPTS=\"-j\$THREADS\"
-                
-                parallel_tools=(make emerge ninja scons meson cmake)
-                for tool in \"\${parallel_tools[@]}\"; do
-                    if command -v \"\$tool\" >/dev/null 2>&1; then
-                        alias \"\$tool\"=\"\$TASKSET \$tool \$MAKEOPTS\"
-                    fi
-                done
-                
-                serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build llvm-tblgen cc1plus)
-                for tool in \"\${serial_tools[@]}\"; do
-                    if command -v \"\$tool\" >/dev/null 2>&1; then
-                        alias \"\$tool\"=\"\$TASKSET \$tool\"
-                    fi
-                done
-                
-                if [[ -t 1 ]]; then
-                    echo \"\${BLUE}──────────────────────────────────────────────────────────────────────────────\${RESET}\"
-                    echo \"\${BOLD}\${RED}Chard Root \${YELLOW}SMRT\${RESET}\${BOLD}\${MAGENTA} CPU Profile:\${RESET}\"
-                    echo \"\"
-                    echo \"\${BLUE}Thread Array:      \${BOLD}\${CORES[*]} \${RESET}\"
-                    echo \"\${BLUE}Available Cores:   \${BOLD}\$WEAK_CORES_ALL \${RESET}\"
-                    echo \"\"
-                    echo \"\${GREEN}Allocated Memory:  \${BOLD}\${MEM_GB} GB \${RESET}\"
-                    echo \"\${GREEN}Allocated Threads: \${BOLD}\$WEAK_CORES \${RESET}\"
-                    echo \"\"
-                    echo \"\${MAGENTA}Makeopts:          \${BOLD}\$MAKEOPTS \${RESET}\"
-                    echo \"\${MAGENTA}Taskset:           \${BOLD}\$TASKSET \${RESET}\"
-                    echo \"\${BLUE}──────────────────────────────────────────────────────────────────────────────\${RESET}\"
-                fi
-
+        RED='\\e[31m'; GREEN='\\e[32m'; YELLOW='\\e[33m'; BLUE='\\e[34m'; MAGENTA='\\e[35m'; CYAN='\\e[36m'; BOLD='\\e[1m'; RESET='\\e[0m'; \
+        \
+        if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then \
+            mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && \$2 ~ /^[0-9.]+$/ {print \$1 \":\" \$2}' | sort -t: -k2,2n); \
+        else \
+            mapfile -t CORES < <(awk -v c=-1 '/^processor/ {c=\$3} /cpu MHz/ && c>=0 {print c \":\" \$4; c=-1}' /proc/cpuinfo | sort -t: -k2,2n); \
+        fi; \
+        \
+        if (( \${#CORES[@]} == 0 )); then \
+            total=\$(nproc); \
+            WEAK_CORES_ALL=\$(seq 0 \$((total-1)) | paste -sd, -); \
+        else \
+            WEAK_CORES_ALL=\$(printf '%s\n' \"\${CORES[@]}\" | cut -d: -f1 | paste -sd, -); \
+        fi; \
+        \
+        MEM_KB=\$(awk '/MemTotal/ {print \$2}' /proc/meminfo); \
+        MEM_GB=\$(( MEM_KB / 1024 / 1024 )); \
+        THREADS=\$(( MEM_GB )); \
+        ((THREADS < 2)) && THREADS=2; \
+        \
+        IFS=',' read -ra CORE_ARRAY <<< \"\$WEAK_CORES_ALL\"; \
+        AVAILABLE_CORES=\${#CORE_ARRAY[@]}; \
+        if (( THREADS < AVAILABLE_CORES )); then \
+            WEAK_CORES=\$(printf '%s,' \"\${CORE_ARRAY[@]:0:\$THREADS}\" | sed 's/,\$//'); \
+        else \
+            WEAK_CORES=\"\$WEAK_CORES_ALL\"; \
+        fi; \
+        \
+        export TASKSET=\"taskset -c \$WEAK_CORES\"; \
+        export MAKEOPTS=\"-j\$THREADS\"; \
+        \
+        parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2); \
+        for tool in \"\${parallel_tools[@]}\"; do \
+            if command -v \"\$tool\" >/dev/null 2>&1; then \
+                alias \"\$tool\"=\"\$TASKSET \$tool \$MAKEOPTS\"; \
+            fi; \
+        done; \
+        \
+        serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build llvm-tblgen cc1plus); \
+        for tool in \"\${serial_tools[@]}\"; do \
+            if command -v \"\$tool\" >/dev/null 2>&1; then \
+                alias \"\$tool\"=\"\$TASKSET \$tool\"; \
+            fi; \
+        done; \
+        \
+        if [[ -t 1 ]]; then \
+            echo -e \"\${BLUE}──────────────────────────────────────────────────────────────────────────────\${RESET}\"; \
+            echo -e \"\${BOLD}\${RED}Chard Root \${YELLOW}SMRT\${RESET}\${BOLD}\${MAGENTA} CPU Profile:\${RESET}\"; \
+            echo -e \"\"; \
+            echo -e \"\${BLUE}Thread Array:      \${BOLD}\${CORES[*]} \${RESET}\"; \
+            echo -e \"\${BLUE}Available Cores:   \${BOLD}\$WEAK_CORES_ALL \${RESET}\"; \
+            echo -e \"\"; \
+            echo -e \"\${GREEN}Allocated Memory:  \${BOLD}\${MEM_GB} GB \${RESET}\"; \
+            echo -e \"\${GREEN}Allocated Threads: \${BOLD}\$WEAK_CORES \${RESET}\"; \
+            echo -e \"\"; \
+            echo -e \"\${MAGENTA}Makeopts:          \${BOLD}\$MAKEOPTS \${RESET}\"; \
+            echo -e \"\${MAGENTA}Taskset:           \${BOLD}\$TASKSET \${RESET}\"; \
+            echo -e \"\${BLUE}──────────────────────────────────────────────────────────────────────────────\${RESET}\"; \
+        fi
+                sleep 1
                 source /home/chronos/user/.bashrc
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
