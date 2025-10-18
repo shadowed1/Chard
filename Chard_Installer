@@ -101,6 +101,7 @@ esac
 
     echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
             sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev/dri" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
@@ -145,6 +146,7 @@ sudo mkdir -p /usr/local/chard/etc/portage/repos.conf"
 sudo mkdir -p /usr/local/chard/var/db/repos/gentoo/profiles"
 sudo mkdir -p "/usr/local/chard/etc/portage/make.profile"
 sudo mkdir -p /usr/local/chard/run/user/0
+sudo mkdir -p /usr/local/chard/dev/dri
 sudo chmod 700 /usr/local/chard/run/user/0
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
@@ -366,6 +368,7 @@ sudo touch "$CHARD_ROOT/etc/xml/catalog"
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
     sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+    sudo umount -l "/usr/local/chard/dev/dri" 2>/dev/null || true
     sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
@@ -978,6 +981,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
 sudo mv /usr/local/chard/usr/lib/libcrypt.so /usr/local/chard/usr/lib/libcrypt.so.bak 2>/dev/null
 
 sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+sudo umount -l "/usr/local/chard/dev/dri" 2>/dev/null || true
 sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
 sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
@@ -1608,6 +1612,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
             sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev/dri" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
