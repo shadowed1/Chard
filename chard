@@ -333,12 +333,13 @@ case "$cmd" in
         read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] ${RESET}" ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
-            sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
-            sudo umount -l "/usr/local/chard/dev/dri" 2>/dev/null || true
-            sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
-            sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
-            sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-            sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev/dri"  2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
+            sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
+            sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
+            sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
             echo "${BLUE}[*] Removing $CHARD_ROOT${RESET}"
             sudo rm -rf "$CHARD_ROOT"
     
@@ -352,12 +353,14 @@ case "$cmd" in
     root|cr)
         sudo chroot /usr/local/chard /bin/bash -c "
 
-            mountpoint -q /proc    || mount -t proc proc /proc
-            mountpoint -q /sys     || mount -t sysfs sys /sys
-            mountpoint -q /dev     || mount -t devtmpfs devtmpfs /dev
-            mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
-            mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
-            mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+            mountpoint -q /proc     || mount -t proc proc /proc
+            mountpoint -q /sys      || mount -t sysfs sys /sys
+            mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
+            mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
+            mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
+            mountpoint -q /dev/dri  || mount --bind /dev/dri /dev/dri
+            mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
+            mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
             [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -370,6 +373,7 @@ case "$cmd" in
             umount /etc/ssl
             umount /dev/pts
             umount /dev/shm
+            umount /dev/dri
             umount /dev
             umount /sys
             umount /proc
@@ -379,12 +383,14 @@ case "$cmd" in
     remerge)
         sudo chroot /usr/local/chard /bin/bash -c "
 
-        mountpoint -q /proc    || mount -t proc proc /proc
-        mountpoint -q /sys     || mount -t sysfs sys /sys
-        mountpoint -q /dev     || mount -t devtmpfs devtmpfs /dev
-        mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
-        mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
-        mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+        mountpoint -q /proc     || mount -t proc proc /proc
+        mountpoint -q /sys      || mount -t sysfs sys /sys
+        mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
+        mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
+        mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
+        mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
+        mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+
         [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -582,13 +588,15 @@ case "$cmd" in
                 umount /dev
                 umount /sys
                 umount /proc
+                umount /run/dbus
             "
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
-            sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
-            sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
-            sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
-            sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-            sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
+            sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
+            sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
+            sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
+            sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
+            sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
