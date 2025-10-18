@@ -177,37 +177,51 @@ export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 #export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 
-RED='\e[31m'
-GREEN='\e[32m'
-YELLOW='\e[33m'
-BLUE='\e[34m'
-MAGENTA='\e[35m'
-CYAN='\e[36m'
-BOLD='\e[1m'
-RESET='\e[0m'
-
-if (( ${#CORES[@]} == 0 )); then
-    total=$(nproc)
-    half=$(( total / 1 ))
-    WEAK_CORES_ALL=$half
-else
-    WEAK_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | cut -d: -f1 | paste -sd, -)
+if ! lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
+    echo "Error: lscpu -e=CPU,MAXMHZ not supported on this system."
+    return 0
 fi
 
-MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-MEM_GB=$(( MEM_KB / 1024 / 1024 ))
-THREADS=$((MEM_GB / 2))
-((THREADS < 1)) && THREADS=1
+mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
+    awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
 
-IFS=',' read -ra CORE_ARRAY <<< "$WEAK_CORES_ALL"
-AVAILABLE_CORES=${#CORE_ARRAY[@]}
-if (( THREADS < AVAILABLE_CORES )); then
-    WEAK_CORES=$(printf '%s,' "${CORE_ARRAY[@]:0:$THREADS}" | sed 's/,$//')
+if (( ${#CORES[@]} == 0 )); then
+    echo "No CPU frequency data found."
+    return 0
+fi
+
+mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
+count=${#mhz_values[@]}
+mid=$((count / 2))
+if (( count % 2 == 0 )); then
+    threshold=$(awk "BEGIN {print (${mhz_values[mid-1]} + ${mhz_values[mid]}) / 2}")
 else
-    WEAK_CORES="$WEAK_CORES_ALL"
+    threshold="${mhz_values[mid]}"
+fi
+
+WEAK_CORES=$(printf '%s\n' "${CORES[@]}" | \
+    awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
+
+if [[ -z "$WEAK_CORES" ]]; then
+    echo "Warning: Could not determine weak cores, defaulting to all cores."
+    WEAK_CORES=$(seq 0 $(( $(nproc) - 1 )) | paste -sd, -)
 fi
 
 export TASKSET="taskset -c $WEAK_CORES"
+
+MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / 1024 / 1024 ))
+THREADS=$((MEM_GB / 2))
+((THREADS < 1)) && THREADS=1
+
+TOTAL_CORES=$(nproc)
+ECORE_COUNT=$(echo "$WEAK_CORES" | tr ',' '\n' | wc -l)
+ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
+
+if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.65)}") )); then
+    THREADS=$(awk -v t="$THREADS" 'BEGIN {printf("%d", t * 3.0)}')
+fi
+
 export MAKEOPTS="-j$THREADS"
 
 parallel_tools=(make emerge ninja scons meson cmake)
@@ -217,7 +231,7 @@ for tool in "${parallel_tools[@]}"; do
     fi
 done
 
-serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build llvm-tblgen cc1plus)
+serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build)
 for tool in "${serial_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
         alias "$tool"="$TASKSET $tool"
@@ -229,7 +243,6 @@ if [[ -t 1 ]]; then
     echo -e "${BOLD}${RED}Chard Root ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} CPU Profile:${RESET}"
     echo
     echo -e "${BLUE}Thread Array:      ${BOLD}${CORES[*]} ${RESET}"
-    echo -e "${BLUE}Available Cores:   ${BOLD}$WEAK_CORES_ALL ${RESET}"
     echo
     echo -e "${GREEN}Allocated Memory:  ${BOLD}${MEM_GB} GB ${RESET}"
     echo -e "${GREEN}Allocated Threads: ${BOLD}$WEAK_CORES ${RESET}"
