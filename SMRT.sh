@@ -93,7 +93,7 @@ if [[ -z "$1" ]]; then
     ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
     
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} - $REQUESTED_THREADS threads${RESET}"
+    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - $REQUESTED_THREADS threads${RESET}"
     echo ""
     echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
     echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
@@ -143,7 +143,7 @@ else
     
     if [[ -t 1 ]]; then
         echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-        echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} - $REQUESTED_THREADS threads${RESET}"
+        echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - $REQUESTED_THREADS threads${RESET}"
         echo ""
         echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
         echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
