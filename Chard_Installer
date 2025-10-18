@@ -101,7 +101,6 @@ esac
 
     echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
             sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
-            sudo umount -q "/usr/local/chard/dev/dri"  2>/dev/null || true
             sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
@@ -147,7 +146,6 @@ sudo mkdir -p /usr/local/chard/etc/portage/repos.conf"
 sudo mkdir -p /usr/local/chard/var/db/repos/gentoo/profiles"
 sudo mkdir -p "/usr/local/chard/etc/portage/make.profile"
 sudo mkdir -p /usr/local/chard/run/user/0
-sudo mkdir -p /usr/local/chard/dev/dri
 sudo chmod 700 /usr/local/chard/run/user/0
 sudo mkdir -p /usr/local/chard/run/dbus
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
@@ -349,7 +347,6 @@ sudo touch "$CHARD_ROOT/etc/xml/catalog"
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
     sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
-    sudo umount -q "/usr/local/chard/dev/dri"  2>/dev/null || true
     sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
     sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
     sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
@@ -906,7 +903,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
     mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
     mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
-    mountpoint -q /dev/dri  || mount --bind /dev/dri /dev/dri
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
     
@@ -959,7 +955,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
     umount /etc/ssl
     umount /dev/pts
     umount /dev/shm
-    umount -q /dev/dri
     umount /dev
     umount /sys
     umount /proc
@@ -968,7 +963,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
 sudo mv /usr/local/chard/usr/lib/libcrypt.so /usr/local/chard/usr/lib/libcrypt.so.bak 2>/dev/null
 
 sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
-sudo umount -q "/usr/local/chard/dev/dri"  2>/dev/null || true
 sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
 sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
@@ -1214,7 +1208,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
         mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
         mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
         mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
-        mountpoint -q /dev/dri  || mount --bind /dev/dri /dev/dri
         mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
         mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
         [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
@@ -1496,7 +1489,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 umount /etc/ssl
                 umount /dev/pts
                 umount /dev/shm
-                umount -q /dev/dri
                 umount /dev
                 umount /sys
                 umount /proc
@@ -1505,7 +1497,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
             sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
-            sudo umount -q "/usr/local/chard/dev/dri" 2>/dev/null || true
             sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
