@@ -186,27 +186,22 @@ CYAN='\e[36m'
 BOLD='\e[1m'
 RESET='\e[0m'
 
-if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
-    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
-else
-    mapfile -t CORES < <(awk -v c=-1 '/^processor/ {c=$3} /cpu MHz/ && c>=0 {print c ":" $4; c=-1}' /proc/cpuinfo | sort -t: -k2,2n)
-fi
-
 if (( ${#CORES[@]} == 0 )); then
     total=$(nproc)
-    WEAK_CORES_ALL=$(seq 0 $((total-1)) | paste -sd, -)
+    half=$(( total / 1 ))
+    WEAK_CORES_ALL=$half
 else
+    # Pick lowest-clocked cores only (slowest cores)
     WEAK_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | cut -d: -f1 | paste -sd, -)
 fi
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( MEM_KB / 1024 / 1024 ))
-THREADS=$(( MEM_GB ))
-((THREADS < 2)) && THREADS=2
+THREADS=$((MEM_GB / 2))
+((THREADS < 1)) && THREADS=1
 
 IFS=',' read -ra CORE_ARRAY <<< "$WEAK_CORES_ALL"
 AVAILABLE_CORES=${#CORE_ARRAY[@]}
-
 if (( THREADS < AVAILABLE_CORES )); then
     WEAK_CORES=$(printf '%s,' "${CORE_ARRAY[@]:0:$THREADS}" | sed 's/,$//')
 else
@@ -216,7 +211,7 @@ fi
 export TASKSET="taskset -c $WEAK_CORES"
 export MAKEOPTS="-j$THREADS"
 
-parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
+parallel_tools=(make emerge ninja scons meson cmake)
 for tool in "${parallel_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
         alias "$tool"="$TASKSET $tool $MAKEOPTS"
