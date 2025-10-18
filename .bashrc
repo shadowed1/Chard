@@ -191,7 +191,6 @@ if (( ${#CORES[@]} == 0 )); then
     half=$(( total / 1 ))
     WEAK_CORES_ALL=$half
 else
-    # Pick lowest-clocked cores only (slowest cores)
     WEAK_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | cut -d: -f1 | paste -sd, -)
 fi
 
