@@ -5,6 +5,4 @@ if [ -z "$CHARD_ROOT" ]; then
     return 1
 fi
 
-dbus-daemon --system --fork 2>/dev/null
-
 # <<< END CHARD_LOGIC <<<
