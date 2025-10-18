@@ -244,7 +244,7 @@ if [[ -t 1 ]]; then
     echo
     echo -e "${BLUE}Thread Array:      ${BOLD}${CORES[*]} ${RESET}"
     echo
-    echo -e "${GREEN}Detected Memory:  ${BOLD}${MEM_GB} GB ${RESET}"
+    echo -e "${GREEN}Detected Memory:   ${BOLD}${MEM_GB} GB ${RESET}"
     echo -e "${GREEN}Allocated Threads: ${BOLD}$WEAK_CORES ${RESET}"
     echo
     echo -e "${MAGENTA}Makeopts:          ${BOLD}$MAKEOPTS ${RESET}"
