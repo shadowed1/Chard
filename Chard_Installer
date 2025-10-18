@@ -1621,4 +1621,4 @@ sudo chroot /usr/local/chard /bin/bash -c "
             #app-accessibility/at-spi2-atk
             #xfce-extra/xfce4-screensaver
             #sys-apps/xdg-dbus-proxy
-            sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
+            #sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "/usr/local/chard/.chard.preload"
