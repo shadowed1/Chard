@@ -1323,7 +1323,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
             echo -e \"\${BLUE}Thread Array:      \${BOLD}\${CORES[*]} \${RESET}\"; \
             echo -e \"\${BLUE}Available Cores:   \${BOLD}\$WEAK_CORES_ALL \${RESET}\"; \
             echo -e \"\"; \
-            echo -e \"\${GREEN}Allocated Memory:  \${BOLD}\${MEM_GB} GB \${RESET}\"; \
+            echo -e \"\${GREEN}Detected Memory:   \${BOLD}\${MEM_GB} GB \${RESET}\"; \
             echo -e \"\${GREEN}Allocated Threads: \${BOLD}\$WEAK_CORES \${RESET}\"; \
             echo -e \"\"; \
             echo -e \"\${MAGENTA}Makeopts:          \${BOLD}\$MAKEOPTS \${RESET}\"; \
