@@ -177,30 +177,36 @@ export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 #export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 
+RED='\e[31m'
+GREEN='\e[32m'
+YELLOW='\e[33m'
+BLUE='\e[34m'
+MAGENTA='\e[35m'
+CYAN='\e[36m'
+BOLD='\e[1m'
+RESET='\e[0m'
+
 if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
-    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
-        awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
+    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
 else
-    mapfile -t CORES < <(awk -v c=-1 '
-        /^processor/ {c=$3}
-        /cpu MHz/ && c>=0 {print c ":" $4; c=-1}
-    ' /proc/cpuinfo | sort -t: -k2,2n)
+    mapfile -t CORES < <(awk -v c=-1 '/^processor/ {c=$3} /cpu MHz/ && c>=0 {print c ":" $4; c=-1}' /proc/cpuinfo | sort -t: -k2,2n)
 fi
 
 if (( ${#CORES[@]} == 0 )); then
     total=$(nproc)
-    WEAK_CORES_ALL=$(seq 0 $((total - 1)) | paste -sd, -)
+    WEAK_CORES_ALL=$(seq 0 $((total-1)) | paste -sd, -)
 else
     WEAK_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | cut -d: -f1 | paste -sd, -)
 fi
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( MEM_KB / 1024 / 1024 ))
-THREADS=$(( MEM_GB ))  # 1GB per thread
+THREADS=$(( MEM_GB ))
 ((THREADS < 2)) && THREADS=2
 
 IFS=',' read -ra CORE_ARRAY <<< "$WEAK_CORES_ALL"
 AVAILABLE_CORES=${#CORE_ARRAY[@]}
+
 if (( THREADS < AVAILABLE_CORES )); then
     WEAK_CORES=$(printf '%s,' "${CORE_ARRAY[@]:0:$THREADS}" | sed 's/,$//')
 else
@@ -225,18 +231,18 @@ for tool in "${serial_tools[@]}"; do
 done
 
 if [[ -t 1 ]]; then
-    echo "${BLUE}──────────────────────────────────────────────────────────────────────────────${RESET}"
-    echo "${BOLD}${RED}Chard Root ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} CPU Profile:${RESET}"
-    echo ""
-    echo "${BLUE}Thread Array:      ${BOLD}${CORES[*]} ${RESET}"
-    echo "${BLUE}Available Cores:   ${BOLD}$WEAK_CORES_ALL ${RESET}"
-    echo ""
-    echo "${GREEN}Allocated Memory:  ${BOLD}${MEM_GB} GB ${RESET}"
-    echo "${GREEN}Allocated Threads: ${BOLD}$WEAK_CORES ${RESET}"
-    echo ""
-    echo "${MAGENTA}Makeopts:          ${BOLD}$MAKEOPTS ${RESET}"
-    echo "${MAGENTA}Taskset:           ${BOLD}$TASKSET ${RESET}"
-    echo "${BLUE}──────────────────────────────────────────────────────────────────────────────${RESET}"
+    echo -e "${BLUE}──────────────────────────────────────────────────────────────────────────────${RESET}"
+    echo -e "${BOLD}${RED}Chard Root ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} CPU Profile:${RESET}"
+    echo
+    echo -e "${BLUE}Thread Array:      ${BOLD}${CORES[*]} ${RESET}"
+    echo -e "${BLUE}Available Cores:   ${BOLD}$WEAK_CORES_ALL ${RESET}"
+    echo
+    echo -e "${GREEN}Allocated Memory:  ${BOLD}${MEM_GB} GB ${RESET}"
+    echo -e "${GREEN}Allocated Threads: ${BOLD}$WEAK_CORES ${RESET}"
+    echo
+    echo -e "${MAGENTA}Makeopts:          ${BOLD}$MAKEOPTS ${RESET}"
+    echo -e "${MAGENTA}Taskset:           ${BOLD}$TASKSET ${RESET}"
+    echo -e "${BLUE}──────────────────────────────────────────────────────────────────────────────${RESET}"
 fi
 
 # <<< END CHARD .BASHRC >>>
