@@ -551,7 +551,7 @@ AR="/usr/bin/gcc-ar"
 RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
 
-FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs ccache config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
 USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts dvd dvdr encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 -systemd -elogind"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
@@ -1302,14 +1302,14 @@ sudo chroot /usr/local/chard /bin/bash -c "
         
         export MAKEOPTS=\"-j\$THREADS\"
         
-        parallel_tools=(make emerge ninja scons meson cmake)
+        parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
         for tool in \"\${parallel_tools[@]}\"; do
             if command -v \"\$tool\" >/dev/null 2>&1; then
                 alias \"\$tool\"=\"\$TASKSET \$tool \$MAKEOPTS\"
             fi
         done
         
-        serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build)
+        serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build llvm-tblgen cc1plus)
         for tool in \"\${serial_tools[@]}\"; do
             if command -v \"\$tool\" >/dev/null 2>&1; then
                 alias \"\$tool\"=\"\$TASKSET \$tool\"
