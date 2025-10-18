@@ -1,5 +1,5 @@
 #!/bin/bash
-# SMRT - Smart Multi-threaded Resource Tasking
+# SMRT - Smart Multithreaded Resource Tasker
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
