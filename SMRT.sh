@@ -93,22 +93,26 @@ if [[ -z "$1" ]]; then
     ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
     
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-    echo "${BOLD}${RED}Chard Root ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} CPU Profile:${RESET}"
+    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} - $REQUESTED_THREADS threads${RESET}"
     echo ""
     echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
-    echo "${BLUE}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
+    echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
     if [[ -n "$P_CORES_ALL" ]]; then
-        echo "${BLUE}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
+        echo "${CYAN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
     fi
+    if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
+            echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
+        fi
     echo ""
     echo "${GREEN}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
     echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
     echo ""
     echo "${MAGENTA}Makeopts:                        ${BOLD}-j$ALLOCATED_COUNT ${RESET}"
     echo "${MAGENTA}Taskset:                         ${BOLD}taskset -c $ALLOCATED_CORES ${RESET}"
+    echo
+    echo "${YELLOW}Example: SMRT $E_CORES_ALL to allocate specific thread count${RESET}"
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
     echo ""
-    echo "${YELLOW}Usage: SMRT [threads] to allocate specific thread count${RESET}"
 else
     REQUESTED_THREADS=$1
     
@@ -138,15 +142,27 @@ else
     done
     
     if [[ -t 1 ]]; then
-        echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-        echo "${BOLD}${RED}Chard Root ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} - Configured for $REQUESTED_THREADS threads${RESET}"
+       echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
+        echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} - $REQUESTED_THREADS threads${RESET}"
         echo ""
-        echo "${GREEN}Allocated Cores:                 ${BOLD}$ALLOCATED_CORES ${RESET}"
-        echo "${GREEN}Thread Count:                    ${BOLD}$ALLOCATED_COUNT ${RESET}"
+        echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
+        echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
+        if [[ -n "$P_CORES_ALL" ]]; then
+            echo "${CYAN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
+        fi
+        if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
+                echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
+            fi
         echo ""
-        echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
-        echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
+        echo "${GREEN}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
+        echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
+        echo ""
+        echo "${MAGENTA}Makeopts:                        ${BOLD}-j$ALLOCATED_COUNT ${RESET}"
+        echo "${MAGENTA}Taskset:                         ${BOLD}taskset -c $ALLOCATED_CORES ${RESET}"
+        echo
+        echo "${YELLOW}Example: SMRT $ALLOCATED_COUNT to allocate specific thread count${RESET}"
         echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
+        echo ""
         if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
             echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
         fi
