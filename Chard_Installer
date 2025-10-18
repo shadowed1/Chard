@@ -1054,8 +1054,8 @@ case "$ARCH" in
                 DRM_I915=y
                 ;;
             *)
-                DRM_AMDGPU=y
-                DRM_I915=y
+                DRM_AMDGPU=n
+                DRM_I915=n
                 ;;
         esac
 
@@ -1172,9 +1172,9 @@ EOF
                 DRM_ARM_DC=n
                 ;;
             *)
-                DRM_MALI=y
-                DRM_ROCKCHIP=y
-                DRM_ARM_DC=y
+                DRM_MALI=n
+                DRM_ROCKCHIP=n
+                DRM_ARM_DC=n
                 ;;
         esac
 
