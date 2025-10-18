@@ -1199,8 +1199,8 @@ echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "/usr/bin/SMRT"
-sudo chmod +x SMRT
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "usr/local/chard/usr/bin/SMRT"
+sudo chmod +x /usr/local/chard/usr/bin/SMRT
 sudo ln -sf /usr/local/chard/usr/bin/SMRT /usr/local/bin/SMRT
 echo
 sudo chroot /usr/local/chard /bin/bash -c "
