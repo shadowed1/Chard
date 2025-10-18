@@ -189,17 +189,15 @@ fi
 
 if (( ${#CORES[@]} == 0 )); then
     total=$(nproc)
-    half=$(( total / 1 ))
-    WEAK_CORES_ALL=$half
+    WEAK_CORES_ALL=$(seq 0 $((total - 1)) | paste -sd, -)
 else
-    # Pick lowest-clocked cores only (slowest cores)
     WEAK_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | cut -d: -f1 | paste -sd, -)
 fi
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( MEM_KB / 1024 / 1024 ))
-THREADS=$((MEM_GB / 2))
-((THREADS < 1)) && THREADS=1
+THREADS=$(( MEM_GB ))  # 1GB per thread
+((THREADS < 2)) && THREADS=2
 
 IFS=',' read -ra CORE_ARRAY <<< "$WEAK_CORES_ALL"
 AVAILABLE_CORES=${#CORE_ARRAY[@]}
@@ -212,7 +210,7 @@ fi
 export TASKSET="taskset -c $WEAK_CORES"
 export MAKEOPTS="-j$THREADS"
 
-parallel_tools=(make emerge ninja scons meson cmake)
+parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
 for tool in "${parallel_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
         alias "$tool"="$TASKSET $tool $MAKEOPTS"
@@ -240,6 +238,5 @@ if [[ -t 1 ]]; then
     echo "${MAGENTA}Taskset:           ${BOLD}$TASKSET ${RESET}"
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────${RESET}"
 fi
-
 
 # <<< END CHARD .BASHRC >>>
