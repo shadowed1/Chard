@@ -1383,7 +1383,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 ECORE_RATIO=\$(awk \"BEGIN {print \$ECORE_COUNT / \$TOTAL_CORES}\")
                 
                 if (( \$(awk \"BEGIN {print (\$ECORE_RATIO >= 0.65)}\") )); then
-                    THREADS=\$(awk -v t=\"\$THREADS\" 'BEGIN {printf(\"%d\", t * 3.1)}')
+                    THREADS=\$(awk -v t=\"\$THREADS\" 'BEGIN {printf(\"%d\", t * 2.25)}')
                 fi
                 
                 if [[ \"\$WEAK_CORES_ALL\" =~ ^[0-9,]+\$ ]]; then
