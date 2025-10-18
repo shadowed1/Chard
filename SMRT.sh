@@ -110,7 +110,7 @@ if [[ -z "$1" ]]; then
     echo "${MAGENTA}Makeopts:                        ${BOLD}-j$ALLOCATED_COUNT ${RESET}"
     echo "${MAGENTA}Taskset:                         ${BOLD}taskset -c $ALLOCATED_CORES ${RESET}"
     echo
-    echo "${YELLOW}Example: SMRT $E_CORES_ALL to allocate specific thread count${RESET}"
+    echo "${YELLOW}Example: SMRT $REQUESTED_THREADS to allocate specific thread count${RESET}"
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
     echo ""
 else
@@ -142,7 +142,7 @@ else
     done
     
     if [[ -t 1 ]]; then
-       echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
+        echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
         echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${MAGENTA} - $REQUESTED_THREADS threads${RESET}"
         echo ""
         echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
