@@ -166,9 +166,9 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
 
 sudo mkdir -p /usr/local/chard/usr/local/src/gtest-1.16.0
 sudo mkdir -p "$(dirname "$LOG_FILE")"
-sudo mkdir -p /usr/local/chard/etc/portage/repos.conf"
-sudo mkdir -p /usr/local/chard/var/db/repos/gentoo/profiles"
-sudo mkdir -p "/usr/local/chard/etc/portage/make.profile"
+sudo mkdir -p /usr/local/chard/etc/portage/repos.conf
+sudo mkdir -p /usr/local/chard/var/db/repos/gentoo/profiles
+sudo mkdir -p /usr/local/chard/etc/portage/make.profile
 sudo mkdir -p /usr/local/chard/run/user/0
 sudo chmod 700 /usr/local/chard/run/user/0
 sudo mkdir -p /usr/local/chard/run/dbus
