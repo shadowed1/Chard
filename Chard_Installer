@@ -105,6 +105,8 @@ esac
             sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
             sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/tmp"      2>/dev/null || true
+            sudo umount -l "/usr/local/chard/var/tmp"  2>/dev/null || true
     
             echo "${BLUE}[*] Removing $CHARD_ROOT...${RESET}"
             sudo rm -rf "$CHARD_ROOT"
@@ -380,6 +382,8 @@ cleanup_chroot() {
     sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
     sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
     sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
+    sudo umount -l "/usr/local/chard/tmp"      2>/dev/null || true
+    sudo umount -l "/usr/local/chard/var/tmp"  2>/dev/null || true
     sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 }
 
@@ -1003,6 +1007,8 @@ sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
 sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
+sudo umount -l "/usr/local/chard/tmp"      2>/dev/null || true
+sudo umount -l "/usr/local/chard/var/tmp"  2>/dev/null || true
 
 
 ARCH=$(uname -m)
@@ -1479,6 +1485,9 @@ sudo chroot /usr/local/chard /bin/bash -c "
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
+            sudo umount -l "/usr/local/chard/tmp"      2>/dev/null || true
+            sudo umount -l "/usr/local/chard/var/tmp"  2>/dev/null || true
             sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
             # Check
             #sys-auth/polkit
