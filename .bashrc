@@ -181,8 +181,6 @@ export PYTHONMULTIPROCESSING_START_METHOD=fork
 
 alias smrt='SMRT'
 
-/usr/bin/SMRT
-
 if [[ -f /usr/bin/.smrt_env.sh ]]; then
     source /usr/bin/.smrt_env.sh
 fi
