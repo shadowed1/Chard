@@ -985,7 +985,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
             export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
-            source /home/chronos/user/.bashrc
             dbus-daemon --system --fork 2>/dev/null        
 
 
@@ -1308,7 +1307,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 ln -s /usr/bin/ccache /usr/lib/ccache/bin/g++
                 ln -s /usr/bin/ccache /usr/lib/ccache/bin/clang
                 ln -s /usr/bin/ccache /usr/lib/ccache/bin/clang++
-                emerge -uDN @world
                 emerge dev-build/make
                 USE="-gui" emerge -1 dev-build/cmake
                 emerge sys-devel/gcc
