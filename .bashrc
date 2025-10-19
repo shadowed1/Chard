@@ -180,7 +180,11 @@ export CLUTTER_BACKEND="x11"
 
 /usr/bin/SMRT
 
-alias SMRT='source /usr/bin/SMRT'
+SMRT() {
+    eval "source /usr/bin/SMRT \"$*\""
+}
+
+#alias SMRT='source /usr/bin/SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
 # <<< END CHARD .BASHRC >>>
