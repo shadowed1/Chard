@@ -111,7 +111,7 @@ esac
             sudo rm -rf "$CHARD_ROOT"
     
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
-
+CHARD_ROOT=/usr/local/chard
 sudo mkdir -p "$CHARD_ROOT"/etc/portage \
                  "$CHARD_ROOT"/etc/sandbox.d \
                  "$CHARD_ROOT"/etc/ssl \
@@ -139,7 +139,7 @@ sudo mkdir -p "$CHARD_ROOT"/etc/portage \
                  "$CHARD_ROOT"/home/chronos/user/.local/share \
                  "$CHARD_ROOT"/home/chronos/user/Desktop \
                  "$CHARD_ROOT"/mnt
-
+sudo mkdir -p /usr/local/chard/usr/bin
 sudo mkdir -p /usr/local/chard/usr/local/src/gtest-1.16.0
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p /usr/local/chard/etc/portage/repos.conf"
@@ -203,31 +203,24 @@ esac
 
 sudo mkdir -p "/usr/local/chard/var/tmp"
 PORTAGE_DIR="/usr/local/chard/usr/portage"
-SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
-TMP_TAR="/usr/local/chard/var/tmp/portage-latest.tar.xz"
-echo "${CYAN}[+] Downloading Portage tree snapshot"
-sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
-    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
-sudo rm -f "$TMP_TAR"
 
-STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
+STAGE4_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage4-$GENTOO_ARCH-wsl-systemd/latest-stage4-$GENTOO_ARCH-wsl-systemd.txt"
 
-STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
-STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
+STAGE4_FILENAME=$(curl -fsSL "$STAGE4_TXT" | grep -Eo 'stage4-.*\.tar\.xz' | head -n1)
+STAGE4_URL=$(dirname "$STAGE4_TXT")"/$STAGE4_FILENAME"
 
-STAGE3_FILE=$(basename "$STAGE3_URL")
-TMP_STAGE3="/usr/local/chard/var/tmp/$STAGE3_FILE"
+STAGE4_FILE=$(basename "$STAGE4_URL")
+TMP_STAGE4="/usr/local/chard/var/tmp/$STAGE4_FILE"
 
-echo "${RESET}${BLUE}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
-sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
+echo "${RESET}${BLUE}[+] Downloading latest Stage4 systemd tarball: $STAGE4_FILENAME"
+sudo curl -L --progress-bar -o "$TMP_STAGE4" "$STAGE4_URL"
 
-echo "${RESET}${BLUE}[+] Extracting Stage3 tarball"
-sudo tar -xJf "$TMP_STAGE3" -C "/usr/local/chard" --strip-components=1 \
+echo "${RESET}${BLUE}[+] Extracting Stage4 systemd tarball"
+sudo tar -xJf "$TMP_STAGE4" -C "/usr/local/chard" --strip-components=1 \
     --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 
-sudo rm -f "$TMP_STAGE3"
+sudo rm -f "$TMP_STAGE4"
 
 PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
 MAKE_PROFILE="/usr/local/chard/etc/portage/make.profile"
@@ -1201,6 +1194,8 @@ echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "usr/local/chard/usr/bin/SMRT"
 sudo chmod +x /usr/local/chard/usr/bin/SMRT
+sudo touch /usr/local/chard/usr/bin/.smrt_env.sh
+sudo chown -R 1000:1000 /usr/local/chard
 echo
 sudo chroot /usr/local/chard /bin/bash -c "
 
