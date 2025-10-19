@@ -181,7 +181,7 @@ export CLUTTER_BACKEND="x11"
 /usr/bin/SMRT
 
 if [[ -f /usr/bin/.smrt_env.sh ]]; then
-    source /usr/bin/smrt_env.sh
+    source /usr/bin/.smrt_env.sh
 fi
 
 #alias SMRT='source /usr/bin/SMRT'
