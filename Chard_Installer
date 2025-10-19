@@ -189,85 +189,14 @@ sudo chmod 700 "$CHARD_ROOT/run/user/0"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
-sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo mkdir -p /usr/local/chard/etc/portage/package.use
 
-sudo rm -f \
-    "$CHARD_ROOT/.chardrc" \
-    "$CHARD_ROOT/.chard.env" \
-    "$CHARD_ROOT/.chard.logic" \
-    "$CHARD_ROOT/bin/SMRT" \
-    "$CHARD_ROOT/bin/chard"
-
-sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT"
-
-echo "${YELLOW}[*] Downloading Chard components...${RESET}"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
-
-for file in \
-    "$CHARD_ROOT/.chardrc" \
-    "$CHARD_ROOT/.chard.env" \
-    "$CHARD_ROOT/.chard.logic" \
-    "$CHARD_ROOT/bin/SMRT" \
-    "$CHARD_ROOT/bin/chard"; do
-
-    if [ -f "$file" ]; then
-        sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
-        sudo chmod +x "$file"
-    else
-        echo "${RED}[!] Missing: $file — download failed?${RESET}"
-    fi
-done
-
-echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
-
-SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
-SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
-
-sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
-sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
-
-USER_HOME="${HOME:-/home/chronos/user}"
-USER_BASHRC="$USER_HOME/.bashrc"
-            
-[ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
-            
-if [ -f /etc/bash.bashrc ]; then
-    SYS_BASHRC="/etc/bash.bashrc"
-elif [ -f /etc/bashrc ]; then
-    SYS_BASHRC="/etc/bashrc"
-else
-    SYS_BASHRC=""
-fi
-
-add_chard_marker() {
-    local FILE="$1"
-    sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
-    
-    if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
-        echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
-        echo "${GREEN}[+] Chard sourced to $FILE${RESET}"
-    else
-        echo "${YELLOW}[!] Chard already sourced in $FILE${RESET}"
-    fi
-}
-
-if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
-    cat >> "/home/chronos/user/.bashrc" <<EOF
-
-# <<< CHARD ENV MARKER <<<
-source "$CHARD_RC"
-# <<< END CHARD ENV MARKER <<<
-EOF
-    echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
-else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
-fi
-
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH" ;;
+esac
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -275,38 +204,19 @@ case "$ARCH" in
         GENTOO_ARCH="amd64"
         CHOST="x86_64-pc-linux-gnu"
         sudo mkdir -p "$CHARD_ROOT/usr/bin"
-        sudo chmod -R +x "$CHARD_ROOT/usr/bin"
+        sudo chmod -R +x "/usr/local/chard/usr/bin"
         ;;
     aarch64|arm64)
         GENTOO_ARCH="arm64"
         CHOST="aarch64-unknown-linux-gnu"
         sudo mkdir -p "$CHARD_ROOT/usr/bin"
-        sudo chmod -R +x "$CHARD_ROOT/usr/bin"
+        sudo chmod -R +x "/usr/local/chard/usr/bin"
         ;;
     *)
         echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
         exit 1
         ;;
 esac
-
-sudo mkdir -p "$CHARD_ROOT/var/tmp"
-
-STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
-
-STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
-STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
-
-STAGE3_FILE=$(basename "$STAGE3_URL")
-TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
-
-echo "${RESET}${BLUE}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME${RESET}"
-sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
-
-echo "${RESET}${BLUE}[+] Extracting Stage3 tarball${RESET}"
-sudo tar -xJpf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
-    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
-
-sudo rm -f "$TMP_STAGE3"
 
 sudo mkdir -p "/usr/local/chard/var/tmp"
 PORTAGE_DIR="/usr/local/chard/usr/portage"
