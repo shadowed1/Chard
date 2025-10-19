@@ -178,7 +178,7 @@ else
         echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
         echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
         echo ""
-        echo "${YELLOW}Tip: Run 'SMRT' without arguments to reset to smart defaults${RESET}"
+        echo "${YELLOW}Example: SMRT $ALLOCATED_COUNT to allocate specific thread count${RESET}"
         echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
         echo ""
     fi
