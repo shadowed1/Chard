@@ -1265,6 +1265,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 export CHOST
                 export HOME=/home/chronos/user
                 export MAGIC=\"/usr/share/misc/magic.mgc\"
+                export PATH="/usr/lib/ccache:$PATH"
                 export CC=/usr/bin/gcc
                 export CXX=/usr/bin/g++
                 export AR=/usr/bin/gcc-ar
