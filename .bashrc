@@ -21,7 +21,7 @@ DEFAULT_FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs co
 DEFAULT_USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts dvd dvdr encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 -systemd -elogind"
 export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
 export USE="${USE:-$DEFAULT_USE}"
-
+export HOME=/home/chronos/user
 if [[ "$ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
@@ -180,9 +180,7 @@ export CLUTTER_BACKEND="x11"
 
 /usr/bin/SMRT
 
-SMRT() {
-    source /usr/bin/SMRT "$@"
-}
+alias SMRT='source /usr/bin/SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
 # <<< END CHARD .BASHRC >>>
