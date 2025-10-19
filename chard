@@ -319,7 +319,6 @@ case "$cmd" in
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "$CHARD_ROOT/usr/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/usr/bin/SMRT"
-                sudo ln -sf /usr/local/chard/usr/bin/SMRT /usr/local/bin/SMRT
                 sleep 1
                 echo "[*] Quick reinstall complete.${RESET}"
                 ;;
