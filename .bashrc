@@ -179,13 +179,12 @@ export CLUTTER_BACKEND="x11"
 #export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
-#/usr/bin/SMRT
+/usr/bin/SMRT
 
 if [[ -f /usr/bin/.smrt_env.sh ]]; then
     source /usr/bin/.smrt_env.sh
 fi
 
-#alias SMRT='source /usr/bin/SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
 # <<< END CHARD .BASHRC >>>
