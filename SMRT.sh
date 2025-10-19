@@ -50,7 +50,8 @@ else
 fi
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
+MEM_GB=$(( MEM_KB / 1024 / 1024 ))
+TOTAL_MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
 
 allocate_cores() {
     local requested_threads=$1
@@ -139,12 +140,13 @@ if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
     echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
 fi
 echo ""
-echo "${GREEN}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
-echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
+echo "${GREEN}Detected Memory:                 ${BOLD}${TOTAL_MEM_GB} GB ${RESET}"
+echo "${CYAN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
+echo "${BLUE}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
 echo ""
 echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
 echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
 echo ""
-echo "${YELLOW}Example: SMRT $ALLOCATED_COUNT ${RESET}"
+echo "${YELLOW}SMRT $ALLOCATED_COUNT ${RESET}"
 echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo ""
