@@ -31,8 +31,8 @@ export PATH LD_LIBRARY_PATH
 alias cr='chard root'
 #alias SMRT='source /usr/local/chard/usr/bin/SMRT'
 
-if [[ -f /usr/bin/.smrt_env.sh ]]; then
-    source /usr/bin/smrt_env.sh
+if [[ -f /usr/local/chard/usr/bin/.smrt_env.sh ]]; then
+    source /usr/local/chard/usr/bin/smrt_env.sh
 fi
 
 # <<< END CHARD_ENV <<<
