@@ -34,10 +34,7 @@ show_progress() {
 }
 
 CHARD_ROOT="/usr/local/chard"
-CHARD_RC="$CHARD_ROOT/.chardrc"
-BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-LOG_FILE=$CHARD_ROOT/chardbuild.log
-DEFAULT_CHARD_ROOT="/usr/local/chard"
+
 
 echo "${RESET}${GREEN}"
 echo
@@ -97,14 +94,8 @@ case "$response" in
 esac
     unset LD_PRELOAD
 
-echo ""
-echo "${RESET}${RED}╔${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}╗"
-echo "${RESET}${YELLOW}║                                          NOTICE:                                              ║"
-echo "${RESET}${RED}║                                                                                               ║"
-echo "${RESET}${YELLOW}║             VT-2 (or enabling sudo in crosh) is required to run this installer!               ║"
-echo "${RESET}${RED}║               ${RESET}${YELLOW}Must be installed in a location without the noexec mount.${RED}                       ║"
-echo "${RESET}${YELLOW}╚${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}╝"
-echo "${RESET}"
+DEFAULT_CHARD_ROOT="/usr/local/chard"
+
 
 if [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$DEFAULT_CHARD_ROOT/.install_path")
@@ -139,50 +130,55 @@ done
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
 
+    CHARD_RC="$CHARD_ROOT/.chardrc"
+    BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+    LOG_FILE=$CHARD_ROOT/chardbuild.log
+
     echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
     echo
     echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 
     echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
-            sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
-    
+            sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
             echo "${BLUE}[*] Removing $CHARD_ROOT...${RESET}"
             sudo rm -rf "$CHARD_ROOT"
     
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
 
-sudo mkdir -p "$CHARD_ROOT"/etc/portage \
-                 "$CHARD_ROOT"/etc/sandbox.d \
-                 "$CHARD_ROOT"/etc/ssl \
-                 "$CHARD_ROOT"/usr/bin \
-                 "$CHARD_ROOT"/usr/lib \
-                 "$CHARD_ROOT"/usr/lib64 \
-                 "$CHARD_ROOT"/usr/include \
-                 "$CHARD_ROOT"/usr/share \
-                 "$CHARD_ROOT"/usr/local/bin \
-                 "$CHARD_ROOT"/usr/local/lib \
-                 "$CHARD_ROOT"/usr/local/include \
-                 "$CHARD_ROOT"/var/tmp/build \
-                 "$CHARD_ROOT"/var/cache/distfiles \
-                 "$CHARD_ROOT"/var/cache/packages \
-                 "$CHARD_ROOT"/var/log \
-                 "$CHARD_ROOT"/var/run \
-                 "$CHARD_ROOT"/dev/shm \
-                 "$CHARD_ROOT"/dev/pts \
-                 "$CHARD_ROOT"/proc \
-                 "$CHARD_ROOT"/sys \
-                 "$CHARD_ROOT"/tmp \
-                 "$CHARD_ROOT"/run \
-                 "$CHARD_ROOT"/home/chronos/user/.cargo \
-                 "$CHARD_ROOT"/home/chronos/user/.rustup \
-                 "$CHARD_ROOT"/home/chronos/user/.local/share \
-                 "$CHARD_ROOT"/home/chronos/user/Desktop \
-                 "$CHARD_ROOT"/mnt
+   sudo mkdir -p "$CHARD_ROOT/etc/portage" \
+                 "$CHARD_ROOT/etc/sandbox.d" \
+                 "$CHARD_ROOT/etc/ssl" \
+                 "$CHARD_ROOT/usr/bin" \
+                 "$CHARD_ROOT/usr/lib" \
+                 "$CHARD_ROOT/usr/lib64" \
+                 "$CHARD_ROOT/usr/include" \
+                 "$CHARD_ROOT/usr/share" \
+                 "$CHARD_ROOT/usr/local/bin" \
+                 "$CHARD_ROOT/usr/local/lib" \
+                 "$CHARD_ROOT/usr/local/include" \
+                 "$CHARD_ROOT/var/tmp/build" \
+                 "$CHARD_ROOT/var/cache/distfiles" \
+                 "$CHARD_ROOT/var/cache/packages" \
+                 "$CHARD_ROOT/var/log" \
+                 "$CHARD_ROOT/var/run" \
+                 "$CHARD_ROOT/dev/shm" \
+                 "$CHARD_ROOT/dev/pts" \
+                 "$CHARD_ROOT/proc" \
+                 "$CHARD_ROOT/sys" \
+                 "$CHARD_ROOT/tmp" \
+                 "$CHARD_ROOT/run" \
+                 "$CHARD_ROOT/home/chronos/user/.cargo" \
+                 "$CHARD_ROOT/home/chronos/user/.rustup" \
+                 "$CHARD_ROOT/home/chronos/user/.local/share" \
+                 "$CHARD_ROOT/home/chronos/user/Desktop" \
+                 "$CHARD_ROOT/mnt"
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
@@ -281,7 +277,7 @@ else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
 fi
 
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 export PYTHON="$CHARD_ROOT/bin/python3"
@@ -350,7 +346,6 @@ make INSTALL_HDR_PATH=/usr headers_install
 
 cp .config /usr/src/linux/.config
 "
-CHARD_ROOT="/usr/local/chard"
 echo "${RESET}${CYAN}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
 sudo rm -rf "$KERNEL_BUILD"
 
@@ -384,15 +379,16 @@ sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
-
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
-    sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/tmp"      2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/var/tmp"  2>/dev/null || true
     sudo cp $CHARD_ROOT/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 }
 
@@ -604,7 +600,6 @@ MESON_NATIVE_FILE="/meson-cross.ini"
 EOF
 
 echo "${RESET}${BLUE}make.conf generated successfully for $ARCH → $MAKECONF_FILE ${RESET}"
-
 
 #PORTAGE_PROFILE_DIR="$CHARD_ROOT/etc/portage/make.profile"
 #sudo mkdir -p "$PORTAGE_PROFILE_DIR"
@@ -931,7 +926,6 @@ sudo mkdir -p $CHARD_ROOT/tmp/.X11-unix
 
 echo "${RESET}${GREEN}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf $CHARD_ROOT/etc/resolv.conf
-
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${YELLOW}make.conf successfully updated for Chard. ${RESET}"
 echo "${RESET}${BLUE}Setting up Emerge!"
@@ -945,6 +939,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+    mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
+    mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
+    chmod 1777 /tmp /var/tmp
     
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
@@ -991,7 +988,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
             export LD=\"/usr/bin/ld\"
 
     emerge --sync
-
     umount /etc/ssl
     umount /dev/pts
     umount /dev/shm
@@ -999,16 +995,19 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     umount /sys
     umount /proc
     umount /run/dbus
+    umount /var/tmp
+    umount /tmp
 "
 sudo mv $CHARD_ROOT/usr/lib/libcrypt.so $CHARD_ROOT/usr/lib/libcrypt.so.bak 2>/dev/null
 
-sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
-
+sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
@@ -1076,7 +1075,6 @@ detect_gpu_freq() {
 
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
-
 case "$ARCH" in
     x86_64)
         case "$GPU_VENDOR" in
@@ -1240,7 +1238,7 @@ echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "usr/local/chard/usr/bin/SMRT"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "$CHARD_ROOT/usr/bin/SMRT"
 sudo chmod +x $CHARD_ROOT/usr/bin/SMRT
 sudo touch $CHARD_ROOT/usr/bin/.smrt_env.sh
 sudo chown -R 1000:1000 $CHARD_ROOT
@@ -1254,6 +1252,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
         mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
         mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
         mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+        mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
+        mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
+        chmod 1777 /tmp /var/tmp
         [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -1470,14 +1471,19 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                 umount /sys
                 umount /proc
                 umount /dev/dbus
+                umount /var/tmp
+                umount /tmp
             "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
-            sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
             sudo cp $CHARD_ROOT/chardbuild.log /home/chronos/user/MyFiles/Downloads/
             # Check
             #sys-auth/polkit
