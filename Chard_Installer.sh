@@ -33,9 +33,6 @@ show_progress() {
     echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
 }
 
-CHARD_ROOT="/usr/local/chard"
-
-
 echo "${RESET}${GREEN}"
 echo
 echo
@@ -129,7 +126,8 @@ while true; do
 done
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
-
+    
+    CHARD_ROOT="${CHARD_ROOT%/}"
     CHARD_RC="$CHARD_ROOT/.chardrc"
     BUILD_DIR="$CHARD_ROOT/var/tmp/build"
     LOG_FILE=$CHARD_ROOT/chardbuild.log
@@ -192,16 +190,48 @@ exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc   -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc -o "$CHARD_ROOT/home/chronos/user/.bashrc"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "$CHARD_ROOT/usr/bin/SMRT"
-sudo chmod +x "$CHARD_ROOT/usr/bin/SMRT"
-sudo touch "$CHARD_ROOT/usr/bin/.smrt_env.sh"
+
+echo "${CYAN}[+] Preparing Chard runtime files...${RESET}"
+
+sudo rm -f \
+    "$CHARD_ROOT/.chardrc" \
+    "$CHARD_ROOT/.chard.env" \
+    "$CHARD_ROOT/.chard.logic" \
+    "$CHARD_ROOT/usr/bin/SMRT" \
+    "$CHARD_ROOT/bin/chard"
+
+sudo mkdir -p \
+    "$CHARD_ROOT/usr/bin" \
+    "$CHARD_ROOT/bin" \
+    "$CHARD_ROOT"
+
+echo "${YELLOW}[*] Downloading Chard components...${RESET}"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
+
+for file in \
+    "$CHARD_ROOT/.chardrc" \
+    "$CHARD_ROOT/.chard.env" \
+    "$CHARD_ROOT/.chard.logic" \
+    "$CHARD_ROOT/usr/SMRT" \
+    "$CHARD_ROOT/usr/chard"; do
+
+    if [ -f "$file" ]; then
+        sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+        sudo chmod +x "$file"
+    else
+        echo "${RED}[!] Missing: $file — download failed?${RESET}"
+    fi
+done
+
+echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
 sudo touch /usr/local/bin/.smrt_env.sh
-sudo chown -R 1000:1000 "$CHARD_ROOT/usr/bin/.smrt_env.sh"
+sudo chown -R 1000:1000 "$CHARD_ROOT/bin/.smrt_env.sh"
 sudo chown -R 1000:1000 /usr/local/bin/.smrt_env.sh
+echo "${GREEN}[+] Chard runtime files installed and configured for root: $CHARD_ROOT${RESET}"
 
 USER_HOME="${HOME:-/home/chronos/user}"
 USER_BASHRC="$USER_HOME/.bashrc"
@@ -308,7 +338,6 @@ else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
 fi
 
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 export PYTHON="$CHARD_ROOT/bin/python3"
@@ -1271,7 +1300,7 @@ echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "$CHARD_ROOT/usr/bin/SMRT"
 sudo chmod +x $CHARD_ROOT/usr/bin/SMRT
-sudo touch $CHARD_ROOT/usr/bin/.smrt_env.sh
+sudo touch $CHARD_ROOT/bin/.smrt_env.sh
 sudo chown -R 1000:1000 $CHARD_ROOT
 echo
 sudo chroot $CHARD_ROOT /bin/bash -c "
