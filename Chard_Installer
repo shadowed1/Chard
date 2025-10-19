@@ -155,6 +155,12 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc 
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "/usr/local/chard/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "/usr/local/chard/.chard.logic"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc -o "/usr/local/chard/home/chronos/user/.bashrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "usr/local/chard/usr/bin/SMRT"
+sudo chmod +x /usr/local/chard/usr/bin/SMRT
+sudo touch /usr/local/chard/usr/bin/.smrt_env.sh
+sudo touch /usr/local/bin/.smrt_env.sh
+sudo chown -R 1000:1000 /usr/local/chard/usr/bin/.smrt_env.sh
+sudo chown -R 1000:1000 /usr/local/bin/.smrt_env.sh
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -891,12 +897,7 @@ echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for
 echo "${RESET}${YELLOW}make.conf successfully updated for Chard. ${RESET}"
 echo "${RESET}${BLUE}Setting up Emerge!"
 
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "usr/local/chard/usr/bin/SMRT"
-sudo chmod +x /usr/local/chard/usr/bin/SMRT
-sudo touch /usr/local/chard/usr/bin/.smrt_env.sh
-sudo touch /usr/local/bin/.smrt_env.sh
-sudo chown -R 1000:1000 /usr/local/chard
-sudo chown -R 1000:1000 /usr/local/bin/.smrt_env.sh
+
 
 sudo chroot /usr/local/chard /bin/bash -c "
 
@@ -1202,6 +1203,7 @@ echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
+sudo chown -R 1000:1000 /usr/local/chard/
 echo
 sudo chroot /usr/local/chard /bin/bash -c "
 
@@ -1256,8 +1258,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 source /home/chronos/user/.bashrc
-                /usr/bin/SMRT
-                source /usr/bin/SMRT
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
                 USE="-gui" emerge -1 dev-build/cmake
@@ -1319,7 +1319,8 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge app-arch/brotli
                 mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
                 emerge dev-lang/rust
-                USE="-elogind systemd" emerge sys-auth/polkit
+                USE="-gui" emerge -1 dev-build/cmake
+                USE="-elogind systemd" emerge -1 sys-auth/polkit
                 emerge sys-apps/bubblewrap
                 emerge app-portage/gentoolkit
                 emerge x11-base/xorg-drivers
