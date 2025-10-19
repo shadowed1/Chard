@@ -360,8 +360,8 @@ case "$cmd" in
             echo "${RED}[*] Cancelled.${RESET}"
         fi
         ;;
-    root|cr)
-        sudo chroot /usr/local/chard /bin/bash -c "
+    root)
+        sudo chroot $CHARD_ROOT /bin/bash -c "
 
             mountpoint -q /proc     || mount -t proc proc /proc
             mountpoint -q /sys      || mount -t sysfs sys /sys
@@ -393,9 +393,6 @@ case "$cmd" in
             umount /proc
             umount /run/dbus
         "
-
-
-
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
