@@ -8,7 +8,6 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-CHARD_ROOT="/usr/local/chard"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
@@ -50,7 +49,6 @@ export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
 DEFAULT_USE="X a52 aac acl acpi alsa bluetooth bindist branding bzip2 cairo cdda cdr cet crypt cups dbus dri dts dvd dvdr -elogind encode exif flac gdbm gif gpm gtk gui iconv icu ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png policykit ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg test-rust truetype udev udisks unicode upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib x11"
 export USE="${USE:-$DEFAULT_USE}"
 
-CHARD_ROOT="/usr/local/chard"
 export CHARD_RC="$CHARD_ROOT/.chardrc"
 export PORTDIR="$CHARD_ROOT/usr/portage"
 export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
@@ -182,9 +180,11 @@ export CFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CFLA
 export CXXFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CXXFLAGS"
 
 LDFLAGS=""
-[[ -d /usr/local/chard/usr/lib ]] && LDFLAGS+="-L/usr/local/chard/usr/lib "
-[[ -d /usr/local/chard/lib ]] && LDFLAGS+="-L/usr/local/chard/lib "
-[[ -d /usr/local/chard/usr/local/lib ]] && LDFLAGS+="-L/usr/local/chard/usr/local/lib "
+
+[[ -d "$CHARD_ROOT/usr/lib" ]]        && LDFLAGS+="-L$CHARD_ROOT/usr/lib "
+[[ -d "$CHARD_ROOT/lib" ]]            && LDFLAGS+="-L$CHARD_ROOT/lib "
+[[ -d "$CHARD_ROOT/usr/local/lib" ]]  && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib "
+
 
 export LDFLAGS
 export LD="$CHARD_ROOT/usr/bin/ld"
@@ -319,9 +319,9 @@ case "$cmd" in
                 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "$CHARD_ROOT/usr/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/usr/bin/SMRT"
-                sudo touch /usr/local/chard/usr/bin/.smrt_env.sh
-                sudo touch /usr/local/bin/.smrt_env.sh
-                sudo chown -R 1000:1000 /usr/local/chard/usr/bin/.smrt_env.sh
+                sudo touch "$CHARD_ROOT/usr/bin/.smrt_env.sh"
+                sudo touch /usr/local/bin/.smrt_env.sh"
+                sudo chown -R 1000:1000 "$CHARD_ROOT/usr/bin/.smrt_env.sh"
                 sudo chown -R 1000:1000 /usr/local/bin/.smrt_env.sh
                 sleep 1
                 echo "[*] Quick reinstall complete.${RESET}"
@@ -339,12 +339,12 @@ case "$cmd" in
         read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] ${RESET}" ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
-            sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
-            sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
-            sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
-            sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
-            sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
-            sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
             echo "${BLUE}[*] Removing $CHARD_ROOT${RESET}"
             sudo rm -rf "$CHARD_ROOT"
     
