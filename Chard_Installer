@@ -1293,6 +1293,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 export XDG_RUNTIME_DIR=\"/run/user/0\"
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
+                export PYTHONMULTIPROCESSING_START_METHOD=fork
                 source /home/chronos/user/.bashrc
                 SMRT
                 dbus-daemon --system --fork 2>/dev/null
@@ -1349,6 +1350,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge dev-libs/libunistring
                 emerge sys-apps/file
                 emerge kde-frameworks/extra-cmake-modules
+                emerge -j$(nproc) dev-perl/File-LibMagic
                 emerge dev-perl/File-LibMagic
                 emerge net-libs/libpsl
                 emerge dev-libs/expat
