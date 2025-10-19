@@ -189,7 +189,6 @@ sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-echo "${YELLOW}[+] Downloading Chard configuration files...${RESET}"
 
 sudo rm -f \
     "$CHARD_ROOT/.chardrc" \
