@@ -1,7 +1,9 @@
-
 # <<< CHARD_ENV <<<
 
-export CHARD_ROOT="/usr/local/chard"
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+export CHARD_ROOT
+# <<< END_CHARD_ROOT_MARKER >>>
 
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
@@ -34,10 +36,10 @@ alias cr='chard root'
 CHARD_ROOT="/usr/local/chard"
 CR="$CHARD_ROOT"
 
-#alias SMRT='source /usr/local/chard/usr/bin/SMRT'
+#alias SMRT='source $CHARD_ROOTusr/bin/SMRT'
 
-if [[ -f /usr/local/chard/usr/bin/.smrt_env.sh ]]; then
-    source /usr/local/chard/usr/bin/.smrt_env.sh
+if [[ -f $CHARD_ROOTusr/bin/.smrt_env.sh ]]; then
+    source $CHARD_ROOTusr/bin/.smrt_env.sh
 fi
 
 # <<< END CHARD_ENV <<<
