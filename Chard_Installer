@@ -1265,13 +1265,12 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 export CHOST
                 export HOME=/home/chronos/user
                 export MAGIC=\"/usr/share/misc/magic.mgc\"
-                export PATH="/usr/lib/ccache:$PATH"
                 export CC=/usr/bin/gcc
                 export CXX=/usr/bin/g++
                 export AR=/usr/bin/gcc-ar
                 export RANLIB=/usr/bin/gcc-ranlib
                 export STRIP=/usr/bin/strip
-                export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
+                export PATH=/usr/bin:/bin:/usr/local/bin:/usr/lib/ccache:\$HOME/.cargo/bin
                 export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
                 export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
                 export PKG_CONFIG=/usr/bin/pkg-config
