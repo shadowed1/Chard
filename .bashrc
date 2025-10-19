@@ -178,7 +178,7 @@ export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 #export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 
-/usr/bin/SMRT
+#/usr/bin/SMRT
 
 if [[ -f /usr/bin/.smrt_env.sh ]]; then
     source /usr/bin/.smrt_env.sh
