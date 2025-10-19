@@ -196,6 +196,37 @@ sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc 
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic -o "$CHARD_ROOT/.chard.logic"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc -o "$CHARD_ROOT/home/chronos/user/.bashrc"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "$CHARD_ROOT/usr/bin/SMRT"
+sudo chmod +x "$CHARD_ROOT/usr/bin/SMRT"
+sudo touch "$CHARD_ROOT/usr/bin/.smrt_env.sh"
+sudo touch /usr/local/bin/.smrt_env.sh
+sudo chown -R 1000:1000 "$CHARD_ROOT/usr/bin/.smrt_env.sh"
+sudo chown -R 1000:1000 /usr/local/bin/.smrt_env.sh
+
+USER_HOME="${HOME:-/home/chronos/user}"
+USER_BASHRC="$USER_HOME/.bashrc"
+            
+[ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
+            
+if [ -f /etc/bash.bashrc ]; then
+    SYS_BASHRC="/etc/bash.bashrc"
+elif [ -f /etc/bashrc ]; then
+    SYS_BASHRC="/etc/bashrc"
+else
+    SYS_BASHRC=""
+fi
+            
+ add_chard_marker() {
+    local FILE="$1"
+    sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    
+    if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
+        echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
+        echo "${GREEN}[+] Chard sourced to $FILE${RESET}${YELLOW}"
+    else
+        echo "${YELLOW}[!] Chard already sourced in $FILE"
+    fi
+ }
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -277,7 +308,7 @@ else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
 fi
 
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/main/chard -o "$CHARD_ROOT/bin/chard"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 
 export PYTHON="$CHARD_ROOT/bin/python3"
