@@ -354,9 +354,6 @@ case "$cmd" in
     root|cr)
         sudo chroot /usr/local/chard /bin/bash -c "
 
-            ot|cr)
-    sudo chroot /usr/local/chard /bin/bash -c "
-
             mountpoint -q /proc     || mount -t proc proc /proc
             mountpoint -q /sys      || mount -t sysfs sys /sys
             mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
@@ -367,7 +364,7 @@ case "$cmd" in
             mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
             mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
             chmod 1777 /tmp /var/tmp
-
+        
             [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -385,6 +382,7 @@ case "$cmd" in
             umount /dev
             umount /sys
             umount /proc
+            umount /run/dbus
         "
 
 
