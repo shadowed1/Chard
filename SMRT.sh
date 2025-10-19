@@ -50,7 +50,7 @@ else
 fi
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-MEM_GB=$(( MEM_KB / 1024 / 1024 ))
+MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
 
 allocate_cores() {
     local requested_threads=$1
