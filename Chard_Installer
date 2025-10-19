@@ -1328,9 +1328,9 @@ sudo chroot /usr/local/chard /bin/bash -c "
                         alias \"\$tool\"=\"\$TASKSET \$tool\"
                     fi
                 done
-        
                 sleep 1
                 source /home/chronos/user/.bashrc
+                /usr/bin/SMRT
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
                 USE="-gui" emerge -1 dev-build/cmake
