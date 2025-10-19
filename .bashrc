@@ -183,6 +183,7 @@ export CLUTTER_BACKEND="x11"
 if [[ -f /usr/bin/.smrt_env.sh ]]; then
     source /usr/bin/.smrt_env.sh
 fi
+source /root/.chard_prompt.sh
 
 #alias SMRT='source /usr/bin/SMRT'
 dbus-daemon --system --fork 2>/dev/null
