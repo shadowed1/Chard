@@ -8,7 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-curl -L https://raw.githubusercontent.com/shadowed1/Chard/refs/heads/main/Chard_Installer -o /home/chronos/Chard_Installer
+curl -L https://raw.githubusercontent.com/shadowed1/Chard/refs/heads/main/Chard_Installer.sh -o /home/chronos/Chard_Installer
 echo ""
 echo "${GREEN}Downloading to: /home/chronos/Chard_Installer"
 echo ""
