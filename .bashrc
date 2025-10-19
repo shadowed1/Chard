@@ -179,7 +179,6 @@ export CLUTTER_BACKEND="x11"
 #export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 
 /usr/bin/SMRT
-
 SMRT() {
     eval "source /usr/bin/SMRT \"$*\""
 }
