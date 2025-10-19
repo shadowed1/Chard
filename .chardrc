@@ -30,4 +30,8 @@ export PATH LD_LIBRARY_PATH
 
 alias cr='chard root'
 
+SMRT() {
+    source /usr/local/chard/usr/bin/SMRT "$@"
+}
+
 # <<< END CHARD_ENV <<<
