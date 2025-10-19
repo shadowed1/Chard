@@ -170,6 +170,9 @@ sudo mkdir -p "/usr/local/chard/etc/portage/make.profile"
 sudo mkdir -p /usr/local/chard/run/user/0
 sudo chmod 700 /usr/local/chard/run/user/0
 sudo mkdir -p /usr/local/chard/run/dbus
+sudo mkdir -p /tmp /var/tmp
+sudo chmod 1777 /tmp /var/tmp
+
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
