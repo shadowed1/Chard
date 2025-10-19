@@ -8,6 +8,11 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+export CHARD_ROOT
+# <<< END_CHARD_ROOT_MARKER >>>
+
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
