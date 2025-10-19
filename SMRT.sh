@@ -89,27 +89,45 @@ if [[ -z "$1" ]]; then
         fi
     fi
     
+    (( AUTO_THREADS > TOTAL_CORES )) && AUTO_THREADS=$TOTAL_CORES
+    
     ALLOCATED_CORES=$(allocate_cores $AUTO_THREADS)
     ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
     
+    export TASKSET="taskset -c $ALLOCATED_CORES"
+    export MAKEOPTS="-j$ALLOCATED_COUNT"
+    
+    # Set up aliases for parallel tools
+    parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
+    for tool in "${parallel_tools[@]}"; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            alias "$tool"="$TASKSET $tool $MAKEOPTS"
+        fi
+    done
+    
+    # Set up aliases for serial tools
+    serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build)
+    for tool in "${serial_tools[@]}"; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            alias "$tool"="$TASKSET $tool"
+        fi
+    done
+    
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - $REQUESTED_THREADS threads${RESET}"
+    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - Smart Defaults Applied${RESET}"
     echo ""
     echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
     echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
     if [[ -n "$P_CORES_ALL" ]]; then
         echo "${CYAN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
     fi
-    if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
-            echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
-        fi
     echo ""
-    echo "${GREEN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
+    echo "${GREEN}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
     echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
     echo ""
-    echo "${MAGENTA}Makeopts:                        ${BOLD}-j$ALLOCATED_COUNT ${RESET}"
-    echo "${MAGENTA}Taskset:                         ${BOLD}taskset -c $ALLOCATED_CORES ${RESET}"
-    echo
+    echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
+    echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
+    echo ""
     echo "${YELLOW}Example: SMRT $ALLOCATED_COUNT to allocate specific thread count${RESET}"
     echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
     echo ""
@@ -151,20 +169,17 @@ else
             echo "${CYAN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
         fi
         if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
-                echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
-            fi
-        echo ""
-        echo "${GREEN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
-        echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
-        echo ""
-        echo "${MAGENTA}Makeopts:                        ${BOLD}-j$ALLOCATED_COUNT ${RESET}"
-        echo "${MAGENTA}Taskset:                         ${BOLD}taskset -c $ALLOCATED_CORES ${RESET}"
-        echo
-        echo "${YELLOW}Example: SMRT $ALLOCATED_COUNT to allocate specific thread count${RESET}"
-        echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-        echo ""
-        if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
             echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
         fi
+        echo ""
+        echo "${GREEN}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
+        echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
+        echo ""
+        echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
+        echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
+        echo ""
+        echo "${YELLOW}Tip: Run 'SMRT' without arguments to reset to smart defaults${RESET}"
+        echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
+        echo ""
     fi
 fi
