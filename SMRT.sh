@@ -104,7 +104,7 @@ if [[ -z "$1" ]]; then
             echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
         fi
     echo ""
-    echo "${GREEN}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
+    echo "${GREEN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
     echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
     echo ""
     echo "${MAGENTA}Makeopts:                        ${BOLD}-j$ALLOCATED_COUNT ${RESET}"
@@ -154,7 +154,7 @@ else
                 echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
             fi
         echo ""
-        echo "${GREEN}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
+        echo "${GREEN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
         echo "${GREEN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
         echo ""
         echo "${MAGENTA}Makeopts:                        ${BOLD}-j$ALLOCATED_COUNT ${RESET}"
