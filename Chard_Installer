@@ -1318,7 +1318,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 emerge app-arch/brotli
                 mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
                 emerge dev-lang/rust
-                emerge sys-auth/polkit
+                USE="-elogind systemd" emerge sys-auth/polkit
                 emerge sys-apps/bubblewrap
                 emerge app-portage/gentoolkit
                 emerge x11-base/xorg-drivers
