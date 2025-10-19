@@ -1,4 +1,3 @@
-
 # CHARD .BASHRC
 
 RED=$(tput setaf 1)
