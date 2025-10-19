@@ -1,3 +1,4 @@
+
 # <<< CHARD_ENV <<<
 
 export CHARD_ROOT="/usr/local/chard"
@@ -29,9 +30,11 @@ export PATH LD_LIBRARY_PATH
 [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
 
 alias cr='chard root'
-alias smrt='SMRT'
+
 CHARD_ROOT="/usr/local/chard"
 CR="$CHARD_ROOT"
+
+#alias SMRT='source /usr/local/chard/usr/bin/SMRT'
 
 if [[ -f /usr/local/chard/usr/bin/.smrt_env.sh ]]; then
     source /usr/local/chard/usr/bin/.smrt_env.sh
