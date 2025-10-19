@@ -934,7 +934,10 @@ sudo chroot /usr/local/chard /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
-    
+    mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
+    mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
+    chmod 1777 /tmp /var/tmp
+
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
     [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -978,6 +981,9 @@ sudo chroot /usr/local/chard /bin/bash -c "
             export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
+            source /home/chronos/user/.bashrc
+            dbus-daemon --system --fork 2>/dev/null        
+
 
     emerge --sync
 
@@ -1240,6 +1246,10 @@ sudo chroot /usr/local/chard /bin/bash -c "
         mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
         mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
         mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+        mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
+        mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
+        chmod 1777 /tmp /var/tmp
+    
         [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -1284,6 +1294,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 source /home/chronos/user/.bashrc
+                SMRT
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
                 USE="-gui" emerge -1 dev-build/cmake
@@ -1448,13 +1459,15 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 #emerge www-client/firefox
                 emerge sys-apps/flatpak
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+                umount /tmp
+                umount /var/tmp
                 umount /etc/ssl
                 umount /dev/pts
                 umount /dev/shm
                 umount /dev
                 umount /sys
                 umount /proc
-                umount /dev/dbus
+                umount /run/dbus
             "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
