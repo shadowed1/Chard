@@ -11,27 +11,6 @@ RESET=$(tput sgr0)
 MAX_RETRIES=10
 RETRY_DELAY=30
 
-format_time() {
-    local total_seconds=$1SMRT
-    local hours=$((total_seconds / 3600))
-    local minutes=$(((total_seconds % 3600) / 60))
-    local seconds=$((total_seconds % 60))
-    
-    if [ $hours -gt 0 ]; then
-        printf "%dh %dm %ds" $hours $minutes $seconds
-    elif [ $minutes -gt 0 ]; then
-        printf "%dm %ds" $minutes $seconds
-    else
-        printf "%ds" $seconds
-    fi
-}
-
-show_progress() {
-    local current_time=$(date +%s)
-    local elapsed=$((current_time - START_TIME))
-    local formatted_time=$(format_time $elapsed)
-    echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
-}
 
 echo "${RESET}${GREEN}"
 echo
@@ -73,13 +52,35 @@ echo
 echo "${GREEN}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
 echo "${GREEN}- Chard is currently in early development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
 echo
+
+format_time() {
+    local total_seconds=$1
+    local hours=$((total_seconds / 3600))
+    local minutes=$(((total_seconds % 3600) / 60))
+    local seconds=$((total_seconds % 60))
+    
+    if [ $hours -gt 0 ]; then
+        printf "%dh %dm %ds" $hours $minutes $seconds
+    elif [ $minutes -gt 0 ]; then
+        printf "%dm %ds" $minutes $seconds
+    else
+        printf "%ds" $seconds
+    fi
+}
+
+show_progress() {
+    local current_time=$(date +%s)
+    local elapsed=$((current_time - START_TIME))
+    local formatted_time=$(format_time $elapsed)
+    echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
+}
+
    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
 response=${response:-Y}
 
 case "$response" in
     y|Y|yes|YES|Yes)
         echo
-        echo "${GREEN}[CONTINUE]${RESET}"
         echo
         ;;
     *)
@@ -93,7 +94,6 @@ esac
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
-
 if [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$DEFAULT_CHARD_ROOT/.install_path")
     echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
@@ -102,7 +102,7 @@ else
 fi
 
 while true; do
-    read -rp "${GREEN}Enter desired Install Path - ${RESET}${GREEN}${BOLD}leave blank for default: $CHARD_ROOT:$RESET " choice
+    read -rp "${GREEN}Enter desired Install Path - ${RESET}${GREEN}${BOLD}leave blank for default: $CHARD_ROOT: ${RESET}" choice
     if [ -n "$choice" ]; then
         CHARD_ROOT="${choice}"
     fi
@@ -110,10 +110,10 @@ while true; do
 
     echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
     read -srp "${YELLOW}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
+    echo ""
     case "$confirm" in
         [Yy]* | "")
             sudo mkdir -p "$CHARD_ROOT"
-            echo ""
             break
             ;;
         [Nn]*)
@@ -127,56 +127,57 @@ done
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
     
-    CHARD_ROOT="${CHARD_ROOT%/}"
-    CHARD_RC="$CHARD_ROOT/.chardrc"
-    BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-    LOG_FILE=$CHARD_ROOT/chardbuild.log
+CHARD_ROOT="${CHARD_ROOT%/}"
+CHARD_RC="$CHARD_ROOT/.chardrc"
+BUILD_DIR="$CHARD_ROOT/var/tmp/build"
+LOG_FILE="$CHARD_ROOT/chardbuild.log"
 
-    echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
-    echo
-    echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
+echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
+echo
+echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 
-    echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
-            sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
-            echo "${BLUE}[*] Removing $CHARD_ROOT...${RESET}"
-            sudo rm -rf "$CHARD_ROOT"
-    
-            sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
+echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
+sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
 
-   sudo mkdir -p "$CHARD_ROOT/etc/portage" \
-                 "$CHARD_ROOT/etc/sandbox.d" \
-                 "$CHARD_ROOT/etc/ssl" \
-                 "$CHARD_ROOT/usr/bin" \
-                 "$CHARD_ROOT/usr/lib" \
-                 "$CHARD_ROOT/usr/lib64" \
-                 "$CHARD_ROOT/usr/include" \
-                 "$CHARD_ROOT/usr/share" \
-                 "$CHARD_ROOT/usr/local/bin" \
-                 "$CHARD_ROOT/usr/local/lib" \
-                 "$CHARD_ROOT/usr/local/include" \
-                 "$CHARD_ROOT/var/tmp/build" \
-                 "$CHARD_ROOT/var/cache/distfiles" \
-                 "$CHARD_ROOT/var/cache/packages" \
-                 "$CHARD_ROOT/var/log" \
-                 "$CHARD_ROOT/var/run" \
-                 "$CHARD_ROOT/dev/shm" \
-                 "$CHARD_ROOT/dev/pts" \
-                 "$CHARD_ROOT/proc" \
-                 "$CHARD_ROOT/sys" \
-                 "$CHARD_ROOT/tmp" \
-                 "$CHARD_ROOT/run" \
-                 "$CHARD_ROOT/home/chronos/user/.cargo" \
-                 "$CHARD_ROOT/home/chronos/user/.rustup" \
-                 "$CHARD_ROOT/home/chronos/user/.local/share" \
-                 "$CHARD_ROOT/home/chronos/user/Desktop" \
-                 "$CHARD_ROOT/mnt"
+echo "${BLUE}[*] Removing $CHARD_ROOT...${RESET}"
+sudo rm -rf "$CHARD_ROOT"
+
+sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
+
+sudo mkdir -p "$CHARD_ROOT/etc/portage" \
+              "$CHARD_ROOT/etc/sandbox.d" \
+              "$CHARD_ROOT/etc/ssl" \
+              "$CHARD_ROOT/usr/bin" \
+              "$CHARD_ROOT/usr/lib" \
+              "$CHARD_ROOT/usr/lib64" \
+              "$CHARD_ROOT/usr/include" \
+              "$CHARD_ROOT/usr/share" \
+              "$CHARD_ROOT/usr/local/bin" \
+              "$CHARD_ROOT/usr/local/lib" \
+              "$CHARD_ROOT/usr/local/include" \
+              "$CHARD_ROOT/var/tmp/build" \
+              "$CHARD_ROOT/var/cache/distfiles" \
+              "$CHARD_ROOT/var/cache/packages" \
+              "$CHARD_ROOT/var/log" \
+              "$CHARD_ROOT/var/run" \
+              "$CHARD_ROOT/dev/shm" \
+              "$CHARD_ROOT/dev/pts" \
+              "$CHARD_ROOT/proc" \
+              "$CHARD_ROOT/sys" \
+              "$CHARD_ROOT/tmp" \
+              "$CHARD_ROOT/run" \
+              "$CHARD_ROOT/home/chronos/user/.cargo" \
+              "$CHARD_ROOT/home/chronos/user/.rustup" \
+              "$CHARD_ROOT/home/chronos/user/.local/share" \
+              "$CHARD_ROOT/home/chronos/user/Desktop" \
+              "$CHARD_ROOT/mnt"
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
@@ -241,18 +242,18 @@ elif [ -f /etc/bashrc ]; then
 else
     SYS_BASHRC=""
 fi
-            
- add_chard_marker() {
+
+add_chard_marker() {
     local FILE="$1"
     sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
     
     if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
         echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
-        echo "${GREEN}[+] Chard sourced to $FILE${RESET}${YELLOW}"
+        echo "${GREEN}[+] Chard sourced to $FILE${RESET}"
     else
-        echo "${YELLOW}[!] Chard already sourced in $FILE"
+        echo "${YELLOW}[!] Chard already sourced in $FILE${RESET}"
     fi
- }
+}
 
 if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
     cat >> "/home/chronos/user/.bashrc" <<EOF
@@ -261,19 +262,12 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${GREEN}[+] Chard sourced to ~/.bashrc ${RESET}${YELLOW}"
+    echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
 else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
 fi
 
-sudo mkdir -p $CHARD_ROOT/etc/portage/package.use
-
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH" ;;
-esac
+sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -296,9 +290,28 @@ case "$ARCH" in
 esac
 
 sudo mkdir -p "$CHARD_ROOT/var/tmp"
-PORTAGE_DIR="$CHARD_ROOT/usr/portage"
+
+STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
+
+STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
+STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
+
+STAGE3_FILE=$(basename "$STAGE3_URL")
+TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
+
+echo "${RESET}${BLUE}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME${RESET}"
+sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
+
+echo "${RESET}${BLUE}[+] Extracting Stage3 tarball${RESET}"
+sudo tar -xJpf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
+    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+
+sudo rm -f "$TMP_STAGE3"
+
+sudo mkdir -p "/usr/local/chard/var/tmp"
+PORTAGE_DIR="/usr/local/chard/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
-TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
+TMP_TAR="/usr/local/chard/var/tmp/portage-latest.tar.xz"
 echo "${CYAN}[+] Downloading Portage tree snapshot"
 sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
@@ -312,47 +325,48 @@ STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | hea
 STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
 
 STAGE3_FILE=$(basename "$STAGE3_URL")
-TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
+TMP_STAGE3="/usr/local/chard/var/tmp/$STAGE3_FILE"
 
 echo "${RESET}${BLUE}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
 sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
 
 echo "${RESET}${BLUE}[+] Extracting Stage3 tarball"
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
+sudo tar -xJf "$TMP_STAGE3" -C "/usr/local/chard" --strip-components=1 \
     --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 
 sudo rm -f "$TMP_STAGE3"
 
 PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
-MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
+MAKE_PROFILE="/usr/local/chard/etc/portage/make.profile"
 sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
 if [ -d "$PROFILE_DIR" ]; then
-    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
+    REL_TARGET=$(realpath --relative-to="/usr/local/chard/etc/portage" "$PROFILE_DIR")
     sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
     echo "[+] Portage profile set to $REL_TARGET"
 else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
 fi
 
-sudo chmod +x "$CHARD_ROOT/bin/chard"
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "/usr/local/chard/bin/chard"
+sudo chmod +x "/usr/local/chard/bin/chard"
 
-export PYTHON="$CHARD_ROOT/bin/python3"
-export CC="$CHARD_ROOT/usr/bin/gcc"
-export CXX="$CHARD_ROOT/usr/bin/g++"
-export AR="$CHARD_ROOT/usr/bin/gcc-ar"
-export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
-export PATH="$PATH:$CHARD_ROOT/usr/bin"
+export PYTHON="/usr/local/chard/bin/python3"
+export CC="/usr/local/chard/usr/bin/gcc"
+export CXX="/usr/local/chard/usr/bin/g++"
+export AR="/usr/local/chard/usr/bin/gcc-ar"
+export RANLIB="/usr/local/chard/usr/bin/gcc-ranlib"
+export PATH="$PATH:/usr/local/chard/usr/bin"
 export CXXFLAGS="$CFLAGS"
 export AWK=/usr/bin/mawk
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
 export MAKEFLAGS="-j$(nproc)"
-export INSTALL_ROOT="$CHARD_ROOT"
-export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal"
-export PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH"
-export PKG_CONFIG_PATH=$CHARD_ROOT/usr/lib64/pkgconfig:$CHARD_ROOT/usr/lib/pkgconfig
-export CFLAGS="-I$CHARD_ROOT/usr/include $CFLAGS"
-export LDFLAGS="-L$CHARD_ROOT/usr/lib64 -L$CHARD_ROOT/usr/lib $LDFLAGS"
-export GIT_TEMPLATE_DIR=$CHARD_ROOT/usr/share/git-core/templates
+export INSTALL_ROOT="/usr/local/chard"
+export ACLOCAL_PATH="/usr/local/chard/usr/share/aclocal"
+export PYTHONPATH="/usr/local/chard/usr/lib/python3.13/site-packages:$PYTHONPATH"
+export PKG_CONFIG_PATH=/usr/local/chard/usr/lib64/pkgconfig:/usr/local/chard/usr/lib/pkgconfig
+export CFLAGS="-I/usr/local/chard/usr/include $CFLAGS"
+export LDFLAGS="-L/usr/local/chard/usr/lib64 -L/usr/local/chard/usr/lib $LDFLAGS"
+export GIT_TEMPLATE_DIR=/usr/local/chard/usr/share/git-core/templates
 
 KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
@@ -382,7 +396,7 @@ sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
 echo "${RESET}${BLUE}[+] Installing Linux headers into Chard Root..."
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
+sudo chroot "/usr/local/chard" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
 HOST_ARCH=\$(uname -m)
@@ -402,29 +416,9 @@ make INSTALL_HDR_PATH=/usr headers_install
 
 cp .config /usr/src/linux/.config
 "
-echo "${RESET}${CYAN}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
+
+echo "${RESET}${CYAN}[+] Linux headers and sources installed to /usr/local/chard/usr/src/linux"
 sudo rm -rf "$KERNEL_BUILD"
-
-CONFIG_FILE="$CHARD_ROOT/usr/src/linux/.config"
-OPTIONS=(
-    "CONFIG_CGROUP_BPF"
-    "CONFIG_FANOTIFY"
-    "CONFIG_USER_NS"
-    "CONFIG_CRYPTO_USER_API_HASH"
-    "CONFIG_INPUT_MOUSEDEV"
-)
-
-for opt in "${OPTIONS[@]}"; do
-    sudo sed -i -E "s/^# $opt is not set/$opt=y/" "$CONFIG_FILE"
-done
-
-for opt in "${OPTIONS[@]}"; do
-    if ! sudo grep -q "^$opt=" "$CONFIG_FILE"; then
-        echo "$opt=y" | sudo tee -a "$CONFIG_FILE" >/dev/null
-    fi
-done
-
-sudo grep -E "CONFIG_CGROUP_BPF|CONFIG_FANOTIFY|CONFIG_USER_NS|CONFIG_CRYPTO_USER_API_HASH|CONFIG_INPUT_MOUSEDEV" $CHARD_ROOT/usr/src/linux/.config | wc -l
 
 sudo mkdir -p $CHARD_ROOT/tmp/docbook-4.3
 cd $CHARD_ROOT/tmp/docbook-4.3
@@ -1443,10 +1437,10 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                 emerge gui-libs/xdg-desktop-portal-wlr
                 emerge media-libs/mesa
                 emerge x11-apps/mesa-progs
-                emerge --autounmask-write media-sound/pulseaudio-daemon
-                etc-update --automode -5
-                emerge media-sound/pulseaudio-daemon
-                emerge media-sound/pulseaudio-ctl
+                #emerge --autounmask-write media-sound/pulseaudio-daemon
+                #etc-update --automode -5
+                #emerge media-sound/pulseaudio-daemon
+                #emerge media-sound/pulseaudio-ctl
                 emerge dev-qt/qtbase
                 emerge dev-qt/qttools
                 emerge dev-qt/qtnetwork
@@ -1462,9 +1456,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                 emerge dev-qt/qtxml
                 emerge dev-qt/qtgui
                 emerge dev-qt/qtcore
-                emerge media-libs/pulseaudio-qt
-                emerge media-sound/alsa-utils
-                emerge sys-apps/dbus
+                #emerge media-libs/pulseaudio-qt
+                #emerge media-sound/alsa-utils
+                #emerge sys-apps/dbus
                 emerge app-accessibility/at-spi2-core
                 emerge app-accessibility/at-spi2-atk
                 emerge media-libs/fontconfig
@@ -1477,7 +1471,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                 #emerge dev-python/pybluez
                 emerge dev-lang/python
                 emerge x11-libs/libnotify
-                emerge --autounmask-write media-sound/pulseaudio-daemon
+                #emerge --autounmask-write media-sound/pulseaudio-daemon
                 etc-update --automode -5
                 emerge dev-libs/libdbusmenu
                 emerge x11-libs/libSM
