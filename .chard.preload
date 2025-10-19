@@ -1,5 +1,9 @@
 # <<< CHARD_PRELOAD <<<
-CHARD_ROOT=/usr/local/chard
+
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+export CHARD_ROOT
+# <<< END_CHARD_ROOT_MARKER >>>
 
 LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
