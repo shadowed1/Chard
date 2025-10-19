@@ -354,6 +354,9 @@ case "$cmd" in
     root|cr)
         sudo chroot /usr/local/chard /bin/bash -c "
 
+            ot|cr)
+    sudo chroot /usr/local/chard /bin/bash -c "
+
             mountpoint -q /proc     || mount -t proc proc /proc
             mountpoint -q /sys      || mount -t sysfs sys /sys
             mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
@@ -361,22 +364,30 @@ case "$cmd" in
             mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
             mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
             mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+            mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
+            mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
+            chmod 1777 /tmp /var/tmp
+
             [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+        
             source /home/chronos/user/.bashrc
-            dbus-daemon --system --fork 2>/dev/null
-
-
+            dbus-daemon --system --fork 2>/dev/null        
             /bin/bash
+
+            umount /tmp
+            umount /var/tmp
             umount /etc/ssl
             umount /dev/pts
             umount /dev/shm
             umount /dev
             umount /sys
             umount /proc
-            "
+        "
+
+
 
         ;;
     categories|cat)
