@@ -88,9 +88,9 @@ if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
     gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/$gcc_version"
 
     if [[ -d "$gcc_bin_path" ]]; then
-        export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:$ROOT/bin:$gcc_bin_path"
+        export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:/usr/lib/ccache:$ROOT/bin:$gcc_bin_path"
     else
-        export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
+        export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:/usr/lib/ccache:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
     fi
 
     if [[ -d "$gcc_lib_path" ]]; then
@@ -99,7 +99,7 @@ if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$ROOT/usr/lib:$ROOT/lib:$ROOT/usr/lib/gcc/$CHOST/14:$ROOT/usr/$CHOST/gcc-bin/14"
     fi
 else
-    export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
+    export PATH="$PYEXEC_DIR:$PATH:$ROOT/usr/bin:/usr/lib/ccache:$ROOT/bin:$ROOT/usr/$CHOST/gcc-bin/14"
     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$ROOT/usr/lib:$ROOT/lib:$ROOT/usr/lib/gcc/$CHOST/14:$ROOT/usr/$CHOST/gcc-bin/14"
 fi
 
