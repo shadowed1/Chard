@@ -419,7 +419,7 @@ EOF
 
 sudo chmod +x /usr/local/chard/root/.chard_prompt.sh
 
-if ! grep -q '/root/.chard_prompt.sh' /usr/local/chard/root/.bashrc 2>/dev/null; then
+if ! grep -q '/root/.chard_prompt.sh' /usr/local/chard/home/chronos/user/.bashrc 2>/dev/null; then
     sudo tee -a /usr/local/chard/home/chronos/user/.bashrc >/dev/null <<'EOF'
 source /root/.chard_prompt.sh
 EOF
