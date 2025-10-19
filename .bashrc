@@ -176,13 +176,12 @@ export MANPATH="$ROOT/usr/share/man:$ROOT/usr/local/share/man:$MANPATH"
 export DISPLAY=":0"
 export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
-#export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
 alias smrt='SMRT'
 
-if [[ -f /usr/bin/.smrt_env.sh ]]; then
-    source /usr/bin/.smrt_env.sh
+if [[ -f /bin/.smrt_env.sh ]]; then
+    source /bin/.smrt_env.sh
 fi
 
 dbus-daemon --system --fork 2>/dev/null
