@@ -29,9 +29,9 @@ export PATH LD_LIBRARY_PATH
 [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
 
 alias cr='chard root'
-
+#alias SMRT='source /usr/local/chard/usr/bin/SMRT'
 SMRT() {
-    source /usr/local/chard/usr/bin/SMRT "$@"
+    eval "source /usr/bin/SMRT \"$*\""
 }
 
 # <<< END CHARD_ENV <<<
