@@ -177,6 +177,7 @@ export DISPLAY=":0"
 export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 #export ACCEPT_KEYWORDS="~amd64 ~x86 ~arm ~arm64"
+export PYTHONMULTIPROCESSING_START_METHOD=fork
 
 #/usr/bin/SMRT
 
