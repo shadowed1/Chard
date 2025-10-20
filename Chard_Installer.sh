@@ -1,3 +1,4 @@
+
 #!/bin/bash
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
@@ -431,14 +432,12 @@ sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
-    sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
     sudo cp "$CHARD_ROOT/chardbuild.log" /home/chronos/user/MyFiles/Downloads/
 }
 
@@ -954,9 +953,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
-    mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
-    mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
-    chmod 1777 /tmp /var/tmp
     
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
@@ -1020,31 +1016,7 @@ sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
 
-BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
-BOARD_NAME=${BOARD_NAME%%-*}
-echo "${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET}"
-sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
-#!/bin/bash
-BOLD='\\[\\e[1m\\]'
-RED='\\[\\e[31m\\]'
-YELLOW='\\[\\e[33m\\]'
-GREEN='\\[\\e[32m\\]'
-RESET='\\[\\e[0m\\]'
-
-PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
-export PS1
-EOF
-sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
-
-if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>/dev/null; then
-    sudo tee -a "$CHARD_ROOT/home/chronos/user/.bashrc" > /dev/null <<'EOF'
-source /root/.chard_prompt.sh
-EOF
-fi
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
@@ -1109,6 +1081,30 @@ detect_gpu_freq() {
         fi
     fi
 }
+
+BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
+BOARD_NAME=${BOARD_NAME%%-*}
+
+sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
+#!/bin/bash
+BOLD='\\[\\e[1m\\]'
+RED='\\[\\e[31m\\]'
+YELLOW='\\[\\e[33m\\]'
+GREEN='\\[\\e[32m\\]'
+RESET='\\[\\e[0m\\]'
+
+PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
+export PS1
+EOF
+
+sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
+
+if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/root/.bashrc" 2>/dev/null; then
+    sudo tee -a "$CHARD_ROOT/root/.bashrc" > /dev/null <<'EOF'
+source /root/.chard_prompt.sh
+EOF
+fi
 
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
@@ -1293,10 +1289,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
         mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
         mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
-        mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
-        mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
-        chmod 1777 /tmp /var/tmp
-        
         [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -1523,8 +1515,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
             sudo cp "$CHARD_ROOT/chardbuild.log" /home/chronos/user/MyFiles/Downloads/
             # Check
             #sys-auth/polkit
