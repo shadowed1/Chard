@@ -484,31 +484,6 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
-BOARD_NAME=${BOARD_NAME%%-*}
-
-sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
-#!/bin/bash
-BOLD='\\[\\e[1m\\]'
-RED='\\[\\e[31m\\]'
-YELLOW='\\[\\e[33m\\]'
-GREEN='\\[\\e[32m\\]'
-RESET='\\[\\e[0m\\]'
-
-PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
-export PS1
-EOF
-
-sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
-
-if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/root/.bashrc" 2>/dev/null; then
-    sudo tee -a "$CHARD_ROOT/root/.bashrc" > /dev/null <<'EOF'
-source /root/.chard_prompt.sh
-EOF
-fi
-
-
 sudo tee "$CHARD_ROOT/bin/emerge" > /dev/null <<'EOF'
 #!/usr/bin/env python3
 import os
@@ -1106,6 +1081,30 @@ detect_gpu_freq() {
     fi
 }
 
+BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
+BOARD_NAME=${BOARD_NAME%%-*}
+
+sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
+#!/bin/bash
+BOLD='\\[\\e[1m\\]'
+RED='\\[\\e[31m\\]'
+YELLOW='\\[\\e[33m\\]'
+GREEN='\\[\\e[32m\\]'
+RESET='\\[\\e[0m\\]'
+
+PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
+export PS1
+EOF
+
+sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
+
+if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/root/.bashrc" 2>/dev/null; then
+    sudo tee -a "$CHARD_ROOT/root/.bashrc" > /dev/null <<'EOF'
+source /root/.chard_prompt.sh
+EOF
+fi
+
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
 
@@ -1127,6 +1126,7 @@ case "$ARCH" in
         esac
 
         sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
+CONFIG_CGROUP_BPF=y
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
@@ -1212,6 +1212,7 @@ EOF
         esac
 
         sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
+CONFIG_CGROUP_BPF=y
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
