@@ -147,7 +147,7 @@ sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
 
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
+sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$HOME/.bashrc" 2>/dev/null || true
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -357,7 +357,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.e
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"        -o "$CHARD_ROOT/home/chronos/user/.bashrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/home/chronos/user/.bashrc"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -389,7 +389,7 @@ SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
-USER_HOME="${HOME:-/home/chronos/user}"
+USER_HOME="${HOME}"
 USER_BASHRC="$USER_HOME/.bashrc"
             
 [ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
@@ -414,8 +414,8 @@ add_chard_marker() {
     fi
 }
 
-if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
-    cat >> "/home/chronos/user/.bashrc" <<EOF
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
+    cat >> "$HOME/.bashrc" <<EOF
 
 # <<< CHARD ENV MARKER <<<
 source "$CHARD_RC"
@@ -456,7 +456,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
-    sudo cp "$CHARD_ROOT/chardbuild.log" /home/chronos/user/MyFiles/Downloads/
+    sudo cp "$CHARD_ROOT/chardbuild.log" ~/
 }
 
 trap cleanup_chroot EXIT INT TERM
@@ -1607,7 +1607,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
-            sudo cp "$CHARD_ROOT/chardbuild.log" /home/chronos/user/MyFiles/Downloads/
+            sudo cp "$CHARD_ROOT/chardbuild.log" ~/
             # Check
             #sys-auth/polkit
             #sys-power/upower
