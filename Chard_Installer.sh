@@ -1461,6 +1461,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge x11-libs/libICE
                 emerge x11-libs/libwnck
                 emerge cmake
+                emerge xfce-base/exo
                 emerge app-admin/exo
                 emerge app-arch/tar
                 emerge app-arch/xz-utils
