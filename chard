@@ -61,6 +61,7 @@ export PKGDIR="$CHARD_ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
 export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
+export PYTHONMULTIPROCESSING_START_METHOD=fork
 
 ARCH=$(uname -m)
 case "$ARCH" in
