@@ -261,7 +261,7 @@ else
 fi
 
 
-sudo rm -rf "$KERNEL_BUILD"
+sudo rm -rf "$KERNEL_BUILD"z
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
