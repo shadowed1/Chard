@@ -1,3 +1,4 @@
+
 #!/bin/bash
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
@@ -147,32 +148,19 @@ sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
 
-CURRENT_SHELL=$(basename "$SHELL")
+sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+{
+    echo "# <<< CHARD ENV MARKER <<<"
+    echo "source \"$CHARD_RC\""
+    echo "# <<< END CHARD ENV MARKER <<<"
+} >> "$FILE"
 
-CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
-DEFAULT_BASHRC="$HOME/.bashrc"
-DEFAULT_ZSHRC="$HOME/.zshrc"
-DEFAULT_PROFILE="$HOME/.profile"
-
-TARGET_FILE=""
-
-if [ -f "$CHROMEOS_BASHRC" ]; then
-    TARGET_FILE="$CHROMEOS_BASHRC"
-
-elif [ "$CURRENT_SHELL" = "zsh" ]; then
-    TARGET_FILE="$DEFAULT_ZSHRC"
-    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
-
-elif [ "$CURRENT_SHELL" = "bash" ]; then
-    TARGET_FILE="$DEFAULT_BASHRC"
-    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
-
-else
-    TARGET_FILE="$DEFAULT_PROFILE"
-    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
-fi
-
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE" 2>/dev/null || true
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH" ;;
+esac
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -198,34 +186,35 @@ sudo mkdir -p "$CHARD_ROOT/var/tmp"
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
-echo "${RED}[+] Downloading Portage Tree Snapshot: $SNAPSHOT_URL"
+echo "${RED}[+] Downloading Portage tree snapshot"
 sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
-echo "${RED}[-] Extracting Portage Tree Snapshot..."
 sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
+    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
 
 STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
-STAGE3_URL="$(dirname "$STAGE3_TXT")/$STAGE3_FILENAME"
+STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
+
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 
-echo "${RESET}${YELLOW}[+] Downloading latest Gentoo Stage3 Tarball: $STAGE3_FILENAME"
+echo "${RESET}${YELLOW}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
 sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
 
-echo "${RESET}${YELLOW}[-] Extracting latest Gentoo Stage3 Tarball"
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
+echo "${RESET}${YELLOW}[+] Extracting Stage3 tarball"
+sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
+    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 
 sudo rm -f "$TMP_STAGE3"
 
 PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
 MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
 sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
-
 if [ -d "$PROFILE_DIR" ]; then
-    REL_TARGET=$(cd "$CHARD_ROOT/etc/portage" && cd "$PROFILE_DIR" && pwd -P | sed "s|^$CHARD_ROOT/etc/portage/||")
+    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
     sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
     echo "${RESET}${GREEN}[+] Portage profile set to $REL_TARGET"
 else
@@ -275,8 +264,10 @@ else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
 
+
 sudo rm -rf "$KERNEL_BUILD"z
-sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR"
+sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
+    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
 echo "${RESET}${CYAN}[+] Installing Linux headers into Chard Root..."
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
@@ -382,30 +373,11 @@ for file in \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
-        if grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
-            if sed --version >/dev/null 2>&1; then
-                sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\\
-# <<< CHARD_ROOT_MARKER >>>\\
-CHARD_ROOT=\"$CHARD_ROOT\"\\
-export CHARD_ROOT\\
-# <<< END_CHARD_ROOT_MARKER >>>" "$file"
-            else
-                sudo sed -i '' "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\\
-# <<< CHARD_ROOT_MARKER >>>\
-CHARD_ROOT=\"$CHARD_ROOT\"\
-export CHARD_ROOT\
-# <<< END_CHARD_ROOT_MARKER >>>" "$file"
-            fi
+        if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
+            sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
+# <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
         else
-            if sed --version >/dev/null 2>&1; then
-                sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
-            else
-                sudo sed -i '' "1i\\
-# <<< CHARD_ROOT_MARKER >>>\
-CHARD_ROOT=\"$CHARD_ROOT\"\
-export CHARD_ROOT\
-# <<< END_CHARD_ROOT_MARKER >>>" "$file"
-            fi
+            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
         fi
 
         sudo chmod +x "$file"
@@ -415,60 +387,55 @@ export CHARD_ROOT\
 done
 
 
+echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
+
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
 
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
-CURRENT_SHELL=$(basename "$SHELL")
-
-CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
-DEFAULT_BASHRC="$HOME/.bashrc"
-DEFAULT_ZSHRC="$HOME/.zshrc"
-DEFAULT_PROFILE="$HOME/.profile"
-
-USER_BASHRC=""
-
-if [ -f "$CHROMEOS_BASHRC" ]; then
-    USER_BASHRC="$CHROMEOS_BASHRC"
-
-elif [ "$CURRENT_SHELL" = "zsh" ]; then
-    USER_BASHRC="$DEFAULT_ZSHRC"
-    [ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
-
-elif [ "$CURRENT_SHELL" = "bash" ]; then
-    USER_BASHRC="$DEFAULT_BASHRC"
-    [ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
-
+USER_HOME="${HOME}"
+USER_BASHRC="$USER_HOME/.bashrc"
+            
+[ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
+            
+if [ -f /etc/bash.bashrc ]; then
+    SYS_BASHRC="/etc/bash.bashrc"
+elif [ -f /etc/bashrc ]; then
+    SYS_BASHRC="/etc/bashrc"
 else
-    USER_BASHRC="$DEFAULT_PROFILE"
-    [ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
+    SYS_BASHRC=""
 fi
 
 add_chard_marker() {
     local FILE="$1"
-
-    if [[ "$(uname)" == "Darwin" ]]; then
-        sed -i '' '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
-    else
-        sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
-    fi
-
+    sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    sed -i '/^[[:space:]]*# <<< CHARD ENV MARKER <<</,/^[[:space:]]*# <<< END CHARD ENV MARKER <<</d' "$FILE"
     if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
         {
-            printf "# <<< CHARD ENV MARKER <<<\n"
-            printf "source \"%s\"\n" "$CHARD_RC"
-            printf "# <<< END CHARD ENV MARKER <<<\n"
+            echo "# <<< CHARD ENV MARKER <<<"
+            echo "source \"$CHARD_RC\""
+            echo "# <<< END CHARD ENV MARKER <<<"
         } >> "$FILE"
-
         echo "${BLUE}[+] Chard sourced to $FILE"
     else
         echo "${YELLOW}[!] Chard already sourced in $FILE"
     fi
+
 }
 
-add_chard_marker "$USER_BASHRC"
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
+    cat >> "$HOME/.bashrc" <<EOF
+
+# <<< CHARD ENV MARKER <<<
+source "$CHARD_RC"
+# <<< END CHARD ENV MARKER <<<
+EOF
+    echo "${BLUE}[+] Chard sourced to ~/.bashrc"
+else
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
+fi
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
@@ -480,7 +447,8 @@ sudo chmod 700 "$CHARD_ROOT/run/user/0"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"    
+sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
+
 sudo mkdir -p "$CHARD_ROOT/tmp/docbook-4.3"
 cd "$CHARD_ROOT/tmp/docbook-4.3"
 sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
@@ -529,13 +497,16 @@ for pkg in "${PACKAGES[@]}"; do
     echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
     case "$EXT" in
         tar.gz|tgz)
-            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
+            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
             ;;
         tar.xz)
-            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
+            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
             ;;
         tar.bz2)
-            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
+            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
+                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
             ;;
         zip)
             sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
@@ -945,11 +916,6 @@ detect_gpu_freq() {
         fi
     fi
 
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        GPU_TYPE=$(system_profiler SPDisplaysDataType 2>/dev/null | awk -F: '/Chipset Model/ {print $2; exit}' | xargs)
-        GPU_MAX_FREQ="unknown"
-    fi
-
     GPU_FREQ_PATH=""
     GPU_MAX_FREQ=""
 }
@@ -960,13 +926,6 @@ IDENTIFIER="Generic GPU"
 DRIVER="modesetting"
 ACCEL="none"
 # Change Accel to glamor for acceleration soon
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    IDENTIFIER="$GPU_TYPE"
-    DRIVER="builtin"
-    ACCEL="none"
-    GPU_VENDOR="macos"
-fi
 
 case "$GPU_VENDOR" in
     intel)
@@ -1117,19 +1076,6 @@ detect_gpu_freq() {
         return
     fi
 
-    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
-        GPU_TYPE="nvidia"
-        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
-        if [[ -f "$PP_DPM_SCLK" ]]; then
-            MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
-            if [[ -n "$MAX_MHZ" ]]; then
-                GPU_MAX_FREQ="$MAX_MHZ"
-            fi
-        fi
-        GPU_FREQ_PATH="$PP_DPM_SCLK"
-        return
-    fi
-
     if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
         GPU_TYPE="amd"
         PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
@@ -1179,23 +1125,10 @@ detect_gpu_freq() {
             GPU_TYPE="vivante"
         fi
     fi
-
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        GPU_TYPE=$(system_profiler SPDisplaysDataType 2>/dev/null | awk -F: '/Chipset Model/ {print $2; exit}' | xargs)
-        GPU_MAX_FREQ="unknown"
-    fi
 }
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    BOARD_NAME=$(sysctl -n hw.model 2>/dev/null || echo "macosroot")
-elif [[ -f /etc/lsb-release ]]; then
-    BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "chardroot")}
-else
-    BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
-    BOARD_NAME=${BOARD_NAME:-$(uname -n)}
-fi
-
+BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
 BOARD_NAME=${BOARD_NAME%%-*}
 
 sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
@@ -1217,7 +1150,6 @@ if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>
 source /root/.chard_prompt.sh
 EOF
 fi
-
 
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
@@ -1270,29 +1202,24 @@ CONFIG_INOTIFY_USER=y
 CONFIG_NET=y
 CONFIG_HIGH_RES_TIMERS=y
 CONFIG_HZ_250=y
-
 CONFIG_FUSE_FS=y
 CONFIG_EXT4_FS=y
 CONFIG_EXT4_USE_FOR_EXT2=y
 CONFIG_FS_POSIX_ACL=y
 CONFIG_FS_SECURITY=y
-
 CONFIG_CRYPTO_USER_API_HASH=y
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
-
 CONFIG_BLK_DEV_LOOP=y
 CONFIG_BLK_DEV_SD=y
 CONFIG_BLK_DEV_NVME=y
 CONFIG_BLK_DEV_DM=y
 CONFIG_SCSI=y
 CONFIG_SCSI_MOD=y
-
 CONFIG_INPUT_MOUSEDEV=y
 CONFIG_INPUT_EVDEV=y
 CONFIG_INPUT_KEYBOARD=y
-
 CONFIG_MEDIA_SUPPORT=y
 CONFIG_VIDEO_DEV=y
 CONFIG_VIDEOBUF2_CORE=y
@@ -1300,7 +1227,6 @@ CONFIG_VIDEOBUF2_MEMOPS=y
 CONFIG_VIDEOBUF2_V4L2=y
 CONFIG_VIDEO_V4L2=m
 CONFIG_V4L2_COMMON=y
-
 CONFIG_DRM=y
 CONFIG_DRM_KMS_HELPER=y
 CONFIG_DRM_TTM=y
@@ -1313,15 +1239,12 @@ CONFIG_DRM_PANEL_ORIENTATION_QUIRKS=y
 CONFIG_DRM_I915=$DRM_I915
 CONFIG_DRM_AMDGPU=$DRM_AMDGPU
 CONFIG_DRM_NOUVEAU=n
-
 CONFIG_FB=y
 CONFIG_FRAMEBUFFER_CONSOLE=y
-
 CONFIG_SND=y
 CONFIG_SND_PCM=y
 CONFIG_SND_HDA_INTEL=y
 CONFIG_SND_HDA_GENERIC=y
-
 CONFIG_ACPI=y
 CONFIG_ACPI_VIDEO=y
 CONFIG_ACPI_BATTERY=y
@@ -1381,29 +1304,24 @@ CONFIG_INOTIFY_USER=y
 CONFIG_NET=y
 CONFIG_HIGH_RES_TIMERS=y
 CONFIG_HZ_250=y
-
 CONFIG_FUSE_FS=y
 CONFIG_EXT4_FS=y
 CONFIG_EXT4_USE_FOR_EXT2=y
 CONFIG_FS_POSIX_ACL=y
 CONFIG_FS_SECURITY=y
-
 CONFIG_CRYPTO_USER_API_HASH=y
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
-
 CONFIG_BLK_DEV_LOOP=y
 CONFIG_BLK_DEV_SD=y
 CONFIG_BLK_DEV_NVME=y
 CONFIG_BLK_DEV_DM=y
 CONFIG_SCSI=y
 CONFIG_SCSI_MOD=y
-
 CONFIG_INPUT_MOUSEDEV=y
 CONFIG_INPUT_EVDEV=y
 CONFIG_INPUT_KEYBOARD=y
-
 CONFIG_MEDIA_SUPPORT=y
 CONFIG_VIDEO_DEV=y
 CONFIG_VIDEOBUF2_CORE=y
@@ -1411,7 +1329,6 @@ CONFIG_VIDEOBUF2_MEMOPS=y
 CONFIG_VIDEOBUF2_V4L2=y
 CONFIG_VIDEO_V4L2=y
 CONFIG_V4L2_COMMON=y
-
 CONFIG_DRM=y
 CONFIG_DRM_KMS_HELPER=y
 CONFIG_DRM_TTM=y
@@ -1424,14 +1341,11 @@ CONFIG_DRM_PANEL_ORIENTATION_QUIRKS=y
 CONFIG_DRM_MALI=$DRM_MALI
 CONFIG_DRM_ROCKCHIP=$DRM_ROCKCHIP
 CONFIG_DRM_ARM_DC=$DRM_ARM_DC
-
 CONFIG_FB=y
 CONFIG_FRAMEBUFFER_CONSOLE=y
-
 CONFIG_SND=y
 CONFIG_SND_PCM=y
 CONFIG_SND_SIMPLE_CARD=y
-
 CONFIG_PM=y
 CONFIG_PM_OPP=y
 CONFIG_PM_DEVFREQ=y
