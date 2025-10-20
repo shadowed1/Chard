@@ -198,10 +198,11 @@ sudo mkdir -p "$CHARD_ROOT/var/tmp"
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
-echo "${RED}[+] Downloading Portage tree snapshot"
+echo "${RED}[+] Downloading Portage Tree Snapshot..."
 sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
+echo "${RED}[-] Extracting Portage Tree Snapshot..."
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
@@ -212,10 +213,10 @@ STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 
-echo "${RESET}${YELLOW}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
+echo "${RESET}${YELLOW}[+] Downloading latest Gentoo Stage3 Tarball: $STAGE3_FILENAME"
 sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
 
-echo "${RESET}${YELLOW}[+] Extracting Stage3 tarball"
+echo "${RESET}${YELLOW}[-] Extracting latest Gentoo Stage3 Tarball"
 sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 
 sudo rm -f "$TMP_STAGE3"
