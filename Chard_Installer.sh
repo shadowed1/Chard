@@ -385,11 +385,30 @@ for file in \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
-        if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
-            sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
-# <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+        if grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
+            if sed --version >/dev/null 2>&1; then
+                sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\\
+# <<< CHARD_ROOT_MARKER >>>\\
+CHARD_ROOT=\"$CHARD_ROOT\"\\
+export CHARD_ROOT\\
+# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+            else
+                sudo sed -i '' "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\\
+# <<< CHARD_ROOT_MARKER >>>\
+CHARD_ROOT=\"$CHARD_ROOT\"\
+export CHARD_ROOT\
+# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+            fi
         else
-            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+            if sed --version >/dev/null 2>&1; then
+                sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+            else
+                sudo sed -i '' "1i\\
+# <<< CHARD_ROOT_MARKER >>>\
+CHARD_ROOT=\"$CHARD_ROOT\"\
+export CHARD_ROOT\
+# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+            fi
         fi
 
         sudo chmod +x "$file"
@@ -397,6 +416,7 @@ for file in \
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
     fi
 done
+
 
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
