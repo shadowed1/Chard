@@ -143,8 +143,6 @@ sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
 
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
@@ -952,6 +950,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+    chmod 1777 /tmp /var/tmp
     
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
@@ -1296,6 +1295,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
         [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+        chmod 1777 /tmp /var/tmp
         
         ARCH=\$(uname -m)
         case \"\$ARCH\" in
