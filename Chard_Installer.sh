@@ -147,7 +147,52 @@ sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
 
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$HOME/.bashrc" 2>/dev/null || true
+CURRENT_SHELL=$(basename "$SHELL")
+
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+DEFAULT_ZSHRC="$HOME/.zshrc"
+DEFAULT_PROFILE="$HOME/.profile"
+
+SYS_BASHRC_FILES=( "/etc/bash.bashrc" "/etc/bashrc" )
+SYS_ZSHRC_FILES=( "/etc/zshrc" )
+SYS_PROFILE="/etc/profile"
+
+TARGET_FILE=""
+
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    TARGET_FILE="$CHROMEOS_BASHRC"
+
+elif [ "$CURRENT_SHELL" = "zsh" ] && [ -f "$DEFAULT_ZSHRC" ]; then
+    TARGET_FILE="$DEFAULT_ZSHRC"
+elif [ -f "$DEFAULT_BASHRC" ]; then
+    TARGET_FILE="$DEFAULT_BASHRC"
+elif [ -f "$DEFAULT_PROFILE" ]; then
+    TARGET_FILE="$DEFAULT_PROFILE"
+
+else
+    for f in "${SYS_BASHRC_FILES[@]}"; do
+        if [ -f "$f" ]; then
+            TARGET_FILE="$f"
+            break
+        fi
+    done
+    if [ -z "$TARGET_FILE" ]; then
+        for f in "${SYS_ZSHRC_FILES[@]}"; do
+            if [ -f "$f" ]; then
+                TARGET_FILE="$f"
+                break
+            fi
+        done
+    fi
+
+    if [ -z "$TARGET_FILE" ]; then
+        TARGET_FILE="$DEFAULT_BASHRC"
+        sudo touch "$TARGET_FILE"
+    fi
+fi
+
+sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE" 2>/dev/null || true
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -389,23 +434,63 @@ SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
-USER_HOME="${HOME}"
-USER_BASHRC="$USER_HOME/.bashrc"
-            
-[ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
-            
-if [ -f /etc/bash.bashrc ]; then
-    SYS_BASHRC="/etc/bash.bashrc"
-elif [ -f /etc/bashrc ]; then
-    SYS_BASHRC="/etc/bashrc"
+CURRENT_SHELL=$(basename "$SHELL")
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+DEFAULT_ZSHRC="$HOME/.zshrc"
+DEFAULT_PROFILE="$HOME/.profile"
+
+SYS_BASHRC_FILES=( "/etc/bash.bashrc" "/etc/bashrc" )
+SYS_ZSHRC_FILES=( "/etc/zshrc" )
+SYS_PROFILE="/etc/profile"
+
+USER_BASHRC=""
+
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    USER_BASHRC="$CHROMEOS_BASHRC"
+
+elif [ "$CURRENT_SHELL" = "zsh" ] && [ -f "$DEFAULT_ZSHRC" ]; then
+    USER_BASHRC="$DEFAULT_ZSHRC"
+elif [ -f "$DEFAULT_BASHRC" ]; then
+    USER_BASHRC="$DEFAULT_BASHRC"
+elif [ -f "$DEFAULT_PROFILE" ]; then
+    USER_BASHRC="$DEFAULT_PROFILE"
+
 else
-    SYS_BASHRC=""
+    for f in "${SYS_BASHRC_FILES[@]}"; do
+        if [ -f "$f" ]; then
+            USER_BASHRC="$f"
+            break
+        fi
+    done
+    if [ -z "$USER_BASHRC" ]; then
+        for f in "${SYS_ZSHRC_FILES[@]}"; do
+            if [ -f "$f" ]; then
+                USER_BASHRC="$f"
+                break
+            fi
+        done
+    fi
+
+    if [ -z "$USER_BASHRC" ]; then
+        USER_BASHRC="$DEFAULT_BASHRC"
+        sudo touch "$USER_BASHRC"
+    fi
 fi
+
+SYS_BASHRC=""
+for f in "${SYS_BASHRC_FILES[@]}"; do
+    if [ -f "$f" ]; then
+        SYS_BASHRC="$f"
+        break
+    fi
+done
 
 add_chard_marker() {
     local FILE="$1"
+
     sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
-    
+
     if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
         echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
         echo "${BLUE}[+] Chard sourced to $FILE"
@@ -414,17 +499,7 @@ add_chard_marker() {
     fi
 }
 
-if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
-    cat >> "$HOME/.bashrc" <<EOF
-
-# <<< CHARD ENV MARKER <<<
-source "$CHARD_RC"
-# <<< END CHARD ENV MARKER <<<
-EOF
-    echo "${BLUE}[+] Chard sourced to ~/.bashrc"
-else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
-fi
+add_chard_marker "$USER_BASHRC"
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
