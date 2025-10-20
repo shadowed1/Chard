@@ -212,7 +212,7 @@ sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
 if [ -d "$PROFILE_DIR" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
     sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
-    echo "[+] Portage profile set to $REL_TARGET"
+    echo "${RESET}${GREEN}[+] Portage profile set to $REL_TARGET"
 else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
 fi
@@ -254,7 +254,7 @@ echo "URL: $KERNEL_URL"
 sudo mkdir -p "$BUILD_DIR"
 
 if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
-    echo "${RESET}${BLUE}[+] Fetching $KERNEL_TAR..."
+    echo "${RESET}${GREEN}[+] Fetching $KERNEL_TAR..."
     sudo curl -L --progress-bar -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
 else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
@@ -266,7 +266,7 @@ sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
 echo "${RESET}${MAGENTA}[+] Installing Linux headers into Chard Root..."
-sudo chroot "/usr/local/chard" /bin/bash -c "
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
 HOST_ARCH=\$(uname -m)
@@ -332,7 +332,7 @@ sudo rm -f \
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
 
-echo "${YELLOW}[*] Downloading Chard components...${RESET}"
+echo "${CYAN}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
@@ -388,7 +388,7 @@ add_chard_marker() {
     
     if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
         echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
-        echo "${GREEN}[+] Chard sourced to $FILE"
+        echo "${CYAN}[+] Chard sourced to $FILE"
     else
         echo "${YELLOW}[!] Chard already sourced in $FILE"
     fi
@@ -401,7 +401,7 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${GREEN}[+] Chard sourced to ~/.bashrc"
+    echo "${CYAN}[+] Chard sourced to ~/.bashrc"
 else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
