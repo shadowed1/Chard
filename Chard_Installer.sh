@@ -1491,7 +1491,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 #emerge dev-lang/rust
                 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                 emerge -j$(nproc) dev-libs/boehm-gc
-                USE="-elogind systemd" emerge sys-auth/polkit
+                USE=\"-elogind systemd\" emerge sys-auth/polkit
                 emerge sys-apps/bubblewrap
                 emerge app-portage/gentoolkit
                 emerge x11-base/xorg-drivers
