@@ -1392,12 +1392,10 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge net-libs/libpsl
                 emerge dev-libs/expat
                 emerge dev-lang/duktape
-                SMRT
                 emerge app-arch/brotli
                 mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
                 emerge dev-lang/rust
                 USE="-elogind systemd" emerge sys-auth/polkit
-                SMRT 128
                 emerge sys-apps/bubblewrap
                 emerge app-portage/gentoolkit
                 emerge x11-base/xorg-drivers
