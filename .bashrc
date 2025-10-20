@@ -21,9 +21,11 @@ DEFAULT_USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdd
 export FEATURES="${FEATURES:-$DEFAULT_FEATURES}"
 export USE="${USE:-$DEFAULT_USE}"
 export HOME=/home/chronos/user
+
 if [[ "$ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
+
 export CHARD_RC="$ROOT/.chardrc"
 export PORTDIR="$ROOT/usr/portage"
 export DISTDIR="$ROOT/var/cache/distfiles"
@@ -32,14 +34,6 @@ export PORTAGE_TMPDIR="$ROOT/var/tmp"
 export SANDBOX="$ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
-
-
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
-esac
 
 PERL_BASE="$ROOT/usr/lib/perl5"
 PERL_LIB_DIRS=()
@@ -148,7 +142,6 @@ else
 fi
 
 export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
-
 export CC="$ROOT/usr/bin/gcc"
 export CXX="$ROOT/usr/bin/g++"
 export AR="$ROOT/usr/bin/ar"
