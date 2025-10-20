@@ -201,8 +201,7 @@ TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 echo "${RED}[+] Downloading Portage tree snapshot"
 sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
 sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
-    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
@@ -217,8 +216,7 @@ echo "${RESET}${YELLOW}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
 sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
 
 echo "${RESET}${YELLOW}[+] Extracting Stage3 tarball"
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
-    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1
 
 sudo rm -f "$TMP_STAGE3"
 
@@ -278,8 +276,7 @@ fi
 
 
 sudo rm -rf "$KERNEL_BUILD"z
-sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
-    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR"
 
 echo "${RESET}${CYAN}[+] Installing Linux headers into Chard Root..."
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
@@ -524,16 +521,13 @@ for pkg in "${PACKAGES[@]}"; do
     echo "${RESET}${YELLOW}[+] Extracting $NAME-$VERSION"
     case "$EXT" in
         tar.gz|tgz)
-            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            sudo tar -xzf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
             ;;
         tar.xz)
-            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            sudo tar -xJf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
             ;;
         tar.bz2)
-            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR" \
-                --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+            sudo tar -xjf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
             ;;
         zip)
             sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
