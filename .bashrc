@@ -178,6 +178,9 @@ export DISPLAY=":0"
 export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
+export EPYTHON="python${second_dot}"
+export PYTHON="python${second_dot}"
+export PORTAGE_PYTHON="python${second_dot}"
 
 alias smrt='SMRT'
 
