@@ -1423,7 +1423,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
-                USE="-gui" emerge -1 dev-build/cmake
+                USE=\"-gui\" emerge -1 dev-build/cmake
                 emerge sys-devel/gcc
                 emerge dev-libs/gmp
                 emerge dev-libs/mpfr
@@ -1458,7 +1458,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 make INSTALL_PATH=/boot install
                 emerge dev-lang/python
                 emerge dev-build/meson
-                USE="-truetype" emerge -1 dev-python/pillow
+                USE=\"-truetype\" emerge -1 dev-python/pillow
                 emerge media-libs/harfbuzz
                 emerge dev-libs/glib
                 emerge dev-util/pkgconf
