@@ -314,9 +314,13 @@ case "$cmd" in
             sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
             echo "${BLUE}[*] Removing $CHARD_ROOT${RESET}"
-            sudo rm -rf "$CHARD_ROOT"
-    
-            sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$HOME/.bashrc" 2>/dev/null || true
+            sudo rm -rf "$CHARD_ROOT"   
+            sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+            {
+                echo "# <<< CHARD ENV MARKER <<<"
+                echo "source \"$CHARD_RC\""
+                echo "# <<< END CHARD ENV MARKER <<<"
+            } >> "$FILE"
             unset LD_PRELOAD
             echo "${CYAN}[+] Uninstalled ${RESET}"
         else
