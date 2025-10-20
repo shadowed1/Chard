@@ -1,4 +1,3 @@
-
 #!/bin/bash
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
