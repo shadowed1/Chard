@@ -1081,6 +1081,7 @@ detect_gpu_freq() {
     fi
 }
 
+CHARD_ROOT=/usr/local/chard
 BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
 BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
 BOARD_NAME=${BOARD_NAME%%-*}
@@ -1099,8 +1100,8 @@ EOF
 
 sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
 
-if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/root/.bashrc" 2>/dev/null; then
-    sudo tee -a "$CHARD_ROOT/root/.bashrc" > /dev/null <<'EOF'
+if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>/dev/null; then
+    sudo tee -a "$CHARD_ROOT/home/chronos/user/.bashrc" > /dev/null <<'EOF'
 source /root/.chard_prompt.sh
 EOF
 fi
