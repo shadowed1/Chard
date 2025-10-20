@@ -200,9 +200,9 @@ SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
 echo "${RED}[+] Downloading Portage Tree Snapshot..."
 sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
+echo "${RED}[-] Extracting Portage Tree Snapshot..."
 sudo mkdir -p "$PORTAGE_DIR"
 sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1
-echo "${RED}[-] Extracting Portage Tree Snapshot..."
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
