@@ -265,7 +265,7 @@ sudo rm -rf "$KERNEL_BUILD"
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
-echo "${RESET}${BLUE}[+] Installing Linux headers into Chard Root..."
+echo "${RESET}${MAGENTA}[+] Installing Linux headers into Chard Root..."
 sudo chroot "/usr/local/chard" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
@@ -287,7 +287,7 @@ make INSTALL_HDR_PATH=/usr headers_install
 cp .config /usr/src/linux/.config
 "
 
-echo "${RESET}${CYAN}[+] Linux headers and sources installed to /usr/local/chard/usr/src/linux"
+echo "${RESET}${CYAN}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
 sudo rm -rf "$KERNEL_BUILD"
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage" \
@@ -347,12 +347,19 @@ for file in \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
-        sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+        if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
+            sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
+# <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+        else
+            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+        fi
+
         sudo chmod +x "$file"
     else
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
     fi
 done
+
 
 echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
 
@@ -381,9 +388,9 @@ add_chard_marker() {
     
     if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
         echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
-        echo "${GREEN}[+] Chard sourced to $FILE${RESET}"
+        echo "${GREEN}[+] Chard sourced to $FILE"
     else
-        echo "${YELLOW}[!] Chard already sourced in $FILE${RESET}"
+        echo "${YELLOW}[!] Chard already sourced in $FILE"
     fi
 }
 
@@ -394,12 +401,12 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
+    echo "${GREEN}[+] Chard sourced to ~/.bashrc"
 else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
 
-sudo mkdir -p "/usr/local/chard/usr/local/src/gtest-1.16.0"
+sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "/usr/local/chard/etc/portage/repos.conf"
 sudo mkdir -p "/usr/local/chard/var/db/repos/gentoo/profiles"
