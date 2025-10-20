@@ -325,7 +325,7 @@ case "$cmd" in
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/usr/bin/SMRT"
                 sudo touch "$CHARD_ROOT/usr/bin/.smrt_env.sh"
-                sudo touch /usr/local/bin/.smrt_env.sh"
+                sudo touch "/usr/local/bin/.smrt_env.sh"
                 sudo chown -R 1000:1000 "$CHARD_ROOT/usr/bin/.smrt_env.sh"
                 sudo chown -R 1000:1000 /usr/local/bin/.smrt_env.sh
                 sleep 1
