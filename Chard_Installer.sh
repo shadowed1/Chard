@@ -208,8 +208,7 @@ sudo rm -f "$TMP_TAR"
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
 
 STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
-STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
-
+STAGE3_URL="$(dirname "$STAGE3_TXT")/$STAGE3_FILENAME"
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 
@@ -224,8 +223,9 @@ sudo rm -f "$TMP_STAGE3"
 PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
 MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
 sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
+
 if [ -d "$PROFILE_DIR" ]; then
-    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
+    REL_TARGET=$(cd "$CHARD_ROOT/etc/portage" && cd "$PROFILE_DIR" && pwd -P | sed "s|^$CHARD_ROOT/etc/portage/||")
     sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
     echo "${RESET}${GREEN}[+] Portage profile set to $REL_TARGET"
 else
@@ -274,7 +274,6 @@ if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
 else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
-
 
 sudo rm -rf "$KERNEL_BUILD"z
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR"
@@ -472,8 +471,7 @@ sudo chmod 700 "$CHARD_ROOT/run/user/0"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
-
+sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"    
 sudo mkdir -p "$CHARD_ROOT/tmp/docbook-4.3"
 cd "$CHARD_ROOT/tmp/docbook-4.3"
 sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
