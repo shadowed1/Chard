@@ -980,6 +980,11 @@ detect_gpu_freq() {
         fi
     fi
 
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        GPU_TYPE=$(system_profiler SPDisplaysDataType 2>/dev/null | awk -F: '/Chipset Model/ {print $2; exit}' | xargs)
+        GPU_MAX_FREQ="unknown"
+    fi
+
     GPU_FREQ_PATH=""
     GPU_MAX_FREQ=""
 }
@@ -990,6 +995,13 @@ IDENTIFIER="Generic GPU"
 DRIVER="modesetting"
 ACCEL="none"
 # Change Accel to glamor for acceleration soon
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    IDENTIFIER="$GPU_TYPE"
+    DRIVER="builtin"
+    ACCEL="none"
+    GPU_VENDOR="macos"
+fi
 
 case "$GPU_VENDOR" in
     intel)
@@ -1140,6 +1152,19 @@ detect_gpu_freq() {
         return
     fi
 
+    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+        GPU_TYPE="nvidia"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        if [[ -f "$PP_DPM_SCLK" ]]; then
+            MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+            if [[ -n "$MAX_MHZ" ]]; then
+                GPU_MAX_FREQ="$MAX_MHZ"
+            fi
+        fi
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        return
+    fi
+
     if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
         GPU_TYPE="amd"
         PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
@@ -1189,10 +1214,23 @@ detect_gpu_freq() {
             GPU_TYPE="vivante"
         fi
     fi
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        GPU_TYPE=$(system_profiler SPDisplaysDataType 2>/dev/null | awk -F: '/Chipset Model/ {print $2; exit}' | xargs)
+        GPU_MAX_FREQ="unknown"
+    fi
 }
 
-BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    BOARD_NAME=$(sysctl -n hw.model 2>/dev/null || echo "macosroot")
+elif [[ -f /etc/lsb-release ]]; then
+    BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "chardroot")}
+else
+    BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
+    BOARD_NAME=${BOARD_NAME:-$(uname -n)}
+fi
+
 BOARD_NAME=${BOARD_NAME%%-*}
 
 sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
@@ -1214,6 +1252,7 @@ if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>
 source /root/.chard_prompt.sh
 EOF
 fi
+
 
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
