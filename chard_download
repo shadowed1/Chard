@@ -10,9 +10,9 @@ RESET=$(tput sgr0)
 
 curl -L https://raw.githubusercontent.com/shadowed1/Chard/refs/heads/main/Chard_Installer.sh -o ~/Chard_Installer
 echo ""
-echo "${GREEN}Downloading to: ~/Chard_Installer"
+echo "${GREEN}Downloading to: ~/Chard_Installer ${RESET}"
 echo ""
-echo "${YELLOW}Run the installer with ${BOLD}${YELLOW}VT-2 or enable sudo in crosh${RESET}${YELLOW}."
+echo "${YELLOW}Run the installer with ${BOLD}${YELLOW}VT-2 or enable sudo in crosh."
 echo "Run commands below with sudo in crosh or VT-2:${RESET}"
 echo ""
 echo ""
@@ -21,5 +21,5 @@ echo "${RED}${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
 echo "sudo bash /usr/local/Chard_Installer${RESET}"
 echo ""
 echo ""
-echo "${GREEN}If on anything else run: ${RESET}"
-echo "${CYAN}sudo bash ~/Chard_Installer
+echo "${CYAN}If on anything else run:"
+echo "${BOLD}sudo bash ~/Chard_Installer ${RESET}"
