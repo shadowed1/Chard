@@ -1332,7 +1332,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 source /home/chronos/user/.bashrc
-                /usr/bin/SMRT
                 source /usr/bin/SMRT
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
