@@ -289,7 +289,7 @@ case "$cmd" in
             echo "${BLUE}[*] Removing $CHARD_ROOT${RESET}"
             sudo rm -rf "$CHARD_ROOT"
     
-            sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
+            sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$HOME/.bashrc" 2>/dev/null || true
             unset LD_PRELOAD
             echo "${CYAN}[+] Uninstalled ${RESET}"
         else
@@ -313,7 +313,7 @@ case "$cmd" in
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
         
-            source /home/chronos/user/.bashrc
+            source "$HOME/.bashrc"
             dbus-daemon --system --fork 2>/dev/null        
             /bin/bash
 
