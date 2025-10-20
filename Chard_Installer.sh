@@ -763,7 +763,7 @@ case "$ARCH" in
         ;;
 esac
 
-MESON_FILE="/usr/local/chard/meson-cross.ini"
+MESON_FILE="$CHARD_ROOT/meson-cross.ini"
 
 sudo tee "$MESON_FILE" > /dev/null <<EOF
 
@@ -808,9 +808,9 @@ EOF
 
 echo "${RESET}${BLUE}[+] Meson file created at $MESON_FILE for architecture $ARCH ${RESET}"
 
-sudo mkdir -p /usr/local/chard/etc/X11/xorg.conf.d
+sudo mkdir -p "$CHARD_ROOT/etc/X11/xorg.conf.d"
 
-XORG_CONF_DIR="/usr/local/chard/etc/X11/xorg.conf.d"
+XORG_CONF_DIR="$CHARD_ROOT/etc/X11/xorg.conf.d"
 sudo mkdir -p "$XORG_CONF_DIR"
 
 ARCH=$(uname -m)
@@ -959,16 +959,16 @@ else
     echo "${YELLOW}Warning:${RESET}${RED} GPU not detected. Using generic Xorg configuration.${RESET}"
 fi
 
-sudo mkdir -p /usr/local/chard/run/dbus
-sudo mkdir -p /usr/local/chard/tmp/.X11-unix
+sudo mkdir -p "$CHARD_ROOT/run/dbus"
+sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
 
 echo "${RESET}${BLUE}[+] Mounting Chard Chroot${RESET}"
-sudo cp /etc/resolv.conf /usr/local/chard/etc/resolv.conf
+sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
 
-sudo chroot /usr/local/chard /bin/bash -c "
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     mountpoint -q /proc     || mount -t proc proc /proc
     mountpoint -q /sys      || mount -t sysfs sys /sys
@@ -1018,7 +1018,7 @@ sudo chroot /usr/local/chard /bin/bash -c "
             export PORTAGE_CONFIGROOT=\"/\"
             export PORTAGE_TMPDIR=\"/var/tmp\"
             export MESON_CROSS_FILE=\"/meson-cross.ini\"
-            export XDG_RUNTIME_DIR=\"/usr/local/chard/run/user/0\"
+            export XDG_RUNTIME_DIR=\"/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
 
@@ -1032,14 +1032,14 @@ sudo chroot /usr/local/chard /bin/bash -c "
     umount /proc
     umount /run/dbus
 "
-sudo mv /usr/local/chard/usr/lib/libcrypt.so /usr/local/chard/usr/lib/libcrypt.so.bak 2>/dev/null
+sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
 
-sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
-sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
-sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
-sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
-sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
-sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
 
 
 ARCH=$(uname -m)
@@ -1126,7 +1126,7 @@ case "$ARCH" in
                 ;;
         esac
 
-        sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<EOF
+        sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
@@ -1209,7 +1209,7 @@ EOF
                 ;;
         esac
 
-        sudo tee /usr/local/chard/usr/src/linux/enable_features.cfg > /dev/null <<EOF
+        sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
@@ -1272,9 +1272,9 @@ echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
-sudo chown -R 1000:1000 /usr/local/chard
+sudo chown -R 1000:1000 "$CHARD_ROOT"
 echo
-sudo chroot /usr/local/chard /bin/bash -c "
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
         mountpoint -q /proc     || mount -t proc proc /proc
         mountpoint -q /sys      || mount -t sysfs sys /sys
@@ -1502,12 +1502,12 @@ sudo chroot /usr/local/chard /bin/bash -c "
             "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
-            sudo umount -l "/usr/local/chard/dev/shm" 2>/dev/null || true
-            sudo umount -l "/usr/local/chard/dev"     2>/dev/null || true
-            sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
-            sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
-            sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-            sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
+            sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
+            sudo cp "$CHARD_ROOT/chardbuild.log" /home/chronos/user/MyFiles/Downloads/
             # Check
             #sys-auth/polkit
             #sys-power/upower
