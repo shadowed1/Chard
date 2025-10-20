@@ -1399,7 +1399,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge app-arch/brotli
                 mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
                 #emerge dev-lang/rust
-                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                 emerge -j$(nproc) dev-libs/boehm-gc
                 USE="-elogind systemd" emerge sys-auth/polkit
                 emerge sys-apps/bubblewrap
