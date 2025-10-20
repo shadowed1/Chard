@@ -431,12 +431,14 @@ sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
-    sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
     sudo cp "$CHARD_ROOT/chardbuild.log" /home/chronos/user/MyFiles/Downloads/
 }
 
@@ -1015,6 +1017,8 @@ sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
 
 BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
 BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo chardroot)}
@@ -1512,6 +1516,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
             sudo cp "$CHARD_ROOT/chardbuild.log" /home/chronos/user/MyFiles/Downloads/
             # Check
             #sys-auth/polkit
