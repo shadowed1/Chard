@@ -33,6 +33,7 @@ export PKGDIR="$ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$ROOT/var/tmp"
 export SANDBOX="$ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
+export XDG_RUNTIME_DIR="$ROOT/run/user/0"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
 PERL_BASE="$ROOT/usr/lib/perl5"
@@ -103,9 +104,9 @@ export MAGIC="$ROOT/usr/share/misc/magic.mgc"
 export PKG_CONFIG="$ROOT/usr/bin/pkg-config"
 export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
 export CPPFLAGS="-I/usr/include"
-PYEXEC_BASE="$ROOT/usr/lib/python-exec"
-PYTHON_EXEC_PREFIX="$ROOT/usr"
-PYTHON_EXECUTABLES="$PYEXEC_BASE"
+export PYEXEC_BASE="$ROOT/usr/lib/python-exec"
+export PYTHON_EXEC_PREFIX="$ROOT/usr"
+export PYTHON_EXECUTABLES="$PYEXEC_BASE"
 
 all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
 
