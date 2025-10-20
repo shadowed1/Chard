@@ -123,6 +123,10 @@ else
     second_latest_python="${all_python_dirs[-2]}"
 fi
 
+if [[ -z "$second_latest_python" ]]; then
+    second_latest_python="$latest_python"
+fi
+
 latest_underscore="${latest_python#python}"
 latest_underscore="${latest_underscore//./_}"
 latest_dot="${latest_python#python}"
@@ -181,6 +185,14 @@ export PYTHONMULTIPROCESSING_START_METHOD=fork
 export EPYTHON="python${second_dot}"
 export PYTHON="python${second_dot}"
 export PORTAGE_PYTHON="python${second_dot}"
+
+MAKECONF="$ROOT/etc/portage/make.conf"
+if [[ -w "$MAKECONF" ]]; then
+    sed -i "/^PYTHON_TARGETS=/d" "$MAKECONF"
+    sed -i "/^PYTHON_SINGLE_TARGET=/d" "$MAKECONF"
+    echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
+    echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
+fi
 
 alias smrt='SMRT'
 
