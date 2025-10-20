@@ -392,6 +392,8 @@ case "$cmd" in
             umount /sys
             umount /proc
             umount /run/dbus
+            umount /tmp
+            umount /var/tmp
         "
         ;;
     categories|cat)
