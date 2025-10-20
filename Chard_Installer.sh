@@ -389,7 +389,7 @@ add_chard_marker() {
     
     if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
         echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
-        echo "${CYAN}[+] Chard sourced to $FILE"
+        echo "${BLUE}[+] Chard sourced to $FILE"
     else
         echo "${YELLOW}[!] Chard already sourced in $FILE"
     fi
@@ -402,7 +402,7 @@ if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
 source "$CHARD_RC"
 # <<< END CHARD ENV MARKER <<<
 EOF
-    echo "${CYAN}[+] Chard sourced to ~/.bashrc"
+    echo "${BLUE}[+] Chard sourced to ~/.bashrc"
 else
     echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
 fi
