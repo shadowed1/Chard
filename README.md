@@ -11,7 +11,7 @@
 - *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist (for now)!* <br>
 - *Requires 8GB of storage, 2GB of RAM, and an internet connection.*
 - GUI apps are still being worked on.
-- Can technically work on any Linux based distro; not just ChromeOS.
+- Plan to support most Linux Distros, but the most popular, ChromeOS, takes priority. 
 
 
 <br>
