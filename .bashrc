@@ -188,6 +188,36 @@ if [[ -w "$MAKECONF" ]]; then
     echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
 fi
 
+LLVM_BASE="$ROOT/usr/lib/llvm"
+if [[ -d "$LLVM_BASE" ]]; then
+    mapfile -t all_llvm_versions < <(ls -1 "$LLVM_BASE" 2>/dev/null | grep -E '^[0-9]+(\.[0-9]+)*$' | sort -V)
+else
+    all_llvm_versions=()
+fi
+
+if [[ ${#all_llvm_versions[@]} -lt 2 ]]; then
+    second_latest_llvm="${all_llvm_versions[-1]}"
+else
+    second_latest_llvm="${all_llvm_versions[-2]}"
+fi
+
+latest_llvm="${all_llvm_versions[-1]}"
+
+export LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
+export LLVM_VERSION="$second_latest_llvm"
+
+if [[ -d "$LLVM_DIR/bin" ]]; then
+    export PATH="$LLVM_DIR/bin:$PATH"
+fi
+
+if [[ -d "$LLVM_DIR/lib" ]]; then
+    export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
+
+if [[ -d "$LLVM_DIR/lib/pkgconfig" ]]; then
+    export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+fi
+
 alias smrt='SMRT'
 
 if [[ -f /bin/.smrt_env.sh ]]; then
