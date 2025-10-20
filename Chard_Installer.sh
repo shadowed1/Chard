@@ -154,52 +154,25 @@ DEFAULT_BASHRC="$HOME/.bashrc"
 DEFAULT_ZSHRC="$HOME/.zshrc"
 DEFAULT_PROFILE="$HOME/.profile"
 
-SYS_BASHRC_FILES=( "/etc/bash.bashrc" "/etc/bashrc" )
-SYS_ZSHRC_FILES=( "/etc/zshrc" )
-SYS_PROFILE="/etc/profile"
-
 TARGET_FILE=""
 
 if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
 
-elif [ "$CURRENT_SHELL" = "zsh" ] && [ -f "$DEFAULT_ZSHRC" ]; then
+elif [ "$CURRENT_SHELL" = "zsh" ]; then
     TARGET_FILE="$DEFAULT_ZSHRC"
-elif [ -f "$DEFAULT_BASHRC" ]; then
+    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
+
+elif [ "$CURRENT_SHELL" = "bash" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
-elif [ -f "$DEFAULT_PROFILE" ]; then
-    TARGET_FILE="$DEFAULT_PROFILE"
+    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
 
 else
-    for f in "${SYS_BASHRC_FILES[@]}"; do
-        if [ -f "$f" ]; then
-            TARGET_FILE="$f"
-            break
-        fi
-    done
-    if [ -z "$TARGET_FILE" ]; then
-        for f in "${SYS_ZSHRC_FILES[@]}"; do
-            if [ -f "$f" ]; then
-                TARGET_FILE="$f"
-                break
-            fi
-        done
-    fi
-
-    if [ -z "$TARGET_FILE" ]; then
-        TARGET_FILE="$DEFAULT_BASHRC"
-        sudo touch "$TARGET_FILE"
-    fi
+    TARGET_FILE="$DEFAULT_PROFILE"
+    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
 fi
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE" 2>/dev/null || true
-
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH" ;;
-esac
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -425,9 +398,6 @@ for file in \
     fi
 done
 
-
-echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
-
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
 
@@ -435,64 +405,37 @@ sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
 CURRENT_SHELL=$(basename "$SHELL")
+
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 DEFAULT_ZSHRC="$HOME/.zshrc"
 DEFAULT_PROFILE="$HOME/.profile"
-
-SYS_BASHRC_FILES=( "/etc/bash.bashrc" "/etc/bashrc" )
-SYS_ZSHRC_FILES=( "/etc/zshrc" )
-SYS_PROFILE="/etc/profile"
 
 USER_BASHRC=""
 
 if [ -f "$CHROMEOS_BASHRC" ]; then
     USER_BASHRC="$CHROMEOS_BASHRC"
 
-elif [ "$CURRENT_SHELL" = "zsh" ] && [ -f "$DEFAULT_ZSHRC" ]; then
+elif [ "$CURRENT_SHELL" = "zsh" ]; then
     USER_BASHRC="$DEFAULT_ZSHRC"
-elif [ -f "$DEFAULT_BASHRC" ]; then
+    [ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
+
+elif [ "$CURRENT_SHELL" = "bash" ]; then
     USER_BASHRC="$DEFAULT_BASHRC"
-elif [ -f "$DEFAULT_PROFILE" ]; then
-    USER_BASHRC="$DEFAULT_PROFILE"
+    [ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
 
 else
-    for f in "${SYS_BASHRC_FILES[@]}"; do
-        if [ -f "$f" ]; then
-            USER_BASHRC="$f"
-            break
-        fi
-    done
-    if [ -z "$USER_BASHRC" ]; then
-        for f in "${SYS_ZSHRC_FILES[@]}"; do
-            if [ -f "$f" ]; then
-                USER_BASHRC="$f"
-                break
-            fi
-        done
-    fi
-
-    if [ -z "$USER_BASHRC" ]; then
-        USER_BASHRC="$DEFAULT_BASHRC"
-        sudo touch "$USER_BASHRC"
-    fi
+    USER_BASHRC="$DEFAULT_PROFILE"
+    [ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
 fi
-
-SYS_BASHRC=""
-for f in "${SYS_BASHRC_FILES[@]}"; do
-    if [ -f "$f" ]; then
-        SYS_BASHRC="$f"
-        break
-    fi
-done
 
 add_chard_marker() {
     local FILE="$1"
 
-    sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
 
     if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
-        echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
+        echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" >> "$FILE"
         echo "${BLUE}[+] Chard sourced to $FILE"
     else
         echo "${YELLOW}[!] Chard already sourced in $FILE"
