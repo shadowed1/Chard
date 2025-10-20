@@ -338,6 +338,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.e
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"        -o "$CHARD_ROOT/home/chronos/user/.bashrc"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
