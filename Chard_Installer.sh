@@ -151,126 +151,6 @@ sudo rm -rf "$CHARD_ROOT"
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' /home/chronos/user/.bashrc 2>/dev/null || true
 
-sudo mkdir -p "$CHARD_ROOT/etc/portage" \
-              "$CHARD_ROOT/etc/sandbox.d" \
-              "$CHARD_ROOT/etc/ssl" \
-              "$CHARD_ROOT/usr/bin" \
-              "$CHARD_ROOT/usr/lib" \
-              "$CHARD_ROOT/usr/lib64" \
-              "$CHARD_ROOT/usr/include" \
-              "$CHARD_ROOT/usr/share" \
-              "$CHARD_ROOT/usr/local/bin" \
-              "$CHARD_ROOT/usr/local/lib" \
-              "$CHARD_ROOT/usr/local/include" \
-              "$CHARD_ROOT/var/tmp/build" \
-              "$CHARD_ROOT/var/cache/distfiles" \
-              "$CHARD_ROOT/var/cache/packages" \
-              "$CHARD_ROOT/var/log" \
-              "$CHARD_ROOT/var/run" \
-              "$CHARD_ROOT/dev/shm" \
-              "$CHARD_ROOT/dev/pts" \
-              "$CHARD_ROOT/proc" \
-              "$CHARD_ROOT/sys" \
-              "$CHARD_ROOT/tmp" \
-              "$CHARD_ROOT/run" \
-              "$CHARD_ROOT/home/chronos/user/.cargo" \
-              "$CHARD_ROOT/home/chronos/user/.rustup" \
-              "$CHARD_ROOT/home/chronos/user/.local/share" \
-              "$CHARD_ROOT/home/chronos/user/Desktop" \
-              "$CHARD_ROOT/mnt"
-
-sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
-sudo mkdir -p "$(dirname "$LOG_FILE")"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-
-sudo rm -f \
-    "$CHARD_ROOT/.chardrc" \
-    "$CHARD_ROOT/.chard.env" \
-    "$CHARD_ROOT/.chard.logic" \
-    "$CHARD_ROOT/bin/SMRT" \
-    "$CHARD_ROOT/bin/chard"
-
-sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT"
-
-echo "${YELLOW}[*] Downloading Chard components...${RESET}"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
-
-for file in \
-    "$CHARD_ROOT/.chardrc" \
-    "$CHARD_ROOT/.chard.env" \
-    "$CHARD_ROOT/.chard.logic" \
-    "$CHARD_ROOT/bin/SMRT" \
-    "$CHARD_ROOT/bin/chard"; do
-
-    if [ -f "$file" ]; then
-        sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
-        sudo chmod +x "$file"
-    else
-        echo "${RED}[!] Missing: $file — download failed?${RESET}"
-    fi
-done
-
-echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
-
-SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
-SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
-
-sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
-sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
-
-USER_HOME="${HOME:-/home/chronos/user}"
-USER_BASHRC="$USER_HOME/.bashrc"
-            
-[ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
-            
-if [ -f /etc/bash.bashrc ]; then
-    SYS_BASHRC="/etc/bash.bashrc"
-elif [ -f /etc/bashrc ]; then
-    SYS_BASHRC="/etc/bashrc"
-else
-    SYS_BASHRC=""
-fi
-
-add_chard_marker() {
-    local FILE="$1"
-    sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
-    
-    if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
-        echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
-        echo "${GREEN}[+] Chard sourced to $FILE${RESET}"
-    else
-        echo "${YELLOW}[!] Chard already sourced in $FILE${RESET}"
-    fi
-}
-
-if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
-    cat >> "/home/chronos/user/.bashrc" <<EOF
-
-# <<< CHARD ENV MARKER <<<
-source "$CHARD_RC"
-# <<< END CHARD ENV MARKER <<<
-EOF
-    echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
-else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
-fi
-
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
-
-
-sudo mkdir -p "$CHARD_ROOT/var/db/repos/gentoo/profiles"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/make.profile"
-sudo mkdir -p "$CHARD_ROOT/run/user/0"
-sudo chmod 700 "$CHARD_ROOT/run/user/0"
-sudo mkdir -p "$CHARD_ROOT/run/dbus"
-exec > >(sudo tee -a "$LOG_FILE") 2>&1
-
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
-
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
@@ -356,7 +236,7 @@ export PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH"
 export PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib64/pkgconfig:$CHARD_ROOT/usr/lib/pkgconfig"
 export CFLAGS="-I$CHARD_ROOT/usr/include $CFLAGS"
 export LDFLAGS="-L$CHARD_ROOT/usr/lib64 -L$CHARD_ROOT/usr/lib $LDFLAGS"
-export GIT_TEMPLATE_DIR=$CHARD_ROOT/usr/share/git-core/templates
+export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
 
 KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
@@ -410,6 +290,127 @@ cp .config /usr/src/linux/.config
 echo "${RESET}${CYAN}[+] Linux headers and sources installed to /usr/local/chard/usr/src/linux"
 sudo rm -rf "$KERNEL_BUILD"
 
+sudo mkdir -p "$CHARD_ROOT/etc/portage" \
+              "$CHARD_ROOT/etc/sandbox.d" \
+              "$CHARD_ROOT/etc/ssl" \
+              "$CHARD_ROOT/usr/bin" \
+              "$CHARD_ROOT/usr/lib" \
+              "$CHARD_ROOT/usr/lib64" \
+              "$CHARD_ROOT/usr/include" \
+              "$CHARD_ROOT/usr/share" \
+              "$CHARD_ROOT/usr/local/bin" \
+              "$CHARD_ROOT/usr/local/lib" \
+              "$CHARD_ROOT/usr/local/include" \
+              "$CHARD_ROOT/var/tmp/build" \
+              "$CHARD_ROOT/var/cache/distfiles" \
+              "$CHARD_ROOT/var/cache/packages" \
+              "$CHARD_ROOT/var/log" \
+              "$CHARD_ROOT/var/run" \
+              "$CHARD_ROOT/dev/shm" \
+              "$CHARD_ROOT/dev/pts" \
+              "$CHARD_ROOT/proc" \
+              "$CHARD_ROOT/sys" \
+              "$CHARD_ROOT/tmp" \
+              "$CHARD_ROOT/run" \
+              "$CHARD_ROOT/home/chronos/user/.cargo" \
+              "$CHARD_ROOT/home/chronos/user/.rustup" \
+              "$CHARD_ROOT/home/chronos/user/.local/share" \
+              "$CHARD_ROOT/home/chronos/user/Desktop" \
+              "$CHARD_ROOT/mnt"
+
+sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
+sudo mkdir -p "$(dirname "$LOG_FILE")"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+
+sudo rm -f \
+    "$CHARD_ROOT/.chardrc" \
+    "$CHARD_ROOT/.chard.env" \
+    "$CHARD_ROOT/.chard.logic" \
+    "$CHARD_ROOT/bin/SMRT" \
+    "$CHARD_ROOT/bin/chard"
+
+sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
+
+
+echo "${YELLOW}[*] Downloading Chard components...${RESET}"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
+
+for file in \
+    "$CHARD_ROOT/.chardrc" \
+    "$CHARD_ROOT/.chard.env" \
+    "$CHARD_ROOT/.chard.logic" \
+    "$CHARD_ROOT/bin/SMRT" \
+    "$CHARD_ROOT/bin/chard"; do
+
+    if [ -f "$file" ]; then
+        sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+        sudo chmod +x "$file"
+    else
+        echo "${RED}[!] Missing: $file — download failed?${RESET}"
+    fi
+done
+
+echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
+
+SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
+SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
+
+sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
+sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
+
+USER_HOME="${HOME:-/home/chronos/user}"
+USER_BASHRC="$USER_HOME/.bashrc"
+            
+[ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
+            
+if [ -f /etc/bash.bashrc ]; then
+    SYS_BASHRC="/etc/bash.bashrc"
+elif [ -f /etc/bashrc ]; then
+    SYS_BASHRC="/etc/bashrc"
+else
+    SYS_BASHRC=""
+fi
+
+add_chard_marker() {
+    local FILE="$1"
+    sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    
+    if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
+        echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" | sudo tee -a "$FILE" >/dev/null
+        echo "${GREEN}[+] Chard sourced to $FILE${RESET}"
+    else
+        echo "${YELLOW}[!] Chard already sourced in $FILE${RESET}"
+    fi
+}
+
+if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "/home/chronos/user/.bashrc"; then
+    cat >> "/home/chronos/user/.bashrc" <<EOF
+
+# <<< CHARD ENV MARKER <<<
+source "$CHARD_RC"
+# <<< END CHARD ENV MARKER <<<
+EOF
+    echo "${GREEN}[+] Chard sourced to ~/.bashrc${RESET}"
+else
+    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc${RESET}"
+fi
+
+sudo mkdir -p "/usr/local/chard/usr/local/src/gtest-1.16.0"
+sudo mkdir -p "$(dirname "$LOG_FILE")"
+sudo mkdir -p "/usr/local/chard/etc/portage/repos.conf"
+sudo mkdir -p "/usr/local/chard/var/db/repos/gentoo/profiles"
+sudo mkdir -p "/usr/local/chard/etc/portage/make.profile"
+sudo mkdir -p "/usr/local/chard/run/user/0"
+sudo chmod 700 "/usr/local/chard/run/user/0"
+sudo mkdir -p "/usr/local/chard/run/dbus"
+exec > >(sudo tee -a "$LOG_FILE") 2>&1
+sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
+sudo mkdir -p /usr/local/chard/etc/portage/package.use
+
 sudo mkdir -p /usr/local/chard/tmp/docbook-4.3
 cd /usr/local/chard/tmp/docbook-4.3
 sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
@@ -419,16 +420,15 @@ sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
+
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
-    sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
+    sudo umount -l "/usr/local/chard/dev/shm"  2>/dev/null || true
+    sudo umount -l "/usr/local/chard/dev"      2>/dev/null || true
+    sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
+    sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
+    sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
+    sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
     sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
 }
 
@@ -950,12 +950,6 @@ if [[ -n "$ACCEL" ]]; then
     echo "    Option \"AccelMethod\" \"$ACCEL\"" | sudo tee -a "$XORG_CONF_DIR/20-glamor.conf" > /dev/null
 fi
 
-sudo tee "$XORG_CONF_DIR/20-glamor.conf" > /dev/null <<EOF
-Section "Device"
-    Identifier "$IDENTIFIER"
-    Driver "$DRIVER"
-EOF
-
 if [[ -n "$GPU_VENDOR" && "$GPU_VENDOR" != "unknown" ]]; then
     echo "${MAGENTA}Detected GPU:${RESET}${GREEN} $GPU_VENDOR ($ARCH)${RESET}"
 else
@@ -983,9 +977,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
-    mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
-    mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
-    chmod 1777 /tmp /var/tmp
     
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
@@ -1040,8 +1031,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
     umount /sys
     umount /proc
     umount /run/dbus
-    umount /var/tmp
-    umount /tmp
 "
 sudo mv /usr/local/chard/usr/lib/libcrypt.so /usr/local/chard/usr/lib/libcrypt.so.bak 2>/dev/null
 
@@ -1051,8 +1040,6 @@ sudo umount -l "/usr/local/chard/sys"      2>/dev/null || true
 sudo umount -l "/usr/local/chard/proc"     2>/dev/null || true
 sudo umount -l "/usr/local/chard/etc/ssl"  2>/dev/null || true
 sudo umount -l "/usr/local/chard/run/dbus" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
 
 
 ARCH=$(uname -m)
@@ -1285,9 +1272,6 @@ echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh -o "usr/local/chard/usr/bin/SMRT"
-sudo chmod +x /usr/local/chard/usr/bin/SMRT
-sudo touch /usr/local/chard/usr/bin/.smrt_env.sh
 sudo chown -R 1000:1000 /usr/local/chard
 echo
 sudo chroot /usr/local/chard /bin/bash -c "
@@ -1299,10 +1283,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
         mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
         mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
         mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
-        mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
-        mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
-        chmod 1777 /tmp /var/tmp
-        
         [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -1519,8 +1499,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
                 umount /sys
                 umount /proc
                 umount /dev/dbus
-                umount /var/tmp
-                umount /tmp
             "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
@@ -1529,9 +1507,6 @@ sudo chroot /usr/local/chard /bin/bash -c "
             sudo umount -l "/usr/local/chard/sys"     2>/dev/null || true
             sudo umount -l "/usr/local/chard/proc"    2>/dev/null || true
             sudo umount -l "/usr/local/chard/etc/ssl" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/tmp"            2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/var/tmp"        2>/dev/null || true
-            
             sudo cp /usr/local/chard/chardbuild.log /home/chronos/user/MyFiles/Downloads/
             # Check
             #sys-auth/polkit
