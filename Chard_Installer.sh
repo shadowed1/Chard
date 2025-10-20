@@ -1421,8 +1421,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge x11-apps/mesa-progs
                 emerge --autounmask-write media-sound/pulseaudio-daemon
                 etc-update --automode -5
-                emerge media-sound/pulseaudio-daemon
-                emerge media-sound/pulseaudio-ctl
+                #emerge media-sound/pulseaudio-daemon
+                #emerge media-sound/pulseaudio-ctl
                 emerge dev-qt/qtbase
                 emerge dev-qt/qttools
                 emerge dev-qt/qtnetwork
@@ -1438,8 +1438,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge dev-qt/qtxml
                 emerge dev-qt/qtgui
                 emerge dev-qt/qtcore
-                emerge media-libs/pulseaudio-qt
-                emerge media-sound/alsa-utils
+                #emerge media-libs/pulseaudio-qt
+                #emerge media-sound/alsa-utils
                 emerge sys-apps/dbus
                 emerge app-accessibility/at-spi2-core
                 emerge app-accessibility/at-spi2-atk
