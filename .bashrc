@@ -135,8 +135,8 @@ second_underscore="${second_latest_python#python}"
 second_underscore="${second_underscore//./_}"
 second_dot="${second_latest_python#python}"
 
-export PYTHON_TARGETS="python${second_underscore} python${latest_underscore}"
-export PYTHON_SINGLE_TARGET="python${latest_underscore}"
+export PYTHON_TARGETS="python${second_underscore}"
+export PYTHON_SINGLE_TARGET="python${second_underscore}"
 
 python_site_second="$ROOT/usr/lib/python${second_dot}/site-packages"
 python_site_latest="$ROOT/usr/lib/python${latest_dot}/site-packages"
