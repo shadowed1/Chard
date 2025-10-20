@@ -449,10 +449,19 @@ fi
 add_chard_marker() {
     local FILE="$1"
 
-    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    if [[ "$(uname)" == "Darwin" ]]; then
+        sed -i '' '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    else
+        sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    fi
 
-    if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$FILE"; then
-        echo -e "\n# <<< CHARD ENV MARKER <<<\nsource \"$CHARD_RC\"\n# <<< END CHARD ENV MARKER <<<" >> "$FILE"
+    if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
+        {
+            printf "# <<< CHARD ENV MARKER <<<\n"
+            printf "source \"%s\"\n" "$CHARD_RC"
+            printf "# <<< END CHARD ENV MARKER <<<\n"
+        } >> "$FILE"
+
         echo "${BLUE}[+] Chard sourced to $FILE"
     else
         echo "${YELLOW}[!] Chard already sourced in $FILE"
