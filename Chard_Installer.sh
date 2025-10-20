@@ -1331,8 +1331,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export XDG_RUNTIME_DIR=\"/run/user/0\"
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
+                export PYTHONMULTIPROCESSING_START_METHOD=fork
                 source /home/chronos/user/.bashrc
-                source /usr/bin/SMRT
+                SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
                 USE="-gui" emerge -1 dev-build/cmake
@@ -1387,14 +1388,16 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge dev-libs/libunistring
                 emerge sys-apps/file
                 emerge kde-frameworks/extra-cmake-modules
-                emerge dev-perl/File-LibMagic
+                emerge -j$(nproc) dev-perl/File-LibMagic
                 emerge net-libs/libpsl
                 emerge dev-libs/expat
                 emerge dev-lang/duktape
+                SMRT
                 emerge app-arch/brotli
                 mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
                 emerge dev-lang/rust
                 USE="-elogind systemd" emerge sys-auth/polkit
+                SMRT 128
                 emerge sys-apps/bubblewrap
                 emerge app-portage/gentoolkit
                 emerge x11-base/xorg-drivers
