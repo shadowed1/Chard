@@ -954,6 +954,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+    mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
+    mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
+    chmod 1777 /tmp /var/tmp
     
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
@@ -1290,6 +1293,10 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
         mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
         mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+        mountpoint -q /tmp      || mount -t tmpfs tmpfs /tmp
+        mountpoint -q /var/tmp  || mount -t tmpfs tmpfs /var/tmp
+        chmod 1777 /tmp /var/tmp
+        
         [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
