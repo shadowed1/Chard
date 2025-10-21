@@ -389,7 +389,7 @@ for file in \
     "$CHARD_ROOT/.chard.logic" \
     "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/bin/chard"; do
-    
+
     if [ -f "$file" ]; then
         if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
             sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
@@ -401,11 +401,17 @@ for file in \
     else
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
     fi
-    TARGET="$CHARD_ROOT/$CHARD_HOME/.bashrc"
-    if [ -f "$TARGET" ]; then
-        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$TARGET"; then
+done
+
+
+for target in \
+    "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
+    "$CHARD_ROOT/.chardrc"; do
+
+    if [ -f "$target" ]; then
+        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$target"; then
             sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
-    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$TARGET"
+# <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$target"
         else
             {
                 echo ""
@@ -413,12 +419,13 @@ for file in \
                 echo "CHARD_HOME=\"/$CHARD_HOME\""
                 echo "export CHARD_HOME"
                 echo "# <<< END_ROOT_MARKER >>>"
-            } | sudo tee -a "$TARGET" >/dev/null
+            } | sudo tee -a "$target" >/dev/null
         fi
     else
-        echo "${RED}[!] Missing: $TARGET — cannot patch ROOT_MARKER${RESET}"
+        echo "${RED}[!] Missing: $target — cannot patch ROOT_MARKER${RESET}"
     fi
 done
+
 
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
