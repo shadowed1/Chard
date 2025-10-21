@@ -184,6 +184,9 @@ if [[ -w "$MAKECONF" ]]; then
     echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
 fi
 
+eselect python set "python${second_dot}" 2>/dev/null || true
+eselect python set --python3 "python${second_dot}" 2>/dev/null || true
+
 LLVM_BASE="$ROOT/usr/lib/llvm"
 
 if [[ -d "$LLVM_BASE" ]]; then
