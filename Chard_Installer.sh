@@ -470,7 +470,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
-    sudo cp "$CHARD_ROOT/chardbuild.log" ~/
+    cp "$CHARD_ROOT/chardbuild.log" ~/
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
     
 }
@@ -986,7 +986,7 @@ sudo mkdir -p "$CHARD_ROOT/run/dbus"
 sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
 
 echo "${RESET}${BLUE}[+] Mounting Chard Chroot${RESET}"
-sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
+cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
@@ -1618,7 +1618,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
-            sudo cp "$CHARD_ROOT/chardbuild.log" ~/
+            cp "$CHARD_ROOT/chardbuild.log" ~/
             echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
 
             # Check
