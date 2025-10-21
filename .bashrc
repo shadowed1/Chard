@@ -32,47 +32,45 @@ export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
 export XDG_RUNTIME_DIR="$ROOT/run/user/0"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
-PERL_BASE="$ROOT/usr/lib/perl5"
-PERL_LIB_DIRS=()
-PERL_BIN_DIRS=()
-PERL_LIBS=()
+PERL_BASES=("/usr/lib64/perl5" "/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
+all_perl_versions=()
 
-if [[ -d "$PERL_BASE" ]]; then
-    mapfile -t all_perl_versions < <(ls -1 "$PERL_BASE" 2>/dev/null | grep -E '^[0-9]+\.[0-9]+$' | sort -V)
-else
-    all_perl_versions=()
-fi
-
-for ver in "${all_perl_versions[@]}"; do
-    archlib="$PERL_BASE/$ver/$CHOST"
-    sitelib="$PERL_BASE/$ver/site_perl"
-    vendorlib="$PERL_BASE/$ver/vendor_perl"
-
-    PERL5LIB_PARTS=()
-    [[ -d "$archlib" ]] && PERL5LIB_PARTS+=("$archlib")
-    [[ -d "$sitelib" ]] && PERL5LIB_PARTS+=("$sitelib")
-    [[ -d "$vendorlib" ]] && PERL5LIB_PARTS+=("$vendorlib")
-    if [[ ${#PERL5LIB_PARTS[@]} -gt 0 ]]; then
-        PERL5LIB="$(IFS=:; echo "${PERL5LIB_PARTS[*]}")${PERL5LIB:+:$PERL5LIB}"
-    fi
-
-    CORE_LIB="$PERL_BASE/$ver/$CHOST/CORE"
-    [[ -d "$CORE_LIB" ]] && PERL_LIBS+=("$CORE_LIB")
-
-    BIN_DIR="$ROOT/usr/bin"
-    [[ -d "$BIN_DIR" ]] && PERL_BIN_DIRS+=("$BIN_DIR")
+for base in "${PERL_BASES[@]}"; do
+    [[ -d "$base" ]] || continue
+    for dir in "$base"/*; do
+        [[ -d "$dir" ]] || continue
+        ver=$(basename "$dir")
+        [[ $ver =~ ^[0-9]+\.[0-9]+$ ]] && all_perl_versions+=("$ver")
+    done
 done
 
+mapfile -t all_perl_versions < <(printf '%s\n' "${all_perl_versions[@]}" | sort -V | uniq)
+
+if (( ${#all_perl_versions[@]} >= 2 )); then
+    second_latest_perl="${all_perl_versions[-2]}"
+elif (( ${#all_perl_versions[@]} == 1 )); then
+    second_latest_perl="${all_perl_versions[0]}"
+else
+    echo "No Perl versions found"
+    second_latest_perl=""
+fi
+
+PERL5LIB=""
+if [[ -n "$second_latest_perl" ]]; then
+    for base in "${PERL_BASES[@]}"; do
+        for lib_sub in "" "vendor_perl" "$CHOST" "vendor_perl/$CHOST"; do
+            dir="$base/$second_latest_perl/$lib_sub"
+            [[ -d "$dir" ]] && PERL5LIB="$dir${PERL5LIB:+:$PERL5LIB}"
+        done
+    done
+fi
+
+PERL_BIN_DIRS=()
+[[ -d "$ROOT/usr/bin" ]] && PERL_BIN_DIRS+=("$ROOT/usr/bin")
+[[ -d "/usr/bin" ]] && PERL_BIN_DIRS+=("/usr/bin")
+
 export PERL5LIB="$PERL5LIB"
-export PERL6LIB="$PERL6LIB"
-
-if [[ ${#PERL_LIBS[@]} -gt 0 ]]; then
-    LD_LIBRARY_PATH="$(IFS=:; echo "${PERL_LIBS[*]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-fi
-
-if [[ ${#PERL_BIN_DIRS[@]} -gt 0 ]]; then
-    PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
-fi
+export PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
 
 gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
 if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
