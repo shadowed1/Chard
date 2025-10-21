@@ -214,9 +214,6 @@ if [[ -n "$second_latest_llvm" ]]; then
     [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 fi
 
-echo "Found LLVM versions: ${all_llvm_versions[*]}"
-echo "Using LLVM $second_latest_llvm (latest: $latest_llvm)"
-
 alias smrt='SMRT'
 
 if [[ -f /bin/.smrt_env.sh ]]; then
