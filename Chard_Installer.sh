@@ -1075,6 +1075,19 @@ detect_gpu_freq() {
         return
     fi
 
+    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+        GPU_TYPE="nvidia"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        if [[ -f "$PP_DPM_SCLK" ]]; then
+            MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+            if [[ -n "$MAX_MHZ" ]]; then
+                GPU_MAX_FREQ="$MAX_MHZ"
+            fi
+        fi
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        return
+    fi
+
     if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
         GPU_TYPE="amd"
         PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
