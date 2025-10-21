@@ -1163,35 +1163,6 @@ detect_gpu_freq() {
     fi
 }
 
-if [[ -f /etc/lsb-release ]]; then
-    BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "chardroot")}
-else
-    BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
-    BOARD_NAME=${BOARD_NAME:-$(uname -n)}
-fi
-
-BOARD_NAME=${BOARD_NAME%%-*}
-
-sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
-#!/bin/bash
-BOLD='\\[\\e[1m\\]'
-RED='\\[\\e[31m\\]'
-YELLOW='\\[\\e[33m\\]'
-GREEN='\\[\\e[32m\\]'
-RESET='\\[\\e[0m\\]'
-
-PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
-export PS1
-EOF
-
-sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
-if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>/dev/null; then
-    sudo tee -a "$CHARD_ROOT/home/chronos/user/.bashrc" > /dev/null <<'EOF'
-source /root/.chard_prompt.sh
-EOF
-fi
-
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
 
@@ -1398,6 +1369,36 @@ EOF
         ;;
 esac
 
+if [[ -f /etc/lsb-release ]]; then
+    BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "chardroot")}
+else
+    BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
+    BOARD_NAME=${BOARD_NAME:-$(uname -n)}
+fi
+
+BOARD_NAME=${BOARD_NAME%%-*}
+
+sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
+#!/bin/bash
+BOLD='\\[\\e[1m\\]'
+RED='\\[\\e[31m\\]'
+YELLOW='\\[\\e[33m\\]'
+GREEN='\\[\\e[32m\\]'
+RESET='\\[\\e[0m\\]'
+
+PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
+export PS1
+EOF
+
+sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
+if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>/dev/null; then
+    sudo tee -a "$CHARD_ROOT/home/chronos/user/.bashrc" > /dev/null <<'EOF'
+source /root/.chard_prompt.sh
+EOF
+fi
+
+sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESSING_START_METHOD=fork'
 
 echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
 echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
