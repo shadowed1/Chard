@@ -168,7 +168,6 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
 fi
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
-
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
@@ -181,7 +180,8 @@ else
 fi
 
 CHARD_HOME="$(dirname "$TARGET_FILE")"
-sudo mkdir -p "$CHARD_HOME"
+CHARD_HOME="${CHARD_HOME#/}"
+sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
 echo "$CHARD_HOME"
 
 ARCH=$(uname -m)
@@ -216,10 +216,8 @@ sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
-
 STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
 STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
-
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 
