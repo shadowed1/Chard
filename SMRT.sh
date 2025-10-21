@@ -128,9 +128,9 @@ for tool in "${serial_tools[@]}"; do
     fi
 done
 
-echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
+echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
-    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - ${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT ${RESET}"
+    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET} - ${RESET}${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT threads ${RESET}"
 else
     echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - $REQUESTED_THREADS threads${RESET}"
 fi
@@ -149,5 +149,5 @@ echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
 echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
 echo ""
 echo "${YELLOW}SMRT $ALLOCATED_COUNT ${RESET}"
-echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
+echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo ""
