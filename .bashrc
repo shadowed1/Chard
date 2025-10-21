@@ -3,7 +3,7 @@
 # <<< ROOT_MARKER >>>
 CHARD_HOME=""
 export CHARD_HOME
-# <<< ROOT_MARKER >>>
+# <<< END_ROOT_MARKER >>>
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
