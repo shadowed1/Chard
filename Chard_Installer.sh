@@ -1273,7 +1273,7 @@ CONFIG_ACPI_BUTTON=y
 EOF
         ;;
 
-    aarch64)
+    arm64)
         case "$GPU_VENDOR" in
             mali)
                 DRM_MALI=y
