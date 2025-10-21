@@ -180,18 +180,10 @@ else
     TARGET_FILE="$DEFAULT_BASHRC"
 fi
 
-CHARD_HOME="$CHARD_ROOT/$(dirname "$TARGET_FILE")"
-
-mkdir -p "$CHARD_HOME"
-
+RELATIVE_PATH="${TARGET_FILE#/}"
+CHARD_HOME="$RELATIVE_PATH"
+sudo mkdir -p "$CHARD_HOME"
 echo "${RESET}${RED}Detected HOME: ${BOLD}${CHARD_HOME}${RED}"
-
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH" ;;
-esac
 
 ARCH=$(uname -m)
 case "$ARCH" in
