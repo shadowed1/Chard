@@ -473,7 +473,18 @@ cd "$CHARD_ROOT/tmp/docbook-4.3"
 sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
 sudo mkdir -p "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo mkdir -p "$CHARD_ROOT/etc/xml"
-sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
+DEST="$CHARD_ROOT/usr/share/xml/docbook/4.3"
+ARCHIVE="docbook-xml-4.3.zip"
+sudo mkdir -p "$DEST"
+if [ -x "/usr/bin/bsdtar" ]; then
+    echo "Using bsdtar to extract $ARCHIVE..."
+    sudo bsdtar -xf "$ARCHIVE" -C "$DEST" --strip-components=1
+elif [ -x "/usr/bin/unzip" ]; then
+    echo "Using unzip to extract $ARCHIVE..."
+    sudo unzip -o "$ARCHIVE" -d "$DEST"
+else
+    echo "Error: neither bsdtar nor unzip found. Cannot extract $ARCHIVE."
+fi
 sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
