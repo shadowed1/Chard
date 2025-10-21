@@ -1397,7 +1397,7 @@ esac
 
 if [[ -f /etc/lsb-release ]]; then
     BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "chardroot")}
+    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || hostname)}
 else
     BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
     BOARD_NAME=${BOARD_NAME:-$(uname -n)}
@@ -1405,8 +1405,12 @@ fi
 
 BOARD_NAME=${BOARD_NAME%%-*}
 
-sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
+sudo tee "$CHARD_ROOT/etc/chard_prompt.sh" >/dev/null <<EOF
 #!/bin/bash
+if [[ \$- != *i* ]]; then
+    return
+fi
+
 BOLD='\\[\\e[1m\\]'
 RED='\\[\\e[31m\\]'
 YELLOW='\\[\\e[33m\\]'
@@ -1416,11 +1420,11 @@ RESET='\\[\\e[0m\\]'
 PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
 export PS1
 EOF
+sudo chmod +x "$CHARD_ROOT/etc/chard_prompt.sh"
 
-sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
-if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null; then
+if ! grep -q '/etc/.chard_prompt.sh' "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null; then
     sudo tee -a "$CHARD_ROOT/$CHARD_HOME/.bashrc" > /dev/null <<'EOF'
-source /root/.chard_prompt.sh
+source /etc/.chard_prompt.sh
 EOF
 fi
 
