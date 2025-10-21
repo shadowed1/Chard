@@ -129,9 +129,10 @@ for tool in "${serial_tools[@]}"; do
 done
 
 echo "${BLUE}──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - $REQUESTED_THREADS threads${RESET}"
 if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
-    echo "${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT (max available)${RESET}"
+    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - ${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT ${RESET}"
+else
+    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - $REQUESTED_THREADS threads${RESET}"
 fi
 echo ""
 echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
@@ -140,8 +141,8 @@ if [[ -n "$P_CORES_ALL" ]]; then
     echo "${CYAN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
 fi
 echo ""
-echo "${GREEN}Detected Memory:                 ${BOLD}${TOTAL_MEM_GB} GB ${RESET}"
-echo "${CYAN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
+echo "${CYAN}Detected Memory:                 ${BOLD}${TOTAL_MEM_GB} GB ${RESET}"
+echo "${GREEN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
 echo "${BLUE}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
 echo ""
 echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
