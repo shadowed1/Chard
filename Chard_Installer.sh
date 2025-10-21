@@ -182,7 +182,6 @@ fi
 RELATIVE_PATH="${TARGET_FILE#/}"
 CHARD_HOME="$RELATIVE_PATH"
 sudo mkdir -p "$CHARD_HOME"
-echo "${RESET}${RED}Detected HOME: ${BOLD}${CHARD_HOME}${RED}"
 
 ARCH=$(uname -m)
 case "$ARCH" in
