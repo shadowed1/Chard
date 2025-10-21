@@ -333,8 +333,8 @@ case "$cmd" in
         fi
         ;;
     root)
-root)
-    sudo chroot "$CHARD_ROOT" /bin/bash -i --rcfile "$CHARD_HOME/.bashrc"
+        sudo chroot $CHARD_ROOT /bin/bash -c "
+
             mountpoint -q /proc     || mount -t proc proc /proc
             mountpoint -q /sys      || mount -t sysfs sys /sys
             mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
