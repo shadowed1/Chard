@@ -1,9 +1,5 @@
-# CHARD .BASHRC
 
-# <<< ROOT_MARKER >>>
-CHARD_HOME=""
-export CHARD_HOME
-# <<< END_ROOT_MARKER >>>
+# CHARD .BASHRC
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -21,14 +17,13 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
-export HOME="$CHARD_HOME"
+export HOME=/home/chronos/user
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
 
 if [[ "$ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
-
-export LANG=C.UTF-8
-export LC_ALL=C.UTF-8
 
 export CHARD_RC="$ROOT/.chardrc"
 export PORTDIR="$ROOT/usr/portage"
