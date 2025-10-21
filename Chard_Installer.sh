@@ -168,7 +168,7 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
     } >> "$TARGET_FILE"
 fi
 
-echo "Target file: $TARGET_FILE"
+echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RED}"
 
 
 ARCH=$(uname -m)
