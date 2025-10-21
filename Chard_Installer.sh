@@ -1474,7 +1474,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge app-portage/gentoolkit
                 rm -rf /var/tmp/portage/app-portage/gentoolkit-*
                 
-                USE="-gui" emerge -1 dev-build/cmake
+                USE=\"-gui\" emerge -1 dev-build/cmake
                 rm -rf /var/tmp/portage/dev-build/cmake-*
                 eclean-dist -d
                 
@@ -1590,7 +1590,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/dev-build/meson-*
                 eclean-dist -d
                 
-                USE="-truetype" emerge -1 dev-python/pillow
+                USE=\"-truetype\" emerge -1 dev-python/pillow
                 rm -rf /var/tmp/portage/dev-python/pillow-*
                 eclean-dist -d
                 
@@ -1678,7 +1678,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
                 eclean-dist -d
                 
-                USE="-elogind systemd" emerge sys-auth/polkit
+                USE=\"-elogind systemd\" emerge sys-auth/polkit
                 rm -rf /var/tmp/portage/sys-auth/polkit-*
                 eclean-dist -d
                 
