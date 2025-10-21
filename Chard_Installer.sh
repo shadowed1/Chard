@@ -385,32 +385,30 @@ for file in \
     fi
 done
 
-
-echo "export CHARD_ROOT=\"$CHARD_ROOT\"" | sudo tee "$CHARD_ROOT/.chard.env" >/dev/null
-
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
 
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
-USER_HOME="${HOME}"
-USER_BASHRC="$USER_HOME/.bashrc"
-            
-[ -f "$USER_BASHRC" ] || touch "$USER_BASHRC"
-            
-if [ -f /etc/bash.bashrc ]; then
-    SYS_BASHRC="/etc/bash.bashrc"
-elif [ -f /etc/bashrc ]; then
-    SYS_BASHRC="/etc/bashrc"
+CURRENT_SHELL=$(basename "$SHELL")
+
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+TARGET_FILE=""
+
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    TARGET_FILE="$CHROMEOS_BASHRC"
 else
-    SYS_BASHRC=""
+    TARGET_FILE="$DEFAULT_BASHRC"
+    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
 fi
 
 add_chard_marker() {
     local FILE="$1"
-    sudo sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
-    sed -i '/^[[:space:]]*# <<< CHARD ENV MARKER <<</,/^[[:space:]]*# <<< END CHARD ENV MARKER <<</d' "$FILE"
+
+    sed -i.bak '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+
     if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
         {
             echo "# <<< CHARD ENV MARKER <<<"
@@ -421,20 +419,9 @@ add_chard_marker() {
     else
         echo "${YELLOW}[!] Chard already sourced in $FILE"
     fi
-
 }
 
-if ! grep -Fxq "<<< CHARD ENV MARKER <<<" "$HOME/.bashrc"; then
-    cat >> "$HOME/.bashrc" <<EOF
-
-# <<< CHARD ENV MARKER <<<
-source "$CHARD_RC"
-# <<< END CHARD ENV MARKER <<<
-EOF
-    echo "${BLUE}[+] Chard sourced to ~/.bashrc"
-else
-    echo "${YELLOW}[!] Chard already sourced in ~/.bashrc"
-fi
+add_chard_marker "$TARGET_FILE"
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
