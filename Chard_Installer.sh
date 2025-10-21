@@ -1506,9 +1506,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 USE=\"-truetype\" emerge -1 dev-python/pillow
                 emerge media-libs/harfbuzz
                 emerge dev-libs/glib
-                emerge dev-util/pkgconf
-                #emerge -1 dev-lang/ruby --autounmask-backtrack=y
-                #emerge dev-ruby/pkg-config
+                emerge dev-util/pkgcon
                 emerge dev-cpp/gtest
                 emerge dev-util/gtest-parallel
                 emerge dev-util/re2c
@@ -1526,7 +1524,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge dev-lang/duktape
                 emerge app-arch/brotli
                 mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
-                #emerge dev-lang/rust
                 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                 emerge -j$(nproc) dev-libs/boehm-gc
                 USE=\"-elogind systemd\" emerge sys-auth/polkit
@@ -1555,10 +1552,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge gui-libs/xdg-desktop-portal-wlr
                 emerge media-libs/mesa
                 emerge x11-apps/mesa-progs
-                emerge --autounmask-write media-sound/pulseaudio-daemon
-                etc-update --automode -5
-                #emerge media-sound/pulseaudio-daemon
-                #emerge media-sound/pulseaudio-ctl
                 emerge dev-qt/qtbase
                 emerge dev-qt/qttools
                 emerge dev-qt/qtnetwork
@@ -1574,8 +1567,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge dev-qt/qtxml
                 emerge dev-qt/qtgui
                 emerge dev-qt/qtcore
-                #emerge media-libs/pulseaudio-qt
-                #emerge media-sound/alsa-utils
                 emerge sys-apps/dbus
                 emerge app-accessibility/at-spi2-core
                 emerge app-accessibility/at-spi2-atk
@@ -1583,10 +1574,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge media-fonts/dejavu
                 emerge x11-themes/gtk-engines
                 emerge x11-themes/gtk-engines-murrine
-                #emerge sys-fs/udisks
-                #emerge sys-power/upower
-                #emerge sys-apps/bluez
-                #emerge dev-python/pybluez
                 emerge dev-lang/python
                 emerge x11-libs/libnotify
                 emerge --autounmask-write media-sound/pulseaudio-daemon
@@ -1617,8 +1604,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge x11-apps/xinit
                 emerge x11-terms/xterm
                 emerge x11-wm/twm
-                #emerge xfce-extra/xfce4-screensaver
-                #emerge xfce-base/xfce4-meta
                 emerge media-gfx/chafa
                 emerge dev-python/pillow
                 emerge app-text/doxygen
@@ -1628,9 +1613,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 meson setup build --prefix=/usr
                 ninja -C build
                 ninja -C build install
-                #emerge --autounmask-write www-client/firefox
-                #etc-update --automode -5
-                #emerge www-client/firefox
                 emerge sys-apps/flatpak
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 umount /etc/ssl
@@ -1652,11 +1634,23 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
 
             # Check
+            #emerge -1 dev-lang/ruby --autounmask-backtrack=y -> Do we need Ruby, yet? 
+            #emerge dev-ruby/pkg-config
+            #emerge dev-lang/rust -> use rustup
+            #emerge --autounmask-write media-sound/pulseaudio-daemon
+            #etc-update --automode -5
+            #emerge media-libs/pulseaudio-qt
+            #emerge media-sound/alsa-utils
+            #emerge sys-fs/udisks
+            #emerge sys-power/upower
+            #emerge sys-apps/bluez
+            #emerge dev-python/pybluez
             #sys-auth/polkit
-            #sys-power/upower
-            #sys-fs/udisks
             #app-accessibility/at-spi2-core
             #app-accessibility/at-spi2-atk
             #xfce-extra/xfce4-screensaver
             #sys-apps/xdg-dbus-proxy
+            #emerge --autounmask-write www-client/firefox
+            #etc-update --automode -5
+            #emerge www-client/firefox
             #sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "$CHARD_ROOT/.chard.preload"
