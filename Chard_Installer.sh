@@ -676,10 +676,7 @@ PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/p
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
-
-if ! grep -q 'PYTHONMULTIPROCESSING_START_METHOD' "$MAKECONF"; then
-    echo 'export PYTHONMULTIPROCESSING_START_METHOD=fork' >> "$MAKECONF"
-fi
+PYTHONMULTIPROCESSING_START_METHOD=fork
 
 EOF
 
