@@ -185,34 +185,37 @@ if [[ -w "$MAKECONF" ]]; then
 fi
 
 LLVM_BASE="$ROOT/usr/lib/llvm"
+
 if [[ -d "$LLVM_BASE" ]]; then
     mapfile -t all_llvm_versions < <(ls -1 "$LLVM_BASE" 2>/dev/null | grep -E '^[0-9]+(\.[0-9]+)*$' | sort -V)
 else
     all_llvm_versions=()
 fi
 
-if [[ ${#all_llvm_versions[@]} -lt 2 ]]; then
-    second_latest_llvm="${all_llvm_versions[-1]}"
-else
+latest_llvm=""
+second_latest_llvm=""
+
+if (( ${#all_llvm_versions[@]} > 0 )); then
+    latest_llvm="${all_llvm_versions[-1]}"
+fi
+
+if (( ${#all_llvm_versions[@]} > 1 )); then
     second_latest_llvm="${all_llvm_versions[-2]}"
+else
+    second_latest_llvm="$latest_llvm"
 fi
 
-latest_llvm="${all_llvm_versions[-1]}"
+if [[ -n "$second_latest_llvm" ]]; then
+    export LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
+    export LLVM_VERSION="$second_latest_llvm"
 
-export LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
-export LLVM_VERSION="$second_latest_llvm"
-
-if [[ -d "$LLVM_DIR/bin" ]]; then
-    export PATH="$LLVM_DIR/bin:$PATH"
+    [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
+    [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 fi
 
-if [[ -d "$LLVM_DIR/lib" ]]; then
-    export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-fi
-
-if [[ -d "$LLVM_DIR/lib/pkgconfig" ]]; then
-    export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-fi
+echo "Found LLVM versions: ${all_llvm_versions[*]}"
+echo "Using LLVM $second_latest_llvm (latest: $latest_llvm)"
 
 alias smrt='SMRT'
 
