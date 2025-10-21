@@ -177,11 +177,13 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
 else
     TARGET_FILE="$DEFAULT_BASHRC"
+    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
 fi
 
-RELATIVE_PATH="${TARGET_FILE#/}"
-CHARD_HOME="$RELATIVE_PATH"
+
+CHARD_HOME="$(dirname "$TARGET_FILE")"
 sudo mkdir -p "$CHARD_HOME"
+echo "$CHARD_HOME"
 
 ARCH=$(uname -m)
 case "$ARCH" in
