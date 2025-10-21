@@ -27,6 +27,9 @@ if [[ "$ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
 
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+
 export CHARD_RC="$ROOT/.chardrc"
 export PORTDIR="$ROOT/usr/portage"
 export DISTDIR="$ROOT/var/cache/distfiles"
