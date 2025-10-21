@@ -30,7 +30,7 @@ export PORTAGE_TMPDIR="$ROOT/var/tmp"
 export SANDBOX="$ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
 export XDG_RUNTIME_DIR="$ROOT/run/user/0"
-export PYTHONMULTIPROCESSING_START_METHOD=fork
+PYTHONMULTIPROCESSING_START_METHOD=fork
 
 PERL_BASE="$ROOT/usr/lib/perl5"
 PERL_LIB_DIRS=()
