@@ -1,4 +1,3 @@
-#!/bin/bash
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -664,7 +663,7 @@ esac
 
 sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
-# Generated based on detected architecture ($ARCH)
+# Generated for ($ARCH)
 
 COMMON_FLAGS="-O2 -pipe"
 CFLAGS="\${COMMON_FLAGS}"
@@ -695,11 +694,7 @@ PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/p
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
-
-if ! grep -q 'PYTHONMULTIPROCESSING_START_METHOD' "$MAKECONF"; then
-    echo 'export PYTHONMULTIPROCESSING_START_METHOD=fork' >> "$MAKECONF"
-fi
-
+PYTHONMULTIPROCESSING_START_METHOD="fork"
 EOF
 
 echo "${RESET}${BLUE}make.conf generated successfully for $ARCH → $MAKECONF_FILE ${RESET}"
