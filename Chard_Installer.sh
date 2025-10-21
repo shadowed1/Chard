@@ -1,3 +1,4 @@
+#!/bin/bash
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -75,20 +76,20 @@ show_progress() {
 }
 
    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
-    response=${response:-Y}
-    
-    case "$response" in
-        y|Y|yes|YES|Yes)
-            echo
-            echo
-            ;;
-        *)
-            echo "${RED}[EXIT]${RESET}"
-            exit 1
-            sleep 1
-            exit 0
-            ;;
-    esac
+response=${response:-Y}
+
+case "$response" in
+    y|Y|yes|YES|Yes)
+        echo
+        echo
+        ;;
+    *)
+        echo "${RED}[EXIT]${RESET}"
+        exit 1
+        sleep 1
+        exit 0
+        ;;
+esac
     unset LD_PRELOAD
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
@@ -168,21 +169,14 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
 fi
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
-CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
-DEFAULT_BASHRC="$HOME/.bashrc"
-TARGET_FILE=""
 
-if [ -f "$CHROMEOS_BASHRC" ]; then
-    TARGET_FILE="$CHROMEOS_BASHRC"
-else
-    TARGET_FILE="$DEFAULT_BASHRC"
-    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
-fi
 
-CHARD_HOME="$(dirname "$TARGET_FILE")"
-CHARD_HOME="${CHARD_HOME#/}"
-sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
-echo "$CHARD_HOME"
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) CHOST=x86_64-pc-linux-gnu ;;
+    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+    *) echo "Unknown architecture: $ARCH" ;;
+esac
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -216,8 +210,10 @@ sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
+
 STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
 STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
+
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 
@@ -283,6 +279,7 @@ if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
 else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
+
 
 sudo rm -rf "$KERNEL_BUILD"z
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
@@ -356,10 +353,10 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage" \
               "$CHARD_ROOT/sys" \
               "$CHARD_ROOT/tmp" \
               "$CHARD_ROOT/run" \
-              "$CHARD_ROOT/$CHARD_HOME/.cargo" \
-              "$CHARD_ROOT/$CHARD_HOME/.rustup" \
-              "$CHARD_ROOT/$CHARD_HOME/.local/share" \
-              "$CHARD_ROOT/$CHARD_HOME/Desktop" \
+              "$CHARD_ROOT/home/chronos/user/.cargo" \
+              "$CHARD_ROOT/home/chronos/user/.rustup" \
+              "$CHARD_ROOT/home/chronos/user/.local/share" \
+              "$CHARD_ROOT/home/chronos/user/Desktop" \
               "$CHARD_ROOT/mnt"
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
@@ -375,13 +372,14 @@ sudo rm -f \
 
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
+
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/home/chronos/user/.bashrc"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -397,42 +395,21 @@ for file in \
         else
             sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
         fi
+
         sudo chmod +x "$file"
     else
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
     fi
 done
 
-
-for target in \
-    "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-    "$CHARD_ROOT/bin/chard"; do
-
-    if [ -f "$target" ]; then
-        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$target"; then
-            sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
-# <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$target"
-        else
-            {
-                echo ""
-                echo "# <<< ROOT_MARKER >>>"
-                echo "CHARD_HOME=\"/$CHARD_HOME\""
-                echo "export CHARD_HOME"
-                echo "# <<< END_ROOT_MARKER >>>"
-            } | sudo tee -a "$target" >/dev/null
-        fi
-    else
-        echo "${RED}[!] Missing: $target — cannot patch ROOT_MARKER${RESET}"
-    fi
-done
-
-
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
+
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
 CURRENT_SHELL=$(basename "$SHELL")
+
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
@@ -462,6 +439,7 @@ add_chard_marker() {
 }
 
 add_chard_marker "$TARGET_FILE"
+
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
@@ -478,20 +456,10 @@ cd "$CHARD_ROOT/tmp/docbook-4.3"
 sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
 sudo mkdir -p "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo mkdir -p "$CHARD_ROOT/etc/xml"
-DEST="$CHARD_ROOT/usr/share/xml/docbook/4.3"
-ARCHIVE="docbook-xml-4.3.zip"
-sudo mkdir -p "$DEST"
-if [ -x "/usr/bin/bsdtar" ]; then
-    echo "Using bsdtar to extract $ARCHIVE..."
-    sudo bsdtar -xf "$ARCHIVE" -C "$DEST" --strip-components=1
-elif [ -x "/usr/bin/unzip" ]; then
-    echo "Using unzip to extract $ARCHIVE..."
-    sudo unzip -o "$ARCHIVE" -d "$DEST"
-else
-    echo "Error: neither bsdtar nor unzip found. Cannot extract $ARCHIVE."
-fi
+sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo touch "$CHARD_ROOT/etc/xml/catalog"
+
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
@@ -677,7 +645,7 @@ esac
 
 sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
-# Generated for ($ARCH)
+# Generated based on detected architecture ($ARCH)
 
 COMMON_FLAGS="-O2 -pipe"
 CFLAGS="\${COMMON_FLAGS}"
@@ -708,7 +676,11 @@ PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/p
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
-PYTHONMULTIPROCESSING_START_METHOD="fork"
+
+if ! grep -q 'PYTHONMULTIPROCESSING_START_METHOD' "$MAKECONF"; then
+    echo 'export PYTHONMULTIPROCESSING_START_METHOD=fork' >> "$MAKECONF"
+fi
+
 EOF
 
 echo "${RESET}${BLUE}make.conf generated successfully for $ARCH → $MAKECONF_FILE ${RESET}"
@@ -725,7 +697,7 @@ ns-user-off
 EOF
 
 sudo tee "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
-export HOME="$CHARD_HOME/"
+export HOME="/home/chronos/user/"
 export USER="chronos"
 export LOGNAME="chronos"
 export PATH=/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
@@ -743,8 +715,8 @@ ar = '/usr/bin/gcc-ar'
 ranlib = '/usr/bin/gcc-ranlib'
 strip = '/usr/bin/strip'
 pkgconfig = 'pkg-config'
-cargo = '$CHARD_HOME/.cargo/bin/cargo'
-rust = '$CHARD_HOME/.cargo/bin/rustc'
+cargo = '/home/chronos/user/.cargo/bin/cargo'
+rust = '/home/chronos/user/.cargo/bin/rustc'
 
 [properties]
 rust_target = 'x86_64-pc-linux-gnu'
@@ -765,8 +737,8 @@ ar = '/usr/bin/gcc-ar'
 ranlib = '/usr/bin/gcc-ranlib'
 strip = '/usr/bin/strip'
 pkgconfig = 'pkg-config'
-cargo = '$CHARD_HOME/.cargo/bin/cargo'
-rust = '$CHARD_HOME/.cargo/bin/rustc'
+cargo = '/home/chronos/user/.cargo/bin/cargo'
+rust = '/home/chronos/user/.cargo/bin/rustc'
 
 [properties]
 rust_target = 'aarch64-unknown-linux-gnu'
@@ -1068,7 +1040,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     esac
             export ARCH
             export CHOST
-            export HOME=\$CHARD_HOME
+            export HOME=/home/chronos/user
             export MAGIC=\"/usr/share/misc/magic.mgc\"
             export CC=/usr/bin/gcc
             export CXX=/usr/bin/g++
@@ -1404,7 +1376,7 @@ esac
 
 if [[ -f /etc/lsb-release ]]; then
     BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || hostname)}
+    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "chardroot")}
 else
     BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
     BOARD_NAME=${BOARD_NAME:-$(uname -n)}
@@ -1412,12 +1384,8 @@ fi
 
 BOARD_NAME=${BOARD_NAME%%-*}
 
-sudo tee "$CHARD_ROOT/etc/chard_prompt.sh" >/dev/null <<EOF
+sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
 #!/bin/bash
-if [[ \$- != *i* ]]; then
-    return
-fi
-
 BOLD='\\[\\e[1m\\]'
 RED='\\[\\e[31m\\]'
 YELLOW='\\[\\e[33m\\]'
@@ -1427,11 +1395,11 @@ RESET='\\[\\e[0m\\]'
 PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
 export PS1
 EOF
-sudo chmod +x "$CHARD_ROOT/etc/chard_prompt.sh"
 
-if ! grep -q '/etc/.chard_prompt.sh' "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null; then
-    sudo tee -a "$CHARD_ROOT/$CHARD_HOME/.bashrc" > /dev/null <<'EOF'
-source /etc/.chard_prompt.sh
+sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
+if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>/dev/null; then
+    sudo tee -a "$CHARD_ROOT/home/chronos/user/.bashrc" > /dev/null <<'EOF'
+source /root/.chard_prompt.sh
 EOF
 fi
 
@@ -1467,7 +1435,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         esac
                 export ARCH
                 export CHOST
-                export HOME=\$CHARD_HOME
+                export HOME=/home/chronos/user
                 export MAGIC=\"/usr/share/misc/magic.mgc\"
                 export CC=/usr/bin/gcc
                 export CXX=/usr/bin/g++
@@ -1498,7 +1466,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 export PYTHONMULTIPROCESSING_START_METHOD=fork
-                source \$CHARD_HOME/.bashrc
+                source /home/chronos/user/.bashrc
                 env-update
                 SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
