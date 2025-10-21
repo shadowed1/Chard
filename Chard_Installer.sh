@@ -406,7 +406,7 @@ done
 
 for target in \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-    "$CHARD_ROOT/.chardrc"; do
+    "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$target" ]; then
         if sudo grep -q '^# <<< ROOT_MARKER >>>' "$target"; then
