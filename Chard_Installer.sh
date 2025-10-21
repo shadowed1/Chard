@@ -1462,6 +1462,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export LD=\"/usr/bin/ld\"
                 export PYTHONMULTIPROCESSING_START_METHOD=fork
                 source /home/chronos/user/.bashrc
+                env-update
                 SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
                 emerge dev-build/make
