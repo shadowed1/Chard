@@ -180,7 +180,6 @@ else
     [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
 fi
 
-
 CHARD_HOME="$(dirname "$TARGET_FILE")"
 sudo mkdir -p "$CHARD_HOME"
 echo "$CHARD_HOME"
@@ -287,7 +286,6 @@ else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
 
-
 sudo rm -rf "$KERNEL_BUILD"z
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
@@ -379,7 +377,6 @@ sudo rm -f \
 
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
-
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
@@ -402,33 +399,35 @@ for file in \
         else
             sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
         fi
-
         sudo chmod +x "$file"
     else
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
     fi
-
-    if [ -f "$CHARD_ROOT/$CHARD_HOME/.bashrc" ]; then
-        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$CHARD_ROOT/$CHARD_HOME/.bashrc"; then
+    TARGET="$CHARD_ROOT/$CHARD_HOME/.bashrc"
+    if [ -f "$TARGET" ]; then
+        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$TARGET"; then
             sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
-    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$TARGET"
         else
-            sudo sed -i "1i # <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>\n" "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+            {
+                echo ""
+                echo "# <<< ROOT_MARKER >>>"
+                echo "CHARD_HOME=\"$CHARD_HOME\""
+                echo "export CHARD_HOME"
+                echo "# <<< END_ROOT_MARKER >>>"
+            } | sudo tee -a "$TARGET" >/dev/null
         fi
     else
-        echo "${RED}[!] Missing: $CHARD_ROOT/$CHARD_HOME/.bashrc — cannot patch ROOT_MARKER${RESET}"
+        echo "${RED}[!] Missing: $TARGET — cannot patch ROOT_MARKER${RESET}"
     fi
-
 done
 
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
-
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
 CURRENT_SHELL=$(basename "$SHELL")
-
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
@@ -458,7 +457,6 @@ add_chard_marker() {
 }
 
 add_chard_marker "$TARGET_FILE"
-
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
@@ -478,7 +476,6 @@ sudo mkdir -p "$CHARD_ROOT/etc/xml"
 sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
 sudo touch "$CHARD_ROOT/etc/xml/catalog"
-
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
