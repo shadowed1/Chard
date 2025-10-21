@@ -389,7 +389,7 @@ for file in \
     "$CHARD_ROOT/.chard.logic" \
     "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/bin/chard"; do
-
+    
     if [ -f "$file" ]; then
         if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
             sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
@@ -405,12 +405,12 @@ for file in \
     if [ -f "$TARGET" ]; then
         if sudo grep -q '^# <<< ROOT_MARKER >>>' "$TARGET"; then
             sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
-    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$TARGET"
+    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$TARGET"
         else
             {
                 echo ""
                 echo "# <<< ROOT_MARKER >>>"
-                echo "CHARD_HOME=\"$CHARD_HOME\""
+                echo "CHARD_HOME=\"/$CHARD_HOME\""
                 echo "export CHARD_HOME"
                 echo "# <<< END_ROOT_MARKER >>>"
             } | sudo tee -a "$TARGET" >/dev/null
