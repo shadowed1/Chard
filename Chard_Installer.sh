@@ -75,20 +75,20 @@ show_progress() {
 }
 
    read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
-response=${response:-Y}
-
-case "$response" in
-    y|Y|yes|YES|Yes)
-        echo
-        echo
-        ;;
-    *)
-        echo "${RED}[EXIT]${RESET}"
-        exit 1
-        sleep 1
-        exit 0
-        ;;
-esac
+    response=${response:-Y}
+    
+    case "$response" in
+        y|Y|yes|YES|Yes)
+            echo
+            echo
+            ;;
+        *)
+            echo "${RED}[EXIT]${RESET}"
+            exit 1
+            sleep 1
+            exit 0
+            ;;
+    esac
     unset LD_PRELOAD
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
