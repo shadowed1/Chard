@@ -146,13 +146,30 @@ sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
 
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
+CURRENT_SHELL=$(basename "$SHELL")
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+TARGET_FILE=""
 
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
-{
-    echo "# <<< CHARD ENV MARKER <<<"
-    echo "source \"$CHARD_RC\""
-    echo "# <<< END CHARD ENV MARKER <<<"
-} >> "$FILE"
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    TARGET_FILE="$CHROMEOS_BASHRC"
+else
+    TARGET_FILE="$DEFAULT_BASHRC"
+    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
+fi
+
+sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
+
+if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
+    {
+        echo "# <<< CHARD ENV MARKER <<<"
+        echo "source \"$CHARD_RC\""
+        echo "# <<< END CHARD ENV MARKER <<<"
+    } >> "$TARGET_FILE"
+fi
+
+echo "Target file: $TARGET_FILE"
+
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -407,7 +424,7 @@ fi
 add_chard_marker() {
     local FILE="$1"
 
-    sed -i.bak '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
+    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE"
 
     if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
         {
