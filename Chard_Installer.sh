@@ -408,16 +408,16 @@ for file in \
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
     fi
 
-    if [ -f "$CHARD_HOME/.bashrc" ]; then
-    if sudo grep -q '^# <<< ROOT_MARKER >>>' "$CHARD_HOME/.bashrc"; then
-        sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
-# <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$CHARD_HOME/.bashrc"
+    if [ -f "$CHARD_ROOT/$CHARD_HOME/.bashrc" ]; then
+        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$CHARD_ROOT/$CHARD_HOME/.bashrc"; then
+            sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
+    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+        else
+            sudo sed -i "1i # <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>\n" "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+        fi
     else
-        sudo sed -i "1i # <<< ROOT_MARKER >>>\nCHARD_HOME=\"$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>\n" "$CHARD_HOME/.bashrc"
+        echo "${RED}[!] Missing: $CHARD_ROOT/$CHARD_HOME/.bashrc — cannot patch ROOT_MARKER${RESET}"
     fi
-else
-    echo "${RED}[!] Missing: $CHARD_HOME/.bashrc — cannot patch ROOT_MARKER${RESET}"
-fi
 
 done
 
