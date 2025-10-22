@@ -175,7 +175,7 @@ ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
     aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH" ;;
+    *) echo "Unsupported Architecture: $ARCH" ;;
 esac
 
 ARCH=$(uname -m)
@@ -293,7 +293,7 @@ HOST_ARCH=\$(uname -m)
 case \"\$HOST_ARCH\" in
     x86_64) KERNEL_ARCH=x86_64 ;;
     aarch64) KERNEL_ARCH=arm64 ;;
-    *) echo \"Unknown architecture: \$HOST_ARCH\"; exit 1 ;;
+    *) echo \"Unsupported Architecture: \$HOST_ARCH\"; exit 1 ;;
 esac
 
 make mrproper
@@ -514,7 +514,7 @@ for pkg in "${PACKAGES[@]}"; do
             sudo bsdtar -xf "$BUILD_DIR/$ARCHIVE" -C "$BUILD_DIR"
             ;;
         *)
-            echo "Unknown archive format: $EXT"
+            echo "Unsupported Archive Format: $EXT"
     esac
 done
 
