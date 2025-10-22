@@ -520,7 +520,7 @@ done
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
 
-sudo tee "$CHARD_ROOT/usr/local/chard/etc/portage/package.use/systemd-overrides" <<EOF
+sudo tee "$CHARD_ROOT/etc/portage/package.use/systemd-overrides" <<EOF
 sys-auth/elogind -systemd
 media-video/pipewire -elogind
 media-video/wireplumber -elogind
@@ -528,7 +528,7 @@ sys-auth/polkit -elogind
 sys-apps/dbus -elogind
 EOF
 
-sudo tee "$CHARD_ROOT/usr/local/chard/etc/portage/package.use/flatpak-systemd" > /dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/etc/portage/package.use/flatpak-systemd" > /dev/null <<'EOF'
 sys-auth/elogind -systemd
 media-video/pipewire -elogind
 media-video/wireplumber -elogind
