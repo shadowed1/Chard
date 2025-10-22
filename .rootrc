@@ -1,3 +1,5 @@
+# CHARD .BASHRC
+
 # <<< ROOT_MARKER >>>
 CHARD_HOME=""
 export CHARD_HOME
