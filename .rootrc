@@ -4,3 +4,5 @@
 CHARD_HOME=""
 export CHARD_HOME
 # <<< END_ROOT_MARKER >>>
+
+# <<< END CHARD .ROOTRC >>>
