@@ -385,6 +385,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"  
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/bin/.rootrc"
 
+sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -431,6 +432,7 @@ for target in \
 done
 
 sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/root/.bashrc"
+
 
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
