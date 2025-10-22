@@ -1648,7 +1648,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
                 eclean-dist -d
                 
-                USE=\"-elogind -systemd\" emerge sys-auth/polkit
+                emerge sys-auth/polkit
                 rm -rf /var/tmp/portage/sys-auth/polkit-*
                 eclean-dist -d
                 
