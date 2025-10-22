@@ -170,6 +170,10 @@ fi
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 
+CHARD_HOME="$(dirname "$TARGET_FILE")"
+CHARD_HOME="${CHARD_HOME#/}"
+sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
+echo "$CHARD_HOME"
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -353,10 +357,10 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage" \
               "$CHARD_ROOT/sys" \
               "$CHARD_ROOT/tmp" \
               "$CHARD_ROOT/run" \
-              "$CHARD_ROOT/home/chronos/user/.cargo" \
-              "$CHARD_ROOT/home/chronos/user/.rustup" \
-              "$CHARD_ROOT/home/chronos/user/.local/share" \
-              "$CHARD_ROOT/home/chronos/user/Desktop" \
+              "$CHARD_ROOT/$CHARD_HOME/.cargo" \
+              "$CHARD_ROOT/$CHARD_HOME/.rustup" \
+              "$CHARD_ROOT/$CHARD_HOME/.local/share" \
+              "$CHARD_ROOT/$CHARD_HOME/Desktop" \
               "$CHARD_ROOT/mnt"
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
@@ -379,7 +383,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.e
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic" -o "$CHARD_ROOT/.chard.logic"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/home/chronos/user/.bashrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -399,6 +403,28 @@ for file in \
         sudo chmod +x "$file"
     else
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
+    fi
+done
+
+for target in \
+    "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
+    "$CHARD_ROOT/bin/chard"; do
+
+    if [ -f "$target" ]; then
+        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$target"; then
+            sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
+# <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$target"
+        else
+            {
+                echo ""
+                echo "# <<< ROOT_MARKER >>>"
+                echo "CHARD_HOME=\"/$CHARD_HOME\""
+                echo "export CHARD_HOME"
+                echo "# <<< END_ROOT_MARKER >>>"
+            } | sudo tee -a "$target" >/dev/null
+        fi
+    else
+        echo "${RED}[!] Missing: $target — cannot patch ROOT_MARKER${RESET}"
     fi
 done
 
@@ -673,7 +699,7 @@ ns-user-off
 EOF
 
 sudo tee "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
-export HOME="/home/chronos/user/"
+export HOME="/$CHARD_HOME/"
 export USER="chronos"
 export LOGNAME="chronos"
 export PATH=/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
@@ -691,8 +717,8 @@ ar = '/usr/bin/gcc-ar'
 ranlib = '/usr/bin/gcc-ranlib'
 strip = '/usr/bin/strip'
 pkgconfig = 'pkg-config'
-cargo = '/home/chronos/user/.cargo/bin/cargo'
-rust = '/home/chronos/user/.cargo/bin/rustc'
+cargo = '/$CHARD_HOME/.cargo/bin/cargo'
+rust = '/$CHARD_HOME/.cargo/bin/rustc'
 
 [properties]
 rust_target = 'x86_64-pc-linux-gnu'
@@ -713,8 +739,8 @@ ar = '/usr/bin/gcc-ar'
 ranlib = '/usr/bin/gcc-ranlib'
 strip = '/usr/bin/strip'
 pkgconfig = 'pkg-config'
-cargo = '/home/chronos/user/.cargo/bin/cargo'
-rust = '/home/chronos/user/.cargo/bin/rustc'
+cargo = '/$CHARD_HOME/.cargo/bin/cargo'
+rust = '/$CHARD_HOME/.cargo/bin/rustc'
 
 [properties]
 rust_target = 'aarch64-unknown-linux-gnu'
@@ -1016,7 +1042,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     esac
             export ARCH
             export CHOST
-            export HOME=/home/chronos/user
             export MAGIC=\"/usr/share/misc/magic.mgc\"
             export CC=/usr/bin/gcc
             export CXX=/usr/bin/g++
@@ -1046,16 +1071,18 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             export XDG_RUNTIME_DIR=\"/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
+            source /root/.bashrc
 
     emerge --sync
 
-    umount /etc/ssl
-    umount /dev/pts
-    umount /dev/shm
-    umount /dev
-    umount /sys
-    umount /proc
-    umount /run/dbus
+    umount /etc/ssl     2>/dev/null || true
+    umount /dev/pts     2>/dev/null || true
+    umount /dev/shm     2>/dev/null || true
+    umount /dev         2>/dev/null || true
+    umount /sys         2>/dev/null || true
+    umount /proc        2>/dev/null || true
+    umount /dev/dbus    2>/dev/null || true
+
 "
 
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
@@ -1301,14 +1328,14 @@ export PS1
 EOF
 
 sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
-if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/home/chronos/user/.bashrc" 2>/dev/null; then
-    sudo tee -a "$CHARD_ROOT/home/chronos/user/.bashrc" > /dev/null <<'EOF'
+if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null; then
+    sudo tee -a "$CHARD_ROOT/$CHARD_HOME/.bashrc" > /dev/null <<'EOF'
 source /root/.chard_prompt.sh
 EOF
 fi
 
 sudo tee "$CHARD_ROOT/root/.bashrc.sh" >/dev/null <<EOF
-source /home/chronos/user/.bashrc
+source /$CHARD_HOME/.bashrc
 EOF
 
 sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESSING_START_METHOD=fork'
@@ -1396,7 +1423,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         esac
                 export ARCH
                 export CHOST
-                export HOME=/home/chronos/user
                 export MAGIC=\"/usr/share/misc/magic.mgc\"
                 export CC=/usr/bin/gcc
                 export CXX=/usr/bin/g++
@@ -1427,7 +1453,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 export PYTHONMULTIPROCESSING_START_METHOD=fork
-                source /home/chronos/user/.bashrc
+                source /root/.bashrc
                 env-update
                 SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
@@ -1482,7 +1508,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/app-misc/fastfetch-*
                 eclean-dist -d
 
-                echo dev-lang/perl ~$(portageq envvar ARCH) >> /etc/portage/package.accept_keywords/perl
+                echo dev-lang/perl ~\$(portageq envvar ARCH) >> /etc/portage/package.accept_keywords/perl
                 
                 emerge -1 dev-lang/perl
                 rm -rf /var/tmp/portage/dev-lang/perl-*
@@ -1620,7 +1646,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/kde-frameworks/extra-cmake-modules-*
                 eclean-dist -d
                 
-                emerge -j$(nproc) dev-perl/File-LibMagic
+                emerge -j\$(nproc) dev-perl/File-LibMagic
                 rm -rf /var/tmp/portage/dev-perl/File-LibMagic-*
                 eclean-dist -d
                 
@@ -1644,7 +1670,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 
                 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                 
-                emerge -j$(nproc) dev-libs/boehm-gc
+                emerge -j\$(nproc) dev-libs/boehm-gc
                 rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
                 eclean-dist -d
                 
@@ -1945,13 +1971,14 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 
-                umount /etc/ssl
-                umount /dev/pts
-                umount /dev/shm
-                umount /dev
-                umount /sys
-                umount /proc
-                umount /dev/dbus
+                umount /etc/ssl     2>/dev/null || true
+                umount /dev/pts     2>/dev/null || true
+                umount /dev/shm     2>/dev/null || true
+                umount /dev         2>/dev/null || true
+                umount /sys         2>/dev/null || true
+                umount /proc        2>/dev/null || true
+                umount /dev/dbus    2>/dev/null || true
+
             "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
