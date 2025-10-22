@@ -1175,21 +1175,25 @@ case "$ARCH" in
                 DRM_AMDGPU=y
                 DRM_I915=n
                 CONFIG_DRM_NOUVEAU=n
+                CONFIG_LAVAPIPE=n
                 ;;
             intel)
                 DRM_AMDGPU=n
                 DRM_I915=y
                 CONFIG_DRM_NOUVEAU=n
+                CONFIG_LAVAPIPE=n
                 ;;
             nvidia)
                 DRM_AMDGPU=n
                 DRM_I915=n
                 CONFIG_DRM_NOUVEAU=y
+                CONFIG_LAVAPIPE=n
                 ;;
             *)
                 DRM_AMDGPU=n
                 DRM_I915=n
                 CONFIG_DRM_NOUVEAU=n
+                CONFIG_LAVAPIPE=y
                 ;;
         esac
 
@@ -1401,6 +1405,60 @@ EOF
 fi
 
 sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESSING_START_METHOD=fork'
+
+    WAYLAND_CONF_DIR="$CHARD_ROOT/etc/profile.d"
+    sudo mkdir -p "$WAYLAND_CONF_DIR"
+
+    WAYLAND_CONF_FILE="$WAYLAND_CONF_DIR/wayland_gpu.sh"
+    sudo tee "$WAYLAND_CONF_FILE" > /dev/null <<EOF
+#!/bin/sh
+# Wayland GPU environment setup for Chard
+
+EOF
+    case "$GPU_TYPE" in
+        intel)
+            DRIVER="i965"
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=i915" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            ;;
+        amd)
+            DRIVER="r600/radeonsi"
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=amdgpu" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            ;;
+        nvidia)
+            DRIVER="nouveau"
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=nouveau" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            ;;
+        mali)
+            DRIVER="panfrost"
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=panfrost" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            ;;
+        adreno)
+            DRIVER="freedreno"
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=freedreno" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            ;;
+        mediatek)
+            DRIVER="mtk"
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=msm" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            ;;
+        vivante)
+            DRIVER="etnaviv"
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=etnaviv" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            ;;
+        *)
+            DRIVER="llvmpipe"
+            echo "[*] No GPU detected, using software fallback (LLVMpipe)" | tee /dev/stderr
+            echo "export LIBGL_ALWAYS_SOFTWARE=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            if [[ "$ARCH" == "x86_64" ]]; then
+                echo "export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            fi
+            ;;
+    esac
+
+    echo "# Enable Sommelier for XWayland forwarding if installed" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+    echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+    sudo chmod +x "$WAYLAND_CONF_FILE"
+    echo "[*] Wayland GPU environment setup complete ($DRIVER)"
 
 echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
 echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
