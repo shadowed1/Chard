@@ -972,11 +972,11 @@ case "$GPU_VENDOR" in
         ;;
     adreno)
         IDENTIFIER="Qualcomm Adreno Graphics"
-        DRIVER="modesetting"
+        DRIVER="panfrost"
         ;;
     mediatek)
         IDENTIFIER="MediaTek GPU"
-        DRIVER="modesetting"
+        DRIVER="panfrost"
         ;;
     vivante)
         IDENTIFIER="Vivante GPU"
