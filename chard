@@ -247,7 +247,6 @@ case "$cmd" in
             1)
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
     
-                # Remove old files
                 sudo rm -f \
                     "$CHARD_ROOT/.chardrc" \
                     "$CHARD_ROOT/.chard.env" \
