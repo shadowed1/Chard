@@ -1308,6 +1308,10 @@ source /root/.chard_prompt.sh
 EOF
 fi
 
+sudo tee "$CHARD_ROOT/root/.bashrc.sh" >/dev/null <<EOF
+source /home/chronos/user/.bashrc
+EOF
+
 sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESSING_START_METHOD=fork'
 
     WAYLAND_CONF_DIR="$CHARD_ROOT/etc/profile.d"
