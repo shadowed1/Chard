@@ -16,7 +16,7 @@ echo "${RESET}${GREEN}"
 echo
 echo
 echo
-echosystem
+echo
 echo
 echo
 echo "                                                             AA"
@@ -1057,8 +1057,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     umount /proc
     umount /run/dbus
 "
-sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
 
+sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
 sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
@@ -1211,9 +1211,7 @@ sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
     CONFIG_CRYPTO_SHA256=y
     CONFIG_CRYPTO_SHA512=y
     EOF
-
         ;;
-
     aarch64)
         case "$GPU_VENDOR" in
             mali)
@@ -1242,7 +1240,7 @@ sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
                 DRM_ARM_DC=n
                 ;;
         esac
-
+        
 sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
     CONFIG_PROC_FS=y
     CONFIG_SYSFS=y
@@ -1250,7 +1248,6 @@ sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
     CONFIG_TMPFS_POSIX_ACL=y
     CONFIG_DEVTMPFS=y
     CONFIG_DEVTMPFS_MOUNT=y
-    
     CONFIG_NAMESPACES=y
     CONFIG_USER_NS=y
     CONFIG_SECCOMP=y
@@ -1259,20 +1256,16 @@ sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
     CONFIG_BPF_SYSCALL=y
     CONFIG_BPF_JIT=y
     CONFIG_CGROUP_BPF=y
-    
     CONFIG_FHANDLE=y
     CONFIG_FANOTIFY=y
     CONFIG_EPOLL=y
     CONFIG_INOTIFY_USER=y
-    
     CONFIG_NET=y
     CONFIG_FUSE_FS=y
-    
     CONFIG_EXT4_FS=y
     CONFIG_EXT4_USE_FOR_EXT2=y
     CONFIG_FS_POSIX_ACL=y
     CONFIG_FS_SECURITY=y
-    
     CONFIG_CRYPTO_USER_API_HASH=y
     CONFIG_CRYPTO_SHA1=y
     CONFIG_CRYPTO_SHA256=y
