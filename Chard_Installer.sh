@@ -173,7 +173,6 @@ echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
 CHARD_HOME="${CHARD_HOME#/}"
 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
-echo "$CHARD_HOME"
 
 ARCH=$(uname -m)
 case "$ARCH" in
