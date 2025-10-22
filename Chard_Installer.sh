@@ -16,7 +16,7 @@ echo "${RESET}${GREEN}"
 echo
 echo
 echo
-echo
+echosystem
 echo
 echo
 echo "                                                             AA"
@@ -521,7 +521,7 @@ done
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.mask"
 
 sudo tee "$CHARD_ROOT/etc/portage/package.mask/systemd" <<EOF
-=sys-apps/systemd-*
+* -systemd
 EOF
 
 sudo tee "$CHARD_ROOT/bin/emerge" > /dev/null <<'EOF'
