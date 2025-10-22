@@ -13,6 +13,11 @@ CHARD_ROOT=""
 export CHARD_ROOT
 # <<< END_CHARD_ROOT_MARKER >>>
 
+# <<< ROOT_MARKER >>>
+CHARD_HOME=""
+export CHARD_HOME
+# <<< END_ROOT_MARKER >>>
+
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
@@ -211,7 +216,7 @@ export PYTHONMULTIPROCESSING_START_METHOD=fork
         PYTHON_TARGETS="$PYTHON_TARGETS" \
         PYTHON_SINGLE_TARGET="$PYTHON_SINGLE_TARGET" \
         PYTHONPATH="$PYTHONPATH" \
-        HOME="$HOME" \
+        HOME="$CHARD_HOME" \
         "$@"
 }
 
@@ -331,7 +336,7 @@ case "$cmd" in
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-            source \"\$HOME/.bashrc\" 2>/dev/null
+            source /root/.bashrc 2>/dev/null
             dbus-daemon --system --fork 2>/dev/null        
             /bin/bash
 
