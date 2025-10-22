@@ -7,5 +7,6 @@ export CHARD_HOME
 
 HOME=$CHARD_HOME
 export HOME
+source /$HOME/.bashrc
 
 # <<< END CHARD .ROOTRC >>>
