@@ -331,6 +331,7 @@ case "$cmd" in
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+            source \"\$HOME/.bashrc\" 2>/dev/null
             source \"\$CHARD_ROOT/home/chronos/user/.bashrc\" 2>/dev/null
             dbus-daemon --system --fork 2>/dev/null        
             /bin/bash
