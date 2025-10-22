@@ -1076,7 +1076,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             export XDG_RUNTIME_DIR=\"/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
-            source /root/.bashrc 2>/dev/null
+            source /.bashrc 2>/dev/null
 
     emerge --sync
 
