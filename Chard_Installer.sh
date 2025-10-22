@@ -373,7 +373,7 @@ sudo rm -f \
     "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/bin/chard"
 
-sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64" "$CHARD_ROOT/root/"
+sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
 
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
@@ -431,7 +431,7 @@ for target in \
     fi
 done
 
-sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/root/.bashrc"
+sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
 
 
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
