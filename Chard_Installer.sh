@@ -518,25 +518,10 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/package.mask"
 
-sudo tee "$CHARD_ROOT/etc/portage/package.use/systemd-overrides" <<EOF
-sys-auth/elogind -systemd
-media-video/pipewire -elogind
-media-video/wireplumber -elogind
-sys-auth/polkit -elogind
-sys-apps/dbus -elogind
-EOF
-
-sudo tee "$CHARD_ROOT/etc/portage/package.use/flatpak-systemd" > /dev/null <<'EOF'
-sys-auth/elogind -systemd
-media-video/pipewire -elogind
-media-video/wireplumber -elogind
-sys-auth/polkit -elogind
-sys-apps/dbus -elogind
-sys-libs/pam -elogind systemd
-sys-apps/shadow -elogind systemd
-sys-apps/util-linux -elogind systemd
+sudo tee "$CHARD_ROOT/etc/portage/package.mask/systemd" <<EOF
+=sys-apps/systemd-*
 EOF
 
 sudo tee "$CHARD_ROOT/bin/emerge" > /dev/null <<'EOF'
@@ -668,7 +653,7 @@ RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
 
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
-USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype -udev -udisks unicode -upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd -elogind"
+USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype -udev -udisks unicode -upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 -systemd -elogind"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
 
@@ -1741,7 +1726,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
                 eclean-dist -d
                 
-                USE=\"-elogind systemd\" emerge sys-auth/polkit
+                USE=\"-elogind -systemd\" emerge sys-auth/polkit
                 rm -rf /var/tmp/portage/sys-auth/polkit-*
                 eclean-dist -d
                 
