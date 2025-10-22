@@ -373,7 +373,7 @@ sudo rm -f \
     "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/bin/chard"
 
-sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
+sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64" "$CHARD_ROOT/root/"
 
 
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
@@ -383,7 +383,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.l
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/root/.bashrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/root/.rootrc"
 
 
 for file in \
@@ -409,7 +409,7 @@ done
 
 for target in \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-    "$CHARD_ROOT/root/.bashrc" \
+    "$CHARD_ROOT/root/.rootrc" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$target" ]; then
@@ -429,6 +429,8 @@ for target in \
         echo "${RED}[!] Missing: $target — cannot patch ROOT_MARKER${RESET}"
     fi
 done
+
+sudo mv "$CHARD_ROOT/root/.rootrc" "$CHARD_ROOT/root/.bashrc"
 
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
