@@ -1422,7 +1422,7 @@ EOF
             echo "export MESA_LOADER_DRIVER_OVERRIDE=i915" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
             ;;
         amd)
-            DRIVER="r600/radeonsi"
+            DRIVER="radeonsi"
             echo "export MESA_LOADER_DRIVER_OVERRIDE=amdgpu" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
             ;;
         nvidia)
@@ -1438,7 +1438,7 @@ EOF
             echo "export MESA_LOADER_DRIVER_OVERRIDE=freedreno" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
             ;;
         mediatek)
-            DRIVER="mtk"
+            DRIVER="panfrost"
             echo "export MESA_LOADER_DRIVER_OVERRIDE=msm" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
             ;;
         vivante)
