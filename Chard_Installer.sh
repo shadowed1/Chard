@@ -451,14 +451,14 @@ sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
-sudo mkdir -p "$CHARD_ROOT/tmp/docbook-4.3"
-cd "$CHARD_ROOT/tmp/docbook-4.3"
-sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
-sudo mkdir -p "$CHARD_ROOT/usr/share/xml/docbook/4.3"
-sudo mkdir -p "$CHARD_ROOT/etc/xml"
-sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
-sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
-sudo touch "$CHARD_ROOT/etc/xml/catalog"
+#sudo mkdir -p "$CHARD_ROOT/tmp/docbook-4.3"
+#cd "$CHARD_ROOT/tmp/docbook-4.3"
+#sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
+#sudo mkdir -p "$CHARD_ROOT/usr/share/xml/docbook/4.3"
+#sudo mkdir -p "$CHARD_ROOT/etc/xml"
+#sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
+#sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
+#sudo touch "$CHARD_ROOT/etc/xml/catalog"
 
 
 cleanup_chroot() {
