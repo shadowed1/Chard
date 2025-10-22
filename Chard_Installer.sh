@@ -1415,6 +1415,7 @@ sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESS
 # Wayland GPU environment setup for Chard
 
 EOF
+
     case "$GPU_TYPE" in
         intel)
             DRIVER="i965"
@@ -1455,13 +1456,11 @@ EOF
             ;;
     esac
 
-    echo "# Enable Sommelier for XWayland forwarding if installed" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
-    echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
-    sudo chmod +x "$WAYLAND_CONF_FILE"
-    echo "[*] Wayland GPU environment setup complete ($DRIVER)"
-
+echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+sudo chmod +x "$WAYLAND_CONF_FILE"
+echo "[*] Wayland GPU environment setup complete ($DRIVER)"
 echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
-echo "${RESET}${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
+echo "${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
