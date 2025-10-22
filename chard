@@ -18,7 +18,6 @@ CHARD_HOME=""
 export CHARD_HOME
 # <<< END_ROOT_MARKER >>>
 
-HOME=$CHARD_HOME
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
