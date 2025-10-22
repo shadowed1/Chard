@@ -964,7 +964,7 @@ case "$GPU_VENDOR" in
     nvidia)
         IDENTIFIER="NVIDIA Graphics"
         DRIVER="nvidia"
-        ACCEL=""
+        ACCEL="nouveau"
         ;;
     mali)
         IDENTIFIER="ARM Mali Graphics"
@@ -972,7 +972,7 @@ case "$GPU_VENDOR" in
         ;;
     adreno)
         IDENTIFIER="Qualcomm Adreno Graphics"
-        DRIVER="panfrost"
+        DRIVER="freedreno"
         ;;
     mediatek)
         IDENTIFIER="MediaTek GPU"
