@@ -1072,7 +1072,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             export XDG_RUNTIME_DIR=\"/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
-            source /root/.bashrc
+            source /root/.bashrc 2>/dev/null
 
     emerge --sync
 
@@ -1450,7 +1450,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 export PYTHONMULTIPROCESSING_START_METHOD=fork
-                source /root/.bashrc
+                source /root/.bashrc 2>/dev/null
                 env-update
                 SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
