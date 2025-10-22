@@ -383,7 +383,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.l
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"      -o "$CHARD_ROOT/bin/SMRT"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/root/.rootrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/bin/.rootrc"
 
 
 for file in \
@@ -409,7 +409,7 @@ done
 
 for target in \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-    "$CHARD_ROOT/root/.rootrc" \
+    "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$target" ]; then
@@ -430,7 +430,7 @@ for target in \
     fi
 done
 
-sudo mv "$CHARD_ROOT/root/.rootrc" "$CHARD_ROOT/root/.bashrc"
+sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/root/.bashrc"
 
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
