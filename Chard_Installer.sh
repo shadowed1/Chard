@@ -1631,6 +1631,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/dev-libs/elfutils-*
                 eclean-dist -d
 
+                if [ \$(uname -m) = 'aarch64' ]; then
+                    export ARCH='arm64';
+                fi
                 cd /usr/src/linux
                 scripts/kconfig/merge_config.sh -m .config enable_features.cfg
                 make olddefconfig
@@ -1638,6 +1641,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 make -j\$(nproc)
                 make modules_install
                 make INSTALL_PATH=/boot install
+                if [ \$(uname -m) = 'aarch64' ]; then
+                    export ARCH='aarch64';
+                fi
                 
                 emerge dev-lang/python
                 rm -rf /var/tmp/portage/dev-lang/python-*
