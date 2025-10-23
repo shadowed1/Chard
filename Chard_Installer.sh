@@ -397,9 +397,9 @@ for file in \
     if [ -f "$file" ]; then
         if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
             sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
-# <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+# <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
         else
-            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\nexport CHARD_ROOT\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
         fi
 
         sudo chmod +x "$file"
@@ -407,6 +407,7 @@ for file in \
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
     fi
 done
+
 
 for target in \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
@@ -417,7 +418,7 @@ for target in \
     if [ -f "$target" ]; then
         if sudo grep -q '^# <<< ROOT_MARKER >>>' "$target"; then
             sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
-# <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\nexport CHARD_HOME\n# <<< END_ROOT_MARKER >>>" "$target"
+    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\n# <<< END_ROOT_MARKER >>>" "$target"
         else
             {
                 echo ""
