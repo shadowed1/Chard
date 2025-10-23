@@ -788,7 +788,9 @@ sudo tee "$CHARD_ROOT/var/db/repos/gentoo/profiles/repo_name" > /dev/null <<'EOF
 gentoo
 EOF
 
-#sudo touch "$PROFILE_DIR/parent"
+sudo tee "$CHARD_ROOT/.chard_home" >/dev/null <<EOF
+$CHARD_HOME
+EOF
 
 echo "${RESET}${BLUE}Created $CHARD_ROOT/mesonrust.ini for $ARCH ${RESET}"
 ARCH=$(uname -m)
