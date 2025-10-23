@@ -285,7 +285,6 @@ else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
 
-
 sudo rm -rf "$KERNEL_BUILD"z
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
@@ -378,7 +377,6 @@ sudo rm -f \
 
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
-
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"     -o "$CHARD_ROOT/.chardrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"   -o "$CHARD_ROOT/.chard.env"
@@ -387,9 +385,9 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/bin/.rootrc"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"      -o "$CHARD_ROOT/bin/chariot"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"   -o "$CHARD_ROOT/bin/chariot"
 
-
+sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 
 for file in \
@@ -413,11 +411,11 @@ for file in \
     fi
 done
 
-
 for target in \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/.chardrc" \
+    "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$target" ]; then
@@ -446,7 +444,6 @@ sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
 CURRENT_SHELL=$(basename "$SHELL")
-
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
@@ -1528,488 +1525,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 env-update
                 SMRT
                 dbus-daemon --system --fork 2>/dev/null
-                
-                emerge dev-build/make
-                rm -rf /var/tmp/portage/dev-build/make-*
-
-                emerge app-portage/gentoolkit
-                rm -rf /var/tmp/portage/app-portage/gentoolkit-*
-                
-                emerge dev-libs/gmp
-                rm -rf /var/tmp/portage/dev-libs/gmp-*
-                eclean-dist -d
-                
-                emerge dev-libs/mpfr
-                rm -rf /var/tmp/portage/dev-libs/mpfr-*
-                eclean-dist -d
-                
-                emerge sys-devel/binutils
-                rm -rf /var/tmp/portage/sys-devel/binutils-*
-                eclean-dist -d
-                
-                emerge sys-apps/diffutils
-                rm -rf /var/tmp/portage/sys-apps/diffutils-*
-                eclean-dist -d
-                
-                emerge dev-libs/openssl
-                rm -rf /var/tmp/portage/dev-libs/openssl-*
-                eclean-dist -d
-                
-                emerge net-misc/curl
-                rm -rf /var/tmp/portage/net-misc/curl-*
-                eclean-dist -d
-                
-                emerge dev-vcs/git
-                rm -rf /var/tmp/portage/dev-vcs/git-*
-                eclean-dist -d
-                
-                emerge sys-apps/coreutils
-                rm -rf /var/tmp/portage/sys-apps/coreutils-*
-                eclean-dist -d
-                
-                emerge app-misc/fastfetch
-                rm -rf /var/tmp/portage/app-misc/fastfetch-*
-                eclean-dist -d
-                
-                emerge dev-lang/perl
-                rm -rf /var/tmp/portage/dev-lang/perl-*
-                eclean-dist -d
-                                
-                emerge dev-perl/Capture-Tiny
-                rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
-                eclean-dist -d
-                
-                emerge dev-perl/Try-Tiny
-                rm -rf /var/tmp/portage/dev-perl/Try-Tiny-*
-                eclean-dist -d
-                
-                emerge dev-perl/Config-AutoConf
-                rm -rf /var/tmp/portage/dev-perl/Config-AutoConf-*
-                eclean-dist -d
-                
-                emerge dev-perl/Test-Fatal
-                rm -rf /var/tmp/portage/dev-perl/Test-Fatal-*
-                eclean-dist -d
-                
-                emerge sys-apps/findutils
-                rm -rf /var/tmp/portage/sys-apps/findutils-*
-                eclean-dist -d
-                
-                emerge dev-libs/elfutils
-                rm -rf /var/tmp/portage/dev-libs/elfutils-*
-                eclean-dist -d
-
-                if [ \$(uname -m) = 'aarch64' ]; then
-                    export ARCH='arm64';
-                fi
-                cd /usr/src/linux
-                scripts/kconfig/merge_config.sh -m .config enable_features.cfg
-                make olddefconfig
-                make -j\$(nproc) tools/objtool
-                make -j\$(nproc)
-                make modules_install
-                make INSTALL_PATH=/boot install
-                if [ \$(uname -m) = 'aarch64' ]; then
-                    export ARCH='aarch64';
-                fi
-                
-                emerge dev-lang/python
-                rm -rf /var/tmp/portage/dev-lang/python-*
-                eclean-dist -d
-                
-                emerge dev-build/meson
-                rm -rf /var/tmp/portage/dev-build/meson-*
-                eclean-dist -d
-                
-                USE=\"-truetype\" emerge -1 dev-python/pillow
-                rm -rf /var/tmp/portage/dev-python/pillow-*
-                eclean-dist -d
-                
-                emerge media-libs/harfbuzz
-                rm -rf /var/tmp/portage/media-libs/harfbuzz-*
-                eclean-dist -d
-                
-                emerge dev-libs/glib
-                rm -rf /var/tmp/portage/dev-libs/glib-*
-                eclean-dist -d
-                
-                emerge dev-util/pkgcon
-                rm -rf /var/tmp/portage/dev-util/pkgcon-*
-                eclean-dist -d
-                
-                emerge dev-cpp/gtest
-                rm -rf /var/tmp/portage/dev-cpp/gtest-*
-                eclean-dist -d
-                
-                emerge dev-util/gtest-parallel
-                rm -rf /var/tmp/portage/dev-util/gtest-parallel-*
-                eclean-dist -d
-                
-                emerge dev-util/re2c
-                rm -rf /var/tmp/portage/dev-util/re2c-*
-                eclean-dist -d
-                
-                emerge dev-build/ninja
-                rm -rf /var/tmp/portage/dev-build/ninja-*
-                eclean-dist -d
-                
-                emerge app-text/docbook2X
-                rm -rf /var/tmp/portage/app-text/docbook2X-*
-                eclean-dist -d
-                
-                emerge app-text/build-docbook-catalog
-                rm -rf /var/tmp/portage/app-text/build-docbook-catalog-*
-                eclean-dist -d
-                
-                emerge dev-util/gtk-doc
-                rm -rf /var/tmp/portage/dev-util/gtk-doc-*
-                eclean-dist -d
-                
-                emerge sys-libs/zlib
-                rm -rf /var/tmp/portage/sys-libs/zlib-*
-                eclean-dist -d
-                
-                emerge dev-libs/libunistring
-                rm -rf /var/tmp/portage/dev-libs/libunistring-*
-                eclean-dist -d
-                
-                emerge sys-apps/file
-                rm -rf /var/tmp/portage/sys-apps/file-*
-                eclean-dist -d
-                
-                emerge kde-frameworks/extra-cmake-modules
-                rm -rf /var/tmp/portage/kde-frameworks/extra-cmake-modules-*
-                eclean-dist -d
-                
-                emerge -j\$(nproc) dev-perl/File-LibMagic
-                rm -rf /var/tmp/portage/dev-perl/File-LibMagic-*
-                eclean-dist -d
-                
-                emerge net-libs/libpsl
-                rm -rf /var/tmp/portage/net-libs/libpsl-*
-                eclean-dist -d
-                
-                emerge dev-libs/expat
-                rm -rf /var/tmp/portage/dev-libs/expat-*
-                eclean-dist -d
-                
-                emerge dev-lang/duktape
-                rm -rf /var/tmp/portage/dev-lang/duktape-*
-                eclean-dist -d
-                
-                emerge app-arch/brotli
-                rm -rf /var/tmp/portage/app-arch/brotli-*
-                eclean-dist -d
-
-                mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
-                
-                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-                
-                emerge -j\$(nproc) dev-libs/boehm-gc
-                rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
-                eclean-dist -d
-                
-                emerge sys-auth/polkit
-                rm -rf /var/tmp/portage/sys-auth/polkit-*
-                eclean-dist -d
-                
-                emerge sys-apps/bubblewrap
-                rm -rf /var/tmp/portage/sys-apps/bubblewrap-*
-                eclean-dist -d
-                
-                emerge -v =llvm-core/libclc-20*
-                rm -rf /var/tmp/portage/llvm-core/libclc-*
-                eclean-dist -d
-                
-                emerge x11-base/xorg-drivers
-                rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
-                eclean-dist -d
-                
-                emerge x11-base/xorg-server
-                rm -rf /var/tmp/portage/x11-base/xorg-server-*
-                eclean-dist -d
-                
-                emerge x11-base/xorg-apps
-                rm -rf /var/tmp/portage/x11-base/xorg-apps-*
-                eclean-dist -d
-                
-                emerge x11-libs/libX11
-                rm -rf /var/tmp/portage/x11-libs/libX11-*
-                eclean-dist -d
-                
-                emerge x11-libs/libXft
-                rm -rf /var/tmp/portage/x11-libs/libXft-*
-                eclean-dist -d
-                
-                emerge x11-libs/libXrender
-                rm -rf /var/tmp/portage/x11-libs/libXrender-*
-                eclean-dist -d
-                
-                emerge x11-libs/libXrandr
-                rm -rf /var/tmp/portage/x11-libs/libXrandr-*
-                eclean-dist -d
-                
-                emerge x11-libs/libXcursor
-                rm -rf /var/tmp/portage/x11-libs/libXcursor-*
-                eclean-dist -d
-                
-                emerge x11-libs/libXi
-                rm -rf /var/tmp/portage/x11-libs/libXi-*
-                eclean-dist -d
-                
-                emerge x11-libs/libXinerama
-                rm -rf /var/tmp/portage/x11-libs/libXinerama-*
-                eclean-dist -d
-                
-                emerge x11-libs/pango
-                rm -rf /var/tmp/portage/x11-libs/pango-*
-                eclean-dist -d
-                
-                emerge dev-libs/wayland
-                rm -rf /var/tmp/portage/dev-libs/wayland-*
-                eclean-dist -d
-                
-                emerge dev-libs/wayland-protocols
-                rm -rf /var/tmp/portage/dev-libs/wayland-protocols-*
-                eclean-dist -d
-                
-                emerge x11-base/xwayland
-                rm -rf /var/tmp/portage/x11-base/xwayland-*
-                eclean-dist -d
-                
-                emerge x11-libs/libxkbcommon
-                rm -rf /var/tmp/portage/x11-libs/libxkbcommon-*
-                eclean-dist -d
-                
-                emerge gui-libs/gtk
-                rm -rf /var/tmp/portage/gui-libs/gtk-*
-                eclean-dist -d
-                
-                emerge xfce-base/libxfce4util
-                rm -rf /var/tmp/portage/xfce-base/libxfce4util-*
-                eclean-dist -d
-                
-                emerge xfce-base/xfconf
-                rm -rf /var/tmp/portage/xfce-base/xfconf-*
-                eclean-dist -d
-                
-                emerge sys-apps/xdg-desktop-portal
-                rm -rf /var/tmp/portage/sys-apps/xdg-desktop-portal-*
-                eclean-dist -d
-                
-                emerge gui-libs/xdg-desktop-portal-wlr
-                rm -rf /var/tmp/portage/gui-libs/xdg-desktop-portal-wlr-*
-                eclean-dist -d
-                
-                emerge media-libs/mesa
-                rm -rf /var/tmp/portage/media-libs/mesa-*
-                eclean-dist -d
-                
-                emerge x11-apps/mesa-progs
-                rm -rf /var/tmp/portage/x11-apps/mesa-progs-*
-                eclean-dist -d
-                
-                emerge dev-qt/qtbase
-                rm -rf /var/tmp/portage/dev-qt/qtbase-*
-                eclean-dist -d
-                
-                emerge dev-qt/qttools
-                rm -rf /var/tmp/portage/dev-qt/qttools-*
-                eclean-dist -d
-                
-                emerge dev-qt/qtnetwork
-                rm -rf /var/tmp/portage/dev-qt/qtnetwork-*
-                eclean-dist -d
-                
-                emerge dev-qt/qtconcurrent
-                rm -rf /var/tmp/portage/dev-qt/qtconcurrent-*
-                eclean-dist -d
-                
-                emerge dev-qt/qtxml
-                rm -rf /var/tmp/portage/dev-qt/qtxml-*
-                eclean-dist -d
-                
-                emerge dev-qt/qtgui
-                rm -rf /var/tmp/portage/dev-qt/qtgui-*
-                eclean-dist -d
-                
-                emerge dev-qt/qtcore
-                rm -rf /var/tmp/portage/dev-qt/qtcore-*
-                eclean-dist -d
-                
-                emerge dev-build/cmake
-                rm -rf /var/tmp/portage/dev-build/cmake-*
-                eclean-dist -d
-                
-                emerge sys-apps/dbus
-                rm -rf /var/tmp/portage/sys-apps/dbus-*
-                eclean-dist -d
-                
-                emerge app-accessibility/at-spi2-core
-                rm -rf /var/tmp/portage/app-accessibility/at-spi2-core-*
-                eclean-dist -d
-                
-                emerge app-accessibility/at-spi2-atk
-                rm -rf /var/tmp/portage/app-accessibility/at-spi2-atk-*
-                eclean-dist -d
-                
-                emerge media-libs/fontconfig
-                rm -rf /var/tmp/portage/media-libs/fontconfig-*
-                eclean-dist -d
-                
-                emerge media-fonts/dejavu
-                rm -rf /var/tmp/portage/media-fonts/dejavu-*
-                eclean-dist -d
-                
-                emerge x11-themes/gtk-engines
-                rm -rf /var/tmp/portage/x11-themes/gtk-engines-*
-                eclean-dist -d
-                
-                emerge x11-themes/gtk-engines-murrine
-                rm -rf /var/tmp/portage/x11-themes/gtk-engines-murrine-*
-                eclean-dist -d
-                
-                emerge dev-lang/python
-                rm -rf /var/tmp/portage/dev-lang/python-*
-                eclean-dist -d
-                
-                emerge x11-libs/libnotify
-                rm -rf /var/tmp/portage/x11-libs/libnotify-*
-                eclean-dist -d
-                
-                emerge dev-libs/libdbusmenu
-                rm -rf /var/tmp/portage/dev-libs/libdbusmenu-*
-                eclean-dist -d
-                
-                emerge x11-libs/libSM
-                rm -rf /var/tmp/portage/x11-libs/libSM-*
-                eclean-dist -d
-                
-                emerge x11-libs/libICE
-                rm -rf /var/tmp/portage/x11-libs/libICE-*
-                eclean-dist -d
-                
-                emerge x11-libs/libwnck
-                rm -rf /var/tmp/portage/x11-libs/libwnck-*
-                eclean-dist -d
-                
-                emerge cmake
-                rm -rf /var/tmp/portage/dev-build/cmake-*
-                eclean-dist -d
-                
-                emerge xfce-base/exo
-                rm -rf /var/tmp/portage/xfce-base/exo-*
-                eclean-dist -d
-                
-                emerge app-admin/exo
-                rm -rf /var/tmp/portage/app-admin/exo-*
-                eclean-dist -d
-                
-                emerge app-arch/tar
-                rm -rf /var/tmp/portage/app-arch/tar-*
-                eclean-dist -d
-                
-                emerge app-arch/xz-utils
-                rm -rf /var/tmp/portage/app-arch/xz-utils-*
-                eclean-dist -d
-                
-                emerge net-libs/gnutls
-                rm -rf /var/tmp/portage/net-libs/gnutls-*
-                eclean-dist -d
-                
-                emerge net-libs/glib-networking
-                rm -rf /var/tmp/portage/net-libs/glib-networking-*
-                eclean-dist -d
-                
-                emerge sys-libs/libseccomp
-                rm -rf /var/tmp/portage/sys-libs/libseccomp-*
-                eclean-dist -d
-                
-                emerge app-eselect/eselect-repository
-                rm -rf /var/tmp/portage/app-eselect/eselect-repository-*
-                eclean-dist -d
-                
-                emerge dev-libs/appstream-glib
-                rm -rf /var/tmp/portage/dev-libs/appstream-glib-*
-                eclean-dist -d
-                
-                emerge app-crypt/gpgme
-                rm -rf /var/tmp/portage/app-crypt/gpgme-*
-                eclean-dist -d
-                
-                emerge dev-libs/json-glib
-                rm -rf /var/tmp/portage/dev-libs/json-glib-*
-                eclean-dist -d
-                
-                emerge dev-util/ostree
-                rm -rf /var/tmp/portage/dev-util/ostree-*
-                eclean-dist -d
-                
-                emerge sys-apps/xdg-dbus-proxy
-                rm -rf /var/tmp/portage/sys-apps/xdg-dbus-proxy-*
-                eclean-dist -d
-                
-                emerge x11-libs/gdk-pixbuf
-                rm -rf /var/tmp/portage/x11-libs/gdk-pixbuf-*
-                eclean-dist -d
-                
-                emerge sys-fs/fuse
-                rm -rf /var/tmp/portage/sys-fs/fuse-*
-                eclean-dist -d
-                
-                emerge dev-python/pygobject
-                rm -rf /var/tmp/portage/dev-python/pygobject-*
-                eclean-dist -d
-                
-                emerge gnome-base/dconf
-                rm -rf /var/tmp/portage/gnome-base/dconf-*
-                eclean-dist -d
-                
-                emerge x11-misc/xdg-utils
-                rm -rf /var/tmp/portage/x11-misc/xdg-utils-*
-                eclean-dist -d
-                
-                emerge x11-apps/xinit
-                rm -rf /var/tmp/portage/x11-apps/xinit-*
-                eclean-dist -d
-                
-                emerge x11-terms/xterm
-                rm -rf /var/tmp/portage/x11-terms/xterm-*
-                eclean-dist -d
-                
-                emerge x11-wm/twm
-                rm -rf /var/tmp/portage/x11-wm/twm-*
-                eclean-dist -d
-                
-                emerge media-gfx/chafa
-                rm -rf /var/tmp/portage/media-gfx/chafa-*
-                eclean-dist -d
-                
-                emerge dev-python/pillow
-                rm -rf /var/tmp/portage/dev-python/pillow-*
-                eclean-dist -d
-                
-                emerge app-text/doxygen
-                rm -rf /var/tmp/portage/app-text/doxygen-*
-                eclean-dist -d
-
-                emerge gui-libs/egl-gbm
-                rm -rf /var/tmp/portage/app-text/doxygen-*
-                eclean-dist -d
-
-                cd /tmp
-                git clone https://chromium.googlesource.com/chromiumos/platform2
-                cd platform2/vm_tools/sommelier
-                meson setup build
-                ninja -C build
-                ninja -C build install
-                
-                emerge sys-apps/flatpak
-                rm -rf /var/tmp/portage/sys-apps/flatpak-*
-                eclean-dist -d
-
-                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                
+                /bin/chariot
                 umount /etc/ssl     2>/dev/null || true
                 umount /dev/pts     2>/dev/null || true
                 umount /dev/shm     2>/dev/null || true
@@ -2017,7 +1533,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 umount /sys         2>/dev/null || true
                 umount /proc        2>/dev/null || true
                 umount /run/dbus    2>/dev/null || true
-
             "
             show_progress
             echo "${GREEN}[+] Chard Root is ready! ${RESET}"
@@ -2028,25 +1543,3 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
             sudo cp "$CHARD_ROOT/chardbuild.log" ~/
             echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
-
-            # Check
-            #emerge -1 dev-lang/ruby --autounmask-backtrack=y -> Do we need Ruby, yet? 
-            #emerge dev-ruby/pkg-config
-            #emerge dev-lang/rust -> use rustup
-            #emerge --autounmask-write media-sound/pulseaudio-daemon
-            #etc-update --automode -5
-            #emerge media-libs/pulseaudio-qt
-            #emerge media-sound/alsa-utils
-            #emerge sys-fs/udisks
-            #emerge sys-power/upower
-            #emerge sys-apps/bluez
-            #emerge dev-python/pybluez
-            #sys-auth/polkit
-            #app-accessibility/at-spi2-core
-            #app-accessibility/at-spi2-atk
-            #xfce-extra/xfce4-screensaver
-            #sys-apps/xdg-dbus-proxy
-            #emerge --autounmask-write www-client/firefox
-            #etc-update --automode -5
-            #emerge www-client/firefox
-            #sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload -o "$CHARD_ROOT/.chard.preload"
