@@ -1468,6 +1468,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
                 
+                chown root:root /var/lib/portage/world
+                chmod 644 /var/lib/portage/world
+                
                 emerge dev-build/make
                 rm -rf /var/tmp/portage/dev-build/make-*
 
