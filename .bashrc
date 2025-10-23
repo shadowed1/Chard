@@ -28,6 +28,8 @@ if [[ "$ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
 
+export ARCH
+export CHOST
 export CHARD_RC="$ROOT/.chardrc"
 export PORTDIR="$ROOT/usr/portage"
 export DISTDIR="$ROOT/var/cache/distfiles"
