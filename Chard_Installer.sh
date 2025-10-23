@@ -636,6 +636,95 @@ export DISPLAY=:0
 EOF
 sudo chmod +x "$CHARD_ROOT/etc/profile.d/display.sh"
 
+#!/bin/bash
+# Generate make.conf with GPU autodetection and full driver support
+
+detect_gpu_freq() {
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+    GPU_TYPE="unknown"
+
+    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        GPU_TYPE="intel"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+        GPU_TYPE="nvidia"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        if [[ -f "$PP_DPM_SCLK" ]]; then
+            MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+            if [[ -n "$MAX_MHZ" ]]; then
+                GPU_MAX_FREQ="$MAX_MHZ"
+            fi
+        fi
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
+        GPU_TYPE="amd"
+        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
+            if [[ -n "$MAX_MHZ" ]]; then
+                GPU_MAX_FREQ="$MAX_MHZ"
+            fi
+        fi
+        GPU_FREQ_PATH="$PP_OD_FILE"
+        return
+    fi
+
+    for d in /sys/class/devfreq/*; do
+        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
+            if [ -f "$d/max_freq" ]; then
+                GPU_FREQ_PATH="$d/max_freq"
+                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                GPU_TYPE="mali"
+                return
+            elif [ -f "$d/available_frequencies" ]; then
+                GPU_FREQ_PATH="$d/available_frequencies"
+                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
+                GPU_TYPE="mali"
+                return
+            fi
+        fi
+    done
+
+    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            return
+        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            return
+        fi
+    fi
+
+    if [[ -d /sys/class/drm ]]; then
+        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mediatek"
+            return
+        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="vivante"
+            return
+        elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="asahi"
+            return
+        elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="panfrost"
+            return
+        fi
+    fi
+}
+
 ARCH=$(uname -m)
 MAKECONF_DIR="$CHARD_ROOT/etc/portage"
 MAKECONF_FILE="$MAKECONF_DIR/make.conf"
@@ -657,15 +746,47 @@ case "$ARCH" in
         ;;
 esac
 
+detect_gpu_freq
+
+case "$GPU_TYPE" in
+    intel)
+        VIDEO_CARDS="intel i965 iris"
+        ;;
+    amd)
+        VIDEO_CARDS="amdgpu radeonsi"
+        ;;
+    nvidia)
+        VIDEO_CARDS="nouveau nvk"
+        ;;
+    mali)
+        VIDEO_CARDS="panfrost lima"
+        ;;
+    adreno)
+        VIDEO_CARDS="freedreno"
+        ;;
+    mediatek)
+        VIDEO_CARDS="mediatek"
+        ;;
+    vivante)
+        VIDEO_CARDS="etnaviv"
+        ;;
+    asahi)
+        VIDEO_CARDS="asahi"
+        ;;
+    *)
+        VIDEO_CARDS="lavapipe virgl"
+        ;;
+esac
+
 sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
-# Generated based on detected architecture ($ARCH)
+# Generated based on detected architecture ($ARCH) and GPU type ($GPU_TYPE)
 
 COMMON_FLAGS="-march=native -O2 -pipe"
-CFLAGS="${COMMON_FLAGS}"
-CXXFLAGS="${COMMON_FLAGS}"
-FCFLAGS="${COMMON_FLAGS}"
-FFLAGS="${COMMON_FLAGS}"
+CFLAGS="\${COMMON_FLAGS}"
+CXXFLAGS="\${COMMON_FLAGS}"
+FCFLAGS="\${COMMON_FLAGS}"
+FFLAGS="\${COMMON_FLAGS}"
 LC_MESSAGES=C.utf8
 DISTDIR="/var/cache/distfiles"
 PKGDIR="/var/cache/packages"
@@ -684,6 +805,7 @@ FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-pro
 USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd -elogind"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
+VIDEO_CARDS="$VIDEO_CARDS"
 
 PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH"
 PKG_CONFIG="/usr/bin/pkg-config"
@@ -693,7 +815,7 @@ PYTHONMULTIPROCESSING_START_METHOD=fork
 
 EOF
 
-echo "${RESET}${BLUE}make.conf generated successfully for $ARCH → $MAKECONF_FILE ${RESET}"
+echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE ${RESET}"
 sudo mkdir -p "$CHARD_ROOT/usr/share/sandbox"
 
 sudo tee "$CHARD_ROOT/etc/sandbox.conf" > /dev/null <<'EOF'
