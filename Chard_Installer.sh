@@ -1362,7 +1362,8 @@ EOF
             fi
             ;;
     esac
-
+    
+echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords/perl" >/dev/null
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
 echo "[*] Wayland GPU environment setup complete ($DRIVER)"
@@ -1436,8 +1437,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge app-misc/fastfetch
                 rm -rf /var/tmp/portage/app-misc/fastfetch-*
                 eclean-dist -d
-
-                echo dev-lang/perl ~\$(portageq envvar ARCH) >> /etc/portage/package.accept_keywords/perl
                 
                 emerge dev-lang/perl
                 rm -rf /var/tmp/portage/dev-lang/perl-*
