@@ -387,6 +387,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"        -o "$CHARD_ROOT/bin/chard"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/bin/.rootrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"      -o "$CHARD_ROOT/bin/chariot"
+
 
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 
