@@ -89,7 +89,7 @@ if [[ -z "$1" ]]; then
         ECORE_COUNT=$(echo "$E_CORES_ALL" | tr ',' '\n' | wc -l)
         ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
         if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.65)}") )); then
-            AUTO_THREADS=$(awk -v t="$AUTO_THREADS" 'BEGIN {printf("%d", t * 2.25)}')
+            AUTO_THREADS=$(awk -v t="$AUTO_THREADS" 'BEGIN {printf("%d", t * 2.67)}')
         fi
     fi
     
