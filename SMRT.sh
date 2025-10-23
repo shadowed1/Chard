@@ -120,8 +120,6 @@ echo
 echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
 [[ -n "$P_CORES_ALL" ]] && echo "${GREEN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
 echo ""
-echo "${YELLOW}Detected Memory:                 ${BOLD}$TOTAL_MEM_GB GB ${RESET}"
-echo ""
 echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
 echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
 echo ""
