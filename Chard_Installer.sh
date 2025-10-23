@@ -1439,12 +1439,10 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
                 echo dev-lang/perl ~\$(portageq envvar ARCH) >> /etc/portage/package.accept_keywords/perl
                 
-                emerge -1 dev-lang/perl
+                emerge dev-lang/perl
                 rm -rf /var/tmp/portage/dev-lang/perl-*
                 eclean-dist -d
-                
-                perl-cleaner --reallyall
-                
+                                
                 emerge dev-perl/Capture-Tiny
                 rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
                 eclean-dist -d
