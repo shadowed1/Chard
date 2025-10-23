@@ -729,10 +729,10 @@ detect_gpu_freq
 
 case "$GPU_TYPE" in
     intel)
-        VIDEO_CARDS="intel i965 iris"
+        VIDEO_CARDS="intel iris"
         ;;
     amd)
-        VIDEO_CARDS="amdgpu radeonsi"
+        VIDEO_CARDS="radeonsi"
         ;;
     nvidia)
         VIDEO_CARDS="nouveau nvk"
