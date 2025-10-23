@@ -1405,7 +1405,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 HOME=\$CHARD_HOME
                 source \$HOME/.bashrc 2>/dev/null
                 env-update
-                SMRT
+                SMRT 8
                 dbus-daemon --system --fork 2>/dev/null
                 
                 emerge dev-build/make
