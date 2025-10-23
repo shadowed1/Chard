@@ -39,7 +39,6 @@ echo "        CCCCCCCCCCCCCHHHHHHHHH     HHHHHHHHHA${BOLD}======                
 echo "                                           ${BOLD}A====                            ====A"
 echo "                                          A====                              ====A"
 echo "${RESET}"
-
 echo               
 echo "${RESET}"
 echo "${RED}- Chard Installer can take ${BOLD}5-20 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~8 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
@@ -214,10 +213,8 @@ sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
 sudo rm -f "$TMP_TAR"
 
 STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
-
 STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
 STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
-
 STAGE3_FILE=$(basename "$STAGE3_URL")
 TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
 
@@ -436,7 +433,6 @@ done
 
 sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
 
-
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
@@ -472,7 +468,6 @@ add_chard_marker() {
 }
 
 add_chard_marker "$TARGET_FILE"
-
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
@@ -484,15 +479,6 @@ sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
-#sudo mkdir -p "$CHARD_ROOT/tmp/docbook-4.3"
-#cd "$CHARD_ROOT/tmp/docbook-4.3"
-#sudo curl -L --progress-bar -o docbook-xml-4.3.zip https://www.oasis-open.org/docbook/xml/4.3/docbook-xml-4.3.zip
-#sudo mkdir -p "$CHARD_ROOT/usr/share/xml/docbook/4.3"
-#sudo mkdir -p "$CHARD_ROOT/etc/xml"
-#sudo bsdtar -xf docbook-xml-4.3.zip -C "$CHARD_ROOT/usr/share/xml/docbook/4.3"
-#sudo chmod -R 755 "$CHARD_ROOT/usr/share/xml/docbook/4.3"
-#sudo touch "$CHARD_ROOT/etc/xml/catalog"
-
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
@@ -723,7 +709,6 @@ detect_gpu_freq() {
 ARCH=$(uname -m)
 MAKECONF_DIR="$CHARD_ROOT/etc/portage"
 MAKECONF_FILE="$MAKECONF_DIR/make.conf"
-
 sudo mkdir -p "$MAKECONF_DIR"
 
 case "$ARCH" in
@@ -1189,7 +1174,6 @@ sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
 
-
 ARCH=$(uname -m)
 detect_gpu_freq() {
     GPU_FREQ_PATH=""
@@ -1449,7 +1433,6 @@ sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESS
     sudo tee "$WAYLAND_CONF_FILE" > /dev/null <<EOF
 #!/bin/sh
 # Wayland GPU environment setup for Chard
-
 EOF
 
     case "$GPU_TYPE" in
@@ -1491,7 +1474,6 @@ EOF
             fi
             ;;
     esac
-
 
 echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords/perl" >/dev/null
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
