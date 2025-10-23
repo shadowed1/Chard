@@ -1289,7 +1289,6 @@ CONFIG_DRM_I915=$DRM_I915
 CONFIG_DRM_AMDGPU=$DRM_AMDGPU
 CONFIG_DRM_NOUVEAU=$DRM_AMDGPU
 CONFIG_LAVAPIPE=$CONFIG_LAVAPIPE
-
 CONFIG_NAMESPACES=y
 CONFIG_USER_NS=y
 CONFIG_SECCOMP=y
@@ -1407,7 +1406,6 @@ RED='\\[\\e[31m\\]'
 YELLOW='\\[\\e[33m\\]'
 GREEN='\\[\\e[32m\\]'
 RESET='\\[\\e[0m\\]'
-
 PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
 export PS1
 EOF
@@ -1480,7 +1478,6 @@ echo "${CYAN}Compiling takes a long time, so please be patient if you have a slo
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 sudo chown -R 1000:1000 "$CHARD_ROOT"
-echo
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
         mountpoint -q /proc     || mount -t proc proc /proc
