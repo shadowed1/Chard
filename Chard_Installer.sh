@@ -1081,6 +1081,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             export XDG_RUNTIME_DIR=\"/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
+            CHARD_HOME=\$(cat /.chard_home)
+            HOME=\$CHARD_HOME
             source \$HOME/.bashrc 2>/dev/null
 
     emerge --sync
@@ -1461,6 +1463,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 export PYTHONMULTIPROCESSING_START_METHOD=fork
+                CHARD_HOME=\$(cat /.chard_home)
+                HOME=\$CHARD_HOME
                 source \$HOME/.bashrc 2>/dev/null
                 env-update
                 SMRT 128
