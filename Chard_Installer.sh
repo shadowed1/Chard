@@ -289,6 +289,7 @@ sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
 echo "${RESET}${CYAN}[+] Installing Linux headers into Chard Root..."
+
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 cd /var/tmp/build/linux-$KERNEL_VER
 
@@ -1024,7 +1025,7 @@ sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
 
-sudo tee "$CHARD_ROOT/$CHARD_HOME/.chard_home" >/dev/null <<EOF
+sudo tee "$CHARD_ROOT/.chard_home" >/dev/null <<EOF
 /$CHARD_HOME
 EOF
 
