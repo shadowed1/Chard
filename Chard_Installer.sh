@@ -422,7 +422,6 @@ for target in \
                 echo ""
                 echo "# <<< ROOT_MARKER >>>"
                 echo "CHARD_HOME=\"/$CHARD_HOME\""
-                echo "export CHARD_HOME"
                 echo "# <<< END_ROOT_MARKER >>>"
             } | sudo tee -a "$target" >/dev/null
         fi
@@ -1424,6 +1423,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         esac
                 export ARCH
                 export CHOST
+                export HOME=/home/chronos/use
                 export MAGIC=\"/usr/share/misc/magic.mgc\"
                 export CC=/usr/bin/gcc
                 export CXX=/usr/bin/g++
