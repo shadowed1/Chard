@@ -74,10 +74,17 @@ if [[ -n "$second_latest_perl" ]]; then
 fi
 
 PYEXEC_BASE="$ROOT/usr/lib/python-exec"
-all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
-latest_python="${all_python_dirs[-1]}"
-second_latest_python="${all_python_dirs[-2]:-${all_python_dirs[-1]}}"
-
+mapfile -t all_python_dirs < <(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V)
+if (( ${#all_python_dirs[@]} > 0 )); then
+    latest_python="${all_python_dirs[-1]}"
+else
+    latest_python=""
+fi
+if (( ${#all_python_dirs[@]} > 1 )); then
+    second_latest_python="${all_python_dirs[-2]}"
+else
+    second_latest_python="$latest_python"
+fi
 latest_dot="${latest_python#python}"
 second_dot="${second_latest_python#python}"
 second_underscore="${second_dot//./_}"
@@ -110,12 +117,32 @@ fi
 
 LLVM_BASE="$ROOT/usr/lib/llvm"
 if [[ -d "$LLVM_BASE" ]]; then
-    mapfile -t all_llvm_versions < <(ls -1 "$LLVM_BASE" | grep -E '^[0-9]+(\.[0-9]+)*$' | sort -V)
-    latest_llvm="${all_llvm_versions[-1]}"
-    second_latest_llvm="${all_llvm_versions[-2]:-$latest_llvm}"
-    LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
-    export LLVM_VERSION="$second_latest_llvm"
+    mapfile -t all_llvm_versions < <(ls -1 "$LLVM_BASE" 2>/dev/null | grep -E '^[0-9]+(\.[0-9]+)*$' | sort -V)
+else
+    all_llvm_versions=()
 fi
+
+latest_llvm=""
+second_latest_llvm=""
+
+if (( ${#all_llvm_versions[@]} > 0 )); then
+    latest_llvm="${all_llvm_versions[-1]}"
+fi
+if (( ${#all_llvm_versions[@]} > 1 )); then
+    second_latest_llvm="${all_llvm_versions[-2]}"
+else
+    second_latest_llvm="$latest_llvm"
+fi
+
+if [[ -n "$second_latest_llvm" ]]; then
+    LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
+    export LLVM_DIR
+    export LLVM_VERSION="$second_latest_llvm"
+    [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
+    [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+fi
+
 
 export CC="$ROOT/usr/bin/gcc"
 export CXX="$ROOT/usr/bin/g++"
