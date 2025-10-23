@@ -1024,6 +1024,11 @@ sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
 
+sudo tee "$CHARD_ROOT/$CHARD_HOME/.chard_home" >/dev/null <<EOF
+/$CHARD_HOME
+EOF
+
+
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     mountpoint -q /proc     || mount -t proc proc /proc
@@ -1046,6 +1051,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         aarch64) CHOST=aarch64-unknown-linux-gnu ;;
         *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
     esac
+            HOME=\$(cat /.chard_home)
+            export HOME
             export ARCH
             export CHOST
             export MAGIC=\"/usr/share/misc/magic.mgc\"
