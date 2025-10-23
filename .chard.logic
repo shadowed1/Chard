@@ -2,7 +2,6 @@
 
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
-export CHARD_ROOT
 # <<< END_CHARD_ROOT_MARKER >>>
 
 if [ -z "$CHARD_ROOT" ]; then
