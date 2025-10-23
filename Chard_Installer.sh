@@ -1973,8 +1973,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
                 cd /tmp
                 git clone https://chromium.googlesource.com/chromiumos/platform2
-                cd vm_tools/sommelier
-                meson setup build --prefix=/usr
+                cd platform2/vm_tools/sommelier
+                meson setup build
                 ninja -C build
                 ninja -C build install
                 
