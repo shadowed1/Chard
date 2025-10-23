@@ -1445,30 +1445,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 
                 perl-cleaner --reallyall
                 
-                emerge virtual/perl-Digest
-                rm -rf /var/tmp/portage/virtual/perl-Digest-*
-                eclean-dist -d
-                
-                emerge virtual/perl-CPAN
-                rm -rf /var/tmp/portage/virtual/perl-CPAN-*
-                eclean-dist -d
-                
-                emerge virtual/perl-CPAN-Meta
-                rm -rf /var/tmp/portage/virtual/perl-CPAN-Meta-*
-                eclean-dist -d
-                
-                emerge virtual/perl-Data-Dumper
-                rm -rf /var/tmp/portage/virtual/perl-Data-Dumper-*
-                eclean-dist -d
-                
-                emerge virtual/perl-Math-BigInt
-                rm -rf /var/tmp/portage/virtual/perl-Math-BigInt-*
-                eclean-dist -d
-                
-                emerge virtual/perl-Scalar-List-Utils
-                rm -rf /var/tmp/portage/virtual/perl-Scalar-List-Utils-*
-                eclean-dist -d
-                
                 emerge dev-perl/Capture-Tiny
                 rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
                 eclean-dist -d
