@@ -4,8 +4,6 @@
 CHARD_ROOT=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
-export CHARD_ROOT
-
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
     *) PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
