@@ -1401,14 +1401,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge app-portage/gentoolkit
                 rm -rf /var/tmp/portage/app-portage/gentoolkit-*
                 
-                USE=\"-gui\" emerge -1 dev-build/cmake
-                rm -rf /var/tmp/portage/dev-build/cmake-*
-                eclean-dist -d
-                
-                emerge sys-devel/gcc
-                rm -rf /var/tmp/portage/sys-devel/gcc-*
-                eclean-dist -d
-                
                 emerge dev-libs/gmp
                 rm -rf /var/tmp/portage/dev-libs/gmp-*
                 eclean-dist -d
