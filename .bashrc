@@ -233,6 +233,8 @@ if [[ -f /bin/.smrt_env.sh ]]; then
     source /bin/.smrt_env.sh
 fi
 
+/bin/SMRT
+
 dbus-daemon --system --fork 2>/dev/null
 
 # <<< END CHARD .BASHRC >>>
