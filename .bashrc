@@ -41,7 +41,7 @@ export DISTDIR="$ROOT/var/cache/distfiles"
 export PKGDIR="$ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$ROOT/var/tmp"
 
-PERL_BASES=("/usr/lib64/perl5" "/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
+PERL_BASES=("$ROOT/usr/lib64/perl5" "$ROOT/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
 all_perl_versions=()
 
 for base in "${PERL_BASES[@]}"; do
@@ -143,7 +143,6 @@ if [[ -n "$second_latest_llvm" ]]; then
     [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 fi
 
-
 export CC="$ROOT/usr/bin/gcc"
 export CXX="$ROOT/usr/bin/g++"
 export AR="$ROOT/usr/bin/ar"
@@ -153,8 +152,8 @@ export STRIP="$ROOT/usr/bin/strip"
 export LD="$ROOT/usr/bin/ld"
 
 CFLAGS="-march=native -O2 -pipe "
-[[ -d /usr/include ]] && CFLAGS+="-I/usr/include "
-[[ -d /include ]] && CFLAGS+="-I/include "
+[[ -d "$ROOT/usr/include" ]] && CFLAGS+="-I$ROOT/usr/include "
+[[ -d "$ROOT/include" ]] && CFLAGS+="-I$ROOT/include "
 export CFLAGS
 
 COMMON_FLAGS="-march=native -O2 -pipe"
@@ -163,9 +162,12 @@ FFLAGS="$COMMON_FLAGS"
 
 CXXFLAGS="$CFLAGS"
 LDFLAGS=""
-[[ -d /usr/lib ]] && LDFLAGS+="-L/usr/lib "
-[[ -d /lib ]] && LDFLAGS+="-L/lib "
-[[ -d /usr/local/lib ]] && LDFLAGS+="-L/usr/local/lib "
+[[ -d "$ROOT/usr/lib" ]] && LDFLAGS+="-L$ROOT/usr/lib "
+[[ -d "$ROOT/lib" ]] && LDFLAGS+="-L$ROOT/lib "
+[[ -d "$ROOT/usr/local/lib" ]] && LDFLAGS+="-L$ROOT/usr/local/lib "
+
+export LDFLAGS
+
 export LDFLAGS
 
 PATHS_TO_ADD=(
@@ -175,7 +177,7 @@ PATHS_TO_ADD=(
     "$gcc_bin_path"
     "$LLVM_DIR/bin"
     "$ROOT/usr/local/bin"
-    "/usr/bin"
+    "$ROOT/usr/bin"
 )
 LIBS_TO_ADD=(
     "$ROOT/usr/lib"
@@ -227,7 +229,7 @@ eselect python set "python${second_dot}" 2>/dev/null || true
 eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 
 alias smrt='SMRT'
-[[ -f /bin/.smrt_env.sh ]] && source /bin/.smrt_env.sh
+[[ -f $ROOT/bin/.smrt_env.sh ]] && source $ROOT/bin/.smrt_env.sh
 dbus-daemon --system --fork 2>/dev/null
 
 # <<< END CHARD .BASHRC >>>
