@@ -915,4 +915,3 @@ checkpoint_118() {
 run_checkpoint 118 "emerge sys-apps/flatpak + setup flathub" checkpoint_118
 echo "Chard Root is ready${RESET}"
 show_progress
-
