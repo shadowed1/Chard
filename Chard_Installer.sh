@@ -11,7 +11,6 @@ RESET=$(tput sgr0)
 MAX_RETRIES=10
 RETRY_DELAY=30
 
-
 echo "${RESET}${GREEN}"
 echo
 echo
