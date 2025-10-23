@@ -1036,57 +1036,15 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts 2>/dev/null
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl 2>/dev/null
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus 2>/dev/null
-
     chmod 1777 /tmp /var/tmp
-    
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
     [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
     [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-
-    ARCH=\$(uname -m)
-    case \"\$ARCH\" in
-        x86_64)  CHOST=x86_64-pc-linux-gnu ;;
-        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-        *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
-    esac
-            export ARCH
-            export CHOST
-            export MAGIC=\"/usr/share/misc/magic.mgc\"
-            export CC=/usr/bin/gcc
-            export CXX=/usr/bin/g++
-            export AR=/usr/bin/gcc-ar
-            export RANLIB=/usr/bin/gcc-ranlib
-            export STRIP=/usr/bin/strip
-            export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
-            export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
-            export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
-            export PKG_CONFIG=/usr/bin/pkg-config
-            export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
-            export PYTHON=\"/bin/python3\"
-            export FORCE_UNSAFE_CONFIGURE=1
-            export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
-            export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-            export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-            export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
-            export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
-            export CARGO_HOME=\$HOME/.cargo
-            export RUSTUP_HOME=\$HOME/.rustup
-            export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
-            export PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
-            export PORTAGE_LOGDIR=\"/var/log/portage\"
-            export PORTAGE_CONFIGROOT=\"/\"
-            export PORTAGE_TMPDIR=\"/var/tmp\"
-            export MESON_CROSS_FILE=\"/meson-cross.ini\"
-            export XDG_RUNTIME_DIR=\"/run/user/0\"
-            export DISPLAY=:0
-            export LD=\"/usr/bin/ld\"
-            CHARD_HOME=\$(cat /.chard_home)
-            HOME=\$CHARD_HOME
-            source \$HOME/.bashrc 2>/dev/null
-
+    CHARD_HOME=\$(cat /.chard_home)
+    HOME=\$CHARD_HOME
+    source \$HOME/.bashrc 2>/dev/null
     emerge --sync
-
     umount /etc/ssl     2>/dev/null || true
     umount /dev/pts     2>/dev/null || true
     umount /dev/shm     2>/dev/null || true
@@ -1425,44 +1383,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
         chmod 1777 /tmp /var/tmp
         
-        ARCH=\$(uname -m)
-        case \"\$ARCH\" in
-            x86_64)  CHOST=x86_64-pc-linux-gnu ;;
-            aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-            *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
-        esac
-                export ARCH
-                export CHOST
-                export MAGIC=\"/usr/share/misc/magic.mgc\"
-                export CC=/usr/bin/gcc
-                export CXX=/usr/bin/g++
-                export AR=/usr/bin/gcc-ar
-                export RANLIB=/usr/bin/gcc-ranlib
-                export STRIP=/usr/bin/strip
-                export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
-                export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
-                export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
-                export PKG_CONFIG=/usr/bin/pkg-config
-                export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
-                export PYTHON=\"/bin/python3\"
-                export FORCE_UNSAFE_CONFIGURE=1
-                export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
-                export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-                export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-                export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
-                export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
-                export CARGO_HOME=\$HOME/.cargo
-                export RUSTUP_HOME=\$HOME/.rustup
-                export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
-                export PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
-                export PORTAGE_LOGDIR=\"/var/log/portage\"
-                export PORTAGE_CONFIGROOT=\"/\"
-                export PORTAGE_TMPDIR=\"/var/tmp\"
-                export MESON_CROSS_FILE=\"/meson-cross.ini\"
-                export XDG_RUNTIME_DIR=\"/run/user/0\"
-                export DISPLAY=:0
-                export LD=\"/usr/bin/ld\"
-                export PYTHONMULTIPROCESSING_START_METHOD=fork
                 CHARD_HOME=\$(cat /.chard_home)
                 HOME=\$CHARD_HOME
                 source \$HOME/.bashrc 2>/dev/null
