@@ -152,7 +152,7 @@ export RANLIB="$ROOT/usr/bin/gcc-ranlib"
 export STRIP="$ROOT/usr/bin/strip"
 export LD="$ROOT/usr/bin/ld"
 
-CFLAGS="-O2 -pipe "
+CFLAGS="-march=native -O2 -pipe "
 [[ -d /usr/include ]] && CFLAGS+="-I/usr/include "
 [[ -d /include ]] && CFLAGS+="-I/include "
 export CFLAGS
