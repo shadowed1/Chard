@@ -1463,7 +1463,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export DISPLAY=:0
                 export LD=\"/usr/bin/ld\"
                 export PYTHONMULTIPROCESSING_START_METHOD=fork
-                source /root/.bashrc 2>/dev/null
+                CHARD_HOME=\$(cat /.chard_home)
+                HOME=\$CHARD_HOME
+                source \$HOME/.bashrc 2>/dev/null
                 env-update
                 SMRT 128
                 dbus-daemon --system --fork 2>/dev/null
