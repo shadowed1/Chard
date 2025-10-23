@@ -1,4 +1,40 @@
 #!/bin/bash
+
+START_TIME=$(date +%s)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+LOG_FILE="/chariot.log"
+exec > >(sudo tee -a "$LOG_FILE") 2>&1
+
+format_time() {
+    local total_seconds=$1
+    local hours=$((total_seconds / 3600))
+    local minutes=$(((total_seconds % 3600) / 60))
+    local seconds=$((total_seconds % 60))
+    
+    if [ $hours -gt 0 ]; then
+        printf "%dh %dm %ds" $hours $minutes $seconds
+    elif [ $minutes -gt 0 ]; then
+        printf "%dm %ds" $minutes $seconds
+    else
+        printf "%ds" $seconds
+    fi
+}
+
+show_progress() {
+    local current_time=$(date +%s)
+    local elapsed=$((current_time - START_TIME))
+    local formatted_time=$(format_time $elapsed)
+    echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
+}
+
 CHECKPOINT_FILE="/.chard_checkpoint"
 echo "${GREEN}Chard implements a checkpoint system to resume if interrupted!"
 
@@ -862,3 +898,4 @@ checkpoint_116() {
 }
 run_checkpoint 116 "emerge sys-apps/flatpak + setup flathub" checkpoint_116
 echo "Chard Root is ready${RESET}"
+show_progress
