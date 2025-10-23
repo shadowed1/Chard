@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# <<< ROOT_MARKER >>>
+CHARD_HOME=""
+# <<< END_ROOT_MARKER >>>
+
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
