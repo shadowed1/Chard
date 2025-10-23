@@ -1431,7 +1431,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         esac
                 export ARCH
                 export CHOST
-                export HOME=/home/chronos/use
                 export MAGIC=\"/usr/share/misc/magic.mgc\"
                 export CC=/usr/bin/gcc
                 export CXX=/usr/bin/g++
