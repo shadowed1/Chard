@@ -1505,7 +1505,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 env-update
                 SMRT
                 dbus-daemon --system --fork 2>/dev/null
-                /bin/chariot
+                /usr/bin/chariot
                 umount /etc/ssl     2>/dev/null || true
                 umount /dev/pts     2>/dev/null || true
                 umount /dev/shm     2>/dev/null || true
