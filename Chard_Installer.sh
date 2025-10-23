@@ -105,7 +105,7 @@ while true; do
         CHARD_ROOT="${choice}"
     fi
     CHARD_ROOT="${CHARD_ROOT%/}"
-
+    echo
     echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
     echo
     read -srp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
