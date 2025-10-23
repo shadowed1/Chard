@@ -80,128 +80,142 @@ checkpoint_1() {
     rm -rf /var/tmp/portage/dev-build/make-*
     eclean-dist -d
 }
-run_checkpoint 1 "emerge dev-build/make + cleanup" checkpoint_1
+run_checkpoint 1 "emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
+    USE="-gui" emerge -1 dev-build/cmake
+    rm -rf /var/tmp/portage/dev-build/cmake-*
+    eclean-dist -d
+}
+run_checkpoint 2 'USE="-gui" emerge -1 dev-build/cmake' checkpoint_2
+
+checkpoint_3() {
+    emerge sys-devel/gcc
+    rm -rf /var/tmp/portage/sys-devel/gcc-*
+    eclean-dist -d
+}
+run_checkpoint 3 "emerge sys-devel/gcc" checkpoint_3
+
+checkpoint_4() {
     emerge app-portage/gentoolkit
     rm -rf /var/tmp/portage/app-portage/gentoolkit-*
     eclean-dist -d
 }
-run_checkpoint 2 "emerge app-portage/gentoolkit + cleanup" checkpoint_2
+run_checkpoint 4 "emerge app-portage/gentoolkit" checkpoint_4
 
-checkpoint_3() {
+checkpoint_5() {
     emerge dev-libs/gmp
     rm -rf /var/tmp/portage/dev-libs/gmp-*
     eclean-dist -d
 }
-run_checkpoint 3 "emerge dev-libs/gmp + cleanup" checkpoint_3
+run_checkpoint 5 "emerge dev-libs/gmp" checkpoint_5
 
-checkpoint_4() {
+checkpoint_6() {
     emerge dev-libs/mpfr
     rm -rf /var/tmp/portage/dev-libs/mpfr-*
     eclean-dist -d
 }
-run_checkpoint 4 "emerge dev-libs/mpfr + cleanup" checkpoint_4
+run_checkpoint 6 "emerge dev-libs/mpfr" checkpoint_6
 
-checkpoint_5() {
+checkpoint_7() {
     emerge sys-devel/binutils
     rm -rf /var/tmp/portage/sys-devel/binutils-*
     eclean-dist -d
 }
-run_checkpoint 5 "emerge sys-devel/binutils + cleanup" checkpoint_5
+run_checkpoint 7 "emerge sys-devel/binutils" checkpoint_7
 
-checkpoint_6() {
+checkpoint_8() {
     emerge sys-apps/diffutils
     rm -rf /var/tmp/portage/sys-apps/diffutils-*
     eclean-dist -d
 }
-run_checkpoint 6 "emerge sys-apps/diffutils + cleanup" checkpoint_6
+run_checkpoint 8 "emerge sys-apps/diffutils" checkpoint_8
 
-checkpoint_7() {
+checkpoint_9() {
     emerge dev-libs/openssl
     rm -rf /var/tmp/portage/dev-libs/openssl-*
     eclean-dist -d
 }
-run_checkpoint 7 "emerge dev-libs/openssl + cleanup" checkpoint_7
+run_checkpoint 9 "emerge dev-libs/openssl" checkpoint_9
 
-checkpoint_8() {
+checkpoint_10() {
     emerge net-misc/curl
     rm -rf /var/tmp/portage/net-misc/curl-*
     eclean-dist -d
 }
-run_checkpoint 8 "emerge net-misc/curl + cleanup" checkpoint_8
+run_checkpoint 10 "emerge net-misc/curl" checkpoint_10
 
-checkpoint_9() {
+checkpoint_11() {
     emerge dev-vcs/git
     rm -rf /var/tmp/portage/dev-vcs/git-*
     eclean-dist -d
 }
-run_checkpoint 9 "emerge dev-vcs/git + cleanup" checkpoint_9
+run_checkpoint 11 "emerge dev-vcs/git" checkpoint_11
 
-checkpoint_10() {
+checkpoint_12() {
     emerge sys-apps/coreutils
     rm -rf /var/tmp/portage/sys-apps/coreutils-*
     eclean-dist -d
 }
-run_checkpoint 10 "emerge sys-apps/coreutils + cleanup" checkpoint_10
+run_checkpoint 12 "emerge sys-apps/coreutils" checkpoint_12
 
-checkpoint_11() {
+checkpoint_13() {
     emerge app-misc/fastfetch
     rm -rf /var/tmp/portage/app-misc/fastfetch-*
     eclean-dist -d
 }
-run_checkpoint 11 "emerge app-misc/fastfetch + cleanup" checkpoint_11
+run_checkpoint 13 "emerge app-misc/fastfetch" checkpoint_13
 
-checkpoint_12() {
+checkpoint_14() {
     emerge dev-lang/perl
     rm -rf /var/tmp/portage/dev-lang/perl-*
     eclean-dist -d
 }
-run_checkpoint 12 "emerge dev-lang/perl + cleanup" checkpoint_12
+run_checkpoint 14 "emerge dev-lang/perl" checkpoint_14
 
-checkpoint_13() {
+checkpoint_15() {
     emerge dev-perl/Capture-Tiny
     rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
     eclean-dist -d
 }
-run_checkpoint 13 "emerge dev-perl/Capture-Tiny + cleanup" checkpoint_13
+run_checkpoint 15 "emerge dev-perl/Capture-Tiny" checkpoint_15
 
-checkpoint_14() {
+checkpoint_16() {
     emerge dev-perl/Try-Tiny
     rm -rf /var/tmp/portage/dev-perl/Try-Tiny-*
     eclean-dist -d
 }
-run_checkpoint 14 "emerge dev-perl/Try-Tiny + cleanup" checkpoint_14
+run_checkpoint 16 "emerge dev-perl/Try-Tiny" checkpoint_16
 
-checkpoint_15() {
+checkpoint_17() {
     emerge dev-perl/Config-AutoConf
     rm -rf /var/tmp/portage/dev-perl/Config-AutoConf-*
     eclean-dist -d
 }
-run_checkpoint 15 "emerge dev-perl/Config-AutoConf + cleanup" checkpoint_15
+run_checkpoint 17 "emerge dev-perl/Config-AutoConf" checkpoint_17
 
-checkpoint_16() {
+checkpoint_18() {
     emerge dev-perl/Test-Fatal
     rm -rf /var/tmp/portage/dev-perl/Test-Fatal-*
     eclean-dist -d
 }
-run_checkpoint 16 "emerge dev-perl/Test-Fatal + cleanup" checkpoint_16
+run_checkpoint 18 "emerge dev-perl/Test-Fatal" checkpoint_18
 
-checkpoint_17() {
+checkpoint_19() {
     emerge sys-apps/findutils
     rm -rf /var/tmp/portage/sys-apps/findutils-*
     eclean-dist -d
 }
-run_checkpoint 17 "emerge sys-apps/findutils + cleanup" checkpoint_17
+run_checkpoint 19 "emerge sys-apps/findutils" checkpoint_19
 
-checkpoint_18() {
+checkpoint_20() {
     emerge dev-libs/elfutils
     rm -rf /var/tmp/portage/dev-libs/elfutils-*
     eclean-dist -d
 }
-run_checkpoint 18 "emerge dev-libs/elfutils + cleanup" checkpoint_18
+run_checkpoint 20 "emerge dev-libs/elfutils" checkpoint_20
 
-checkpoint_19() {
+checkpoint_21() {
     if [ $(uname -m) = aarch64 ]; then
         export ARCH=arm64
     fi
@@ -216,675 +230,673 @@ checkpoint_19() {
         export ARCH=aarch64
     fi
 }
+run_checkpoint 21 "build and install kernel + modules" checkpoint_21
 
-run_checkpoint 19 "build and install kernel + modules" checkpoint_19
-
-checkpoint_20() {
+checkpoint_22() {
     emerge dev-lang/python
     rm -rf /var/tmp/portage/dev-lang/python-*
     eclean-dist -d
 }
-run_checkpoint 20 "emerge dev-lang/python + cleanup" checkpoint_20
+run_checkpoint 22 "emerge dev-lang/python" checkpoint_22
 
-checkpoint_21() {
+checkpoint_23() {
     emerge dev-build/meson
     rm -rf /var/tmp/portage/dev-build/meson-*
     eclean-dist -d
 }
-run_checkpoint 21 "emerge dev-build/meson + cleanup" checkpoint_21
+run_checkpoint 23 "emerge dev-build/meson" checkpoint_23
 
-checkpoint_22() {
+checkpoint_24() {
     USE="-truetype" emerge -1 dev-python/pillow
     rm -rf /var/tmp/portage/dev-python/pillow-*
     eclean-dist -d
 }
-run_checkpoint 22 "emerge dev-python/pillow + cleanup" checkpoint_22
+run_checkpoint 24 "emerge dev-python/pillow" checkpoint_24
 
-checkpoint_23() {
+checkpoint_25() {
     emerge media-libs/harfbuzz
     rm -rf /var/tmp/portage/media-libs/harfbuzz-*
     eclean-dist -d
 }
-run_checkpoint 23 "emerge media-libs/harfbuzz + cleanup" checkpoint_23
+run_checkpoint 25 "emerge media-libs/harfbuzz" checkpoint_25
 
-checkpoint_24() {
+checkpoint_26() {
     emerge dev-libs/glib
     rm -rf /var/tmp/portage/dev-libs/glib-*
     eclean-dist -d
 }
-run_checkpoint 24 "emerge dev-libs/glib + cleanup" checkpoint_24
+run_checkpoint 26 "emerge dev-libs/glib" checkpoint_26
 
-checkpoint_25() {
+checkpoint_27() {
     emerge dev-util/pkgcon
     rm -rf /var/tmp/portage/dev-util/pkgcon-*
     eclean-dist -d
 }
-run_checkpoint 25 "emerge dev-util/pkgcon + cleanup" checkpoint_25
+run_checkpoint 27 "emerge dev-util/pkgcon" checkpoint_27
 
-checkpoint_26() {
+checkpoint_28() {
     emerge dev-cpp/gtest
     rm -rf /var/tmp/portage/dev-cpp/gtest-*
     eclean-dist -d
 }
-run_checkpoint 26 "emerge dev-cpp/gtest + cleanup" checkpoint_26
+run_checkpoint 28 "emerge dev-cpp/gtest" checkpoint_28
 
-checkpoint_27() {
+checkpoint_29() {
     emerge dev-util/gtest-parallel
     rm -rf /var/tmp/portage/dev-util/gtest-parallel-*
     eclean-dist -d
 }
-run_checkpoint 27 "emerge dev-util/gtest-parallel + cleanup" checkpoint_27
+run_checkpoint 29 "emerge dev-util/gtest-parallel" checkpoint_29
 
-checkpoint_28() {
+checkpoint_30() {
     emerge dev-util/re2c
     rm -rf /var/tmp/portage/dev-util/re2c-*
     eclean-dist -d
 }
-run_checkpoint 28 "emerge dev-util/re2c + cleanup" checkpoint_28
+run_checkpoint 30 "emerge dev-util/re2c" checkpoint_30
 
-checkpoint_29() {
+checkpoint_31() {
     emerge dev-build/ninja
     rm -rf /var/tmp/portage/dev-build/ninja-*
     eclean-dist -d
 }
-run_checkpoint 29 "emerge dev-build/ninja + cleanup" checkpoint_29
+run_checkpoint 31 "emerge dev-build/ninja" checkpoint_31
 
-checkpoint_30() {
+checkpoint_32() {
     emerge app-text/docbook2X
     rm -rf /var/tmp/portage/app-text/docbook2X-*
     eclean-dist -d
 }
-run_checkpoint 30 "emerge app-text/docbook2X + cleanup" checkpoint_30
+run_checkpoint 32 "emerge app-text/docbook2X" checkpoint_32
 
-checkpoint_31() {
+checkpoint_33() {
     emerge app-text/build-docbook-catalog
     rm -rf /var/tmp/portage/app-text/build-docbook-catalog-*
     eclean-dist -d
 }
-run_checkpoint 31 "emerge app-text/build-docbook-catalog + cleanup" checkpoint_31
+run_checkpoint 33 "emerge app-text/build-docbook-catalog" checkpoint_33
 
-checkpoint_32() {
+checkpoint_34() {
     emerge dev-util/gtk-doc
     rm -rf /var/tmp/portage/dev-util/gtk-doc-*
     eclean-dist -d
 }
-run_checkpoint 32 "emerge dev-util/gtk-doc + cleanup" checkpoint_32
+run_checkpoint 34 "emerge dev-util/gtk-doc" checkpoint_34
 
-checkpoint_33() {
+checkpoint_35() {
     emerge sys-libs/zlib
     rm -rf /var/tmp/portage/sys-libs/zlib-*
     eclean-dist -d
 }
-run_checkpoint 33 "emerge sys-libs/zlib + cleanup" checkpoint_33
+run_checkpoint 35 "emerge sys-libs/zlib" checkpoint_35
 
-checkpoint_34() {
+checkpoint_36() {
     emerge dev-libs/libunistring
     rm -rf /var/tmp/portage/dev-libs/libunistring-*
     eclean-dist -d
 }
-run_checkpoint 34 "emerge dev-libs/libunistring + cleanup" checkpoint_34
+run_checkpoint 36 "emerge dev-libs/libunistring" checkpoint_36
 
-checkpoint_35() {
+checkpoint_37() {
     emerge sys-apps/file
     rm -rf /var/tmp/portage/sys-apps/file-*
     eclean-dist -d
 }
-run_checkpoint 35 "emerge sys-apps/file + cleanup" checkpoint_35
+run_checkpoint 37 "emerge sys-apps/file" checkpoint_37
 
-checkpoint_36() {
+checkpoint_38() {
     emerge kde-frameworks/extra-cmake-modules
     rm -rf /var/tmp/portage/kde-frameworks/extra-cmake-modules-*
     eclean-dist -d
 }
-run_checkpoint 36 "emerge kde-frameworks/extra-cmake-modules + cleanup" checkpoint_36
+run_checkpoint 38 "emerge kde-frameworks/extra-cmake-modules" checkpoint_38
 
-checkpoint_37() {
+checkpoint_39() {
     emerge -j$(nproc) dev-perl/File-LibMagic
     rm -rf /var/tmp/portage/dev-perl/File-LibMagic-*
     eclean-dist -d
 }
-run_checkpoint 37 "emerge dev-perl/File-LibMagic + cleanup" checkpoint_37
+run_checkpoint 39 "emerge dev-perl/File-LibMagic" checkpoint_39
 
-checkpoint_38() {
+checkpoint_40() {
     emerge net-libs/libpsl
     rm -rf /var/tmp/portage/net-libs/libpsl-*
     eclean-dist -d
 }
-run_checkpoint 38 "emerge net-libs/libpsl + cleanup" checkpoint_38
+run_checkpoint 40 "emerge net-libs/libpsl" checkpoint_40
 
-checkpoint_39() {
+checkpoint_41() {
     emerge dev-libs/expat
     rm -rf /var/tmp/portage/dev-libs/expat-*
     eclean-dist -d
 }
-run_checkpoint 39 "emerge dev-libs/expat + cleanup" checkpoint_39
+run_checkpoint 41 "emerge dev-libs/expat" checkpoint_41
 
-checkpoint_40() {
+checkpoint_42() {
     emerge dev-lang/duktape
     rm -rf /var/tmp/portage/dev-lang/duktape-*
     eclean-dist -d
 }
-run_checkpoint 40 "emerge dev-lang/duktape + cleanup" checkpoint_40
+run_checkpoint 42 "emerge dev-lang/duktape" checkpoint_42
 
-checkpoint_41() {
+checkpoint_43() {
     emerge app-arch/brotli
     rm -rf /var/tmp/portage/app-arch/brotli-*
     eclean-dist -d
 }
-run_checkpoint 41 "emerge app-arch/brotli + cleanup" checkpoint_41
+run_checkpoint 43 "emerge app-arch/brotli" checkpoint_43
 
-checkpoint_42() {
+checkpoint_44() {
     mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 }
-run_checkpoint 42 "backup libcrypt + install rustup" checkpoint_42
+run_checkpoint 44 "backup libcrypt + install rustup" checkpoint_44
 
-checkpoint_43() {
+checkpoint_45() {
     emerge -j$(nproc) dev-libs/boehm-gc
     rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
     eclean-dist -d
 }
-run_checkpoint 43 "emerge dev-libs/boehm-gc + cleanup" checkpoint_43
+run_checkpoint 45 "emerge dev-libs/boehm-gc" checkpoint_45
 
-checkpoint_44() {
+checkpoint_46() {
     emerge sys-auth/polkit
     rm -rf /var/tmp/portage/sys-auth/polkit-*
     eclean-dist -d
 }
-run_checkpoint 44 "emerge sys-auth/polkit + cleanup" checkpoint_44
+run_checkpoint 46 "emerge sys-auth/polkit" checkpoint_46
 
-checkpoint_45() {
+checkpoint_47() {
     emerge sys-apps/bubblewrap
     rm -rf /var/tmp/portage/sys-apps/bubblewrap-*
     eclean-dist -d
 }
-run_checkpoint 45 "emerge sys-apps/bubblewrap + cleanup" checkpoint_45
+run_checkpoint 47 "emerge sys-apps/bubblewrap" checkpoint_47
 
-checkpoint_46() {
+checkpoint_48() {
     emerge -v =llvm-core/libclc-20*
     rm -rf /var/tmp/portage/llvm-core/libclc-*
     eclean-dist -d
 }
-run_checkpoint 46 "emerge llvm-core/libclc-20* + cleanup" checkpoint_46
+run_checkpoint 48 "emerge llvm-core/libclc-20*" checkpoint_48
 
-checkpoint_47() {
+checkpoint_49() {
     emerge x11-base/xorg-drivers
     rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
     eclean-dist -d
 }
-run_checkpoint 47 "emerge x11-base/xorg-drivers + cleanup" checkpoint_47
+run_checkpoint 49 "emerge x11-base/xorg-drivers" checkpoint_49
 
-checkpoint_48() {
+checkpoint_50() {
     emerge x11-base/xorg-server
     rm -rf /var/tmp/portage/x11-base/xorg-server-*
     eclean-dist -d
 }
-run_checkpoint 48 "emerge x11-base/xorg-server + cleanup" checkpoint_48
+run_checkpoint 50 "emerge x11-base/xorg-server" checkpoint_50
 
-checkpoint_49() {
+checkpoint_51() {
     emerge x11-base/xorg-apps
     rm -rf /var/tmp/portage/x11-base/xorg-apps-*
     eclean-dist -d
 }
-run_checkpoint 49 "emerge x11-base/xorg-apps + cleanup" checkpoint_49
+run_checkpoint 51 "emerge x11-base/xorg-apps" checkpoint_51
 
-checkpoint_50() {
+checkpoint_52() {
     emerge x11-libs/libX11
     rm -rf /var/tmp/portage/x11-libs/libX11-*
     eclean-dist -d
 }
-run_checkpoint 50 "emerge x11-libs/libX11 + cleanup" checkpoint_50
+run_checkpoint 52 "emerge x11-libs/libX11" checkpoint_52
 
-checkpoint_51() {
+checkpoint_53() {
     emerge x11-libs/libXft
     rm -rf /var/tmp/portage/x11-libs/libXft-*
     eclean-dist -d
 }
-run_checkpoint 51 "emerge x11-libs/libXft + cleanup" checkpoint_51
+run_checkpoint 53 "emerge x11-libs/libXft" checkpoint_53
 
-checkpoint_52() {
+checkpoint_54() {
     emerge x11-libs/libXrender
     rm -rf /var/tmp/portage/x11-libs/libXrender-*
     eclean-dist -d
 }
-run_checkpoint 52 "emerge x11-libs/libXrender + cleanup" checkpoint_52
+run_checkpoint 54 "emerge x11-libs/libXrender" checkpoint_54
 
-checkpoint_53() {
+checkpoint_55() {
     emerge x11-libs/libXrandr
     rm -rf /var/tmp/portage/x11-libs/libXrandr-*
     eclean-dist -d
 }
-run_checkpoint 53 "emerge x11-libs/libXrandr + cleanup" checkpoint_53
+run_checkpoint 55 "emerge x11-libs/libXrandr" checkpoint_55
 
-checkpoint_54() {
+checkpoint_56() {
     emerge x11-libs/libXcursor
     rm -rf /var/tmp/portage/x11-libs/libXcursor-*
     eclean-dist -d
 }
-run_checkpoint 54 "emerge x11-libs/libXcursor + cleanup" checkpoint_54
+run_checkpoint 56 "emerge x11-libs/libXcursor" checkpoint_56
 
-checkpoint_55() {
+checkpoint_57() {
     emerge x11-libs/libXi
     rm -rf /var/tmp/portage/x11-libs/libXi-*
     eclean-dist -d
 }
-run_checkpoint 55 "emerge x11-libs/libXi + cleanup" checkpoint_55
+run_checkpoint 57 "emerge x11-libs/libXi" checkpoint_57
 
-checkpoint_56() {
+checkpoint_58() {
     emerge x11-libs/libXinerama
     rm -rf /var/tmp/portage/x11-libs/libXinerama-*
     eclean-dist -d
 }
-run_checkpoint 56 "emerge x11-libs/libXinerama + cleanup" checkpoint_56
+run_checkpoint 58 "emerge x11-libs/libXinerama" checkpoint_58
 
-checkpoint_57() {
+checkpoint_59() {
     emerge x11-libs/pango
     rm -rf /var/tmp/portage/x11-libs/pango-*
     eclean-dist -d
 }
-run_checkpoint 57 "emerge x11-libs/pango + cleanup" checkpoint_57
+run_checkpoint 59 "emerge x11-libs/pango" checkpoint_59
 
-checkpoint_58() {
+checkpoint_60() {
     emerge dev-libs/wayland
     rm -rf /var/tmp/portage/dev-libs/wayland-*
     eclean-dist -d
 }
-run_checkpoint 58 "emerge dev-libs/wayland + cleanup" checkpoint_58
+run_checkpoint 60 "emerge dev-libs/wayland" checkpoint_60
 
-
-checkpoint_59() {
+checkpoint_61() {
     emerge dev-libs/wayland-protocols
     rm -rf /var/tmp/portage/dev-libs/wayland-protocols-*
     eclean-dist -d
 }
-run_checkpoint 59 "emerge dev-libs/wayland-protocols + cleanup" checkpoint_59
+run_checkpoint 61 "emerge dev-libs/wayland-protocols" checkpoint_61
 
-checkpoint_60() {
+checkpoint_62() {
     emerge x11-base/xwayland
     rm -rf /var/tmp/portage/x11-base/xwayland-*
     eclean-dist -d
 }
-run_checkpoint 60 "emerge x11-base/xwayland + cleanup" checkpoint_60
+run_checkpoint 62 "emerge x11-base/xwayland" checkpoint_62
 
-checkpoint_61() {
+checkpoint_63() {
     emerge x11-libs/libxkbcommon
     rm -rf /var/tmp/portage/x11-libs/libxkbcommon-*
     eclean-dist -d
 }
-run_checkpoint 61 "emerge x11-libs/libxkbcommon + cleanup" checkpoint_61
+run_checkpoint 63 "emerge x11-libs/libxkbcommon" checkpoint_63
 
-checkpoint_62() {
+checkpoint_64() {
     emerge gui-libs/gtk
     rm -rf /var/tmp/portage/gui-libs/gtk-*
     eclean-dist -d
 }
-run_checkpoint 62 "emerge gui-libs/gtk + cleanup" checkpoint_62
+run_checkpoint 64 "emerge gui-libs/gtk" checkpoint_64
 
-checkpoint_63() {
+checkpoint_65() {
     emerge xfce-base/libxfce4util
     rm -rf /var/tmp/portage/xfce-base/libxfce4util-*
     eclean-dist -d
 }
-run_checkpoint 63 "emerge xfce-base/libxfce4util + cleanup" checkpoint_63
+run_checkpoint 65 "emerge xfce-base/libxfce4util" checkpoint_65
 
-checkpoint_64() {
+checkpoint_66() {
     emerge xfce-base/xfconf
     rm -rf /var/tmp/portage/xfce-base/xfconf-*
     eclean-dist -d
 }
-run_checkpoint 64 "emerge xfce-base/xfconf + cleanup" checkpoint_64
+run_checkpoint 66 "emerge xfce-base/xfconf" checkpoint_66
 
-checkpoint_65() {
+checkpoint_67() {
     emerge sys-apps/xdg-desktop-portal
     rm -rf /var/tmp/portage/sys-apps/xdg-desktop-portal-*
     eclean-dist -d
 }
-run_checkpoint 65 "emerge sys-apps/xdg-desktop-portal + cleanup" checkpoint_65
+run_checkpoint 67 "emerge sys-apps/xdg-desktop-portal" checkpoint_67
 
-checkpoint_66() {
+checkpoint_68() {
     emerge gui-libs/xdg-desktop-portal-wlr
     rm -rf /var/tmp/portage/gui-libs/xdg-desktop-portal-wlr-*
     eclean-dist -d
 }
-run_checkpoint 66 "emerge gui-libs/xdg-desktop-portal-wlr + cleanup" checkpoint_66
+run_checkpoint 68 "emerge gui-libs/xdg-desktop-portal-wlr" checkpoint_68
 
-checkpoint_67() {
+checkpoint_69() {
     emerge media-libs/mesa
     rm -rf /var/tmp/portage/media-libs/mesa-*
     eclean-dist -d
 }
-run_checkpoint 67 "emerge media-libs/mesa + cleanup" checkpoint_67
+run_checkpoint 69 "emerge media-libs/mesa" checkpoint_69
 
-checkpoint_68() {
+checkpoint_70() {
     emerge x11-apps/mesa-progs
     rm -rf /var/tmp/portage/x11-apps/mesa-progs-*
     eclean-dist -d
 }
-run_checkpoint 68 "emerge x11-apps/mesa-progs + cleanup" checkpoint_68
+run_checkpoint 70 "emerge x11-apps/mesa-progs" checkpoint_70
 
-checkpoint_69() {
+checkpoint_71() {
     emerge dev-qt/qtbase
     rm -rf /var/tmp/portage/dev-qt/qtbase-*
     eclean-dist -d
 }
-run_checkpoint 69 "emerge dev-qt/qtbase + cleanup" checkpoint_69
+run_checkpoint 71 "emerge dev-qt/qtbase" checkpoint_71
 
-checkpoint_70() {
+checkpoint_72() {
     emerge dev-qt/qttools
     rm -rf /var/tmp/portage/dev-qt/qttools-*
     eclean-dist -d
 }
-run_checkpoint 70 "emerge dev-qt/qttools + cleanup" checkpoint_70
+run_checkpoint 72 "emerge dev-qt/qttools" checkpoint_72
 
-checkpoint_71() {
+checkpoint_73() {
     emerge dev-qt/qtnetwork
     rm -rf /var/tmp/portage/dev-qt/qtnetwork-*
     eclean-dist -d
 }
-run_checkpoint 71 "emerge dev-qt/qtnetwork + cleanup" checkpoint_71
+run_checkpoint 73 "emerge dev-qt/qtnetwork" checkpoint_73
 
-checkpoint_72() {
+checkpoint_74() {
     emerge dev-qt/qtconcurrent
     rm -rf /var/tmp/portage/dev-qt/qtconcurrent-*
     eclean-dist -d
 }
-run_checkpoint 72 "emerge dev-qt/qtconcurrent + cleanup" checkpoint_72
+run_checkpoint 74 "emerge dev-qt/qtconcurrent" checkpoint_74
 
-checkpoint_73() {
+checkpoint_75() {
     emerge dev-qt/qtxml
     rm -rf /var/tmp/portage/dev-qt/qtxml-*
     eclean-dist -d
 }
-run_checkpoint 73 "emerge dev-qt/qtxml + cleanup" checkpoint_73
+run_checkpoint 75 "emerge dev-qt/qtxml" checkpoint_75
 
-checkpoint_74() {
+checkpoint_76() {
     emerge dev-qt/qtgui
     rm -rf /var/tmp/portage/dev-qt/qtgui-*
     eclean-dist -d
 }
-run_checkpoint 74 "emerge dev-qt/qtgui + cleanup" checkpoint_74
+run_checkpoint 76 "emerge dev-qt/qtgui" checkpoint_76
 
-checkpoint_75() {
+checkpoint_77() {
     emerge dev-qt/qtcore
     rm -rf /var/tmp/portage/dev-qt/qtcore-*
     eclean-dist -d
 }
-run_checkpoint 75 "emerge dev-qt/qtcore + cleanup" checkpoint_75
+run_checkpoint 77 "emerge dev-qt/qtcore" checkpoint_77
 
-checkpoint_76() {
+checkpoint_78() {
     emerge dev-build/cmake
     rm -rf /var/tmp/portage/dev-build/cmake-*
     eclean-dist -d
 }
-run_checkpoint 76 "emerge dev-build/cmake + cleanup" checkpoint_76
+run_checkpoint 78 "emerge dev-build/cmake" checkpoint_78
 
-checkpoint_77() {
+checkpoint_79() {
     emerge sys-apps/dbus
     rm -rf /var/tmp/portage/sys-apps/dbus-*
     eclean-dist -d
 }
-run_checkpoint 77 "emerge sys-apps/dbus + cleanup" checkpoint_77
+run_checkpoint 79 "emerge sys-apps/dbus" checkpoint_79
 
-checkpoint_78() {
+checkpoint_80() {
     emerge app-accessibility/at-spi2-core
     rm -rf /var/tmp/portage/app-accessibility/at-spi2-core-*
     eclean-dist -d
 }
-run_checkpoint 78 "emerge app-accessibility/at-spi2-core + cleanup" checkpoint_78
+run_checkpoint 80 "emerge app-accessibility/at-spi2-core" checkpoint_80
 
-checkpoint_79() {
+checkpoint_81() {
     emerge app-accessibility/at-spi2-atk
     rm -rf /var/tmp/portage/app-accessibility/at-spi2-atk-*
     eclean-dist -d
 }
-run_checkpoint 79 "emerge app-accessibility/at-spi2-atk + cleanup" checkpoint_79
+run_checkpoint 81 "emerge app-accessibility/at-spi2-atk" checkpoint_81
 
-checkpoint_80() {
+checkpoint_82() {
     emerge media-libs/fontconfig
     rm -rf /var/tmp/portage/media-libs/fontconfig-*
     eclean-dist -d
 }
-run_checkpoint 80 "emerge media-libs/fontconfig + cleanup" checkpoint_80
+run_checkpoint 82 "emerge media-libs/fontconfig" checkpoint_82
 
-checkpoint_81() {
+checkpoint_83() {
     emerge media-fonts/dejavu
     rm -rf /var/tmp/portage/media-fonts/dejavu-*
     eclean-dist -d
 }
-run_checkpoint 81 "emerge media-fonts/dejavu + cleanup" checkpoint_81
+run_checkpoint 83 "emerge media-fonts/dejavu" checkpoint_83
 
-checkpoint_82() {
+checkpoint_84() {
     emerge x11-themes/gtk-engines
     rm -rf /var/tmp/portage/x11-themes/gtk-engines-*
     eclean-dist -d
 }
-run_checkpoint 82 "emerge x11-themes/gtk-engines + cleanup" checkpoint_82
+run_checkpoint 84 "emerge x11-themes/gtk-engines" checkpoint_84
 
-checkpoint_83() {
+checkpoint_85() {
     emerge x11-themes/gtk-engines-murrine
     rm -rf /var/tmp/portage/x11-themes/gtk-engines-murrine-*
     eclean-dist -d
 }
-run_checkpoint 83 "emerge x11-themes/gtk-engines-murrine + cleanup" checkpoint_83
+run_checkpoint 85 "emerge x11-themes/gtk-engines-murrine" checkpoint_85
 
-checkpoint_84() {
+checkpoint_86() {
     emerge dev-lang/python
     rm -rf /var/tmp/portage/dev-lang/python-*
     eclean-dist -d
 }
-run_checkpoint 84 "emerge dev-lang/python + cleanup" checkpoint_84
+run_checkpoint 86 "emerge dev-lang/python" checkpoint_86
 
-checkpoint_85() {
+checkpoint_87() {
     emerge x11-libs/libnotify
     rm -rf /var/tmp/portage/x11-libs/libnotify-*
     eclean-dist -d
 }
-run_checkpoint 85 "emerge x11-libs/libnotify + cleanup" checkpoint_85
+run_checkpoint 87 "emerge x11-libs/libnotify" checkpoint_87
 
-checkpoint_86() {
+checkpoint_88() {
     emerge dev-libs/libdbusmenu
     rm -rf /var/tmp/portage/dev-libs/libdbusmenu-*
     eclean-dist -d
 }
-run_checkpoint 86 "emerge dev-libs/libdbusmenu + cleanup" checkpoint_86
+run_checkpoint 88 "emerge dev-libs/libdbusmenu" checkpoint_88
 
-checkpoint_87() {
+checkpoint_89() {
     emerge x11-libs/libSM
     rm -rf /var/tmp/portage/x11-libs/libSM-*
     eclean-dist -d
 }
-run_checkpoint 87 "emerge x11-libs/libSM + cleanup" checkpoint_87
+run_checkpoint 89 "emerge x11-libs/libSM" checkpoint_89
 
-checkpoint_88() {
+checkpoint_90() {
     emerge x11-libs/libICE
     rm -rf /var/tmp/portage/x11-libs/libICE-*
     eclean-dist -d
 }
-run_checkpoint 88 "emerge x11-libs/libICE + cleanup" checkpoint_88
+run_checkpoint 90 "emerge x11-libs/libICE" checkpoint_90
 
-checkpoint_89() {
+checkpoint_91() {
     emerge x11-libs/libwnck
     rm -rf /var/tmp/portage/x11-libs/libwnck-*
     eclean-dist -d
 }
-run_checkpoint 89 "emerge x11-libs/libwnck + cleanup" checkpoint_89
+run_checkpoint 91 "emerge x11-libs/libwnck" checkpoint_91
 
-checkpoint_90() {
+checkpoint_92() {
     emerge dev-build/cmake
     rm -rf /var/tmp/portage/dev-build/cmake-*
     eclean-dist -d
 }
-run_checkpoint 90 "emerge dev-build/cmake + cleanup" checkpoint_90
+run_checkpoint 92 "emerge dev-build/cmake" checkpoint_92
 
-checkpoint_91() {
+checkpoint_93() {
     emerge xfce-base/exo
     rm -rf /var/tmp/portage/xfce-base/exo-*
     eclean-dist -d
 }
-run_checkpoint 91 "emerge xfce-base/exo + cleanup" checkpoint_91
+run_checkpoint 93 "emerge xfce-base/exo" checkpoint_93
 
-checkpoint_92() {
+checkpoint_94() {
     emerge app-admin/exo
     rm -rf /var/tmp/portage/app-admin/exo-*
     eclean-dist -d
 }
-run_checkpoint 92 "emerge app-admin/exo + cleanup" checkpoint_92
+run_checkpoint 94 "emerge app-admin/exo" checkpoint_94
 
-checkpoint_93() {
+checkpoint_95() {
     emerge app-arch/tar
     rm -rf /var/tmp/portage/app-arch/tar-*
     eclean-dist -d
 }
-run_checkpoint 93 "emerge app-arch/tar + cleanup" checkpoint_93
+run_checkpoint 95 "emerge app-arch/tar" checkpoint_95
 
-checkpoint_94() {
+checkpoint_96() {
     emerge app-arch/xz-utils
     rm -rf /var/tmp/portage/app-arch/xz-utils-*
     eclean-dist -d
 }
-run_checkpoint 94 "emerge app-arch/xz-utils + cleanup" checkpoint_94
+run_checkpoint 96 "emerge app-arch/xz-utils" checkpoint_96
 
-checkpoint_95() {
+checkpoint_97() {
     emerge net-libs/gnutls
     rm -rf /var/tmp/portage/net-libs/gnutls-*
     eclean-dist -d
 }
-run_checkpoint 95 "emerge net-libs/gnutls + cleanup" checkpoint_95
+run_checkpoint 97 "emerge net-libs/gnutls" checkpoint_97
 
-checkpoint_96() {
+checkpoint_98() {
     emerge net-libs/glib-networking
     rm -rf /var/tmp/portage/net-libs/glib-networking-*
     eclean-dist -d
 }
-run_checkpoint 96 "emerge net-libs/glib-networking + cleanup" checkpoint_96
+run_checkpoint 98 "emerge net-libs/glib-networking" checkpoint_98
 
-checkpoint_97() {
+checkpoint_99() {
     emerge sys-libs/libseccomp
     rm -rf /var/tmp/portage/sys-libs/libseccomp-*
     eclean-dist -d
 }
-run_checkpoint 97 "emerge sys-libs/libseccomp + cleanup" checkpoint_97
+run_checkpoint 99 "emerge sys-libs/libseccomp" checkpoint_99
 
-checkpoint_98() {
+checkpoint_100() {
     emerge app-eselect/eselect-repository
     rm -rf /var/tmp/portage/app-eselect/eselect-repository-*
     eclean-dist -d
 }
-run_checkpoint 98 "emerge app-eselect/eselect-repository + cleanup" checkpoint_98
+run_checkpoint 100 "emerge app-eselect/eselect-repository" checkpoint_100
 
-checkpoint_99() {
+checkpoint_101() {
     emerge dev-libs/appstream-glib
     rm -rf /var/tmp/portage/dev-libs/appstream-glib-*
     eclean-dist -d
 }
-run_checkpoint 99 "emerge dev-libs/appstream-glib + cleanup" checkpoint_99
+run_checkpoint 101 "emerge dev-libs/appstream-glib" checkpoint_101
 
-checkpoint_100() {
+checkpoint_102() {
     emerge app-crypt/gpgme
     rm -rf /var/tmp/portage/app-crypt/gpgme-*
     eclean-dist -d
 }
-run_checkpoint 100 "emerge app-crypt/gpgme + cleanup" checkpoint_100
+run_checkpoint 102 "emerge app-crypt/gpgme" checkpoint_102
 
-checkpoint_101() {
+checkpoint_103() {
     emerge dev-util/ostree
     rm -rf /var/tmp/portage/dev-util/ostree-*
     eclean-dist -d
 }
-run_checkpoint 101 "emerge dev-util/ostree + cleanup" checkpoint_101
+run_checkpoint 103 "emerge dev-util/ostree" checkpoint_103
 
-checkpoint_102() {
+checkpoint_104() {
     emerge sys-apps/xdg-dbus-proxy
     rm -rf /var/tmp/portage/sys-apps/xdg-dbus-proxy-*
     eclean-dist -d
 }
-run_checkpoint 102 "emerge sys-apps/xdg-dbus-proxy + cleanup" checkpoint_102
+run_checkpoint 104 "emerge sys-apps/xdg-dbus-proxy" checkpoint_104
 
-checkpoint_103() {
+checkpoint_105() {
     emerge x11-libs/gdk-pixbuf
     rm -rf /var/tmp/portage/x11-libs/gdk-pixbuf-*
     eclean-dist -d
 }
-run_checkpoint 103 "emerge x11-libs/gdk-pixbuf + cleanup" checkpoint_103
+run_checkpoint 105 "emerge x11-libs/gdk-pixbuf" checkpoint_105
 
-checkpoint_104() {
+checkpoint_106() {
     emerge sys-fs/fuse
     rm -rf /var/tmp/portage/sys-fs/fuse-*
     eclean-dist -d
 }
-run_checkpoint 104 "emerge sys-fs/fuse + cleanup" checkpoint_104
+run_checkpoint 106 "emerge sys-fs/fuse" checkpoint_106
 
-checkpoint_105() {
+checkpoint_107() {
     emerge dev-python/pygobject
     rm -rf /var/tmp/portage/dev-python/pygobject-*
     eclean-dist -d
 }
-run_checkpoint 105 "emerge dev-python/pygobject + cleanup" checkpoint_105
+run_checkpoint 107 "emerge dev-python/pygobject" checkpoint_107
 
-checkpoint_106() {
+checkpoint_108() {
     emerge gnome-base/dconf
     rm -rf /var/tmp/portage/gnome-base/dconf-*
     eclean-dist -d
 }
-run_checkpoint 106 "emerge gnome-base/dconf + cleanup" checkpoint_106
+run_checkpoint 108 "emerge gnome-base/dconf" checkpoint_108
 
-checkpoint_107() {
+checkpoint_109() {
     emerge x11-misc/xdg-utils
     rm -rf /var/tmp/portage/x11-misc/xdg-utils-*
     eclean-dist -d
 }
-run_checkpoint 107 "emerge x11-misc/xdg-utils + cleanup" checkpoint_107
+run_checkpoint 109 "emerge x11-misc/xdg-utils" checkpoint_109
 
-checkpoint_108() {
+checkpoint_110() {
     emerge x11-apps/xinit
     rm -rf /var/tmp/portage/x11-apps/xinit-*
     eclean-dist -d
 }
-run_checkpoint 108 "emerge x11-apps/xinit + cleanup" checkpoint_108
+run_checkpoint 110 "emerge x11-apps/xinit" checkpoint_110
 
-checkpoint_109() {
+checkpoint_111() {
     emerge x11-terms/xterm
     rm -rf /var/tmp/portage/x11-terms/xterm-*
     eclean-dist -d
 }
-run_checkpoint 109 "emerge x11-terms/xterm + cleanup" checkpoint_109
+run_checkpoint 111 "emerge x11-terms/xterm" checkpoint_111
 
-checkpoint_110() {
+checkpoint_112() {
     emerge x11-wm/twm
     rm -rf /var/tmp/portage/x11-wm/twm-*
     eclean-dist -d
 }
-run_checkpoint 110 "emerge x11-wm/twm + cleanup" checkpoint_110
+run_checkpoint 112 "emerge x11-wm/twm" checkpoint_112
 
-checkpoint_111() {
+checkpoint_113() {
     emerge media-gfx/chafa
     rm -rf /var/tmp/portage/media-gfx/chafa-*
     eclean-dist -d
 }
-run_checkpoint 111 "emerge media-gfx/chafa + cleanup" checkpoint_111
+run_checkpoint 113 "emerge media-gfx/chafa" checkpoint_113
 
-checkpoint_112() {
+checkpoint_114() {
     emerge dev-python/pillow
     rm -rf /var/tmp/portage/dev-python/pillow-*
     eclean-dist -d
 }
-run_checkpoint 112 "emerge dev-python/pillow + cleanup" checkpoint_112
+run_checkpoint 114 "emerge dev-python/pillow" checkpoint_114
 
-checkpoint_113() {
+checkpoint_115() {
     emerge app-text/doxygen
     rm -rf /var/tmp/portage/app-text/doxygen-*
     eclean-dist -d
 }
-run_checkpoint 113 "emerge app-text/doxygen + cleanup" checkpoint_113
+run_checkpoint 115 "emerge app-text/doxygen" checkpoint_115
 
-checkpoint_114() {
+checkpoint_116() {
     emerge gui-libs/egl-gbm
     rm -rf /var/tmp/portage/gui-libs/egl-gbm-*
     eclean-dist -d
 }
-run_checkpoint 114 "emerge gui-libs/egl-gbm + cleanup" checkpoint_114
+run_checkpoint 116 "emerge gui-libs/egl-gbm" checkpoint_116
 
-checkpoint_115() {
+checkpoint_117() {
     cd /tmp
     git clone https://chromium.googlesource.com/chromiumos/platform2
     cd platform2/vm_tools/sommelier
@@ -892,14 +904,15 @@ checkpoint_115() {
     ninja -C build
     ninja -C build install
 }
-run_checkpoint 115 "build sommelier from source" checkpoint_115
+run_checkpoint 117 "build sommelier from source" checkpoint_117
 
-checkpoint_116() {
+checkpoint_118() {
     emerge sys-apps/flatpak
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     eclean-dist -d
 }
-run_checkpoint 116 "emerge sys-apps/flatpak + setup flathub" checkpoint_116
+run_checkpoint 118 "emerge sys-apps/flatpak + setup flathub" checkpoint_118
 echo "Chard Root is ready${RESET}"
 show_progress
+
