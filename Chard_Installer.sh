@@ -760,7 +760,6 @@ esac
 sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
 # Generated based on detected architecture ($ARCH) and GPU type ($GPU_TYPE)
-
 COMMON_FLAGS="-march=native -O2 -pipe"
 CFLAGS="\${COMMON_FLAGS}"
 CXXFLAGS="\${COMMON_FLAGS}"
@@ -772,20 +771,17 @@ PKGDIR="/var/cache/packages"
 PORTAGE_TMPDIR="/var/tmp"
 PORTDIR="/usr/portage"
 SANDBOX="/usr/bin/sandbox"
-
 CHOST="$CHOST"
 CC="/usr/bin/gcc"
 CXX="/usr/bin/g++"
 AR="/usr/bin/gcc-ar"
 RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
-
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
 USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd -elogind"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
 VIDEO_CARDS="$VIDEO_CARDS"
-
 PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH"
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
