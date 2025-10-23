@@ -1358,6 +1358,8 @@ EOF
             ;;
     esac
 
+sudo mkdir -p "$CHARD_ROOT/var/lib/portage"
+sudo touch "$CHARD_ROOT/var/lib/portage/world"
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
 echo "[*] Wayland GPU environment setup complete ($DRIVER)"
