@@ -1051,8 +1051,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         aarch64) CHOST=aarch64-unknown-linux-gnu ;;
         *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
     esac
-            HOME=\$(cat /.chard_home)
-            export HOME
             export ARCH
             export CHOST
             export MAGIC=\"/usr/share/misc/magic.mgc\"
@@ -1084,7 +1082,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             export XDG_RUNTIME_DIR=\"/run/user/0\"
             export DISPLAY=:0
             export LD=\"/usr/bin/ld\"
-            source /.bashrc 2>/dev/null
+            CHARD_HOME=\$(cat /.chard_home)
+            HOME=\$CHARD_HOME
+            source \$HOME/.bashrc 2>/dev/null
 
     emerge --sync
 
