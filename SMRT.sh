@@ -1,5 +1,5 @@
 #!/bin/bash
-# SMRT - Smart Multithreaded Resource Tasker
+# SMRT - Smart Multithreaded Resource Tasker (Percentage-based)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -49,10 +49,6 @@ else
     fi
 fi
 
-MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-MEM_GB=$(( MEM_KB / 1024 / 1024 ))
-TOTAL_MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
-
 allocate_cores() {
     local requested_threads=$1
     local selected_cores=""
@@ -81,27 +77,15 @@ allocate_cores() {
     echo "$selected_cores"
 }
 
-if [[ -z "$1" ]]; then
-    AUTO_THREADS=$((MEM_GB / 2))
-    ((AUTO_THREADS < 1)) && AUTO_THREADS=1
-    
-    if [[ -n "$E_CORES_ALL" ]]; then
-        ECORE_COUNT=$(echo "$E_CORES_ALL" | tr ',' '\n' | wc -l)
-        ECORE_RATIO=$(awk "BEGIN {print $ECORE_COUNT / $TOTAL_CORES}")
-        if (( $(awk "BEGIN {print ($ECORE_RATIO >= 0.65)}") )); then
-            AUTO_THREADS=$(awk -v t="$AUTO_THREADS" 'BEGIN {printf("%d", t * 2.67)}')
-        fi
-    fi
-    
-    (( AUTO_THREADS > TOTAL_CORES )) && AUTO_THREADS=$TOTAL_CORES
-    REQUESTED_THREADS=$AUTO_THREADS
-else
-    REQUESTED_THREADS=$1
-    if ! [[ "$REQUESTED_THREADS" =~ ^[0-9]+$ ]]; then
-        echo "${RED}Error: Please provide a valid number of threads${RESET}"
-        exit 1
-    fi
+PCT="${1:-75}" 
+
+if ! [[ "$PCT" =~ ^[0-9]+$ ]] || (( PCT < 1 || PCT > 100 )); then
+    echo "${RED}Error: Please provide a percentage between 1 and 100${RESET}"
+    exit 1
 fi
+
+REQUESTED_THREADS=$(( (TOTAL_CORES * PCT + 99) / 100 ))
+(( REQUESTED_THREADS < 1 )) && REQUESTED_THREADS=1
 
 ALLOCATED_CORES=$(allocate_cores $REQUESTED_THREADS)
 ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
@@ -111,7 +95,6 @@ cat > "$SMRT_ENV_FILE" <<EOF
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
 EOF
-
 source "$SMRT_ENV_FILE"
 
 parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
@@ -129,25 +112,18 @@ for tool in "${serial_tools[@]}"; do
 done
 
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-if (( ALLOCATED_COUNT != REQUESTED_THREADS )); then
-    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET} - ${RESET}${YELLOW}Requested $REQUESTED_THREADS threads, allocated $ALLOCATED_COUNT threads ${RESET}"
-else
-    echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${BLUE} - $REQUESTED_THREADS threads${RESET}"
-fi
+echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${CYAN} - Allocated ${ALLOCATED_COUNT} threads (${PCT}% of cores)${RESET}"
 echo ""
 echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
+echo "${CYAN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
+echo
 echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
-if [[ -n "$P_CORES_ALL" ]]; then
-    echo "${CYAN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
-fi
+[[ -n "$P_CORES_ALL" ]] && echo "${GREEN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
 echo ""
-echo "${CYAN}Detected Memory:                 ${BOLD}${TOTAL_MEM_GB} GB ${RESET}"
-echo "${GREEN}Allocated Memory:                ${BOLD}${MEM_GB} GB ${RESET}"
-echo "${BLUE}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
+echo "${YELLOW}Detected Memory:                 ${BOLD}$TOTAL_MEM_GB GB ${RESET}"
 echo ""
 echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
 echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
 echo ""
-echo "${YELLOW}SMRT $ALLOCATED_COUNT ${RESET}"
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo ""
