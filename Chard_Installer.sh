@@ -212,7 +212,7 @@ sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
     --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 sudo rm -f "$TMP_TAR"
 
-STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-llvm-systemd/latest-stage3-$GENTOO_ARCH-llvm-systemd.txt"
+STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
 
 STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
 STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
@@ -680,7 +680,7 @@ RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
 
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
-USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd -elogind"
+USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg lcms libnotify libtirpc mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds qml qt5 qt6 readline sdl seccomp sound spell ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd -elogind"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
 
@@ -1043,10 +1043,45 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
     [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
     [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-    
-    CHARD_HOME=\$(cat /.chard_home)
-    HOME=\$CHARD_HOME
-    source \$HOME/.bashrc 2>/dev/null
+
+    ARCH=\$(uname -m)
+    case \"\$ARCH\" in
+        x86_64)  CHOST=x86_64-pc-linux-gnu ;;
+        aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+        *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
+    esac
+            export ARCH
+            export CHOST
+            export MAGIC=\"/usr/share/misc/magic.mgc\"
+            export CC=/usr/bin/gcc
+            export CXX=/usr/bin/g++
+            export AR=/usr/bin/gcc-ar
+            export RANLIB=/usr/bin/gcc-ranlib
+            export STRIP=/usr/bin/strip
+            export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
+            export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
+            export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
+            export PKG_CONFIG=/usr/bin/pkg-config
+            export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
+            export PYTHON=\"/bin/python3\"
+            export FORCE_UNSAFE_CONFIGURE=1
+            export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
+            export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+            export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+            export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
+            export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
+            export CARGO_HOME=\$HOME/.cargo
+            export RUSTUP_HOME=\$HOME/.rustup
+            export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+            export PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
+            export PORTAGE_LOGDIR=\"/var/log/portage\"
+            export PORTAGE_CONFIGROOT=\"/\"
+            export PORTAGE_TMPDIR=\"/var/tmp\"
+            export MESON_CROSS_FILE=\"/meson-cross.ini\"
+            export XDG_RUNTIME_DIR=\"/run/user/0\"
+            export DISPLAY=:0
+            export LD=\"/usr/bin/ld\"
+            source \$HOME/.bashrc 2>/dev/null
 
     emerge --sync
 
@@ -1363,7 +1398,8 @@ EOF
             ;;
     esac
     
-echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords/perl" >/dev/null
+sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
+sudo touch "$CHARD_ROOT/var/lib/portage/world"
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
 echo "[*] Wayland GPU environment setup complete ($DRIVER)"
@@ -1389,8 +1425,44 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
         chmod 1777 /tmp /var/tmp
         
-                CHARD_HOME=\$(cat /.chard_home)
-                HOME=\$CHARD_HOME
+        ARCH=\$(uname -m)
+        case \"\$ARCH\" in
+            x86_64)  CHOST=x86_64-pc-linux-gnu ;;
+            aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+            *) echo \"Unknown architecture: \$ARCH\"; exit 1 ;;
+        esac
+                export ARCH
+                export CHOST
+                export MAGIC=\"/usr/share/misc/magic.mgc\"
+                export CC=/usr/bin/gcc
+                export CXX=/usr/bin/g++
+                export AR=/usr/bin/gcc-ar
+                export RANLIB=/usr/bin/gcc-ranlib
+                export STRIP=/usr/bin/strip
+                export PATH=/usr/bin:/bin:/usr/local/bin:\$HOME/.cargo/bin
+                export LD_LIBRARY_PATH=\"/lib:/lib64:/usr/lib:/usr/lib64:\$HOME/.rustup/toolchains/stable-$CHOST/lib:/usr/local/lib:/usr/local/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}\"
+                export PERL5LIB=/usr/local/lib/perl5/site_perl/5.40.0:/usr/local/lib/perl5:\${PERL5LIB}
+                export PKG_CONFIG=/usr/bin/pkg-config
+                export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:\${PKG_CONFIG_PATH}
+                export PYTHON=\"/bin/python3\"
+                export FORCE_UNSAFE_CONFIGURE=1
+                export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
+                export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+                export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+                export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
+                export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
+                export CARGO_HOME=\$HOME/.cargo
+                export RUSTUP_HOME=\$HOME/.rustup
+                export GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+                export PORTAGE_PROFILE_DIR=\"/usr/local/etc/portage/make.profile\"
+                export PORTAGE_LOGDIR=\"/var/log/portage\"
+                export PORTAGE_CONFIGROOT=\"/\"
+                export PORTAGE_TMPDIR=\"/var/tmp\"
+                export MESON_CROSS_FILE=\"/meson-cross.ini\"
+                export XDG_RUNTIME_DIR=\"/run/user/0\"
+                export DISPLAY=:0
+                export LD=\"/usr/bin/ld\"
+                export PYTHONMULTIPROCESSING_START_METHOD=fork
                 source \$HOME/.bashrc 2>/dev/null
                 env-update
                 SMRT 128
@@ -1401,6 +1473,14 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
                 emerge app-portage/gentoolkit
                 rm -rf /var/tmp/portage/app-portage/gentoolkit-*
+                
+                USE=\"-gui\" emerge -1 dev-build/cmake
+                rm -rf /var/tmp/portage/dev-build/cmake-*
+                eclean-dist -d
+                
+                emerge sys-devel/gcc
+                rm -rf /var/tmp/portage/sys-devel/gcc-*
+                eclean-dist -d
                 
                 emerge dev-libs/gmp
                 rm -rf /var/tmp/portage/dev-libs/gmp-*
@@ -1437,11 +1517,39 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge app-misc/fastfetch
                 rm -rf /var/tmp/portage/app-misc/fastfetch-*
                 eclean-dist -d
+
+                echo dev-lang/perl ~\$(portageq envvar ARCH) >> /etc/portage/package.accept_keywords/perl
                 
-                emerge dev-lang/perl
+                emerge -1 dev-lang/perl
                 rm -rf /var/tmp/portage/dev-lang/perl-*
                 eclean-dist -d
-                                
+                
+                perl-cleaner --reallyall
+                
+                emerge virtual/perl-Digest
+                rm -rf /var/tmp/portage/virtual/perl-Digest-*
+                eclean-dist -d
+                
+                emerge virtual/perl-CPAN
+                rm -rf /var/tmp/portage/virtual/perl-CPAN-*
+                eclean-dist -d
+                
+                emerge virtual/perl-CPAN-Meta
+                rm -rf /var/tmp/portage/virtual/perl-CPAN-Meta-*
+                eclean-dist -d
+                
+                emerge virtual/perl-Data-Dumper
+                rm -rf /var/tmp/portage/virtual/perl-Data-Dumper-*
+                eclean-dist -d
+                
+                emerge virtual/perl-Math-BigInt
+                rm -rf /var/tmp/portage/virtual/perl-Math-BigInt-*
+                eclean-dist -d
+                
+                emerge virtual/perl-Scalar-List-Utils
+                rm -rf /var/tmp/portage/virtual/perl-Scalar-List-Utils-*
+                eclean-dist -d
+                
                 emerge dev-perl/Capture-Tiny
                 rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
                 eclean-dist -d
