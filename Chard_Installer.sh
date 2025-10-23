@@ -212,7 +212,7 @@ sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
     --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
 sudo rm -f "$TMP_TAR"
 
-STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-llvm-systemd/latest-stage3-$GENTOO_ARCH-llvm-systemd.txt"
+STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-llvm-systemd.txt"
 
 STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
 STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
@@ -1970,6 +1970,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 emerge app-text/doxygen
                 rm -rf /var/tmp/portage/app-text/doxygen-*
                 eclean-dist -d
+
+                emerge gui-libs/egl-gbm
 
                 cd /tmp
                 git clone https://chromium.googlesource.com/chromiumos/platform2
