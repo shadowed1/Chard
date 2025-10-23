@@ -157,6 +157,10 @@ CFLAGS="-march=native -O2 -pipe "
 [[ -d /include ]] && CFLAGS+="-I/include "
 export CFLAGS
 
+COMMON_FLAGS="-march=native -O2 -pipe"
+FCFLAGS="$COMMON_FLAGS"
+FFLAGS="$COMMON_FLAGS"
+
 CXXFLAGS="$CFLAGS"
 LDFLAGS=""
 [[ -d /usr/lib ]] && LDFLAGS+="-L/usr/lib "
