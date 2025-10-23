@@ -105,7 +105,6 @@ while true; do
         CHARD_ROOT="${choice}"
     fi
     CHARD_ROOT="${CHARD_ROOT%/}"
-    echo
     echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
     echo
     read -srp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
@@ -131,7 +130,7 @@ CHARD_ROOT="${CHARD_ROOT%/}"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 LOG_FILE="$CHARD_ROOT/chardbuild.log"
-
+echo
 echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
 echo
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
