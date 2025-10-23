@@ -411,6 +411,7 @@ done
 for target in \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
     "$CHARD_ROOT/bin/.rootrc" \
+    "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$target" ]; then
