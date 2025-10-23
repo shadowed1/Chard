@@ -15,7 +15,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 LOG_FILE="/chariot.log"
-exec > >(sudo tee -a "$LOG_FILE") 2>&1
+exec > >( tee -a "$LOG_FILE") 2>&1
 
 format_time() {
     local total_seconds=$1
