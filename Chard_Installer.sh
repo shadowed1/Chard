@@ -1145,7 +1145,8 @@ sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
 echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
-
+sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
+sudo touch "$CHARD_ROOT/var/lib/portage/world"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     mountpoint -q /proc     || mount -t proc proc /proc 2>/dev/null
@@ -1157,6 +1158,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus 2>/dev/null
 
     chmod 1777 /tmp /var/tmp
+    
+    chown root:root /var/lib/portage/world
+    chmod 644 /var/lib/portage/world
     
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
@@ -1490,8 +1494,7 @@ EOF
             ;;
     esac
 
-sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
-sudo touch "$CHARD_ROOT/var/lib/portage/world"
+
 echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords/perl" >/dev/null
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
@@ -1517,8 +1520,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
         [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
         chmod 1777 /tmp /var/tmp
-                chown root:root /var/lib/portage/world
-                chmod 644 /var/lib/portage/world
                 CHARD_HOME=\$(cat /.chard_home)
                 HOME=\$CHARD_HOME
                 source \$HOME/.bashrc 2>/dev/null
