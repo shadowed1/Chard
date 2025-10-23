@@ -1405,6 +1405,10 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 rm -rf /var/tmp/portage/dev-build/cmake-*
                 eclean-dist -d
                 
+                emerge sys-devel/gcc
+                rm -rf /var/tmp/portage/sys-devel/gcc-*
+                eclean-dist -d
+                
                 emerge dev-libs/gmp
                 rm -rf /var/tmp/portage/dev-libs/gmp-*
                 eclean-dist -d
