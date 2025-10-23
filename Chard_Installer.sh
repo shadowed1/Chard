@@ -1534,7 +1534,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 umount /run/dbus    2>/dev/null || true
             "
             show_progress
-            echo "${GREEN}[+] Chard Root is ready! ${RESET}"
+            echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
             sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
