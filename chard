@@ -264,7 +264,10 @@ case "$cmd" in
             sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/bin/.rootrc"
             sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"   -o "$CHARD_ROOT/bin/chariot"
     
-            sudo chmod +x "$CHARD_ROOT"/bin/* || true
+            sudo chmod +x "$CHARD_ROOT"/bin/SMRT"
+            sudo chmod +x "$CHARD_ROOT"/bin/chard"
+            sudo chmod +x "$CHARD_ROOT"/bin/.rootrc"
+            sudo chmod +x "$CHARD_ROOT"/bin/chariot"
     
             echo "${RESET}${CYAN}Patching CHARD_ROOT markers..."
             for file in "$CHARD_ROOT/.chardrc" "$CHARD_ROOT/.chard.env" "$CHARD_ROOT/.chard.logic" "$CHARD_ROOT/bin/SMRT" "$CHARD_ROOT/bin/chard"; do
