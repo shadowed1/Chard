@@ -659,11 +659,11 @@ sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
 # Generated based on detected architecture ($ARCH)
 
-COMMON_FLAGS="-O2 -pipe"
-CFLAGS="\${COMMON_FLAGS}"
-CXXFLAGS="\${COMMON_FLAGS}"
-FCFLAGS="\${COMMON_FLAGS}"
-FFLAGS="\${COMMON_FLAGS}"
+COMMON_FLAGS="-march=native -O2 -pipe"
+CFLAGS="${COMMON_FLAGS}"
+CXXFLAGS="${COMMON_FLAGS}"
+FCFLAGS="${COMMON_FLAGS}"
+FFLAGS="${COMMON_FLAGS}"
 
 LC_MESSAGES=C.utf8
 DISTDIR="/var/cache/distfiles"
@@ -830,10 +830,10 @@ python = '/usr/bin/python3'
 ninja = '/usr/bin/ninja'
 
 [built-in options]
-c_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
-c_link_args = ['-L/usr/lib64']
-cpp_args = ['-O2', '-pipe', '-fPIC', '-I/usr/include']
-cpp_link_args = ['-L/usr/lib64']
+c_args = ['-march=native', '-O2', '-pipe', '-fPIC', '-I/usr/include']
+c_link_args = ['-march=native', '-L/usr/lib64']
+cpp_args = ['-march=native', '-O2', '-pipe', '-fPIC', '-I/usr/include']
+cpp_link_args = ['-march=native', '-L/usr/lib64']
 fortran_args = []
 fortran_link_args = []
 objc_args = []
@@ -1066,8 +1066,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             export PYTHON=\"/bin/python3\"
             export FORCE_UNSAFE_CONFIGURE=1
             export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
-            export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-            export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+            export CFLAGS=\"-march=native -O2 -pipe -fPIC -I/usr/include\"
+            export CXXFLAGS=\"-march=native -O2 -pipe -fPIC -I/usr/include\"
             export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
             export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
             export CARGO_HOME=\$HOME/.cargo
@@ -1447,8 +1447,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 export PYTHON=\"/bin/python3\"
                 export FORCE_UNSAFE_CONFIGURE=1
                 export XDG_DATA_DIRS=\"/usr/share:/usr/local/share\"
-                export CFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
-                export CXXFLAGS=\"-O2 -pipe -fPIC -I/usr/include\"
+                export CFLAGS=\"-march=native -O2 -pipe -fPIC -I/usr/include\"
+                export CXXFLAGS=\"-march=native -O2 -pipe -fPIC -I/usr/include\"
                 export LDFLAGS=\"-L/usr/lib -L/usr/lib64\"
                 export GI_TYPELIB_PATH=/usr/lib64/girepository-1.0:\${GI_TYPELIB_PATH:-}
                 export CARGO_HOME=\$HOME/.cargo
