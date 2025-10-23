@@ -1031,13 +1031,14 @@ EOF
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
-    mountpoint -q /proc     || mount -t proc proc /proc
-    mountpoint -q /sys      || mount -t sysfs sys /sys
-    mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
-    mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
-    mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
-    mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
-    mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+    mountpoint -q /proc     || mount -t proc proc /proc 2>/dev/null
+    mountpoint -q /sys      || mount -t sysfs sys /sys 2>/dev/null
+    mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+    mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+    mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts 2>/dev/null
+    mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+    mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus 2>/dev/null
+
     chmod 1777 /tmp /var/tmp
     
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
@@ -1094,7 +1095,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     umount /dev         2>/dev/null || true
     umount /sys         2>/dev/null || true
     umount /proc        2>/dev/null || true
-    umount /dev/dbus    2>/dev/null || true
+    umount /run/dbus    2>/dev/null || true
 
 "
 
@@ -1989,7 +1990,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 umount /dev         2>/dev/null || true
                 umount /sys         2>/dev/null || true
                 umount /proc        2>/dev/null || true
-                umount /dev/dbus    2>/dev/null || true
+                umount /run/dbus    2>/dev/null || true
 
             "
             show_progress
