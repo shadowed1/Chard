@@ -2,7 +2,6 @@
 
 # <<< ROOT_MARKER >>>
 CHARD_HOME=""
-export CHARD_HOME
 # <<< END_ROOT_MARKER >>>
 
 RED=$(tput setaf 1)
