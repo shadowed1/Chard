@@ -40,7 +40,7 @@ show_progress() {
 }
 
 CHECKPOINT_FILE="/.chard_checkpoint"
-echo "${GREEN}Chard implements a checkpoint system to resume if interrupted!"
+echo "${GREEN}${BOLD}Chard implements a checkpoint system to resume if interrupted! ${RESET}${GREEN}"
 
 if [[ -f "$CHECKPOINT_FILE" ]]; then
     CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
