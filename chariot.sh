@@ -84,7 +84,6 @@ run_checkpoint 1 "emerge dev-build/make" checkpoint_1
 checkpoint_2() {
     USE="-gui" emerge -1 dev-build/cmake
     rm -rf /var/tmp/portage/dev-build/cmake-*
-    eclean-dist -d
 }
 run_checkpoint 2 'USE="-gui" emerge -1 dev-build/cmake' checkpoint_2
 
