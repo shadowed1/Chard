@@ -82,24 +82,25 @@ checkpoint_1() {
 run_checkpoint 1 "emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
-    USE="-gui" emerge -1 dev-build/cmake
-    rm -rf /var/tmp/portage/dev-build/cmake-*
-}
-run_checkpoint 2 'USE="-gui" emerge -1 dev-build/cmake' checkpoint_2
-
-checkpoint_3() {
-    emerge sys-devel/gcc
-    rm -rf /var/tmp/portage/sys-devel/gcc-*
-    eclean-dist -d
-}
-run_checkpoint 3 "emerge sys-devel/gcc" checkpoint_3
-
-checkpoint_4() {
     emerge app-portage/gentoolkit
     rm -rf /var/tmp/portage/app-portage/gentoolkit-*
     eclean-dist -d
 }
-run_checkpoint 4 "emerge app-portage/gentoolkit" checkpoint_4
+run_checkpoint 2 "emerge app-portage/gentoolkit" checkpoint_2
+
+checkpoint_3() {
+    USE="-gui" emerge -1 dev-build/cmake
+    rm -rf /var/tmp/portage/dev-build/cmake-*
+    eclean-dist -d
+}
+run_checkpoint 3 'USE="-gui" emerge -1 dev-build/cmake' checkpoint_3
+
+checkpoint_4() {
+    emerge sys-devel/gcc
+    rm -rf /var/tmp/portage/sys-devel/gcc-*
+    eclean-dist -d
+}
+run_checkpoint 4 "emerge sys-devel/gcc" checkpoint_4
 
 checkpoint_5() {
     emerge dev-libs/gmp
