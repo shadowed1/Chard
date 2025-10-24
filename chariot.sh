@@ -42,7 +42,9 @@ show_progress() {
 
 CHECKPOINT_FILE="/.chard_checkpoint"
 echo
-echo "${CYAN}${BOLD}Chariot is an Install Assistant implements a checkpoint system to resume if interrupted! ${RESET}${GREEN}"
+echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! Run:${RESET}${BLUE}"
+echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
+echo "${RESET}${BLUE}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
 echo
 
 if [[ -f "$CHECKPOINT_FILE" ]]; then
@@ -921,5 +923,16 @@ checkpoint_118() {
     eclean-dist -d
 }
 run_checkpoint 118 "emerge sys-apps/flatpak + setup flathub" checkpoint_118
-echo "Chard Root is ready${RESET}"
+
+echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
+
+reset() {
+    rm /.chard_checkpoint
+    exit 0
+}
+
+case "$1" in
+    reset) reset ;;
+    *) run_checkpoint ;;
+esac
