@@ -481,7 +481,6 @@ for target in \
 done
 
 sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
-
 SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
 SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
 sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
