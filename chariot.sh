@@ -40,7 +40,7 @@ show_progress() {
 }
 
 CHECKPOINT_FILE="/.chard_checkpoint"
-echo "${GREEN}${BOLD}Chard implements a checkpoint system to resume if interrupted! ${RESET}${GREEN}"
+echo "${CYAN}${BOLD}Chard implements a checkpoint system to resume if interrupted! ${RESET}${GREEN}"
 
 if [[ -f "$CHECKPOINT_FILE" ]]; then
     CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
@@ -56,22 +56,22 @@ run_checkpoint() {
     shift 2
 
     if (( CURRENT_CHECKPOINT < step )); then
-        echo ">>> Running checkpoint $step: $desc"
+        echo "${RESET}${GREEN}${BOLD}>>> Running checkpoint $step: $desc ${RESET}${GREEN}"
 
         "$@"
         local ret=$?
 
         if (( ret != 0 )); then
-            echo ">>> Checkpoint $step FAILED or interrupted. Exiting."
+            echo "${RESET}${RED}${BOLD}>>> Checkpoint $step FAILED or interrupted. Exiting.${RESET}${GREEN}"
             exit $ret
         fi
 
         echo $step > "$CHECKPOINT_FILE"
         sync
         CURRENT_CHECKPOINT=$step
-        echo ">>> Checkpoint $step complete"
+        echo "${RESET}${CYAN}>>> Checkpoint $step complete${RESET}${GREEN}"
     else
-        echo ">>> Skipping checkpoint $step ($desc)"
+        echo "${RESET}${YELLOW}>>> Skipping checkpoint $step ($desc) ${RESET}${GREEN}"
     fi
 }
 
