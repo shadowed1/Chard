@@ -93,9 +93,9 @@ echo "${RESET}"
 
 CHECKPOINT_FILE="/.chard_checkpoint"
 echo
-echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! Run:${RESET}${BLUE}"
+echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! Run:${RESET}${BLUE}${BOLD}"
 echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
-echo "${RESET}${BLUE}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
+echo "${RESET}${BLUE}${BOLD}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
 echo
 sleep 5
 
@@ -106,7 +106,7 @@ else
     CURRENT_CHECKPOINT=0
 fi
 
-trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}$${RED}Exiting${RESET}"; exit 1' SIGINT
+trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Exiting${RESET}"; exit 1' SIGINT
 
 run_checkpoint() {
     local step=$1
@@ -115,7 +115,7 @@ run_checkpoint() {
 
     if (( CURRENT_CHECKPOINT < step )); then
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Checkpoint $step ($desc) starting${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step ($desc) starting${RESET}${GREEN}"
         echo
 
         "$@"
@@ -123,7 +123,7 @@ run_checkpoint() {
 
         if (( ret != 0 )); then
             echo
-            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Checkpoint $step ($desc) did not finish. ${RESET}${GREEN}"
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step ($desc) did not finish. ${RESET}${GREEN}"
             echo
             exit $ret
         fi
@@ -132,10 +132,10 @@ run_checkpoint() {
         sync
         CURRENT_CHECKPOINT=$step
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Checkpoint $step ($desc) Finished${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step ($desc) Finished${RESET}${GREEN}"
         echo
     else
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${YELLOW}Checkpoint $step ($desc) Skipped${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${YELLOW}${BOLD}Checkpoint $step ($desc) Skipped${RESET}${GREEN}"
         echo
     fi
 }
