@@ -121,7 +121,7 @@ run_checkpoint() {
         sync
         CURRENT_CHECKPOINT=$step
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}Checkpoint $step ($desc) Finished${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Checkpoint $step ($desc) Finished${RESET}${GREEN}"
         echo
     else
         echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${YELLOW}Checkpoint $step ($desc) Skipped${RESET}${GREEN}"
