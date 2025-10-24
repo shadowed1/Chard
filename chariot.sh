@@ -53,7 +53,7 @@ else
     CURRENT_CHECKPOINT=0
 fi
 
-trap 'echo; echo ">>> Exiting"; exit 1' SIGINT
+trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}$${RED}Exiting${RESET}"; exit 1' SIGINT
 
 run_checkpoint() {
     local step=$1
@@ -62,7 +62,7 @@ run_checkpoint() {
 
     if (( CURRENT_CHECKPOINT < step )); then
         echo
-        echo "${RESET}${GREEN}${BOLD}>>> Running checkpoint $step: $desc ${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Running Checkpoint $step ($desc)${RESET}${GREEN}"
         echo
 
         "$@"
@@ -70,7 +70,7 @@ run_checkpoint() {
 
         if (( ret != 0 )); then
             echo
-            echo "${RESET}${RED}${BOLD}>>> Checkpoint $step FAILED or interrupted. Exiting.${RESET}${GREEN}"
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Checkpoint $step ($desc) did not finish. Exiting.${RESET}${GREEN}"
             echo
             exit $ret
         fi
@@ -78,10 +78,11 @@ run_checkpoint() {
         echo $step > "$CHECKPOINT_FILE"
         sync
         CURRENT_CHECKPOINT=$step
-        echo "${RESET}${CYAN}>>> Checkpoint $step complete${RESET}${GREEN}"
+        echo
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}Checkpoint $step ($desc) Finished${RESET}${GREEN}"
         echo
     else
-        echo "${RESET}${YELLOW}>>> Skipping checkpoint $step ($desc) ${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${YELLOW}Checkpoint $step ($desc) Skipped${RESET}${GREEN}"
         echo
     fi
 }
