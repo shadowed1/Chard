@@ -99,7 +99,6 @@ echo "${RESET}${BLUE}${BOLD}chariot reset${RESET}${RED} to reset build progress.
 echo
 sleep 5
 
-
 if [[ -f "$CHECKPOINT_FILE" ]]; then
     CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
 else
