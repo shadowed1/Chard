@@ -1,4 +1,5 @@
 #!/bin/bash
+# Chariot
 
 # <<< ROOT_MARKER >>>
 CHARD_HOME=""
@@ -41,7 +42,7 @@ show_progress() {
 
 CHECKPOINT_FILE="/.chard_checkpoint"
 echo
-echo "${CYAN}${BOLD}Chard implements a checkpoint system to resume if interrupted! ${RESET}${GREEN}"
+echo "${CYAN}${BOLD}Chariot is an Install Assistant implements a checkpoint system to resume if interrupted! ${RESET}${GREEN}"
 echo
 
 if [[ -f "$CHECKPOINT_FILE" ]]; then
