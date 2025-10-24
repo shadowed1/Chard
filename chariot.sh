@@ -88,6 +88,7 @@ echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a
 echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
 echo "${RESET}${BLUE}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
 echo
+sleep 5
 
 if [[ -f "$CHECKPOINT_FILE" ]]; then
     CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
