@@ -162,12 +162,12 @@ FFLAGS="$COMMON_FLAGS"
 
 CXXFLAGS="$CFLAGS"
 LDFLAGS=""
+[[ -d "$ROOT/usr/lib64" ]] && LDFLAGS+="-L$ROOT/usr/lib64 "
+[[ -d "$ROOT/lib64" ]] && LDFLAGS+="-L$ROOT/lib64 "
+[[ -d "$ROOT/usr/local/lib64" ]] && LDFLAGS+="-L$ROOT/usr/local/lib64 "
 [[ -d "$ROOT/usr/lib" ]] && LDFLAGS+="-L$ROOT/usr/lib "
 [[ -d "$ROOT/lib" ]] && LDFLAGS+="-L$ROOT/lib "
 [[ -d "$ROOT/usr/local/lib" ]] && LDFLAGS+="-L$ROOT/usr/local/lib "
-
-export LDFLAGS
-
 export LDFLAGS
 
 PATHS_TO_ADD=(
@@ -180,6 +180,8 @@ PATHS_TO_ADD=(
     "$ROOT/usr/bin"
 )
 LIBS_TO_ADD=(
+    "$ROOT/usr/lib64"
+    "$ROOT/lib64"
     "$ROOT/usr/lib"
     "$ROOT/lib"
     "$gcc_lib_path"
