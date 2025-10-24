@@ -1529,18 +1529,18 @@ echo "${RESET}${GREEN}Eventually a precompiled version will be made once thoroug
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
-        mountpoint -q /proc     || mount -t proc proc /proc
-        mountpoint -q /sys      || mount -t sysfs sys /sys
-        mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
-        mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
-        mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
-        mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
-        mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
-        [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-        [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-        [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-        [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-        chmod 1777 /tmp /var/tmp
+                mountpoint -q /proc     || mount -t proc proc /proc
+                mountpoint -q /sys      || mount -t sysfs sys /sys
+                mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
+                mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
+                mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
+                mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
+                mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                chmod 1777 /tmp /var/tmp
                 CHARD_HOME=\$(cat /.chard_home)
                 HOME=\$CHARD_HOME
                 source \$HOME/.bashrc 2>/dev/null
