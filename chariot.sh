@@ -115,7 +115,7 @@ run_checkpoint() {
 
     if (( CURRENT_CHECKPOINT < step )); then
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Checkpoint $step ($desc)starting${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Checkpoint $step ($desc) starting${RESET}${GREEN}"
         echo
 
         "$@"
