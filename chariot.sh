@@ -957,7 +957,7 @@ checkpoint_117() {
     ninja -C build
     ninja -C build install
 }
-run_checkpoint 117 "build sommelier from source" checkpoint_117
+run_checkpoint 117 "Build Sommelier" checkpoint_117
 
 checkpoint_118() {
     emerge sys-apps/flatpak
