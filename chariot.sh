@@ -58,13 +58,17 @@ run_checkpoint() {
     shift 2
 
     if (( CURRENT_CHECKPOINT < step )); then
+        echo
         echo "${RESET}${GREEN}${BOLD}>>> Running checkpoint $step: $desc ${RESET}${GREEN}"
+        echo
 
         "$@"
         local ret=$?
 
         if (( ret != 0 )); then
+            echo
             echo "${RESET}${RED}${BOLD}>>> Checkpoint $step FAILED or interrupted. Exiting.${RESET}${GREEN}"
+            echo
             exit $ret
         fi
 
@@ -72,8 +76,10 @@ run_checkpoint() {
         sync
         CURRENT_CHECKPOINT=$step
         echo "${RESET}${CYAN}>>> Checkpoint $step complete${RESET}${GREEN}"
+        echo
     else
         echo "${RESET}${YELLOW}>>> Skipping checkpoint $step ($desc) ${RESET}${GREEN}"
+        echo
     fi
 }
 
