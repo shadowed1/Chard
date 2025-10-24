@@ -39,6 +39,15 @@ show_progress() {
     local formatted_time=$(format_time $elapsed)
     echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
 }
+
+reset() {
+    rm /.chard_checkpoint
+    echo
+    echo "${RED}Chariot Progress Reset! ${RESET}"
+    echo
+    exit 0
+}
+
 echo ""
 echo ""
 echo "${RESET}${RED}"        
@@ -89,6 +98,7 @@ echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
 echo "${RESET}${BLUE}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
 echo
 sleep 5
+
 
 if [[ -f "$CHECKPOINT_FILE" ]]; then
     CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
@@ -970,11 +980,6 @@ run_checkpoint 118 "emerge sys-apps/flatpak + setup flathub" checkpoint_118
 
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
-
-reset() {
-    rm /.chard_checkpoint
-    exit 0
-}
 
 case "$1" in
     reset) reset ;;
