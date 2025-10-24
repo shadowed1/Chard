@@ -78,7 +78,6 @@ run_checkpoint() {
 checkpoint_1() {
     emerge dev-build/make
     rm -rf /var/tmp/portage/dev-build/make-*
-    eclean-dist -d
 }
 run_checkpoint 1 "emerge dev-build/make" checkpoint_1
 
