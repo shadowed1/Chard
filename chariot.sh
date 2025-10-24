@@ -105,7 +105,7 @@ run_checkpoint() {
 
     if (( CURRENT_CHECKPOINT < step )); then
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Running Checkpoint $step ($desc)${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}Checkpoint $step ($desc)starting${RESET}${GREEN}"
         echo
 
         "$@"
@@ -113,7 +113,7 @@ run_checkpoint() {
 
         if (( ret != 0 )); then
             echo
-            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Checkpoint $step ($desc) did not finish. Exiting.${RESET}${GREEN}"
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Checkpoint $step ($desc) did not finish. ${RESET}${GREEN}"
             echo
             exit $ret
         fi
