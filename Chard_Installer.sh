@@ -173,6 +173,13 @@ CHARD_HOME="$(dirname "$TARGET_FILE")"
 CHARD_HOME="${CHARD_HOME#/}"
 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
 
+# chroot
+# CHARD_USER=\$(cat /.chard_user)
+# USER=\$CHARD_USER
+# useradd -m -s /bin/bash $CHARD_HOME_NAME
+# passwd $CHARD_HOME_NAME
+# cp /run/user/1000/.Xauthority $CHARD_ROOT/$CHARD_HOME/.Xauthority 2>/dev/null
+
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
@@ -474,6 +481,8 @@ sudo mkdir -p "$CHARD_ROOT/var/db/repos/gentoo/profiles"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/make.profile"
 sudo mkdir -p "$CHARD_ROOT/run/user/0"
 sudo chmod 700 "$CHARD_ROOT/run/user/0"
+sudo mkdir -p "$CHARD_ROOT/run/user/1000"
+sudo chmod 700 "$CHARD_ROOT/run/user/1000"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
