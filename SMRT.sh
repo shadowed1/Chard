@@ -122,30 +122,28 @@ cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
-EOF
-source "$SMRT_ENV_FILE"
+export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
 
-if (( MEM_LIMIT_MB > 0 )); then
-    echo "Applying per-process memory limit: ${MEM_LIMIT_MB}MB"
-    ulimit -v $(( MEM_LIMIT_MB * 1024 ))
-fi
+ulimit -v $(( MEM_LIMIT_MB * 1024 ))
+
+# Aliases for parallel tools
+EOF
 
 parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
 for tool in "${parallel_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
-        alias "$tool"="$TASKSET $tool $MAKEOPTS"
+        echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
     fi
 done
 
 serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build)
 for tool in "${serial_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
-        alias "$tool"="$TASKSET $tool"
+        echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
     fi
 done
 
-echo "${GREEN}SMRT setup complete:${RESET} $ALLOCATED_COUNT threads, $MEM_LIMIT_MB MB per thread"
-
+source "$SMRT_ENV_FILE"
 
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${CYAN} - Allocated ${ALLOCATED_COUNT} threads (${PCT}%)${RESET}"
