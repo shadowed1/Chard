@@ -67,7 +67,6 @@ allocate_cores() {
     if (( requested_threads <= e_count )); then
         selected_cores=$(printf '%s,' "${E_CORE_ARRAY[@]:0:$requested_threads}" | sed 's/,$//')
     else
-        # E-cores first, then P-cores
         selected_cores="$E_CORES_ALL"
         local remaining=$((requested_threads - e_count))
         if (( remaining > 0 )); then
