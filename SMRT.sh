@@ -16,7 +16,6 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-HOME=$CHARD_HOME
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
 if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
