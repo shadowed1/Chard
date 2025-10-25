@@ -1534,10 +1534,10 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 CHARD_USER=\$(cat /.chard_user)
                 HOME=\$CHARD_HOME
                 USER=\$CHARD_USER
+                SMRT
                 source \$HOME/.bashrc 2>/dev/null
                 source \$HOME/.smrt_env.sh 2>/dev/null
                 env-update
-                SMRT
                 dbus-daemon --system --fork 2>/dev/null
                 sleep 2
                 /bin/chariot
