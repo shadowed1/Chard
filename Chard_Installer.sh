@@ -1542,6 +1542,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 env-update
                 SMRT
                 dbus-daemon --system --fork 2>/dev/null
+                /bin/chard_debug
+                sleep 2
                 /bin/chariot
                 umount /run/chrome 2>/dev/null  || true
                 umount /etc/ssl     2>/dev/null || true
@@ -1551,7 +1553,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 umount /sys         2>/dev/null || true
                 umount /proc        2>/dev/null || true
                 umount /run/dbus    2>/dev/null || true
-                
             "
             
             show_progress
@@ -1566,6 +1567,5 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
 
-            
             sudo cp "$CHARD_ROOT/chardbuild.log" ~/
             echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
