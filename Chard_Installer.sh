@@ -169,11 +169,17 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
 fi
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
-
 CHARD_HOME="$(dirname "$TARGET_FILE")"
 CHARD_HOME="${CHARD_HOME#/}"
-CHARD_USER="${CHARD_HOME%%/*}"
 
+if [[ "$CHARD_HOME" == home/* ]]; then
+    CHARD_HOME="${CHARD_HOME%%/user*}"
+
+    CHARD_USER="${CHARD_HOME#*/}"
+fi
+
+echo "CHARD_HOME: $CHARD_ROOT/$CHARD_HOME"
+echo "CHARD_USER: $CHARD_USER"
 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
 
 sudo tee "$CHARD_ROOT/.chard_home" >/dev/null <<EOF
@@ -1195,7 +1201,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     umount /sys         2>/dev/null || true
     umount /proc        2>/dev/null || true
     umount /run/dbus    2>/dev/null || true
-
 "
 
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
@@ -1515,8 +1520,8 @@ echo "${CYAN}Compiling takes a long time, so please be patient if you have a slo
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 sudo chown -R 1000:1000 "$CHARD_ROOT"
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 mountpoint -q /proc     || mount -t proc proc /proc
                 mountpoint -q /sys      || mount -t sysfs sys /sys
                 mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
@@ -1546,6 +1551,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 umount /proc        2>/dev/null || true
                 umount /run/dbus    2>/dev/null || true
             "
+            
             show_progress
             echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
             sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
