@@ -419,9 +419,11 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard"  
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"      -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"      -o "$CHARD_ROOT/bin/.rootrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"   -o "$CHARD_ROOT/bin/chariot"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"   -o "$CHARD_ROOT/bin/chard_debug"
 
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
+sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -431,6 +433,7 @@ for file in \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
+    "$CHARD_ROOT/bin/chard_debug" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
