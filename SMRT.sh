@@ -103,7 +103,6 @@ THREADS=$(( THREADS > 0 ? THREADS : 1 ))
 ALLOCATED_CORES=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | head -n $THREADS | paste -sd, -)
 ALLOCATED_COUNT=$THREADS
 
-
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
 export TASKSET='taskset -c $ALLOCATED_CORES'
