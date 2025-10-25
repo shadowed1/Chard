@@ -144,7 +144,7 @@ export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-avera
 
 ulimit -v $(( MEM_LIMIT_MB * 1024 ))
 
-# Aliases for parallel tools
+# Aliases
 EOF
 
 parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
