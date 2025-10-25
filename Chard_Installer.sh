@@ -1542,7 +1542,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 env-update
                 SMRT
                 dbus-daemon --system --fork 2>/dev/null
-                /bin/chard_debug
                 sleep 2
                 /bin/chariot
                 umount /run/chrome 2>/dev/null  || true
