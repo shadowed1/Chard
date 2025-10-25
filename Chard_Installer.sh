@@ -214,7 +214,7 @@ case "$ARCH" in
 esac
 
 sudo mkdir -p "$CHARD_ROOT/var/tmp"
-
+echo "${RED}Creating account $CHARD_USER inside $CHARD_ROOT with blank password."
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /proc     || mount -t proc proc /proc 2>/dev/null
     mountpoint -q /sys      || mount -t sysfs sys /sys 2>/dev/null
