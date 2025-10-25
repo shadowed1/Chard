@@ -226,46 +226,6 @@ case "$ARCH" in
 esac
 
 sudo mkdir -p "$CHARD_ROOT/var/tmp"
-echo "${RED}Creating account $CHARD_USER inside $CHARD_ROOT with blank password."
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-
-    mountpoint -q /proc     || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys      || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus 2>/dev/null
-    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome    2>/dev/null
-
-    
-    chmod 1777 /tmp /var/tmp
-    
-    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-    
-    CHARD_HOME=\$(cat /.chard_home)
-    CHARD_USER=\$(cat /.chard_user)
-    HOME=\$CHARD_HOME
-    USER=\$CHARD_USER
-    
-    if ! id \"\$CHARD_USER\" &>/dev/null; then
-        useradd -m -s /bin/bash \"\$CHARD_USER\"
-        passwd -d \"\$CHARD_USER\" 2>/dev/null || true
-    fi
-
-    umount /run/chrome 2>/dev/null  || true
-    umount /etc/ssl     2>/dev/null || true
-    umount /dev/pts     2>/dev/null || true
-    umount /dev/shm     2>/dev/null || true
-    umount /dev         2>/dev/null || true
-    umount /sys         2>/dev/null || true
-    umount /proc        2>/dev/null || true
-    umount /run/dbus    2>/dev/null || true
-"
-
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
 TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
@@ -370,9 +330,22 @@ cp -a . /usr/src/linux
 make INSTALL_HDR_PATH=/usr headers_install
 
 cp .config /usr/src/linux/.config
+
+CHARD_HOME=\$(cat /.chard_home)
+CHARD_USER=\$(cat /.chard_user)
+HOME=\$CHARD_HOME
+USER=\$CHARD_USER
+    
+if ! id \"\$CHARD_USER\" &>/dev/null; then
+    useradd -m -s /bin/bash \"\$CHARD_USER\"
+    passwd -d \"\$CHARD_USER\" 2>/dev/null || true
+fi
 "
 
 echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
+echo ""
+echo "${BLUE}Creating account $CHARD_USER inside $CHARD_ROOT with blank password."
+
 sudo rm -rf "$KERNEL_BUILD"
 
 CONFIG_FILE="$CHARD_ROOT/usr/src/linux/.config"
