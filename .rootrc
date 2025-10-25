@@ -10,6 +10,8 @@ HOME="/$CHARD_HOME"
 USER="$CHARD_USER"
 export HOME
 export USER
+source /$HOME/.smrt_env.sh
 source /$HOME/.bashrc
+
 
 # <<< END CHARD .ROOTRC >>>
