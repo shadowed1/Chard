@@ -459,10 +459,6 @@ CHARD_USER=\"$CHARD_USER\"\n\
 done
 
 sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
-SMRT_ENV_HOST="/usr/local/bin/.smrt_env.sh"
-SMRT_ENV_CHARD="$CHARD_ROOT/bin/.smrt_env.sh"
-sudo touch "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
-sudo chown -R 1000:1000 "$SMRT_ENV_HOST" "$SMRT_ENV_CHARD"
 
 CURRENT_SHELL=$(basename "$SHELL")
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
@@ -1534,11 +1530,10 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 CHARD_USER=\$(cat /.chard_user)
                 HOME=\$CHARD_HOME
                 USER=\$CHARD_USER
-                SMRT
                 source \$HOME/.bashrc 2>/dev/null
-                source \$HOME/.smrt_env.sh 2>/dev/null
                 env-update
                 dbus-daemon --system --fork 2>/dev/null
+                SMRT
                 sleep 2
                 /bin/chariot
                 umount /run/chrome 2>/dev/null  || true
