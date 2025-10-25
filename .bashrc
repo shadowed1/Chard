@@ -228,7 +228,6 @@ export CLUTTER_BACKEND="x11"
 export EMERGE_DEFAULT_OPTS="--quiet-build=y"
 # export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
 
-
 MAKECONF="$ROOT/etc/portage/make.conf"
 if [[ -w "$MAKECONF" ]]; then
     sed -i "/^PYTHON_TARGETS=/d" "$MAKECONF"
