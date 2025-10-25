@@ -6,7 +6,7 @@ CHARD_HOME=""
 CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
-HOME=$CHARD_HOME
+HOME=/$CHARD_HOME
 export HOME
 source /$HOME/.bashrc
 
