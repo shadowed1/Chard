@@ -225,7 +225,9 @@ export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/share"
 export DISPLAY=":0"
 export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
-export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
+export EMERGE_DEFAULT_OPTS="--quiet-build=y"
+# export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
+
 
 MAKECONF="$ROOT/etc/portage/make.conf"
 if [[ -w "$MAKECONF" ]]; then
