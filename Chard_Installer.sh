@@ -216,6 +216,7 @@ esac
 sudo mkdir -p "$CHARD_ROOT/var/tmp"
 echo "${RED}Creating account $CHARD_USER inside $CHARD_ROOT with blank password."
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
+
     mountpoint -q /proc     || mount -t proc proc /proc 2>/dev/null
     mountpoint -q /sys      || mount -t sysfs sys /sys 2>/dev/null
     mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev 2>/dev/null
@@ -249,7 +250,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     umount /proc        2>/dev/null || true
     umount /run/dbus    2>/dev/null || true
 "
-
 
 PORTAGE_DIR="$CHARD_ROOT/usr/portage"
 SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
@@ -1190,9 +1190,11 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
     
     CHARD_HOME=\$(cat /.chard_home)
+    CHARD_USER=\$(cat /.chard_user)
     HOME=\$CHARD_HOME
+    USER=\$CHARD_USER
 
-    #chown root:root /var/lib/portage/world
+    chown \$USER:\$USER /var/lib/portage/world
     chmod 644 /var/lib/portage/world
     
     source \$HOME/.bashrc 2>/dev/null
@@ -1541,7 +1543,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
                 chmod 1777 /tmp /var/tmp
                 CHARD_HOME=\$(cat /.chard_home)
+                CHARD_USER=\$(cat /.chard_user)
                 HOME=\$CHARD_HOME
+                USER=\$CHARD_USER
                 source \$HOME/.bashrc 2>/dev/null
                 env-update
                 SMRT
