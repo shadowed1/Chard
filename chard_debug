@@ -6,7 +6,17 @@ CHARD_HOME=""
 CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
 echo "===== CHARD DEBUG ====="
+echo "${RED}"
 echo "CHARD_ROOT: $CHARD_ROOT"
 echo "CHARD_HOME: $CHARD_HOME"
 echo "CHARD_USER: $CHARD_USER"
@@ -18,14 +28,14 @@ echo "SANDBOX: $SANDBOX"
 echo "GIT_EXEC_PATH: $GIT_EXEC_PATH"
 echo "XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR"
 echo "PYTHONMULTIPROCESSING_START_METHOD: $PYTHONMULTIPROCESSING_START_METHOD"
-
+echo "${RESET}${YELLOW}"
 echo "PORTDIR: $PORTDIR"
 echo "DISTDIR: $DISTDIR"
 echo "PKGDIR: $PKGDIR"
 echo "PORTAGE_TMPDIR: $PORTAGE_TMPDIR"
-
+echo
 echo "PERL5LIB: $PERL5LIB"
-
+echo "${RESET}${GREEN}"
 echo "PYTHON_TARGETS: $PYTHON_TARGETS"
 echo "PYTHON_SINGLE_TARGET: $PYTHON_SINGLE_TARGET"
 echo "PYTHONPATH: $PYTHONPATH"
@@ -33,10 +43,10 @@ echo "PYEXEC_DIR: $PYEXEC_DIR"
 echo "EPYTHON: $EPYTHON"
 echo "PYTHON: $PYTHON"
 echo "PORTAGE_PYTHON: $PORTAGE_PYTHON"
-
+echo
 echo "LLVM_DIR: $LLVM_DIR"
 echo "LLVM_VERSION: $LLVM_VERSION"
-
+echo "${RESET}${CYAN}
 echo "CC: $CC"
 echo "CXX: $CXX"
 echo "AR: $AR"
@@ -44,13 +54,13 @@ echo "NM: $NM"
 echo "RANLIB: $RANLIB"
 echo "STRIP: $STRIP"
 echo "LD: $LD"
-
+echo "${RESET}${BLUE}
 echo "CFLAGS: $CFLAGS"
 echo "CXXFLAGS: $CXXFLAGS"
 echo "LDFLAGS: $LDFLAGS"
 echo "FCFLAGS: $FCFLAGS"
 echo "FFLAGS: $FFLAGS"
-
+echo "${RESET}${MAGENTA}
 echo "PATH: $PATH"
 echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
 echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
@@ -65,5 +75,5 @@ echo "DISPLAY: $DISPLAY"
 echo "GDK_BACKEND: $GDK_BACKEND"
 echo "CLUTTER_BACKEND: $CLUTTER_BACKEND"
 echo "EMERGE_DEFAULT_OPTS: $EMERGE_DEFAULT_OPTS"
-
-echo "===================================="
+echo "${RESET}
+echo "====================================${RESET}"
