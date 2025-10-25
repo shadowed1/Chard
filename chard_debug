@@ -1,4 +1,10 @@
+# Chard Debug
 
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
+# <<< END_CHARD_ROOT_MARKER >>>
 
 echo "===== CHARD DEBUG ====="
 echo "CHARD_ROOT: $CHARD_ROOT"
