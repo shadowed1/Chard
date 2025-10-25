@@ -127,7 +127,6 @@ if [[ -d "$LLVM_BASE" ]]; then
         ver=$(basename "$d")       # strip path
         [[ $ver =~ ^[0-9]+(\.[0-9]+)*$ ]] && all_llvm_versions+=("$ver")
     done
-    # Sort versions
     mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V)
 fi
 
