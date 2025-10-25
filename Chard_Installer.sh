@@ -822,7 +822,7 @@ AR="/usr/bin/gcc-ar"
 RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
 FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
-USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt dbus dri dri3 dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit lcms libnotify libtirpc llvm mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds proprietary-codecs qml qt5 qt6 readline sdl seccomp sound spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd zstd -elogind"
+USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt cube dbus dri dri3 dts encode exif flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit lcms libnotify libtirpc llvm mad mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp pam pango pcre pdf png ppds proprietary-codecs qml qt5 qt6 readline sdl seccomp sound spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis vulkan wayland wxwidgets x264 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd zstd -elogind"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
 VIDEO_CARDS="$VIDEO_CARDS"
@@ -1148,6 +1148,8 @@ EOF
 if [[ -n "$ACCEL" ]]; then
     echo "    Option \"AccelMethod\" \"$ACCEL\"" | sudo tee -a "$XORG_CONF_DIR/20-glamor.conf" > /dev/null
 fi
+
+echo "EndSection" | sudo tee -a "$XORG_CONF_DIR/20-glamor.conf" > /dev/null
 
 if [[ -n "$GPU_VENDOR" && "$GPU_VENDOR" != "unknown" ]]; then
     echo "${BLUE}Detected GPU:${RESET}${GREEN} $GPU_VENDOR ($ARCH)${RESET}"
