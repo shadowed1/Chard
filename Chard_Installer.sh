@@ -137,12 +137,14 @@ echo
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 
 echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
-sudo umount -l "$CHARD_ROOT/dev/shm"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"           2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/etc/ssl"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"       2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
 
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
@@ -192,7 +194,11 @@ EOF
 
 sudo cp /run/user/1000/.Xauthority $CHARD_ROOT/$CHARD_HOME/.Xauthority 2>/dev/null
 
+sudo mkdir -p "$CHARD_ROOT/run/chrome"
+sudo mkdir -p "$CHARD_ROOT/run/dbus"
+
 ARCH=$(uname -m)
+
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
     aarch64) CHOST=aarch64-unknown-linux-gnu ;;
@@ -230,6 +236,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts 2>/dev/null
     mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl 2>/dev/null
     mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus 2>/dev/null
+    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome    2>/dev/null
+
     
     chmod 1777 /tmp /var/tmp
     
@@ -247,7 +255,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         useradd -m -s /bin/bash \"\$CHARD_USER\"
         passwd -d \"\$CHARD_USER\" 2>/dev/null || true
     fi
-    
+
+    umount /run/chrome 2>/dev/null  || true
     umount /etc/ssl     2>/dev/null || true
     umount /dev/pts     2>/dev/null || true
     umount /dev/shm     2>/dev/null || true
@@ -525,12 +534,16 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
-    sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+
+    
     sudo cp "$CHARD_ROOT/chardbuild.log" ~/
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
     
@@ -1169,13 +1182,15 @@ sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
 sudo touch "$CHARD_ROOT/var/lib/portage/world"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
-    mountpoint -q /proc     || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys      || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus 2>/dev/null
+    mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
+    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+
 
     chmod 1777 /tmp /var/tmp
     
@@ -1196,22 +1211,28 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     emerge --sync
 
-    umount /etc/ssl     2>/dev/null || true
-    umount /dev/pts     2>/dev/null || true
-    umount /dev/shm     2>/dev/null || true
-    umount /dev         2>/dev/null || true
-    umount /sys         2>/dev/null || true
-    umount /proc        2>/dev/null || true
-    umount /run/dbus    2>/dev/null || true
+    umount /run/chrome 2>/dev/null || true
+    umount /run/dbus   2>/dev/null || true
+    umount /etc/ssl    2>/dev/null || true
+    umount /dev/pts    2>/dev/null || true
+    umount /dev/shm    2>/dev/null || true
+    umount /dev        2>/dev/null || true
+    umount /sys        2>/dev/null || true
+    umount /proc       2>/dev/null || true
 "
 
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
-sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
+
+sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+
+
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
@@ -1524,13 +1545,14 @@ echo "${RESET}${GREEN}Eventually a precompiled version will be made once thoroug
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-                mountpoint -q /proc     || mount -t proc proc /proc
-                mountpoint -q /sys      || mount -t sysfs sys /sys
-                mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev
-                mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm
-                mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts
-                mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl
-                mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus
+               mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+               mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+               mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+               mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+               mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+               mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+               mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
+               mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
                 [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
                 [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
                 [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -1545,6 +1567,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 SMRT
                 dbus-daemon --system --fork 2>/dev/null
                 /bin/chariot
+                umount /run/chrome 2>/dev/null  || true
                 umount /etc/ssl     2>/dev/null || true
                 umount /dev/pts     2>/dev/null || true
                 umount /dev/shm     2>/dev/null || true
@@ -1552,14 +1575,21 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 umount /sys         2>/dev/null || true
                 umount /proc        2>/dev/null || true
                 umount /run/dbus    2>/dev/null || true
+                
             "
             
             show_progress
             echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
-            sudo umount -l "$CHARD_ROOT/dev/shm" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc"    2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/etc/ssl" 2>/dev/null || true
+            
+            sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+
+            
             sudo cp "$CHARD_ROOT/chardbuild.log" ~/
             echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
