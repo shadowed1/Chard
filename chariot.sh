@@ -1,9 +1,11 @@
 #!/bin/bash
 # Chariot
 
-# <<< ROOT_MARKER >>>
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
 CHARD_HOME=""
-# <<< END_ROOT_MARKER >>>
+CHARD_USER=""
+# <<< END_CHARD_ROOT_MARKER >>>
 
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
