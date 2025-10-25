@@ -519,7 +519,6 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
 
-    
     sudo cp "$CHARD_ROOT/chardbuild.log" ~/
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
     
@@ -1206,8 +1205,6 @@ sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-
-
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
