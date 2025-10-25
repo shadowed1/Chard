@@ -1181,8 +1181,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     USER=\$CHARD_USER
 
     chown \$USER:\$USER /var/lib/portage/world
-    chmod 644 /var/lib/portage/world
-    
+    chmod 644 /var/lib/portage/world 
     source \$HOME/.bashrc 2>/dev/null
 
     emerge --sync
@@ -1539,6 +1538,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 HOME=\$CHARD_HOME
                 USER=\$CHARD_USER
                 source \$HOME/.bashrc 2>/dev/null
+                source \$HOME/.smrt_env.sh 2>/dev/null
                 env-update
                 SMRT
                 dbus-daemon --system --fork 2>/dev/null
