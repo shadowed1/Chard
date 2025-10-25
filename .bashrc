@@ -23,6 +23,7 @@ case "$ARCH" in
 esac
 
 HOME="/$CHARD_HOME"
+USER="$CHARD_USER"
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 
