@@ -27,7 +27,6 @@ else
         /cpu MHz/ && c>=0 {print c ":" $4; c=-1}
     ' /proc/cpuinfo | sort -t: -k2,2n)
 fi
-
 TOTAL_CORES=$(nproc)
 
 if (( ${#CORES[@]} == 0 )); then
@@ -37,64 +36,73 @@ else
     mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
     count=${#mhz_values[@]}
     mid=$((count / 2))
-    
     if (( count % 2 == 0 )); then
         threshold=$(awk "BEGIN {print (${mhz_values[mid-1]} + ${mhz_values[mid]}) / 2}")
     else
         threshold="${mhz_values[mid]}"
     fi
-    
-    E_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | \
-        awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
-    P_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | \
-        awk -v t="$threshold" -F: '{if ($2 > t) print $1}' | paste -sd, -)
-    
-    if [[ -z "$E_CORES_ALL" ]]; then
-        E_CORES_ALL=$(seq -s, 0 $((TOTAL_CORES - 1)))
-        P_CORES_ALL=""
-    fi
+    E_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
+    P_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | awk -v t="$threshold" -F: '{if ($2 > t) print $1}' | paste -sd, -)
+    [[ -z "$E_CORES_ALL" ]] && { E_CORES_ALL=$(seq -s, 0 $((TOTAL_CORES - 1))); P_CORES_ALL=""; }
 fi
 
 allocate_cores() {
     local requested_threads=$1
     local selected_cores=""
-    
     IFS=',' read -ra E_CORE_ARRAY <<< "$E_CORES_ALL"
     IFS=',' read -ra P_CORE_ARRAY <<< "$P_CORES_ALL"
-    
     local e_count=${#E_CORE_ARRAY[@]}
     local p_count=${#P_CORE_ARRAY[@]}
-    
     (( requested_threads > TOTAL_CORES )) && requested_threads=$TOTAL_CORES
     (( requested_threads < 1 )) && requested_threads=1
-    
     if (( requested_threads <= e_count )); then
         selected_cores=$(printf '%s,' "${E_CORE_ARRAY[@]:0:$requested_threads}" | sed 's/,$//')
     else
         selected_cores="$E_CORES_ALL"
         local remaining=$((requested_threads - e_count))
-        
         if [[ -n "$P_CORES_ALL" ]] && (( remaining > 0 )); then
             local p_cores_needed=$(printf '%s,' "${P_CORE_ARRAY[@]:0:$remaining}" | sed 's/,$//')
             selected_cores="${selected_cores},${p_cores_needed}"
         fi
     fi
-    
     echo "$selected_cores"
 }
 
 PCT="${1:-75}" 
-
 if ! [[ "$PCT" =~ ^[0-9]+$ ]] || (( PCT < 1 || PCT > 100 )); then
     echo "${RED}Error: Please provide a percentage between 1 and 100${RESET}"
     exit 1
 fi
-
 REQUESTED_THREADS=$(( (TOTAL_CORES * PCT + 99) / 100 ))
 (( REQUESTED_THREADS < 1 )) && REQUESTED_THREADS=1
-
 ALLOCATED_CORES=$(allocate_cores $REQUESTED_THREADS)
 ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
+
+MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
+
+if (( MEM_GB <= 1 )); then
+    MEM_LIMIT_MB=512
+    THREADS=1
+elif (( MEM_GB <= 2 )); then
+    MEM_LIMIT_MB=1024
+    THREADS=1
+elif (( MEM_GB <= 4 )); then
+    MEM_LIMIT_MB=1024
+    THREADS=$REQUESTED_THREADS
+elif (( MEM_GB <= 16 )); then
+    MEM_LIMIT_MB=2048
+    THREADS=$REQUESTED_THREADS
+else
+    MEM_LIMIT_MB=0
+    THREADS=$REQUESTED_THREADS
+fi
+
+THREADS=$(( THREADS > 0 ? THREADS : 1 ))
+
+ALLOCATED_CORES=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | head -n $THREADS | paste -sd, -)
+ALLOCATED_COUNT=$THREADS
+
 
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
@@ -102,6 +110,21 @@ export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
 EOF
 source "$SMRT_ENV_FILE"
+
+if (( MEM_LIMIT_MB > 0 )); then
+    echo "Applying per-process memory limit: ${MEM_LIMIT_MB}MB"
+    ulimit -v $(( MEM_LIMIT_MB * 1024 ))
+fi
+
+CGROUP_DIR="/sys/fs/cgroup/smrt_build"
+if [[ -w /sys/fs/cgroup ]]; then
+    mkdir -p $CGROUP_DIR 2>/dev/null || true
+    if (( MEM_LIMIT_MB > 0 )); then
+        echo $(( MEM_LIMIT_MB * 1024 * 1024 )) | sudo tee $CGROUP_DIR/memory.max >/dev/null 2>&1
+    fi
+    echo $ALLOCATED_COUNT | sudo tee $CGROUP_DIR/cpu.max >/dev/null 2>&1
+    echo "Build processes can be run with: sudo cgexec -g memory,cpu:$CGROUP_DIR <command>"
+fi
 
 parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
 for tool in "${parallel_tools[@]}"; do
@@ -117,17 +140,27 @@ for tool in "${serial_tools[@]}"; do
     fi
 done
 
+echo "${GREEN}SMRT setup complete:${RESET} $ALLOCATED_COUNT threads, $MEM_LIMIT_MB MB per thread"
+
+
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${CYAN} - Allocated ${ALLOCATED_COUNT} threads (${PCT}%)${RESET}"
 echo ""
 echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
 echo "${CYAN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
 echo
-echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
+[[ -n "$E_CORES_ALL" ]] && echo "${GREEN}E-Cores Available:               ${BOLD}$E_CORES_ALL ${RESET}"
 [[ -n "$P_CORES_ALL" ]] && echo "${GREEN}P-Cores Available:               ${BOLD}$P_CORES_ALL ${RESET}"
 echo ""
 echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
 echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
 echo ""
+echo "${YELLOW}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
+if (( MEM_LIMIT_MB > 0 )); then
+    echo "${YELLOW}Thread Memory Limit:             ${BOLD}${MEM_LIMIT_MB} MB ${RESET}"
+else
+    echo "${YELLOW}Thread Memory Limit:         ${BOLD}Unlimited ${RESET}"
+fi
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo ""
+
