@@ -22,7 +22,7 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
-HOME="$CHARD_HOME"
+HOME="/$CHARD_HOME"
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 
