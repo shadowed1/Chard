@@ -16,8 +16,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-SCRIPT_DIR="${SCRIPT_DIR:-$HOME}"
-SMRT_ENV_FILE="$SCRIPT_DIR/.smrt_env.sh"
+SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
 if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
     mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
