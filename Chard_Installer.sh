@@ -1484,7 +1484,7 @@ EOF
             ;;
         mediatek)
             DRIVER="panfrost"
-            echo "export MESA_LOADER_DRIVER_OVERRIDE=msm" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+            echo "export MESA_LOADER_DRIVER_OVERRIDE=panfrost" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
             ;;
         vivante)
             DRIVER="etnaviv"
