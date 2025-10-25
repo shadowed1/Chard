@@ -118,7 +118,7 @@ run_checkpoint() {
 
     if (( CURRENT_CHECKPOINT < step )); then
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step ($desc) starting${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step ($desc) Starting${RESET}${GREEN}"
         echo
 
         "$@"
@@ -126,7 +126,7 @@ run_checkpoint() {
 
         if (( ret != 0 )); then
             echo
-            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step ($desc) did not finish. ${RESET}${GREEN}"
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step ($desc) did not finish. ${RESET}${GREEN}"
             echo
             exit $ret
         fi
@@ -135,10 +135,10 @@ run_checkpoint() {
         sync
         CURRENT_CHECKPOINT=$step
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step ($desc) Finished${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step ($desc) Finished${RESET}${GREEN}"
         echo
     else
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${YELLOW}${BOLD}Checkpoint $step ($desc) Skipped${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${YELLOW}${BOLD}Checkpoint $step ($desc) Skipped${RESET}${GREEN}"
         echo
     fi
 }
