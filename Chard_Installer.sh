@@ -172,7 +172,7 @@ echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 
 CHARD_HOME="$(dirname "$TARGET_FILE")"
 CHARD_HOME="${CHARD_HOME#/}"
-CHARD_USER="${CHARD_HOME##*/}"
+CHARD_USER="${CHARD_HOME%%/*}"
 
 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
 
@@ -440,43 +440,30 @@ for file in \
     "$CHARD_ROOT/.chard.env" \
     "$CHARD_ROOT/.chard.logic" \
     "$CHARD_ROOT/bin/SMRT" \
+    "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
+    "$CHARD_ROOT/bin/.rootrc" \
+    "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
         if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
             sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
-# <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\n# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+# <<< CHARD_ROOT_MARKER >>>\n\
+CHARD_ROOT=\"$CHARD_ROOT\"\n\
+CHARD_HOME=\"$CHARD_HOME\"\n\
+CHARD_USER=\"$CHARD_USER\"\n\
+# <<< END_CHARD_ROOT_MARKER >>>" "$file"
         else
-            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\nCHARD_ROOT=\"$CHARD_ROOT\"\n# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\n\
+CHARD_ROOT=\"$CHARD_ROOT\"\n\
+CHARD_HOME=\"$CHARD_HOME\"\n\
+CHARD_USER=\"$CHARD_USER\"\n\
+# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
         fi
 
         sudo chmod +x "$file"
     else
         echo "${RED}[!] Missing: $file — download failed?${RESET}"
-    fi
-done
-
-for target in \
-    "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-    "$CHARD_ROOT/bin/.rootrc" \
-    "$CHARD_ROOT/.chardrc" \
-    "$CHARD_ROOT/bin/chariot" \
-    "$CHARD_ROOT/bin/chard"; do
-
-    if [ -f "$target" ]; then
-        if sudo grep -q '^# <<< ROOT_MARKER >>>' "$target"; then
-            sudo sed -i -E "/^# <<< ROOT_MARKER >>>/,/^# <<< END_ROOT_MARKER >>>/c\
-    # <<< ROOT_MARKER >>>\nCHARD_HOME=\"/$CHARD_HOME\"\n# <<< END_ROOT_MARKER >>>" "$target"
-        else
-            {
-                echo ""
-                echo "# <<< ROOT_MARKER >>>"
-                echo "CHARD_HOME=\"/$CHARD_HOME\""
-                echo "# <<< END_ROOT_MARKER >>>"
-            } | sudo tee -a "$target" >/dev/null
-        fi
-    else
-        echo "${RED}[!] Missing: $target — cannot patch ROOT_MARKER${RESET}"
     fi
 done
 
