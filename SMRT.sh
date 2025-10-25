@@ -44,6 +44,15 @@ else
     E_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
     P_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | awk -v t="$threshold" -F: '{if ($2 > t) print $1}' | paste -sd, -)
     [[ -z "$E_CORES_ALL" ]] && { E_CORES_ALL=$(seq -s, 0 $((TOTAL_CORES - 1))); P_CORES_ALL=""; }
+
+    E_CORES_ALL=$(echo "$E_CORES_ALL" | tr ',' '\n' | sort -n | paste -sd, -)
+    P_CORES_ALL=$(echo "$P_CORES_ALL" | tr ',' '\n' | sort -n | paste -sd, -)
+
+    if [[ -z "$ALLOCATED_CORES" ]]; then
+    TASKSET=""
+    else
+        TASKSET="taskset -c $ALLOCATED_CORES"
+    fi
 fi
 
 allocate_cores() {
@@ -52,17 +61,17 @@ allocate_cores() {
     IFS=',' read -ra E_CORE_ARRAY <<< "$E_CORES_ALL"
     IFS=',' read -ra P_CORE_ARRAY <<< "$P_CORES_ALL"
     local e_count=${#E_CORE_ARRAY[@]}
-    local p_count=${#P_CORE_ARRAY[@]}
     (( requested_threads > TOTAL_CORES )) && requested_threads=$TOTAL_CORES
     (( requested_threads < 1 )) && requested_threads=1
+    
     if (( requested_threads <= e_count )); then
         selected_cores=$(printf '%s,' "${E_CORE_ARRAY[@]:0:$requested_threads}" | sed 's/,$//')
     else
+        # E-cores first, then P-cores
         selected_cores="$E_CORES_ALL"
         local remaining=$((requested_threads - e_count))
-        if [[ -n "$P_CORES_ALL" ]] && (( remaining > 0 )); then
-            local p_cores_needed=$(printf '%s,' "${P_CORE_ARRAY[@]:0:$remaining}" | sed 's/,$//')
-            selected_cores="${selected_cores},${p_cores_needed}"
+        if (( remaining > 0 )); then
+            selected_cores="${selected_cores},$(printf '%s,' "${P_CORE_ARRAY[@]:0:$remaining}" | sed 's/,$//')"
         fi
     fi
     echo "$selected_cores"
@@ -82,16 +91,22 @@ MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
 
 if (( MEM_GB <= 1 )); then
-    MEM_LIMIT_MB=512
+    MEM_LIMIT_MB=128
     THREADS=1
 elif (( MEM_GB <= 2 )); then
-    MEM_LIMIT_MB=1024
+    MEM_LIMIT_MB=256
     THREADS=1
 elif (( MEM_GB <= 4 )); then
-    MEM_LIMIT_MB=1024
+    MEM_LIMIT_MB=384
+    THREADS=$REQUESTED_THREADS
+elif (( MEM_GB <= 8 )); then
+    MEM_LIMIT_MB=768
     THREADS=$REQUESTED_THREADS
 elif (( MEM_GB <= 16 )); then
     MEM_LIMIT_MB=2048
+    THREADS=$REQUESTED_THREADS
+elif (( MEM_GB <= 32 )); then
+    MEM_LIMIT_MB=4096
     THREADS=$REQUESTED_THREADS
 else
     MEM_LIMIT_MB=0
@@ -100,8 +115,9 @@ fi
 
 THREADS=$(( THREADS > 0 ? THREADS : 1 ))
 
-ALLOCATED_CORES=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | head -n $THREADS | paste -sd, -)
-ALLOCATED_COUNT=$THREADS
+ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
+TASKSET="taskset -c $ALLOCATED_CORES"
+MAKEOPTS="-j$ALLOCATED_COUNT"
 
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
@@ -113,16 +129,6 @@ source "$SMRT_ENV_FILE"
 if (( MEM_LIMIT_MB > 0 )); then
     echo "Applying per-process memory limit: ${MEM_LIMIT_MB}MB"
     ulimit -v $(( MEM_LIMIT_MB * 1024 ))
-fi
-
-CGROUP_DIR="/sys/fs/cgroup/smrt_build"
-if [[ -w /sys/fs/cgroup ]]; then
-    mkdir -p $CGROUP_DIR 2>/dev/null || true
-    if (( MEM_LIMIT_MB > 0 )); then
-        echo $(( MEM_LIMIT_MB * 1024 * 1024 )) | sudo tee $CGROUP_DIR/memory.max >/dev/null 2>&1
-    fi
-    echo $ALLOCATED_COUNT | sudo tee $CGROUP_DIR/cpu.max >/dev/null 2>&1
-    echo "Build processes can be run with: sudo cgexec -g memory,cpu:$CGROUP_DIR <command>"
 fi
 
 parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
@@ -162,4 +168,3 @@ else
 fi
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo ""
-
