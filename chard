@@ -338,12 +338,15 @@ case "$cmd" in
         read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] ${RESET}" ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             echo "${RESET}${MAGENTA}[*] Unmounting active bind mounts...${RESET}"
-            sudo umount -l "$CHARD_ROOT/dev/shm"  2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/etc/ssl"  2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+
             echo "${BLUE}[*] Removing $CHARD_ROOT${RESET}"
             sudo rm -rf "$CHARD_ROOT"   
             sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE" 2>/dev/null || true
@@ -361,13 +364,14 @@ case "$cmd" in
     root)
         sudo chroot $CHARD_ROOT /bin/bash -c "
 
-            mountpoint -q /proc     || mount -t proc proc /proc 2>/dev/null
-            mountpoint -q /sys      || mount -t sysfs sys /sys 2>/dev/null
-            mountpoint -q /dev      || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-            mountpoint -q /dev/shm  || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-            mountpoint -q /dev/pts  || mount -t devpts devpts /dev/pts 2>/dev/null
-            mountpoint -q /etc/ssl  || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-            mountpoint -q /run/dbus || mount --bind /run/dbus /run/dbus 2>/dev/null
+            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+            mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
 
             chmod 1777 /tmp /var/tmp
         
@@ -381,13 +385,14 @@ case "$cmd" in
             dbus-daemon --system --fork 2>/dev/null        
             /bin/bash
 
-            umount /etc/ssl     2>/dev/null || true
-            umount /dev/pts     2>/dev/null || true
-            umount /dev/shm     2>/dev/null || true
-            umount /dev         2>/dev/null || true
-            umount /sys         2>/dev/null || true
-            umount /proc        2>/dev/null || true
-            umount /run/dbus    2>/dev/null || true
+            umount -l /run/chrome   2>/dev/null || true
+            umount -l /run/dbus     2>/dev/null || true
+            umount -l /etc/ssl      2>/dev/null || true
+            umount -l /dev/pts      2>/dev/null || true
+            umount -l /dev/shm      2>/dev/null || true
+            umount -l /dev          2>/dev/null || true
+            umount -l /sys          2>/dev/null || true
+            umount -l /proc         2>/dev/null || true
         "
         ;;
     categories|cat)
