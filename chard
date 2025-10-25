@@ -381,6 +381,7 @@ case "$cmd" in
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
             CHARD_HOME=\$(cat /.chard_home)
             HOME=\$CHARD_HOME
+            source \$HOME/.smrt_env.sh 2>/dev/null
             source \$HOME/.bashrc 2>/dev/null
             dbus-daemon --system --fork 2>/dev/null
             export MAKEOPTS
