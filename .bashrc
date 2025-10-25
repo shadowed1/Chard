@@ -31,6 +31,8 @@ if [[ "$ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
 
+source "$HOME/.smrt_env_file"
+
 export ARCH
 export CHOST
 export CHARD_RC="$ROOT/.chardrc"
