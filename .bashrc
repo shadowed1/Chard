@@ -118,10 +118,16 @@ else
 fi
 
 LLVM_BASE="$ROOT/usr/lib/llvm"
+all_llvm_versions=()
+
 if [[ -d "$LLVM_BASE" ]]; then
-    mapfile -t all_llvm_versions < <(ls -1 "$LLVM_BASE" 2>/dev/null | grep -E '^[0-9]+(\.[0-9]+)*$' | sort -V)
-else
-    all_llvm_versions=()
+    for d in "$LLVM_BASE"/*/; do
+        [[ -d "$d" ]] || continue
+        ver=$(basename "$d")       # strip path
+        [[ $ver =~ ^[0-9]+(\.[0-9]+)*$ ]] && all_llvm_versions+=("$ver")
+    done
+    # Sort versions
+    mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V)
 fi
 
 latest_llvm=""
