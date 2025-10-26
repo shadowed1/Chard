@@ -16,7 +16,6 @@ if [[ -t 1 && "$TERM" != "dumb" ]]; then
     BOLD="\033[1m"
     RESET="\033[0m"
 else
-    # No color support (non-interactive or dumb terminal)
     RED=""; GREEN=""; YELLOW=""; BLUE=""; MAGENTA=""; CYAN=""; BOLD=""; RESET=""
 fi
 
