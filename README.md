@@ -16,7 +16,7 @@
 
 <br>
 
-- To install, open up crosh, paste in shell: <br>
+- To install, paste in shell: <br>
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
 
