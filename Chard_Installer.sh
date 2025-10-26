@@ -259,9 +259,6 @@ else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
 fi
 
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/Chard/main/chard -o "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
-
 export PYTHON="$CHARD_ROOT/bin/python3"
 export CC="$CHARD_ROOT/usr/bin/gcc"
 export CXX="$CHARD_ROOT/usr/bin/g++"
@@ -420,6 +417,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
 
+sudo chmod +x "$CHARD_ROOT/bin/SMRT"
+sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
