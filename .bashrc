@@ -240,7 +240,6 @@ eselect python set "python${second_dot}" 2>/dev/null || true
 eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 
 alias smrt='SMRT'
-[[ -f $ROOT/bin/.smrt_env.sh ]] && source $ROOT/bin/.smrt_env.sh
 dbus-daemon --system --fork 2>/dev/null
 
 # <<< END CHARD .BASHRC >>>
