@@ -91,6 +91,7 @@
 - Rust
 - OpenSSL
 - Curl
+- Mesa
 - Flatpak
 - And Many More
 
