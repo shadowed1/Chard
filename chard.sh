@@ -473,7 +473,10 @@ EOF
         fi
         ;;
     root)
-        sudo chroot $CHARD_ROOT /bin/bash -c "
+sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"    || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
     mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
@@ -502,6 +505,7 @@ EOF
     USER=\$CHARD_HOME
     source \$HOME/.bashrc 2>/dev/null
     source \$HOME/.smrt_env.sh
+
     dbus-daemon --system --fork 2>/dev/null
 
     /bin/bash
@@ -517,6 +521,8 @@ EOF
     umount -l /proc        2>/dev/null || true
 "
 
+sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
