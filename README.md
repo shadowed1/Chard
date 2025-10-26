@@ -18,13 +18,13 @@
 
 ## Download:
 
-- For ChromeOS download, open crosh, and paste in shell: <br>
+- For ChromeOS open crosh, type in `shell` and paste: <br>
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
 
 <br>
 
-- For all Linux distros (and ChromeOS with sudo in crosh shell), open terminal and paste : <br>
+- For all Linux distros (and ChromeOS with sudo in shell), open terminal and paste : <br>
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")</pre> 
 
 
