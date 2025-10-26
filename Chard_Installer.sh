@@ -364,33 +364,34 @@ mkdir -p \"/\$CHARD_HOME\"
 chown \$USER_ID:\$GROUP_ID \"/\$CHARD_HOME\"
 "
 
-sudo mkdir -p "$CHARD_ROOT/etc/portage" \
-              "$CHARD_ROOT/etc/sandbox.d" \
-              "$CHARD_ROOT/etc/ssl" \
-              "$CHARD_ROOT/usr/bin" \
-              "$CHARD_ROOT/usr/lib" \
-              "$CHARD_ROOT/usr/lib64" \
-              "$CHARD_ROOT/usr/include" \
-              "$CHARD_ROOT/usr/share" \
-              "$CHARD_ROOT/usr/local/bin" \
-              "$CHARD_ROOT/usr/local/lib" \
-              "$CHARD_ROOT/usr/local/include" \
-              "$CHARD_ROOT/var/tmp/build" \
-              "$CHARD_ROOT/var/cache/distfiles" \
-              "$CHARD_ROOT/var/cache/packages" \
-              "$CHARD_ROOT/var/log" \
-              "$CHARD_ROOT/var/run" \
-              "$CHARD_ROOT/dev/shm" \
-              "$CHARD_ROOT/dev/pts" \
-              "$CHARD_ROOT/proc" \
-              "$CHARD_ROOT/sys" \
-              "$CHARD_ROOT/tmp" \
-              "$CHARD_ROOT/run" \
-              #"$CHARD_ROOT/$CHARD_HOME/.cargo" \
-              #"$CHARD_ROOT/$CHARD_HOME/.rustup" \
-              "$CHARD_ROOT/$CHARD_HOME/.local/share" \
-              "$CHARD_ROOT/$CHARD_HOME/Desktop" \
-              "$CHARD_ROOT/mnt"
+sudo mkdir -p "$CHARD_ROOT/etc/portage"
+sudo mkdir -p "$CHARD_ROOT/etc/sandbox.d"
+sudo mkdir -p "$CHARD_ROOT/etc/ssl"
+sudo mkdir -p "$CHARD_ROOT/usr/bin"
+sudo mkdir -p "$CHARD_ROOT/usr/lib"
+sudo mkdir -p "$CHARD_ROOT/usr/lib64"
+sudo mkdir -p "$CHARD_ROOT/usr/include"
+sudo mkdir -p "$CHARD_ROOT/usr/share"
+sudo mkdir -p "$CHARD_ROOT/usr/local/bin"
+sudo mkdir -p "$CHARD_ROOT/usr/local/lib"
+sudo mkdir -p "$CHARD_ROOT/usr/local/include"
+sudo mkdir -p "$CHARD_ROOT/var/tmp/build"
+sudo mkdir -p "$CHARD_ROOT/var/cache/distfiles"
+sudo mkdir -p "$CHARD_ROOT/var/cache/packages"
+sudo mkdir -p "$CHARD_ROOT/var/log"
+sudo mkdir -p "$CHARD_ROOT/var/run"
+sudo mkdir -p "$CHARD_ROOT/dev/shm"
+sudo mkdir -p "$CHARD_ROOT/dev/pts"
+sudo mkdir -p "$CHARD_ROOT/proc"
+sudo mkdir -p "$CHARD_ROOT/sys"
+sudo mkdir -p "$CHARD_ROOT/tmp"
+sudo mkdir -p "$CHARD_ROOT/run"
+#sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.cargo"
+#sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.rustup"
+sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.local/share"
+sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/Desktop"
+sudo mkdir -p "$CHARD_ROOT/mnt"
+
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
