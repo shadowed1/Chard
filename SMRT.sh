@@ -90,44 +90,9 @@ ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
 
-if (( MEM_GB <= 1 )); then
-    MEM_LIMIT_MB=128
+if (( MEM_GB <= 2 )); then
     THREADS=1
-elif (( MEM_GB <= 2 )); then
-    MEM_LIMIT_MB=192
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 4 )); then
-    MEM_LIMIT_MB=384
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 8 )); then
-    MEM_LIMIT_MB=768
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 12 )); then
-    MEM_LIMIT_MB=1024
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 16 )); then
-    MEM_LIMIT_MB=1536
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 24 )); then
-    MEM_LIMIT_MB=2048
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 32 )); then
-    MEM_LIMIT_MB=3072
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 48 )); then
-    MEM_LIMIT_MB=6144
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 64 )); then
-    MEM_LIMIT_MB=8192
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 96 )); then
-    MEM_LIMIT_MB=12288
-    THREADS=$REQUESTED_THREADS
-elif (( MEM_GB <= 128 )); then
-    MEM_LIMIT_MB=16384
-    THREADS=$REQUESTED_THREADS
 else
-    MEM_LIMIT_MB=0
     THREADS=$REQUESTED_THREADS
 fi
 
@@ -142,8 +107,6 @@ cat > "$SMRT_ENV_FILE" <<EOF
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
-
-ulimit -v $(( MEM_LIMIT_MB * 1024 ))
 
 # Aliases
 EOF
@@ -176,11 +139,5 @@ echo ""
 echo "${MAGENTA}Makeopts:                        ${BOLD}$MAKEOPTS ${RESET}"
 echo "${MAGENTA}Taskset:                         ${BOLD}$TASKSET ${RESET}"
 echo ""
-echo "${YELLOW}Detected Memory:                 ${BOLD}${MEM_GB} GB ${RESET}"
-if (( MEM_LIMIT_MB > 0 )); then
-    echo "${YELLOW}Thread Memory Limit:             ${BOLD}${MEM_LIMIT_MB} MB ${RESET}"
-else
-    echo "${YELLOW}Thread Memory Limit:         ${BOLD}Unlimited ${RESET}"
-fi
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo ""
