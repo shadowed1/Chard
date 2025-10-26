@@ -936,18 +936,18 @@ checkpoint_112() {
 run_checkpoint 112 "emerge x11-wm/twm" checkpoint_112
 
 checkpoint_113() {
-    emerge media-gfx/chafa
-    rm -rf /var/tmp/portage/media-gfx/chafa-*
-    eclean-dist -d
-}
-run_checkpoint 113 "emerge media-gfx/chafa" checkpoint_113
-
-checkpoint_114() {
     emerge dev-python/pillow
     rm -rf /var/tmp/portage/dev-python/pillow-*
     eclean-dist -d
 }
-run_checkpoint 114 "emerge dev-python/pillow" checkpoint_114
+run_checkpoint 113 "emerge dev-python/pillow" checkpoint_113
+
+checkpoint_114() {
+    emerge media-gfx/chafa
+    rm -rf /var/tmp/portage/media-gfx/chafa-*
+    eclean-dist -d
+}
+run_checkpoint 114 "emerge media-gfx/chafa" checkpoint_114
 
 checkpoint_115() {
     emerge app-text/doxygen
