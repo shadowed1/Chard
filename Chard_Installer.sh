@@ -354,9 +354,7 @@ USER_ID=1000
 
 getent group \$GROUP_ID >/dev/null || groupadd -g \$GROUP_ID wayland
 
-if ! id -u \"\$CHARD_USER\" >/dev/null 2>&1; then
-    useradd -u \$USER_ID -g \$GROUP_ID -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
-fi
+useradd -u \$USER_ID -g \$GROUP_ID -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
 
 usermod -aG \$GROUP_ID \"\$CHARD_USER\"
 
@@ -1202,6 +1200,56 @@ sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+
+    mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
+    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+
+    chmod 1777 /tmp /var/tmp
+    
+    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+    
+    CHARD_HOME=\$(cat /.chard_home)
+    CHARD_USER=\$(cat /.chard_user)
+    HOME=\$CHARD_HOME
+    USER=\$CHARD_USER
+    source \$HOME/.bashrc 2>/dev/null
+    chown \$USER:\$USER /var/lib/portage/world
+    chmod 644 /var/lib/portage/world 
+    source \$HOME/.smrt_env.sh
+
+    emerge app-misc/resolve-march-native && \
+    MARCH_FLAGS=\$(resolve-march-native) && \
+    BASHRC=\"\$HOME/.bashrc\" && \
+    awk -v march=\"\$MARCH_FLAGS\" '\
+    /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next} \
+    /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next} \
+    inblock { \
+        if (\$0 ~ /CFLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
+        if (\$0 ~ /COMMON_FLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
+        print; next \
+    } \
+    {print}' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\" \
+
+    umount /run/chrome 2>/dev/null || true
+    umount /run/dbus   2>/dev/null || true
+    umount /etc/ssl    2>/dev/null || true
+    umount /dev/pts    2>/dev/null || true
+    umount /dev/shm    2>/dev/null || true
+    umount /dev        2>/dev/null || true
+    umount /sys        2>/dev/null || true
+    umount /proc       2>/dev/null || true
+"
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
