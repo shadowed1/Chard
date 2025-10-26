@@ -1173,7 +1173,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     CHARD_USER=\$(cat /.chard_user)
     HOME=\$CHARD_HOME
     USER=\$CHARD_USER
-    
+    su \$USER
     chown \$USER:\$USER /var/lib/portage/world
     chmod 644 /var/lib/portage/world 
     source \$HOME/.bashrc 2>/dev/null
