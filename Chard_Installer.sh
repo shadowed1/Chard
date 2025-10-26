@@ -1,4 +1,4 @@
-x#!/bin/bash
+#!/bin/bash
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
