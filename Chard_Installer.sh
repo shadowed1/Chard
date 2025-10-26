@@ -494,14 +494,16 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
-    sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/zram0"  2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+
 
     sudo cp "$CHARD_ROOT/chardbuild.log" ~/
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
@@ -1500,14 +1502,20 @@ echo "${RESET}${GREEN}Eventually a precompiled version will be made once thoroug
 sudo chown -R 1000:1000 "$CHARD_ROOT"
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-               mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
-               mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
-               mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
-               mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
-               mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
-               mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
-               mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
-               mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+                mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+                mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+                mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+                mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+                mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+            
+                if [ -e /dev/zram0 ]; then
+                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                    mount --make-rslave /dev/zram0 2>/dev/null
+                fi
+                
                 [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
                 [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
                 [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -1524,27 +1532,30 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 source \$HOME/.smrt_env.sh
                 sleep 2
                 /bin/chariot
-                umount /run/chrome 2>/dev/null  || true
-                umount /etc/ssl     2>/dev/null || true
-                umount /dev/pts     2>/dev/null || true
-                umount /dev/shm     2>/dev/null || true
-                umount /dev         2>/dev/null || true
-                umount /sys         2>/dev/null || true
-                umount /proc        2>/dev/null || true
-                umount /run/dbus    2>/dev/null || true
+                umount -l /dev/zram0   2>/dev/null || true
+                umount -l /run/chrome  2>/dev/null || true
+                umount -l /run/dbus    2>/dev/null || true
+                umount -l /etc/ssl     2>/dev/null || true
+                umount -l /dev/pts     2>/dev/null || true
+                umount -l /dev/shm     2>/dev/null || true
+                umount -l /dev         2>/dev/null || true
+                umount -l /sys         2>/dev/null || true
+                umount -l /proc        2>/dev/null || true
             "
             
             show_progress
             echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
             
-            sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/zram0"  2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+            sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+
 
             sudo cp "$CHARD_ROOT/chardbuild.log" ~/
             echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
