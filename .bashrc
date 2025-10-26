@@ -223,8 +223,8 @@ export M4PATH="$ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
 export MANPATH="$ROOT/usr/share/man:$ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
 export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/share"
 export DISPLAY=":0"
-export GDK_BACKEND="x11"
-export CLUTTER_BACKEND="x11"
+export GDK_BACKEND="wayland,x11"
+export CLUTTER_BACKEND="wayland"
 
 MAKECONF="$ROOT/etc/portage/make.conf"
 if [[ -w "$MAKECONF" ]]; then
