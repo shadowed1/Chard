@@ -329,11 +329,6 @@ CHARD_HOME=\$(cat /.chard_home)
 CHARD_USER=\$(cat /.chard_user)
 HOME=\$CHARD_HOME
 USER=\$CHARD_USER
-    
-if ! id \"\$CHARD_USER\" &>/dev/null; then
-    useradd -m -s /bin/bash \"\$CHARD_USER\"
-    passwd -d \"\$CHARD_USER\" 2>/dev/null || true
-fi
 "
 
 echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
