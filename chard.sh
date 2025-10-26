@@ -475,39 +475,48 @@ EOF
     root)
         sudo chroot $CHARD_ROOT /bin/bash -c "
 
-            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-            mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
 
-            chmod 1777 /tmp /var/tmp
-        
-            [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-            [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-            [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-            [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-            CHARD_HOME=\$(cat /.chard_home)
-            HOME=\$CHARD_HOME
-            CHARD_USER=\$(cat /.chard_user)
-            USER=\$CHARD_HOME
-            source \$HOME/.bashrc 2>/dev/null
-            source \$HOME/.smrt_env.sh
-            dbus-daemon --system --fork 2>/dev/null
-            /bin/bash
+    if [ -e /dev/zram0 ]; then
+        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+        mount --make-rslave /dev/zram0 2>/dev/null
+    fi
 
-            umount -l /run/chrome   2>/dev/null || true
-            umount -l /run/dbus     2>/dev/null || true
-            umount -l /etc/ssl      2>/dev/null || true
-            umount -l /dev/pts      2>/dev/null || true
-            umount -l /dev/shm      2>/dev/null || true
-            umount -l /dev          2>/dev/null || true
-            umount -l /sys          2>/dev/null || true
-            umount -l /proc         2>/dev/null || true
-        "
+    chmod 1777 /tmp /var/tmp
+
+    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+
+    CHARD_HOME=\$(cat /.chard_home)
+    HOME=\$CHARD_HOME
+    CHARD_USER=\$(cat /.chard_user)
+    USER=\$CHARD_HOME
+    source \$HOME/.bashrc 2>/dev/null
+    source \$HOME/.smrt_env.sh
+    dbus-daemon --system --fork 2>/dev/null
+
+    /bin/bash
+
+    umount -l /dev/zram0   2>/dev/null || true
+    umount -l /run/chrome  2>/dev/null || true
+    umount -l /run/dbus    2>/dev/null || true
+    umount -l /etc/ssl     2>/dev/null || true
+    umount -l /dev/pts     2>/dev/null || true
+    umount -l /dev/shm     2>/dev/null || true
+    umount -l /dev         2>/dev/null || true
+    umount -l /sys         2>/dev/null || true
+    umount -l /proc        2>/dev/null || true
+"
+
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
