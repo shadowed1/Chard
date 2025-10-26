@@ -1168,7 +1168,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     chown \$USER:\$USER /var/lib/portage/world
     chmod 644 /var/lib/portage/world 
     emerge --sync
-    /bin/SMRT 100
+    /bin/SMRT
     source \$HOME/.smrt_env.sh
 
     umount /run/chrome 2>/dev/null || true
