@@ -151,7 +151,10 @@ run_checkpoint 1 "emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
     emerge app-portage/gentoolkit
+    emerge app-misc/resolve-march-native
+    resolve-march-native
     rm -rf /var/tmp/portage/app-portage/gentoolkit-*
+    rm -rf /var/tmp/portage/app-misc/resolve-march-native-*
     eclean-dist -d
 }
 run_checkpoint 2 "emerge app-portage/gentoolkit" checkpoint_2
