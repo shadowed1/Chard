@@ -155,7 +155,7 @@ for tool in "${parallel_tools[@]}"; do
     fi
 done
 
-serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build)
+serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build cc1plus cc1)
 for tool in "${serial_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
         echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
