@@ -1,4 +1,5 @@
 #!/bin/bash
+
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -1148,7 +1149,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
     mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
     mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-
 
     chmod 1777 /tmp /var/tmp
     
