@@ -464,8 +464,11 @@ case "$cmd" in
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
             CHARD_HOME=\$(cat /.chard_home)
             HOME=\$CHARD_HOME
+            CHARD_USER=\$(cat /.chard_user)
+            USER=\$CHARD_HOME
             source \$HOME/.bashrc 2>/dev/null
             dbus-daemon --system --fork 2>/dev/null
+            su $USER
             /bin/bash
 
             umount -l /run/chrome   2>/dev/null || true
