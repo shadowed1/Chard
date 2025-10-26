@@ -8,13 +8,14 @@
 
 <br>
 
-- For ChromeOS open crosh, type in `shell` and paste: <br>
+- For **ChromeOS** open crosh, type in `shell` and paste:
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
 
 <br>
 
-- For all Linux distros supporting Bash, and ChromeOS with sudo in shell, open terminal and paste : <br>
+- For **all Linux distros**, open terminal and paste :
+
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")</pre> 
 
 <br>
@@ -91,4 +92,7 @@
 - `chard reinstall` -- Option 1 updates chard scripts to latest version. Option 2 is a full reinstall.
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
-- `chard help` -- Show help examples. 
+- `chard help` -- Show help examples.
+
+<br>
+
