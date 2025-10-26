@@ -89,7 +89,7 @@ REQUESTED_THREADS=$(( (TOTAL_CORES * PCT + 99) / 100 ))
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
 if (( MEM_GB <= 2 )); then
-    echo "${YELLOW}Low-memory device detected (${MEM_GB} GB) — forcing single-thread mode.${RESET}"
+    echo "${YELLOW}Low-memory device detected (${MEM_GB} GB) — enabling single-thread mode.${RESET}"
     REQUESTED_THREADS=1
 fi
 
