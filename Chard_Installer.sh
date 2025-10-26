@@ -170,6 +170,9 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
     } >> "$TARGET_FILE"
 fi
 
+sudo mkdir -p "$CHARD_ROOT/run/chrome"
+sudo mkdir -p "$CHARD_ROOT/run/dbus"
+
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
 CHARD_HOME="${CHARD_HOME#/}"
@@ -180,9 +183,6 @@ if [[ "$CHARD_HOME" == home/* ]]; then
     CHARD_USER="${CHARD_HOME#*/}"
 fi
 
-echo "CHARD_HOME: $CHARD_ROOT/$CHARD_HOME"
-echo "CHARD_USER: $CHARD_USER"
-
 sudo tee "$CHARD_ROOT/.chard_home" >/dev/null <<EOF
 $CHARD_HOME
 EOF
@@ -191,8 +191,8 @@ sudo tee "$CHARD_ROOT/.chard_user" >/dev/null <<EOF
 $CHARD_USER
 EOF
 
-sudo mkdir -p "$CHARD_ROOT/run/chrome"
-sudo mkdir -p "$CHARD_ROOT/run/dbus"
+echo "CHARD_HOME: $CHARD_ROOT/$CHARD_HOME"
+echo "CHARD_USER: $CHARD_USER"
 
 ARCH=$(uname -m)
 
