@@ -467,6 +467,7 @@ case "$cmd" in
             CHARD_USER=\$(cat /.chard_user)
             USER=\$CHARD_HOME
             source \$HOME/.bashrc 2>/dev/null
+            source \$HOME/.smrt_env.sh
             dbus-daemon --system --fork 2>/dev/null
             /bin/bash
 
