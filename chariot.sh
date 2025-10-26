@@ -957,6 +957,7 @@ checkpoint_115() {
 run_checkpoint 115 "emerge app-text/doxygen" checkpoint_115
 
 checkpoint_116() {
+    emerge -1 =llvm-core/libclc-20.1.8
     emerge gui-libs/egl-gbm
     rm -rf /var/tmp/portage/gui-libs/egl-gbm-*
     eclean-dist -d
