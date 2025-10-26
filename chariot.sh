@@ -151,27 +151,7 @@ run_checkpoint 1 "emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
     emerge app-portage/gentoolkit
-    emerge app-misc/resolve-march-native
-    MARCH_FLAGS=$(resolve-march-native)
-    BASHRC="$HOME/.bashrc"
-    awk -v march="$MARCH_FLAGS" '
-        /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
-        /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
-        inblock {
-            if ($0 ~ /CFLAGS=.*-march=/) {
-                sub(/-march=[^ ]+/, march)
-            }
-            if ($0 ~ /COMMON_FLAGS=.*-march=/) {
-                sub(/-march=[^ ]+/, march)
-            }
-            print
-            next
-        }
-        {print}
-    ' "$BASHRC" > "${BASHRC}.tmp" && mv "${BASHRC}.tmp" "$BASHRC"
-
     rm -rf /var/tmp/portage/app-portage/gentoolkit-*
-    rm -rf /var/tmp/portage/app-misc/resolve-march-native-*
     eclean-dist -d
 }
 run_checkpoint 2 "emerge app-portage/gentoolkit" checkpoint_2
