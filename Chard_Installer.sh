@@ -1525,7 +1525,7 @@ echo "${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
-sudo chown -R 1000:1000 "$CHARD_ROOT"
+sudo chown -R $USER:$USER "$CHARD_ROOT"
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
