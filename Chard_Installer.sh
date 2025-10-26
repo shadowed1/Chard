@@ -1272,26 +1272,26 @@ case "$ARCH" in
     x86_64)
         case "$GPU_VENDOR" in
             amd)
-                DRM_AMDGPU=y
-                DRM_I915=n
+                CONFIG_DRM_AMDGPU=y
+                CONFIG_DRM_I915=n
                 CONFIG_DRM_NOUVEAU=n
                 CONFIG_LAVAPIPE=n
                 ;;
             intel)
-                DRM_AMDGPU=n
-                DRM_I915=y
+                CONFIG_DRM_AMDGPU=n
+                CONFIG_DRM_I915=y
                 CONFIG_DRM_NOUVEAU=n
                 CONFIG_LAVAPIPE=n
                 ;;
             nvidia)
-                DRM_AMDGPU=n
-                DRM_I915=n
+                CONFIG_DRM_AMDGPU=n
+                CONFIG_DRM_I915=n
                 CONFIG_DRM_NOUVEAU=y
                 CONFIG_LAVAPIPE=n
                 ;;
             *)
-                DRM_AMDGPU=n
-                DRM_I915=n
+                CONFIG_DRM_AMDGPU=n
+                CONFIG_DRM_I915=n
                 CONFIG_DRM_NOUVEAU=n
                 CONFIG_LAVAPIPE=y
                 ;;
@@ -1330,48 +1330,48 @@ CONFIG_CRYPTO_USER_API_HASH=y
 CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
-DRM_MALI=n
-DRM_ROCKCHIP=n
-DRM_ARM_DC=n
+CONFIG_ARM_MALI=n
+CONFIG_DRM_ROCKCHIP=n
+CONFIG_DRM_ARM_DC=n
 EOF
         ;;
     aarch64)
         case "$GPU_VENDOR" in
             mali)
-                DRM_MALI=y
-                DRM_ROCKCHIP=n
-                DRM_ARM_DC=n
+                CONFIG_DRM_MALI=y
+                CONFIG_DRM_ROCKCHIP=n
+                CONFIG_DRM_ARM_DC=n
                 ;;
             adreno)
-                DRM_MALI=y
-                DRM_ROCKCHIP=n
-                DRM_ARM_DC=n
+                CONFIG_DRM_MALI=y
+                CONFIG_DRM_ROCKCHIP=n
+                CONFIG_DRM_ARM_DC=n
                 ;;
             mediatek)
-                DRM_MALI=y
-                DRM_ROCKCHIP=n
-                DRM_ARM_DC=n
+                CONFIG_DRM_MALI=y
+                CONFIG_DRM_ROCKCHIP=n
+                CONFIG_DRM_ARM_DC=n
                 ;;
             vivante)
-                DRM_MALI=y
-                DRM_ROCKCHIP=n
-                DRM_ARM_DC=n
+                CONFIG_DRM_MALI=y
+                CONFIG_DRM_ROCKCHIP=n
+                CONFIG_DRM_ARM_DC=n
                 ;;
             *)
-                DRM_MALI=n
-                DRM_ROCKCHIP=n
-                DRM_ARM_DC=n
+                CONFIG_DRM_MALI=n
+                CONFIG_DRM_ROCKCHIP=n
+                CONFIG_DRM_ARM_DC=n
                 ;;
         esac
         
 sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
 CONFIG_PROC_FS=y
 CONFIG_SYSFS=y
-DRM_MALI=$DRM_MALI
-DRM_ROCKCHIP=$DRM_ROCKCHIP
-DRM_ARM_DC=$DRM_ARM_DC
-DRM_AMDGPU=n
-DRM_I915=n
+CONFIG_DRM_MALI=$DRM_MALI
+CONFIG_DRM_ROCKCHIP=$DRM_ROCKCHIP
+CONFIG_DRM_ARM_DC=$DRM_ARM_DC
+CONFIG_DRM_AMDGPU=n
+CONFIG_DRM_I915=n
 CONFIG_DRM_NOUVEAU=n
 CONFIG_LAVAPIPE=y
 CONFIG_TMPFS=y
