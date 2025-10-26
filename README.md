@@ -53,7 +53,7 @@
 
 <br>
 
-- Chard auto-detects the Host's hardware and tailor-builds Gentoo + Kernel around it.
+- Chard auto-detects the Host's hardware and builds Gentoo + psuedo-Kernel automatically.
 - Includes ability to resume installer if interrupted.
 
 <br>
