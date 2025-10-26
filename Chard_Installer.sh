@@ -173,6 +173,7 @@ fi
 
 sudo mkdir -p "$CHARD_ROOT/run/chrome"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
+sudo mkdir -p "$CHARD_ROOT/run/wayland-0"
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
