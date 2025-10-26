@@ -34,7 +34,7 @@
 
 <br>
 
-- *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist (for now)!*
+- **Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist!**
 - *Requires 8GB of storage, 2GB of RAM, and an internet connection.*
 
 <br>
