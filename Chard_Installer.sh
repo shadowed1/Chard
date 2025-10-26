@@ -324,16 +324,10 @@ cp -a . /usr/src/linux
 make INSTALL_HDR_PATH=/usr headers_install
 
 cp .config /usr/src/linux/.config
-
-CHARD_HOME=\$(cat /.chard_home)
-CHARD_USER=\$(cat /.chard_user)
-HOME=\$CHARD_HOME
-USER=\$CHARD_USER
 "
 
 echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
 echo ""
-echo "${BLUE}Creating account $CHARD_USER inside $CHARD_ROOT with blank password."
 
 sudo rm -rf "$KERNEL_BUILD"
 
