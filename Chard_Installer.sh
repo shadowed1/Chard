@@ -1531,6 +1531,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 USER=\$CHARD_USER
                 source \$HOME/.smrt_env.sh
                 source \$HOME/.bashrc 2>/dev/null
+                su \$USER
                 env-update
                 dbus-daemon --system --fork 2>/dev/null
                 SMRT
