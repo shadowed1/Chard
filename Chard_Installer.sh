@@ -182,7 +182,6 @@ fi
 
 echo "CHARD_HOME: $CHARD_ROOT/$CHARD_HOME"
 echo "CHARD_USER: $CHARD_USER"
-sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
 
 sudo tee "$CHARD_ROOT/.chard_home" >/dev/null <<EOF
 $CHARD_HOME
@@ -191,8 +190,6 @@ EOF
 sudo tee "$CHARD_ROOT/.chard_user" >/dev/null <<EOF
 $CHARD_USER
 EOF
-
-sudo cp /run/user/1000/.Xauthority $CHARD_ROOT/$CHARD_HOME/.Xauthority 2>/dev/null
 
 sudo mkdir -p "$CHARD_ROOT/run/chrome"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
@@ -407,6 +404,8 @@ sudo rm -f \
     "$CHARD_ROOT/.chard.logic" \
     "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/bin/chard"
+
+sudo cp /run/user/1000/.Xauthority $CHARD_ROOT/$CHARD_HOME/.Xauthority 2>/dev/null
 
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
