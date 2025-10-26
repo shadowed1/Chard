@@ -31,8 +31,6 @@ if [[ "$ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
 
-source "$HOME/.smrt_env.sh"
-
 export ARCH
 export CHOST
 export CHARD_RC="$ROOT/.chardrc"
@@ -241,5 +239,7 @@ eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
+
+source "$HOME/.smrt_env.sh"
 
 # <<< END CHARD .BASHRC >>>
