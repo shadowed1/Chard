@@ -82,23 +82,20 @@ if ! [[ "$PCT" =~ ^[0-9]+$ ]] || (( PCT < 1 || PCT > 100 )); then
     echo "${RED}Error: Please provide a percentage between 1 and 100${RESET}"
     exit 1
 fi
+
 REQUESTED_THREADS=$(( (TOTAL_CORES * PCT + 99) / 100 ))
 (( REQUESTED_THREADS < 1 )) && REQUESTED_THREADS=1
-ALLOCATED_CORES=$(allocate_cores $REQUESTED_THREADS)
-ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
-
 if (( MEM_GB <= 2 )); then
-    THREADS=1
-else
-    THREADS=$REQUESTED_THREADS
+    echo "${YELLOW}Low-memory device detected (${MEM_GB} GB) — forcing single-thread mode.${RESET}"
+    REQUESTED_THREADS=1
 fi
 
-THREADS=$(( THREADS > 0 ? THREADS : 1 ))
-
+ALLOCATED_CORES=$(allocate_cores $REQUESTED_THREADS)
 ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
+
 TASKSET="taskset -c $ALLOCATED_CORES"
 MAKEOPTS="-j$ALLOCATED_COUNT"
 
