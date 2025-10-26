@@ -36,7 +36,7 @@ export CHOST
 export CHARD_RC="$ROOT/.chardrc"
 export SANDBOX="$ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
-export XDG_RUNTIME_DIR="$ROOT/run/user/0"
+export XDG_RUNTIME_DIR="$ROOT/run/chrome"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
 export PORTDIR="$ROOT/usr/portage"
