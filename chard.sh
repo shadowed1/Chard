@@ -468,7 +468,6 @@ case "$cmd" in
             USER=\$CHARD_HOME
             source \$HOME/.bashrc 2>/dev/null
             dbus-daemon --system --fork 2>/dev/null
-            su \$USER
             /bin/bash
 
             umount -l /run/chrome   2>/dev/null || true
