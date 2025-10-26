@@ -442,7 +442,7 @@ CHARD_USER=\"$CHARD_USER\"\n\
 
         sudo chmod +x "$file"
     else
-        echo "${RED}[!] Missing: $file — download failed?${RESET}"
+        echo "${RED}[!] Missing: $file — download failed${RESET}"
     fi
 done
 
