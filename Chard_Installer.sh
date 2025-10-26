@@ -1,4 +1,4 @@
-#!/bin/bash
+x#!/bin/bash
 START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -1174,12 +1174,12 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     CHARD_USER=\$(cat /.chard_user)
     HOME=\$CHARD_HOME
     USER=\$CHARD_USER
-    /bin/SMRT
+    
     chown \$USER:\$USER /var/lib/portage/world
     chmod 644 /var/lib/portage/world 
     source \$HOME/.bashrc 2>/dev/null
-
     emerge --sync
+    /bin/SMRT
 
     umount /run/chrome 2>/dev/null || true
     umount /run/dbus   2>/dev/null || true
