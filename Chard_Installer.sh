@@ -1166,6 +1166,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     chmod 644 /var/lib/portage/world 
     emerge --sync
     /bin/SMRT
+    source \$HOME/.smrt_env.sh
 
     umount /run/chrome 2>/dev/null || true
     umount /run/dbus   2>/dev/null || true
@@ -1516,11 +1517,11 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 CHARD_USER=\$(cat /.chard_user)
                 HOME=\$CHARD_HOME
                 USER=\$CHARD_USER
-                source \$HOME/.smrt_env.sh
                 source \$HOME/.bashrc 2>/dev/null
                 env-update
                 dbus-daemon --system --fork 2>/dev/null
                 SMRT
+                source \$HOME/.smrt_env.sh
                 sleep 2
                 /bin/chariot
                 umount /run/chrome 2>/dev/null  || true
