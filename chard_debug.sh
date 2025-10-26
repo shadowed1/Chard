@@ -6,7 +6,6 @@ CHARD_HOME=""
 CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
-if [[ -t 1 && "$TERM" != "dumb" ]]; then
     RED="\033[31m"
     GREEN="\033[32m"
     YELLOW="\033[33m"
@@ -15,9 +14,6 @@ if [[ -t 1 && "$TERM" != "dumb" ]]; then
     CYAN="\033[36m"
     BOLD="\033[1m"
     RESET="\033[0m"
-else
-    RED=""; GREEN=""; YELLOW=""; BLUE=""; MAGENTA=""; CYAN=""; BOLD=""; RESET=""
-fi
 
 
 HOME=$CHARD_HOME
