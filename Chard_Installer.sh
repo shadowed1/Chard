@@ -171,9 +171,8 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
     } >> "$TARGET_FILE"
 fi
 
-sudo mkdir -p "$CHARD_ROOT/run/chrome"
+sudo mkdir -p "$CHARD_ROOT/run/chrome/wayland-0"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
-sudo mkdir -p "$CHARD_ROOT/run/wayland-0"
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
@@ -195,14 +194,6 @@ EOF
 
 echo "CHARD_HOME: $CHARD_ROOT/$CHARD_HOME"
 echo "CHARD_USER: $CHARD_USER"
-
-ARCH=$(uname -m)
-
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unsupported Architecture: $ARCH" ;;
-esac
 
 ARCH=$(uname -m)
 case "$ARCH" in
@@ -301,7 +292,7 @@ else
     echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
 fi
 
-sudo rm -rf "$KERNEL_BUILD"z
+sudo rm -rf "$KERNEL_BUILD"
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
@@ -354,6 +345,25 @@ done
 
 sudo grep -E "CONFIG_CGROUP_BPF|CONFIG_FANOTIFY|CONFIG_USER_NS|CONFIG_CRYPTO_USER_API_HASH|CONFIG_INPUT_MOUSEDEV" "$CHARD_ROOT/usr/src/linux/.config" | wc -l
 
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+CHARD_HOME=\$(cat /.chard_home)
+CHARD_USER=\$(cat /.chard_user)
+
+GROUP_ID=601
+USER_ID=1000
+
+getent group \$GROUP_ID >/dev/null || groupadd -g \$GROUP_ID wayland
+
+if ! id -u \"\$CHARD_USER\" >/dev/null 2>&1; then
+    useradd -u \$USER_ID -g \$GROUP_ID -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
+fi
+
+usermod -aG \$GROUP_ID \"\$CHARD_USER\"
+
+mkdir -p \"/\$CHARD_HOME\"
+chown \$USER_ID:\$GROUP_ID \"/\$CHARD_HOME\"
+"
+
 sudo mkdir -p "$CHARD_ROOT/etc/portage" \
               "$CHARD_ROOT/etc/sandbox.d" \
               "$CHARD_ROOT/etc/ssl" \
@@ -376,8 +386,8 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage" \
               "$CHARD_ROOT/sys" \
               "$CHARD_ROOT/tmp" \
               "$CHARD_ROOT/run" \
-              "$CHARD_ROOT/$CHARD_HOME/.cargo" \
-              "$CHARD_ROOT/$CHARD_HOME/.rustup" \
+              #"$CHARD_ROOT/$CHARD_HOME/.cargo" \
+              #"$CHARD_ROOT/$CHARD_HOME/.rustup" \
               "$CHARD_ROOT/$CHARD_HOME/.local/share" \
               "$CHARD_ROOT/$CHARD_HOME/Desktop" \
               "$CHARD_ROOT/mnt"
@@ -509,7 +519,6 @@ cleanup_chroot() {
 
     sudo cp "$CHARD_ROOT/chardbuild.log" ~/
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
-    
 }
 
 trap cleanup_chroot EXIT INT TERM
