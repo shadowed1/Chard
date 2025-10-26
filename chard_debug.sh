@@ -13,8 +13,8 @@ if [ -f "$HOME/.bashrc" ]; then
     source "$HOME/.bashrc"
 fi
 
-echo
-echo "${MAGENTA}>>>>>>>>>>>>>>>>>> CHARD DEBUG <<<<<<<<<<<<<<<<<<<<<<<<"
+echo "${MAGENTA}"
+echo ">>>>>>>>>>>>>>>>>> CHARD DEBUG <<<<<<<<<<<<<<<<<<<<<<<<"
 echo ""
 echo "Chard Install Location: $CHARD_ROOT"
 echo "Chard Home: $CHARD_ROOT/$CHARD_HOME"
@@ -80,5 +80,5 @@ echo "GDK_BACKEND: $GDK_BACKEND"
 echo "CLUTTER_BACKEND: $CLUTTER_BACKEND"
 echo "EMERGE_DEFAULT_OPTS: $EMERGE_DEFAULT_OPTS"
 echo ""
-echo ">>>>>>>>>>>>>>>>>> CHARD DEBUG <<<<<<<<<<<<<<<<<<<<<<<<${RESET}"
-echo
+echo ">>>>>>>>>>>>>>>>>> CHARD DEBUG <<<<<<<<<<<<<<<<<<<<<<<<"
+echo "${RESET}"
