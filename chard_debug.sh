@@ -6,14 +6,20 @@ CHARD_HOME=""
 CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
+if [[ -t 1 && "$TERM" != "dumb" ]]; then
+    RED="\033[31m"
+    GREEN="\033[32m"
+    YELLOW="\033[33m"
+    BLUE="\033[34m"
+    MAGENTA="\033[35m"
+    CYAN="\033[36m"
+    BOLD="\033[1m"
+    RESET="\033[0m"
+else
+    # No color support (non-interactive or dumb terminal)
+    RED=""; GREEN=""; YELLOW=""; BLUE=""; MAGENTA=""; CYAN=""; BOLD=""; RESET=""
+fi
+
 
 HOME=$CHARD_HOME
 USER=$CHARD_USER
