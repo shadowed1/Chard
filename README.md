@@ -10,6 +10,9 @@
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install.* <br>
 - *Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist (for now)!* <br>
 - *Requires 8GB of storage, 2GB of RAM, and an internet connection.*
+- Installer has ability to resume where it is left off.
+- Includes an intelligent CPU task scheduler for building packages.
+- User can customize how many threads Chard can use dynamically. Useful for devices with low memory. 
 - GUI apps are still being worked on.
 - Supports ChromeOS, Ubuntu, Arch, and probably many more. 
 
@@ -27,10 +30,14 @@
 - For all Linux distros supporting Bash, and ChromeOS with sudo in shell, open terminal and paste : <br>
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")</pre> 
 
+<br>
+
+- Installer will be fully automated. It will detect the system's hardware and build Gentoo around it.
 
 <br>
 
-- Chard appends its paths to ChromeOS, ensuring it never overrides system commands. <br>
+- Chard appends its paths to Host OS, ensuring it never overrides system commands. <br>
+
 
 # Functioning Tools: <br>
 - Latest Boostrapped Stage3 Gentoo Linux + Linux Kernel
