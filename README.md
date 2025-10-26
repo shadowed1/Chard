@@ -79,10 +79,10 @@
 # Chard Installer will use Emerge to build: <br>
 - Make
 - CMake
+- Curl with OpenSSL
+- GCC
 - Python
 - Git
-- GCC
-- LLVM
 - File + LDD
 - CMake
 - Perl
@@ -90,7 +90,8 @@
 - Ninja
 - Rust
 - OpenSSL
-- Curl
+- LLVM
+- Clang
 - Mesa
 - Flatpak
 - And Many More
