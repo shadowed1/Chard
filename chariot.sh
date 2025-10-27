@@ -480,13 +480,13 @@ checkpoint_47() {
     eclean-dist -d
 }
 run_checkpoint 47 "emerge sys-apps/bubblewrap" checkpoint_47
-
+# Fix for long term
 checkpoint_48() {
     emerge -v =llvm-core/libclc-20*
     rm -rf /var/tmp/portage/llvm-core/libclc-*
     eclean-dist -d
 }
-run_checkpoint 48 "emerge llvm-core/libclc-20*" checkpoint_48
+run_checkpoint 48 "emerge llvm-core/libclc-20" checkpoint_48
 
 checkpoint_49() {
     emerge x11-base/xorg-drivers
@@ -976,14 +976,27 @@ checkpoint_117() {
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
 checkpoint_118() {
-    #app-admin/sudo
     emerge sys-apps/flatpak
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     eclean-dist -d
 }
-run_checkpoint 118 "emerge sys-apps/flatpak + setup flathub" checkpoint_118
+run_checkpoint 118 "emerge sys-apps/flatpak" checkpoint_118
+
+checkpoint_119() {
+    emerge app-admin/sudo
+    rm -rf /var/tmp/portage/app-admin/sudo-*
+    eclean-dist -d
+}
+run_checkpoint 119 "emerge app-admin/sudo" checkpoint_119
+
+checkpoint_120() {
+    emerge app-admin/sudo
+    echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
+    emerge --autounmask-write firefox-bin
+    eclean-dist -d
+}
+run_checkpoint 120 "emerge firefox-bin" checkpoint_120
 
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
