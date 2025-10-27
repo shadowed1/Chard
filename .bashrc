@@ -229,6 +229,7 @@ export DISPLAY=":0"
 export GDK_BACKEND="wayland,x11"
 export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
+export EGL_PLATFORM=wayland
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
 
 MAKECONF="$ROOT/etc/portage/make.conf"
