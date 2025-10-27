@@ -486,6 +486,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
     mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
     mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+    mountpoint -q /dev/dri    || mount --bind /dev/dri /dev/dri
+    mountpoint -q /dev/input  || mount --bind /dev/input /dev/input
 
     if [ -e /dev/zram0 ]; then
         mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
@@ -511,6 +513,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     /bin/bash
 
     umount -l /dev/zram0   2>/dev/null || true
+    umount -l /dev/input   2>/dev/null || true
+    umount -l /dev/dri     2>/dev/null || true
     umount -l /run/chrome  2>/dev/null || true
     umount -l /run/dbus    2>/dev/null || true
     umount -l /etc/ssl     2>/dev/null || true
