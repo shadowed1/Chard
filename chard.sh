@@ -474,20 +474,17 @@ EOF
         ;;
     root)
 sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
-sudo mountpoint -q "$CHARD_ROOT/run/dbus"    || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
+sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
+sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-
-    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-    mountpoint -q /dev/dri    || mount --bind /dev/dri /dev/dri
-    mountpoint -q /dev/input  || mount --bind /dev/input /dev/input
+    mountpoint -q /proc    || mount -t proc proc /proc
+    mountpoint -q /sys     || mount -t sysfs sys /sys
+    mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+    mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+    mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
 
     if [ -e /dev/zram0 ]; then
         mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
@@ -512,21 +509,20 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     /bin/bash
 
-    umount -l /dev/zram0   2>/dev/null || true
-    umount -l /dev/input   2>/dev/null || true
-    umount -l /dev/dri     2>/dev/null || true
-    umount -l /run/chrome  2>/dev/null || true
-    umount -l /run/dbus    2>/dev/null || true
-    umount -l /etc/ssl     2>/dev/null || true
-    umount -l /dev/pts     2>/dev/null || true
-    umount -l /dev/shm     2>/dev/null || true
-    umount -l /dev         2>/dev/null || true
-    umount -l /sys         2>/dev/null || true
-    umount -l /proc        2>/dev/null || true
+    umount -l /dev/zram0  2>/dev/null || true
+    umount -l /etc/ssl    2>/dev/null || true
+    umount -l /dev/shm    2>/dev/null || true
+    umount -l /dev/pts    2>/dev/null || true
+    umount -l /sys        2>/dev/null || true
+    umount -l /proc       2>/dev/null || true
 "
 
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
+
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
