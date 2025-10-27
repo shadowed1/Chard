@@ -501,11 +501,11 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
     [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
     [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-
+    
     CHARD_HOME=\$(cat /.chard_home)
     HOME=\$CHARD_HOME
     CHARD_USER=\$(cat /.chard_user)
-    USER=\$CHARD_HOME
+    USER=\$CHARD_USER
     source \$HOME/.bashrc 2>/dev/null
     source \$HOME/.smrt_env.sh
 
