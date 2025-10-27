@@ -991,7 +991,6 @@ checkpoint_119() {
 run_checkpoint 119 "emerge app-admin/sudo" checkpoint_119
 
 checkpoint_120() {
-    emerge app-admin/sudo
     echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
     emerge --autounmask-write firefox-bin
     eclean-dist -d
