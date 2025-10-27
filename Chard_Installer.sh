@@ -375,6 +375,18 @@ chmod 440 /etc/sudoers.d/\$CHARD_USER
 echo \"Passwordless sudo configured for \$CHARD_USER\"
 "
 
+CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home")
+CHARD_USER=$(cat "$CHARD_ROOT/.chard_user")
+USER_ID=1000
+GROUP_ID=601
+PASSWD_FILE="$CHARD_ROOT/etc/passwd"
+
+if grep -q "^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::" "$PASSWD_FILE"; then
+    echo "Fixing empty GECOS field for $CHARD_USER"
+    sudo sed -i "s/^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::/${CHARD_USER}:x:${USER_ID}:${GROUP_ID}:${CHARD_USER} User:/" "$PASSWD_FILE"
+else
+    echo "GECOS field for $CHARD_USER is already set or missing."
+fi
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage"
 sudo mkdir -p "$CHARD_ROOT/etc/sandbox.d"
@@ -396,13 +408,9 @@ sudo mkdir -p "$CHARD_ROOT/dev/shm"
 sudo mkdir -p "$CHARD_ROOT/dev/pts"
 sudo mkdir -p "$CHARD_ROOT/proc"
 sudo mkdir -p "$CHARD_ROOT/sys"
-#sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.cargo"
-#sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.rustup"
 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.local/share"
 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/Desktop"
 sudo mkdir -p "$CHARD_ROOT/mnt"
-
-
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
@@ -1250,7 +1258,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     chown \$USER:\$USER /var/lib/portage/world
     chmod 644 /var/lib/portage/world 
     source \$HOME/.smrt_env.sh
-
     emerge app-misc/resolve-march-native && \
     MARCH_FLAGS=\$(resolve-march-native) && \
     BASHRC=\"\$HOME/.bashrc\" && \
@@ -1624,6 +1631,60 @@ sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CH
 sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
 sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
+                mountpoint -q /dev     || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                mountpoint -q /proc    || mount -t proc proc /proc
+                mountpoint -q /sys     || mount -t sysfs sys /sys
+                mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+                mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+                mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+            
+                if [ -e /dev/zram0 ]; then
+                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                    mount --make-rslave /dev/zram0 2>/dev/null
+                fi
+            
+                chmod 1777 /tmp /var/tmp
+            
+                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                GROUP_ID=601
+                USER_ID=1000
+                CHARD_HOME=\$(cat /.chard_home)
+                CHARD_USER=\$(cat /.chard_user)
+                HOME=\$CHARD_HOME
+                USER=\$CHARD_USER
+                source \$HOME/.bashrc 2>/dev/null
+                env-update
+                dbus-daemon --system --fork 2>/dev/null
+                SMRT
+                source \$HOME/.smrt_env.sh
+                sleep 2
+                emerge app-admin/sudo
+                umount -l /dev/zram0  2>/dev/null || true
+                umount -l /etc/ssl    2>/dev/null || true
+                umount -l /dev/shm    2>/dev/null || true
+                umount -l /dev/pts    2>/dev/null || true
+                umount -l /sys        2>/dev/null || true
+                umount -l /proc       2>/dev/null || true
+                umount -l /dev        2>/dev/null || true
+            "
+sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+##############################################################
+##############################################################
+sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
+sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
+sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
+sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
                 mountpoint -q /proc    || mount -t proc proc /proc
                 mountpoint -q /sys     || mount -t sysfs sys /sys
@@ -1668,6 +1729,7 @@ sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+#############################################################
 show_progress
 echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
 #############################################################
