@@ -482,7 +482,7 @@ sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHAR
 sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
 sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
 sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
+sudo chroot --userspec=$USER:$USER "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
     mountpoint -q /proc    || mount -t proc proc /proc
     mountpoint -q /sys     || mount -t sysfs sys /sys
