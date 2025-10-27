@@ -201,7 +201,7 @@ LIBS_TO_ADD=(
 PKG_TO_ADD=(
     "$ROOT/usr/lib/pkgconfig"
     "$ROOT/usr/lib64/pkgconfig"
-    "$ROOT/usr/local/lib/pkgconfig"
+    "$ROOT/usr/local/lib/pkgconfig;
     "$ROOT/usr/local/share/pkgconfig"
     "$LLVM_DIR/lib/pkgconfig"
 )
@@ -224,7 +224,7 @@ export CPPFLAGS="-I$ROOT/usr/include"
 export ACLOCAL_PATH="$ROOT/usr/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
 export M4PATH="$ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
 export MANPATH="$ROOT/usr/share/man:$ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
-export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share/$XDG_DATA_DIRS"
+export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share/;$XDG_DATA_DIRS"
 export DISPLAY=":0"
 export GDK_BACKEND="wayland,x11"
 export CLUTTER_BACKEND="wayland"
