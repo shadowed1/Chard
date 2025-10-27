@@ -173,6 +173,7 @@ fi
 
 sudo mkdir -p "$CHARD_ROOT/run/chrome/wayland-0"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
+sudo mkdir -p "$CHARD_ROOT/tmp"
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
@@ -382,8 +383,6 @@ sudo mkdir -p "$CHARD_ROOT/dev/shm"
 sudo mkdir -p "$CHARD_ROOT/dev/pts"
 sudo mkdir -p "$CHARD_ROOT/proc"
 sudo mkdir -p "$CHARD_ROOT/sys"
-sudo mkdir -p "$CHARD_ROOT/tmp"
-sudo mkdir -p "$CHARD_ROOT/run"
 #sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.cargo"
 #sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.rustup"
 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/.local/share"
@@ -498,10 +497,12 @@ sudo mkdir -p "$CHARD_ROOT/run/user/0"
 sudo chmod 700 "$CHARD_ROOT/run/user/0"
 sudo mkdir -p "$CHARD_ROOT/run/user/1000"
 sudo chmod 700 "$CHARD_ROOT/run/user/1000"
-sudo mkdir -p "$CHARD_ROOT/run/dbus"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
+sudo mkdir -p "$CHARD_ROOT/dev/dri"
+sudo mkdir -p "$CHARD_ROOT/dev/input"
+sudo mkdir -p "$CHARD_ROOT/tmp"
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
@@ -1141,7 +1142,6 @@ else
     echo "${YELLOW}Warning:${RESET}${RED} GPU not detected. Using generic Xorg configuration.${RESET}"
 fi
 
-sudo mkdir -p "$CHARD_ROOT/run/dbus"
 sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
 
 echo "${RESET}${BLUE}[+] Mounting Chard Chroot${RESET}"
