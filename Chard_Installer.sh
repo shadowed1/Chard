@@ -1676,6 +1676,5 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
 
-
             sudo cp "$CHARD_ROOT/chardbuild.log" ~/
             echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
