@@ -351,21 +351,30 @@ done
 sudo grep -E "CONFIG_CGROUP_BPF|CONFIG_FANOTIFY|CONFIG_USER_NS|CONFIG_CRYPTO_USER_API_HASH|CONFIG_INPUT_MOUSEDEV" "$CHARD_ROOT/usr/src/linux/.config" | wc -l
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-CHARD_HOME=\$(cat /.chard_home)
 CHARD_USER=\$(cat /.chard_user)
+CHARD_HOME=\$(cat /.chard_home)
 
 GROUP_ID=601
 USER_ID=1000
 
 getent group \$GROUP_ID >/dev/null || groupadd -g \$GROUP_ID wayland
 
-useradd -u \$USER_ID -g \$GROUP_ID -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
-
-usermod -aG \$GROUP_ID \"\$CHARD_USER\"
+if ! id \"\$CHARD_USER\" &>/dev/null; then
+    useradd -u \$USER_ID -g \$GROUP_ID -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
+fi
 
 mkdir -p \"/\$CHARD_HOME\"
 chown \$USER_ID:\$GROUP_ID \"/\$CHARD_HOME\"
+
+mkdir -p /etc/sudoers.d
+chmod 750 /etc/sudoers.d
+
+echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
+chmod 440 /etc/sudoers.d/\$CHARD_USER
+
+echo \"Passwordless sudo configured for \$CHARD_USER\"
 "
+
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage"
 sudo mkdir -p "$CHARD_ROOT/etc/sandbox.d"
