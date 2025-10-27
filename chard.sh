@@ -480,6 +480,7 @@ sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CH
 sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
     mountpoint -q /proc    || mount -t proc proc /proc
     mountpoint -q /sys     || mount -t sysfs sys /sys
     mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
@@ -515,6 +516,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     umount -l /dev/pts    2>/dev/null || true
     umount -l /sys        2>/dev/null || true
     umount -l /proc       2>/dev/null || true
+    umount -l /dev        2>/dev/null || true
 "
 
 sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
