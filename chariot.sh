@@ -983,12 +983,12 @@ checkpoint_118() {
 }
 run_checkpoint 118 "emerge sys-apps/flatpak" checkpoint_118
 
-checkpoint_119() {
-    emerge app-admin/sudo
-    rm -rf /var/tmp/portage/app-admin/sudo-*
-    eclean-dist -d
-}
-run_checkpoint 119 "emerge app-admin/sudo" checkpoint_119
+#checkpoint_119() {
+#    emerge app-admin/sudo
+#    rm -rf /var/tmp/portage/app-admin/sudo-*
+#    eclean-dist -d
+#}
+#run_checkpoint 119 "emerge app-admin/sudo" checkpoint_119
 
 checkpoint_120() {
     echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
