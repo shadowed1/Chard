@@ -17,7 +17,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-LOG_FILE="/chariot.log"
+LOG_FILE="~/chariot.log"
 exec > >( tee -a "$LOG_FILE") 2>&1
 
 format_time() {
