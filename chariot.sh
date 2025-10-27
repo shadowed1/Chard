@@ -979,6 +979,7 @@ checkpoint_118() {
     #app-admin/sudo
     emerge sys-apps/flatpak
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     eclean-dist -d
 }
