@@ -1605,9 +1605,9 @@ sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
-
+##############################################################
 sudo chown -R $USER:$USER "$CHARD_ROOT"
-
+##############################################################
 sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
@@ -1615,24 +1615,24 @@ sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CH
 sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
 sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /proc    || mount -t proc proc /proc
-    mountpoint -q /sys     || mount -t sysfs sys /sys
-    mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
-    mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
-    mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
-
-    if [ -e /dev/zram0 ]; then
-        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-        mount --make-rslave /dev/zram0 2>/dev/null
-    fi
-
-    chmod 1777 /tmp /var/tmp
-
-    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                mountpoint -q /proc    || mount -t proc proc /proc
+                mountpoint -q /sys     || mount -t sysfs sys /sys
+                mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+                mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+                mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+            
+                if [ -e /dev/zram0 ]; then
+                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                    mount --make-rslave /dev/zram0 2>/dev/null
+                fi
+            
+                chmod 1777 /tmp /var/tmp
+            
+                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
 
                 CHARD_HOME=\$(cat /.chard_home)
                 CHARD_USER=\$(cat /.chard_user)
@@ -1653,28 +1653,28 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 umount -l /proc       2>/dev/null || true
                 umount -l /dev        2>/dev/null || true
             "
-            sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-            
-            show_progress
-            echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
-            
-            sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/tmp"          2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
 
-            sudo cp "$CHARD_ROOT/chardbuild.log" ~/
-            echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
+sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+
+show_progress
+echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
+
+sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp"          2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+sudo cp "$CHARD_ROOT/chardbuild.log" ~/
+echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
