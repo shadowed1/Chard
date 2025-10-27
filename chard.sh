@@ -511,7 +511,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     dbus-daemon --system --fork 2>/dev/null
 
-    /bin/bash
+    su -s /bin/bash \$USER
 
     umount -l /dev/zram0  2>/dev/null || true
     umount -l /etc/ssl    2>/dev/null || true
