@@ -38,26 +38,14 @@ export SANDBOX="$ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
-if [[ -f /etc/lsb-release ]]; then
-    BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
-    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "root")}
-else
-    BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
-    BOARD_NAME=${BOARD_NAME:-$(uname -n)}
-fi
-
-BOARD_NAME=${BOARD_NAME%%-*}
-
-if [[ "$BOARD_NAME" != "root" && -f /etc/lsb-release ]]; then
-    export XDG_RUNTIME_DIR="$ROOT/run/chrome"
-else
-    export XDG_RUNTIME_DIR="/run/user/1000"
-fi
-
 export PORTDIR="$ROOT/usr/portage"
 export DISTDIR="$ROOT/var/cache/distfiles"
 export PKGDIR="$ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$ROOT/var/tmp"
+
+# <<< CHARD_XDG_RUNTIME_DIR >>>
+export XDG_RUNTIME=""
+# <<< END CHARD_XDG_RUNTIME_DIR >>>
 
 PERL_BASES=("$ROOT/usr/lib64/perl5" "$ROOT/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
 all_perl_versions=()
