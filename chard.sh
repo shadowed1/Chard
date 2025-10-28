@@ -312,7 +312,6 @@ case "$cmd" in
                               "$CHARD_ROOT/$CHARD_HOME/Desktop" \
                               "$CHARD_ROOT/mnt"
                 
-                sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
                 sudo mkdir -p "$(dirname "$LOG_FILE")"
                 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
                 
