@@ -164,7 +164,7 @@ checkpoint_3() {
 run_checkpoint 3 'USE="-gui" emerge -1 dev-build/cmake' checkpoint_3
 
 checkpoint_4() {
-    source ~/.bashrc
+    #source ~/.bashrc
     #emerge sys-devel/gcc
     #rm -rf /var/tmp/portage/sys-devel/gcc-*
     eclean-dist -d
