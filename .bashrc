@@ -229,6 +229,7 @@ export DISPLAY=":0"
 export GDK_BACKEND="wayland"
 export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
+export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
 export LIBGL_ALWAYS_INDIRECT=1
