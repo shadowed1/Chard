@@ -226,12 +226,13 @@ export M4PATH="$ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
 export MANPATH="$ROOT/usr/share/man:$ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
 export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
 export DISPLAY=":0"
-export GDK_BACKEND="wayland,x11"
+export GDK_BACKEND="wayland"
 export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export EGL_PLATFORM=wayland
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
 export LIBGL_ALWAYS_INDIRECT=1
+export QT_QPA_PLATFORM=wayland
 
 MAKECONF="$ROOT/etc/portage/make.conf"
 if [[ -w "$MAKECONF" ]]; then
