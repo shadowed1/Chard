@@ -484,11 +484,18 @@ sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHA
 sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /proc    || mount -t proc proc /proc
-    mountpoint -q /sys     || mount -t sysfs sys /sys
-    mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
-    mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
-    mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+    mountpoint -q /proc       || mount -t proc proc /proc
+    mountpoint -q /sys        || mount -t sysfs sys /sys
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl
+
+    CHARD_HOME=\$(cat /.chard_home)
+    HOME=\$CHARD_HOME
+    CHARD_USER=\$(cat /.chard_user)
+    USER=\$CHARD_USER
+    GROUP_ID=601
+    USER_ID=1000
 
     if [ -e /dev/zram0 ]; then
         mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
@@ -501,7 +508,12 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
     [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
     [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-    
+
+    dbus-daemon --system --fork 2>/dev/null
+
+"
+
+sudo chroot --userspec=1000:601 "$CHARD_ROOT" /bin/bash -c "
     CHARD_HOME=\$(cat /.chard_home)
     HOME=\$CHARD_HOME
     CHARD_USER=\$(cat /.chard_user)
@@ -510,16 +522,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     USER_ID=1000
     source \$HOME/.bashrc 2>/dev/null
     source \$HOME/.smrt_env.sh
-
-    dbus-daemon --system --fork 2>/dev/null
-
-    umount -l /dev/zram0  2>/dev/null || true
-    umount -l /etc/ssl    2>/dev/null || true
-    umount -l /dev/shm    2>/dev/null || true
-    umount -l /dev/pts    2>/dev/null || true
-    umount -l /sys        2>/dev/null || true
-    umount -l /proc       2>/dev/null || true
-    umount -l /dev        2>/dev/null || true
+    /bin/bash
 "
 sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
@@ -527,8 +530,6 @@ sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-
-# su -s /bin/bash \$USER removed from chroot
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
