@@ -494,7 +494,7 @@ EOF
             HOME=\$CHARD_HOME
             CHARD_USER=\$(cat /.chard_user)
             USER=\$CHARD_USER
-            GROUP_ID=601
+            GROUP_ID=1000
             USER_ID=1000
         
             if [ -e /dev/zram0 ]; then
