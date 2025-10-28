@@ -513,8 +513,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
     dbus-daemon --system --fork 2>/dev/null
 
-    su -s /bin/bash \$USER
-
     umount -l /dev/zram0  2>/dev/null || true
     umount -l /etc/ssl    2>/dev/null || true
     umount -l /dev/shm    2>/dev/null || true
@@ -529,6 +527,8 @@ sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+
+# su -s /bin/bash \$USER removed from chroot
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
