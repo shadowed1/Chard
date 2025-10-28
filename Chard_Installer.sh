@@ -144,7 +144,6 @@ sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
@@ -565,7 +564,6 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/tmp"          2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
@@ -1261,7 +1259,6 @@ sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHA
 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
 sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
 sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
-sudo mountpoint -q "$CHARD_ROOT/tmp"        || sudo mount --bind /tmp "$CHARD_ROOT/tmp"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
     mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
     mountpoint -q /proc    || mount -t proc proc /proc
@@ -1311,7 +1308,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     umount -l /proc       2>/dev/null || true
     umount -l /dev        2>/dev/null || true
 "
-sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
@@ -1646,7 +1642,6 @@ sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
@@ -1704,7 +1699,6 @@ sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
