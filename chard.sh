@@ -482,12 +482,32 @@ EOF
                 umount -l /proc       2>/dev/null || true
                 umount -l /dev        2>/dev/null || true
             "
-            sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-                        
+                sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+                sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+                sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+                sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+                sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+    
+                if [[ -f /etc/lsb-release ]]; then
+                    BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+                    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "root")}
+                else
+                    BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
+                    BOARD_NAME=${BOARD_NAME:-$(uname -n)}
+                fi
+                
+                BOARD_NAME=${BOARD_NAME%%-*}
+                
+                if grep -q "CHROMEOS_RELEASE" /etc/lsb-release 2>/dev/null; then
+                    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/chrome"'
+                else
+                    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/user/1000"'
+                fi
+                
+                sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
+                # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
+                "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+                            
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 ;;
             2)
