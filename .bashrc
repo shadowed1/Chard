@@ -233,6 +233,9 @@ export EGL_PLATFORM=wayland
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
 export LIBGL_ALWAYS_INDIRECT=1
 export QT_QPA_PLATFORM=wayland
+export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
+export SOMMELIER_GLAMOR=1
+export SOMMELIER_VERSION=0.20
 
 MAKECONF="$ROOT/etc/portage/make.conf"
 if [[ -w "$MAKECONF" ]]; then
