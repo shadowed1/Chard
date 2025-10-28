@@ -25,9 +25,10 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libGLX.so.0"
     "$CHARD_ROOT/usr/lib64/libxml2.so.16"
     "$CHARD_ROOT/usr/lib64/libstemmer.so.3"
-    "$CHARD_ROOT/usr/lib64/libdconf.so.1"
+    #"$CHARD_ROOT/usr/lib64/libdconf.so.1"
     "$CHARD_ROOT/usr/lib64/libseccomp.so.2"
-    "$CHARD_ROOT/usr/lib64/libjson-glib-1.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libjson-glib-1.0.so.0"
+    "$CHARD_ROOT/usr/lib64/libnghttp3.so.9"
 )
 
 LD_PRELOAD=""
