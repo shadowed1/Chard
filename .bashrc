@@ -54,7 +54,6 @@ else
     export XDG_RUNTIME_DIR="/run/user/1000"
 fi
 
-
 export PORTDIR="$ROOT/usr/portage"
 export DISTDIR="$ROOT/var/cache/distfiles"
 export PKGDIR="$ROOT/var/cache/packages"
