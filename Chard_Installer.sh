@@ -174,7 +174,6 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
     } >> "$TARGET_FILE"
 fi
 
-sudo mkdir -p "$CHARD_ROOT/run/chrome/wayland-0"
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 sudo mkdir -p "$CHARD_ROOT/tmp"
 sudo mkdir -p "$CHARD_ROOT/run/cras"
