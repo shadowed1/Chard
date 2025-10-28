@@ -482,7 +482,6 @@ EOF
                 umount -l /proc       2>/dev/null || true
                 umount -l /dev        2>/dev/null || true
             "
-            sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
@@ -510,7 +509,6 @@ EOF
             sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/tmp"          2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
@@ -577,7 +575,6 @@ EOF
             umount -l /proc       2>/dev/null || true
             umount -l /dev        2>/dev/null || true
         "
-        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
