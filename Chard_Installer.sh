@@ -353,7 +353,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 CHARD_USER=\$(cat /.chard_user)
 CHARD_HOME=\$(cat /.chard_home)
 
-GROUP_ID=601
+GROUP_ID=1000
 USER_ID=1000
 
 getent group \$GROUP_ID >/dev/null || groupadd -g \$GROUP_ID wayland
@@ -377,7 +377,7 @@ echo \"Passwordless sudo configured for \$CHARD_USER\"
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home")
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user")
 USER_ID=1000
-GROUP_ID=601
+GROUP_ID=1000
 PASSWD_FILE="$CHARD_ROOT/etc/passwd"
 
 if grep -q "^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::" "$PASSWD_FILE"; then
