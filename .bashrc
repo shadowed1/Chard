@@ -231,6 +231,7 @@ export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export EGL_PLATFORM=wayland
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+export LIBGL_ALWAYS_INDIRECT=1
 
 MAKECONF="$ROOT/etc/portage/make.conf"
 if [[ -w "$MAKECONF" ]]; then
