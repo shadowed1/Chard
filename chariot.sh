@@ -967,6 +967,13 @@ run_checkpoint 116 "emerge gui-libs/egl-gbm" checkpoint_116
 
 checkpoint_117() {
     cd /tmp
+    git clone https://gn.googlesource.com/gn
+    cd gn
+    python build/gen.py
+    ninja -C out
+    export PATH=$PWD/out:$PATH
+    gn --version
+    cd /tmp
     git clone https://chromium.googlesource.com/chromiumos/platform2
     cd platform2/vm_tools/sommelier
     meson setup build
