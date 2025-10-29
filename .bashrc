@@ -254,6 +254,23 @@ eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
-source "$HOME/.smrt_env.sh"
+
+if [[ -f "$HOME/.smrt_env.sh" ]]; then
+    if [[ -z "$SMRT_WATCH_PID" ]] || ! kill -0 "$SMRT_WATCH_PID" 2>/dev/null; then
+        (
+            LAST_MOD=""
+            while true; do
+                [[ -f "$HOME/.smrt_env.sh" ]] || { sleep 10; continue; }
+                MOD_TIME=$(stat -c %Y "$HOME/.smrt_env.sh" 2>/dev/null)
+                if [[ "$MOD_TIME" != "$LAST_MOD" ]]; then
+                    source "$HOME/.smrt_env.sh"
+                    LAST_MOD="$MOD_TIME"
+                fi
+                sleep 10
+            done
+        ) &
+        export SMRT_WATCH_PID=$!
+    fi
+fi
 
 # <<< END CHARD .BASHRC >>>
