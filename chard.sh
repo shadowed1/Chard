@@ -387,7 +387,6 @@ case "$cmd" in
                 sudo chmod +x "$CHARD_ROOT/bin/chariot"
                 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
-                sudo chown 1000:1000 $CHARD_ROOT
                 for file in \
                     "$CHARD_ROOT/.chardrc" \
                     "$CHARD_ROOT/.chard.env" \
