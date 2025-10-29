@@ -136,6 +136,26 @@ done
 
 source "$SMRT_ENV_FILE" 2>/dev/null
 
+SMRT_LOOP_PID_FILE="$HOME/.smrt_env_loop.pid"
+
+if [[ -f "$SMRT_LOOP_PID_FILE" ]]; then
+    if ps -p "$(cat "$SMRT_LOOP_PID_FILE")" > /dev/null 2>&1; then
+        :
+    else
+        rm -f "$SMRT_LOOP_PID_FILE"
+    fi
+fi
+
+if [[ ! -f "$SMRT_LOOP_PID_FILE" ]]; then
+    (
+        while true; do
+            source "$HOME/.smrt_env.sh" 2>/dev/null
+            sleep 10
+        done
+    ) &
+    echo $! > "$SMRT_LOOP_PID_FILE"
+fi
+
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
 echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${CYAN} - Allocated ${ALLOCATED_COUNT} threads (${PCT}%)${RESET}"
 echo ""
