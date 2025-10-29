@@ -999,13 +999,14 @@ checkpoint_120() {
 run_checkpoint 120 "emerge firefox-bin" checkpoint_120
 
 checkpoint_121() {
+    emerge net-misc/yt-dlp
     emerge media-libs/libopus
     emerge media-video/vlc
     rm -rf /var/tmp/portage/media-libs/libopus-*
     rm -rf /var/tmp/portage/media-video/vlc-*
     eclean-dist -d
 }
-run_checkpoint 121 "emerge vlc" checkpoint_121
+run_checkpoint 121 "emerge yt-dlp + vlc" checkpoint_121
 
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
