@@ -325,6 +325,8 @@ case "$cmd" in
                 chmod 755 /etc/sudoers.d
                 chown root:root /etc/sudoers.d/\$USER
                 chmod 440 /etc/sudoers.d/\$USER
+                chown root:root /usr/bin/sudo
+                chmod 4755 /usr/bin/sudo
                 echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
                 echo \"Passwordless sudo configured for \$CHARD_USER\"
                 "
