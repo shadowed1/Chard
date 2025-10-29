@@ -1576,7 +1576,7 @@ fi
 
 BOARD_NAME=${BOARD_NAME%%-*}
 
-sudo tee "$CHARD_ROOT/root/.chard_prompt.sh" >/dev/null <<EOF
+sudo tee "$CHARD_ROOT/usr/.chard_prompt.sh" >/dev/null <<EOF
 #!/bin/bash
 BOLD='\\[\\e[1m\\]'
 RED='\\[\\e[31m\\]'
@@ -1587,10 +1587,10 @@ PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET
 export PS1
 EOF
 
-sudo chmod +x "$CHARD_ROOT/root/.chard_prompt.sh"
-if ! grep -q '/root/.chard_prompt.sh' "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null; then
+sudo chmod +x "$CHARD_ROOT/usr/.chard_prompt.sh"
+if ! grep -q '/usr/.chard_prompt.sh' "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null; then
     sudo tee -a "$CHARD_ROOT/$CHARD_HOME/.bashrc" > /dev/null <<'EOF'
-source /root/.chard_prompt.sh
+source /usr/.chard_prompt.sh
 EOF
 fi
 
