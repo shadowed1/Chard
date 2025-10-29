@@ -1594,6 +1594,7 @@ source /root/.chard_prompt.sh
 EOF
 fi
 
+sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESSING_START_METHOD=fork'
 
     WAYLAND_CONF_DIR="$CHARD_ROOT/etc/profile.d"
