@@ -51,6 +51,7 @@ echo
 echo "${GREEN}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
 echo "${GREEN}- Chard is currently in early development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
 echo
+echo
 
 format_time() {
     local total_seconds=$1
