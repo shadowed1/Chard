@@ -256,32 +256,93 @@ alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
+BASHRC_FILE="$HOME/.bashrc"
+SMRT_REFRESH_INTERVAL=10
+TRIGGER_FILE="$HOME/.smrt_refresh_trigger"
+
+replace_smrt_block() {
+    [[ ! -f "$SMRT_ENV_FILE" ]] && return
+
+    {
+        echo "# <<< CHARD_SMRT >>>"
+        echo "# SMRT exports"
+        grep -E '^export[[:space:]]' "$SMRT_ENV_FILE"
+        echo
+        echo "# Aliases"
+        grep -E '^alias[[:space:]]' "$SMRT_ENV_FILE"
+        echo "# <<< END CHARD_SMRT >>>"
+    } > "$HOME/.smrt_temp_block"
+
+    if grep -q "# <<< CHARD_SMRT >>>" "$BASHRC_FILE"; then
+        awk -v RS='' \
+            -v new="$(<"$HOME/.smrt_temp_block")" \
+            'BEGIN{split("",out)}{
+                if ($0 ~ /# <<< CHARD_SMRT >>>/) {
+                    gsub(/# <<< CHARD_SMRT >>>(.|\n)*# <<< END CHARD_SMRT >>>/, new)
+                }
+                print
+            }' "$BASHRC_FILE" > "$HOME/.bashrc.tmp"
+        mv "$HOME/.bashrc.tmp" "$BASHRC_FILE"
+    else
+        # If not found, append the new block
+        cat "$HOME/.smrt_temp_block" >> "$BASHRC_FILE"
+    fi
+
+    rm -f "$HOME/.smrt_temp_block"
+    echo -e "[SMRT] Updated .bashrc at $(date +%H:%M:%S)"
+}
+
 if [[ -f "$SMRT_ENV_FILE" ]]; then
     if [[ -z "$SMRT_WATCH_PID" ]] || ! kill -0 "$SMRT_WATCH_PID" 2>/dev/null; then
         (
             LAST_MOD=""
             while true; do
-                [[ -f "$SMRT_ENV_FILE" ]] || { sleep 10; continue; }
+                [[ -f "$SMRT_ENV_FILE" ]] || { sleep "$SMRT_REFRESH_INTERVAL"; continue; }
                 MOD_TIME=$(stat -c %Y "$SMRT_ENV_FILE" 2>/dev/null)
-
                 if [[ "$MOD_TIME" != "$LAST_MOD" ]]; then
-                    while IFS= read -r line; do
-                        [[ "$line" =~ ^export[[:space:]] ]] && eval "${line#export }"
-                    done < "$SMRT_ENV_FILE"
-
-                    unalias $(alias | awk -F'[ =]' '/taskset -c/ {print $2}') 2>/dev/null
-                    while IFS= read -r line; do
-                        [[ "$line" =~ ^alias[[:space:]] ]] && eval "$line"
-                    done < "$SMRT_ENV_FILE"
-
-                    echo -e "[SMRT] Environment refreshed at $(date +%H:%M:%S)"
+                    echo "refresh" > "$TRIGGER_FILE"
                     LAST_MOD="$MOD_TIME"
                 fi
-                sleep 10
+                sleep "$SMRT_REFRESH_INTERVAL"
             done
         ) &
         export SMRT_WATCH_PID=$!
     fi
 fi
+
+(
+    while true; do
+        if [[ -f "$TRIGGER_FILE" ]]; then
+            rm -f "$TRIGGER_FILE"
+            replace_smrt_block
+        fi
+        sleep "$SMRT_REFRESH_INTERVAL"
+    done
+) &
+
+
+# <<< CHARD_SMRT >>>
+# SMRT exports
+export SMRT_DEFAULT_PCT=""
+export TASKSET=''
+export MAKEOPTS=''
+export EMERGE_DEFAULT_OPTS="--quiet-build=y"
+
+# Aliases
+alias make='make'
+alias emerge='emerge'
+alias ninja='ninja'
+alias meson='meson'
+alias cmake='cmake'
+alias tar='tar'
+alias gzip='gzip'
+alias bzip2='bzip2'
+alias xz='xz'
+alias rsync='rsync'
+alias gcc='gcc'
+alias g++='g++'
+alias python='python'
+alias install='install'
+# <<< END CHARD_SMRT >>>
 
 # <<< END CHARD .BASHRC >>>
