@@ -499,14 +499,16 @@ EOF
                 [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
                 [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
                 [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-                
+
+                mkdir -p /var/db/pkg /var/lib/portage
                 CHARD_HOME=\$(cat /.chard_home)
                 CHARD_USER=\$(cat /.chard_user)
                 HOME=\$CHARD_HOME
                 USER=\$CHARD_USER
                 source \$HOME/.bashrc 2>/dev/null
-                chown \$USER:\$USER /var/lib/portage/world
-                chmod 644 /var/lib/portage/world 
+                chown -R portage:portage /var/db/pkg /var/lib/portage
+                chmod -R 755 /var/db/pkg
+                chmod 644 /var/lib/portage/world
                 source \$HOME/.smrt_env.sh
                 emerge app-misc/resolve-march-native && \
                 MARCH_FLAGS=\$(resolve-march-native) && \
