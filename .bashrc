@@ -255,15 +255,26 @@ eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
-if [[ -f "$HOME/.smrt_env.sh" ]]; then
+SMRT_ENV_FILE="$HOME/.smrt_env.sh"
+if [[ -f "$SMRT_ENV_FILE" ]]; then
     if [[ -z "$SMRT_WATCH_PID" ]] || ! kill -0 "$SMRT_WATCH_PID" 2>/dev/null; then
         (
             LAST_MOD=""
             while true; do
-                [[ -f "$HOME/.smrt_env.sh" ]] || { sleep 10; continue; }
-                MOD_TIME=$(stat -c %Y "$HOME/.smrt_env.sh" 2>/dev/null)
+                [[ -f "$SMRT_ENV_FILE" ]] || { sleep 10; continue; }
+                MOD_TIME=$(stat -c %Y "$SMRT_ENV_FILE" 2>/dev/null)
+
                 if [[ "$MOD_TIME" != "$LAST_MOD" ]]; then
-                    source "$HOME/.smrt_env.sh"
+                    while IFS= read -r line; do
+                        [[ "$line" =~ ^export[[:space:]] ]] && eval "${line#export }"
+                    done < "$SMRT_ENV_FILE"
+
+                    unalias $(alias | awk -F'[ =]' '/taskset -c/ {print $2}') 2>/dev/null
+                    while IFS= read -r line; do
+                        [[ "$line" =~ ^alias[[:space:]] ]] && eval "$line"
+                    done < "$SMRT_ENV_FILE"
+
+                    echo -e "[SMRT] Environment refreshed at $(date +%H:%M:%S)"
                     LAST_MOD="$MOD_TIME"
                 fi
                 sleep 10
