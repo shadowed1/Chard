@@ -18,11 +18,10 @@ RESET=$(tput sgr0)
 
 HOME=/$CHARD_HOME
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
-BASHRC_FILE="$HOME/.bashrc"
-SMRT_WRAPPER_START="# <<< CHARD_SMRT >>>"
-SMRT_WRAPPER_END="# <<< END CHARD_SMRT >>>"
 
-[[ -f "$SMRT_ENV_FILE" ]] && source "$SMRT_ENV_FILE"
+if [[ -f "$SMRT_ENV_FILE" ]]; then
+    source "$SMRT_ENV_FILE"
+fi
 
 if [[ -n "$1" ]]; then
     SMRT_DEFAULT_PCT="$1"
@@ -31,10 +30,14 @@ elif [[ -z "$SMRT_DEFAULT_PCT" ]]; then
 fi
 PCT="$SMRT_DEFAULT_PCT"
 
-if command -v lscpu >/dev/null 2>&1; then
-    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
+if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
+    mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
+        awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
 else
-    mapfile -t CORES < <(awk -v c=-1 '/^processor/ {c=$3} /cpu MHz/ && c>=0 {print c ":" $4; c=-1}' /proc/cpuinfo | sort -t: -k2,2n)
+    mapfile -t CORES < <(awk -v c=-1 '
+        /^processor/ {c=$3}
+        /cpu MHz/ && c>=0 {print c ":" $4; c=-1}
+    ' /proc/cpuinfo | sort -t: -k2,2n)
 fi
 TOTAL_CORES=$(nproc)
 
@@ -45,10 +48,23 @@ else
     mhz_values=($(printf '%s\n' "${CORES[@]}" | cut -d: -f2 | sort -n))
     count=${#mhz_values[@]}
     mid=$((count / 2))
-    threshold=$(( count % 2 == 0 ? (mhz_values[mid-1]+mhz_values[mid])/2 : mhz_values[mid] ))
+    if (( count % 2 == 0 )); then
+        threshold=$(awk "BEGIN {print (${mhz_values[mid-1]} + ${mhz_values[mid]}) / 2}")
+    else
+        threshold="${mhz_values[mid]}"
+    fi
     E_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | awk -v t="$threshold" -F: '{if ($2 <= t) print $1}' | paste -sd, -)
     P_CORES_ALL=$(printf '%s\n' "${CORES[@]}" | awk -v t="$threshold" -F: '{if ($2 > t) print $1}' | paste -sd, -)
     [[ -z "$E_CORES_ALL" ]] && { E_CORES_ALL=$(seq -s, 0 $((TOTAL_CORES - 1))); P_CORES_ALL=""; }
+
+    E_CORES_ALL=$(echo "$E_CORES_ALL" | tr ',' '\n' | sort -n | paste -sd, -)
+    P_CORES_ALL=$(echo "$P_CORES_ALL" | tr ',' '\n' | sort -n | paste -sd, -)
+
+    if [[ -z "$ALLOCATED_CORES" ]]; then
+    TASKSET=""
+    else
+        TASKSET="taskset -c $ALLOCATED_CORES"
+    fi
 fi
 
 allocate_cores() {
@@ -72,6 +88,7 @@ allocate_cores() {
     echo "$selected_cores"
 }
 
+PCT="${1:-75}" 
 if ! [[ "$PCT" =~ ^[0-9]+$ ]] || (( PCT < 1 || PCT > 100 )); then
     echo "${RED}Error: Please provide a percentage between 1 and 100${RESET}"
     exit 1
@@ -89,45 +106,33 @@ fi
 
 ALLOCATED_CORES=$(allocate_cores $REQUESTED_THREADS)
 ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
+
 TASKSET="taskset -c $ALLOCATED_CORES"
 MAKEOPTS="-j$ALLOCATED_COUNT"
-EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
 
-{
-    echo "# SMRT exports"
-    echo "export SMRT_DEFAULT_PCT=\"$PCT\""
-    echo "export TASKSET='$TASKSET'"
-    echo "export MAKEOPTS='$MAKEOPTS'"
-    echo "export EMERGE_DEFAULT_OPTS=\"$EMERGE_DEFAULT_OPTS\""
-    echo
-    echo "# Aliases"
-    for tool in make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2; do
-        command -v "$tool" >/dev/null 2>&1 && echo "alias $tool='$TASKSET $tool $MAKEOPTS'"
-    done
-    for tool in cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build cc1plus cc1; do
-        command -v "$tool" >/dev/null 2>&1 && echo "alias $tool='$TASKSET $tool'"
-    done
-} > "$SMRT_ENV_FILE"
+cat > "$SMRT_ENV_FILE" <<EOF
+# SMRT exports
+export SMRT_DEFAULT_PCT="$PCT"
+export TASKSET='taskset -c $ALLOCATED_CORES'
+export MAKEOPTS='-j$ALLOCATED_COUNT'
+export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
 
-replace_bashrc_smrt() {
-    [[ ! -f "$BASHRC_FILE" ]] && return
-    TMPFILE=$(mktemp)
-    {
-        awk -v start="$SMRT_WRAPPER_START" -v end="$SMRT_WRAPPER_END" -v envfile="$SMRT_ENV_FILE" '
-        BEGIN { inside=0 }
-        {
-            if ($0 ~ start) { print ""; inside=1; next }
-            if ($0 ~ end) { inside=0; next }
-            if (!inside) print
-        }' "$BASHRC_FILE"
-        echo "$SMRT_WRAPPER_START"
-        cat "$SMRT_ENV_FILE"
-        echo "$SMRT_WRAPPER_END"
-    } > "$TMPFILE"
-    mv "$TMPFILE" "$BASHRC_FILE"
-}
+# Aliases
+EOF
 
-replace_bashrc_smrt
+parallel_tools=(make emerge ninja scons meson cmake tar gzip bzip2 xz rsync pigz pxz pbzip2)
+for tool in "${parallel_tools[@]}"; do
+    if command -v "$tool" >/dev/null 2>&1; then
+        echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
+    fi
+done
+
+serial_tools=(cargo go rustc gcc g++ clang clang++ ccache waf python pip install npm yarn node gyp bazel b2 bjam dune dune-build cc1plus cc1)
+for tool in "${serial_tools[@]}"; do
+    if command -v "$tool" >/dev/null 2>&1; then
+        echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
+    fi
+done
 
 source "$SMRT_ENV_FILE"
 
