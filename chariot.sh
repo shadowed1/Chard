@@ -164,12 +164,46 @@ checkpoint_3() {
 run_checkpoint 3 'USE="-gui" emerge -1 dev-build/cmake' checkpoint_3
 
 checkpoint_4() {
+    emerge app-misc/resolve-march-native
+    TARGET_FILE="$HOME/.bashrc"
+    BACKUP_FILE="$TARGET_FILE.bak"
+    [[ -f "$TARGET_FILE" ]] || { echo "File not found: $TARGET_FILE"; exit 1; }
+    cp "$TARGET_FILE" "$BACKUP_FILE"
+    NATIVE_FLAGS=$(resolve-march-native)
+    CLEAN_FLAGS=$(echo "$NATIVE_FLAGS" | sed -E 's/\+crc//g; s/\+crypto//g')
+    APPEND_FLAGS="$CLEAN_FLAGS"
+
+    read -r -d '' NEW_BLOCK << EOM
+# <<< CHARD_MARCH_NATIVE >>>
+CFLAGS="-march=native -O2 -pipe $APPEND_FLAGS"
+[[ -d "\$ROOT/usr/include" ]] && CFLAGS+="-I\$ROOT/usr/include "
+[[ -d "\$ROOT/include" ]] && CFLAGS+="-I\$ROOT/include "
+export CFLAGS
+
+COMMON_FLAGS="-march=native -O2 -pipe $APPEND_FLAGS"
+FCFLAGS="\$COMMON_FLAGS"
+FFLAGS="\$COMMON_FLAGS"
+
+CXXFLAGS="\$CFLAGS"
+# <<< END CHARD_MARCH_NATIVE >>>
+EOM
+
+    awk -v newblock="$NEW_BLOCK" '
+BEGIN { inside=0 }
+/# <<< CHARD_MARCH_NATIVE >>>/ { 
+    print newblock; inside=1; next 
+}
+/# <<< END CHARD_MARCH_NATIVE >>>/ { inside=0; next }
+!inside { print }
+    ' "$BACKUP_FILE" > "$TARGET_FILE"
+
     #source ~/.bashrc
     #emerge sys-devel/gcc
     #rm -rf /var/tmp/portage/sys-devel/gcc-*
+    rm -rf /var/tmp/portage/app-misc/resolve-march-native-*
     eclean-dist -d
 }
-run_checkpoint 4 "emerge sys-devel/gcc" checkpoint_4
+run_checkpoint 4 "emerge resolve-march-native" checkpoint_4
 
 checkpoint_5() {
     emerge dev-libs/gmp
