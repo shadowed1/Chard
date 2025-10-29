@@ -154,6 +154,9 @@ if [[ -n "$second_latest_llvm" ]]; then
     [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 fi
 
+echo ">=dev-libs/llvm-${latest_llvm}" >> /etc/portage/package.mask
+echo ">=sys-devel/clang-${latest_llvm}" >> /etc/portage/package.mask
+
 export CC="$ROOT/usr/bin/gcc"
 export CXX="$ROOT/usr/bin/g++"
 export AR="$ROOT/usr/bin/ar"
