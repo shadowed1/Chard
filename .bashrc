@@ -256,7 +256,6 @@ alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
-BASHRC_FILE="$HOME/.bashrc"
 SMRT_REFRESH_INTERVAL=10
 TRIGGER_FILE="$HOME/.smrt_refresh_trigger"
 
@@ -271,25 +270,22 @@ replace_smrt_block() {
         echo "# Aliases"
         grep -E '^alias[[:space:]]' "$SMRT_ENV_FILE"
         echo "# <<< END CHARD_SMRT >>>"
-    } > "$HOME/.smrt_temp_block"
+    } > /tmp/.smrt_temp_block
 
-    if grep -q "# <<< CHARD_SMRT >>>" "$BASHRC_FILE"; then
-        awk -v RS='' \
-            -v new="$(<"$HOME/.smrt_temp_block")" \
-            'BEGIN{split("",out)}{
-                if ($0 ~ /# <<< CHARD_SMRT >>>/) {
-                    gsub(/# <<< CHARD_SMRT >>>(.|\n)*# <<< END CHARD_SMRT >>>/, new)
-                }
+    if grep -q "# <<< CHARD_SMRT >>>" "$0"; then
+        awk -v new="$(< /tmp/.smrt_temp_block)" '
+            BEGIN { RS=""; ORS="\n\n" }
+            {
+                if ($0 ~ /# <<< CHARD_SMRT >>>(.|\n)*# <<< END CHARD_SMRT >>>/)
+                    sub(/# <<< CHARD_SMRT >>>(.|\n)*# <<< END CHARD_SMRT >>>/, new)
                 print
-            }' "$BASHRC_FILE" > "$HOME/.bashrc.tmp"
-        mv "$HOME/.bashrc.tmp" "$BASHRC_FILE"
+            }' "$0" > /tmp/.bashrc.tmp && mv /tmp/.bashrc.tmp "$0"
     else
-        # If not found, append the new block
-        cat "$HOME/.smrt_temp_block" >> "$BASHRC_FILE"
+        cat /tmp/.smrt_temp_block >> "$0"
     fi
 
-    rm -f "$HOME/.smrt_temp_block"
-    echo -e "[SMRT] Updated .bashrc at $(date +%H:%M:%S)"
+    rm -f /tmp/.smrt_temp_block
+    echo "[SMRT] Updated .bashrc at $(date +%H:%M:%S)"
 }
 
 if [[ -f "$SMRT_ENV_FILE" ]]; then
@@ -319,7 +315,6 @@ fi
         sleep "$SMRT_REFRESH_INTERVAL"
     done
 ) &
-
 
 # <<< CHARD_SMRT >>>
 # SMRT exports
