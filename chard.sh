@@ -512,7 +512,9 @@ EOF
                 chown -R portage:portage /var/db/pkg /var/lib/portage
                 chmod -R 755 /var/db/pkg
                 chmod 644 /var/lib/portage/world
+                /bin/SMRT
                 source \$HOME/.smrt_env.sh
+                chown 1000:1000 \$HOME/.smrt_env.sh
                 emerge app-misc/resolve-march-native && \
                 MARCH_FLAGS=\$(resolve-march-native) && \
                 BASHRC=\"\$HOME/.bashrc\" && \
