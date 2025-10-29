@@ -1002,6 +1002,7 @@ checkpoint_121() {
     emerge net-misc/yt-dlp
     emerge media-libs/libopus
     emerge media-video/vlc
+    rm -rf /var/tmp/portage/net-misc/yt-dlp-*
     rm -rf /var/tmp/portage/media-libs/libopus-*
     rm -rf /var/tmp/portage/media-video/vlc-*
     eclean-dist -d
