@@ -255,24 +255,4 @@ eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
-SMRT_LOOP_PID_FILE="$HOME/.smrt_env_loop.pid"
-
-if [[ -f "$SMRT_LOOP_PID_FILE" ]]; then
-    if ps -p "$(cat "$SMRT_LOOP_PID_FILE")" > /dev/null 2>&1; then
-        :
-    else
-        rm -f "$SMRT_LOOP_PID_FILE"
-    fi
-fi
-
-if [[ ! -f "$SMRT_LOOP_PID_FILE" ]]; then
-    (
-        while true; do
-            source "$HOME/.smrt_env.sh" 2>/dev/null
-            sleep 10
-        done
-    ) &
-    echo $! > "$SMRT_LOOP_PID_FILE"
-fi
-
 # <<< END CHARD .BASHRC >>>
