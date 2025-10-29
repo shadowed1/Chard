@@ -1760,6 +1760,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 env-update
                 dbus-daemon --system --fork 2>/dev/null
                 SMRT
+                chown 1000:1000 \$HOME/.smrt_env.sh
                 source \$HOME/.smrt_env.sh
                 sleep 2
                 /bin/chariot
