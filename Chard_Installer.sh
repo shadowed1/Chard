@@ -1230,7 +1230,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     source \$HOME/.bashrc 2>/dev/null
     chown \$USER:\$USER /var/lib/portage/world
     chmod 644 /var/lib/portage/world 
-    emerge --sync
     /bin/SMRT
     source \$HOME/.smrt_env.sh
 
