@@ -1295,9 +1295,12 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     chmod 644 /var/lib/portage/world 
     source \$HOME/.smrt_env.sh
     emerge app-admin/sudo
+    mkdir -p /etc/sudoers.d/\$USER
     chown root:root /etc/sudoers.d
     chmod 755 /etc/sudoers.d
     chown root:root /etc/sudoers.d/\$USER
+    chown root:root /etc/sudo.conf
+    chown root:root /usr/bin/sudo
     chmod 440 /etc/sudoers.d/\$USER
     emerge app-misc/resolve-march-native && \
     MARCH_FLAGS=\$(resolve-march-native) && \
