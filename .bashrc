@@ -262,16 +262,33 @@ TRIGGER_FILE="$HOME/.smrt_refresh_trigger"
 replace_smrt_block() {
     [[ ! -f "$SMRT_ENV_FILE" ]] && return
 
-    {
-        echo "# <<< CHARD_SMRT >>>"
-        echo "# SMRT exports"
-        grep -E '^export[[:space:]]' "$SMRT_ENV_FILE"
-        echo
-        echo "# Aliases"
-        grep -E '^alias[[:space:]]' "$SMRT_ENV_FILE"
-        echo "# <<< END CHARD_SMRT >>>"
-    } > /tmp/.smrt_temp_block
+    cat <<'EOF' > /tmp/.smrt_temp_block
+# <<< CHARD_SMRT >>>
+# SMRT exports
+export SMRT_DEFAULT_PCT="75"
+export TASKSET='taskset -c 4,5,6,7,0,1'
+export MAKEOPTS='-j6'
+export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=6 --load-average=6"
 
+# Aliases
+alias make='taskset -c 4,5,6,7,0,1 make -j6'
+alias emerge='taskset -c 4,5,6,7,0,1 emerge -j6'
+alias ninja='taskset -c 4,5,6,7,0,1 ninja -j6'
+alias meson='taskset -c 4,5,6,7,0,1 meson -j6'
+alias cmake='taskset -c 4,5,6,7,0,1 cmake -j6'
+alias tar='taskset -c 4,5,6,7,0,1 tar -j6'
+alias gzip='taskset -c 4,5,6,7,0,1 gzip -j6'
+alias bzip2='taskset -c 4,5,6,7,0,1 bzip2 -j6'
+alias xz='taskset -c 4,5,6,7,0,1 xz -j6'
+alias rsync='taskset -c 4,5,6,7,0,1 rsync -j6'
+alias gcc='taskset -c 4,5,6,7,0,1 gcc'
+alias g++='taskset -c 4,5,6,7,0,1 g++'
+alias python='taskset -c 4,5,6,7,0,1 python'
+alias install='taskset -c 4,5,6,7,0,1 install'
+# <<< END CHARD_SMRT >>>
+EOF
+
+    # Replace or append the block in this .bashrc
     if grep -q "# <<< CHARD_SMRT >>>" "$0"; then
         awk -v new="$(< /tmp/.smrt_temp_block)" '
             BEGIN { RS=""; ORS="\n\n" }
@@ -315,29 +332,5 @@ fi
         sleep "$SMRT_REFRESH_INTERVAL"
     done
 ) &
-
-# <<< CHARD_SMRT >>>
-# SMRT exports
-export SMRT_DEFAULT_PCT=""
-export TASKSET=''
-export MAKEOPTS=''
-export EMERGE_DEFAULT_OPTS="--quiet-build=y"
-
-# Aliases
-alias make='make'
-alias emerge='emerge'
-alias ninja='ninja'
-alias meson='meson'
-alias cmake='cmake'
-alias tar='tar'
-alias gzip='gzip'
-alias bzip2='bzip2'
-alias xz='xz'
-alias rsync='rsync'
-alias gcc='gcc'
-alias g++='g++'
-alias python='python'
-alias install='install'
-# <<< END CHARD_SMRT >>>
 
 # <<< END CHARD .BASHRC >>>
