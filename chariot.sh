@@ -522,6 +522,82 @@ checkpoint_48() {
 }
 run_checkpoint 48 "emerge llvm-core/libclc-20" checkpoint_48
 
+checkpoint_49() {
+    emerge x11-base/xorg-drivers
+    rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
+    eclean-dist -d
+}
+run_checkpoint 49 "emerge x11-base/xorg-drivers" checkpoint_49
+
+checkpoint_50() {
+    emerge x11-base/xorg-server
+    rm -rf /var/tmp/portage/x11-base/xorg-server-*
+    eclean-dist -d
+}
+run_checkpoint 50 "emerge x11-base/xorg-server" checkpoint_50
+
+checkpoint_51() {
+    emerge x11-base/xorg-apps
+    rm -rf /var/tmp/portage/x11-base/xorg-apps-*
+    eclean-dist -d
+}
+run_checkpoint 51 "emerge x11-base/xorg-apps" checkpoint_51
+
+checkpoint_52() {
+    emerge x11-libs/libX11
+    rm -rf /var/tmp/portage/x11-libs/libX11-*
+    eclean-dist -d
+}
+run_checkpoint 52 "emerge x11-libs/libX11" checkpoint_52
+
+checkpoint_53() {
+    emerge x11-libs/libXft
+    rm -rf /var/tmp/portage/x11-libs/libXft-*
+    eclean-dist -d
+}
+run_checkpoint 53 "emerge x11-libs/libXft" checkpoint_53
+
+checkpoint_54() {
+    emerge x11-libs/libXrender
+    rm -rf /var/tmp/portage/x11-libs/libXrender-*
+    eclean-dist -d
+}
+run_checkpoint 54 "emerge x11-libs/libXrender" checkpoint_54
+
+checkpoint_55() {
+    emerge x11-libs/libXrandr
+    rm -rf /var/tmp/portage/x11-libs/libXrandr-*
+    eclean-dist -d
+}
+run_checkpoint 55 "emerge x11-libs/libXrandr" checkpoint_55
+
+checkpoint_56() {
+    emerge x11-libs/libXcursor
+    rm -rf /var/tmp/portage/x11-libs/libXcursor-*
+    eclean-dist -d
+}
+run_checkpoint 56 "emerge x11-libs/libXcursor" checkpoint_56
+
+checkpoint_57() {
+    emerge x11-libs/libXi
+    rm -rf /var/tmp/portage/x11-libs/libXi-*
+    eclean-dist -d
+}
+run_checkpoint 57 "emerge x11-libs/libXi" checkpoint_57
+
+checkpoint_58() {
+    emerge x11-libs/libXinerama
+    rm -rf /var/tmp/portage/x11-libs/libXinerama-*
+    eclean-dist -d
+}
+run_checkpoint 58 "emerge x11-libs/libXinerama" checkpoint_58
+
+checkpoint_59() {
+    emerge x11-libs/pango
+    rm -rf /var/tmp/portage/x11-libs/pango-*
+    eclean-dist -d
+}
+run_checkpoint 59 "emerge x11-libs/pango" checkpoint_59
 
 checkpoint_60() {
     emerge dev-libs/wayland
@@ -536,6 +612,20 @@ checkpoint_61() {
     eclean-dist -d
 }
 run_checkpoint 61 "emerge dev-libs/wayland-protocols" checkpoint_61
+
+checkpoint_62() {
+    emerge x11-base/xwayland
+    rm -rf /var/tmp/portage/x11-base/xwayland-*
+    eclean-dist -d
+}
+run_checkpoint 62 "emerge x11-base/xwayland" checkpoint_62
+
+checkpoint_63() {
+    emerge x11-libs/libxkbcommon
+    rm -rf /var/tmp/portage/x11-libs/libxkbcommon-*
+    eclean-dist -d
+}
+run_checkpoint 63 "emerge x11-libs/libxkbcommon" checkpoint_63
 
 checkpoint_64() {
     emerge gui-libs/gtk
@@ -578,6 +668,13 @@ checkpoint_69() {
     eclean-dist -d
 }
 run_checkpoint 69 "emerge media-libs/mesa" checkpoint_69
+
+checkpoint_70() {
+    emerge x11-apps/mesa-progs
+    rm -rf /var/tmp/portage/x11-apps/mesa-progs-*
+    eclean-dist -d
+}
+run_checkpoint 70 "emerge x11-apps/mesa-progs" checkpoint_70
 
 checkpoint_71() {
     emerge dev-qt/qtbase
@@ -670,6 +767,20 @@ checkpoint_83() {
 }
 run_checkpoint 83 "emerge media-fonts/dejavu" checkpoint_83
 
+checkpoint_84() {
+    emerge x11-themes/gtk-engines
+    rm -rf /var/tmp/portage/x11-themes/gtk-engines-*
+    eclean-dist -d
+}
+run_checkpoint 84 "emerge x11-themes/gtk-engines" checkpoint_84
+
+checkpoint_85() {
+    emerge x11-themes/gtk-engines-murrine
+    rm -rf /var/tmp/portage/x11-themes/gtk-engines-murrine-*
+    eclean-dist -d
+}
+run_checkpoint 85 "emerge x11-themes/gtk-engines-murrine" checkpoint_85
+
 checkpoint_86() {
     emerge dev-lang/python
     rm -rf /var/tmp/portage/dev-lang/python-*
@@ -677,12 +788,40 @@ checkpoint_86() {
 }
 run_checkpoint 86 "emerge dev-lang/python" checkpoint_86
 
+checkpoint_87() {
+    emerge x11-libs/libnotify
+    rm -rf /var/tmp/portage/x11-libs/libnotify-*
+    eclean-dist -d
+}
+run_checkpoint 87 "emerge x11-libs/libnotify" checkpoint_87
+
 checkpoint_88() {
     emerge dev-libs/libdbusmenu
     rm -rf /var/tmp/portage/dev-libs/libdbusmenu-*
     eclean-dist -d
 }
 run_checkpoint 88 "emerge dev-libs/libdbusmenu" checkpoint_88
+
+checkpoint_89() {
+    emerge x11-libs/libSM
+    rm -rf /var/tmp/portage/x11-libs/libSM-*
+    eclean-dist -d
+}
+run_checkpoint 89 "emerge x11-libs/libSM" checkpoint_89
+
+checkpoint_90() {
+    emerge x11-libs/libICE
+    rm -rf /var/tmp/portage/x11-libs/libICE-*
+    eclean-dist -d
+}
+run_checkpoint 90 "emerge x11-libs/libICE" checkpoint_90
+
+checkpoint_91() {
+    emerge x11-libs/libwnck
+    rm -rf /var/tmp/portage/x11-libs/libwnck-*
+    eclean-dist -d
+}
+run_checkpoint 91 "emerge x11-libs/libwnck" checkpoint_91
 
 checkpoint_92() {
     emerge dev-build/cmake
@@ -775,6 +914,13 @@ checkpoint_104() {
 }
 run_checkpoint 104 "emerge sys-apps/xdg-dbus-proxy" checkpoint_104
 
+checkpoint_105() {
+    emerge x11-libs/gdk-pixbuf
+    rm -rf /var/tmp/portage/x11-libs/gdk-pixbuf-*
+    eclean-dist -d
+}
+run_checkpoint 105 "emerge x11-libs/gdk-pixbuf" checkpoint_105
+
 checkpoint_106() {
     emerge sys-fs/fuse
     rm -rf /var/tmp/portage/sys-fs/fuse-*
@@ -795,6 +941,34 @@ checkpoint_108() {
     eclean-dist -d
 }
 run_checkpoint 108 "emerge gnome-base/dconf" checkpoint_108
+
+checkpoint_109() {
+    emerge x11-misc/xdg-utils
+    rm -rf /var/tmp/portage/x11-misc/xdg-utils-*
+    eclean-dist -d
+}
+run_checkpoint 109 "emerge x11-misc/xdg-utils" checkpoint_109
+
+checkpoint_110() {
+    emerge x11-apps/xinit
+    rm -rf /var/tmp/portage/x11-apps/xinit-*
+    eclean-dist -d
+}
+run_checkpoint 110 "emerge x11-apps/xinit" checkpoint_110
+
+checkpoint_111() {
+    emerge x11-terms/xterm
+    rm -rf /var/tmp/portage/x11-terms/xterm-*
+    eclean-dist -d
+}
+run_checkpoint 111 "emerge x11-terms/xterm" checkpoint_111
+
+checkpoint_112() {
+    emerge x11-wm/twm
+    rm -rf /var/tmp/portage/x11-wm/twm-*
+    eclean-dist -d
+}
+run_checkpoint 112 "emerge x11-wm/twm" checkpoint_112
 
 checkpoint_113() {
     emerge dev-python/pillow
