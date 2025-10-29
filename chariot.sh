@@ -998,28 +998,21 @@ checkpoint_119() {
 run_checkpoint 119 "emerge app-admin/sudo" checkpoint_119
 
 checkpoint_120() {
-    emerge app-admin/sudo
-    rm -rf /var/tmp/portage/app-admin/sudo-*
-    eclean-dist -d
-}
-run_checkpoint 120 "emerge sudo" checkpoint_120
-
-checkpoint_121() {
     echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
     emerge --autounmask-write firefox-bin
     rm -rf /var/tmp/portage/www-client/firefox-bin-*
     eclean-dist -d
 }
-run_checkpoint 121 "emerge firefox-bin" checkpoint_121
+run_checkpoint 120 "emerge firefox-bin" checkpoint_120
 
-checkpoint_122() {
+checkpoint_121() {
     emerge media-libs/libopus
     emerge media-video/vlc
     rm -rf /var/tmp/portage/media-libs/libopus-*
     rm -rf /var/tmp/portage/media-video/vlc-*
     eclean-dist -d
 }
-run_checkpoint 122 "emerge vlc" checkpoint_122
+run_checkpoint 121 "emerge vlc" checkpoint_121
 
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
