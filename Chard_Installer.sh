@@ -1725,7 +1725,6 @@ sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
-sudo chown -R $USER:$USER "$CHARD_ROOT"
 sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
