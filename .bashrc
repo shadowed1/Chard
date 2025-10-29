@@ -255,28 +255,9 @@ eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
-# <<< CHARD_SMRT >>>
-# SMRT exports
-export SMRT_DEFAULT_PCT=""
-export TASKSET=''
-export MAKEOPTS=''
-export EMERGE_DEFAULT_OPTS="--quiet-build=y"
-
-# Aliases
-alias make='make'
-alias emerge='emerge'
-alias ninja='ninja'
-alias meson='meson'
-alias cmake='cmake'
-alias tar='tar'
-alias gzip='gzip'
-alias bzip2='bzip2'
-alias xz='xz'
-alias rsync='rsync'
-alias gcc='gcc'
-alias g++='g++'
-alias python='python'
-alias install='install'
-# <<< END CHARD_SMRT >>>
+while true; do
+    source "$HOME/.smrt_env.sh"
+    sleep 10
+done
 
 # <<< END CHARD .BASHRC >>>
