@@ -1013,8 +1013,8 @@ checkpoint_121() {
 run_checkpoint 121 "emerge firefox-bin" checkpoint_121
 
 checkpoint_122() {
-    emerge media-libs/libopus
     emerge media-video/ffmpeg
+    emerge media-libs/libopus
     emerge media-video/vlc
     rm -rf /var/tmp/portage/media-libs/libopus-*
     rm -rf /var/tmp/portage/media-video/ffmpeg-*
