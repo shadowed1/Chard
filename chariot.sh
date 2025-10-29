@@ -489,10 +489,9 @@ checkpoint_43() {
 run_checkpoint 43 "emerge app-arch/brotli" checkpoint_43
 
 checkpoint_44() {
-    mv /usr/lib/libcrypt.so /usr/lib/libcrypt.so.bak || true
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 }
-run_checkpoint 44 "backup libcrypt + install rustup" checkpoint_44
+run_checkpoint 44 "install rustup" checkpoint_44
 
 checkpoint_45() {
     emerge -j$(nproc) dev-libs/boehm-gc
