@@ -273,6 +273,8 @@ case "$cmd" in
                 sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 CHARD_USER=\$(cat /.chard_user)
                 CHARD_HOME=\$(cat /.chard_home)
+                USER=\$CHARD_USER
+                HOME=\$CHARD_HOME
                 
                 getent group 1000 >/dev/null   || groupadd -g 1000 chronos
                 getent group 601 >/dev/null    || groupadd -g 601 wayland
@@ -320,13 +322,14 @@ case "$cmd" in
                 chown 1000:1000 \"/\$CHARD_HOME\"
                 
                 mkdir -p /etc/sudoers.d
-                chmod 750 /etc/sudoers.d
+                chown root:root /etc/sudoers.d
+                chmod 755 /etc/sudoers.d
+                chown root:root /etc/sudoers.d/\$USER
+                chmod 440 /etc/sudoers.d/\$USER
                 echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
-                chmod 440 /etc/sudoers.d/\$CHARD_USER
-                
                 echo \"Passwordless sudo configured for \$CHARD_USER\"
                 "
-                
+                echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
                 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
                 CHARD_HOME="$(dirname "$TARGET_FILE")"
                 CHARD_HOME="${CHARD_HOME#/}"
