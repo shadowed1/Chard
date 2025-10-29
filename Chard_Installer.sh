@@ -1293,6 +1293,11 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     chown \$USER:\$USER /var/lib/portage/world
     chmod 644 /var/lib/portage/world 
     source \$HOME/.smrt_env.sh
+    emerge app-admin/sudo
+    chown root:root /etc/sudoers.d
+    chmod 755 /etc/sudoers.d
+    chown root:root /etc/sudoers.d/\$USER
+    chmod 440 /etc/sudoers.d/\$USER
     emerge app-misc/resolve-march-native && \
     MARCH_FLAGS=\$(resolve-march-native) && \
     BASHRC=\"\$HOME/.bashrc\" && \
@@ -1319,6 +1324,8 @@ sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+
+echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
