@@ -28,7 +28,6 @@ if [[ -n "$1" ]]; then
 elif [[ -z "$SMRT_DEFAULT_PCT" ]]; then
     SMRT_DEFAULT_PCT=75
 fi
-
 PCT="$SMRT_DEFAULT_PCT"
 
 if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
@@ -40,7 +39,6 @@ else
         /cpu MHz/ && c>=0 {print c ":" $4; c=-1}
     ' /proc/cpuinfo | sort -t: -k2,2n)
 fi
-
 TOTAL_CORES=$(nproc)
 
 if (( ${#CORES[@]} == 0 )); then
@@ -78,11 +76,11 @@ allocate_cores() {
     (( requested_threads > TOTAL_CORES )) && requested_threads=$TOTAL_CORES
     (( requested_threads < 1 )) && requested_threads=1
     
-       if (( requested_threads <= e_count )); then
+    if (( requested_threads <= e_count )); then
         selected_cores=$(printf '%s,' "${E_CORE_ARRAY[@]:0:$requested_threads}" | sed 's/,$//')
     else
-        selected_cores="$E_CORES_ALL" 
-        remaining=$((requested_threads - e_count))
+        selected_cores="$E_CORES_ALL"
+        local remaining=$((requested_threads - e_count))
         if (( remaining > 0 )); then
             selected_cores="${selected_cores},$(printf '%s,' "${P_CORE_ARRAY[@]:0:$remaining}" | sed 's/,$//')"
         fi
