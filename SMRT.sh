@@ -77,13 +77,18 @@ allocate_cores() {
     echo "$selected_cores"
 }
 
-PCT="${1:-75}" 
-if ! [[ "$PCT" =~ ^[0-9]+$ ]] || (( PCT < 1 || PCT > 100 )); then
-    echo "${RED}Error: Please provide a percentage between 1 and 100${RESET}"
-    exit 1
+if [[ -n "$1" ]]; then
+    PCT="$1"
+    if ! [[ "$PCT" =~ ^[0-9]+$ ]] || (( PCT < 1 || PCT > 100 )); then
+        echo "${RED}Error: Please provide a percentage between 1 and 100${RESET}"
+        exit 1
+    fi
+    REQUESTED_THREADS=$(( (TOTAL_CORES * PCT + 99) / 100 ))
+else
+    IFS=',' read -ra E_CORE_ARRAY <<< "$E_CORES_ALL"
+    REQUESTED_THREADS=${#E_CORE_ARRAY[@]}
 fi
 
-REQUESTED_THREADS=$(( (TOTAL_CORES * PCT + 99) / 100 ))
 (( REQUESTED_THREADS < 1 )) && REQUESTED_THREADS=1
 
 MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
@@ -125,7 +130,7 @@ done
 source "$SMRT_ENV_FILE"
 
 echo "${BLUE}───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────${RESET}"
-echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${CYAN} - Allocated ${ALLOCATED_COUNT} threads (${PCT}%)${RESET}"
+echo "${BOLD}${RED}Chard ${YELLOW}SMRT${RESET}${BOLD}${CYAN} - Allocated ${ALLOCATED_COUNT} Threads${RESET}"
 echo ""
 echo "${BLUE}Thread Array:                    ${BOLD}${CORES[*]} ${RESET}"
 echo "${CYAN}Allocated Threads:               ${BOLD}$ALLOCATED_CORES ${RESET}"
