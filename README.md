@@ -93,6 +93,7 @@
 - LLVM
 - Clang
 - Mesa
+- Vulkan + Vulkan Tools
 - Flatpak
 - And Many More
 
