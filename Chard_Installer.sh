@@ -1144,21 +1144,25 @@ echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
 sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
 sudo touch "$CHARD_ROOT/var/lib/portage/world"
 
-sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
-sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
-sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
-sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
-sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /proc    || mount -t proc proc /proc
-    mountpoint -q /sys     || mount -t sysfs sys /sys
-    mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
-    mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
-    mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+sudo chroot $CHARD_ROOT /bin/bash -c "
 
+    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+    mountpoint -q /run/cras   || mount --bind /run/cras /run/cras 2>/dev/null
+
+                        
+    if [ -e /dev/zram0 ]; then
+        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+        mount --make-rslave /dev/zram0 2>/dev/null
+    fi
+                    
     chmod 1777 /tmp /var/tmp
-    
+                    
     [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
     [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
     [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -1179,14 +1183,16 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     /bin/SMRT
     source \$HOME/.smrt_env.sh
 
-    umount /run/chrome 2>/dev/null || true
-    umount /run/dbus   2>/dev/null || true
-    umount /etc/ssl    2>/dev/null || true
-    umount /dev/pts    2>/dev/null || true
-    umount /dev/shm    2>/dev/null || true
-    umount /dev        2>/dev/null || true
-    umount /sys        2>/dev/null || true
-    umount /proc       2>/dev/null || true
+    umount -l /dev/zram0   2>/dev/null || true
+    umount -l /run/cras    2>/dev/null || true
+    umount -l /run/chrome  2>/dev/null || true
+    umount -l /run/dbus    2>/dev/null || true
+    umount -l /etc/ssl     2>/dev/null || true
+    umount -l /dev/pts     2>/dev/null || true
+    umount -l /dev/shm     2>/dev/null || true
+    umount -l /dev         2>/dev/null || true
+    umount -l /sys         2>/dev/null || true
+    umount -l /proc        2>/dev/null || true
 "
 
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
