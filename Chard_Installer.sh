@@ -1191,94 +1191,102 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
 
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-                mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-                mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-                    
-                if [ -e /dev/zram0 ]; then
-                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                    mount --make-rslave /dev/zram0 2>/dev/null
-                fi
-                    
-                chmod 1777 /tmp /var/tmp
-                    
-                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-                
-                getent group 1000 >/dev/null   || groupadd -g 1000 chronos
-                getent group 601 >/dev/null    || groupadd -g 601 wayland
-                getent group 602 >/dev/null    || groupadd -g 602 arc-bridge
-                getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd
-                getent group 604 >/dev/null    || groupadd -g 604 arc-sensor
-                getent group 665357 >/dev/null || groupadd -g 665357 android-everybody
-                getent group 18 >/dev/null     || groupadd -g 18 audio
-                getent group 222 >/dev/null    || groupadd -g 222 input
-                getent group 7 >/dev/null      || groupadd -g 7 lp
-                getent group 27 >/dev/null     || groupadd -g 27 video
-                getent group 423 >/dev/null    || groupadd -g 423 bluetooth-audio
-                getent group 600 >/dev/null    || groupadd -g 600 cras
-                getent group 85 >/dev/null     || groupadd -g 85 usb
-                getent group 20162 >/dev/null  || groupadd -g 20162 traced-producer
-                getent group 20164 >/dev/null  || groupadd -g 20164 traced-consumer
-                getent group 1001 >/dev/null   || groupadd -g 1001 chronos-access
-                getent group 240 >/dev/null    || groupadd -g 240 brltty
-                getent group 20150 >/dev/null  || groupadd -g 20150 arcvm-boot-notification-server
-                getent group 20189 >/dev/null  || groupadd -g 20189 arc-mojo-proxy
-                getent group 20152 >/dev/null  || groupadd -g 20152 arc-host-clock
-                getent group 608 >/dev/null    || groupadd -g 608 midis
-                getent group 415 >/dev/null    || groupadd -g 415 suzy-q
-                getent group 612 >/dev/null    || groupadd -g 612 ml-core
-                getent group 311 >/dev/null    || groupadd -g 311 fuse-archivemount
-                getent group 20137 >/dev/null  || groupadd -g 20137 crash
-                getent group 419 >/dev/null    || groupadd -g 419 crash-access
-                getent group 420 >/dev/null    || groupadd -g 420 crash-user-access
-                getent group 304 >/dev/null    || groupadd -g 304 fuse-drivefs
-                getent group 20215 >/dev/null  || groupadd -g 20215 regmond_senders
-                getent group 603 >/dev/null    || groupadd -g 603 arc-camera
-                getent group 20042 >/dev/null  || groupadd -g 20042 camera
-                getent group 208 >/dev/null    || groupadd -g 208 pkcs11
-                getent group 303 >/dev/null    || groupadd -g 303 policy-readers
-                getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd
-                getent group 605 >/dev/null    || groupadd -g 605 debugfs-access
-                
-                if ! id \"\$CHARD_USER\" &>/dev/null; then
-                    useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
-                fi
-                
-                usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access \$CHARD_USER
-                
-                mkdir -p \"/\$CHARD_HOME\"
-                chown 1000:1000 \"/\$CHARD_HOME\"
+sudo chroot $CHARD_ROOT /bin/bash -c "
 
-                emerge app-admin/sudo
+                        mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+                        mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+                        mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                        mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+                        mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+                        mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+                        mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                        mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+                    
+                        if [ -e /dev/zram0 ]; then
+                            mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                            mount --make-rslave /dev/zram0 2>/dev/null
+                        fi
+                    
+                        chmod 1777 /tmp /var/tmp
+                    
+                        [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                        [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                        [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                        [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                        
+                        CHARD_USER=\$(cat /.chard_user)
+                        CHARD_HOME=\$(cat /.chard_home)
+                        USER=\$CHARD_USER
+                        HOME=\$CHARD_HOME
+                        source \$HOME/.bashrc 2>/dev/null
+                        source \$HOME/.smrt_env.sh
+                        
+                        getent group 1000 >/dev/null   || groupadd -g 1000 chronos
+                        getent group 601 >/dev/null    || groupadd -g 601 wayland
+                        getent group 602 >/dev/null    || groupadd -g 602 arc-bridge
+                        getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd
+                        getent group 604 >/dev/null    || groupadd -g 604 arc-sensor
+                        getent group 665357 >/dev/null || groupadd -g 665357 android-everybody
+                        getent group 18 >/dev/null     || groupadd -g 18 audio
+                        getent group 222 >/dev/null    || groupadd -g 222 input
+                        getent group 7 >/dev/null      || groupadd -g 7 lp
+                        getent group 27 >/dev/null     || groupadd -g 27 video
+                        getent group 423 >/dev/null    || groupadd -g 423 bluetooth-audio
+                        getent group 600 >/dev/null    || groupadd -g 600 cras
+                        getent group 85 >/dev/null     || groupadd -g 85 usb
+                        getent group 20162 >/dev/null  || groupadd -g 20162 traced-producer
+                        getent group 20164 >/dev/null  || groupadd -g 20164 traced-consumer
+                        getent group 1001 >/dev/null   || groupadd -g 1001 chronos-access
+                        getent group 240 >/dev/null    || groupadd -g 240 brltty
+                        getent group 20150 >/dev/null  || groupadd -g 20150 arcvm-boot-notification-server
+                        getent group 20189 >/dev/null  || groupadd -g 20189 arc-mojo-proxy
+                        getent group 20152 >/dev/null  || groupadd -g 20152 arc-host-clock
+                        getent group 608 >/dev/null    || groupadd -g 608 midis
+                        getent group 415 >/dev/null    || groupadd -g 415 suzy-q
+                        getent group 612 >/dev/null    || groupadd -g 612 ml-core
+                        getent group 311 >/dev/null    || groupadd -g 311 fuse-archivemount
+                        getent group 20137 >/dev/null  || groupadd -g 20137 crash
+                        getent group 419 >/dev/null    || groupadd -g 419 crash-access
+                        getent group 420 >/dev/null    || groupadd -g 420 crash-user-access
+                        getent group 304 >/dev/null    || groupadd -g 304 fuse-drivefs
+                        getent group 20215 >/dev/null  || groupadd -g 20215 regmond_senders
+                        getent group 603 >/dev/null    || groupadd -g 603 arc-camera
+                        getent group 20042 >/dev/null  || groupadd -g 20042 camera
+                        getent group 208 >/dev/null    || groupadd -g 208 pkcs11
+                        getent group 303 >/dev/null    || groupadd -g 303 policy-readers
+                        getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd
+                        getent group 605 >/dev/null    || groupadd -g 605 debugfs-access
+                        
+                        if ! id \"\$CHARD_USER\" &>/dev/null; then
+                            useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
+                        fi
 
-                mkdir -p /etc/sudoers.d
-                chown root:root /etc/sudoers.d
-                chmod 755 /etc/sudoers.d
-                chown root:root /etc/sudoers.d/\$USER
-                chmod 440 /etc/sudoers.d/\$USER
-                chown root:root /usr/bin/sudo
-                chmod 4755 /usr/bin/sudo
-                echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
-                echo \"Passwordless sudo configured for \$CHARD_USER\"
-                umount -l /dev/zram0   2>/dev/null || true
-                umount -l /run/chrome  2>/dev/null || true
-                umount -l /run/dbus    2>/dev/null || true
-                umount -l /etc/ssl     2>/dev/null || true
-                umount -l /dev/pts     2>/dev/null || true
-                umount -l /dev/shm     2>/dev/null || true
-                umount -l /dev         2>/dev/null || true
-                umount -l /sys         2>/dev/null || true
-                umount -l /proc        2>/dev/null || true
-            "
+                        usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access \$CHARD_USER
+                        
+                        mkdir -p \"/\$CHARD_HOME\"
+                        chown 1000:1000 \"/\$CHARD_HOME\"
+        
+                        emerge app-admin/sudo
+        
+                        mkdir -p /etc/sudoers.d
+                        chown root:root /etc/sudoers.d
+                        chmod 755 /etc/sudoers.d
+                        chown root:root /etc/sudoers.d/\$USER
+                        chmod 440 /etc/sudoers.d/\$USER
+                        chown root:root /usr/bin/sudo
+                        chmod 4755 /usr/bin/sudo
+                        echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
+                        echo \"Passwordless sudo configured for \$CHARD_USER\"
+                        umount -l /dev/zram0   2>/dev/null || true
+                        umount -l /run/chrome  2>/dev/null || true
+                        umount -l /run/dbus    2>/dev/null || true
+                        umount -l /etc/ssl     2>/dev/null || true
+                        umount -l /dev/pts     2>/dev/null || true
+                        umount -l /dev/shm     2>/dev/null || true
+                        umount -l /dev         2>/dev/null || true
+                        umount -l /sys         2>/dev/null || true
+                        umount -l /proc        2>/dev/null || true
+                    "
                 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 
@@ -1676,6 +1684,7 @@ sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR 
 "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/env"
+sudo mkdir -p "$CHARD_ROOT/etc/portage/package.env"
 
 sudo tee "$CHARD_ROOT/etc/portage/env/llvm_override.sh" > /dev/null <<'EOF'
 #!/bin/bash
@@ -1711,7 +1720,7 @@ fi
 EOF
 
 sudo chmod +x "$CHARD_ROOT/etc/portage/env/llvm_override.sh"
-sudo mkdir -p /etc/portage/package.env
+
 sudo tee "$CHARD_ROOT/etc/portage/package.env/llvm" > /dev/null <<'EOF'
 * llvm_override
 EOF
