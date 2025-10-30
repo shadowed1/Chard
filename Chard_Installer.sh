@@ -1151,6 +1151,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
     mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
     mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+    mountpoint -q /dev/input  || mount --bind /dev/input 2>/dev/null
     mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
     mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
     mountpoint -q /run/cras   || mount --bind /run/cras /run/cras 2>/dev/null
@@ -1188,6 +1189,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     umount -l /run/chrome  2>/dev/null || true
     umount -l /run/dbus    2>/dev/null || true
     umount -l /etc/ssl     2>/dev/null || true
+    umount -l /dev/input   2>/dev/null || true
     umount -l /dev/pts     2>/dev/null || true
     umount -l /dev/shm     2>/dev/null || true
     umount -l /dev         2>/dev/null || true
