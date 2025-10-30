@@ -1149,16 +1149,19 @@ echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for
 echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
 sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
 sudo touch "$CHARD_ROOT/var/lib/portage/world"
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
-    mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
-    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
-    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
+sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
+sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+    mountpoint -q /proc    || mount -t proc proc /proc
+    mountpoint -q /sys     || mount -t sysfs sys /sys
+    mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+    mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+    mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
 
     chmod 1777 /tmp /var/tmp
     
@@ -1200,9 +1203,21 @@ sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
+
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
 
+sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
+sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
+sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
+                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                mountpoint -q /proc    || mount -t proc proc /proc
+                mountpoint -q /sys     || mount -t sysfs sys /sys
+                mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+                mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+                mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
                 CHARD_USER=\$(cat /.chard_user)
                 CHARD_HOME=\$(cat /.chard_home)
                 USER=\$CHARD_USER
@@ -1264,7 +1279,18 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 chmod 4755 /usr/bin/sudo
                 echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
                 echo \"Passwordless sudo configured for \$CHARD_USER\"
-                "
+                umount -l /etc/ssl    2>/dev/null || true
+                umount -l /dev/shm    2>/dev/null || true
+                umount -l /dev/pts    2>/dev/null || true
+                umount -l /sys        2>/dev/null || true
+                umount -l /proc       2>/dev/null || true
+                umount -l /dev        2>/dev/null || true
+        "
+        sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
                 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 
