@@ -519,61 +519,63 @@ EOF
                 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 
                 sudo chroot $CHARD_ROOT /bin/bash -c "
-                mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-                mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-            
-                if [ -e /dev/zram0 ]; then
-                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                    mount --make-rslave /dev/zram0 2>/dev/null
-                fi
-            
-                chmod 1777 /tmp /var/tmp
-            
-                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
 
-                mkdir -p /var/db/pkg /var/lib/portage
-                CHARD_HOME=\$(cat /.chard_home)
-                CHARD_USER=\$(cat /.chard_user)
-                HOME=\$CHARD_HOME
-                USER=\$CHARD_USER
-                source \$HOME/.bashrc 2>/dev/null
-                chown -R portage:portage /var/db/pkg /var/lib/portage
-                chmod -R 755 /var/db/pkg
-                chmod 644 /var/lib/portage/world
-                /bin/SMRT
-                source \$HOME/.smrt_env.sh
-                chown 1000:1000 \$HOME/.smrt_env.sh
-                emerge app-misc/resolve-march-native && \
-                MARCH_FLAGS=\$(resolve-march-native) && \
-                BASHRC=\"\$HOME/.bashrc\" && \
-                awk -v march=\"\$MARCH_FLAGS\" '\
-                /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next} \
-                /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next} \
-                inblock { \
-                    if (\$0 ~ /CFLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
-                    if (\$0 ~ /COMMON_FLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
-                    print; next \
-                } \
-                {print}' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\" \
-            
-                umount -l /run/chrome  2>/dev/null || true
-                umount -l /run/dbus    2>/dev/null || true
-                umount -l /etc/ssl     2>/dev/null || true
-                umount -l /dev/pts     2>/dev/null || true
-                umount -l /dev/shm     2>/dev/null || true
-                umount -l /dev         2>/dev/null || true
-                umount -l /sys         2>/dev/null || true
-                umount -l /proc        2>/dev/null || true
-            "
+                    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+                    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+                        
+                    if [ -e /dev/zram0 ]; then
+                        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                        mount --make-rslave /dev/zram0 2>/dev/null
+                    fi
+                        
+                    chmod 1777 /tmp /var/tmp
+                        
+                    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+    
+                    mkdir -p /var/db/pkg /var/lib/portage
+                    CHARD_HOME=\$(cat /.chard_home)
+                    CHARD_USER=\$(cat /.chard_user)
+                    HOME=\$CHARD_HOME
+                    USER=\$CHARD_USER
+                    source \$HOME/.bashrc 2>/dev/null
+                    chown -R portage:portage /var/db/pkg /var/lib/portage
+                    chmod -R 755 /var/db/pkg
+                    chmod 644 /var/lib/portage/world
+                    /bin/SMRT
+                    source \$HOME/.smrt_env.sh
+                    chown 1000:1000 \$HOME/.smrt_env.sh
+                    emerge app-misc/resolve-march-native && \
+                    MARCH_FLAGS=\$(resolve-march-native) && \
+                    BASHRC=\"\$HOME/.bashrc\" && \
+                    awk -v march=\"\$MARCH_FLAGS\" '
+                    /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
+                    /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
+                    inblock {
+                        if (\$0 ~ /CFLAGS=.*-march=/) gsub(/-march=[^ ]+/, march)
+                        if (\$0 ~ /COMMON_FLAGS=.*-march=/) gsub(/-march=[^ ]+/, march)
+                        print; next
+                    }
+                    {print}
+                ' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\"
+                
+                    umount -l /run/chrome  2>/dev/null || true
+                    umount -l /run/dbus    2>/dev/null || true
+                    umount -l /etc/ssl     2>/dev/null || true
+                    umount -l /dev/pts     2>/dev/null || true
+                    umount -l /dev/shm     2>/dev/null || true
+                    umount -l /dev         2>/dev/null || true
+                    umount -l /sys         2>/dev/null || true
+                    umount -l /proc        2>/dev/null || true
+                "
     
                 if [[ -f /etc/lsb-release ]]; then
                     BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
