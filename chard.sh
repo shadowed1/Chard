@@ -455,15 +455,15 @@ case "$cmd" in
                 
                 add_chard_marker "$TARGET_FILE"
 
-                if [[ -f /etc/lsb-release ]]; then
+               if [[ -f /etc/lsb-release ]]; then
                     BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
                     BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "root")}
-                else
+               else
                     BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
                     BOARD_NAME=${BOARD_NAME:-$(uname -n)}
-                fi
-                
-                BOARD_NAME=${BOARD_NAME%%-*}
+               fi
+
+               BOARD_NAME=${BOARD_NAME%%-*}
 
                 sudo tee "$CHARD_ROOT/usr/.chard_prompt.sh" >/dev/null <<EOF
 #!/bin/bash
@@ -472,7 +472,7 @@ RED='\\[\\e[31m\\]'
 YELLOW='\\[\\e[33m\\]'
 GREEN='\\[\\e[32m\\]'
 RESET='\\[\\e[0m\\]'
-PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
+PS1="\${BOLD}\${RED}\\u\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
 export PS1
 EOF
 
@@ -482,6 +482,8 @@ EOF
 source /usr/.chard_prompt.sh
 EOF
                 fi
+
+                sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 
                 sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
