@@ -1729,7 +1729,9 @@ EOF
 sudo chmod +x "$CHARD_ROOT/etc/portage/env/llvm_override.sh"
 
 sudo tee "$CHARD_ROOT/etc/portage/package.env/llvm" > /dev/null <<'EOF'
-* llvm_override
+sys-auth/polkit llvm_override
+sys-devel/clang llvm_override
+sys-devel/clang-common llvm_override
 EOF
 
 echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords/perl" >/dev/null
