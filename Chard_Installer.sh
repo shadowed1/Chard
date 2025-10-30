@@ -1799,18 +1799,17 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             umount -l /proc       2>/dev/null || true
             umount -l /dev        2>/dev/null || true
             "
-sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
 show_progress
 echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
 sudo cp "$CHARD_ROOT/chardbuild.log" ~/
