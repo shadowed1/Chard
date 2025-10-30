@@ -19,17 +19,6 @@ RESET=$(tput sgr0)
 HOME=/$CHARD_HOME
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
-if [[ -f "$SMRT_ENV_FILE" ]]; then
-    source "$SMRT_ENV_FILE"
-fi
-
-if [[ -n "$1" ]]; then
-    SMRT_DEFAULT_PCT="$1"
-elif [[ -z "$SMRT_DEFAULT_PCT" ]]; then
-    SMRT_DEFAULT_PCT=75
-fi
-PCT="$SMRT_DEFAULT_PCT"
-
 if command -v lscpu >/dev/null 2>&1 && lscpu -e=CPU,MAXMHZ >/dev/null 2>&1; then
     mapfile -t CORES < <(lscpu -e=CPU,MAXMHZ 2>/dev/null | \
         awk 'NR>1 && $2 ~ /^[0-9.]+$/ {print $1 ":" $2}' | sort -t: -k2,2n)
@@ -112,7 +101,6 @@ MAKEOPTS="-j$ALLOCATED_COUNT"
 
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
-export SMRT_DEFAULT_PCT="$PCT"
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
