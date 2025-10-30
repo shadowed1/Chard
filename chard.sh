@@ -560,9 +560,15 @@ EOF
                     /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
                     /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
                     inblock {
-                        if (\$0 ~ /CFLAGS=.*-march=/) gsub(/-march=[^ ]+/, march)
-                        if (\$0 ~ /COMMON_FLAGS=.*-march=/) gsub(/-march=[^ ]+/, march)
-                        print; next
+                        if (\$0 ~ /^CFLAGS=/) { print \"CFLAGS=\\\"\" march \" -O2 -pipe\\\"\"; next }
+                        if (\$0 ~ /^COMMON_FLAGS=/) { 
+                            print \"COMMON_FLAGS=\\\"\" march \" -O2 -pipe\\\"\"
+                            print \"FCFLAGS=\\\"\$COMMON_FLAGS\\\"\"
+                            print \"FFLAGS=\\\"\$COMMON_FLAGS\\\"\"
+                            print \"CXXFLAGS=\\\"\$CFLAGS\\\"\"
+                            next
+                        }
+                        next
                     }
                     {print}
                 ' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\"
