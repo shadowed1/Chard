@@ -319,7 +319,9 @@ case "$cmd" in
                 
                 mkdir -p \"/\$CHARD_HOME\"
                 chown 1000:1000 \"/\$CHARD_HOME\"
-                
+
+                emerge app-admin/sudo
+
                 mkdir -p /etc/sudoers.d
                 chown root:root /etc/sudoers.d
                 chmod 755 /etc/sudoers.d
@@ -485,6 +487,11 @@ EOF
 
                 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 
+                sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
+                sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+                sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
+                sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
+                sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
                 sudo chroot "$CHARD_ROOT" /bin/bash -c "
                 mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
                 mountpoint -q /proc    || mount -t proc proc /proc
