@@ -1702,7 +1702,7 @@ fi
 EOF
 
 sudo chmod +x "$CHARD_ROOT/etc/portage/env/llvm_override.sh"
-
+sudo mkdir -p /etc/portage/package.env
 sudo tee "$CHARD_ROOT/etc/portage/package.env/llvm" > /dev/null <<'EOF'
 * llvm_override
 EOF
