@@ -1078,7 +1078,6 @@ GPU_VENDOR="$GPU_TYPE"
 IDENTIFIER="Generic GPU"
 DRIVER="modesetting"
 ACCEL="glamor"
-# Change Accel to glamor for acceleration soon
 
 case "$GPU_VENDOR" in
     intel)
