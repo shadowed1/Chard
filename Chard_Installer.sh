@@ -1583,7 +1583,7 @@ RED='\\[\\e[31m\\]'
 YELLOW='\\[\\e[33m\\]'
 GREEN='\\[\\e[32m\\]'
 RESET='\\[\\e[0m\\]'
-PS1="\${BOLD}\${RED}chard\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
+PS1="\${BOLD}\${RED}\\u\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
 export PS1
 EOF
 
