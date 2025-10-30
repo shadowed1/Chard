@@ -1742,17 +1742,17 @@ echo "${BLUE}Emerge is ready! Please do not sync more than once a day.${RESET}"
 echo "${CYAN}Compiling takes a long time, so please be patient if you have a slow CPU. ${RESET}"
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
-sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/shm"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"          2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"         2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/cras"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
 
 sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
