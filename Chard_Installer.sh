@@ -1154,7 +1154,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     mountpoint -q /dev/input  || mount --bind /dev/input 2>/dev/null
     mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
     mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-    mountpoint -q /run/cras   || mount --bind /run/cras /run/cras 2>/dev/null
 
                         
     if [ -e /dev/zram0 ]; then
@@ -1184,8 +1183,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     /bin/SMRT
     source \$HOME/.smrt_env.sh
 
-    umount -l /dev/zram0   2>/dev/null || true
-    umount -l /run/cras    2>/dev/null || true
     umount -l /run/chrome  2>/dev/null || true
     umount -l /run/dbus    2>/dev/null || true
     umount -l /etc/ssl     2>/dev/null || true
