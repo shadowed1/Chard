@@ -565,7 +565,6 @@ EOF
                 } \
                 {print}' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\" \
             
-                umount -l /dev/zram0   2>/dev/null || true
                 umount -l /run/chrome  2>/dev/null || true
                 umount -l /run/dbus    2>/dev/null || true
                 umount -l /etc/ssl     2>/dev/null || true
