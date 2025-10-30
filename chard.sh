@@ -295,6 +295,7 @@ case "$cmd" in
                         CHARD_HOME=\$(cat /.chard_home)
                         USER=\$CHARD_USER
                         HOME=\$CHARD_HOME
+                        source \$HOME/.bashrc 2>/dev/null
                         
                         getent group 1000 >/dev/null   || groupadd -g 1000 chronos
                         getent group 601 >/dev/null    || groupadd -g 601 wayland
@@ -643,11 +644,13 @@ EOF
         fi
         ;;
     root)
-        sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
-        sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
-        sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
-        sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
-        sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
+        sudo mount -t proc /proc "$CHARD_ROOT/proc"
+        sudo mount -t sysfs /sys "$CHARD_ROOT/sys"
+        sudo mount -t devtmpfs /dev "$CHARD_ROOT/dev"
+        sudo mount --rbind /dev/pts "$CHARD_ROOT/dev/pts"
+        sudo mount --rbind /dev/shm "$CHARD_ROOT/dev/shm"
+        sudo mount --rbind /run "$CHARD_ROOT/run"
+        sudo mount --rbind /etc/ssl "$CHARD_ROOT/etc/ssl"
         sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
