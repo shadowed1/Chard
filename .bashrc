@@ -255,4 +255,23 @@ eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
+# <<< CHARD_SMRT >>>
+SMRT_ENV_FILE="$HOME/.smrt_env.sh"
+SMRT_REFRESH_INTERVAL=10
+
+smrt_refresh_wrapper() {
+    while true; do
+        if [[ -f "$SMRT_ENV_FILE" ]]; then
+            source "$SMRT_ENV_FILE" 2>/dev/null
+        fi
+        sleep "$SMRT_REFRESH_INTERVAL"
+    done
+}
+
+if [[ -z "$SMRT_LOOP_STARTED" ]]; then
+    smrt_refresh_wrapper &
+    export SMRT_LOOP_STARTED=1
+fi
+# <<< END_CHARD_SMRT >>>
+
 # <<< END CHARD .BASHRC >>>
