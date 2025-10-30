@@ -43,15 +43,13 @@ echo "${RESET}"
 echo               
 echo "${RESET}"
 echo "${RED}- Chard Installer can take ${BOLD}5-20 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~8 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
-echo "${RED}- Chard can be installed in ${RESET}${RED}${BOLD}/usr/local (can be changed)${RESET}${RED} and will not affect ChromeOS system commands.${RESET}"
+echo "${RED}- Chard will be installed in ${RESET}${RED}${BOLD}${CHARD_ROOT}${RESET}${RED} and will not affect ChromeOS system commands.${RESET}"
 echo
 echo "${YELLOW}- It is ${BOLD}semi-sandboxed within itself${RESET}${YELLOW}, but can rely on Host libraries. Automatically updates itself build and compile with.${RESET}"
 echo "${YELLOW}- Chard has ${BOLD}not${RESET}${YELLOW} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${YELLOW} require dev_install.${RESET}"
 echo
 echo "${GREEN}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
 echo "${GREEN}- Chard is currently in early development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
-echo
-echo "${MAGENTA}- Supports ChromeOS/FydeOS and any Linux distro supporting Bash. ${RESET}"
 echo
 echo
 
@@ -1523,26 +1521,46 @@ EOF
                 CONFIG_DRM_MALI=y
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MSM=n
+                CONFIG_DRM_ETNAVIV=n
+                CONFIG_LAVAPIPE=n
                 ;;
             adreno)
-                CONFIG_DRM_MALI=y
+                CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MSM=y
+                CONFIG_DRM_ETNAVIV=n
+                CONFIG_LAVAPIPE=n
                 ;;
             mediatek)
-                CONFIG_DRM_MALI=y
+                CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
+                CONFIG_DRM_MEDIATEK=y
+                CONFIG_DRM_MSM=n
+                CONFIG_DRM_ETNAVIV=n
+                CONFIG_LAVAPIPE=n
                 ;;
             vivante)
-                CONFIG_DRM_MALI=y
+                CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MSM=n
+                CONFIG_DRM_ETNAVIV=y
+                CONFIG_LAVAPIPE=n
                 ;;
             *)
                 CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MSM=n
+                CONFIG_DRM_ETNAVIV=n
+                CONFIG_LAVAPIPE=y
                 ;;
         esac
         
@@ -1559,10 +1577,13 @@ CONFIG_SYSFS=y
 CONFIG_DRM_MALI=$CONFIG_DRM_MALI
 CONFIG_DRM_ROCKCHIP=$CONFIG_DRM_ROCKCHIP
 CONFIG_DRM_ARM_DC=$CONFIG_DRM_ARM_DC
+CONFIG_DRM_MEDIATEK=$CONFIG_DRM_MEDIATEK
+CONFIG_DRM_MSM=$CONFIG_DRM_MSM
+CONFIG_DRM_ETNAVIV=$CONFIG_DRM_ETNAVIV
 CONFIG_DRM_AMDGPU=n
 CONFIG_DRM_I915=n
 CONFIG_DRM_NOUVEAU=n
-CONFIG_LAVAPIPE=y
+CONFIG_LAVAPIPE=$CONFIG_LAVAPIPE
 CONFIG_TMPFS=y
 CONFIG_TMPFS_POSIX_ACL=y
 CONFIG_DEVTMPFS=y
