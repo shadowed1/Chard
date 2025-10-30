@@ -1199,6 +1199,8 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
 
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
 
+echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
+
 sudo chroot $CHARD_ROOT /bin/bash -c "
 
                         mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
