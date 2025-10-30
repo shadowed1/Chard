@@ -1335,17 +1335,17 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                 emerge app-misc/resolve-march-native && \
                 MARCH_FLAGS=\$(resolve-march-native) && \
                 BASHRC=\"\$HOME/.bashrc\" && \
-                awk -v march=\"\$MARCH_FLAGS\" '\
-                /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next} \
-                /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next} \
-                inblock { \
-                    if (\$0 ~ /CFLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
-                    if (\$0 ~ /COMMON_FLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
-                    print; next \
-                } \
-                {print}' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\" \
+                awk -v march=\"\$MARCH_FLAGS\" '
+                /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
+                /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
+                inblock {
+                    if (\$0 ~ /CFLAGS=.*-march=/) gsub(/-march=[^ ]+/, march)
+                    if (\$0 ~ /COMMON_FLAGS=.*-march=/) gsub(/-march=[^ ]+/, march)
+                    print; next
+                }
+                {print}
+            ' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\"
             
-                umount -l /dev/zram0   2>/dev/null || true
                 umount -l /run/chrome  2>/dev/null || true
                 umount -l /run/dbus    2>/dev/null || true
                 umount -l /etc/ssl     2>/dev/null || true
