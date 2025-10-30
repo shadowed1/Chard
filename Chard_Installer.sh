@@ -1749,7 +1749,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c '
     [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
     [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
 
-
     CHARD_HOME=$(cat /.chard_home)
     CHARD_USER=$(cat /.chard_user)
     HOME="$CHARD_HOME"
