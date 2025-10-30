@@ -352,61 +352,70 @@ done
 sudo grep -E "CONFIG_CGROUP_BPF|CONFIG_FANOTIFY|CONFIG_USER_NS|CONFIG_CRYPTO_USER_API_HASH|CONFIG_INPUT_MOUSEDEV" "$CHARD_ROOT/usr/src/linux/.config" | wc -l
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-CHARD_USER=\$(cat /.chard_user)
-CHARD_HOME=\$(cat /.chard_home)
+                CHARD_USER=\$(cat /.chard_user)
+                CHARD_HOME=\$(cat /.chard_home)
+                USER=\$CHARD_USER
+                HOME=\$CHARD_HOME
+                
+                getent group 1000 >/dev/null   || groupadd -g 1000 chronos
+                getent group 601 >/dev/null    || groupadd -g 601 wayland
+                getent group 602 >/dev/null    || groupadd -g 602 arc-bridge
+                getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd
+                getent group 604 >/dev/null    || groupadd -g 604 arc-sensor
+                getent group 665357 >/dev/null || groupadd -g 665357 android-everybody
+                getent group 18 >/dev/null     || groupadd -g 18 audio
+                getent group 222 >/dev/null    || groupadd -g 222 input
+                getent group 7 >/dev/null      || groupadd -g 7 lp
+                getent group 27 >/dev/null     || groupadd -g 27 video
+                getent group 423 >/dev/null    || groupadd -g 423 bluetooth-audio
+                getent group 600 >/dev/null    || groupadd -g 600 cras
+                getent group 85 >/dev/null     || groupadd -g 85 usb
+                getent group 20162 >/dev/null  || groupadd -g 20162 traced-producer
+                getent group 20164 >/dev/null  || groupadd -g 20164 traced-consumer
+                getent group 1001 >/dev/null   || groupadd -g 1001 chronos-access
+                getent group 240 >/dev/null    || groupadd -g 240 brltty
+                getent group 20150 >/dev/null  || groupadd -g 20150 arcvm-boot-notification-server
+                getent group 20189 >/dev/null  || groupadd -g 20189 arc-mojo-proxy
+                getent group 20152 >/dev/null  || groupadd -g 20152 arc-host-clock
+                getent group 608 >/dev/null    || groupadd -g 608 midis
+                getent group 415 >/dev/null    || groupadd -g 415 suzy-q
+                getent group 612 >/dev/null    || groupadd -g 612 ml-core
+                getent group 311 >/dev/null    || groupadd -g 311 fuse-archivemount
+                getent group 20137 >/dev/null  || groupadd -g 20137 crash
+                getent group 419 >/dev/null    || groupadd -g 419 crash-access
+                getent group 420 >/dev/null    || groupadd -g 420 crash-user-access
+                getent group 304 >/dev/null    || groupadd -g 304 fuse-drivefs
+                getent group 20215 >/dev/null  || groupadd -g 20215 regmond_senders
+                getent group 603 >/dev/null    || groupadd -g 603 arc-camera
+                getent group 20042 >/dev/null  || groupadd -g 20042 camera
+                getent group 208 >/dev/null    || groupadd -g 208 pkcs11
+                getent group 303 >/dev/null    || groupadd -g 303 policy-readers
+                getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd
+                getent group 605 >/dev/null    || groupadd -g 605 debugfs-access
+                
+                if ! id \"\$CHARD_USER\" &>/dev/null; then
+                    useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
+                fi
+                
+                usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access \$CHARD_USER
+                
+                mkdir -p \"/\$CHARD_HOME\"
+                chown 1000:1000 \"/\$CHARD_HOME\"
 
-getent group 1000 >/dev/null   || groupadd -g 1000 chronos
-getent group 601 >/dev/null    || groupadd -g 601 wayland
-getent group 602 >/dev/null    || groupadd -g 602 arc-bridge
-getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd
-getent group 604 >/dev/null    || groupadd -g 604 arc-sensor
-getent group 665357 >/dev/null || groupadd -g 665357 android-everybody
-getent group 18 >/dev/null     || groupadd -g 18 audio
-getent group 222 >/dev/null    || groupadd -g 222 input
-getent group 7 >/dev/null      || groupadd -g 7 lp
-getent group 27 >/dev/null     || groupadd -g 27 video
-getent group 423 >/dev/null    || groupadd -g 423 bluetooth-audio
-getent group 600 >/dev/null    || groupadd -g 600 cras
-getent group 85 >/dev/null     || groupadd -g 85 usb
-getent group 20162 >/dev/null  || groupadd -g 20162 traced-producer
-getent group 20164 >/dev/null  || groupadd -g 20164 traced-consumer
-getent group 1001 >/dev/null   || groupadd -g 1001 chronos-access
-getent group 240 >/dev/null    || groupadd -g 240 brltty
-getent group 20150 >/dev/null  || groupadd -g 20150 arcvm-boot-notification-server
-getent group 20189 >/dev/null  || groupadd -g 20189 arc-mojo-proxy
-getent group 20152 >/dev/null  || groupadd -g 20152 arc-host-clock
-getent group 608 >/dev/null    || groupadd -g 608 midis
-getent group 415 >/dev/null    || groupadd -g 415 suzy-q
-getent group 612 >/dev/null    || groupadd -g 612 ml-core
-getent group 311 >/dev/null    || groupadd -g 311 fuse-archivemount
-getent group 20137 >/dev/null  || groupadd -g 20137 crash
-getent group 419 >/dev/null    || groupadd -g 419 crash-access
-getent group 420 >/dev/null    || groupadd -g 420 crash-user-access
-getent group 304 >/dev/null    || groupadd -g 304 fuse-drivefs
-getent group 20215 >/dev/null  || groupadd -g 20215 regmond_senders
-getent group 603 >/dev/null    || groupadd -g 603 arc-camera
-getent group 20042 >/dev/null  || groupadd -g 20042 camera
-getent group 208 >/dev/null    || groupadd -g 208 pkcs11
-getent group 303 >/dev/null    || groupadd -g 303 policy-readers
-getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd
-getent group 605 >/dev/null    || groupadd -g 605 debugfs-access
+                emerge app-admin/sudo
 
-if ! id \"\$CHARD_USER\" &>/dev/null; then
-    useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
-fi
-
-usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access \$CHARD_USER
-
-mkdir -p \"/\$CHARD_HOME\"
-chown 1000:1000 \"/\$CHARD_HOME\"
-
-mkdir -p /etc/sudoers.d
-chmod 750 /etc/sudoers.d
-echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
-chmod 440 /etc/sudoers.d/\$CHARD_USER
-
-echo \"Passwordless sudo configured for \$CHARD_USER\"
-"
+                mkdir -p /etc/sudoers.d
+                chown root:root /etc/sudoers.d
+                chmod 755 /etc/sudoers.d
+                chown root:root /etc/sudoers.d/\$USER
+                chmod 440 /etc/sudoers.d/\$USER
+                chown root:root /usr/bin/sudo
+                chmod 4755 /usr/bin/sudo
+                echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
+                echo \"Passwordless sudo configured for \$CHARD_USER\"
+                "
+                
+echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home")
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user")
@@ -1268,62 +1277,58 @@ sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHAR
 sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
 sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /proc    || mount -t proc proc /proc
-    mountpoint -q /sys     || mount -t sysfs sys /sys
-    mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
-    mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
-    mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                mountpoint -q /proc    || mount -t proc proc /proc
+                mountpoint -q /sys     || mount -t sysfs sys /sys
+                mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+                mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+                mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+            
+                if [ -e /dev/zram0 ]; then
+                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                    mount --make-rslave /dev/zram0 2>/dev/null
+                fi
+            
+                chmod 1777 /tmp /var/tmp
+            
+                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
 
-    if [ -e /dev/zram0 ]; then
-        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-        mount --make-rslave /dev/zram0 2>/dev/null
-    fi
-
-    chmod 1777 /tmp /var/tmp
-
-    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-    
-    CHARD_HOME=\$(cat /.chard_home)
-    CHARD_USER=\$(cat /.chard_user)
-    HOME=\$CHARD_HOME
-    USER=\$CHARD_USER
-    source \$HOME/.bashrc 2>/dev/null
-    chown \$USER:\$USER /var/lib/portage/world
-    chmod 644 /var/lib/portage/world 
-    source \$HOME/.smrt_env.sh
-    emerge app-admin/sudo
-    mkdir -p /etc/sudoers.d/\$USER
-    chown root:root /etc/sudoers.d
-    chmod 755 /etc/sudoers.d
-    chown root:root /etc/sudoers.d/\$USER
-    chown root:root /etc/sudo.conf
-    chown root:root /usr/bin/sudo
-    chmod 440 /etc/sudoers.d/\$USER
-    emerge app-misc/resolve-march-native && \
-    MARCH_FLAGS=\$(resolve-march-native) && \
-    BASHRC=\"\$HOME/.bashrc\" && \
-    awk -v march=\"\$MARCH_FLAGS\" '\
-    /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next} \
-    /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next} \
-    inblock { \
-        if (\$0 ~ /CFLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
-        if (\$0 ~ /COMMON_FLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
-        print; next \
-    } \
-    {print}' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\" \
-
-    umount -l /dev/zram0  2>/dev/null || true
-    umount -l /etc/ssl    2>/dev/null || true
-    umount -l /dev/shm    2>/dev/null || true
-    umount -l /dev/pts    2>/dev/null || true
-    umount -l /sys        2>/dev/null || true
-    umount -l /proc       2>/dev/null || true
-    umount -l /dev        2>/dev/null || true
-"
+                mkdir -p /var/db/pkg /var/lib/portage
+                CHARD_HOME=\$(cat /.chard_home)
+                CHARD_USER=\$(cat /.chard_user)
+                HOME=\$CHARD_HOME
+                USER=\$CHARD_USER
+                source \$HOME/.bashrc 2>/dev/null
+                chown -R portage:portage /var/db/pkg /var/lib/portage
+                chmod -R 755 /var/db/pkg
+                chmod 644 /var/lib/portage/world
+                /bin/SMRT
+                source \$HOME/.smrt_env.sh
+                chown 1000:1000 \$HOME/.smrt_env.sh
+                emerge app-misc/resolve-march-native && \
+                MARCH_FLAGS=\$(resolve-march-native) && \
+                BASHRC=\"\$HOME/.bashrc\" && \
+                awk -v march=\"\$MARCH_FLAGS\" '\
+                /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next} \
+                /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next} \
+                inblock { \
+                    if (\$0 ~ /CFLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
+                    if (\$0 ~ /COMMON_FLAGS=.*-march=/) sub(/-march=[^ ]+/, march); \
+                    print; next \
+                } \
+                {print}' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\" \
+            
+                umount -l /dev/zram0  2>/dev/null || true
+                umount -l /etc/ssl    2>/dev/null || true
+                umount -l /dev/shm    2>/dev/null || true
+                umount -l /dev/pts    2>/dev/null || true
+                umount -l /sys        2>/dev/null || true
+                umount -l /proc       2>/dev/null || true
+                umount -l /dev        2>/dev/null || true
+            "
 sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
@@ -1727,50 +1732,51 @@ sudo umount -l "$CHARD_ROOT/dev/input"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"     2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome"   2>/dev/null || true
+
 sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
 sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
 sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
-                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                mountpoint -q /proc    || mount -t proc proc /proc
-                mountpoint -q /sys     || mount -t sysfs sys /sys
-                mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
-                mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
-                mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+            mountpoint -q /proc    || mount -t proc proc /proc
+            mountpoint -q /sys     || mount -t sysfs sys /sys
+            mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts
+            mountpoint -q /dev/shm || mount -t tmpfs tmpfs /dev/shm
+            mountpoint -q /etc/ssl || mount --bind /etc/ssl /etc/ssl
+        
+            if [ -e /dev/zram0 ]; then
+                mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                mount --make-rslave /dev/zram0 2>/dev/null
+            fi
+        
+            chmod 1777 /tmp /var/tmp
+        
+            [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+            [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+            [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+            [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+            CHARD_HOME=\$(cat /.chard_home)
+            HOME=\$CHARD_HOME
+            CHARD_USER=\$(cat /.chard_user)
+            USER=\$CHARD_USER
+            GROUP_ID=1000
+            USER_ID=1000
+            su \$USER
+            /bin/SMRT
+            source \$HOME/.bashrc 2>/dev/null
+            source \$HOME/.smrt_env.sh
+            dbus-daemon --system --fork 2>/dev/null
+            sudo /bin/chariot
             
-                if [ -e /dev/zram0 ]; then
-                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                    mount --make-rslave /dev/zram0 2>/dev/null
-                fi
-            
-                chmod 1777 /tmp /var/tmp
-            
-                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-
-                CHARD_HOME=\$(cat /.chard_home)
-                CHARD_USER=\$(cat /.chard_user)
-                HOME=\$CHARD_HOME
-                USER=\$CHARD_USER
-                source \$HOME/.bashrc 2>/dev/null
-                env-update
-                dbus-daemon --system --fork 2>/dev/null
-                SMRT
-                chown 1000:1000 \$HOME/.smrt_env.sh
-                source \$HOME/.smrt_env.sh
-                sleep 2
-                /bin/chariot
-                umount -l /dev/zram0  2>/dev/null || true
-                umount -l /etc/ssl    2>/dev/null || true
-                umount -l /dev/shm    2>/dev/null || true
-                umount -l /dev/pts    2>/dev/null || true
-                umount -l /sys        2>/dev/null || true
-                umount -l /proc       2>/dev/null || true
-                umount -l /dev        2>/dev/null || true
+            umount -l /dev/zram0  2>/dev/null || true
+            umount -l /etc/ssl    2>/dev/null || true
+            umount -l /dev/shm    2>/dev/null || true
+            umount -l /dev/pts    2>/dev/null || true
+            umount -l /sys        2>/dev/null || true
+            umount -l /proc       2>/dev/null || true
+            umount -l /dev        2>/dev/null || true
             "
 sudo umount -l "$CHARD_ROOT/etc/ssl"      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/pts"      2>/dev/null || true
