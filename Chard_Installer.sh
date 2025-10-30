@@ -1787,6 +1787,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
     USER_ID=1000
     source /.bashrc
     source ~/.bashrc 2>/dev/null
+    chown -R 1000:1000 "$CHARD_HOME"
     /bin/SMRT
     source ~/.smrt_env.sh 2>/dev/null
 
