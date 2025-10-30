@@ -1800,9 +1800,9 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
         source ~/.smrt_env.sh 2>/dev/null
         echo $EMERGE_DEFAULT_OPTS
         trap - SIGINT
-        sudo /bin/chariot
+        sudo -E /bin/chariot
     "
-
+    
     umount -l /dev/zram0  2>/dev/null || true
     umount -l /etc/ssl    2>/dev/null || true
     umount -l /dev/shm    2>/dev/null || true
