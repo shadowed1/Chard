@@ -257,21 +257,15 @@ dbus-daemon --system --fork 2>/dev/null
 
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
-SMRT_REFRESH_INTERVAL=10
 
-smrt_refresh_wrapper() {
-    while true; do
-        if [[ -f "$SMRT_ENV_FILE" ]]; then
-            source "$SMRT_ENV_FILE" 2>/dev/null
-        fi
-        sleep "$SMRT_REFRESH_INTERVAL"
-    done
+smrt_refresh_prompt() {
+    [[ -f "$SMRT_ENV_FILE" ]] && source "$SMRT_ENV_FILE" 2>/dev/null
 }
 
-if [[ -z "$SMRT_LOOP_STARTED" ]]; then
-    smrt_refresh_wrapper &
-    export SMRT_LOOP_STARTED=1
-fi
+case "$PROMPT_COMMAND" in
+  *smrt_refresh_prompt*) ;;
+  *) PROMPT_COMMAND="smrt_refresh_prompt; $PROMPT_COMMAND" ;;
+esac
 # <<< END_CHARD_SMRT >>>
 
 # <<< END CHARD .BASHRC >>>
