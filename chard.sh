@@ -253,9 +253,9 @@ chard_uninstall() {
             echo "Uninstalling Chard..."
             sudo bash "$script"
         else
-            echo "${RED}Uninstall script not found or not executable at: $script${RESET}"
-            echo "${YELLOW}Downloading an extra copy... ${RESET}
-            exit 1
+            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+            sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+            $CHARD_ROOT/bin/Uninstall_Chard.sh
         fi
     else
         echo "${RED}Installation directory not found: $CHARD_ROOT ${RESET}"
