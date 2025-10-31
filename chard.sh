@@ -415,6 +415,7 @@ case "$cmd" in
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"            -o "$CHARD_ROOT/.chardrc"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"          -o "$CHARD_ROOT/.chard.env"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard.sh"            -o "$CHARD_ROOT/bin/chard"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
@@ -428,6 +429,7 @@ case "$cmd" in
                     "$CHARD_ROOT/.chardrc" \
                     "$CHARD_ROOT/.chard.env" \
                     "$CHARD_ROOT/.chard.logic" \
+                    "$CHARD_ROOT/.chard.preload" \
                     "$CHARD_ROOT/bin/SMRT" \
                     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
                     "$CHARD_ROOT/bin/.rootrc" \
