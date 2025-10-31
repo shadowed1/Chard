@@ -1139,7 +1139,6 @@ sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
 echo "${RESET}${BLUE}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
-echo "${BLUE}${BOLD}chardbuild.log${RESET}${BLUE} copied to Downloads folder for viewing. ${RESET}"
 echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
 sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
 sudo touch "$CHARD_ROOT/var/lib/portage/world"
