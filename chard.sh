@@ -230,8 +230,9 @@ chard_reinstall() {
             echo "Reinstalling Chard..."
             sudo bash "$script"
         else
-            echo "${RED}Reinstall script not found or not executable at: $script${RESET}"
-            exit 1
+            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+            sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+            $CHARD_ROOT/bin/Reinstall_Chard.sh
         fi
     else
         echo "${RED}Installation directory not found: $CHARD_ROOT ${RESET}"
