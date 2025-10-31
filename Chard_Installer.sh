@@ -80,8 +80,6 @@ read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
 response=${response:-Y}
 
 trap 'echo -e "\n${BLUE}Cancelled.${RESET}\n"; exit 1' INT TERM
-trap 'echo -e "\n${GREEN}Done.${RESET}\n"' EXIT
-
 read -rp "Continue? [Y/n]: " response
 
 case "$response" in
@@ -118,8 +116,6 @@ while true; do
     echo ""
     
     trap 'echo -e "${BLUE}Cancelled.${RESET}\n"; exit 1' INT TERM
-    trap 'echo -e "${GREEN}Done.${RESET}\n"' EXIT
-
     read -rp "Continue? [Y/n]: " confirm
     
     case "$confirm" in
