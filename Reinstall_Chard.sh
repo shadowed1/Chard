@@ -16,6 +16,9 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+read -r -p "${RED}${BOLD}Reinstall $CHARD_ROOT [y/N] ${RESET}" ans
+        if [[ "$ans" =~ ^[Yy]$ ]]; then
+
 
         echo "${RESET}${GREEN}"
         echo "[1] Quick Reinstall (Update Chard)"
