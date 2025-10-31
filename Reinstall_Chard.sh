@@ -408,8 +408,6 @@ EOF
                 "$CHARD_ROOT/$CHARD_HOME/.bashrc"
                             
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
-                sleep 1
-                exit 0
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
