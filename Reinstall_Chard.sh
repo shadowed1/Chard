@@ -417,4 +417,3 @@ EOF
                 echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
                 ;;
          esac
-exit 0
