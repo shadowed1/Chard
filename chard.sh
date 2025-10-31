@@ -253,6 +253,7 @@ chard_uninstall() {
             sudo bash "$script"
         else
             echo "${RED}Uninstall script not found or not executable at: $script${RESET}"
+            echo "${YELLOW}Downloading an extra copy... ${RESET}
             exit 1
         fi
     else
