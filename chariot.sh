@@ -993,14 +993,35 @@ checkpoint_119() {
 run_checkpoint 119 "sudo -E emerge app-admin/sudo" checkpoint_119
 
 checkpoint_120() {
+    USE="udisks" sudo -E emerge xfce-base/thunar
+    rm -rf /var/tmp/portage/xfce-base/thunar-*
+    eclean-dist -d
+}
+run_checkpoint 120 "sudo -E emerge xfce-base/thunar" checkpoint_120
+
+checkpoint_121() {
+    USE="udisks" sudo -E emerge gnome-base/gvfs
+    rm -rf /var/tmp/portage/gnome-base/gvfs-*
+    eclean-dist -d
+}
+run_checkpoint 121 "sudo -E emerge gnome-base/gvfs" checkpoint_121
+
+checkpoint_122() {
+    sudo -E emerge xfce-base/xfce4-meta
+    rm -rf /var/tmp/portage/xfce-base/xfce4-meta-*
+    eclean-dist -d
+}
+run_checkpoint 122 "sudo -E emerge xfce-base/xfce4-meta" checkpoint_122
+
+checkpoint_123() {
     echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
     sudo -E emerge --autounmask-write firefox-bin
     rm -rf /var/tmp/portage/www-client/firefox-bin-*
     eclean-dist -d
 }
-run_checkpoint 120 "sudo -E emerge firefox-bin" checkpoint_120
+run_checkpoint 123 "sudo -E emerge firefox-bin" checkpoint_123
 
-checkpoint_121() {
+checkpoint_124() {
     sudo -E emerge net-misc/yt-dlp
     sudo -E emerge media-libs/opus
     sudo -E emerge media-video/vlc
@@ -1009,7 +1030,7 @@ checkpoint_121() {
     rm -rf /var/tmp/portage/media-video/vlc-*
     eclean-dist -d
 }
-run_checkpoint 121 "sudo -E emerge yt-dlp + vlc" checkpoint_121
+run_checkpoint 124 "sudo -E emerge yt-dlp + vlc" checkpoint_124
 
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
