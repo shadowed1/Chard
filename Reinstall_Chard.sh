@@ -233,7 +233,6 @@ trap cleanup_chroot EXIT INT TERM
                 "$CHARD_ROOT/bin/.rootrc" \
                 "$CHARD_ROOT/bin/chariot" \
                 "$CHARD_ROOT/bin/chard_debug" \
-                "$CHARD_ROOT/bin/Uninstall_Chard.sh" \
                 "$CHARD_ROOT/bin/chard"; do
                 
                     if [ -f "$file" ]; then
