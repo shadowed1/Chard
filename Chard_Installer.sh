@@ -109,7 +109,7 @@ while true; do
     CHARD_ROOT="${CHARD_ROOT%/}"
     echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
     echo
-    read -srp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
+    read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
     echo ""
     case "$confirm" in
         [Yy]* | "")
