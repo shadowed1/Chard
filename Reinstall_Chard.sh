@@ -25,10 +25,6 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
 }
 
-read -r -p "${RED}${BOLD}Reinstall $CHARD_ROOT [y/N] ${RESET}" ans
-        if [[ "$ans" =~ ^[Yy]$ ]]; then
-
-
         echo "${RESET}${GREEN}"
         echo "[1] Quick Reinstall (Update Chard)"
         echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
