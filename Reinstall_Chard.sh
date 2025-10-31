@@ -200,6 +200,8 @@ trap cleanup_chroot EXIT INT TERM
                 sudo mkdir -p "$(dirname "$LOG_FILE")"
                 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
                 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
+                sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
+                sudo chmod 1777 "$CHARD_ROOT/tmp/.X11-unix"
                 
                 echo "${BLUE}[*] Downloading Chard components...${RESET}"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"            -o "$CHARD_ROOT/.chardrc"
