@@ -16,7 +16,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard entries from ~/.bashrc? [y/N] ${RESET}" ans
+read -r -p "${RED}${BOLD}Remove $CHARD_ROOT and Chard entry from ~/.bashrc? [y/N] ${RESET}" ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             
     echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
