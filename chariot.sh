@@ -1002,7 +1002,7 @@ run_checkpoint 120 "sudo -E emerge firefox-bin" checkpoint_120
 
 checkpoint_121() {
     sudo -E emerge net-misc/yt-dlp
-    sudo -E emerge media-libs/libopus
+    sudo -E emerge media-libs/opus
     sudo -E emerge media-video/vlc
     rm -rf /var/tmp/portage/net-misc/yt-dlp-*
     rm -rf /var/tmp/portage/media-libs/libopus-*
