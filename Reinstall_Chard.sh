@@ -16,6 +16,21 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+cleanup_chroot() {
+    echo "${RED}Exiting${RESET}"
+    sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+}
+
 read -r -p "${RED}${BOLD}Reinstall $CHARD_ROOT [y/N] ${RESET}" ans
         if [[ "$ans" =~ ^[Yy]$ ]]; then
 
