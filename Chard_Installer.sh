@@ -43,7 +43,7 @@ echo "${RESET}"
 echo               
 echo "${RESET}"
 echo "${RED}- Chard Installer can take ${BOLD}5-20 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~8 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
-echo "${RED}- Chard will be installed in ${RESET}${RED}${BOLD}${CHARD_ROOT}${RESET}${RED} and will not affect ChromeOS system commands.${RESET}"
+echo "${RED}- Chard install location can be customized and will not affect ChromeOS system commands.${RESET}"
 echo
 echo "${YELLOW}- It is ${BOLD}semi-sandboxed within itself${RESET}${YELLOW}, but can rely on Host libraries. Automatically updates itself build and compile with.${RESET}"
 echo "${YELLOW}- Chard has ${BOLD}not${RESET}${YELLOW} been tested with Brunch Toolchain or Chromebrew - this project uses a different implementation. It does ${BOLD}NOT${RESET}${YELLOW} require dev_install.${RESET}"
