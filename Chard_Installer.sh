@@ -1770,62 +1770,62 @@ echo "${CYAN}Compiling takes a long time, so please be patient if you have a slo
 echo "${BLUE}To start compiling apps open a new shell and run: ${BOLD}chard root${RESET}${BLUE}${RESET}"
 echo "${RESET}${GREEN}Eventually a precompiled version will be made once thorough testing is done.${RESET}"
 
-sudo chroot $CHARD_ROOT /bin/bash -c '
+sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
+        sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
+        sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
+        sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
+        sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
+        sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
-    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-
-    if [ -e /dev/zram0 ]; then
-        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-        mount --make-rslave /dev/zram0 2>/dev/null
-    fi
-
-    chmod 1777 /tmp /var/tmp
-
-    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-
-    CHARD_HOME=$(cat /.chard_home)
-    CHARD_USER=$(cat /.chard_user)
-    HOME="$CHARD_HOME"
-    USER="$CHARD_USER"
-    GROUP_ID=1000
-    USER_ID=1000
-    source /.bashrc
-    source ~/.bashrc 2>/dev/null
-    chown -R 1000:1000 "$CHARD_HOME"
-    source ~/.smrt_env.sh 2>/dev/null
-
-    dbus-daemon --system --fork 2>/dev/null
-
-    su - "$CHARD_USER" -s /bin/bash -c "
-        source /.bashrc
-        source ~/.bashrc 2>/dev/null
-        /bin/SMRT
-        source ~/.smrt_env.sh 2>/dev/null
-        echo $EMERGE_DEFAULT_OPTS
-        trap - SIGINT
-        sudo -E /bin/chariot
-    "
-    
-    umount -l /dev/zram0   2>/dev/null || true
-    umount -l /run/chrome  2>/dev/null || true
-    umount -l /run/dbus    2>/dev/null || true
-    umount -l /etc/ssl     2>/dev/null || true
-    umount -l /dev/pts     2>/dev/null || true
-    umount -l /dev/shm     2>/dev/null || true
-    umount -l /dev         2>/dev/null || true
-    umount -l /sys         2>/dev/null || true
-    umount -l /proc        2>/dev/null || true
-'
+            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+            mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+        
+            if [ -e /dev/zram0 ]; then
+                mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                mount --make-rslave /dev/zram0 2>/dev/null
+            fi
+        
+            chmod 1777 /tmp /var/tmp
+        
+            [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+            [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+            [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+            [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+            
+            CHARD_HOME=\$(cat /.chard_home)
+            HOME=\$CHARD_HOME
+            CHARD_USER=\$(cat /.chard_user)
+            USER=\$CHARD_USER
+            GROUP_ID=1000
+            USER_ID=1000
+            source \$HOME/.bashrc 2>/dev/null
+            source \$HOME/.smrt_env.sh
+            dbus-daemon --system --fork 2>/dev/null
+            env-update
+            SMRT 75
+            /bin/chariot
+            
+            umount -l /dev/zram0   2>/dev/null || true
+            umount -l /run/chrome  2>/dev/null || true
+            umount -l /run/dbus    2>/dev/null || true
+            umount -l /etc/ssl     2>/dev/null || true
+            umount -l /dev/pts     2>/dev/null || true
+            umount -l /dev/shm     2>/dev/null || true
+            umount -l /dev         2>/dev/null || true
+            umount -l /sys         2>/dev/null || true
+            umount -l /proc        2>/dev/null || true
+        "
+        sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
 
 show_progress
 echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
