@@ -1719,39 +1719,6 @@ sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/env"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.env"
 
-sudo tee "$CHARD_ROOT/etc/portage/env/llvm_override.sh" > /dev/null <<'EOF'
-#!/bin/bash
-
-LLVM_BASE="/usr/lib/llvm"
-all_llvm_versions=()
-
-if [[ -d "$LLVM_BASE" ]]; then
-    for d in "$LLVM_BASE"/*/; do
-        [[ -d "$d" ]] || continue
-        ver=$(basename "$d")
-        [[ $ver =~ ^[0-9]+(\.[0-9]+)*$ ]] && all_llvm_versions+=("$ver")
-    done
-    mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V)
-fi
-
-latest_llvm="${all_llvm_versions[-1]}"
-second_latest_llvm="${all_llvm_versions[-2]:-${all_llvm_versions[-1]}}"
-
-LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
-
-export LLVM_VERSION="$second_latest_llvm"
-export CC="$LLVM_DIR/bin/clang"
-export CXX="$LLVM_DIR/bin/clang++"
-export PATH="$LLVM_DIR/bin:$PATH"
-export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-
-if [[ -n "$EBUILD" && -f "$EBUILD" ]]; then
-    sed -i -E "s/(>=dev-libs\/llvm-)[0-9]+(\.[0-9]+)*/\1$second_latest_llvm/g" "$EBUILD"
-    sed -i -E "s/(>=sys-devel\/clang-)[0-9]+(\.[0-9]+)*/\1$second_latest_llvm/g" "$EBUILD"
-fi
-EOF
-
 echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords/perl" >/dev/null
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
