@@ -1,5 +1,23 @@
+#!/bin/bash
+# Chard Uninstaller
 
-echo "${RESET}${GREEN}"
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
+# <<< END_CHARD_ROOT_MARKER >>>
+
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+
+        echo "${RESET}${GREEN}"
         echo "[1] Quick Reinstall (Update Chard)"
         echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
         echo "${RESET}${RED}[q] Cancel"
