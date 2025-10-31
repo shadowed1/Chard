@@ -208,6 +208,7 @@ read -r -p "${RED}${BOLD}Reinstall $CHARD_ROOT [y/N] ${RESET}" ans
                 sudo mkdir -p "$(dirname "$LOG_FILE")"
                 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
                 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
+                
                 echo "${BLUE}[*] Downloading Chard components...${RESET}"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"            -o "$CHARD_ROOT/.chardrc"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"          -o "$CHARD_ROOT/.chard.env"
@@ -219,20 +220,30 @@ read -r -p "${RED}${BOLD}Reinstall $CHARD_ROOT [y/N] ${RESET}" ans
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+                
+                sudo chmod +x "$CHARD_ROOT/bin/SMRT"
+                sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chariot"
                 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
+                sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+                sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+                
                 for file in \
-                    "$CHARD_ROOT/.chardrc" \
-                    "$CHARD_ROOT/.chard.env" \
-                    "$CHARD_ROOT/.chard.logic" \
-                    "$CHARD_ROOT/.chard.preload" \
-                    "$CHARD_ROOT/bin/SMRT" \
-                    "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-                    "$CHARD_ROOT/bin/.rootrc" \
-                    "$CHARD_ROOT/bin/chariot" \
-                    "$CHARD_ROOT/bin/chard_debug" \
-                    "$CHARD_ROOT/bin/chard"; do
+                "$CHARD_ROOT/.chardrc" \
+                "$CHARD_ROOT/.chard.env" \
+                "$CHARD_ROOT/.chard.logic" \
+                "$CHARD_ROOT/.chard.preload" \
+                "$CHARD_ROOT/bin/SMRT" \
+                "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
+                "$CHARD_ROOT/bin/.rootrc" \
+                "$CHARD_ROOT/bin/chariot" \
+                "$CHARD_ROOT/bin/chard_debug" \
+                "$CHARD_ROOT/bin/Reinstall_Chard.sh" \
+                "$CHARD_ROOT/bin/Uninstall_Chard.sh" \
+                "$CHARD_ROOT/bin/chard"; do
                 
                     if [ -f "$file" ]; then
                         if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
@@ -417,4 +428,4 @@ EOF
                 echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
                 ;;
          esac
-         exit 0
+exit 0
