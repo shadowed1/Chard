@@ -1187,6 +1187,8 @@ else
 fi
 
 sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
+sudo chmod 1777 "$CHARD_ROOT/tmp/.X11-unix"
+
 
 echo "${RESET}${BLUE}[+] Mounting Chard Chroot${RESET}"
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
