@@ -31,6 +31,10 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
 }
 
+read -r -p "${RED}${BOLD}Reinstall $CHARD_ROOT [y/N] ${RESET}" ans
+        if [[ "$ans" =~ ^[Yy]$ ]]; then
+
+
         echo "${RESET}${GREEN}"
         echo "[1] Quick Reinstall (Update Chard)"
         echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
@@ -237,7 +241,6 @@ cleanup_chroot() {
                 "$CHARD_ROOT/bin/.rootrc" \
                 "$CHARD_ROOT/bin/chariot" \
                 "$CHARD_ROOT/bin/chard_debug" \
-                "$CHARD_ROOT/bin/Reinstall_Chard.sh" \
                 "$CHARD_ROOT/bin/Uninstall_Chard.sh" \
                 "$CHARD_ROOT/bin/chard"; do
                 
@@ -424,3 +427,4 @@ EOF
                 echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
                 ;;
          esac
+exit 0
