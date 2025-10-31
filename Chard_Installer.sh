@@ -1,6 +1,5 @@
 #!/bin/bash
 
-START_TIME=$(date +%s)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -9,6 +8,8 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
+
+START_TIME=$(date +%s)
 MAX_RETRIES=10
 RETRY_DELAY=30
 
@@ -75,8 +76,13 @@ show_progress() {
     echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
 }
 
-   read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
+read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
 response=${response:-Y}
+
+trap 'echo -e "\n${BLUE}Cancelled.${RESET}\n"; exit 1' INT TERM
+trap 'echo -e "\n${GREEN}Done.${RESET}\n"' EXIT
+
+read -rp "Continue? [Y/n]: " response
 
 case "$response" in
     y|Y|yes|YES|Yes)
@@ -84,13 +90,12 @@ case "$response" in
         echo
         ;;
     *)
-        echo "${RED}[EXIT]${RESET}"
+        echo -e "${RED}[EXIT]${RESET}"
         exit 1
-        sleep 1
-        exit 0
         ;;
 esac
-    unset LD_PRELOAD
+
+unset LD_PRELOAD
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
@@ -111,17 +116,23 @@ while true; do
     echo
     read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
     echo ""
+    
+    trap 'echo -e "${BLUE}Cancelled.${RESET}\n"; exit 1' INT TERM
+    trap 'echo -e "${GREEN}Done.${RESET}\n"' EXIT
+
+    read -rp "Continue? [Y/n]: " confirm
+    
     case "$confirm" in
         [Yy]* | "")
             sudo mkdir -p "$CHARD_ROOT"
-            break
             ;;
         [Nn]*)
             echo -e "${BLUE}Cancelled.${RESET}\n"
-            exit 0
+            exit 1
             ;;
         *)
             echo -e "${RED}Please answer Y/n.${RESET}"
+            exit 1
             ;;
     esac
 done
@@ -152,19 +163,22 @@ sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
-CURRENT_SHELL=$(basename "$SHELL")
+
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
-
+        
 if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
-else
+elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
-    [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
 fi
-
-sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
+        
+if [ -n "$TARGET_FILE" ]; then
+    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
+else
+    echo "${RED}No .bashrc found! ${RESET}"
+fi
 
 if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
     {
