@@ -58,3 +58,5 @@ read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard e
     else
         echo "${RED}[*] Cancelled.${RESET}"
     fi
+
+exit 0
