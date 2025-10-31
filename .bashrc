@@ -234,11 +234,7 @@ export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
-
-if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval $(dbus-launch --sh-syntax)
-fi
-
+eval $(dbus-launch --sh-syntax)
 export LIBGL_ALWAYS_INDIRECT=1
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
