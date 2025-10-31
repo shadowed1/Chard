@@ -1326,68 +1326,69 @@ echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/
 
 sudo chroot $CHARD_ROOT /bin/bash -c "
 
-                mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-                mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-                    
-                if [ -e /dev/zram0 ]; then
-                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                    mount --make-rslave /dev/zram0 2>/dev/null
-                fi
-                    
-                chmod 1777 /tmp /var/tmp
-                    
-                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
 
-                mkdir -p /var/db/pkg /var/lib/portage
-                CHARD_HOME=\$(cat /.chard_home)
-                CHARD_USER=\$(cat /.chard_user)
-                HOME=\$CHARD_HOME
-                USER=\$CHARD_USER
-                source \$HOME/.bashrc 2>/dev/null
-                chown -R portage:portage /var/db/pkg /var/lib/portage
-                chmod -R 755 /var/db/pkg
-                chmod 644 /var/lib/portage/world
-                /bin/SMRT
-                source \$HOME/.smrt_env.sh
-                chown 1000:1000 \$HOME/.smrt_env.sh
-                emerge app-misc/resolve-march-native && \
-                MARCH_FLAGS=\$(resolve-march-native) && \
-                BASHRC=\"\$HOME/.bashrc\" && \
-                awk -v march=\"\$MARCH_FLAGS\" '
-                /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
-                /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
-                inblock {
-                    if (\$0 ~ /^CFLAGS=/) { print \"CFLAGS=\\\"\" march \" -O2 -pipe\\\"\"; next }
-                    if (\$0 ~ /^COMMON_FLAGS=/) { 
-                        print \"COMMON_FLAGS=\\\"\" march \" -O2 -pipe\\\"\"
-                        print \"FCFLAGS=\\\"\$COMMON_FLAGS\\\"\"
-                        print \"FFLAGS=\\\"\$COMMON_FLAGS\\\"\"
-                        print \"CXXFLAGS=\\\"\$CFLAGS\\\"\"
-                        next
-                    }
-                    next
-                }
-                {print}
-            ' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\"
-            
-                umount -l /run/chrome  2>/dev/null || true
-                umount -l /run/dbus    2>/dev/null || true
-                umount -l /etc/ssl     2>/dev/null || true
-                umount -l /dev/pts     2>/dev/null || true
-                umount -l /dev/shm     2>/dev/null || true
-                umount -l /dev         2>/dev/null || true
-                umount -l /sys         2>/dev/null || true
-                umount -l /proc        2>/dev/null || true
-            "
+    if [ -e /dev/zram0 ]; then
+        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+        mount --make-rslave /dev/zram0 2>/dev/null
+    fi
+
+    chmod 1777 /tmp /var/tmp
+
+    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+
+    mkdir -p /var/db/pkg /var/lib/portage
+    CHARD_HOME=\$(cat /.chard_home)
+    CHARD_USER=\$(cat /.chard_user)
+    HOME=\$CHARD_HOME
+    USER=\$CHARD_USER
+    source \$HOME/.bashrc 2>/dev/null
+    chown -R portage:portage /var/db/pkg /var/lib/portage
+    chmod -R 755 /var/db/pkg
+    chmod 644 /var/lib/portage/world
+    /bin/SMRT
+    source \$HOME/.smrt_env.sh
+    chown 1000:1000 \$HOME/.smrt_env.sh
+
+    emerge app-misc/resolve-march-native && \
+    MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
+    BASHRC=\"\$HOME/.bashrc\" && \
+    awk -v march=\"\$MARCH_FLAGS\" '
+        /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
+        /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
+        inblock {
+            if (\$0 ~ /^CFLAGS=/) { print \"CFLAGS=\\\"\" march \" -O2 -pipe\\\"\"; next }
+            if (\$0 ~ /^COMMON_FLAGS=/) {
+                print \"COMMON_FLAGS=\\\"\" march \" -O2 -pipe\\\"\"
+                print \"FCFLAGS=\\\"\$COMMON_FLAGS\\\"\"
+                print \"FFLAGS=\\\"\$COMMON_FLAGS\\\"\"
+                print \"CXXFLAGS=\\\"\$CFLAGS\\\"\"
+                next
+            }
+            next
+        }
+        {print}
+    ' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\"
+
+    umount -l /run/chrome  2>/dev/null || true
+    umount -l /run/dbus    2>/dev/null || true
+    umount -l /etc/ssl     2>/dev/null || true
+    umount -l /dev/pts     2>/dev/null || true
+    umount -l /dev/shm     2>/dev/null || true
+    umount -l /dev         2>/dev/null || true
+    umount -l /sys         2>/dev/null || true
+    umount -l /proc        2>/dev/null || true
+"
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
