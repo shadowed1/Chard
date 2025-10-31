@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # SMRT - Smart Multithreaded Resource Tasker (Percentage-based)
 
