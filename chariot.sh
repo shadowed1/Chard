@@ -50,6 +50,10 @@ reset() {
     exit 0
 }
 
+if [[ "$1" == "reset" ]]; then
+    reset
+fi
+
 echo ""
 echo ""
 echo "${RESET}${RED}"        
