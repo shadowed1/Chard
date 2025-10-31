@@ -41,6 +41,8 @@ read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard e
 
     if [ -n "$TARGET_FILE" ]; then
         sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
+    else
+        echo "${RED}No .bashrc found! ${RESET}"
     fi
     
         echo "${CYAN}[+] Uninstalled ${RESET}"
