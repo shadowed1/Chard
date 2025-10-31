@@ -35,4 +35,6 @@ else
 fi
 
 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
-echo "${GREEN}Chard is uninstalled!${RESET}
+
+echo "${GREEN}Chard is uninstalled!${RESET}"
+echo
