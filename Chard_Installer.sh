@@ -13,6 +13,8 @@ START_TIME=$(date +%s)
 MAX_RETRIES=10
 RETRY_DELAY=30
 
+trap 'echo -e "\n${RED}Cancelled.${RESET}\n"; exit 1' INT TERM
+
 echo "${RESET}${GREEN}"
 echo
 echo
@@ -79,9 +81,6 @@ show_progress() {
 read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
 response=${response:-Y}
 
-trap 'echo -e "\n${BLUE}Cancelled.${RESET}\n"; exit 1' INT TERM
-read -rp "Continue? [Y/n]: " response
-
 case "$response" in
     y|Y|yes|YES|Yes)
         echo
@@ -93,7 +92,18 @@ case "$response" in
         ;;
 esac
 
-unset LD_PRELOAD
+read -rp "${YELLOW}Continue? [Y/n]: ${RESET}" response
+
+case "$response" in
+    y|Y|yes|YES|Yes)
+        echo
+        echo
+        ;;
+    *)
+        echo -e "${RED}[EXIT]${RESET}"
+        exit 1
+        ;;
+esac
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
@@ -115,7 +125,6 @@ while true; do
     read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
     echo ""
     
-    trap 'echo -e "${BLUE}Cancelled.${RESET}\n"; exit 1' INT TERM
     read -rp "Continue? [Y/n]: " confirm
     
     case "$confirm" in
@@ -133,6 +142,8 @@ while true; do
     esac
 done
 
+unset LD_PRELOAD
+
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
     
 CHARD_ROOT="${CHARD_ROOT%/}"
@@ -144,6 +155,25 @@ echo
 echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
 echo
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
+
+cleanup_chroot() {
+    echo "${RED}Unmounting Chard${RESET}"
+    sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+    sudo cp "$CHARD_ROOT/chardbuild.log" ~/
+    echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
+}
+
+trap cleanup_chroot EXIT INT TERM
 
 echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
 sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
@@ -290,7 +320,6 @@ KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | sed 's/href="linux-\(.*\)\.tar\.xz"/\1/' )
 
 KERNEL_VER=$(echo "$KERNEL_INDEX" | sort -V | tail -n2 | head -n1)
-
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
 KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
 KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
@@ -513,25 +542,6 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
 sudo mkdir -p "$CHARD_ROOT/dev/dri"
 sudo mkdir -p "$CHARD_ROOT/dev/input"
 sudo mkdir -p "$CHARD_ROOT/tmp"
-
-cleanup_chroot() {
-    echo "${RED}Unmounting Chard${RESET}"
-    sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-    sudo cp "$CHARD_ROOT/chardbuild.log" ~/
-    echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
-}
-
-trap cleanup_chroot EXIT INT TERM
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
