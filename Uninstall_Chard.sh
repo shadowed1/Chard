@@ -1,3 +1,4 @@
+#!/bin/bash
 # Chard Uninstaller
 
 # <<< CHARD_ROOT_MARKER >>>
