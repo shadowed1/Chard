@@ -646,8 +646,6 @@ detect_gpu_freq() {
     GPU_MAX_FREQ=""
     GPU_TYPE="unknown"
 
-    echo "[*] Detecting GPU..."
-
     if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
         GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
         GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
@@ -977,7 +975,7 @@ cpu = '$CPU_FAMILY'
 endian = 'little'
 EOF
 
-echo "${RESET}${BLUE}[+] Meson file created at $MESON_FILE for architecture $ARCH ${RESET}"
+echo "${RESET}${BLUE}[+] Meson file created at $MESON_FILE for architecture $ARCH"
 
 sudo mkdir -p "$CHARD_ROOT/etc/X11/xorg.conf.d"
 
