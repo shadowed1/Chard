@@ -1,5 +1,5 @@
 #!/bin/bash
-# Chard Uninstaller
+# Chard Reinstaller
 
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
@@ -392,3 +392,14 @@ EOF
                             
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 sleep 1
+                exit 0
+                ;;
+            2)
+                echo "${RESET}${YELLOW}[*] Performing full reinstall..."
+                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")
+                ;;
+            q|Q|*)
+                echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
+                ;;
+         esac
+         exit 0
