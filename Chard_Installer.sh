@@ -448,6 +448,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"          -o "$CHARD_ROOT/.chard.env"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/Reinstall_Chard.sh"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/Uninstall_Chard.sh"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard.sh"            -o "$CHARD_ROOT/bin/chard"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
@@ -460,6 +462,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
+sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -471,6 +475,8 @@ for file in \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard_debug" \
+    "$CHARD_ROOT/bin/Reinstall_Chard.sh" \
+    "$CHARD_ROOT/bin/Uninstall_Chard.sh" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
