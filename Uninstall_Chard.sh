@@ -32,15 +32,16 @@ read -r -p "${RED}${BOLD}Are you sure you want to remove $CHARD_ROOT and chard e
     CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
     DEFAULT_BASHRC="$HOME/.bashrc"
     TARGET_FILE=""
-    
+
     if [ -f "$CHROMEOS_BASHRC" ]; then
         TARGET_FILE="$CHROMEOS_BASHRC"
-    else
+    elif [ -f "$DEFAULT_BASHRC" ]; then
         TARGET_FILE="$DEFAULT_BASHRC"
-        [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
     fi
-    
+
+    if [ -n "$TARGET_FILE" ]; then
         sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
+    fi
     
         echo "${CYAN}[+] Uninstalled ${RESET}"
     else
