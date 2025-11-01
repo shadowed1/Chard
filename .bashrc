@@ -368,7 +368,7 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
         cd ~/
         pulseaudio &>/dev/null &
         PULSEAUDIO_PID=$!
-        /bin/bash
+        exec bash
         kill -9 $PULSEAUDIO_PID 2>/dev/null || true
     '
 fi
