@@ -1336,7 +1336,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         chmod 440 /etc/sudoers.d/\$USER
                         chown root:root /usr/bin/sudo
                         chmod 4755 /usr/bin/sudo
-                        echo \"\$CHARD_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/\$CHARD_USER
                         echo \"Passwordless sudo configured for \$CHARD_USER\"
                         umount -l /dev/zram0   2>/dev/null || true
                         umount -l /run/chrome  2>/dev/null || true
