@@ -236,7 +236,7 @@ export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval "$(dbus-launch --sh-syntax --exit-with-session)"
+    eval "$(dbus-launch --sh-syntax )"
     export DBUS_SESSION_BUS_ADDRESS
     export DBUS_SESSION_BUS_PID
 fi
@@ -275,13 +275,13 @@ w() {
 #sommelier --display=/run/chrome/wayland-0 --noop-driver --force-drm-device=/dev/dri/renderD128 -X --glamor --enable-linux-dmabuf --xwayland-path=/usr/libexec/Xwayland -- bash -c 'sleep 1; export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/"); echo "DISPLAY=$DISPLAY"; [ -f ~/.bashrc ] && source ~/.bashrc; exec bash'
 
 
-#if [ -z "$XFCE_STARTED" ] && [ ! -f /tmp/.xfce_started ]; then
-#    export XFCE_STARTED=1
-#    if ! pgrep -x "startxfce4" >/dev/null 2>&1; then
-#        nohup sudo -u $USER bash -c 'DISPLAY=:1 startxfce4 >/tmp/xfce4.log 2>&1 &' &
-#        touch /tmp/.xfce_started
-#    fi
-#fi
+if [ -z "$XFCE_STARTED" ] && [ ! -f /tmp/.xfce_started ]; then
+    export XFCE_STARTED=1
+    if ! pgrep -x "startxfce4" >/dev/null 2>&1; then
+        nohup sudo -u $USER bash -c 'DISPLAY=:1 startxfce4 >/tmp/xfce4.log 2>&1 &' &
+        touch /tmp/.xfce_started
+    fi
+fi
 
 MAKECONF="$ROOT/etc/portage/make.conf"
 if [[ -w "$MAKECONF" ]]; then
