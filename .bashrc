@@ -290,7 +290,7 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
     export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
     export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 
-    echo "Starting Xwayland session..."
+    echo "${MAGENTA}Starting Xwayland session.${RESET}"
     
     exec sommelier \
         --display="$SOMMELIER_DISPLAY" \
