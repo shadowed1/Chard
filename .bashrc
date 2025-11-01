@@ -305,7 +305,6 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
         sleep 1
         export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
         echo "DISPLAY=$DISPLAY"
-        # Source rc again safely
         [ -f ~/.bashrc ] && source ~/.bashrc
         exec bash
     '
