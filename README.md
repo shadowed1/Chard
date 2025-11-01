@@ -27,7 +27,7 @@
 - This is a Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed, even on ChromeOS!
 - Tested on a wide array of hardware and distros - but focusing on ChromeOS.
-- Run GUI apps with full GPU acceleration natively in ChromeOS. 
+- Run GUI apps with full GPU acceleration natively in ChromeOS. (Still being worked on)
 
 <br>
 
