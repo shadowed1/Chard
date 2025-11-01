@@ -92,19 +92,6 @@ case "$response" in
         ;;
 esac
 
-read -rp "${YELLOW}Continue? [Y/n]: ${RESET}" response
-
-case "$response" in
-    y|Y|yes|YES|Yes)
-        echo
-        echo
-        ;;
-    *)
-        echo -e "${RED}[EXIT]${RESET}"
-        exit 1
-        ;;
-esac
-
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
 if [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
@@ -114,7 +101,6 @@ else
     CHARD_ROOT="$DEFAULT_CHARD_ROOT"
 fi
 
-while true; do
     read -rp "${GREEN}Enter desired Install Path - ${RESET}${GREEN}${BOLD}leave blank for default: $CHARD_ROOT: ${RESET}" choice
     if [ -n "$choice" ]; then
         CHARD_ROOT="${choice}"
@@ -124,9 +110,7 @@ while true; do
     echo
     read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
     echo ""
-    
-    read -rp "Continue? [Y/n]: " confirm
-    
+        
     case "$confirm" in
         [Yy]* | "")
             sudo mkdir -p "$CHARD_ROOT"
@@ -140,8 +124,7 @@ while true; do
             exit 1
             ;;
     esac
-done
-
+    
 unset LD_PRELOAD
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
