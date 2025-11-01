@@ -257,7 +257,7 @@ x() {
 if [ -z "$XFCE_STARTED" ] && [ ! -f /tmp/.xfce_started ]; then
     export XFCE_STARTED=1
     if ! pgrep -x "startxfce4" >/dev/null 2>&1; then
-        nohup bash -c 'DISPLAY=:1 startxfce4 >/tmp/xfce4.log 2>&1 &' &
+        nohup sudo -u $USER bash -c 'DISPLAY=:1 startxfce4 >/tmp/xfce4.log 2>&1 &' &
         touch /tmp/.xfce_started
     fi
 fi
