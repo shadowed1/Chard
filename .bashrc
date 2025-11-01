@@ -290,24 +290,22 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
     export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
     export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 
-    SOMMELIER_CMD=(
-        sommelier
-        --display="$SOMMELIER_DISPLAY"
-        --noop-driver
-        --force-drm-device="$SOMMELIER_DRM_DEVICE"
-        -X
-        --glamor
-        --enable-linux-dmabuf
-        --xwayland-path=/usr/libexec/Xwayland
-    )
-
-    exec "${SOMMELIER_CMD[@]}" -- bash -c '
-        sleep 1
-        export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-        echo "DISPLAY=$DISPLAY"
-        [ -f ~/.bashrc ] && source ~/.bashrc
-        exec bash
-    '
+    echo "Starting Xwayland session..."
+    
+    exec sommelier \
+        --display="$SOMMELIER_DISPLAY" \
+        --noop-driver \
+        --force-drm-device="$SOMMELIER_DRM_DEVICE" \
+        -X --glamor --enable-linux-dmabuf \
+        --xwayland-path=/usr/libexec/Xwayland \
+        -- bash -c '
+            sleep 0.1
+            clear
+            source /.bashrc
+            cd ~/
+            export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
+            exec bash
+        '
 fi
 
 # <<< CHARD_SMRT >>>
