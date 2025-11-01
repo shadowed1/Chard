@@ -11,7 +11,6 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 cleanup_chroot() {
-    echo "${RED}Exiting${RESET}"
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
