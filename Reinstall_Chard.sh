@@ -154,7 +154,7 @@ trap cleanup_chroot EXIT INT TERM
                         umount -l /proc        2>/dev/null || true
                     "
                 
-                echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
+                echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee "$CHARD_ROOT/etc/sudoers.d/$CHARD_USER" > /dev/null
                 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
                 CHARD_HOME="$(dirname "$TARGET_FILE")"
                 CHARD_HOME="${CHARD_HOME#/}"
