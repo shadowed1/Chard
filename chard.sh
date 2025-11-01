@@ -290,12 +290,19 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
+
+        sudo cp -a "$CHARD_ROOT/usr/bin/bwrap" "$CHARD_ROOT/$CHARD_HOME/"
+        sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap"
+        sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap"
+        sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap"
+        
         sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
         sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
         sudo chroot "$CHARD_ROOT" /bin/bash -c "
+
 
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
@@ -349,6 +356,7 @@ case "$cmd" in
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         ;;
     categories|cat)
         PORTAGE_DIR="$CHARD_ROOT/usr/portage"
