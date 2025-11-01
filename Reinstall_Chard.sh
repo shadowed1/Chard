@@ -130,7 +130,7 @@ trap cleanup_chroot EXIT INT TERM
                         
                         mkdir -p \"/\$CHARD_HOME\"
                         chown 1000:1000 \"/\$CHARD_HOME\"
-        
+                        emerge --no-replace app-portage/gentoolkit
                         emerge --noreplace app-admin/sudo
         
                         mkdir -p /etc/sudoers.d
