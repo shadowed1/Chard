@@ -131,7 +131,7 @@ trap cleanup_chroot EXIT INT TERM
                         mkdir -p \"/\$CHARD_HOME\"
                         chown 1000:1000 \"/\$CHARD_HOME\"
         
-                        emerge app-admin/sudo
+                        emerge --noreplace app-admin/sudo
         
                         mkdir -p /etc/sudoers.d
                         chown root:root /etc/sudoers.d
@@ -355,8 +355,7 @@ EOF
                     /bin/SMRT
                     source \$HOME/.smrt_env.sh
                     chown 1000:1000 \$HOME/.smrt_env.sh
-                
-                    emerge app-misc/resolve-march-native && \
+                    emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
                     BASHRC=\"\$HOME/.bashrc\" && \
                     awk -v march=\"\$MARCH_FLAGS\" '
