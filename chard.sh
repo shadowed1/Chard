@@ -324,6 +324,8 @@ case "$cmd" in
             USER=\$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
+            source \$HOME/.bashrc 2>/dev/null
+            source \$HOME/.smrt_env.sh
             su \$USER
             source \$HOME/.bashrc 2>/dev/null
             source \$HOME/.smrt_env.sh
