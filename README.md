@@ -4,6 +4,8 @@
 
 <br>
 
+## Notice: Chard is in early development and lacks polish. Suggestions appreciated. 
+
 ### How to Install:
 
 <br>
@@ -27,7 +29,6 @@
 - This is a Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed, even on ChromeOS!
 - Tested on a wide array of hardware and distros - but focusing on ChromeOS.
-- Run GUI apps with full GPU acceleration natively in ChromeOS. (Still being worked on)
 
 <br>
 
@@ -58,8 +59,10 @@
 - *Requires Developer Mode if on ChromeOS.* <br>
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install; but Chard is independent of these tools.*
 
-- *Chromebooks with 8GB of RAM and 8 threads+ can build Chard in under 8 hours.*
-- *Lower end Chromebooks (2c Intel, Mediatek 500 series, and older) can expect much longer install times. 
+<br>
+
+- *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 4-8 hours.*
+- *Lower end Chromebooks (4 thread Intel, Mediatek 500 series, and older) can expect much longer install times.*
 
 <br>
 
@@ -68,17 +71,17 @@
 <br>
 
 - Chard auto-detects the Host's hardware and builds Gentoo + psuedo-Kernel automatically.
-- Includes ability to resume installer if interrupted.
+- Includes ability to resume installer if interrupted; even if system shuts down.
 
 <br>
 
 - Has an intelligent CPU task scheduler for building packages.
 - User can customize how many threads Chard can use dynamically. Useful for devices with low memory.
-- Hardware detection scripts allows compilers to enable native architecture tweaks.
+- Hardware detection scripts allows compilers to enable native architectural tweaks.
 
 <br>
 
-- Supports running Wayland apps directly in chroot that lack usernamespace requirements.
+- Supports running Wayland/X11 apps directly in chroot.
 - Uses Sommelier communicate with ChromeOS' and support X11 Desktop Environments and Apps.
 - Runs GUI apps with full GPU acceleration.
 
