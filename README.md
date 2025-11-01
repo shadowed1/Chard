@@ -4,7 +4,7 @@
 
 <br>
 
-## Notice: Chard is in early development and lacks polish. Suggestions appreciated. 
+*Notice: Chard is in early development and lacks polish. Suggestions and testing are greatly appreciated.* 
 
 ### How to Install:
 
