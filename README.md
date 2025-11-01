@@ -99,7 +99,7 @@
 - Clang
 - Mesa
 - Vulkan + Vulkan Tools
-- Flatpak
+- Flatpak (broken)
 - Sommelier
 - Wayland
 - X11
