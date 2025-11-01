@@ -1368,7 +1368,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     /bin/SMRT
     source \$HOME/.smrt_env.sh
     chown 1000:1000 \$HOME/ -R
-
+    emerge app-portage/gentoolkit
     emerge app-misc/resolve-march-native && \
     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
     BASHRC=\"\$HOME/.bashrc\" && \
