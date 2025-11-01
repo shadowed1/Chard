@@ -488,7 +488,6 @@ EOF
                 x86_64)
                     CHOST="x86_64-pc-linux-gnu"
                     ACCEPT_KEYWORDS="~amd64"
-                    ABI_X86="64 32"
                     ;;
                 aarch64)
                     CHOST="aarch64-unknown-linux-gnu"
@@ -499,11 +498,12 @@ EOF
                     exit 1
                     ;;
             esac
-            
-            MAKECONF_ABI_LINE=""
-            if [ -n "${ABI_X86:-}" ]; then
-                MAKECONF_ABI_LINE="ABI_X86=\"${ABI_X86}\""
-            fi
+
+            #ABI_X86="64 32"
+            #MAKECONF_ABI_LINE=""
+            #if [ -n "${ABI_X86:-}" ]; then
+            #    MAKECONF_ABI_LINE="ABI_X86=\"${ABI_X86}\""
+            #fi
             
             detect_gpu_freq
             
@@ -562,7 +562,6 @@ USE="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr ce
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
 VIDEO_CARDS="$VIDEO_CARDS"
-$MAKECONF_ABI_LINE
 PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH"
 PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
