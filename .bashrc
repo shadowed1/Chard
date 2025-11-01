@@ -285,7 +285,6 @@ alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
 
-# === AUTO-LAUNCH SOMMELIER ONCE PER SHELL ===
 if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ] && [ -t 1 ]; then
     echo "${MAGENTA}Starting Xwayland session...${RESET}"
     exec sommelier \
