@@ -39,6 +39,16 @@
 
 <br>
 
+- *Intel CPU's are recommended to enable hyperthreading in `chrome://flags` via Scheduler setting.*
+- *Building apps will heat up your system and require delayed/disabled sleep times!*
+
+<br>
+
+- *ChromeOS_PowerControl is recommended for custom fan curve, custom CPU clock speed curve, and enabling custom sleep thresholds for ChromeOS users:*
+<pre>https://github.com/shadowed1/ChromeOS_PowerControl/blob/main/README.md</pre>
+
+<br>
+
 - *Requires 8GB of storage, 2GB of RAM, and an internet connection.*
 - *CPU Support: x86_64 & ARM64 - CPU must be 64-bit*
 - *GPU Support: AMD, Intel, NVIDIA, ARM, Mali, Rockchip, Mediatek, Adreno, & Vivanti*
@@ -47,6 +57,9 @@
 
 - *Requires Developer Mode if on ChromeOS.* <br>
 - *Untested with Brunch Toolchain, Chromebrew, and dev_install; but Chard is independent of these tools.*
+
+- *Chromebooks with 8GB of RAM and 8 threads+ can build Chard in under 8 hours.*
+- *Lower end Chromebooks (2c Intel, Mediatek 500 series, and older) can expect much longer install times. 
 
 <br>
 
@@ -120,4 +133,5 @@
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate.
 - `Chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
-  
+- `w` -- Launch into a full Sommelier Xwayland environment. (Placeholder command)
+- `x vlc` -- Prepending `x` to an app you want to run will run it in an Xwayland environment. (Placeholder command)
