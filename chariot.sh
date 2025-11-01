@@ -993,12 +993,12 @@ checkpoint_119() {
 }
 run_checkpoint 119 "sudo -E emerge app-admin/sudo" checkpoint_119
 
-checkpoint_120() {
-    sudo -E emerge x11-misc/xkeyboard-config
-    rm -rf /var/tmp/portage/x11-misc/xkeyboard-config-*
-    eclean-dist -d
-}
-run_checkpoint 120 "sudo -E emerge x11-misc/xkeyboard-config" checkpoint_120
+#checkpoint_120() {
+#    sudo -E emerge x11-misc/xkeyboard-config
+#    rm -rf /var/tmp/portage/x11-misc/xkeyboard-config-*
+#    eclean-dist -d
+#}
+#run_checkpoint 120 "sudo -E emerge x11-misc/xkeyboard-config" checkpoint_120
 
 
 checkpoint_121() {
