@@ -285,13 +285,9 @@ alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
 
-if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
-    export SOMMELIER_ACTIVE=1
-    export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
-    export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
-
-    echo "${MAGENTA}Starting Xwayland session.${RESET}"
-    
+# === AUTO-LAUNCH SOMMELIER ONCE PER SHELL ===
+if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ] && [ -t 1 ]; then
+    echo "${MAGENTA}Starting Xwayland session...${RESET}"
     exec sommelier \
         --display="$SOMMELIER_DISPLAY" \
         --noop-driver \
@@ -299,11 +295,10 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
         -X --glamor --enable-linux-dmabuf \
         --xwayland-path=/usr/libexec/Xwayland \
         -- bash -c '
-            source /.bashrc
+            [ -f ~/.bashrc ] && source ~/.bashrc
             cd ~/
             export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-            pulseaudio &
-            PULSEAUDIO_PID="$!"
+            pulseaudio --start
             exec bash
         '
 fi
