@@ -260,20 +260,7 @@ x() {
     exec $SOMMELIER_CMD "$@"
 }
 
-w() {
-    SOMMELIER_DISPLAY=/run/chrome/wayland-0
-    SOMMELIER_CMD="sommelier --display=$SOMMELIER_DISPLAY --noop-driver --force-drm-device=/dev/dri/renderD128 -X --glamor --enable-linux-dmabuf --xwayland-path=/usr/libexec/Xwayland"
-    $SOMMELIER_CMD -- bash -c '
-        sleep 1
-        export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/")
-        echo "DISPLAY=$DISPLAY"
-        [ -f ~/.bashrc ] && source ~/.bashrc
-        exec bash
-    '
-}
-
 #sommelier --display=/run/chrome/wayland-0 --noop-driver --force-drm-device=/dev/dri/renderD128 -X --glamor --enable-linux-dmabuf --xwayland-path=/usr/libexec/Xwayland -- bash -c 'sleep 1; export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/"); echo "DISPLAY=$DISPLAY"; [ -f ~/.bashrc ] && source ~/.bashrc; exec bash'
-
 
 if [ -z "$XFCE_STARTED" ] && [ ! -f /tmp/.xfce_started ]; then
     export XFCE_STARTED=1
@@ -297,6 +284,32 @@ eselect python set --python3 "python${second_dot}" 2>/dev/null || true
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
+
+if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
+    export SOMMELIER_ACTIVE=1
+    export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
+    export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
+
+    SOMMELIER_CMD=(
+        sommelier
+        --display="$SOMMELIER_DISPLAY"
+        --noop-driver
+        --force-drm-device="$SOMMELIER_DRM_DEVICE"
+        -X
+        --glamor
+        --enable-linux-dmabuf
+        --xwayland-path=/usr/libexec/Xwayland
+    )
+
+    exec "${SOMMELIER_CMD[@]}" -- bash -c '
+        sleep 1
+        export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
+        echo "DISPLAY=$DISPLAY"
+        # Source rc again safely
+        [ -f ~/.bashrc ] && source ~/.bashrc
+        exec bash
+    '
+fi
 
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
