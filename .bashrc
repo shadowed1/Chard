@@ -139,7 +139,6 @@ export PYTHON="python${third_latest_python}"
 export PORTAGE_PYTHON="python${third_latest_python}"
 
 if command -v python3 >/dev/null && python3 --version 2>&1 | grep -q "$latest_python"; then
-    echo "${YELLOW}[chard] Warning: python${latest_python} is active, switching to python${third_latest_python}${RESET}"
     alias python3="$ROOT/usr/bin/python${third_latest_python}"
 fi
 
@@ -172,8 +171,6 @@ fi
 if [[ -n "$third_latest_gcc" && -n "$CHOST" ]]; then
     gcc_bin_path="$ROOT/usr/$CHOST/gcc-bin/${third_latest_gcc}"
     gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/${third_latest_gcc}"
-    echo "GCC bin path: $gcc_bin_path"
-    echo "GCC lib path: $gcc_lib_path"
 fi
 
 export PATH="$gcc_bin_path:$PATH"
@@ -190,6 +187,7 @@ if command -v equery >/dev/null 2>&1; then
 fi
 
 if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
+    echo "Equery not available or no versions found, scanning $LLVM_BASE..."
     for d in "$LLVM_BASE"/*/; do
         [[ -d "$d" ]] || continue
         ver=$(basename "$d" | grep -oP '^[0-9]+\.[0-9]+')
@@ -200,24 +198,21 @@ fi
 mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V | uniq)
 
 latest_llvm=""
-second_latest_llvm=""
+third_latest_llvm=""
 
 if (( ${#all_llvm_versions[@]} > 0 )); then
     latest_llvm="${all_llvm_versions[-1]}"
-    echo "Latest LLVM major release detected: $latest_llvm"
 fi
-if (( ${#all_llvm_versions[@]} > 1 )); then
-    second_latest_llvm="${all_llvm_versions[-2]}"
-    echo "Second-latest LLVM major release selected: $second_latest_llvm"
-else
-    second_latest_llvm="$latest_llvm"
-    echo "Only one LLVM major release found, using latest: $second_latest_llvm"
+if (( ${#all_llvm_versions[@]} >= 3 )); then
+    third_latest_llvm="${all_llvm_versions[-3]}"
+elif (( ${#all_llvm_versions[@]} > 0 )); then
+    third_latest_llvm="${all_llvm_versions[0]}"
 fi
 
-if [[ -n "$second_latest_llvm" ]]; then
-    LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
+if [[ -n "$third_latest_llvm" ]]; then
+    LLVM_DIR="$LLVM_BASE/$third_latest_llvm"
     export LLVM_DIR
-    export LLVM_VERSION="$second_latest_llvm"
+    export LLVM_VERSION="$third_latest_llvm"
     [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
     [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
