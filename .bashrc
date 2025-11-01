@@ -371,10 +371,10 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
         echo "DISPLAY=$DISPLAY"
         [ -f ~/.bashrc ] && source ~/.bashrc
         cd ~/
-        pulseaudio & 2>/dev/null
-        PULSEAUDIO_PID="$!"
-        trap "kill -9 $PULSEAUDIO_PID 2>/dev/null" EXIT
-        exec bash
+        pulseaudio &>/dev/null &
+        PULSEAUDIO_PID=$!
+        /bin/bash
+        kill -9 $PULSEAUDIO_PID 2>/dev/null || true
     '
 fi
 
