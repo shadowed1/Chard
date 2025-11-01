@@ -848,6 +848,7 @@ PKG_CONFIG="/usr/bin/pkg-config"
 PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
 PYTHONMULTIPROCESSING_START_METHOD=fork
+ABI_X86="64 32"
 EOF
 
 echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE ${RESET}"
