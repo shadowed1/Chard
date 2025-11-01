@@ -302,7 +302,8 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
             source /.bashrc
             cd ~/
             export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-            echo "${
+            pulseaudio &
+            PULSEAUDIO_PID="$!"
             exec bash
         '
 fi
