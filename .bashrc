@@ -231,9 +231,9 @@ export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/local/share:/usr/share/flatpak/e
 export DISPLAY=":0"
 export GDK_BACKEND="wayland"
 export CLUTTER_BACKEND="wayland"
-export WAYLAND_DISPLAY=wayland-0
-export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
-export EGL_PLATFORM=wayland
+export WAYLAND_DISPLAY="wayland-0"
+export WAYLAND_DISPLAY_LOW_DENSITY="wayland-1"
+export EGL_PLATFORM="wayland"
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
@@ -241,11 +241,11 @@ if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     export DBUS_SESSION_BUS_PID
 fi
 
-export LIBGL_ALWAYS_INDIRECT=1
-export QT_QPA_PLATFORM=wayland
+export LIBGL_ALWAYS_INDIRECT="1"
+export QT_QPA_PLATFORM="wayland"
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
-export SOMMELIER_GLAMOR=1
-export SOMMELIER_VERSION=0.20
+export SOMMELIER_GLAMOR="1"
+export SOMMELIER_VERSION="0.20"
 
 x() {
     if [[ -z "$WAYLAND_DISPLAY" ]]; then
