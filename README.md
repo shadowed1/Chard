@@ -60,6 +60,7 @@
 
 - Has an intelligent CPU task scheduler for building packages.
 - User can customize how many threads Chard can use dynamically. Useful for devices with low memory.
+- Hardware detection scripts allows compilers to enable native architecture tweaks.
 
 <br>
 
@@ -71,6 +72,7 @@
 
 - Does *not* alter files ouside of /usr/local/ and a .bashrc entry wrapper that will remove itself on uninstall.
 - When Installer finishes or exits the log file, 'chardbuild.log', is copied to home folder.
+- Can run certain apps directly in the chroot; with libraries being slowly validated. 
 
 <br>
 
@@ -97,12 +99,22 @@
 - Mesa
 - Vulkan + Vulkan Tools
 - Flatpak
+- Sommelier
+- Wayland
+- X11
+- XFCE4
+- Gedit
 - And Many More
 
 # Commands (most not listed - on to-do list) <br>
-- `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot.
+- `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (needs rework).
 - `chard root` or `cr` -- Enter Chard Chroot for a fully sandboxed Gentoo environment.
 - `chard reinstall` -- Option 1 updates chard scripts to latest version. Option 2 is a full reinstall.
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
 - `chard help` -- Show help examples.
+
+*Inside Chard Root*
+- `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate.
+- `Chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
+  
