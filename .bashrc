@@ -47,108 +47,172 @@ export PORTAGE_TMPDIR="$ROOT/var/tmp"
 export XDG_RUNTIME=""
 # <<< END CHARD_XDG_RUNTIME_DIR >>>
 
-PERL_BASES=("$ROOT/usr/lib64/perl5" "$ROOT/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
 all_perl_versions=()
 
-for base in "${PERL_BASES[@]}"; do
-    [[ -d "$base" ]] || continue
-    for dir in "$base"/*; do
-        [[ -d "$dir" ]] || continue
-        ver=$(basename "$dir")
-        [[ $ver =~ ^[0-9]+\.[0-9]+$ ]] && all_perl_versions+=("$ver")
-    done
-done
-
-mapfile -t all_perl_versions < <(printf '%s\n' "${all_perl_versions[@]}" | sort -V | uniq)
-
-if (( ${#all_perl_versions[@]} >= 2 )); then
-    second_latest_perl="${all_perl_versions[-2]}"
-elif (( ${#all_perl_versions[@]} == 1 )); then
-    second_latest_perl="${all_perl_versions[0]}"
-else
-    second_latest_perl=""
+if command -v equery >/dev/null 2>&1; then
+    while read -r line; do
+        # Example line: [IP-] [  ] dev-lang/perl-5.40.0:5.40
+        ver=$(echo "$line" | grep -oP 'dev-lang/perl-\K[0-9]+\.[0-9]+')
+        [[ -n "$ver" ]] && all_perl_versions+=("$ver")
+    done < <(equery list -p dev-lang/perl 2>/dev/null | grep 'dev-lang/perl-')
 fi
 
-PERL5LIB=""
-if [[ -n "$second_latest_perl" ]]; then
+if [[ ${#all_perl_versions[@]} -eq 0 ]]; then
+    PERL_BASES=("$ROOT/usr/lib64/perl5" "$ROOT/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
     for base in "${PERL_BASES[@]}"; do
-        for sub in "" "vendor_perl" "$CHOST" "vendor_perl/$CHOST"; do
-            dir="$base/$second_latest_perl/$sub"
-            [[ -d "$dir" ]] && PERL5LIB="$dir${PERL5LIB:+:$PERL5LIB}"
+        [[ -d "$base" ]] || continue
+        for dir in "$base"/*; do
+            [[ -d "$dir" ]] || continue
+            ver=$(basename "$dir" | grep -oP '^[0-9]+\.[0-9]+')
+            [[ -n "$ver" ]] && all_perl_versions+=("$ver")
         done
     done
 fi
 
+mapfile -t all_perl_versions < <(printf '%s\n' "${all_perl_versions[@]}" | sort -V | uniq)
+
+third_latest_perl=""
+if (( ${#all_perl_versions[@]} >= 3 )); then
+    third_latest_perl="${all_perl_versions[-3]}"
+elif (( ${#all_perl_versions[@]} > 0 )); then
+    third_latest_perl="${all_perl_versions[0]}"
+fi
+
+PERL5LIB=""
+if [[ -n "$third_latest_perl" ]]; then
+    PERL_BASES=("$ROOT/usr/lib64/perl5" "$ROOT/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
+    for base in "${PERL_BASES[@]}"; do
+        for sub in "" "vendor_perl" "$CHOST" "vendor_perl/$CHOST"; do
+            dir="$base/$third_latest_perl/$sub"
+            if [[ -d "$dir" ]]; then
+                PERL5LIB="$dir${PERL5LIB:+:$PERL5LIB}"
+            fi
+        done
+    done
+    export PERL5LIB
+fi
+
 PYEXEC_BASE="$ROOT/usr/lib/python-exec"
-mapfile -t all_python_dirs < <(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V)
-if (( ${#all_python_dirs[@]} > 0 )); then
-    latest_python="${all_python_dirs[-1]}"
-else
-    latest_python=""
+all_python_versions=()
+
+if command -v equery >/dev/null 2>&1; then
+    while read -r line; do
+        ver=$(echo "$line" | grep -oP 'dev-lang/python-\K[0-9]+\.[0-9]+')
+        [[ -n "$ver" ]] && all_python_versions+=("$ver")
+    done < <(equery list -p dev-lang/python 2>/dev/null | grep 'dev-lang/python-')
 fi
-if (( ${#all_python_dirs[@]} > 1 )); then
-    second_latest_python="${all_python_dirs[-2]}"
-else
-    second_latest_python="$latest_python"
+
+if (( ${#all_python_versions[@]} == 0 )); then
+    mapfile -t all_python_dirs < <(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V)
+    for d in "${all_python_dirs[@]}"; do
+        ver="${d#python}"
+        [[ -n "$ver" ]] && all_python_versions+=("$ver")
+    done
 fi
-latest_dot="${latest_python#python}"
-second_dot="${second_latest_python#python}"
-second_underscore="${second_dot//./_}"
+
+mapfile -t all_python_versions < <(printf '%s\n' "${all_python_versions[@]}" | sort -V | uniq)
+
+latest_python=""
+third_latest_python=""
+
+if (( ${#all_python_versions[@]} > 0 )); then
+    latest_python="${all_python_versions[-1]}"
+fi
+if (( ${#all_python_versions[@]} >= 3 )); then
+    third_latest_python="${all_python_versions[-3]}"
+elif (( ${#all_python_versions[@]} > 0 )); then
+    third_latest_python="${all_python_versions[0]}"
+fi
+
+second_underscore="${third_latest_python//./_}"
 
 export PYTHON_TARGETS="python${second_underscore}"
 export PYTHON_SINGLE_TARGET="python${second_underscore}"
 
-python_site_second="$ROOT/usr/lib/python${second_dot}/site-packages"
-python_site_latest="$ROOT/usr/lib/python${latest_dot}/site-packages"
-export PYTHONPATH="${python_site_second}:${python_site_latest}${PYTHONPATH:+:$(realpath -m "$PYTHONPATH")}"
+python_site_third="$ROOT/usr/lib/python${third_latest_python}/site-packages"
+python_site_latest="$ROOT/usr/lib/python${latest_python}/site-packages"
+export PYTHONPATH="${python_site_third}:${python_site_latest}${PYTHONPATH:+:$(realpath -m "$PYTHONPATH")}"
 
-export PYEXEC_DIR="${PYEXEC_BASE}/${second_latest_python}"
-export EPYTHON="python${second_dot}"
-export PYTHON="python${second_dot}"
-export PORTAGE_PYTHON="python${second_dot}"
+export PYEXEC_DIR="${PYEXEC_BASE}/python${third_latest_python}"
+export EPYTHON="python${third_latest_python}"
+export PYTHON="python${third_latest_python}"
+export PORTAGE_PYTHON="python${third_latest_python}"
 
-if python3 --version 2>/dev/null | grep -q "3\.14"; then
-    echo "${YELLOW}[chard] Warning: python${latest_dot} is active, switching python${second_dot}.${RESET}"
-    alias python3="$ROOT/usr/bin/python${second_dot}"
+if command -v python3 >/dev/null && python3 --version 2>&1 | grep -q "$latest_python"; then
+    alias python3="$ROOT/usr/bin/python${third_latest_python}"
 fi
 
-gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
-if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
-    gcc_bin_path="$ROOT/usr/$CHOST/gcc-bin/${gcc_version}"
-    gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/$gcc_version"
-else
-    gcc_bin_path="$ROOT/usr/$CHOST/gcc-bin/14"
-    gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/14"
+all_gcc_versions=()
+
+if command -v equery >/dev/null 2>&1; then
+    while read -r line; do
+        ver=$(echo "$line" | grep -oP 'sys-devel/gcc-\K[0-9]+')
+        [[ -n "$ver" ]] && all_gcc_versions+=("$ver")
+    done < <(equery list -p sys-devel/gcc 2>/dev/null | grep 'sys-devel/gcc-')
 fi
+
+if [[ ${#all_gcc_versions[@]} -eq 0 && -d "$ROOT/usr/$CHOST/gcc-bin" ]]; then
+    for dir in "$ROOT/usr/$CHOST/gcc-bin"/*; do
+        [[ -d "$dir" ]] || continue
+        ver=$(basename "$dir")
+        [[ $ver =~ ^[0-9]+$ ]] && all_gcc_versions+=("$ver")
+    done
+fi
+
+mapfile -t all_gcc_versions < <(printf '%s\n' "${all_gcc_versions[@]}" | sort -V | uniq)
+
+third_latest_gcc=""
+if (( ${#all_gcc_versions[@]} >= 3 )); then
+    third_latest_gcc="${all_gcc_versions[-3]}"
+elif (( ${#all_gcc_versions[@]} > 0 )); then
+    third_latest_gcc="${all_gcc_versions[0]}"
+fi
+
+if [[ -n "$third_latest_gcc" && -n "$CHOST" ]]; then
+    gcc_bin_path="$ROOT/usr/$CHOST/gcc-bin/${third_latest_gcc}"
+    gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/${third_latest_gcc}"
+fi
+
+export PATH="$gcc_bin_path:$PATH"
+export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 LLVM_BASE="$ROOT/usr/lib/llvm"
 all_llvm_versions=()
 
-if [[ -d "$LLVM_BASE" ]]; then
-    for d in "$LLVM_BASE"/*/; do
-        [[ -d "$d" ]] || continue
-        ver=$(basename "$d")       # strip path
-        [[ $ver =~ ^[0-9]+(\.[0-9]+)*$ ]] && all_llvm_versions+=("$ver")
-    done
-    mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V)
+if command -v equery >/dev/null 2>&1; then
+    while read -r line; do
+        ver=$(echo "$line" | grep -oP 'llvm-core/llvm-\K[0-9]+\.[0-9]+')
+        [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
+    done < <(equery list -p llvm-core/llvm 2>/dev/null | grep 'llvm-core/llvm-')
 fi
 
+if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
+    echo "Equery not available or no versions found, scanning $LLVM_BASE..."
+    for d in "$LLVM_BASE"/*/; do
+        [[ -d "$d" ]] || continue
+        ver=$(basename "$d" | grep -oP '^[0-9]+\.[0-9]+')
+        [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
+    done
+fi
+
+mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V | uniq)
+
 latest_llvm=""
-second_latest_llvm=""
+third_latest_llvm=""
 
 if (( ${#all_llvm_versions[@]} > 0 )); then
     latest_llvm="${all_llvm_versions[-1]}"
 fi
-if (( ${#all_llvm_versions[@]} > 1 )); then
-    second_latest_llvm="${all_llvm_versions[-2]}"
-else
-    second_latest_llvm="$latest_llvm"
+if (( ${#all_llvm_versions[@]} >= 3 )); then
+    third_latest_llvm="${all_llvm_versions[-3]}"
+elif (( ${#all_llvm_versions[@]} > 0 )); then
+    third_latest_llvm="${all_llvm_versions[0]}"
 fi
 
-if [[ -n "$second_latest_llvm" ]]; then
-    LLVM_DIR="$LLVM_BASE/$second_latest_llvm"
+if [[ -n "$third_latest_llvm" ]]; then
+    LLVM_DIR="$LLVM_BASE/$third_latest_llvm"
     export LLVM_DIR
-    export LLVM_VERSION="$second_latest_llvm"
+    export LLVM_VERSION="$third_latest_llvm"
     [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
     [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
