@@ -1041,6 +1041,16 @@ checkpoint_124() {
 }
 run_checkpoint 124 "sudo -E emerge yt-dlp + vlc" checkpoint_124
 
+checkpoint_125() {
+    sudo -E emerge app-eselect/eselect-repository dev-vcs/git
+    sudo -E eselect repository enable another-brave-overlay
+    sudo -E emerge --sync another-brave-overlay
+    sudo -E emerge www-client/brave-browser::another-brave-overlay
+    rm -rf /var/tmp/portage/www-client/brave-browser-*
+    eclean-dist -d
+}
+run_checkpoint 125 "sudo -E emerge www-client/brave-browser::another-brave-overlay" checkpoint_125
+
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
 
