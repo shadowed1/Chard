@@ -287,6 +287,7 @@ export EMERGE_DEFAULT_OPTS=--quiet-build=y
 
 if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ] && [ -t 1 ]; then
     echo "${MAGENTA}Starting Xwayland session...${RESET}"
+
     exec sommelier \
         --display="$SOMMELIER_DISPLAY" \
         --noop-driver \
@@ -297,7 +298,9 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ] && [ -t 1 ]; then
             [ -f ~/.bashrc ] && source ~/.bashrc
             cd ~/
             export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-            pulseaudio --start
+            pulseaudio --start &
+            PULSEAUDIO_PID="$!"
+            trap "kill -9 $PULSEAUDIO_PID 2>/dev/null" EXIT
             exec bash
         '
 fi
