@@ -26,7 +26,7 @@
 
 - This is a Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed, even on ChromeOS!
-- Tested on a wide array of hardware and distros.
+- Tested on a wide array of hardware and distros - but focusing on ChromeOS.
 
 <br>
 
@@ -63,7 +63,9 @@
 
 <br>
 
-- GUI apps are still being worked on; but other programs and compiling tools are working.
+- Supports running Wayland apps directly in chroot that lack usernamespace requirements.
+- Uses Sommelier communicate with ChromeOS' and support X11 Desktop Environments and Apps.
+- Runs GUI apps with full GPU acceleration.
 
 <br>
 
