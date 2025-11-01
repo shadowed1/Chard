@@ -254,6 +254,21 @@ x() {
     exec $SOMMELIER_CMD "$@"
 }
 
+w() {
+    SOMMELIER_DISPLAY=/run/chrome/wayland-0
+    SOMMELIER_CMD="sommelier --display=$SOMMELIER_DISPLAY --noop-driver --force-drm-device=/dev/dri/renderD128 -X --glamor --enable-linux-dmabuf --xwayland-path=/usr/libexec/Xwayland"
+    $SOMMELIER_CMD -- bash -c '
+        sleep 1
+        export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/")
+        echo "DISPLAY=$DISPLAY"
+        [ -f ~/.bashrc ] && source ~/.bashrc
+        exec bash
+    '
+}
+
+#sommelier --display=/run/chrome/wayland-0 --noop-driver --force-drm-device=/dev/dri/renderD128 -X --glamor --enable-linux-dmabuf --xwayland-path=/usr/libexec/Xwayland -- bash -c 'sleep 1; export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/"); echo "DISPLAY=$DISPLAY"; [ -f ~/.bashrc ] && source ~/.bashrc; exec bash'
+
+
 if [ -z "$XFCE_STARTED" ] && [ ! -f /tmp/.xfce_started ]; then
     export XFCE_STARTED=1
     if ! pgrep -x "startxfce4" >/dev/null 2>&1; then
