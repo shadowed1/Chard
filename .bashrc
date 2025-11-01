@@ -368,6 +368,9 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
         sleep 0.1
         export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
         [ -f ~/.bashrc ] && source ~/.bashrc
+        cd ~/
+        pulseaudio &>/dev/null &
+        PULSEAUDIO_PID=$!
         exec bash
     '
 fi
