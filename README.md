@@ -73,7 +73,7 @@
 
 - Does *not* alter files ouside of /usr/local/ and a .bashrc entry wrapper that will remove itself on uninstall.
 - When Installer finishes or exits the log file, 'chardbuild.log', is copied to home folder.
-- Can run certain apps directly in the chroot; with libraries being slowly validated. 
+- Can run certain apps directly from Chard in the Host OS; with libraries being slowly validated. 
 
 <br>
 
