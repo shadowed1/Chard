@@ -299,11 +299,10 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
         -X --glamor --enable-linux-dmabuf \
         --xwayland-path=/usr/libexec/Xwayland \
         -- bash -c '
-            sleep 0.1
-            clear
             source /.bashrc
             cd ~/
             export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
+            echo "${
             exec bash
         '
 fi
