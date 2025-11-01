@@ -1789,6 +1789,21 @@ echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/
 sudo chmod +x "$WAYLAND_CONF_FILE"
 echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
 
+
+PULSEHOME="$CHARD_ROOT/$CHARD_HOME/.config/pulse"
+sudo mkdir -p "$PULSEHOME"
+sudo tee "${PULSEHOME}/default.pa" > /dev/null <<'EOF'
+#!/usr/bin/pulseaudio -nF
+# Copyright (c) 2016 The crouton Authors. All rights reserved.
+.include /etc/pulse/default.pa
+load-module module-alsa-sink device=cras sink_name=cras-sink
+load-module module-alsa-source device=cras source_name=cras-source
+set-default-sink cras-sink
+set-default-source cras-source
+EOF
+    
+sudo chown -R 1000:1000 "${PULSEHOME}"
+
 sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
