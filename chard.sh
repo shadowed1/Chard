@@ -333,8 +333,8 @@ case "$cmd" in
                 source \$HOME/.bashrc 2>/dev/null
                 source \$HOME/.smrt_env.sh 2>/dev/null
                 dbus-daemon --system --fork 2>/dev/null
-                chard_sommelier && exec /bin/bash
                 trap exit 1 INT TERM
+                chard_sommelier && exec /bin/bash
             "
             
             umount -l /dev/zram0   2>/dev/null || true
