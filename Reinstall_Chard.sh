@@ -201,7 +201,7 @@ trap cleanup_chroot EXIT INT TERM
                 sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
                 sudo chmod 1777 "$CHARD_ROOT/tmp/.X11-unix"
                 
-                echo "${BLUE}[*] Downloading Chard components...${RESET}"
+                echo "${BLUE}[*] Downloading Chard components..."
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"            -o "$CHARD_ROOT/.chardrc"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"          -o "$CHARD_ROOT/.chard.env"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
