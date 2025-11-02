@@ -328,16 +328,13 @@ case "$cmd" in
             USER=$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
-        
             su $USER -l -c "
                 source \$HOME/.bashrc 2>/dev/null
                 source \$HOME/.smrt_env.sh 2>/dev/null
                 dbus-daemon --system --fork 2>/dev/null
                 chard_sommelier && exec /bin/bash
                 trap exit 1 INT TERM
-
             "
-            
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
