@@ -26,7 +26,6 @@ SOMMELIER_CMD=(
     pulseaudio &>/dev/null &
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
-    trap exit 1 INT TERM
     exec bash
 '
 
