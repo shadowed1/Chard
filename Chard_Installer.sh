@@ -1240,7 +1240,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     HOME=\$CHARD_HOME
     USER=\$CHARD_USER
     source \$HOME/.bashrc 2>/dev/null
-    chmod 644 /var/lib/portage/world
     mkdir -p /var/db/pkg /var/lib/portage
     chown -R portage:portage /var/db/pkg /var/lib/portage
     chmod -R 755 /var/db/pkg
@@ -1396,7 +1395,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     chown -R portage:portage /var/db/pkg /var/lib/portage
     chmod -R 755 /var/db/pkg
     chmod 644 /var/lib/portage/world
-    /bin/SMRT
     source \$HOME/.smrt_env.sh
     chown -R 1000:1000 \$HOME/
     emerge app-portage/gentoolkit
