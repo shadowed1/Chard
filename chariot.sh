@@ -154,7 +154,7 @@ checkpoint_1() {
 run_checkpoint 1 "sudo -E emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
-    sudo -E emerge --no-replace app-portage/gentoolkit
+    sudo -E emerge --noreplace app-portage/gentoolkit
     rm -rf /var/tmp/portage/app-portage/gentoolkit-*
     eclean-dist -d
 }
