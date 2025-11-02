@@ -943,10 +943,12 @@ run_checkpoint 112 "sudo -E emerge x11-wm/twm" checkpoint_112
 
 checkpoint_113() {
     sudo -E emerge dev-python/pillow
+    sudo -E emerge app-misc/fastfetch
     rm -rf /var/tmp/portage/dev-python/pillow-*
+    rm -rf /var/tmp/portage/app-misc/fastfetch-*
     eclean-dist -d
 }
-run_checkpoint 113 "sudo -E emerge dev-python/pillow" checkpoint_113
+run_checkpoint 113 "sudo -E emerge dev-python/pillow + fastfetch" checkpoint_113
 
 checkpoint_114() {
     sudo -E emerge media-gfx/chafa
