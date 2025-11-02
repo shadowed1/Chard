@@ -27,6 +27,7 @@ SOMMELIER_CMD=(
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
     exec bash
+    trap exit 1 INT TERM
 '
 
 if [ -f /tmp/.pulseaudio_pid ]; then
