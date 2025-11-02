@@ -1109,7 +1109,6 @@ sudo tee /etc/portage/package.use/steam > /dev/null <<'EOF'
 app-accessibility/at-spi2-core  abi_x86_32
 app-arch/bzip2                  abi_x86_32
 app-arch/lz4                    abi_x86_32
-app-arch/zstd                   abi_x86_32
 dev-db/sqlite                   abi_x86_32
 dev-lang/rust-bin               abi_x86_32
 dev-libs/dbus-glib              abi_x86_32
