@@ -1081,6 +1081,15 @@ checkpoint_127() {
 }
 run_checkpoint 127 "sudo -E emerge app-editors/vscodium" checkpoint_127
 
+checkpoint_128() {
+    sudo -E emerge games-util/gamemode
+    sudo -E emerge games-action/prismlauncher
+    rm -rf /var/tmp/portage/games-util/gamemode-*
+    rm -rf /var/tmp/portage/games-action/prismlauncher-*
+    eclean-dist -d
+}
+run_checkpoint 128 "sudo -E emerge games-action/prismlauncher" checkpoint_128
+
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
 
