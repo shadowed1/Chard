@@ -1,4 +1,5 @@
-#!/bin/bash
+sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true#!/bin/bash
 
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
@@ -395,7 +396,6 @@ case "$cmd" in
                     source \$HOME/.smrt_env.sh
                     dbus-daemon --system --fork 2>/dev/null
                     env-update
-                    SMRT 75
                     /bin/chariot
                     
                     umount -l /dev/zram0   2>/dev/null || true
