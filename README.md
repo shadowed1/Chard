@@ -83,7 +83,7 @@
 
 - Supports running Wayland/X11 apps directly in chroot.
 - Uses Sommelier to communicate with ChromeOS and support X11 Desktop Environments and Apps.
-- Runs GUI apps with full GPU acceleration.
+- Runs GUI apps with full GPU acceleration including audio support.
 
 <br>
 
