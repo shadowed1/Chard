@@ -30,7 +30,6 @@ export PATH LD_LIBRARY_PATH
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
     if sudo test -d "/opt/google/containers/android/rootfs/root/system/app/FydeOSAppService" 2>/dev/null; then
-        # FydeOSAppService exists → not ChromeOS
         DEFAULT_BASHRC="$HOME/.bashrc"
         BASHRC_PATH="$DEFAULT_BASHRC"
         IS_CHROMEOS=0
