@@ -318,6 +318,7 @@ checkpoint_23() {
 run_checkpoint 23 "sudo -E emerge dev-build/meson" checkpoint_23
 
 checkpoint_24() {
+    USE="-tiff" sudo -E emerge media-libs/libwebp
     USE="-truetype" sudo -E emerge -1 dev-python/pillow
     rm -rf /var/tmp/portage/dev-python/pillow-*
     eclean-dist -d
