@@ -46,10 +46,9 @@ if [ "$IS_CHROMEOS" -eq 1 ]; then
 fi
 
 alias cr='chard root'
-
+alias smrt='SMRT'
+alias chariot='chard chariot'
 CR="$CHARD_ROOT"
-
-#alias SMRT='source $CHARD_ROOTusr/bin/SMRT'
 
 if [[ -f $CHARD_ROOT/usr/bin/.smrt_env.sh ]]; then
     source $CHARD_ROOT/usr/bin/.smrt_env.sh
