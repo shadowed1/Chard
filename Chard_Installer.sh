@@ -446,8 +446,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
-sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+sudo chmod +x "$CHARD_ROOT/Reinstall_Chard.sh"
+sudo chmod +x "$CHARD_ROOT/Uninstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
 
 for file in \
