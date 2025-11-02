@@ -185,7 +185,7 @@ sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
 sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
-sudo rm -rf "$CHARD_ROOT"
+sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
