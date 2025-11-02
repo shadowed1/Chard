@@ -126,6 +126,7 @@
 - VLC
 - KDE Plasma
 - Brave Browser
+- xarchiver
 - Codium
 - Prism Launcher + Minecraft
 - And Many More
