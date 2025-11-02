@@ -1384,7 +1384,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     chmod 644 /var/lib/portage/world
     /bin/SMRT
     source \$HOME/.smrt_env.sh
-    chown 1000:1000 \$HOME/ -R
+    chown -R 1000:1000 \$HOME/
     emerge app-portage/gentoolkit
     emerge app-misc/resolve-march-native && \
     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
@@ -1804,13 +1804,18 @@ EOF
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
 
-sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome"
-sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus"
-sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri"
-sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input"
-sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras"
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
+sudo cp -a "$CHARD_ROOT/usr/bin/bwrap" "$CHARD_ROOT/$CHARD_HOME/" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/usr/bin/bwrap" || sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
 
+sudo chroot "$CHARD_ROOT" /bin/bash -c '
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
             mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
@@ -1831,20 +1836,22 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-            
-            CHARD_HOME=\$(cat /.chard_home)
-            HOME=\$CHARD_HOME
-            CHARD_USER=\$(cat /.chard_user)
-            USER=\$CHARD_USER
+        
+            CHARD_HOME=$(cat /.chard_home)
+            HOME=$CHARD_HOME
+            CHARD_USER=$(cat /.chard_user)
+            USER=$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
-            source \$HOME/.bashrc 2>/dev/null
-            source \$HOME/.smrt_env.sh
-            dbus-daemon --system --fork 2>/dev/null
-            env-update
-            SMRT 75
-            /bin/chariot
-            
+        
+            su $USER -l -c "
+                source \$HOME/.bashrc 2>/dev/null
+                source \$HOME/.smrt_env.sh 2>/dev/null
+                dbus-daemon --system --fork 2>/dev/null
+                SMRT
+                sudo -E /bin/chariot
+            "
+        
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
@@ -1854,12 +1861,14 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
             umount -l /dev         2>/dev/null || true
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
-        "
+        '
+        
 sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
 
 show_progress
 echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
