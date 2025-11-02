@@ -29,9 +29,17 @@ esac
 export PATH LD_LIBRARY_PATH
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
-    CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
-    BASHRC_PATH="$CHROMEOS_BASHRC"
-    IS_CHROMEOS=1
+    if [ -d "/opt/google/containers/android/rootfs/root/system/app/FydeOSAppService" ]; then
+        # FydeOSAppService exists → not ChromeOS
+        DEFAULT_BASHRC="$HOME/.bashrc"
+        BASHRC_PATH="$DEFAULT_BASHRC"
+        IS_CHROMEOS=0
+    else
+        # ChromeOS environment
+        CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+        BASHRC_PATH="$CHROMEOS_BASHRC"
+        IS_CHROMEOS=1
+    fi
 else
     DEFAULT_BASHRC="$HOME/.bashrc"
     BASHRC_PATH="$DEFAULT_BASHRC"
@@ -44,6 +52,7 @@ fi
 if [ "$IS_CHROMEOS" -eq 1 ]; then
     [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
 fi
+
 
 alias cr='chard root'
 alias smrt='SMRT'
