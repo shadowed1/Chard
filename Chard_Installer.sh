@@ -13,8 +13,6 @@ START_TIME=$(date +%s)
 MAX_RETRIES=10
 RETRY_DELAY=30
 
-trap 'echo -e "\n${RED}Cancelled.${RESET}\n"; exit 1' INT TERM
-
 echo "${RESET}${GREEN}"
 echo
 echo
