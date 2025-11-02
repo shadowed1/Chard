@@ -4,7 +4,7 @@
 
 <br>
 
-*Notice: Chard is in early development and has bugs. Suggestions and testing are greatly appreciated.* 
+*Notice: Chard is in early development and will contain bugs. Suggestions and testing are greatly appreciated.* 
 
 ### How to Install:
 
@@ -121,6 +121,7 @@
 - X11
 - XFCE4
 - Gedit
+- VLC
 - KDE Plasma
 - Brave Browser!
 - And Many More
