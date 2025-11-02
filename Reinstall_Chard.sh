@@ -214,6 +214,8 @@ trap cleanup_chroot EXIT INT TERM
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
+
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -222,6 +224,7 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
                 sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
                 sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+                sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
@@ -233,6 +236,7 @@ trap cleanup_chroot EXIT INT TERM
                 "$CHARD_ROOT/bin/.rootrc" \
                 "$CHARD_ROOT/bin/chariot" \
                 "$CHARD_ROOT/bin/chard_debug" \
+                "$CHARD_ROOT/bin/chard_sommelier" \
                 "$CHARD_ROOT/bin/chard"; do
                 
                     if [ -f "$file" ]; then
