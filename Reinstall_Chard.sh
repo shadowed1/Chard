@@ -265,8 +265,7 @@ trap cleanup_chroot EXIT INT TERM
                 done
                 
                 sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
-                
-                CURRENT_SHELL=$(basename "$SHELL")
+                CHARD_RC="$CHARD_ROOT/.chardrc"
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 DEFAULT_BASHRC="$HOME/.bashrc"
                 TARGET_FILE=""
