@@ -320,10 +320,12 @@ run_checkpoint 23 "sudo -E emerge dev-build/meson" checkpoint_23
 checkpoint_24() {
     USE="-tiff" sudo -E emerge media-libs/libwebp
     USE="-truetype" sudo -E emerge -1 dev-python/pillow
+    sudo -E emerge media-libs/libwebp
     rm -rf /var/tmp/portage/dev-python/pillow-*
+    rm -rf /var/tmp/portage/media-libs/libwebp-*
     eclean-dist -d
 }
-run_checkpoint 24 "sudo -E emerge dev-python/pillow" checkpoint_24
+run_checkpoint 24 "sudo -E emerge dev-python/pillow and libwebp" checkpoint_24
 
 checkpoint_25() {
     sudo -E emerge media-libs/harfbuzz
