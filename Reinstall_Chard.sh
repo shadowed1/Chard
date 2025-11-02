@@ -358,7 +358,7 @@ EOF
                     chmod 644 /var/lib/portage/world
                     /bin/SMRT
                     source \$HOME/.smrt_env.sh
-                    chown 1000:1000 \$HOME/ -R
+                    chown -R 1000:1000 \$HOME/
                     emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
                     BASHRC=\"\$HOME/.bashrc\" && \
