@@ -1849,8 +1849,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
                 source \$HOME/.smrt_env.sh 2>/dev/null
                 dbus-daemon --system --fork 2>/dev/null
                 SMRT
-                sudo -E /bin/chariot
                 trap exit 1 INT TERM
+                sudo -E /bin/chariot
             "
         
             umount -l /dev/zram0   2>/dev/null || true
