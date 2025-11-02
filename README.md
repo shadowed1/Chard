@@ -26,10 +26,10 @@
 
 <br>
 
+- Run Linux Apps with GUI support natively inside ChromeOS!
 - This is a Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
-- Automated install will build everything needed, even on ChromeOS!
-- Tested on a wide array of hardware and distros - but focusing on ChromeOS.
-
+- Automated install will build everything needed with full hardware detection.
+  
 <br>
 
 ### Requirements:
@@ -61,7 +61,7 @@
 
 <br>
 
-- *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 4-8 hours.*
+- *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 3-6 hours.*
 - *Lower end Chromebooks (4 thread Intel, Mediatek 500 series, and older) can expect much longer install times.*
 
 <br>
