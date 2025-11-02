@@ -13,6 +13,13 @@ START_TIME=$(date +%s)
 MAX_RETRIES=10
 RETRY_DELAY=30
 
+cancel_chroot() {
+    echo "${RED}Cancelled${RESET}"
+    exit 1
+}
+
+trap cancel_chroot INT TERM
+
 echo "${RESET}${GREEN}"
 echo
 echo
@@ -151,12 +158,17 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
+    sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
     sudo cp "$CHARD_ROOT/chardbuild.log" ~/
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
 }
 
-trap cleanup_chroot EXIT INT TERM
+existing_int_trap=$(trap -p INT | cut -d"'" -f2)
+existing_term_trap=$(trap -p TERM | cut -d"'" -f2)
+
+trap 'cleanup_chroot; '"$existing_int_trap" INT
+trap 'cleanup_chroot; '"$existing_term_trap" TERM
+trap cleanup_chroot EXIT
 
 echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
 sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
@@ -171,7 +183,7 @@ sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
 
