@@ -172,6 +172,8 @@ sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sudo rm -rf "$CHARD_ROOT"
 
@@ -1805,7 +1807,7 @@ set-default-source cras-source
 EOF
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
-
+sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
 sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
@@ -1862,6 +1864,7 @@ sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
 
 sudo chown -R 1000:1000 $CHARD_ROOT/$CHARD_HOME
 show_progress
