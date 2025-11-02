@@ -439,6 +439,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"      -o "$CHARD_ROOT/bin/chard_sommelier"
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -447,6 +448,7 @@ sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
 sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -458,6 +460,7 @@ for file in \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard_debug" \
+    "$CHARD_ROOT/bin/chard_sommelier" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
