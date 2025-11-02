@@ -439,7 +439,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"      -o "$CHARD_ROOT/bin/chard_sommelier"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
