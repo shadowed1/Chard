@@ -286,10 +286,6 @@ dbus-daemon --system --fork 2>/dev/null
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
 
 if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
-    export SOMMELIER_ACTIVE=1
-    export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
-    export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
-
     SOMMELIER_CMD=(
         sommelier
         --display="$SOMMELIER_DISPLAY"
@@ -302,13 +298,14 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
     )
 
     exec "${SOMMELIER_CMD[@]}" -- bash -c '
-        sleep 1
+        sleep 0.1
         export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
         pulseaudio &>/dev/null &
         PULSEAUDIO_PID=$!
         [ -f ~/.bashrc ] && source ~/.bashrc
         cd ~/
-        exec bash
+        /bin/bash
+        kill $PULSEAUDIO_PID 2>/dev/null
     '
 fi
 
