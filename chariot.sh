@@ -1074,6 +1074,13 @@ checkpoint_126() {
 }
 run_checkpoint 126 "xarchiver" checkpoint_126
 
+checkpoint_127() {
+    sudo -E emerge app-editors/vscodium
+    rm -rf /var/tmp/portage/app-editors/vscodium-*
+    eclean-dist -d
+}
+run_checkpoint 127 "sudo -E emerge app-editors/vscodium" checkpoint_127
+
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
 
