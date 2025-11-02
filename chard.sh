@@ -335,7 +335,7 @@ case "$cmd" in
         
             dbus-daemon --system --fork 2>/dev/null
         
-            /bin/bash
+            /bin/chard_sommelier
         
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
