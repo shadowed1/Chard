@@ -135,9 +135,10 @@
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
 - `chard help` -- Show help examples.
+- `chard chariot` or `chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate.
 - `chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
-- `w` -- Launch into a full Sommelier Xwayland environment. (Placeholder name)
+- `chard_sommelier` -- Launch into a full Sommelier Xwayland environment. (Placeholder name)
 - `x vlc` -- Prepending `x` to an app you want to run will run it in an Xwayland environment. (Placeholder name)
