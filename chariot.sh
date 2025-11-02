@@ -1022,13 +1022,13 @@ checkpoint_123() {
 }
 run_checkpoint 123 "sudo -E emerge xfce-base/xfce4-meta" checkpoint_123
 
-#checkpoint_123() {
-#    echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
+checkpoint_123() {
+    echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
 #    sudo -E emerge --autounmask-write firefox-bin
 #    rm -rf /var/tmp/portage/www-client/firefox-bin-*
 #    eclean-dist -d
-#}
-#run_checkpoint 123 "sudo -E emerge firefox-bin" checkpoint_123
+}
+run_checkpoint 123 "sudo -E emerge firefox-bin (skipping for now)" checkpoint_123
 
 checkpoint_124() {
     sudo -E emerge net-misc/yt-dlp
