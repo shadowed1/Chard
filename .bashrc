@@ -302,9 +302,8 @@ if [ -z "$SOMMELIER_ACTIVE" ] && [ -e /run/chrome/wayland-0 ]; then
     )
 
     exec "${SOMMELIER_CMD[@]}" -- bash -c '
-        sleep 1
+        sleep 0.1
         export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-        echo "DISPLAY=$DISPLAY"
         source ~/.bashrc
         cd ~/
         pulseaudio &>/dev/null &
