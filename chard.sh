@@ -300,7 +300,8 @@ case "$cmd" in
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
-        sudo chroot "$CHARD_ROOT" /bin/bash -c '
+        sudo chroot "$CHARD_ROOT" /bin/bash -c "
+
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
             mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
@@ -321,20 +322,21 @@ case "$cmd" in
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-        
-            CHARD_HOME=$(cat /.chard_home)
-            HOME=$CHARD_HOME
-            CHARD_USER=$(cat /.chard_user)
-            USER=$CHARD_USER
+            
+            CHARD_HOME=\$(cat /.chard_home)
+            HOME=\$CHARD_HOME
+            CHARD_USER=\$(cat /.chard_user)
+            USER=\$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
-            su $USER -l -c "
-                source \$HOME/.bashrc 2>/dev/null
-                source \$HOME/.smrt_env.sh 2>/dev/null
-                dbus-daemon --system --fork 2>/dev/null
-                chard_sommelier && exec /bin/bash
-                trap exit 1 INT TERM
-            "
+            su \$USER
+            source \$HOME/.bashrc 2>/dev/null
+            source \$HOME/.smrt_env.sh
+        
+            dbus-daemon --system --fork 2>/dev/null
+        
+            /bin/bash
+        
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
@@ -344,7 +346,7 @@ case "$cmd" in
             umount -l /dev         2>/dev/null || true
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
-        '
+        "
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
