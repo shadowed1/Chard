@@ -117,7 +117,7 @@
 - Clang
 - Mesa
 - Vulkan + Vulkan Tools
-- Flatpak (broken)
+- Flatpak (broken for now)
 - Sommelier
 - Wayland
 - X11
@@ -125,7 +125,9 @@
 - Gedit
 - VLC
 - KDE Plasma
-- Brave Browser!
+- Brave Browser
+- Codium
+- Prism Launcher + Minecraft
 - And Many More
 
 # Commands (most not listed - on to-do list) <br>
