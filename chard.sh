@@ -1,5 +1,4 @@
-sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true#!/bin/bash
+#!/bin/bash
 
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
