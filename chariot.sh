@@ -1056,6 +1056,24 @@ checkpoint_125() {
 }
 run_checkpoint 125 "sudo -E emerge www-client/brave-browser::another-brave-overlay" checkpoint_125
 
+checkpoint_126() {
+    echo "app-arch/lha lha" | sudo tee -a /etc/portage/package.license
+    echo "app-arch/unrar unRAR" | sudo tee -a /etc/portage/package.license
+    echo "app-arch/rar RAR" | sudo tee -a /etc/portage/package.license
+    sudo -E emerge app-arch/p7zip app-arch/arj app-arch/lha app-arch/lzop app-arch/unrar app-arch/rar app-arch/unzip app-arch/zip app-arch/xarchiver
+    rm -rf /var/tmp/portage/app-arch/p7zip-*
+    rm -rf /var/tmp/portage/app-arch/arj-*
+    rm -rf /var/tmp/portage/app-arch/lha-*
+    rm -rf /var/tmp/portage/app-arch/lzop-*
+    rm -rf /var/tmp/portage/app-arch/unrar-*
+    rm -rf /var/tmp/portage/app-arch/rar-*
+    rm -rf /var/tmp/portage/app-arch/unzip-*
+    rm -rf /var/tmp/portage/app-arch/zip-*
+    rm -rf /var/tmp/portage/app-arch/xarchiver-*
+    eclean-dist -d
+}
+run_checkpoint 126 "xarchiver" checkpoint_126
+
 echo "Chard Root is ready (soon tm)${RESET}"
 show_progress
 
