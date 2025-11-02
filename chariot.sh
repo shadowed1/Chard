@@ -230,12 +230,12 @@ checkpoint_12() {
 }
 run_checkpoint 12 "sudo -E emerge sys-apps/coreutils" checkpoint_12
 
-checkpoint_13() {
-    sudo -E emerge app-misc/fastfetch
-    rm -rf /var/tmp/portage/app-misc/fastfetch-*
-    eclean-dist -d
-}
-run_checkpoint 13 "sudo -E emerge app-misc/fastfetch" checkpoint_13
+#checkpoint_13() {
+#    sudo -E emerge app-misc/fastfetch
+#    rm -rf /var/tmp/portage/app-misc/fastfetch-*
+#    eclean-dist -d
+#}
+#run_checkpoint 13 "sudo -E emerge app-misc/fastfetch" checkpoint_13
 
 checkpoint_14() {
     sudo -E emerge dev-lang/perl
