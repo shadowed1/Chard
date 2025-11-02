@@ -96,8 +96,10 @@
 # Functioning Tools: <br>
 - Latest Boostrapped Stage3 Gentoo Linux + Linux Kernel
 - Emerge
+- Sommelier
+- CRAS
 
-# Chard Installer will use Emerge to build: <br>
+# Chard can use Emerge to build: <br>
 - Make
 - CMake
 - Curl with OpenSSL
