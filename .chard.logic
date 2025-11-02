@@ -11,7 +11,4 @@ if [ -z "$CHARD_ROOT" ]; then
     return 1
 fi
 
-alias smrt='SMRT'
-alias chariot='chard chariot'
-
 # <<< END CHARD_LOGIC <<<
