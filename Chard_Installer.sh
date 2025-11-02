@@ -1826,7 +1826,6 @@ sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CH
 sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
 
     sudo chroot "$CHARD_ROOT" /bin/bash -c '
-    # --- Mount necessary filesystems ---
     mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
     mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
     mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
@@ -1857,7 +1856,7 @@ sudo mountpoint -q "$CHARD_ROOT/run/cras"   || sudo mount --bind /run/cras "$CHA
 
     sudo -u "$USER" bash -c "
         cleanup() {
-            echo \"${RED}Exiting user session${RESET}\"
+            echo \"Logging out $USER\"
         }
         trap cleanup EXIT INT TERM
 
