@@ -350,7 +350,7 @@ esac
 
 
 
-
+export LC_ALL=C
 export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
 export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 export LIBGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
