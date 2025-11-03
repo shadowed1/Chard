@@ -985,6 +985,7 @@ run_checkpoint 117 "Build Sommelier" checkpoint_117
 checkpoint_118() {
     sudo -E emerge sys-apps/flatpak
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     chown -R 1000:1000 /home/chronos/.local/share/flatpak
     eclean-dist -d
@@ -1179,8 +1180,8 @@ net-misc/curl                   abi_x86_32
 net-misc/networkmanager         abi_x86_32
 net-print/cups                  abi_x86_32
 sys-apps/dbus                   abi_x86_32
-sys-apps/systemd                abi_x86_32
-sys-apps/systemd-utils          abi_x86_32
+sys-apps/systemd                -abi_x86_32
+sys-apps/systemd-utils          -abi_x86_32
 sys-apps/util-linux             abi_x86_32
 sys-libs/gdbm                   abi_x86_32
 sys-libs/gpm                    abi_x86_32
@@ -1240,9 +1241,10 @@ games-util/game-device-udev-rules
 sys-libs/libudev-compat
 EOF
 
-echo "games-util/steam-launcher ValveSteamLicense" | sudo tee -a /etc/portage/package.license/steam-launcher
+echo "games-util/steam-launcher ValveSteamLicense" | sudo tee -a /etc/portage/package.license
 
 USE="-gpm" sudo -E emerge --oneshot sys-libs/ncurses
+USE="-abi_x86_32" sudo -E emerge sys-apps/systemd
 sudo -E emerge games-util/steam-launcher
 sudo -E emerge sys-libs/ncurses gpm
 
