@@ -4,8 +4,6 @@
 
 <br>
 
-*Notice: Chard is in early development and will contain bugs. Suggestions and testing are greatly appreciated.* 
-
 ### How to Install:
 
 <br>
@@ -32,8 +30,6 @@
   
 <br>
 
-
-
 ### Examples:
 
 <br>
@@ -41,6 +37,13 @@
 *Minecraft Java + Prism Launcher:*
 <p align="center">
   <img src="https://i.imgur.com/MplsaH4.jpeg" alt="logo" width="1000" />
+</p>  
+
+<br>
+
+*Brave, Codium, Thunar, VLC, xfce4:*
+<p align="center">
+  <img src="https://i.imgur.com/dkv1NIn.jpeg" alt="logo" width="1000" />
 </p>  
 
 <br>
