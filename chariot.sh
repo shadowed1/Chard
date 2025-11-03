@@ -1108,7 +1108,7 @@ checkpoint_129() {
     if detect_intel_gpu; then
         echo "[*] Installing libva-intel-media-driver for Gen9+ Intel GPU"
         echo "media-libs/libva-intel-media-driver no-source-code" | sudo tee -a /etc/portage/package.license
-        sudo -E emerge -av media-libs/libva-intel-media-driver
+        sudo -E emerge media-libs/libva-intel-media-driver
         rm -rf /var/tmp/portage/media-libs/libva-intel-media-driver-*
         eclean-dist -d
     else
