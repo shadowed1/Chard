@@ -50,7 +50,37 @@
   <img src="https://i.imgur.com/sOLWL73.jpeg" alt="logo" width="1000" />
 </p>  
 
+<br>
 
+### Features:
+
+<br>
+
+- Chard auto-detects the Host's hardware and builds Gentoo + psuedo-Kernel automatically.
+- Includes ability to resume installer if interrupted; even if system shuts down.
+- Greatly exceeds Crostini performance and can achieve equal performance to Borealis with far less overhead.
+
+
+<br>
+
+- Intelligent CPU task scheduler for building packages.
+- User can customize how many threads Chard can use dynamically. Useful for devices with low memory.
+- Hardware detection scripts allows compilers to enable native architectural tweaks.
+
+<br>
+
+- Supports running Wayland/X11 apps directly in chroot.
+- Uses Sommelier to communicate with ChromeOS and support X11 Desktop Environments, Apps and Games.
+- Runs GUI apps with full GPU acceleration including audio support for Chromebooks.
+- Native full screen support, multi-monitor support, and supports ChromeOS window managment gestures. 
+
+<br>
+
+- Does *not* require removing files and includes an uninstaller script to clean up after itself.
+- When Installer finishes or exits the log file, 'chardbuild.log', is copied for viewing/debugging.
+- Can run certain apps directly from Chard in the Host OS; with libraries being whitelisted. 
+
+<br>
 
 ### Requirements:
 
@@ -83,33 +113,6 @@
 
 - *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 3-6 hours.*
 - *Lower end Chromebooks (4 thread Intel, Mediatek 500 series, and older) can expect much longer install times.*
-
-<br>
-
-### Features:
-
-<br>
-
-- Chard auto-detects the Host's hardware and builds Gentoo + psuedo-Kernel automatically.
-- Includes ability to resume installer if interrupted; even if system shuts down.
-
-<br>
-
-- Has an intelligent CPU task scheduler for building packages.
-- User can customize how many threads Chard can use dynamically. Useful for devices with low memory.
-- Hardware detection scripts allows compilers to enable native architectural tweaks.
-
-<br>
-
-- Supports running Wayland/X11 apps directly in chroot.
-- Uses Sommelier to communicate with ChromeOS and support X11 Desktop Environments, Apps and Games.
-- Runs GUI apps with full GPU acceleration including audio support for Chromebooks.
-
-<br>
-
-- Does *not* alter files ouside of /usr/local/ and a .bashrc entry wrapper that will remove itself on uninstall.
-- When Installer finishes or exits the log file, 'chardbuild.log', is copied to home folder.
-- Can run certain apps directly from Chard in the Host OS; with libraries being slowly validated. 
 
 <br>
 
