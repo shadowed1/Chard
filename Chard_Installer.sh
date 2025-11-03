@@ -1873,6 +1873,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
         dbus-daemon --system --fork 2>/dev/null
         source \$HOME/.bashrc 2>/dev/null
         source \$HOME/.smrt_env.sh
+        sudo -E chown -R $USER:$USER $HOME
         sudo -E /bin/chariot
     "
 
@@ -1903,7 +1904,6 @@ else
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
 fi
 
-sudo chown -R 1000:1000 $CHARD_ROOT/$CHARD_HOME
 show_progress
 echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
 sudo cp "$CHARD_ROOT/chardbuild.log" ~/
