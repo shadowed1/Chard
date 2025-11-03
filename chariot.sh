@@ -1091,6 +1091,33 @@ checkpoint_128() {
 }
 run_checkpoint 128 "sudo -E emerge games-action/prismlauncher" checkpoint_128
 
+checkpoint_129() {
+    detect_intel_gpu() {
+        if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+            GPU_MAX_FREQ=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
+            GPU_TYPE="intel"
+            echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
+            return 0
+        else
+            GPU_TYPE="unknown"
+            echo "[*] No Intel GPU detected, skipping this checkpoint"
+            return 1
+        fi
+    }
+
+    if detect_intel_gpu; then
+        echo "[*] Installing libva-intel-media-driver for Gen9+ Intel GPU"
+        echo "media-libs/libva-intel-media-driver no-source-code" | sudo tee -a /etc/portage/package.license
+        sudo -E emerge -av media-libs/libva-intel-media-driver
+        rm -rf /var/tmp/portage/media-libs/libva-intel-media-driver-*
+        eclean-dist -d
+    else
+        echo "[*] Skipping Intel driver installation"
+    fi
+}
+run_checkpoint 129 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_129
+
+
 echo "Chard Root is Ready! ${RESET}"
 show_progress
 
