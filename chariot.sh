@@ -1117,7 +1117,7 @@ checkpoint_129() {
 }
 run_checkpoint 129 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_129
 
-
+sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
 show_progress
 
