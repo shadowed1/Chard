@@ -1817,6 +1817,7 @@ set-default-source cras-source
 EOF
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
+source "$CHARD_ROOT/.chardrc"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
