@@ -47,7 +47,6 @@ all_perl_versions=()
 
 if command -v equery >/dev/null 2>&1; then
     while read -r line; do
-        # Example line: [IP-] [  ] dev-lang/perl-5.40.0:5.40
         ver=$(echo "$line" | grep -oP 'dev-lang/perl-\K[0-9]+\.[0-9]+')
         [[ -n "$ver" ]] && all_perl_versions+=("$ver")
     done < <(equery list -p dev-lang/perl 2>/dev/null | grep 'dev-lang/perl-')
