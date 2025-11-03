@@ -352,6 +352,9 @@ eselect python set --python3 "python${second_underscore}" 2>/dev/null || true
 # KSP
 export LC_ALL=C
 
+# OBS
+alias obs='QT_QPA_PLATFORM=xcb obs'
+
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
