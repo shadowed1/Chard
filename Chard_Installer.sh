@@ -1891,7 +1891,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
 else
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+    :
 fi
         
 sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
