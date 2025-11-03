@@ -1048,10 +1048,6 @@ checkpoint_124() {
 run_checkpoint 124 "sudo -E emerge yt-dlp + vlc" checkpoint_124
 
 checkpoint_125() {
-    sudo mkdir -p /var/db/repos/another-brave-overlay/profiles
-    sudo mkdir -p /var/db/repos/another-brave-overlay/metadata
-    echo "masters = gentoo" | sudo tee /var/db/repos/another-brave-overlay/metadata/layout.conf
-    echo "another-brave-overlay" | sudo tee /var/db/repos/another-brave-overlay/profiles/repo_name    
     sudo -E emerge app-eselect/eselect-repository dev-vcs/git
     sudo -E eselect repository enable another-brave-overlay
     sudo -E emerge --sync another-brave-overlay
