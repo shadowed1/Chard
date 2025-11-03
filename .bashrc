@@ -355,6 +355,8 @@ export LC_ALL=C
 # OBS
 alias obs='QT_QPA_PLATFORM=xcb obs'
 
+
+alias cs='chard_sommelier'
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
