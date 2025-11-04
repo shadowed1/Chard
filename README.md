@@ -168,4 +168,4 @@
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
-- .
+- `chard_sommelier` or `cs` -- Enter a Sommelier Xwayland environment with audio and GUI support. 
