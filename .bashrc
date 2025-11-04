@@ -292,21 +292,12 @@ export ACLOCAL_PATH="$ROOT/usr/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
 export M4PATH="$ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
 export MANPATH="$ROOT/usr/share/man:$ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
 export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
-
-if [ -S /run/chrome/wayland-0 ]; then
-    export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-/run/chrome/wayland-0}"
-    export WAYLAND_DISPLAY_LOW_DENSITY=${WAYLAND_DISPLAY:-wayland-1}
-    export XDG_SESSION_TYPE=wayland
-    export QT_QPA_PLATFORM=wayland
-    export GDK_BACKEND=wayland
-    export CLUTTER_BACKEND=wayland
-    export EGL_PLATFORM=wayland
-else
-    export XDG_SESSION_TYPE=x11
-    export QT_QPA_PLATFORM=xcb
-    export DISPLAY="${DISPLAY:-:0}"
-    export EGL_PLATFORM=x11
-fi
+export DISPLAY=":0"
+export GDK_BACKEND="wayland"
+export CLUTTER_BACKEND="wayland"
+export WAYLAND_DISPLAY=wayland-0
+export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
+export EGL_PLATFORM=wayland
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
@@ -318,7 +309,7 @@ export LIBGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
 export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
 export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
-
+export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
