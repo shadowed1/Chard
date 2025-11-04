@@ -1736,38 +1736,38 @@ EOF
 
 case "$GPU_TYPE" in
     intel)
-        DRIVER="i965"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=i915" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        DRIVER="iris"
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='iris i965 i915'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     amd)
         DRIVER="radeonsi"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=amdgpu" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='radeonsi r600'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     nvidia)
         DRIVER="nouveau"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=nouveau" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='nouveau nvk'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mali)
         DRIVER="panfrost"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=panfrost" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='panfrost lima'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     adreno)
         DRIVER="freedreno"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=freedreno" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='freedreno'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mediatek)
-        DRIVER="mediatek"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=mediatek" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        DRIVER="mediatek" 
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='mediatek'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     vivante)
         DRIVER="etnaviv"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=etnaviv" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='etnaviv'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     *)
         DRIVER="llvmpipe"
         echo "[*] No GPU detected, using software fallback (LLVMpipe)" | tee /dev/stderr
         echo "export LIBGL_ALWAYS_SOFTWARE=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
-        echo "export MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='llvmpipe'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         if [[ "$ARCH" == "x86_64" ]]; then
             echo "export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         fi
