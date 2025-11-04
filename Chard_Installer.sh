@@ -1928,6 +1928,10 @@ sudo sed -i "/# <<< CHARD_MESA_MARKER >>>/,/# <<< END CHARD_MESA_MARKER >>>/c\
 # <<< CHARD_MESA_MARKER >>>\n${MESA_EXPORT}\n# <<< END CHARD_MESA_MARKER >>>" \
 "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 
+sudo sed -i "/# <<< CHARD_MESA_MARKER >>>/,/# <<< END CHARD_MESA_MARKER >>>/c\
+# <<< CHARD_MESA_MARKER >>>\n${MESA_EXPORT}\n# <<< END CHARD_MESA_MARKER >>>" \
+"$CHARD_ROOT/bin/chard_sommelier"
+
 source "$CHARD_ROOT/.chardrc"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
