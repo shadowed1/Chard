@@ -43,7 +43,7 @@ export XDG_RUNTIME=""
 # <<< END CHARD_XDG_RUNTIME_DIR >>>
 
 # <<< CHARD_MESA_MARKER >>>"
-export MESA_DRIVER=""
+export MESA_LOADER_DRIVER_OVERRIDE=""
 # <<< END CHARD_MESA_MARKER >>>"
 
 
