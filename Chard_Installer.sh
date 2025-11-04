@@ -824,7 +824,7 @@ case "$GPU_TYPE" in
         USE_FLAGS+=" vaapi vdpau vulkan"
         ;;
     intel)
-        USE_FLAGS+=" vulkan abi_x86_32"
+        USE_FLAGS+=" vulkan"
         ;;
     mediatek)
         USE_FLAGS+=" virgl"
