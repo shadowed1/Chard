@@ -474,7 +474,6 @@ for file in \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard_debug" \
-    "$CHARD_ROOT/bin/chard_sommelier" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
@@ -1795,10 +1794,6 @@ sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR 
 # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
 "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 
-sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
-# <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n$CHARD_ROOT/bin/chard_sommelier\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
-"$CHARD_ROOT/bin/chard_sommelier"
-
 sudo mkdir -p "$CHARD_ROOT/etc/portage/env"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.env"
 
@@ -1806,7 +1801,6 @@ echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/por
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
 echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
-
 
 PULSEHOME="$CHARD_ROOT/$CHARD_HOME/.config/pulse"
 sudo mkdir -p "$PULSEHOME"
