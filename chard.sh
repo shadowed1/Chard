@@ -357,8 +357,8 @@ case "$cmd" in
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
             
-                pulseaudio &                 # start pulseaudio in background
-                PULSEAUDIO_PID=\"\$!\"        # capture its PID
+                pulseaudio &
+                PULSEAUDIO_PID=\"\$!\"
             
                 exec chard_sommelier
             "
