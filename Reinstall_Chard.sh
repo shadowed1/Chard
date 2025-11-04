@@ -81,11 +81,13 @@ trap cleanup_chroot EXIT INT TERM
                         [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
                         [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
                         [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                        
                         CHARD_USER=\$(cat /.chard_user)
                         CHARD_HOME=\$(cat /.chard_home)
                         USER=\$CHARD_USER
                         HOME=\$CHARD_HOME
                         source \$HOME/.bashrc 2>/dev/null
+                        source \$HOME/.smrt_env.sh
                         
                         getent group 1000 >/dev/null   || groupadd -g 1000 chronos 2>/dev/null
                         getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
@@ -122,18 +124,19 @@ trap cleanup_chroot EXIT INT TERM
                         getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
                         getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
                         getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
-                        
-                                                
+                        usermod -aG portage \$USER
+                        newgrp portage
+
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
-                        
+
                         usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
-                        chown 1000:1000 \"/\$CHARD_HOME\"
-                        emerge --noreplace app-portage/gentoolkit
-                        emerge --noreplace app-admin/sudo
+                        chown \$USER:\$USER \"/\$CHARD_HOME\"
+        
+                        emerge app-admin/sudo
         
                         mkdir -p /etc/sudoers.d
                         chown root:root /etc/sudoers.d
