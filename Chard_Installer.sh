@@ -1328,6 +1328,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
                         getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
                         getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
+                        usermod -aG portage \$(whoami)
+                        newgrp portage
+
 
                         
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
