@@ -24,7 +24,6 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
-
 }
 
 trap cleanup_chroot EXIT INT TERM
@@ -239,7 +238,6 @@ trap cleanup_chroot EXIT INT TERM
                 "$CHARD_ROOT/bin/.rootrc" \
                 "$CHARD_ROOT/bin/chariot" \
                 "$CHARD_ROOT/bin/chard_debug" \
-                "$CHARD_ROOT/bin/chard_sommelier" \
                 "$CHARD_ROOT/bin/chard"; do
                 
                     if [ -f "$file" ]; then
