@@ -473,6 +473,14 @@ checkpoint_45() {
 run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
 
 checkpoint_46() {
+    MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+    MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
+    THREADS=$(( MEM_GB / 2 ))
+    (( THREADS < 1 )) && THREADS=1 
+    TOTAL_CORES=$(nproc)
+    PCT=$(( THREADS * 100 / TOTAL_CORES ))
+    (( PCT > 100 )) && PCT=100
+    SMRT "$PCT"
     sudo -E emerge sys-auth/polkit
     rm -rf /var/tmp/portage/sys-auth/polkit-*
     eclean-dist -d
@@ -480,6 +488,7 @@ checkpoint_46() {
 run_checkpoint 46 "sudo -E emerge sys-auth/polkit" checkpoint_46
 
 checkpoint_47() {
+    SMRT 75
     sudo -E emerge sys-apps/bubblewrap
     rm -rf /var/tmp/portage/sys-apps/bubblewrap-*
     eclean-dist -d
