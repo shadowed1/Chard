@@ -77,7 +77,7 @@ allocate_cores() {
     echo "$selected_cores"
 }
 
-PCT="${1:-75}" 
+PCT="${1:-${SMRT_LAST_PCT:-75}}"
 if ! [[ "$PCT" =~ ^[0-9]+$ ]] || (( PCT < 1 || PCT > 100 )); then
     echo "${RED}Error: Please provide a percentage between 1 and 100${RESET}"
     exit 1
@@ -101,6 +101,7 @@ MAKEOPTS="-j$ALLOCATED_COUNT"
 
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
+export SMRT_LAST_PCT=$PCT
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
