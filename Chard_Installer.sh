@@ -789,7 +789,7 @@ detect_gpu_freq
 
 case "$GPU_TYPE" in
     intel)
-        VIDEO_CARDS="iris i915"
+        VIDEO_CARDS="iris i915 intel"
         ;;
     amd)
         VIDEO_CARDS="radeonsi r600"
