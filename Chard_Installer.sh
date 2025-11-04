@@ -1328,11 +1328,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
                         getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
                         getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
-                        usermod -aG portage \$(whoami)
+                        usermod -aG portage \$USER
                         newgrp portage
 
-
-                        
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
@@ -1340,7 +1338,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
-                        chown 1000:1000 \"/\$CHARD_HOME\"
+                        chown \$USER:\$USER \"/\$CHARD_HOME\"
         
                         emerge app-admin/sudo
         
@@ -1350,7 +1348,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         chown root:root /etc/sudoers.d/\$USER
                         chmod 440 /etc/sudoers.d/\$USER
                         chown root:root /usr/bin/sudo
-                        chmod 4755 /usr/bin/sudo
+                        chmod 4755 /usr/bin/sudoz
                         echo \"Passwordless sudo configured for \$CHARD_USER\"
                         umount -l /dev/zram0   2>/dev/null || true
                         umount -l /run/chrome  2>/dev/null || true
