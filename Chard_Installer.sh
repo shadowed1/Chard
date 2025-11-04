@@ -1836,7 +1836,7 @@ sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CH
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
 else
-    sudo mountpoint -q "$CHARD_ROOT/run/user/1000/pulse" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/user/1000/pulse" 2>/dev/null
+    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
 fi
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
@@ -1895,7 +1895,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
 else
-    sudo umount -l "$CHARD_ROOT/run/user/1000/pulse" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
 fi
         
 sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
