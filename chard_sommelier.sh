@@ -1,6 +1,5 @@
 # <<< CHARD .SOMMELIER >>>
 #!/bin/bash
-set -e
 export LC_ALL=C
 export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
 export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
