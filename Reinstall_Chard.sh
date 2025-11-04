@@ -602,123 +602,121 @@ EOF
                 # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
                 "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 
-                MARKER_START="# <<< CHARD_MESA_MARKER >>>"
-                MARKER_END="# <<< END CHARD_MESA_MARKER >>>"
-                
                 detect_gpu_freq() {
-                    GPU_FREQ_PATH=""
-                    GPU_MAX_FREQ=""
-                    GPU_TYPE="unknown"
-                
-                    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
-                        GPU_TYPE="intel"
-                        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
-                        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-                        echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
-                        return
-                    fi
-                
-                    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
-                        GPU_TYPE="nvidia"
-                        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
-                        GPU_FREQ_PATH="$PP_DPM_SCLK"
-                        GPU_MAX_FREQ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
-                        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
-                        return
-                    fi
-                
-                    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
-                        GPU_TYPE="amd"
-                        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
-                        GPU_FREQ_PATH="$PP_OD_FILE"
-                        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
-                        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-                            GPU_MAX_FREQ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
-                        fi
-                        echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
-                        return
-                    fi
-                
-                    if [[ -d /sys/class/drm ]]; then
-                        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
-                            GPU_TYPE="mediatek"
-                            echo "[*] Detected MediaTek GPU"
-                            return
-                        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
-                            GPU_TYPE="vivante"
-                            echo "[*] Detected Vivante GPU"
-                            return
-                        elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
-                            GPU_TYPE="asahi"
-                            echo "[*] Detected Asahi GPU"
-                            return
-                        elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
-                            GPU_TYPE="mali"
-                            echo "[*] Detected Mali/Panfrost GPU"
-                            return
-                        fi
-                    fi
-                
-                    for d in /sys/class/devfreq/*; do
-                        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
-                            if [ -f "$d/max_freq" ]; then
-                                GPU_FREQ_PATH="$d/max_freq"
-                                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-                                GPU_TYPE="mali"
-                                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
-                                return
-                            elif [ -f "$d/available_frequencies" ]; then
-                                GPU_FREQ_PATH="$d/available_frequencies"
-                                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
-                                GPU_TYPE="mali"
-                                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
-                                return
-                            fi
-                        fi
-                    done
-                
-                    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
-                        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
-                            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
-                            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-                            GPU_TYPE="adreno"
-                            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
-                            return
-                        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
-                            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
-                            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-                            GPU_TYPE="adreno"
-                            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
-                            return
-                        fi
-                    fi
-                
-                    echo "[*] No GPU detected, using unknown"
-                    GPU_TYPE="unknown"
-                }
-                
-                detect_gpu_freq
-                
-                case "$GPU_TYPE" in
-                    intel)    MESA_DRIVER="iris i915" ;;
-                    amd)      MESA_DRIVER="radeonsi r600" ;;
-                    nvidia)   MESA_DRIVER="nouveau nvk" ;;
-                    mali)     MESA_DRIVER="panfrost lima" ;;
-                    adreno)   MESA_DRIVER="freedreno" ;;
-                    mediatek) MESA_DRIVER="mediatek" ;;
-                    vivante)  MESA_DRIVER="etnaviv" ;;
-                    asahi)    MESA_DRIVER="asahi" ;;
-                    *)        MESA_DRIVER="lavapipe virgl" ;;
-                esac
-                
-                MARKER_LINE="export MESA_LOADER_DRIVER_OVERRIDE=\"$MESA_DRIVER\""
-                
-                if grep -q "$MARKER_START" "$BASHRC" 2>/dev/null; then
-                    sudo sed -i "/$MARKER_START/,/$MARKER_END/c\\
-                $MARKER_START\n$MARKER_LINE\n$MARKER_END" "$BASHRC"
-                else
-                    echo -e "\n$MARKER_START\n$MARKER_LINE\n$MARKER_END" | sudo tee -a "$BASHRC" >/dev/null
+                GPU_FREQ_PATH=""
+                GPU_MAX_FREQ=""
+                GPU_TYPE="unknown"
+            
+                if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+                    GPU_TYPE="intel"
+                    GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+                    GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                    echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
+                    return
                 fi
+            
+                if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+                    GPU_TYPE="nvidia"
+                    PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+                    GPU_FREQ_PATH="$PP_DPM_SCLK"
+                    GPU_MAX_FREQ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+                    echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
+                    return
+                fi
+            
+                if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
+                    GPU_TYPE="amd"
+                    PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+                    GPU_FREQ_PATH="$PP_OD_FILE"
+                    mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
+                    if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+                        GPU_MAX_FREQ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
+                    fi
+                    echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
+                    return
+                fi
+            
+                if [[ -d /sys/class/drm ]]; then
+                    if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
+                        GPU_TYPE="mediatek"
+                        echo "[*] Detected MediaTek GPU"
+                        return
+                    elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
+                        GPU_TYPE="vivante"
+                        echo "[*] Detected Vivante GPU"
+                        return
+                    elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
+                        GPU_TYPE="asahi"
+                        echo "[*] Detected Asahi GPU"
+                        return
+                    elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
+                        GPU_TYPE="mali"
+                        echo "[*] Detected Mali/Panfrost GPU"
+                        return
+                    fi
+                fi
+            
+                for d in /sys/class/devfreq/*; do
+                    if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
+                        if [ -f "$d/max_freq" ]; then
+                            GPU_FREQ_PATH="$d/max_freq"
+                            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                            GPU_TYPE="mali"
+                            echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                            return
+                        elif [ -f "$d/available_frequencies" ]; then
+                            GPU_FREQ_PATH="$d/available_frequencies"
+                            GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
+                            GPU_TYPE="mali"
+                            echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                            return
+                        fi
+                    fi
+                done
+            
+                if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+                    if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
+                        GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+                        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                        GPU_TYPE="adreno"
+                        echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+                        return
+                    elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
+                        GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+                        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                        GPU_TYPE="adreno"
+                        echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+                        return
+                    fi
+                fi
+            
+                echo "[*] No GPU detected, using unknown"
+                GPU_TYPE="unknown"
+            }
+            
+            detect_gpu_freq
+            
+            case "$GPU_TYPE" in
+                intel)    MESA_LOADER_DRIVER_OVERRIDE="iris i915" ;;
+                amd)      MESA_LOADER_DRIVER_OVERRIDE="radeonsi r600" ;;
+                nvidia)   MESA_LOADER_DRIVER_OVERRIDE="nouveau nvk" ;;
+                mali)     MESA_LOADER_DRIVER_OVERRIDE="panfrost lima" ;;
+                adreno)   MESA_LOADER_DRIVER_OVERRIDE="freedreno" ;;
+                mediatek) MESA_LOADER_DRIVER_OVERRIDE="mediatek" ;;
+                vivante)  MESA_LOADER_DRIVER_OVERRIDE="etnaviv" ;;
+                asahi)    MESA_LOADER_DRIVER_OVERRIDE="asahi" ;;
+                *)        MESA_LOADER_DRIVER_OVERRIDE="lavapipe virgl" ;;
+            esac
+            
+            MESA_EXPORT="export MESA_LOADER_DRIVER_OVERRIDE=\"$MESA_LOADER_DRIVER_OVERRIDE\""
+            
+            sudo sed -i "/# <<< CHARD_MESA_MARKER >>>/,/# <<< END CHARD_MESA_MARKER >>>/c\
+            # <<< CHARD_MESA_MARKER >>>\n${MESA_EXPORT}\n# <<< END CHARD_MESA_MARKER >>>" \
+            "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+            
+            sudo sed -i "/# <<< CHARD_MESA_MARKER >>>/,/# <<< END CHARD_MESA_MARKER >>>/c\
+            # <<< CHARD_MESA_MARKER >>>\n${MESA_EXPORT}\n# <<< END CHARD_MESA_MARKER >>>" \
+            "$CHARD_ROOT/bin/chard_sommelier"
                             
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 ;;
