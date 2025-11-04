@@ -44,7 +44,7 @@ export PKGDIR="$ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$ROOT/var/tmp"
 
 # <<< CHARD_XDG_RUNTIME_DIR >>>
-export XDG_RUNTIME=""
+export XDG_RUNTIME_DIR=""
 # <<< END CHARD_XDG_RUNTIME_DIR >>>
 
 # <<< CHARD_MESA_MARKER >>>"
