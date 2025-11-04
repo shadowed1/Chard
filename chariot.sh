@@ -1126,6 +1126,17 @@ checkpoint_129() {
 }
 run_checkpoint 129 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_129
 
+checkpoint_128() {
+   echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
+    sudo -E emerge media-plugins/obs-pipewire-audio-capture
+    rm -rf /var/tmp/portage/media-video/obs-studio-*
+    rm -rf /var/tmp/portage/media-plugins/obs-pipewire-audio-capture-*
+    eclean-dist -d
+}
+run_checkpoint 128 "sudo -E emerge games-action/prismlauncher" checkpoint_128
+
+
+
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
 show_progress
