@@ -42,11 +42,6 @@ export PORTAGE_TMPDIR="$ROOT/var/tmp"
 export XDG_RUNTIME_DIR=""
 # <<< END CHARD_XDG_RUNTIME_DIR >>>
 
-# <<< CHARD_MESA_MARKER >>>"
-export MESA_LOADER_DRIVER_OVERRIDE=""
-# <<< END CHARD_MESA_MARKER >>>"
-
-
 all_perl_versions=()
 
 if command -v equery >/dev/null 2>&1; then
