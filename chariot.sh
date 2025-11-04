@@ -488,7 +488,6 @@ checkpoint_46() {
 run_checkpoint 46 "sudo -E emerge sys-auth/polkit" checkpoint_46
 
 checkpoint_47() {
-    SMRT 75
     sudo -E emerge sys-apps/bubblewrap
     rm -rf /var/tmp/portage/sys-apps/bubblewrap-*
     eclean-dist -d
@@ -503,6 +502,7 @@ checkpoint_48() {
 run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
 
 checkpoint_49() {
+    SMRT 75
     sudo -E emerge x11-base/xorg-drivers
     rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
     eclean-dist -d
