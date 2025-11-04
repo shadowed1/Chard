@@ -789,10 +789,10 @@ detect_gpu_freq
 
 case "$GPU_TYPE" in
     intel)
-        VIDEO_CARDS="iris i915"
+        VIDEO_CARDS="intel iris"
         ;;
     amd)
-        VIDEO_CARDS="radeonsi r600"
+        VIDEO_CARDS="radeonsi"
         ;;
     nvidia)
         VIDEO_CARDS="nouveau nvk"
@@ -821,10 +821,10 @@ USE_FLAGS="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda 
 
 case "$GPU_TYPE" in
     amd|nvidia)
-        USE_FLAGS+=" vaapi vdpau vulkan"
+        USE_FLAGS+=" vaapi vdpau vulkan abi_x86_32"
         ;;
     intel)
-        USE_FLAGS+=" vulkan"
+        USE_FLAGS+=" vulkan abi_x86_32"
         ;;
     mediatek)
         USE_FLAGS+=" virgl"
@@ -1736,38 +1736,38 @@ EOF
 
 case "$GPU_TYPE" in
     intel)
-        DRIVER="iris"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='iris i965 i915'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        DRIVER="i965"
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=i915" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     amd)
         DRIVER="radeonsi"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='radeonsi r600'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=amdgpu" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     nvidia)
         DRIVER="nouveau"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='nouveau nvk'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=nouveau" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mali)
         DRIVER="panfrost"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='panfrost lima'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=panfrost" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     adreno)
         DRIVER="freedreno"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='freedreno'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=freedreno" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mediatek)
-        DRIVER="mediatek" 
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='mediatek'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        DRIVER="mediatek"
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=mediatek" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     vivante)
         DRIVER="etnaviv"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='etnaviv'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=etnaviv" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     *)
         DRIVER="llvmpipe"
         echo "[*] No GPU detected, using software fallback (LLVMpipe)" | tee /dev/stderr
         echo "export LIBGL_ALWAYS_SOFTWARE=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='llvmpipe'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         if [[ "$ARCH" == "x86_64" ]]; then
             echo "export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         fi
@@ -1807,131 +1807,14 @@ sudo mkdir -p "$PULSEHOME"
 sudo tee "${PULSEHOME}/default.pa" > /dev/null <<'EOF'
 #!/usr/bin/pulseaudio -nF
 # Copyright (c) 2016 The crouton Authors. All rights reserved.
+.include /etc/pulse/default.pa
 load-module module-alsa-sink device=cras sink_name=cras-sink
 load-module module-alsa-source device=cras source_name=cras-source
-load-module module-remap-sink sink_name=stereo_out master=cras-sink channels=2 remix=yes
-set-default-sink stereo_out
+set-default-sink cras-sink
 set-default-source cras-source
 EOF
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
-
-detect_gpu_freq() {
-    GPU_FREQ_PATH=""
-    GPU_MAX_FREQ=""
-    GPU_TYPE="unknown"
-
-    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
-        GPU_TYPE="intel"
-        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
-        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-        echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
-        return
-    fi
-
-    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
-        GPU_TYPE="nvidia"
-        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
-        GPU_FREQ_PATH="$PP_DPM_SCLK"
-        GPU_MAX_FREQ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
-        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
-        return
-    fi
-
-    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
-        GPU_TYPE="amd"
-        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
-        GPU_FREQ_PATH="$PP_OD_FILE"
-        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
-        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-            GPU_MAX_FREQ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
-        fi
-        echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
-        return
-    fi
-
-    if [[ -d /sys/class/drm ]]; then
-        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="mediatek"
-            echo "[*] Detected MediaTek GPU"
-            return
-        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="vivante"
-            echo "[*] Detected Vivante GPU"
-            return
-        elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="asahi"
-            echo "[*] Detected Asahi GPU"
-            return
-        elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="mali"
-            echo "[*] Detected Mali/Panfrost GPU"
-            return
-        fi
-    fi
-
-    for d in /sys/class/devfreq/*; do
-        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
-            if [ -f "$d/max_freq" ]; then
-                GPU_FREQ_PATH="$d/max_freq"
-                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-                GPU_TYPE="mali"
-                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
-                return
-            elif [ -f "$d/available_frequencies" ]; then
-                GPU_FREQ_PATH="$d/available_frequencies"
-                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
-                GPU_TYPE="mali"
-                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
-                return
-            fi
-        fi
-    done
-
-    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
-        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
-            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
-            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-            GPU_TYPE="adreno"
-            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
-            return
-        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
-            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
-            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-            GPU_TYPE="adreno"
-            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
-            return
-        fi
-    fi
-
-    echo "[*] No GPU detected, using unknown"
-    GPU_TYPE="unknown"
-}
-
-detect_gpu_freq
-
-case "$GPU_TYPE" in
-    intel)    MESA_LOADER_DRIVER_OVERRIDE="iris i915" ;;
-    amd)      MESA_LOADER_DRIVER_OVERRIDE="radeonsi r600" ;;
-    nvidia)   MESA_LOADER_DRIVER_OVERRIDE="nouveau nvk" ;;
-    mali)     MESA_LOADER_DRIVER_OVERRIDE="panfrost lima" ;;
-    adreno)   MESA_LOADER_DRIVER_OVERRIDE="freedreno" ;;
-    mediatek) MESA_LOADER_DRIVER_OVERRIDE="mediatek" ;;
-    vivante)  MESA_LOADER_DRIVER_OVERRIDE="etnaviv" ;;
-    asahi)    MESA_LOADER_DRIVER_OVERRIDE="asahi" ;;
-    *)        MESA_LOADER_DRIVER_OVERRIDE="lavapipe virgl" ;;
-esac
-
-MESA_EXPORT="export MESA_LOADER_DRIVER_OVERRIDE=\"$MESA_LOADER_DRIVER_OVERRIDE\""
-
-sudo sed -i "/# <<< CHARD_MESA_MARKER >>>/,/# <<< END CHARD_MESA_MARKER >>>/c\
-# <<< CHARD_MESA_MARKER >>>\n${MESA_EXPORT}\n# <<< END CHARD_MESA_MARKER >>>" \
-"$CHARD_ROOT/$CHARD_HOME/.bashrc"
-
-sudo sed -i "/# <<< CHARD_MESA_MARKER >>>/,/# <<< END CHARD_MESA_MARKER >>>/c\
-# <<< CHARD_MESA_MARKER >>>\n${MESA_EXPORT}\n# <<< END CHARD_MESA_MARKER >>>" \
-"$CHARD_ROOT/bin/chard_sommelier"
-
 source "$CHARD_ROOT/.chardrc"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
