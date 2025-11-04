@@ -804,7 +804,7 @@ case "$GPU_TYPE" in
         VIDEO_CARDS="freedreno"
         ;;
     mediatek)
-        VIDEO_CARDS="mediatek"
+        VIDEO_CARDS="panfrost lima"
         ;;
     vivante)
         VIDEO_CARDS="etnaviv"
@@ -1595,7 +1595,6 @@ EOF
                 CONFIG_DRM_MALI=y
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
-                CONFIG_DRM_MEDIATEK=n
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=n
@@ -1604,16 +1603,14 @@ EOF
                 CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
-                CONFIG_DRM_MEDIATEK=n
                 CONFIG_DRM_MSM=y
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=n
                 ;;
             mediatek)
-                CONFIG_DRM_MALI=n
+                CONFIG_DRM_MALI=y
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
-                CONFIG_DRM_MEDIATEK=y
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=n
@@ -1622,7 +1619,6 @@ EOF
                 CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
-                CONFIG_DRM_MEDIATEK=n
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=y
                 CONFIG_LAVAPIPE=n
@@ -1631,7 +1627,6 @@ EOF
                 CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
-                CONFIG_DRM_MEDIATEK=n
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=y
@@ -1651,7 +1646,6 @@ CONFIG_SYSFS=y
 CONFIG_DRM_MALI=$CONFIG_DRM_MALI
 CONFIG_DRM_ROCKCHIP=$CONFIG_DRM_ROCKCHIP
 CONFIG_DRM_ARM_DC=$CONFIG_DRM_ARM_DC
-CONFIG_DRM_MEDIATEK=$CONFIG_DRM_MEDIATEK
 CONFIG_DRM_MSM=$CONFIG_DRM_MSM
 CONFIG_DRM_ETNAVIV=$CONFIG_DRM_ETNAVIV
 CONFIG_DRM_AMDGPU=n
@@ -1756,8 +1750,8 @@ case "$GPU_TYPE" in
         echo "export MESA_LOADER_DRIVER_OVERRIDE='freedreno'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mediatek)
-        DRIVER="mediatek" 
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='mediatek'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        DRIVER="panfrost" 
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='panfrost lima'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     vivante)
         DRIVER="etnaviv"
