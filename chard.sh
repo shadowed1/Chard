@@ -347,15 +347,22 @@ case "$cmd" in
             sudo -u "$USER" bash -c "
                 cleanup() {
                     echo \"Logging out $USER\"
+                    if [ -n \"\$PULSEAUDIO_PID\" ]; then
+                        kill -9 \"\$PULSEAUDIO_PID\" 2>/dev/null
+                    fi
                 }
                 trap cleanup EXIT INT TERM
-        
+            
                 dbus-daemon --system --fork 2>/dev/null
-                source \$HOME/.bashrc 2>/dev/null
-                source \$HOME/.smrt_env.sh
+                [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
+                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
+            
+                pulseaudio &                 # start pulseaudio in background
+                PULSEAUDIO_PID=\"\$!\"        # capture its PID
+            
                 exec chard_sommelier
             "
-        
+            
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
