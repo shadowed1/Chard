@@ -602,6 +602,10 @@ EOF
                 # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
                 "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 
+                sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
+                # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
+                "$CHARD_ROOT/bin/chard_sommelier"
+
                 detect_gpu_freq() {
                 GPU_FREQ_PATH=""
                 GPU_MAX_FREQ=""
