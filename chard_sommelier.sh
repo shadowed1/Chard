@@ -348,13 +348,11 @@ case "$PROMPT_COMMAND" in
 esac
 # <<< END_CHARD_SMRT >>>
 
-
-
 export LC_ALL=C
 export SOMMELIER_DISPLAY="/run/chrome/wayland-0"
 export SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
-export LIBGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
-export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
+export LIBGL_DRIVERS_PATH="/usr/lib64/dri"
+export LIBEGL_DRIVERS_PATH="/usr/lib64/dri"
 export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
