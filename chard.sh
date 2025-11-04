@@ -471,7 +471,7 @@ case "$cmd" in
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         "
-       if [ -f "/home/chronos/user/.bashrc" ]; then
+        if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
         else
             sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
