@@ -1807,17 +1807,14 @@ sudo mkdir -p "$PULSEHOME"
 sudo tee "${PULSEHOME}/default.pa" > /dev/null <<'EOF'
 #!/usr/bin/pulseaudio -nF
 # Copyright (c) 2016 The crouton Authors. All rights reserved.
-.include /etc/pulse/default.pa
 load-module module-alsa-sink device=cras sink_name=cras-sink
 load-module module-alsa-source device=cras source_name=cras-source
-set-default-sink cras-sink
+load-module module-remap-sink sink_name=stereo_out master=cras-sink channels=2 remix=yes
+set-default-sink stereo_out
 set-default-source cras-source
 EOF
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
-
-MARKER_START="# <<< CHARD_MESA_MARKER >>>"
-MARKER_END="# <<< END CHARD_MESA_MARKER >>>"
 
 detect_gpu_freq() {
     GPU_FREQ_PATH=""
@@ -1914,25 +1911,22 @@ detect_gpu_freq() {
 detect_gpu_freq
 
 case "$GPU_TYPE" in
-    intel)    MESA_DRIVER="iris i915" ;;
-    amd)      MESA_DRIVER="radeonsi r600" ;;
-    nvidia)   MESA_DRIVER="nouveau nvk" ;;
-    mali)     MESA_DRIVER="panfrost lima" ;;
-    adreno)   MESA_DRIVER="freedreno" ;;
-    mediatek) MESA_DRIVER="mediatek" ;;
-    vivante)  MESA_DRIVER="etnaviv" ;;
-    asahi)    MESA_DRIVER="asahi" ;;
-    *)        MESA_DRIVER="lavapipe virgl" ;;
+    intel)    MESA_LOADER_DRIVER_OVERRIDE="iris i915" ;;
+    amd)      MESA_LOADER_DRIVER_OVERRIDE="radeonsi r600" ;;
+    nvidia)   MESA_LOADER_DRIVER_OVERRIDE="nouveau nvk" ;;
+    mali)     MESA_LOADER_DRIVER_OVERRIDE="panfrost lima" ;;
+    adreno)   MESA_LOADER_DRIVER_OVERRIDE="freedreno" ;;
+    mediatek) MESA_LOADER_DRIVER_OVERRIDE="mediatek" ;;
+    vivante)  MESA_LOADER_DRIVER_OVERRIDE="etnaviv" ;;
+    asahi)    MESA_LOADER_DRIVER_OVERRIDE="asahi" ;;
+    *)        MESA_LOADER_DRIVER_OVERRIDE="lavapipe virgl" ;;
 esac
 
-MARKER_LINE="export MESA_LOADER_DRIVER_OVERRIDE=\"$MESA_DRIVER\""
+MESA_EXPORT="export MESA_LOADER_DRIVER_OVERRIDE=\"$MESA_LOADER_DRIVER_OVERRIDE\""
 
-if grep -q "$MARKER_START" "$BASHRC" 2>/dev/null; then
-    sudo sed -i "/$MARKER_START/,/$MARKER_END/c\\
-$MARKER_START\n$MARKER_LINE\n$MARKER_END" "$BASHRC"
-else
-    echo -e "\n$MARKER_START\n$MARKER_LINE\n$MARKER_END" | sudo tee -a "$BASHRC" >/dev/null
-fi
+sudo sed -i "/# <<< CHARD_MESA_MARKER >>>/,/# <<< END CHARD_MESA_MARKER >>>/c\
+# <<< CHARD_MESA_MARKER >>>\n${MESA_EXPORT}\n# <<< END CHARD_MESA_MARKER >>>" \
+"$CHARD_ROOT/$CHARD_HOME/.bashrc"
 
 source "$CHARD_ROOT/.chardrc"
 
