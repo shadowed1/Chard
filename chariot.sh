@@ -658,14 +658,6 @@ checkpoint_70() {
 run_checkpoint 70 "sudo -E emerge x11-apps/mesa-progs" checkpoint_70
 
 checkpoint_71() {
-    MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-    MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
-    THREADS=$(( MEM_GB / 2 ))
-    (( THREADS < 1 )) && THREADS=1 
-    TOTAL_CORES=$(nproc)
-    PCT=$(( THREADS * 100 / TOTAL_CORES ))
-    (( PCT > 100 )) && PCT=100
-    SMRT "$PCT"
     sudo -E emerge dev-qt/qtbase
     rm -rf /var/tmp/portage/dev-qt/qtbase-*
     eclean-dist -d
@@ -680,7 +672,6 @@ checkpoint_72() {
 run_checkpoint 72 "sudo -E emerge dev-qt/qttools" checkpoint_72
 
 checkpoint_73() {
-    SMRT 75
     sudo -E emerge dev-qt/qtnetwork
     rm -rf /var/tmp/portage/dev-qt/qtnetwork-*
     eclean-dist -d
