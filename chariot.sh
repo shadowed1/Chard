@@ -1137,6 +1137,14 @@ checkpoint_130() {
 }
 run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
 
+checkpoint_131() {
+    sudo -E emerge media-gfx/gimp
+    rm -rf /var/tmp/portage/media-gfx/gimp-*
+    eclean-dist -d
+}
+run_checkpoint 131 "sudo -E emerge media-gfx/gimp" checkpoint_131
+
+
 #checkpoint_131() {
 #    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
 #    sudo -E emerge media-plugins/obs-pipewire-audio-capture
