@@ -313,24 +313,22 @@ export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
 
-# OBS
-# export OBS_VKCAPTURE=1
-# export OBS_GAMECAPTURE=1
+obs() {
+    export QT_QPA_PLATFORM=xcb
+    export OBS_VKCAPTURE=1
+    export OBS_GAMECAPTURE=1
+    local LD_PRELOAD_LIBS=(
+        "/usr/lib64/obs-plugins/linux-vkcapture.so"
+        "/usr/lib64/obs_glcapture/libobs_glcapture.so"
+    )
+    local LD_PRELOAD=""
+    for lib in "${LD_PRELOAD_LIBS[@]}"; do
+        [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
+    done
+    export LD_PRELOAD
+    /usr/bin/obs "$@" &
+}
 
-# LD_PRELOAD_LIBS=(
-#    "/usr/lib64/obs-plugins/linux-vkcapture.so"
-#    "/usr/lib64/obs_glcapture/libobs_glcapture.so"
-#)
-#
-#LD_PRELOAD=""
-#
-#for lib in "${LD_PRELOAD_LIBS[@]}"; do
-#    if [[ -f "$lib" ]]; then
-#        LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
-#    fi
-#done
-
-#export LD_PRELOAD
 
 x() {
     if [[ -z "$WAYLAND_DISPLAY" ]]; then
@@ -384,7 +382,6 @@ export XCURSOR_THEME
 alias ksp='LC_ALL=C ./KSP_x86_64'
 
 # xcb
-alias obs='QT_QPA_PLATFORM=xcb obs'
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 
 alias cs='chard_sommelier'
