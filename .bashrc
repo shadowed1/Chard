@@ -312,6 +312,7 @@ export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
+export OBS_VKCAPTURE=1
 
 x() {
     if [[ -z "$WAYLAND_DISPLAY" ]]; then
