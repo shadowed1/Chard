@@ -27,6 +27,7 @@
 - Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
 - This is a Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed with full hardware detection.
+- *Chard is in early development. Bug reports, suggestions, ideas, and anything else is greatly appreciated!*
   
 <br>
 
