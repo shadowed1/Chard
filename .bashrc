@@ -367,8 +367,9 @@ eselect python set --python3 "python${second_underscore}" 2>/dev/null || true
 # KSP
 alias ksp='LC_ALL=C ./KSP_x86_64'
 
-# OBS
+# xcb
 alias obs='QT_QPA_PLATFORM=xcb obs'
+alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 
 
 alias cs='chard_sommelier'
