@@ -500,7 +500,6 @@ done
 
 sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
 
-CURRENT_SHELL=$(basename "$SHELL")
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
