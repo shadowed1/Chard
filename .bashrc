@@ -314,7 +314,7 @@ export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
 
 # OBS
-export OBS_VKCAPTURE=1
+# export OBS_VKCAPTURE=1
 
 x() {
     if [[ -z "$WAYLAND_DISPLAY" ]]; then
