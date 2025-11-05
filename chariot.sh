@@ -1148,6 +1148,11 @@ run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
 #}
 #run_checkpoint 130 "sudo -E emerge media-video/obs-studio" checkpoint_131
 
+# dolphin
+# echo "games-emulation/dolphin ~amd64" | sudo tee -a /etc/portage/package.accept_keywords
+# echo "games-emulation/dolphin FatFs" | sudo tee -a /etc/portage/package.license
+# sudo -E emerge games-emulation/dolphin
+
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
 show_progress
