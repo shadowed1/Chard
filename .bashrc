@@ -365,7 +365,7 @@ eselect python set "python${second_underscore}" 2>/dev/null || true
 eselect python set --python3 "python${second_underscore}" 2>/dev/null || true
 
 # KSP
-alias ./KSP_x86_64='export LC_ALL=C ./KSP_x86_64'
+alias ksp='LC_ALL=C ./KSP_x86_64'
 
 # OBS
 alias obs='QT_QPA_PLATFORM=xcb obs'
