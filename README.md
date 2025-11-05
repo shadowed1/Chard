@@ -180,7 +180,7 @@
 - LibreOffice
 - Thunar
 - Game Emulators
-- And Many More
+- And too many to test. 
 
 # Commands (most not listed - on to-do list) <br>
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (needs rework).
