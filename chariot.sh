@@ -1137,15 +1137,16 @@ checkpoint_130() {
 }
 run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
 
-#checkpoint_130() {
+#checkpoint_131() {
 #    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
 #    sudo -E emerge media-plugins/obs-pipewire-audio-capture
 #    sudo -E emerge media-plugins/obs-vkcapture
+#    sudo -E emerge media-video/obs-studio
 #    rm -rf /var/tmp/portage/media-video/obs-studio-*
 #    rm -rf /var/tmp/portage/media-plugins/obs-pipewire-audio-capture-*
 #    eclean-dist -d
 #}
-#run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
+#run_checkpoint 130 "sudo -E emerge media-video/obs-studio" checkpoint_131
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
