@@ -364,6 +364,20 @@ fi
 eselect python set "python${second_underscore}" 2>/dev/null || true
 eselect python set --python3 "python${second_underscore}" 2>/dev/null || true
 
+# Chard Scale
+: "${CHARD_SCALE:=1.25}"
+: "${XCURSOR_SIZE:=32}"
+: "${XCURSOR_THEME:=Adwaita}"
+export GDK_SCALE="$CHARD_SCALE"
+export GDK_DPI_SCALE=1
+export QT_SCALE_FACTOR="$CHARD_SCALE"
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
+export QT_WAYLAND_FORCE_DPI=$(awk "BEGIN {print int(96 * $CHARD_SCALE)}")
+export ELECTRON_FORCE_DEVICE_SCALE_FACTOR="$CHARD_SCALE"
+export _JAVA_OPTIONS="-Dsun.java2d.uiScale=$CHARD_SCALE"
+export XCURSOR_SIZE
+export XCURSOR_THEME
+
 # KSP
 alias ksp='LC_ALL=C ./KSP_x86_64'
 
