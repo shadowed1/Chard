@@ -358,9 +358,6 @@ case "$cmd" in
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
             
-                pulseaudio &
-                PULSEAUDIO_PID=\"\$!\"
-            
                 exec chard_sommelier
             "
             
@@ -391,6 +388,8 @@ case "$cmd" in
         else
             sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
         fi
+
+        killall -9 pulseaudio
 
         #sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         #sudo umount -l "$CHARD_ROOT/$CHARD_HOME" 2>/dev/null || true
@@ -547,7 +546,7 @@ case "$cmd" in
             dbus-daemon --system --fork 2>/dev/null
         
             /bin/bash
-        
+            
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
