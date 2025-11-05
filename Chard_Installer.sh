@@ -1793,9 +1793,6 @@ load-module module-alsa-source device=cras source_name=cras-source
 set-default-sink cras-sink
 set-default-source cras-source
 EOF
-
-# key spam
-sudo sed -i -E 's/^\s*key <I(360|362|368|370|373|374|376|377|381|384|385|386|387|388|389|391|392|393|394|395|396|398|417|421|570|598|599)>/\/\/ &/' "$CHARD_ROOT/usr/share/xkeyboard-config-2/symbols/inet"
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
 
