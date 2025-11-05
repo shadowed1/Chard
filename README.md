@@ -169,17 +169,17 @@
 - Wayland
 - X11
 - XFCE4
-- Gedit
 - VLC
 - KDE Plasma
 - Brave Browser
 - xarchiver
+- Gedit
 - Codium
-- Prism Launcher + Minecraft Java
-- OBS with Game Capture, Recording, and Streaming support
 - GIMP
 - LibreOffice
 - Thunar
+- Prism Launcher + Minecraft Java
+- OBS with Game Capture, Recording, and Streaming support
 - Game Emulators
 - And too many to test. 
 
