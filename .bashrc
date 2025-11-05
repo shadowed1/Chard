@@ -314,21 +314,21 @@ export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
 
 # OBS
-# export OBS_VKCAPTURE=1
-# export OBS_GAMECAPTURE=1
+export OBS_VKCAPTURE=1
+export OBS_GAMECAPTURE=1
 
-#LD_PRELOAD_LIBS=(
-#    "/usr/lib64/obs-vkcapture/libobs-vkcapture.so"
-#    "/usr/lib64/obs_glcapture/libobs_glcapture.so"
-#)
-#
-#LD_PRELOAD=""
-#
-#for lib in "${LD_PRELOAD_LIBS[@]}"; do
-#    if [[ -f "$lib" ]]; then
-#        LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
-#    fi
-#done
+LD_PRELOAD_LIBS=(
+    "/usr/lib64/obs-vkcapture/libobs-vkcapture.so"
+    "/usr/lib64/obs_glcapture/libobs_glcapture.so"
+)
+
+LD_PRELOAD=""
+
+for lib in "${LD_PRELOAD_LIBS[@]}"; do
+    if [[ -f "$lib" ]]; then
+        LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
+    fi
+done
 
 x() {
     if [[ -z "$WAYLAND_DISPLAY" ]]; then
@@ -384,7 +384,6 @@ alias ksp='LC_ALL=C ./KSP_x86_64'
 # xcb
 alias obs='QT_QPA_PLATFORM=xcb obs'
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
-
 
 alias cs='chard_sommelier'
 alias smrt='SMRT'
