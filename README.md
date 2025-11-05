@@ -207,6 +207,7 @@
 - Chrome app shelf is missing icon + pin support. Remedied by customizing xfce4 shelf.
 - Entering Chard Root with Sommelier support will have harmless errors generated.
 - Display Scaling support is still in the beginning stages of implementation.
+- Mediatek GPU support is currently being worked on.
   
 <br>
 
