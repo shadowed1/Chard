@@ -1144,6 +1144,10 @@ checkpoint_131() {
 }
 run_checkpoint 131 "sudo -E emerge media-gfx/gimp" checkpoint_131
 
+checkpoint_132() {
+    sudo sed -i -E 's/^\s*key <I(360|362|368|370|373|374|376|377|381|384|385|386|387|388|389|391|392|393|394|395|396|398|417|421|570|598|599)>/\/\/ &/' "$CHARD_ROOT/usr/share/xkeyboard-config-2/symbols/inet"
+}
+run_checkpoint 132 "Keyboard error spam fix" checkpoint_132
 
 #checkpoint_131() {
 #    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
