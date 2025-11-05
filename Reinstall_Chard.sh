@@ -38,12 +38,13 @@ trap cleanup_chroot EXIT INT TERM
         case "$choice" in
             1)
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
-                CURRENT_SHELL=$(basename "$SHELL")
+
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 DEFAULT_BASHRC="$HOME/.bashrc"
                 TARGET_FILE=""
                 if [ -f "$CHROMEOS_BASHRC" ]; then
                     TARGET_FILE="$CHROMEOS_BASHRC"
+                    sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
                 else
                     TARGET_FILE="$DEFAULT_BASHRC"
                     [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
