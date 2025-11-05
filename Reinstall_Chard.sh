@@ -127,7 +127,6 @@ trap cleanup_chroot EXIT INT TERM
                         getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
                         getent group portage >/dev/null || groupadd -g 250 portage 2>/dev/null
 
-
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
@@ -137,7 +136,7 @@ trap cleanup_chroot EXIT INT TERM
                         mkdir -p \"/\$CHARD_HOME\"
                         chown \$USER:\$USER \"/\$CHARD_HOME\"
         
-                        emerge app-admin/sudo
+                        emerge --noreplace app-admin/sudo
         
                         mkdir -p /etc/sudoers.d
                         chown root:root /etc/sudoers.d
