@@ -183,7 +183,7 @@
 - Game Emulators
 - And too many to test. 
 
-# Commands (most not listed - on to-do list) <br>
+### Commands (Some not listed) <br>
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
 - `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
 - `chard safe` -- Enter Chard Root without GUI support.
@@ -201,7 +201,7 @@
 
 <br>
 
-*Known Issues - Some of these issues might not be easily fixed:*
+### *Known Issues - Some of these issues might not be easily fixed:*
 - Bubblewrap support is not functioning. This means Steam, Flatpak, Firefox, and other apps requiring user namespace support is not functioning due to ChromeOS restrictions.
 - Audio support is often unreliable. Volume is currently only adjustable via in-app controls.
 - Chrome app shelf is missing icon + pin support. Remedied by customizing xfce4 shelf.
