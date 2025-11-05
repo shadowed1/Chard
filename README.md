@@ -151,7 +151,7 @@
 - CMake
 - Curl with OpenSSL
 - GCC
-- Python
+- Python + Pip
 - Git
 - File + LDD
 - CMake
@@ -174,8 +174,8 @@
 - Brave Browser
 - xarchiver
 - Codium
-- Prism Launcher + Minecraft
-- OBS with Game Capture
+- Prism Launcher + Minecraft Java
+- OBS with Game Capture, Recording, and Streaming support
 - GIMP
 - LibreOffice
 - Thunar
@@ -183,7 +183,7 @@
 - And too many to test. 
 
 # Commands (most not listed - on to-do list) <br>
-- `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (needs rework).
+- `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
 - `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
 - `chard safe` -- Enter Chard Root without GUI support.
 - `chard reinstall` -- Option 1 updates chard scripts to latest version. Option 2 is a full reinstall.
