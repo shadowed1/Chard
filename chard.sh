@@ -389,7 +389,7 @@ case "$cmd" in
             sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
         fi
 
-        killall -9 pulseaudio
+        killall -9 pulseaudio 2>/dev/null
 
         #sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         #sudo umount -l "$CHARD_ROOT/$CHARD_HOME" 2>/dev/null || true
