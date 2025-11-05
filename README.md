@@ -48,10 +48,31 @@
 
 <br>
 
+*OBS:*
+<p align="center">
+  <img src="https://i.imgur.com/1jN6fHc.png" alt="logo" width="1000" />
+</p>
+
+<br>
+
+*LibreOffice*
+<p align="center">
+  <img src="https://i.imgur.com/tuZNOsF.png" alt="logo" width="1000" />
+</p>
+
+<br>
+
+*GIMP*
+<p align="center">
+  <img src="https://i.imgur.com/Ys9HuWV.png" alt="logo" width="1000" />
+</p>
+
+<br>
+
 *Kerbal Space Program:*
 <p align="center">
   <img src="https://i.imgur.com/sOLWL73.jpeg" alt="logo" width="1000" />
-</p>  
+</p>
 
 <br>
 
@@ -163,7 +184,8 @@
 
 # Commands (most not listed - on to-do list) <br>
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (needs rework).
-- `chard root` or `cr` -- Enter Chard Chroot for a fully sandboxed Gentoo environment.
+- `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
+- `chard safe` -- Enter Chard Root without GUI support.
 - `chard reinstall` -- Option 1 updates chard scripts to latest version. Option 2 is a full reinstall.
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
@@ -172,11 +194,24 @@
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
+- `exit` -- Leave Chard Root
+- This is a full Gentoo Linux environment. Read up on Gentoo Linux commands:
+<pre>https://wiki.gentoo.org/wiki/Main_Page</pre>
 
 <br>
 
+*Known Issues - Some of these issues might not be easily fixed:*
+- Bubblewrap support is not functioning. This means Steam, Flatpak, Firefox, and other apps requiring user namespace support is not functioning due to ChromeOS restrictions.
+- Audio support is often unreliable. Volume is currently only adjustable via in-app controls.
+- Chrome app shelf is missing icon + pin support. Remedied by customizing xfce4 shelf.
+- Entering Chard Root with Sommelier support will have harmless errors generated.
+- Display Scaling support is still in the beginning stages of implementation.
+  
+<br>
+
 ### Acknowledgements
-- Terry Stormchaser
-- Saragon
-- DennyL
-- Zhil
+- *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
+- *Terry Stormchaser* - Spending time testing Borealis alternatives, testing Chard, and providing ideas.
+- *DennyL* - Testing Chard and making suggestions.
+- *Saragon* - Providing documentation and suggestions.
+- *Zhil* - Sending documentation for XFCE4 theme ideas. 
