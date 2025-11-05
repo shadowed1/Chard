@@ -315,6 +315,20 @@ export SOMMELIER_VERSION=0.20
 
 # OBS
 # export OBS_VKCAPTURE=1
+# export OBS_GAMECAPTURE=1
+
+#LD_PRELOAD_LIBS=(
+#    "/usr/lib64/obs-vkcapture/libobs-vkcapture.so"
+#    "/usr/lib64/obs_glcapture/libobs_glcapture.so"
+#)
+#
+#LD_PRELOAD=""
+#
+#for lib in "${LD_PRELOAD_LIBS[@]}"; do
+#    if [[ -f "$lib" ]]; then
+#        LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
+#    fi
+#done
 
 x() {
     if [[ -z "$WAYLAND_DISPLAY" ]]; then
