@@ -1149,16 +1149,25 @@ checkpoint_132() {
 }
 run_checkpoint 132 "Keyboard error spam fix" checkpoint_132
 
-#checkpoint_131() {
-#    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
-#    sudo -E emerge media-plugins/obs-pipewire-audio-capture
-#    sudo -E emerge media-plugins/obs-vkcapture
-#    sudo -E emerge media-video/obs-studio
-#    rm -rf /var/tmp/portage/media-video/obs-studio-*
-#    rm -rf /var/tmp/portage/media-plugins/obs-pipewire-audio-capture-*
-#    eclean-dist -d
-#}
-#run_checkpoint 130 "sudo -E emerge media-video/obs-studio" checkpoint_131
+checkpoint_133() {
+    sudo -E emerge app-office/libreoffice-bin
+    rm -rf /var/tmp/portage/app-office/libreoffice-bin-*
+    eclean-dist -d
+}
+run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
+
+sudo -E emerge app-office/libreoffice-bin
+
+checkpoint_134() {
+    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
+    sudo -E emerge media-plugins/obs-pipewire-audio-capture
+    sudo -E emerge media-plugins/obs-vkcapture
+    sudo -E emerge media-video/obs-studio
+    rm -rf /var/tmp/portage/media-video/obs-studio-*
+    rm -rf /var/tmp/portage/media-plugins/obs-pipewire-audio-capture-*
+    eclean-dist -d
+}
+run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_131
 
 # dolphin
 # echo "games-emulation/dolphin ~amd64" | sudo tee -a /etc/portage/package.accept_keywords
