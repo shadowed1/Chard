@@ -1047,68 +1047,14 @@ checkpoint_123() {
 run_checkpoint 123 "sudo -E emerge firefox-bin (skipping for now)" checkpoint_123
 
 checkpoint_124() {
-    sudo -E emerge net-misc/yt-dlp
-    sudo -E emerge media-libs/opus
-    sudo -E emerge media-video/vlc
-    rm -rf /var/tmp/portage/net-misc/yt-dlp-*
-    rm -rf /var/tmp/portage/media-libs/libopus-*
-    rm -rf /var/tmp/portage/media-video/vlc-*
-    eclean-dist -d
-}
-run_checkpoint 124 "sudo -E emerge yt-dlp + vlc" checkpoint_124
-
-checkpoint_125() {
-    sudo -E emerge app-eselect/eselect-repository dev-vcs/git
-    sudo -E eselect repository enable another-brave-overlay
-    sudo -E emerge --sync another-brave-overlay
-    sudo -E emerge www-client/brave-browser::another-brave-overlay
-    rm -rf /var/tmp/portage/www-client/brave-browser-*
-    eclean-dist -d
-}
-run_checkpoint 125 "sudo -E emerge www-client/brave-browser::another-brave-overlay" checkpoint_125
-
-checkpoint_126() {
-    echo "app-arch/lha lha" | sudo tee -a /etc/portage/package.license
-    echo "app-arch/unrar unRAR" | sudo tee -a /etc/portage/package.license
-    echo "app-arch/rar RAR" | sudo tee -a /etc/portage/package.license
-    sudo -E emerge app-arch/p7zip app-arch/arj app-arch/lha app-arch/lzop app-arch/unrar app-arch/rar app-arch/unzip app-arch/zip app-arch/xarchiver
-    rm -rf /var/tmp/portage/app-arch/p7zip-*
-    rm -rf /var/tmp/portage/app-arch/arj-*
-    rm -rf /var/tmp/portage/app-arch/lha-*
-    rm -rf /var/tmp/portage/app-arch/lzop-*
-    rm -rf /var/tmp/portage/app-arch/unrar-*
-    rm -rf /var/tmp/portage/app-arch/rar-*
-    rm -rf /var/tmp/portage/app-arch/unzip-*
-    rm -rf /var/tmp/portage/app-arch/zip-*
-    rm -rf /var/tmp/portage/app-arch/xarchiver-*
-    eclean-dist -d
-}
-run_checkpoint 126 "xarchiver" checkpoint_126
-
-checkpoint_127() {
-    sudo -E emerge app-editors/vscodium
-    rm -rf /var/tmp/portage/app-editors/vscodium-*
-    eclean-dist -d
-}
-run_checkpoint 127 "sudo -E emerge app-editors/vscodium" checkpoint_127
-
-checkpoint_128() {
-    sudo -E emerge games-util/gamemode
-    sudo -E emerge games-action/prismlauncher
-    rm -rf /var/tmp/portage/games-util/gamemode-*
-    rm -rf /var/tmp/portage/games-action/prismlauncher-*
-    eclean-dist -d
-}
-run_checkpoint 128 "sudo -E emerge games-action/prismlauncher" checkpoint_128
-
-checkpoint_129() {
     sudo -E emerge media-libs/libva
+    libva-intel-media-driver
     rm -rf /var/tmp/portage/media-libs/libva-*
     eclean-dist -d
 }
-run_checkpoint 129 "sudo -E emerge games-action/prismlauncher" checkpoint_129
+run_checkpoint 124 "sudo -E emerge media-libs/libva" checkpoint_124
 
-checkpoint_129() {
+checkpoint_125() {
     detect_intel_gpu() {
         if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
             GPU_MAX_FREQ=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
@@ -1132,7 +1078,64 @@ checkpoint_129() {
         echo "[*] Skipping Intel driver installation"
     fi
 }
-run_checkpoint 129 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_129
+run_checkpoint 125 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_125
+
+checkpoint_126() {
+    sudo -E emerge media-libs/libao
+    sudo -E emerge net-misc/yt-dlp
+    sudo -E emerge media-libs/opus
+    sudo -E emerge media-video/vlc
+    rm -rf /var/tmp/portage/net-misc/libao-*
+    rm -rf /var/tmp/portage/net-misc/yt-dlp-*
+    rm -rf /var/tmp/portage/media-libs/libopus-*
+    rm -rf /var/tmp/portage/media-video/vlc-*
+    eclean-dist -d
+}
+run_checkpoint 126 "sudo -E emerge yt-dlp + vlc" checkpoint_126
+
+checkpoint_127() {
+    sudo -E emerge app-eselect/eselect-repository dev-vcs/git
+    sudo -E eselect repository enable another-brave-overlay
+    sudo -E emerge --sync another-brave-overlay
+    sudo -E emerge www-client/brave-browser::another-brave-overlay
+    rm -rf /var/tmp/portage/www-client/brave-browser-*
+    eclean-dist -d
+}
+run_checkpoint 127 "sudo -E emerge www-client/brave-browser::another-brave-overlay" checkpoint_127
+
+checkpoint_128() {
+    echo "app-arch/lha lha" | sudo tee -a /etc/portage/package.license
+    echo "app-arch/unrar unRAR" | sudo tee -a /etc/portage/package.license
+    echo "app-arch/rar RAR" | sudo tee -a /etc/portage/package.license
+    sudo -E emerge app-arch/p7zip app-arch/arj app-arch/lha app-arch/lzop app-arch/unrar app-arch/rar app-arch/unzip app-arch/zip app-arch/xarchiver
+    rm -rf /var/tmp/portage/app-arch/p7zip-*
+    rm -rf /var/tmp/portage/app-arch/arj-*
+    rm -rf /var/tmp/portage/app-arch/lha-*
+    rm -rf /var/tmp/portage/app-arch/lzop-*
+    rm -rf /var/tmp/portage/app-arch/unrar-*
+    rm -rf /var/tmp/portage/app-arch/rar-*
+    rm -rf /var/tmp/portage/app-arch/unzip-*
+    rm -rf /var/tmp/portage/app-arch/zip-*
+    rm -rf /var/tmp/portage/app-arch/xarchiver-*
+    eclean-dist -d
+}
+run_checkpoint 128 "xarchiver" checkpoint_128
+
+checkpoint_129() {
+    sudo -E emerge app-editors/vscodium
+    rm -rf /var/tmp/portage/app-editors/vscodium-*
+    eclean-dist -d
+}
+run_checkpoint 129 "sudo -E emerge app-editors/vscodium" checkpoint_129
+
+checkpoint_130() {
+    sudo -E emerge games-util/gamemode
+    sudo -E emerge games-action/prismlauncher
+    rm -rf /var/tmp/portage/games-util/gamemode-*
+    rm -rf /var/tmp/portage/games-action/prismlauncher-*
+    eclean-dist -d
+}
+run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
 
 #checkpoint_130() {
 #    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
