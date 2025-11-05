@@ -373,7 +373,6 @@ SOMMELIER_CMD=(
 "${SOMMELIER_CMD[@]}" -- bash -c '
     sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-    pulseaudio &>/dev/null &
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
     exec bash
