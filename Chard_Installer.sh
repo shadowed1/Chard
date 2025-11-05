@@ -1328,8 +1328,8 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
                         getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
                         getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
-                        usermod -aG portage \$USER
-                        newgrp portage
+                        usermod -aG portage \$USER 2>/dev/null
+                        newgrp portage 2>/dev/null
 
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
