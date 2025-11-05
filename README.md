@@ -143,7 +143,6 @@
 - Clang
 - Mesa
 - Vulkan + Vulkan Tools
-- Flatpak (broken for now)
 - Sommelier
 - Wayland
 - X11
@@ -155,6 +154,11 @@
 - xarchiver
 - Codium
 - Prism Launcher + Minecraft
+- OBS with Game Capture
+- GIMP
+- LibreOffice
+- Thunar
+- Game Emulators
 - And Many More
 
 # Commands (most not listed - on to-do list) <br>
