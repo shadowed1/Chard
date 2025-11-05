@@ -764,7 +764,9 @@ run_checkpoint 85 "sudo -E emerge x11-themes/gtk-engines-murrine" checkpoint_85
 
 checkpoint_86() {
     sudo -E emerge dev-lang/python
+    sudo -E emerge dev-python/pip
     rm -rf /var/tmp/portage/dev-lang/python-*
+    rm -rf /var/tmp/portage/dev-lang/pip-*
     eclean-dist -d
 }
 run_checkpoint 86 "sudo -E emerge dev-lang/python" checkpoint_86
