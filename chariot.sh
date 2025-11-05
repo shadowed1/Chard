@@ -1102,6 +1102,13 @@ checkpoint_128() {
 run_checkpoint 128 "sudo -E emerge games-action/prismlauncher" checkpoint_128
 
 checkpoint_129() {
+    sudo -E emerge media-libs/libva
+    rm -rf /var/tmp/portage/media-libs/libva-*
+    eclean-dist -d
+}
+run_checkpoint 129 "sudo -E emerge games-action/prismlauncher" checkpoint_129
+
+checkpoint_129() {
     detect_intel_gpu() {
         if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
             GPU_MAX_FREQ=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
