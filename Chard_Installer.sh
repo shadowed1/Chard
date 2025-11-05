@@ -1777,7 +1777,7 @@ sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR 
 sudo mkdir -p "$CHARD_ROOT/etc/portage/env"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/package.env"
 
-echo "dev-lang/perl ~$(portageq envvar ARCH)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords/perl" >/dev/null
+echo "dev-lang/perl ~$(arch)" | sudo tee -a "$CHARD_ROOT/etc/portage/package.accept_keywords" >/dev/null
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
 echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
