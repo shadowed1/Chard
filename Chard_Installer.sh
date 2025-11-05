@@ -1802,8 +1802,7 @@ sudo tee "${PULSEHOME}/default.pa" > /dev/null <<'EOF'
 .include /etc/pulse/default.pa
 load-module module-alsa-sink device=cras sink_name=cras-sink
 load-module module-alsa-source device=cras source_name=cras-source
-load-module module-remap-sink sink_name=stereo_out master=cras-sink channels=2 remix=yes
-set-default-sink stereo_out
+set-default-sink cras-sink
 set-default-source cras-source
 EOF
     
