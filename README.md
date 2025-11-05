@@ -168,3 +168,11 @@
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
+
+<br>
+
+### Acknowledgements
+- Terry Stormchaser
+- Saragon
+- DennyL
+- Zhil
