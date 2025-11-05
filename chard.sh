@@ -300,6 +300,7 @@ case "$cmd" in
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+            sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
@@ -385,6 +386,7 @@ case "$cmd" in
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
+            sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
             sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
         else
             sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
