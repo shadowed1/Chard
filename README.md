@@ -208,6 +208,7 @@
 - Entering Chard Root with Sommelier support will have harmless errors generated.
 - Display Scaling support is still in the beginning stages of implementation.
 - Mediatek GPU support is currently being worked on.
+- Exiting Chard Root session while others are active is not recommended. Exit them all at once!
   
 <br>
 
