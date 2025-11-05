@@ -315,7 +315,6 @@ export SOMMELIER_VERSION=0.20
 
 # OBS
 export OBS_VKCAPTURE=1
-export OBS_PULSE_SERVER=unix:/run/cras
 
 x() {
     if [[ -z "$WAYLAND_DISPLAY" ]]; then
