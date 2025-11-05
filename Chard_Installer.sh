@@ -157,6 +157,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
     sudo cp "$CHARD_ROOT/chardbuild.log" ~/
