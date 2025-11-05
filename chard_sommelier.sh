@@ -371,13 +371,18 @@ SOMMELIER_CMD=(
 )
 
 "${SOMMELIER_CMD[@]}" -- bash -c '
-    sleep 0.2
-    pulseaudio --start --exit-idle-time=-1
+    sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
+    pulseaudio &>/dev/null &
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
     exec bash
 '
+
+if [ -f /tmp/.pulseaudio_pid ]; then
+    kill "$(cat /tmp/.pulseaudio_pid)" 2>/dev/null
+    rm -f /tmp/.pulseaudio_pid
+fi
 
 # <<< END CHARD .SOMMELIER >>>
 
