@@ -1799,6 +1799,7 @@ sudo mkdir -p "$PULSEHOME"
 sudo tee "${PULSEHOME}/default.pa" > /dev/null <<'EOF'
 #!/usr/bin/pulseaudio -nF
 # Copyright (c) 2016 The crouton Authors. All rights reserved.
+.include /etc/pulse/default.pa
 load-module module-alsa-sink device=cras sink_name=cras-sink
 load-module module-alsa-source device=cras source_name=cras-source
 load-module module-remap-sink sink_name=stereo_out master=cras-sink channels=2 remix=yes
