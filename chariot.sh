@@ -1173,6 +1173,13 @@ checkpoint_134() {
 }
 run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_131
 
+checkpoint_135() {
+    USE="ruby_targets_ruby34" sudo -E emerge dev-lang/ruby
+    rm -rf /var/tmp/portage/dev-lang/ruby-*
+    eclean-dist -d
+}
+run_checkpoint 135 "sudo -E emerge dev-lang/ruby" checkpoint_135
+
 # dolphin
 # echo "games-emulation/dolphin ~amd64" | sudo tee -a /etc/portage/package.accept_keywords
 # echo "games-emulation/dolphin FatFs" | sudo tee -a /etc/portage/package.license
