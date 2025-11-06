@@ -203,10 +203,16 @@
 <br>
 
 ### How to use:
+
 - After installer finishes, open a new ChromeOS shell via crosh shell to continue.
 - Type in `cr` or `chard_root` to enter Chard Chroot with Sommelier support.
 
+<br>
+
 - `startxfce4` to launch a basic app launcher shelf that can be adjusted.
+- Do not exit a Chard shell if you have other ones open. Append & at end of an app to run more apps in same shell. 
+
+<br>
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
