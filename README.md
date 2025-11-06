@@ -27,7 +27,7 @@
 - Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
 - This is a Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed with full hardware detection.
-- *Chard is in early development. Bug reports, suggestions, ideas, and anything else is greatly appreciated!*
+- *Chard is in early development. Bug reports, suggestions, and ideas are greatly appreciated.*
   
 <br>
 
@@ -83,7 +83,7 @@
 
 - Chard auto-detects the Host's hardware and builds Gentoo + psuedo-Kernel automatically.
 - Includes ability to resume installer if interrupted; even if system shuts down.
-- Greatly exceeds Crostini performance and can achieve equal performance to Borealis with far less overhead.
+- Greatly exceeds Crostini performance and can achieve equal performance to Borealis (RIP) with significantly lower memory overhead.
 
 <br>
 
@@ -93,8 +93,8 @@
 
 <br>
 
-- Supports running Wayland/X11 apps directly in chroot.
-- Uses Sommelier to communicate with ChromeOS and support X11 Desktop Environments, Apps and Games.
+- Includes most compiling tools as a basic toolchain. 
+- Uses Sommelier to communicate with ChromeOS' window management and support Desktop Environments, Apps, Games, and more.
 - Runs GUI apps with full GPU acceleration including audio support for Chromebooks.
 - Native full screen support, multi-monitor support, and supports ChromeOS window managment gestures. 
 
@@ -102,7 +102,7 @@
 
 - Does *not* require removing files and includes an uninstaller script to clean up after itself.
 - When Installer finishes or exits the log file, 'chardbuild.log', is copied for viewing/debugging.
-- Can run certain apps directly from Chard in the Host OS; with libraries being whitelisted.
+- Can run certain apps directly from Chard in the Host OS (ChromeOS only).
 - Overwrites dev_install Python with up to date versions with pip support. 
 
 <br>
