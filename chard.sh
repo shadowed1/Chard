@@ -270,18 +270,22 @@ case "$cmd" in
         chard_run "$@"
         ;;
     help)
-        echo "${GREEN}Chard command examples:"
-        echo "  python, gcc, Et al....   - Run all available binaries from the Chard environment!"
-        echo "  reinstall                - Reinstall or update Chard"
-        echo "  uninstall                - Remove Chard environment and entries"
-        echo "  categories | cat         - List available Portage categories"
-        echo "  help                     - Show this help message"
         echo
-        echo "Examples:"
-        echo "  chard emerge app-misc/foo"
-        echo "  chard cat"
-        echo "  chard python"
+        echo "${GREEN}Chard commands:"
+        echo "  chard <binary> <arguments>    -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now)"
+        echo "  chard root | cr               -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support."
+        echo "  chard reinstall               -- Option 1 for FAST reinstall. Option 2 is a FULL reinstall."
+        echo "  chard uninstall               -- Remove Chard environment and entries"
+        echo "  chard categories | chard cat  -- List available Portage categories"
+        echo "  chard chariot or chariot      -- Chard companion tool for setting itself up with a checkpoint system."
+        echo "  chard version                 -- Check for updates"
+        echo "  chard help                    -- Show this help message"
+        echo "${RESET}${CYAN}"
+        echo "Inside Chard Root:"
+        echo
+        echo "SMRT or SMRT <1-100>            -- For compiling, auto allocate threads or specify in % how many threads you want to allocate."
         echo "${RESET}"
+        echo
         ;;
     reinstall)
         chard_reinstall
