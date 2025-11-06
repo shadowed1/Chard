@@ -1573,6 +1573,7 @@ case "$ARCH" in
 
 sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
 CONFIG_SWAP=y
+CONFIG_DRM=y
 CONFIG_SWAPFILESYSTEM=y
 CONFIG_ZRAM=y
 CONFIG_BLK_DEV_RAM=y
@@ -1613,6 +1614,7 @@ CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
 CONFIG_KEY_DH_OPERATIONS=y
 CONFIG_VIDEO_DEV=y
+CONFIG_DRM_GEM_SHMEM_HELPER=y
 CONFIG_ARM_MALI=n
 CONFIG_DRM_ROCKCHIP=n
 CONFIG_DRM_ARM_DC=n
@@ -1627,6 +1629,12 @@ EOF
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=n
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MEDIATEK_HDMI=n
+                CONFIG_MEDIATEK_CMDQ=n
+                CONFIG_MTK_CMDQ_MBOX=n
+                CONFIG_MTK_IOMMU=n
+                CONFIG_DRM_PANFROST=y
                 ;;
             adreno)
                 CONFIG_DRM_MALI=n
@@ -1635,14 +1643,27 @@ EOF
                 CONFIG_DRM_MSM=y
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=n
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MEDIATEK_HDMI=n
+                CONFIG_MEDIATEK_CMDQ=n
+                CONFIG_MTK_CMDQ_MBOX=n
+                CONFIG_MTK_IOMMU=n
+                CONFIG_DRM_PANFROST=n
                 ;;
             mediatek)
-                CONFIG_DRM_MALI=y
+                CONFIG_DRM_MALI=n
                 CONFIG_DRM_ROCKCHIP=n
                 CONFIG_DRM_ARM_DC=n
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=n
+                CONFIG_DRM_MEDIATEK=y
+                CONFIG_DRM_MEDIATEK_HDMI=y
+                CONFIG_MEDIATEK_CMDQ=y
+                CONFIG_MTK_CMDQ_MBOX=y
+                CONFIG_MTK_IOMMU=y
+                CONFIG_DRM_PANFROST=y
+                
                 ;;
             vivante)
                 CONFIG_DRM_MALI=n
@@ -1651,6 +1672,12 @@ EOF
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=y
                 CONFIG_LAVAPIPE=n
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MEDIATEK_HDMI=n
+                CONFIG_MEDIATEK_CMDQ=n
+                CONFIG_MTK_CMDQ_MBOX=n
+                CONFIG_MTK_IOMMU=n
+                CONFIG_DRM_PANFROST=n
                 ;;
             *)
                 CONFIG_DRM_MALI=n
@@ -1659,11 +1686,20 @@ EOF
                 CONFIG_DRM_MSM=n
                 CONFIG_DRM_ETNAVIV=n
                 CONFIG_LAVAPIPE=y
+                CONFIG_DRM_MEDIATEK=n
+                CONFIG_DRM_MEDIATEK_HDMI=n
+                CONFIG_MEDIATEK_CMDQ=n
+                CONFIG_MTK_CMDQ_MBOX=n
+                CONFIG_MTK_IOMMU=n
+                CONFIG_DRM_PANFROST=n
                 ;;
         esac
         
 sudo tee "$CHARD_ROOT/usr/src/linux/enable_features.cfg" > /dev/null <<EOF
 CONFIG_SWAP=y
+CONFIG_DRM=y
+CONFIG_DRM_FBDEV_EMULATION=y
+CONFIG_DRM_KMS_HELPER=y
 CONFIG_SWAPFILESYSTEM=y
 CONFIG_ZRAM=y
 CONFIG_BLK_DEV_RAM=y
@@ -1709,6 +1745,14 @@ CONFIG_CRYPTO_SHA256=y
 CONFIG_CRYPTO_SHA512=y
 CONFIG_KEY_DH_OPERATIONS=y
 CONFIG_VIDEO_DEV=y
+CONFIG_DRM_MEDIATEK=$CONFIG_DRM_MEDIATEK
+CONFIG_DRM_MEDIATEK_HDMI=$CONFIG_DRM_MEDIATEK_HDMI
+CONFIG_MEDIATEK_CMDQ=$CONFIG_MEDIATEK_CMDQ
+CONFIG_MTK_CMDQ_MBOX=$CONFIG_MTK_CMDQ_MBOX
+CONFIG_MTK_IOMMU=$CONFIG_MTK_IOMMU
+CONFIG_DEVFREQ_THERMAL=y
+CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
+CONFIG_DRM_GEM_SHMEM_HELPER=y
 EOF
         ;;
     *)
