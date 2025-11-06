@@ -95,7 +95,7 @@
 
 - Includes most compiling tools as a basic toolchain. 
 - Uses Sommelier to communicate with ChromeOS' window management and support Desktop Environments, Apps, Games, and more.
-- Runs GUI apps with full GPU acceleration including audio support for Chromebooks.
+- Runs GUI apps with full GPU acceleration including audio support for Chromebooks; including HDMI audio out. 
 - Native full screen support, multi-monitor support, and supports ChromeOS window managment gestures. 
 
 <br>
