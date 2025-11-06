@@ -1180,6 +1180,11 @@ checkpoint_135() {
 }
 run_checkpoint 135 "sudo -E emerge dev-lang/ruby" checkpoint_135
 
+checkpoint_136() {
+    sudo -E perl-cleaner --all
+}
+run_checkpoint 136 "sudo -E emerge dev-lang/ruby" checkpoint_136
+
 # dolphin
 # echo "games-emulation/dolphin ~amd64" | sudo tee -a /etc/portage/package.accept_keywords
 # echo "games-emulation/dolphin FatFs" | sudo tee -a /etc/portage/package.license
