@@ -333,18 +333,18 @@ obs() {
 }
 
 
-x() {
-    if [[ -z "$WAYLAND_DISPLAY" ]]; then
-        echo "ERROR: WAYLAND_DISPLAY is not set"
-        return 1
-    fi
-
-    [ ! -d /tmp/.X11-unix ] && sudo mkdir -p /tmp/.X11-unix && sudo chmod 1777 /tmp/.X11-unix
-
-    SOMMELIER_CMD="sommelier --noop-driver --display=$WAYLAND_DISPLAY -X --glamor --xwayland-path=/usr/libexec/Xwayland"
-
-    exec $SOMMELIER_CMD "$@"
-}
+#x() {
+#    if [[ -z "$WAYLAND_DISPLAY" ]]; then
+#        echo "ERROR: WAYLAND_DISPLAY is not set"
+#        return 1
+#    fi
+#
+#    [ ! -d /tmp/.X11-unix ] && sudo mkdir -p /tmp/.X11-unix && sudo chmod 1777 /tmp/.X11-unix
+#
+#    SOMMELIER_CMD="sommelier --noop-driver --display=$WAYLAND_DISPLAY -X --glamor --xwayland-path=/usr/libexec/Xwayland"
+#
+#    exec $SOMMELIER_CMD "$@"
+#}
 
 #sommelier --display=/run/chrome/wayland-0 --noop-driver --force-drm-device=/dev/dri/renderD128 -X --glamor --enable-linux-dmabuf --xwayland-path=/usr/libexec/Xwayland -- bash -c 'sleep 1; export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/"); echo "DISPLAY=$DISPLAY"; [ -f ~/.bashrc ] && source ~/.bashrc; exec bash'
 
