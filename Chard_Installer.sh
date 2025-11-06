@@ -59,7 +59,12 @@ echo
 echo "${GREEN}- Does not require altering current state of /usr/local/ during Install and Uninstall.${RESET}"
 echo "${GREEN}- Chard is currently in early development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
 echo
-echo
+echo "${CYAN}${BOLD}- Chard README: ${RESET}"
+echo "${BLUE}- https://github.com/shadowed1/Chard/blob/main/README.md ${RESET}"
+echo "${MAGENTA}${BOLD}"
+echo "- Requires Developer Mode for ChromeOS users."
+echo "${RESET}"
+
 
 format_time() {
     local total_seconds=$1
@@ -83,7 +88,7 @@ show_progress() {
     echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
 }
 
-read -rp "${GREEN}${BOLD}Install Chard? (Y/n): ${RESET}" response
+read -rp "${GREEN}${BOLD}Install Chard?${RESET} (Y/n):" response
 response=${response:-Y}
 
 case "$response" in
