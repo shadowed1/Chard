@@ -54,7 +54,7 @@ fi
 alias cr='chard root'
 alias smrt='SMRT'
 alias chariot='chard chariot'
-#alias emerge='emerge --root="$CHARD_ROOT" --sysroot="$CHARD_ROOT" --config-root="$CHARD_ROOT" --pkgdir="$CHARD_ROOT/var/cache/packages" --root-deps=rdeps'
+#alias emerge='emerge --root="$CHARD_ROOT" --sysroot="$CHARD_ROOT" --config-root="$CHARD_ROOT" --root-deps=rdeps'
 CR="$CHARD_ROOT"
 CH="$CHARD_HOME"
 
