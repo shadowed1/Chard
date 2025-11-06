@@ -225,6 +225,7 @@ export RANLIB="$ROOT/usr/bin/gcc-ranlib"
 export STRIP="$ROOT/usr/bin/strip"
 export LD="$ROOT/usr/bin/ld"
 
+# <<< CHARD_MARCH_NATIVE >>>
 CFLAGS="-march=native -O2 -pipe "
 [[ -d "$ROOT/usr/include" ]] && CFLAGS+="-I$ROOT/usr/include "
 [[ -d "$ROOT/include" ]] && CFLAGS+="-I$ROOT/include "
@@ -233,10 +234,9 @@ export CFLAGS
 COMMON_FLAGS="-march=native -O2 -pipe"
 FCFLAGS="$COMMON_FLAGS"
 FFLAGS="$COMMON_FLAGS"
-export FCFLAGS
-export FFLAGS
+
 CXXFLAGS="$CFLAGS"
-export CXXFLAGS
+# <<< END CHARD_MARCH_NATIVE >>>
 
 LDFLAGS=""
 [[ -d "$ROOT/usr/lib64" ]] && LDFLAGS+="-L$ROOT/usr/lib64 "
@@ -245,7 +245,10 @@ LDFLAGS=""
 [[ -d "$ROOT/usr/lib" ]] && LDFLAGS+="-L$ROOT/usr/lib "
 [[ -d "$ROOT/lib" ]] && LDFLAGS+="-L$ROOT/lib "
 [[ -d "$ROOT/usr/local/lib" ]] && LDFLAGS+="-L$ROOT/usr/local/lib "
+
 export LDFLAGS
+export FCFLAGS
+export FFLAGS
 
 PATHS_TO_ADD=(
     "$PYEXEC_DIR"
