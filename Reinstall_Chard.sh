@@ -368,7 +368,7 @@ EOF
                     chmod 644 /var/lib/portage/world
                     /bin/SMRT
                     source \$HOME/.smrt_env.sh
-                    chown -R 1000:1000 \$HOME/
+                    sudo chown -R \$USER:\$USER \$HOME
                     emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
                     BASHRC=\"\$HOME/.bashrc\" && \
@@ -627,7 +627,7 @@ load-module module-alsa-source device=cras source_name=cras-source
 set-default-sink cras-sink
 set-default-source cras-source
 EOF
-                            
+                sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc            
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 ;;
             2)
