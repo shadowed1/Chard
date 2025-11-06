@@ -202,6 +202,12 @@
 
 <br>
 
+### How to use:
+- After installer finishes, open a new ChromeOS shell via crosh shell to continue.
+- Type in `cr` or `chard_root` to enter Chard Chroot with Sommelier support.
+
+- `startxfce4` to launch a basic app launcher shelf that can be adjusted.
+
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
 - Bubblewrap support is not functioning. This means Steam, Flatpak, Firefox, and other apps requiring user namespace support are unsupported (for now?).
