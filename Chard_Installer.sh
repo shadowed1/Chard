@@ -1823,6 +1823,7 @@ set-default-source cras-source
 EOF
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
+sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc            
 
 source "$CHARD_ROOT/.chardrc"
 
