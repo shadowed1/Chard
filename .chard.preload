@@ -35,6 +35,7 @@ LD_PRELOAD_LIBS=(
     #"$CHARD_ROOT/usr/lib64/libjsoncpp.so.26"    
     #"$CHARD_ROOT/usr/lib64/librhash.so.1"
     #"$CHARD_ROOT/usr/lib64/libuv.so.1"
+    #"$CHARD_ROOT/usr/lib64/libruby34.so.3.4"
 )
 
 LD_PRELOAD=""
