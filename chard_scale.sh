@@ -10,6 +10,15 @@ RESET=$(tput sgr0)
 DISPLAY_SCALING=""
 CURSOR_SIZE=""
 
+update_env_file() {
+    local var="$1"
+    local value="$2"
+    local env_file="$HOME/.bashrc"
+
+    sed -i "/^export $var=/d" "$env_file"
+    echo "export $var=$value" >> "$env_file"
+}
+
 set_display_scaling() {
     local input="$1"
 
