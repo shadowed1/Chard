@@ -1183,6 +1183,10 @@ checkpoint_135() {
 }
 run_checkpoint 135 "sudo -E emerge dev-lang/ruby" checkpoint_135
 
+checkpoint_136() {
+sudo chown -R $USER:$USER $HOME
+}
+run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 
 # dolphin
 # echo "games-emulation/dolphin ~amd64" | sudo tee -a /etc/portage/package.accept_keywords
