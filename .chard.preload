@@ -1,5 +1,6 @@
 # <<< CHARD_PRELOAD <<<
-
+# ChromeOS Only. Does not support FydeOS.
+# Manual entries.
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
 CHARD_HOME=""
