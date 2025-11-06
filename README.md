@@ -103,7 +103,6 @@
 - Does *not* require removing files and includes an uninstaller script to clean up after itself.
 - When Installer finishes or exits the log file, 'chardbuild.log', is copied for viewing/debugging.
 - Can run certain apps directly from Chard in the Host OS (ChromeOS only).
-- Overwrites dev_install Python with up to date versions with pip support. 
 
 <br>
 
