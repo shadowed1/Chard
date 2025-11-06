@@ -1,5 +1,5 @@
 #!/bin/bash
-# SMRT - Smart Multithreaded Resource Tasker
+# SMRT - Smart Multithreaded Resource Taskforce
 
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
