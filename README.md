@@ -241,6 +241,12 @@
   
 <br>
 
+### Changelog:
+
+- 0.01: `Initial Release`
+
+<br>
+
 ### Acknowledgements
 - *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
 - *Terry Stormchaser* - Spending time testing Borealis alternatives, testing Chard, and providing ideas.
