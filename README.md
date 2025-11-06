@@ -90,6 +90,7 @@
 - Intelligent CPU task scheduler for building packages.
 - User can customize how many threads Chard can use dynamically. Useful for devices with low memory.
 - Hardware detection scripts allows compilers to enable native architectural tweaks.
+- ChromeOS' Downloads folder is shared when entering Chard Root, allowing for fast file sharing. 
 
 <br>
 
