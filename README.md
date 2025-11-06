@@ -197,6 +197,8 @@
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
+- `chard_scale display 2` -- Set display scaling to 2x scaling
+- `chard_scale cursor 64` -- Set cursor to 64px.
 - `exit` -- Leave Chard Root
 - This is a full Gentoo Linux environment. Read up on Gentoo Linux commands:
 <pre>https://wiki.gentoo.org/wiki/Main_Page</pre>
