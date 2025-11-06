@@ -160,6 +160,7 @@
 - Meson
 - Ninja
 - Rust
+- Ruby
 - OpenSSL
 - LLVM
 - Clang
