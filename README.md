@@ -202,13 +202,25 @@
 <br>
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
+
+
 - Bubblewrap support is not functioning. This means Steam, Flatpak, Firefox, and other apps requiring user namespace support is not functioning due to ChromeOS restrictions.
 - Audio support is often unreliable. Volume is currently only adjustable via in-app controls.
+
+<br>
+
 - Chrome app shelf is missing icon + pin support. Remedied by customizing xfce4 shelf.
 - Entering Chard Root with Sommelier support will have harmless errors generated.
+
+<br>
+
 - Display Scaling support is still in the beginning stages of implementation.
 - Mediatek GPU support is currently being worked on.
+
+<br>
+
 - Exiting Chard Root session while others are active is not recommended. Exit them all at once!
+- OBS game capture is suggested to run it all in one shell. So run `obs & prismlauncher` for example. 
   
 <br>
 
