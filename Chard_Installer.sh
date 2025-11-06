@@ -1881,7 +1881,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 
         dbus-daemon --system --fork 2>/dev/null
         source \$HOME/.bashrc 2>/dev/null
-        source \$HOME/.smrt_env.sh
+        source \$HOME/.smrt_env.sh 2>/dev/null
         sudo chown -R 1000:1000 $HOME
         sudo -E /bin/chariot
     "
