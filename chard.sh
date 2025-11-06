@@ -597,7 +597,7 @@ case "$cmd" in
         # Denny's version checker
     version)
         if [[ -f "$CHARD_ROOT/$CHARD_HOME/chard_version" ]]; then
-            CURRENT_VER=$(head -n1 "$CHARD_ROOT/$CHARD_HOME/chard_version")
+            CURRENT_VER=$(cat "$HOME/opt/bin/version")
             CURRENT_VER_NO=$(echo "$CURRENT_VER" | sed -e 's/VERSION=//' -e 's/"//g' -e 's/\.//g' -e 's/^0*//')
         
             LATEST_VER=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_version")
