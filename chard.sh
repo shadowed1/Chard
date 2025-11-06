@@ -283,7 +283,7 @@ case "$cmd" in
         echo "${RESET}${CYAN}"
         echo "Inside Chard Root:"
         echo
-        echo "SMRT or SMRT <1-100>            -- For compiling, auto allocate threads or specify in % how many threads you want to allocate."
+        echo "  SMRT or SMRT <1-100>            -- For compiling, auto allocate threads or specify in % how many threads you want to allocate."
         echo "${RESET}"
         echo
         ;;
