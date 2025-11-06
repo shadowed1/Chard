@@ -9,6 +9,7 @@ CHARD_USER=""
 
 LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
+    "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
     "$CHARD_ROOT/usr/lib64/libb2.so.1"
     "$CHARD_ROOT/usr/lib64/libcrypto.so.3"
     "$CHARD_ROOT/usr/lib64/libsystemd.so.0"
