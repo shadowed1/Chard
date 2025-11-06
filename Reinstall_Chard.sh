@@ -314,7 +314,7 @@ trap cleanup_chroot EXIT INT TERM
 
                BOARD_NAME=${BOARD_NAME%%-*}
 
-                sudo tee "$CHARD_ROOT/usr/.chard_prompt.sh" >/dev/null <<EOF
+               sudo tee "$CHARD_ROOT/usr/.chard_prompt.sh" >/dev/null <<EOF
 #!/bin/bash
 BOLD='\\[\\e[1m\\]'
 RED='\\[\\e[31m\\]'
@@ -368,8 +368,27 @@ EOF
                     chmod 644 /var/lib/portage/world
                     /bin/SMRT
                     source \$HOME/.smrt_env.sh
-                    chown -R \$USER:\$USER \$HOME/
-                    
+                    chown -R 1000:1000 \$HOME/
+                    emerge --noreplace app-misc/resolve-march-native && \
+                    MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
+                    BASHRC=\"\$HOME/.bashrc\" && \
+                    awk -v march=\"\$MARCH_FLAGS\" '
+                        /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
+                        /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
+                        inblock {
+                            if (\$0 ~ /^CFLAGS=/) { print \"CFLAGS=\\\"\" march \" -O2 -pipe\\\"\"; next }
+                            if (\$0 ~ /^COMMON_FLAGS=/) {
+                                print \"COMMON_FLAGS=\\\"\" march \" -O2 -pipe\\\"\"
+                                print \"FCFLAGS=\\\"\$COMMON_FLAGS\\\"\"
+                                print \"FFLAGS=\\\"\$COMMON_FLAGS\\\"\"
+                                print \"CXXFLAGS=\\\"\$CFLAGS\\\"\"
+                                next
+                            }
+                            next
+                        }
+                        {print}
+                    ' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\"
+                
                     umount -l /run/chrome  2>/dev/null || true
                     umount -l /run/dbus    2>/dev/null || true
                     umount -l /etc/ssl     2>/dev/null || true
@@ -379,7 +398,7 @@ EOF
                     umount -l /sys         2>/dev/null || true
                     umount -l /proc        2>/dev/null || true
                 "
-
+                
                 detect_gpu_freq() {
                 GPU_FREQ_PATH=""
                 GPU_MAX_FREQ=""
