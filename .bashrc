@@ -1,5 +1,5 @@
-# CHARD .BASHRC
-
+# <<< CHARD .BASHRC >>>
+# To do - Organize, clean up, and then outsource.
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
 CHARD_HOME=""
