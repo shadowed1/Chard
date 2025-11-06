@@ -590,6 +590,36 @@ case "$cmd" in
             basename "$cat"
         done | sort
         ;;
+        # Denny's version checker
+    version)
+            if [[ -f "$CHARD_ROOT/$CHARD_HOME/chard_version" ]]; then
+                CURRENT_VER=$(cat "$CHARD_ROOT/$CHARD_HOME/chard_version")
+                CURRENT_VER_NO=$(echo "$CURRENT_VER" | sed -e 's/VERSION=//' -e 's/"//g' -e 's/\.//g' -e 's/^0*//')
+        
+                LATEST_VER=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_version")
+                LATEST_VER_NO=$(echo "$LATEST_VER" | sed -e 's/VERSION=//' -e 's/"//g' -e 's/\.//g' -e 's/^0*//')
+        
+                if [[ "$CURRENT_VER_NO" =~ ^[0-9]+$ && "$LATEST_VER_NO" =~ ^[0-9]+$ ]]; then
+                    if (( 10#$CURRENT_VER_NO < 10#$LATEST_VER_NO )); then
+                        echo "${CYAN}You're using $CURRENT_VER which is NOT the latest version.${RESET}"
+                        read -rp "Would you like to 'reinstall' to get $LATEST_VER ? (Y/n): " choice
+                        if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
+                            echo "${CYAN}Reinstalling!${RESET}"
+                            bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")
+                        else
+                            echo "${YELLOW}Skipping reinstall.${RESET}"
+                        fi
+                    else
+                        echo "${GREEN}You're using $CURRENT_VER which is up-to-date, so you're good.${RESET}"
+                    fi
+                else
+                    echo "${RED}Version check failed. One of the version numbers is invalid.${RESET}"
+                fi
+            else
+                echo "${RED}Version file not found.${RESET}"
+                exit 1
+            fi
+        ;;
     *)
         chard_run "$cmd" "$@"
         ;;
