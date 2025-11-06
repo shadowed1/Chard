@@ -17,7 +17,8 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-LOG_FILE="/chariot.log"
+touch ~/chariot.log
+LOG_FILE=~/chariot.log
 exec > >( tee -a "$LOG_FILE") 2>&1
 
 format_time() {
@@ -110,6 +111,7 @@ sleep 5
 if [[ -f "$CHECKPOINT_FILE" ]]; then
     CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
 else
+    echo "0" | sudo tee "$CHECKPOINT_FILE" >/dev/null
     CURRENT_CHECKPOINT=0
 fi
 
@@ -135,7 +137,7 @@ run_checkpoint() {
             exit $ret
         fi
 
-        echo $step > "$CHECKPOINT_FILE"
+        echo "$step" | sudo tee "$CHECKPOINT_FILE" >/dev/null
         sync
         CURRENT_CHECKPOINT=$step
         echo
@@ -249,6 +251,7 @@ checkpoint_15() {
     sudo -E emerge dev-perl/Capture-Tiny
     rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
     eclean-dist -d
+    sudo -E perl-cleaner --all
 }
 run_checkpoint 15 "sudo -E emerge dev-perl/Capture-Tiny" checkpoint_15
 
@@ -1180,10 +1183,6 @@ checkpoint_135() {
 }
 run_checkpoint 135 "sudo -E emerge dev-lang/ruby" checkpoint_135
 
-checkpoint_136() {
-    sudo -E perl-cleaner --all
-}
-run_checkpoint 136 "sudo -E emerge dev-lang/ruby" checkpoint_136
 
 # dolphin
 # echo "games-emulation/dolphin ~amd64" | sudo tee -a /etc/portage/package.accept_keywords
