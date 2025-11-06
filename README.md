@@ -187,11 +187,12 @@
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
 - `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
 - `chard safe` -- Enter Chard Root without GUI support.
-- `chard reinstall` -- Option 1 updates chard scripts to latest version. Option 2 is a full reinstall.
+- `chard reinstall` -- Option 1 for FAST reinstall. Option 2 is a FULL reinstall.
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
 - `chard help` -- Show help examples.
 - `chard chariot` or `chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
+- `chard version` -- Check for updates
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
