@@ -102,7 +102,8 @@
 
 - Does *not* require removing files and includes an uninstaller script to clean up after itself.
 - When Installer finishes or exits the log file, 'chardbuild.log', is copied for viewing/debugging.
-- Can run certain apps directly from Chard in the Host OS; with libraries being whitelisted. 
+- Can run certain apps directly from Chard in the Host OS; with libraries being whitelisted.
+- Overwrites dev_install Python with up to date versions with pip support. 
 
 <br>
 
@@ -136,7 +137,7 @@
 <br>
 
 - *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 3-6 hours.*
-- *Lower end Chromebooks (4 thread Intel, Mediatek 500 series, and older) can expect much longer install times.*
+- *Lower end Chromebooks (2-4 thread Intel, Mediatek 500 series, and older) can expect much longer install times.*
 
 <br>
 
@@ -202,7 +203,6 @@
 <br>
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
-
 
 - Bubblewrap support is not functioning. This means Steam, Flatpak, Firefox, and other apps requiring user namespace support is not functioning due to ChromeOS restrictions.
 - Audio support is often unreliable. Volume is currently only adjustable via in-app controls.
