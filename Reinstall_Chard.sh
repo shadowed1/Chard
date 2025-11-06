@@ -213,21 +213,36 @@ trap cleanup_chroot EXIT INT TERM
                 
                 echo "${BLUE}[*] Downloading Chard components..."
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"            -o "$CHARD_ROOT/.chardrc"
+                sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"          -o "$CHARD_ROOT/.chard.env"
+                sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
+                sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard.sh"            -o "$CHARD_ROOT/bin/chard"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+                sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+                sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard.sh"            -o "$CHARD_ROOT/bin/chard"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+                sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
-
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -237,6 +252,7 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
                 sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
+                sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
