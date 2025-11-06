@@ -85,7 +85,6 @@
 - Includes ability to resume installer if interrupted; even if system shuts down.
 - Greatly exceeds Crostini performance and can achieve equal performance to Borealis with far less overhead.
 
-
 <br>
 
 - Intelligent CPU task scheduler for building packages.
