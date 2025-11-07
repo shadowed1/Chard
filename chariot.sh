@@ -1193,6 +1193,11 @@ run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 # echo "games-emulation/dolphin FatFs" | sudo tee -a /etc/portage/package.license
 # sudo -E emerge games-emulation/dolphin
 
+# Heroic
+# sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
+# sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
+# sudo chown -R $USER:$USER /home/chronos/.config/heroic
+
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
 show_progress
