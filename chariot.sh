@@ -1205,13 +1205,6 @@ checkpoint_137() {
 }
 run_checkpoint 137 "sudo -E emerge games-util/heroic-bin" checkpoint_137
 
-checkpoint_138() {
-    sudo -E emerge dev-java/openjdk
-    rm -rf /var/tmp/portage/dev-java/openjdk*
-    eclean-dist -d
-}
-run_checkpoint 138 "sudo -E emerge dev-java/openjdk" checkpoint_137
-
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
 show_progress
