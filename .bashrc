@@ -386,6 +386,7 @@ alias ksp='LC_ALL=C ./KSP_x86_64'
 
 # xcb
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
+alias seamonkey='GDK_BACKEND=x11 seamonkey'
 
 alias cs='chard_sommelier'
 alias smrt='SMRT'
