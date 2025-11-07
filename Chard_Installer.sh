@@ -479,6 +479,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_so
 sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
 sleep 0.5
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/wx"                  -o "$CHARD_ROOT/bin/wx"
+sleep 0.5
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -489,6 +491,7 @@ sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
 sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
+sudo chmod +x "$CHARD_ROOT/bin/wx"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
