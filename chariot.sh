@@ -1194,9 +1194,16 @@ run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 # sudo -E emerge games-emulation/dolphin
 
 # Heroic
-# sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
-# sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
-# sudo chown -R $USER:$USER /home/chronos/.config/heroic
+
+checkpoint_137() {
+    sudo -E emerge games-util/heroic-bin
+    sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
+    sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
+    sudo chown -R $USER:$USER /home/chronos/.config/heroic
+    rm -rf /var/tmp/portage/games-util/heroic-bin-*
+    eclean-dist -d
+}
+run_checkpoint 137 "sudo -E emerge games-util/heroic-bin" checkpoint_137
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
