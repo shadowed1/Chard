@@ -301,9 +301,13 @@ checkpoint_21() {
     make -j$(nproc)
     make modules_install
     make INSTALL_PATH=/boot install
+    sudo make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-$(uname -r)
+    sudo rm 
     if [ $(uname -m) = aarch64 ]; then
         export ARCH=aarch64
     fi
+    cd /
+    sudo rm -rf /usr/src/linux
 }
 run_checkpoint 21 "build and install kernel + modules" checkpoint_21
 
@@ -994,6 +998,7 @@ checkpoint_117() {
     meson setup build
     ninja -C build
     ninja -C build install
+    sudo rm -rf /tmp/platform2
 }
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
