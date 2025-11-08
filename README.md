@@ -246,7 +246,7 @@
 ### Changelog:
 
 - 0.01: `Initial Release`
-- 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0.`
+- 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added headers + cleanup commands for Linux Kernel.`
 
 <br>
 
