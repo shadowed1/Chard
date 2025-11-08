@@ -1826,10 +1826,15 @@ case "$GPU_TYPE" in
         DRIVER="freedreno"
         echo "export MESA_LOADER_DRIVER_OVERRIDE='freedreno'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
-    mediatek)
-        DRIVER="panfrost" 
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='kmsro'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
-        ;;
+   mediatek)
+        DRIVER="panfrost"
+        sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
+export DRIVER="panfrost"
+export MESA_LOADER_DRIVER_OVERRIDE=panfrost,lima
+export MALI_PLATFORM_CONFIG=/etc/mali_platform.conf
+EOF
+    ;;
+
     vivante)
         DRIVER="etnaviv"
         echo "export MESA_LOADER_DRIVER_OVERRIDE='etnaviv'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
