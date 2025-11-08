@@ -1828,7 +1828,7 @@ case "$GPU_TYPE" in
         ;;
     mediatek)
         DRIVER="panfrost" 
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='panfrost lima'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='kmsro'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     vivante)
         DRIVER="etnaviv"
