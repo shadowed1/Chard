@@ -550,7 +550,7 @@ EOF
                     VIDEO_CARDS="freedreno"
                     ;;
                 mediatek)
-                    VIDEO_CARDS="mediatek"
+                    VIDEO_CARDS="panfrost lima"
                     ;;
                 vivante)
                     VIDEO_CARDS="etnaviv"
