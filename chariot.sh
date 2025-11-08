@@ -306,8 +306,6 @@ checkpoint_21() {
     if [ $(uname -m) = aarch64 ]; then
         export ARCH=aarch64
     fi
-    cd /
-    sudo rm -rf /usr/src/linux
 }
 run_checkpoint 21 "build and install kernel + modules" checkpoint_21
 
@@ -1003,9 +1001,10 @@ checkpoint_117() {
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
 #checkpoint_118() {
-#    sudo -E emerge sys-apps/flatpak
-#    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-#    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+#    sudo -E emerge dev-build/bazelisk
+#    cd /usr/local/src
+#    git clone https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools.git
+#    cd cros-container-guest-tools
 #    rm -rf /var/tmp/portage/sys-apps/flatpak-*
 #    chown -R 1000:1000 /home/chronos/.local/share/flatpak
 #    eclean-dist -d
@@ -1198,7 +1197,16 @@ run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 # echo "games-emulation/dolphin FatFs" | sudo tee -a /etc/portage/package.license
 # sudo -E emerge games-emulation/dolphin
 
-# Heroic
+#checkpoint_118() {
+#    sudo -E emerge sys-apps/flatpak
+#    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+#    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+#    rm -rf /var/tmp/portage/sys-apps/flatpak-*
+#    chown -R 1000:1000 /home/chronos/.local/share/flatpak
+#    eclean-dist -d
+#}
+#run_checkpoint 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
+
 
 checkpoint_137() {
     sudo -E emerge games-util/heroic-bin
