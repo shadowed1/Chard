@@ -488,6 +488,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/wx"     
 sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
 sleep 0.5
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
+sleep 0.5
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -499,7 +501,8 @@ sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
 sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
 sudo chmod +x "$CHARD_ROOT/bin/wx"
-sudo chmod +x "$CHARD_ROOT/bin/chard_usb"
+sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
+sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
