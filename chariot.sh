@@ -302,7 +302,6 @@ checkpoint_21() {
     make modules_install
     make INSTALL_PATH=/boot install
     sudo make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-$(uname -r)
-    sudo rm 
     if [ $(uname -m) = aarch64 ]; then
         export ARCH=aarch64
     fi
