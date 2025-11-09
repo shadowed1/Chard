@@ -368,7 +368,7 @@ case "$cmd" in
             
                 exec chard_sommelier
             "
-            
+            umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
