@@ -243,7 +243,7 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.5
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
                 sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/wx"                  -o "$CHARD_ROOT/bin/wx"
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_usb"           -o "$CHARD_ROOT/bin/chard_usb"
                 sleep 0.5
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
@@ -256,6 +256,7 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
                 sudo chmod +x "$CHARD_ROOT/bin/wx"
+                sudo chmod +x "$CHARD_ROOT/bin/chard_usb"
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
