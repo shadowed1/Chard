@@ -1103,10 +1103,13 @@ checkpoint_126() {
 run_checkpoint 126 "sudo -E emerge yt-dlp + vlc" checkpoint_126
 
 checkpoint_127() {
+    sudo -E emerge dev-util/vulkan-tools
     sudo -E emerge app-eselect/eselect-repository dev-vcs/git
     sudo -E eselect repository enable another-brave-overlay
     sudo -E emerge --sync another-brave-overlay
     sudo -E emerge www-client/brave-browser::another-brave-overlay
+    rm -rf /var/tmp/portage/dev-util/vulkan-tools-*
+    rm -rf /var/tmp/portage/eselect-repository dev-vcs/git-*
     rm -rf /var/tmp/portage/www-client/brave-browser-*
     eclean-dist -d
 }
@@ -1230,6 +1233,16 @@ checkpoint_138() {
     eclean-dist -d
 }
 run_checkpoint 138 "sudo -E emerge sys-block/gparted" checkpoint_138
+
+checkpoint_139() {
+    sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
+    sudo chmod +x /usr/local/bin/unetbootin
+}
+run_checkpoint 139 "unetbootin" checkpoint_139
+
+
+
+
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
