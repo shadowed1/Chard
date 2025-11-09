@@ -1240,8 +1240,12 @@ checkpoint_139() {
 }
 run_checkpoint 139 "unetbootin" checkpoint_139
 
-
-
+checkpoint_140() {
+    sudo -E emerge app-emulation/qemu
+    rm -rf /var/tmp/app-emulation/qemu*
+    eclean-dist -d
+}
+run_checkpoint 140 "sudo -E emerge app-emulation/qemu" checkpoint_140
 
 
 sudo -E chown -R $USER:$USER $HOME
