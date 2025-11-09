@@ -260,7 +260,7 @@
 
 - 0.01: `Initial Release`
 - 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added headers + cleanup commands for Linux Kernel. Cleaned up Sommelier.
-Added chard_mount and chard_unmount commands. Added GParted and UNetBootin support.`
+Added chard_mount and chard_unmount commands. Added GParted,UNetBootin and QEMU support.`
 
 <br>
 
