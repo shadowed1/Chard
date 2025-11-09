@@ -486,7 +486,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/wx"     
 sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/wx"                  -o "$CHARD_ROOT/bin/wx"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_usb"           -o "$CHARD_ROOT/bin/chard_usb"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
 sleep 0.5
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
