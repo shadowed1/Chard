@@ -141,13 +141,12 @@
 
 <br>
 
-# Functioning Tools: <br>
+# Tools: <br>
 - Latest Boostrapped Stage3 Gentoo Linux + Linux Kernel
 - Emerge
-- Sommelier
 - CRAS
 
-# Chard can use Emerge to build: <br>
+# Chard will use Emerge to build: <br>
 - Make
 - CMake
 - Curl with OpenSSL
@@ -179,9 +178,12 @@
 - GIMP
 - LibreOffice
 - Thunar
+- GParted
+- UNetBootin
 - Prism Launcher + Minecraft Java
 - OBS with Game Capture, Recording, and Streaming support
-- Game Emulators
+- Heroic Game Launcher
+- Supports game emulators and Kerbal Space Program
 - And too many to test. 
 
 ### Commands (Some not listed) <br>
@@ -199,6 +201,11 @@
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
 - `chard_scale display 2` -- Set display scaling to 2x scaling
 - `chard_scale cursor 64` -- Set cursor to 64px.
+- Refresh a new shell after adjusting scaling.
+
+- Prepend `wx` to a command to give an app a choice to try wayland and x11 if unsure.
+- `chard mount` to mount a USB device (ignores SSD and USB devices) for UNetBootin
+- `chard unmount` or `exit` to unmount the device.
 - `exit` -- Leave Chard Root
 - This is a full Gentoo Linux environment. Read up on Gentoo Linux commands:
 <pre>https://wiki.gentoo.org/wiki/Main_Page</pre>
@@ -209,6 +216,12 @@
 
 - After installer finishes, open a new ChromeOS shell via crosh shell to continue.
 - Type in `cr` or `chard_root` to enter Chard Chroot with Sommelier support.
+- When running sudo, use `sudo -E` instead.
+- When running GParted, make sure to unmount the device in ChromeOS first; otherwise you will to to re-run GParted command.
+- `startxfce4` launches a taskbar + app drawer. Right click -> panel -> panel preferences -> uncheck lock and click dots on the sides to drag around.
+- Create a launcher in items which then allows for custom app shortcuts. 
+
+
 
 <br>
 
@@ -246,7 +259,8 @@
 ### Changelog:
 
 - 0.01: `Initial Release`
-- 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added headers + cleanup commands for Linux Kernel. Cleaned up Sommelier`
+- 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added headers + cleanup commands for Linux Kernel. Cleaned up Sommelier.
+Added chard_mount and chard_unmount commands. Added GParted and UNetBootin support.`
 
 <br>
 
