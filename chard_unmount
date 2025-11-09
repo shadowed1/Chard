@@ -1,0 +1,6 @@
+#!/bin/bash
+MOUNT_POINT="/tmp/usb_mount"
+if mountpoint -q "$MOUNT_POINT"; then
+    echo "Unmounting $MOUNT_POINT..."
+    sudo umount "$MOUNT_POINT"
+fi
