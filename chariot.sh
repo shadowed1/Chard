@@ -1221,16 +1221,15 @@ run_checkpoint 137 "sudo -E emerge games-util/heroic-bin" checkpoint_137
 checkpoint_138() {
     sudo -E emerge sys-block/gparted
     sudo -E emerge sys-fs/exfatprogs sys-fs/dosfstools sys-fs/ntfs3g
+    sudo -E emerge sys-fs/mtools
     rm -rf /var/tmp/portage/sys-block/gparted-*
     rm -rf /var/tmp/portage/emerge sys-fs/exfatprogs-*
     rm -rf /var/tmp/portage/sys-fs/dosfstools-*
     rm -rf /var/tmp/portage/sys-fs/ntfs3g-*
+    rm -rf /var/tmp/portage/sys-fs/mtools-*
     eclean-dist -d
 }
 run_checkpoint 138 "sudo -E emerge sys-block/gparted" checkpoint_138
-
-sudo -E emerge sys-block/gparted
-sudo -E emerge sys-fs/exfatprogs sys-fs/dosfstools sys-fs/ntfs3g
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
