@@ -258,9 +258,9 @@
 
 ### Changelog:
 
-- 0.01: `Initial Release`
-- 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added headers + cleanup commands for Linux Kernel. Cleaned up Sommelier.
-Added chard_mount and chard_unmount commands. Added GParted,UNetBootin and QEMU support.`
+- 0.01: `Initial Release` <br><br>
+- 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added header install command for Linux Kernel. Cleaned up Sommelier tmp directory.
+Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GParted, UNetBootin and QEMU support. Now we can format USB's with nearly all file systems and create bootable media in ChromeOS!` <br><br>
 
 <br>
 
