@@ -1240,7 +1240,11 @@ run_checkpoint 139 "unetbootin" checkpoint_139
 
 checkpoint_140() {
     sudo -E emerge app-emulation/qemu
+    sudo -E emerge qemu-init-scripts
+    sudo -E emerge sys-apps/usermode-utilities
     rm -rf /var/tmp/app-emulation/qemu*
+    rm -rf /var/tmp/qemu-init-scripts*
+    rm -rf /var/tmp/sys-apps/usermode-utilities*
     eclean-dist -d
 }
 run_checkpoint 140 "sudo -E emerge app-emulation/qemu" checkpoint_140
