@@ -9,6 +9,14 @@ mv ~/user/MyFiles/Downloads/Win10_22H2_English_x64v1.iso ~/Downloads/
 
 qemu-system-x86_64 -cdrom ~/Downloads/Win10_22H2_English_x64v1.iso -boot d -m 2048 -hda win10.qcow2
 
+qemu-system-x86_64 \
+  -m 4G \
+  -cpu qemu64 \
+  -smp 4 \
+  -hda win10.qcow2
+  -cdrom ~/user/MyFiles/Downloads/Win10_English_x64.iso \
+  -boot d \
+  -name "Windows 10 VM"
 
 
 #################
