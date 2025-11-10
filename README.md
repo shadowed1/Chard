@@ -35,6 +35,14 @@
 
 <br>
 
+
+*QEMU running VMs::*
+<p align="center">
+  <img src="https://i.imgur.com/FpEkYoM.png" alt="logo" width="1000" />
+</p>  
+
+<br>
+
 *Minecraft Java + Prism Launcher:*
 <p align="center">
   <img src="https://i.imgur.com/MplsaH4.jpeg" alt="logo" width="1000" />
