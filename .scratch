@@ -28,8 +28,8 @@ qemu-system-x86_64 \
   -smp 7 \
   -machine type=q35,accel=tcg \
   -drive file=/home/chronos/win10.qcow2,format=qcow2 \
-  -cdrom ~/Downloads/Win10_22H2_English_x64v1.iso \
-  -drive file=/home/chronos/virtio-win.iso,media=cdrom \
+  -cdrom ~/Downloads/win10.iso \
+  -drive file=/home/chronos/Downloads/virtio-win.iso,media=cdrom \
   -vga virtio \
   -boot d \
   -name "Windows 10 VM"
@@ -41,7 +41,7 @@ qemu-system-x86_64 \
   -machine type=q35,accel=kvm \
   -drive file=/home/chronos/ubuntu.qcow2,format=qcow2 \
   -cdrom ~/Downloads/ubuntu.iso \
-  --display sdl,gl=on \
+  -display sdl,gl=on \
   -boot d \
   -name "Ubuntu VM"
 
