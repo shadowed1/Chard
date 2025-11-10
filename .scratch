@@ -34,6 +34,17 @@ qemu-system-x86_64 \
   -boot d \
   -name "Windows 10 VM"
 
+qemu-system-x86_64 \
+  -m 4G \
+  -cpu qemu64 \
+  -smp 7 \
+  -machine type=q35,accel=kvm \
+  -drive file=/home/chronos/ubuntu.qcow2,format=qcow2 \
+  -cdrom ~/Downloads/ubuntu.iso \
+  --display sdl,gl=on \
+  -boot d \
+  -name "Ubuntu VM"
+
 
 
 #################
