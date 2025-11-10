@@ -1000,10 +1000,9 @@ checkpoint_117() {
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
 checkpoint_118() {
-    sudo -E emerge dev-build/bazelisk
-    cd /usr/local/src
-    git clone https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools.git
-    cd cros-container-guest-tools
+    sudo -E emerge sys-apps/flatpak
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     chown -R 1000:1000 /home/chronos/.local/share/flatpak
     eclean-dist -d
