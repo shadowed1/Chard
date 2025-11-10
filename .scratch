@@ -30,7 +30,7 @@ qemu-system-x86_64 \
   -drive file=/home/chronos/win10.qcow2,format=qcow2 \
   -cdrom ~/Downloads/win10.iso \
   -drive file=/home/chronos/Downloads/virtio-win.iso,media=cdrom \
-  -vga virtio \
+  -display sdl,gl=on \
   -boot d \
   -name "Windows 10 VM"
 
@@ -46,7 +46,7 @@ qemu-system-x86_64 \
   -name "Ubuntu VM"
 
 
-
+-vga virtio \
 #################
 
 if [ -x "$CHARD_ROOT/usr/bin/bwrap" ]; then
