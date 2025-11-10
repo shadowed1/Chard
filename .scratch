@@ -6,7 +6,7 @@
 mkdir -p ~/Downloads
 cd ~/
 
-qemu-img create -f qcow2 win10.qcow2 32G
+  qemu-img create -f qcow2 win10.qcow2 32G
 
 # Change 32G to larger if you have space.
 
@@ -17,11 +17,23 @@ qemu-system-x86_64 -cdrom ~/Downloads/Win10_22H2_English_x64v1.iso -boot d -m 20
 qemu-system-x86_64 \
   -m 4G \
   -cpu qemu64 \
-  -smp 4 \
+  -smp 8 \
   -hda win10.qcow2
-  -cdrom ~/user/MyFiles/Downloads/Win10_English_x64.iso \
   -boot d \
   -name "Windows 10 VM"
+
+qemu-system-x86_64 \
+  -m 4G \
+  -cpu qemu64 \
+  -smp 7 \
+  -machine type=q35,accel=tcg \
+  -drive file=/home/chronos/win10.qcow2,format=qcow2 \
+  -cdrom ~/Downloads/Win10_22H2_English_x64v1.iso \
+  -drive file=/home/chronos/virtio-win.iso,media=cdrom \
+  -vga virtio \
+  -boot d \
+  -name "Windows 10 VM"
+
 
 
 #################
