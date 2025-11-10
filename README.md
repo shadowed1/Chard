@@ -188,6 +188,7 @@
 - Thunar
 - GParted
 - UNetBootin
+- QEMU with VM support
 - Prism Launcher + Minecraft Java
 - OBS with Game Capture, Recording, and Streaming support
 - Heroic Game Launcher
