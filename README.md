@@ -219,7 +219,35 @@
 - When running sudo, use `sudo -E` instead.
 - When running GParted, make sure to unmount the device in ChromeOS first; otherwise you will to to re-run GParted command.
 - `startxfce4` launches a taskbar + app drawer. Right click -> panel -> panel preferences -> uncheck lock and click dots on the sides to drag around.
-- Create a launcher in items which then allows for custom app shortcuts. 
+- Create a launcher in items which then allows for custom app shortcuts.
+
+QEMU Example: 
+
+<br>
+
+`xhost +SI:localuser:root`
+`sudo qemu-system-x86_64 \
+  -m 4G \
+  -cpu host \
+  -smp 4 \
+  -machine type=q35,accel=kvm \
+  -drive file=/home/chronos/ubuntu.qcow2,format=qcow2 \
+  -cdrom ~/Downloads/ubuntu.iso \
+  -display sdl,gl=on \
+  -boot d \
+  -name "Ubuntu VM"`
+
+  - -m 4G allocated 4GB of RAM to the VM
+  - -smp 4 allocates 4 threads to the VM
+  - accel=kvm enables GPU passthrough
+  - -display sdl,gl=on enables OpenGL acceleration
+
+
+  
+
+  
+
+  
 
 
 
@@ -260,7 +288,7 @@
 
 - 0.01: `Initial Release` <br><br>
 - 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added header install command for Linux Kernel. Cleaned up Sommelier tmp directory.
-Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GParted, UNetBootin and QEMU support. Now we can format USB's with nearly all file systems and create bootable media in ChromeOS!` <br><br>
+Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GParted, UNetBootin and QEMU support. QEMU will use KVM + OpenGL for excellent performance!Now we can format USB's with nearly all file systems and create bootable media in ChromeOS!` <br><br>
 
 <br>
 
