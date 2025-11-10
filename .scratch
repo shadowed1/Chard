@@ -40,9 +40,7 @@ qemu-system-x86_64 \
 
 if [ -x "$CHARD_ROOT/usr/bin/bwrap" ]; then
             echo "Setting up privileged bwrap for Flatpak support..."
-            sudo mkdir -p "$CHARD_ROOT/usr/bin"
-            sudo cp -f "$CHARD_ROOT/usr/bin/bwrap" "$CHARD_ROOT/usr/bin/bwrap.elf" 2>/dev/null || \
-            sudo cp -f /usr/bin/bwrap "$CHARD_ROOT/usr/bin/bwrap.elf"
+            sudo cp -f "$CHARD_ROOT/usr/bin/bwrap" "$CHARD_ROOT/usr/bin/bwrap.elf" 2>/dev/null
             cat <<'EOF' | sudo tee "$CHARD_ROOT/usr/bin/bwrap" >/dev/null
 #!/bin/bash
 BWRAP_ELF="/usr/bin/bwrap.elf"
