@@ -413,8 +413,6 @@ for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
     "$CHARD_ROOT/.chard.logic" \
-    #"$CHARD_ROOT/.chard.preload" \
-    "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
