@@ -150,7 +150,7 @@ run_checkpoint() {
 }
 
 checkpoint_1() {
-    sudo chown -R $USER:$USER $HOME
+    sudo chown -R 1000:1000 ~/
     sudo -E emerge dev-build/make
     rm -rf /var/tmp/portage/dev-build/make-*
 }
@@ -1189,7 +1189,7 @@ checkpoint_135() {
 run_checkpoint 135 "sudo -E emerge dev-lang/ruby" checkpoint_135
 
 checkpoint_136() {
-sudo chown -R $USER:$USER $HOME
+sudo chown -R 1000:1000 ~/
 }
 run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 
