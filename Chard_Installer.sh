@@ -249,16 +249,16 @@ echo "CHARD_USER: $CHARD_USER"
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)
-        GENTOO_ARCH="amd64"
+        ARCH_URL="https://mirror.rackspace.com/archlinux/iso/latest/archlinux-bootstrap-x86_64.tar.zst"
+        ARCH_FILE="archlinux-bootstrap-x86_64.tar.zst"
+        ARCH_DIR="root.x86_64"
         CHOST="x86_64-pc-linux-gnu"
-        sudo mkdir -p "$CHARD_ROOT/usr/bin"
-        sudo chmod -R +x "$CHARD_ROOT/usr/bin"
         ;;
     aarch64|arm64)
-        GENTOO_ARCH="arm64"
+        ARCH_URL="http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
+        ARCH_FILE="ArchLinuxARM-aarch64-latest.tar.gz"
+        ARCH_DIR="."
         CHOST="aarch64-unknown-linux-gnu"
-        sudo mkdir -p "$CHARD_ROOT/usr/bin"
-        sudo chmod -R +x "$CHARD_ROOT/usr/bin"
         ;;
     *)
         echo "${RED}[!] Unsupported architecture: $ARCH${RESET}"
@@ -267,41 +267,69 @@ case "$ARCH" in
 esac
 
 sudo mkdir -p "$CHARD_ROOT/var/tmp"
-PORTAGE_DIR="$CHARD_ROOT/usr/portage"
-SNAPSHOT_URL="https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz"
-TMP_TAR="$CHARD_ROOT/var/tmp/portage-latest.tar.xz"
-echo "${RED}[+] Downloading Portage tree snapshot"
-sudo curl -L --progress-bar -o "$TMP_TAR" "$SNAPSHOT_URL"
-sudo mkdir -p "$PORTAGE_DIR"
-sudo tar -xJf "$TMP_TAR" -C "$PORTAGE_DIR" --strip-components=1 \
-    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
-sudo rm -f "$TMP_TAR"
+TMP_BOOTSTRAP="$CHARD_ROOT/var/tmp/$ARCH_FILE"
 
-STAGE3_TXT="https://gentoo.osuosl.org/releases/$GENTOO_ARCH/autobuilds/current-stage3-$GENTOO_ARCH-systemd/latest-stage3-$GENTOO_ARCH-systemd.txt"
-STAGE3_FILENAME=$(curl -fsSL "$STAGE3_TXT" | grep -Eo 'stage3-.*\.tar\.xz' | head -n1)
-STAGE3_URL=$(dirname "$STAGE3_TXT")"/$STAGE3_FILENAME"
-STAGE3_FILE=$(basename "$STAGE3_URL")
-TMP_STAGE3="$CHARD_ROOT/var/tmp/$STAGE3_FILE"
+echo "${RED}[+] Downloading Arch Linux bootstrap for $ARCH${RESET}"
 
-echo "${RESET}${YELLOW}[+] Downloading latest Stage3 tarball: $STAGE3_FILENAME"
-sudo curl -L --progress-bar -o "$TMP_STAGE3" "$STAGE3_URL"
+if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+    BASE_URL="http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
+    echo "[*] Resolving latest Arch Linux ARM mirror..."
+    MIRROR_URL=$(curl -sI -L "$BASE_URL" | awk -F': ' '/^Location:/ {print $2}' | tail -n1 | tr -d '\r')
 
-echo "${RESET}${YELLOW}[+] Extracting Stage3 tarball"
-sudo tar -xJf "$TMP_STAGE3" -C "$CHARD_ROOT" --strip-components=1 \
-    --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+    if [ -z "$MIRROR_URL" ]; then
+        echo "[!] Failed to resolve mirror URL from $BASE_URL"
+        exit 1
+    fi
 
-sudo rm -f "$TMP_STAGE3"
+    echo "[+] Mirror resolved:"
+    echo "    $MIRROR_URL"
+    echo
 
-PROFILE_DIR="$PORTAGE_DIR/profiles/default/linux/$GENTOO_ARCH/23.0/desktop"
-MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
-sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
-if [ -d "$PROFILE_DIR" ]; then
-    REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
-    sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
-    echo "${RESET}${GREEN}[+] Portage profile set to $REL_TARGET"
+    sudo curl -L --fail --retry 5 --retry-delay 5 -C - \
+        -o "$TMP_BOOTSTRAP" \
+        "$MIRROR_URL"
 else
-    echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
+    sudo curl -L --fail --retry 5 --retry-delay 5 -C - \
+        --progress-bar -o "$TMP_BOOTSTRAP" \
+        "$ARCH_URL"
 fi
+
+echo "${RESET}${YELLOW}[+] Extracting Arch Linux bootstrap${RESET}"
+
+if [[ "$ARCH_FILE" == *.tar.zst ]]; then
+    sudo tar --use-compress-program=unzstd -xf "$TMP_BOOTSTRAP" -C "$CHARD_ROOT" \
+        --strip-components=1 "$ARCH_DIR" \
+        --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+else
+    sudo tar -xzf "$TMP_BOOTSTRAP" -C "$CHARD_ROOT" --strip-components=1 \
+        --checkpoint=.100 --checkpoint-action=echo="   extracted %u files"
+fi
+
+sudo rm -f "$TMP_BOOTSTRAP"
+
+sudo mkdir -p "$CHARD_ROOT/usr/bin"
+sudo chmod -R +x "$CHARD_ROOT/usr/bin"
+
+if sudo test -x "$CHARD_ROOT/usr/bin/pacman"; then
+    echo "${RESET}${GREEN}[+] Initializing pacman keyring${RESET}"
+    sudo chroot "$CHARD_ROOT" /bin/bash -c "
+        pacman-key --init
+        pacman-key --populate archlinux || pacman-key --populate archlinuxarm
+        pacman -Syu --noconfirm
+    "
+else
+    echo "${YELLOW}[!] pacman not found in bootstrap – skipping key initialization${RESET}"
+fi
+
+export CHOST
+export PATH="$CHARD_ROOT/usr/bin:$PATH"
+export MAKEFLAGS="-j$(nproc)"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib64:$CHARD_ROOT/usr/lib"
+
+echo ""
+echo "${BLUE}[+] Arch Linux bootstrap installed to ${BOLD}$CHARD_ROOT${RESET}"
+echo "${BLUE}[+] Ready for kernel installation phase.${RESET}"
+echo ""
 
 export PYTHON="$CHARD_ROOT/bin/python3"
 export CC="$CHARD_ROOT/usr/bin/gcc"
