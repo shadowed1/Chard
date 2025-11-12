@@ -58,8 +58,8 @@ alias chariot='chard chariot'
 CR="$CHARD_ROOT"
 CH="$CHARD_HOME"
 
-if [[ -f $CHARD_ROOT/usr/bin/.smrt_env.sh ]]; then
-    source $CHARD_ROOT/usr/bin/.smrt_env.sh
-fi
+#if [[ -f $CHARD_ROOT/usr/bin/.smrt_env.sh ]]; then
+#    source $CHARD_ROOT/usr/bin/.smrt_env.sh
+#fi
 
 # <<< END CHARD_ENV <<<
