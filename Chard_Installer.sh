@@ -344,7 +344,6 @@ sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
 sudo rm -f \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
-    "$CHARD_ROOT/.chard.logic" \
     "$CHARD_ROOT/bin/chard"
 
     
@@ -358,8 +357,6 @@ echo "${BLUE}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chardrc"            -o "$CHARD_ROOT/.chardrc"
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.env"          -o "$CHARD_ROOT/.chard.env"
-sleep 0.2
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 sleep 0.2
@@ -408,7 +405,6 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
 for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
-    "$CHARD_ROOT/.chard.logic" \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
