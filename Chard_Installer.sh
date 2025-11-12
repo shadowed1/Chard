@@ -344,7 +344,6 @@ sudo rm -f \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
     "$CHARD_ROOT/.chard.logic" \
-    "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/bin/chard"
 
     
@@ -361,13 +360,11 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.e
 sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
 sleep 0.5
-#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
 sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
 sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard.sh"            -o "$CHARD_ROOT/bin/chard"
 sleep 0.5
@@ -396,7 +393,6 @@ sleep 0.5
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
 sleep 0.5
 
-sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
@@ -1299,9 +1295,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     chmod 644 /var/lib/portage/world
 
     emerge --sync
-    /bin/SMRT
-    source \$HOME/.smrt_env.sh
-
     umount -l /run/chrome  2>/dev/null || true
     umount -l /run/dbus    2>/dev/null || true
     umount -l /etc/ssl     2>/dev/null || true
@@ -1344,9 +1337,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         CHARD_HOME=\$(cat /.chard_home)
                         USER=\$CHARD_USER
                         HOME=\$CHARD_HOME
-                        source \$HOME/.bashrc 2>/dev/null
-                        source \$HOME/.smrt_env.sh
-                        
+                        source \$HOME/.bashrc 2>/dev/null                        
                         getent group 1000 >/dev/null   || groupadd -g 1000 chronos 2>/dev/null
                         getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
                         getent group 602  >/dev/null   || groupadd -g 602 arc-bridge 2>/dev/null
@@ -1453,7 +1444,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     chown -R portage:portage /var/db/pkg /var/lib/portage
     chmod -R 755 /var/db/pkg
     chmod 644 /var/lib/portage/world
-    source \$HOME/.smrt_env.sh
     chown -R 1000:1000 \$HOME/
     emerge app-portage/gentoolkit
     emerge app-misc/resolve-march-native && \
@@ -2010,7 +2000,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 
         dbus-daemon --system --fork 2>/dev/null
         source \$HOME/.bashrc 2>/dev/null
-        source \$HOME/.smrt_env.sh 2>/dev/null
         sudo chown -R 1000:1000 $HOME
         sudo -E /bin/chariot
     "
