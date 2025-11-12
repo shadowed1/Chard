@@ -9,9 +9,9 @@ CHARD_USER=""
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
-alias cr='chard root'
-alias smrt='SMRT'
-alias chariot='chard chariot'
+alias safe='$CHARD_ROOT/bin/chard safe'
+alias cr='$CHARD_ROOT/bin/chard root'
+alias chariot='$CHARD_ROOT/bin/chard chariot'
 CR="$CHARD_ROOT"
 
 # <<< END CHARD_ENV <<<
