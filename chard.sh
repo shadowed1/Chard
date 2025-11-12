@@ -32,9 +32,15 @@ fi
 
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    x86_64)
+        CHOST="x86_64-pc-linux-gnu"
+        ;;
+    aarch64|arm64)
+        CHOST="aarch64-unknown-linux-gnu"
+        ;;
+    *)
+        echo "[!] Unsupported architecture: $ARCH"
+        ;;
 esac
 
 chard_run() {
@@ -43,160 +49,18 @@ chard_run() {
         return 1
     fi
 
-    ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
-esac
-
-export CHARD_RC="$CHARD_ROOT/.chardrc"
-export PORTDIR="$CHARD_ROOT/usr/portage"
-export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
-export PKGDIR="$CHARD_ROOT/var/cache/packages"
-export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
-export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
-export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
-export PYTHONMULTIPROCESSING_START_METHOD=fork
-
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+    x86_64)
+        CHOST="x86_64-pc-linux-gnu"
+        ;;
+    aarch64|arm64)
+        CHOST="aarch64-unknown-linux-gnu"
+        ;;
+    *)
+        echo "[!] Unsupported architecture: $ARCH"
+        ;;
 esac
-
-PERL_BASE="$CHARD_ROOT/usr/lib/perl5"
-PERL_LIB_DIRS=()
-PERL_BIN_DIRS=()
-PERL_LIBS=()
-
-if [[ -d "$PERL_BASE" ]]; then
-    mapfile -t all_perl_versions < <(ls -1 "$PERL_BASE" 2>/dev/null | grep -E '^[0-9]+\.[0-9]+$' | sort -V)
-else
-    all_perl_versions=()
-fi
-
-for ver in "${all_perl_versions[@]}"; do
-    archlib="$PERL_BASE/$ver/$CHOST"
-    sitelib="$PERL_BASE/$ver/site_perl"
-    vendorlib="$PERL_BASE/$ver/vendor_perl"
-
-    PERL5LIB_PARTS=()
-    [[ -d "$archlib" ]] && PERL5LIB_PARTS+=("$archlib")
-    [[ -d "$sitelib" ]] && PERL5LIB_PARTS+=("$sitelib")
-    [[ -d "$vendorlib" ]] && PERL5LIB_PARTS+=("$vendorlib")
-    if [[ ${#PERL5LIB_PARTS[@]} -gt 0 ]]; then
-        PERL5LIB="$(IFS=:; echo "${PERL5LIB_PARTS[*]}")${PERL5LIB:+:$PERL5LIB}"
-    fi
-
-    CORE_LIB="$PERL_BASE/$ver/$CHOST/CORE"
-    [[ -d "$CORE_LIB" ]] && PERL_LIBS+=("$CORE_LIB")
-
-    BIN_DIR="$CHARD_ROOT/usr/bin"
-    [[ -d "$BIN_DIR" ]] && PERL_BIN_DIRS+=("$BIN_DIR")
-done
-
-export PERL5LIB="$PERL5LIB"
-export PERL6LIB="$PERL6LIB"
-
-if [[ ${#PERL_LIBS[@]} -gt 0 ]]; then
-    LD_LIBRARY_PATH="$(IFS=:; echo "${PERL_LIBS[*]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-fi
-
-if [[ ${#PERL_BIN_DIRS[@]} -gt 0 ]]; then
-    PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
-fi
-
-gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
-if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
-    gcc_bin_path="$CHARD_ROOT/usr/$CHOST/gcc-bin/${gcc_version}"
-    gcc_lib_path="$CHARD_ROOT/usr/lib/gcc/$CHOST/$gcc_version"
-
-    if [[ -d "$gcc_bin_path" ]]; then
-        export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$gcc_bin_path"
-    else
-        export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-    fi
-
-    if [[ -d "$gcc_lib_path" ]]; then
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$gcc_lib_path:$gcc_bin_path"
-    else
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-    fi
-else
-    export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-fi
-
-export PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/usr/lib64/pkgconfig:$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/usr/local/lib/pkgconfig:$CHARD_ROOT/usr/local/share/pkgconfig"
-export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
-export PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
-export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
-export CPPFLAGS="-I${CHARD_ROOT}usr/include"
-PYEXEC_BASE="$CHARD_ROOT/usr/lib/python-exec"
-PYTHON_EXEC_PREFIX="$CHARD_ROOT/usr"
-PYTHON_EXECUTABLES="$PYEXEC_BASE"
-
-all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
-
-latest_python="${all_python_dirs[-1]}"
-
-if [[ ${#all_python_dirs[@]} -lt 2 ]]; then
-    second_latest_python="${all_python_dirs[-1]}"
-else
-    second_latest_python="${all_python_dirs[-2]}"
-fi
-
-latest_underscore="${latest_python#python}"
-latest_underscore="${latest_underscore//./_}"
-latest_dot="${latest_python#python}"
-
-second_underscore="${second_latest_python#python}"
-second_underscore="${second_underscore//./_}"
-second_dot="${second_latest_python#python}"
-
-export PYTHON_TARGETS="python${second_underscore} python${latest_underscore}"
-export PYTHON_SINGLE_TARGET="python${latest_underscore}"
-
-python_site_second="$CHARD_ROOT/usr/lib/python${second_dot}/site-packages"
-python_site_latest="$CHARD_ROOT/usr/lib/python${latest_dot}/site-packages"
-
-if [[ -n "$PYTHONPATH" ]]; then
-    export PYTHONPATH="${python_site_second}:${python_site_latest}:$(realpath -m $PYTHONPATH)"
-else
-    export PYTHONPATH="${python_site_second}:${python_site_latest}"
-fi
-
-export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
-
-export CC="$CHARD_ROOT/usr/bin/gcc"
-export CXX="$CHARD_ROOT/usr/bin/g++"
-export AR="$CHARD_ROOT/usr/bin/ar"
-export NM="$CHARD_ROOT/usr/bin/gcc-nm"
-export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
-export STRIP="$CHARD_ROOT/usr/bin/strip"
-export XDG_DATA_DIRS="$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/share"
-export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
-export CFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CFLAGS"
-export CXXFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CXXFLAGS"
-
-LDFLAGS=""
-
-[[ -d "$CHARD_ROOT/usr/lib" ]]        && LDFLAGS+="-L$CHARD_ROOT/usr/lib "
-[[ -d "$CHARD_ROOT/lib" ]]            && LDFLAGS+="-L$CHARD_ROOT/lib "
-[[ -d "$CHARD_ROOT/usr/local/lib" ]]  && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib "
-
-
-export LDFLAGS
-export LD="$CHARD_ROOT/usr/bin/ld"
-export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal:$ACLOCAL_PATH"
-export M4PATH="$CHARD_ROOT/usr/share/m4:$M4PATH"
-export MANPATH="$CHARD_ROOT/usr/share/man:$CHARD_ROOT/usr/local/share/man:$MANPATH"
-export DISPLAY=":0"
-export GDK_BACKEND="x11"
-export CLUTTER_BACKEND="x11"
-export PYTHONMULTIPROCESSING_START_METHOD=fork
 
     echo "[*] Running '$*' inside Chard environment..."
     env \
@@ -293,15 +157,7 @@ case "$cmd" in
     uninstall)
          chard_uninstall
         ;;
-    root)
-        #sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
-        #sudo mount --bind "$CHARD_ROOT/$CHARD_HOME" "$CHARD_ROOT/$CHARD_HOME"
-        #sudo mount -o remount,exec,symfollow,suid "$CHARD_ROOT/$CHARD_HOME"
-        #sudo cp -a "$CHARD_ROOT/usr/bin/bwrap" "$CHARD_ROOT/$CHARD_HOME/" 2>/dev/null
-        #sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
-        #sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
-        #sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
-        
+    root) 
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
