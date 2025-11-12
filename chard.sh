@@ -147,7 +147,6 @@ case "$cmd" in
         echo "${RESET}${CYAN}"
         echo "Inside Chard Root:"
         echo
-        echo "  SMRT or SMRT <1-100>            -- For compiling, auto allocate threads or specify in % how many threads you want to allocate."
         echo "${RESET}"
         echo
         ;;
@@ -217,7 +216,6 @@ case "$cmd" in
             
                 dbus-daemon --system --fork 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
-                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
@@ -308,19 +306,6 @@ case "$cmd" in
         
             source \$HOME/.bashrc 2>/dev/null
         
-            while true; do
-                read -p 'What CPU usage do you want to allocate for building chard? (0-100)? ' CPU_ALLOC
-                if [[ \$CPU_ALLOC =~ ^[0-9]+$ ]] && [ \$CPU_ALLOC -ge 0 ] && [ \$CPU_ALLOC -le 100 ]; then
-                    echo \"Using \$CPU_ALLOC% CPU for SMRT\"
-                    break
-                else
-                    echo 'Invalid input, enter a number from 0 to 100.'
-                fi
-            done
-        
-            SMRT \$CPU_ALLOC
-        
-            source \$HOME/.smrt_env.sh
             dbus-daemon --system --fork 2>/dev/null
             env-update
         
@@ -403,7 +388,6 @@ case "$cmd" in
             USER_ID=1000
             su \$USER
             source \$HOME/.bashrc 2>/dev/null
-            source \$HOME/.smrt_env.sh
         
             dbus-daemon --system --fork 2>/dev/null
         
