@@ -60,7 +60,7 @@ echo "${GREEN}- Does not require altering current state of /usr/local/ during In
 echo "${GREEN}- Chard is currently in early development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
 echo
 echo "${CYAN}${BOLD}- Chard README: ${RESET}"
-echo "${BLUE}- https://github.com/shadowed1/Chard/blob/beta/README.md ${RESET}"
+echo "${BLUE}- https://github.com/shadowed1/Chard/blob/arch/README.md ${RESET}"
 echo "${MAGENTA}${BOLD}"
 echo "- Requires Developer Mode for ChromeOS users."
 echo "${RESET}"
@@ -355,45 +355,45 @@ sudo cp /run/user/1000/.mutter-Xwaylandauth.ID0RE3 $CHARD_ROOT/run/user/1000/.mu
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chardrc"            -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chardrc"            -o "$CHARD_ROOT/.chardrc"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chard.env"          -o "$CHARD_ROOT/.chard.env"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.env"          -o "$CHARD_ROOT/.chard.env"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
 sleep 0.5
-#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
+#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard.sh"            -o "$CHARD_ROOT/bin/chard"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard.sh"            -o "$CHARD_ROOT/bin/chard"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/wx"                  -o "$CHARD_ROOT/bin/wx"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/wx"                  -o "$CHARD_ROOT/bin/wx"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/wx"                  -o "$CHARD_ROOT/bin/wx"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/wx"                  -o "$CHARD_ROOT/bin/wx"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
 sleep 0.5
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
