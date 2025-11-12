@@ -60,7 +60,7 @@ echo "${GREEN}- Does not require altering current state of /usr/local/ during In
 echo "${GREEN}- Chard is currently in early development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
 echo
 echo "${CYAN}${BOLD}- Chard README: ${RESET}"
-echo "${BLUE}- https://github.com/shadowed1/Chard/blob/main/README.md ${RESET}"
+echo "${BLUE}- https://github.com/shadowed1/Chard/blob/beta/README.md ${RESET}"
 echo "${MAGENTA}${BOLD}"
 echo "- Requires Developer Mode for ChromeOS users."
 echo "${RESET}"
@@ -269,7 +269,7 @@ esac
 sudo mkdir -p "$CHARD_ROOT/var/tmp"
 TMP_BOOTSTRAP="$CHARD_ROOT/var/tmp/$ARCH_FILE"
 
-echo "${RED}[+] Downloading Arch Linux bootstrap for $ARCH${RESET}"
+echo "${RED}[+] Downloading Arch Linux bootstrap for $ARCH"
 
 if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
     BASE_URL="http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
@@ -294,7 +294,7 @@ else
         "$ARCH_URL"
 fi
 
-echo "${RESET}${YELLOW}[+] Extracting Arch Linux bootstrap${RESET}"
+echo "${RESET}${YELLOW}[+] Extracting Arch Linux bootstrap"
 
 if [[ "$ARCH_FILE" == *.tar.zst ]]; then
     sudo tar --use-compress-program=unzstd -xf "$TMP_BOOTSTRAP" -C "$CHARD_ROOT" \
@@ -310,131 +310,8 @@ sudo rm -f "$TMP_BOOTSTRAP"
 sudo mkdir -p "$CHARD_ROOT/usr/bin"
 sudo chmod -R +x "$CHARD_ROOT/usr/bin"
 
-if sudo test -x "$CHARD_ROOT/usr/bin/pacman"; then
-    echo "${RESET}${GREEN}[+] Initializing pacman keyring${RESET}"
-    sudo chroot "$CHARD_ROOT" /bin/bash -c "
-        pacman-key --init
-        pacman-key --populate archlinux || pacman-key --populate archlinuxarm
-        pacman -Syu --noconfirm
-    "
-else
-    echo "${YELLOW}[!] pacman not found in bootstrap – skipping key initialization${RESET}"
-fi
-
-export CHOST
-export PATH="$CHARD_ROOT/usr/bin:$PATH"
-export MAKEFLAGS="-j$(nproc)"
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CHARD_ROOT/usr/lib64:$CHARD_ROOT/usr/lib"
-
-echo ""
-echo "${BLUE}[+] Arch Linux bootstrap installed to ${BOLD}$CHARD_ROOT${RESET}"
-echo "${BLUE}[+] Ready for kernel installation phase.${RESET}"
-echo ""
-
-export PYTHON="$CHARD_ROOT/bin/python3"
-export CC="$CHARD_ROOT/usr/bin/gcc"
-export CXX="$CHARD_ROOT/usr/bin/g++"
-export AR="$CHARD_ROOT/usr/bin/gcc-ar"
-export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
-export PATH="$PATH:$CHARD_ROOT/usr/bin"
-export CXXFLAGS="$CFLAGS"
-export AWK=/usr/bin/mawk
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib64"
-export MAKEFLAGS="-j$(nproc)"
-export INSTALL_ROOT="$CHARD_ROOT"
-export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal"
-export PYTHONPATH="$CHARD_ROOT/usr/lib/python3.13/site-packages:$PYTHONPATH"
-export PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib64/pkgconfig:$CHARD_ROOT/usr/lib/pkgconfig"
-export CFLAGS="-I$CHARD_ROOT/usr/include $CFLAGS"
-export LDFLAGS="-L$CHARD_ROOT/usr/lib64 -L$CHARD_ROOT/usr/lib $LDFLAGS"
-export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
-
-KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
-    | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
-    | sed 's/href="linux-\(.*\)\.tar\.xz"/\1/' )
-
-KERNEL_VER=$(echo "$KERNEL_INDEX" | sort -V | tail -n2 | head -n1)
-KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
-KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
-KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
-
-echo "Fetching kernel version: $KERNEL_VER"
-echo "URL: $KERNEL_URL"
-
-sudo mkdir -p "$BUILD_DIR"
-
-if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
-    echo "${RESET}${GREEN}[+] Fetching $KERNEL_TAR..."
-    sudo curl -L --progress-bar -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
-else
-    echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
-fi
-
-sudo rm -rf "$KERNEL_BUILD"
-sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
-    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-
-echo "${RESET}${CYAN}[+] Installing Linux headers into Chard Root..."
-
-sudo chroot "$CHARD_ROOT" /bin/bash -c "
-cd /var/tmp/build/linux-$KERNEL_VER
-
-HOST_ARCH=\$(uname -m)
-case \"\$HOST_ARCH\" in
-    x86_64) KERNEL_ARCH=x86_64 ;;
-    aarch64) KERNEL_ARCH=arm64 ;;
-    *) echo \"Unsupported Architecture: \$HOST_ARCH\"; exit 1 ;;
-esac
-
-make mrproper
-make defconfig
-
-rm -rf /usr/src/linux
-cp -a . /usr/src/linux
-
-make INSTALL_HDR_PATH=/usr headers_install
-
-cp .config /usr/src/linux/.config
-"
-
-echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
-echo ""
-
-sudo rm -rf "$KERNEL_BUILD"
-
-CONFIG_FILE="$CHARD_ROOT/usr/src/linux/.config"
-OPTIONS=(
-    "CONFIG_CGROUP_BPF"
-    "CONFIG_FANOTIFY"
-    "CONFIG_USER_NS"
-    "CONFIG_CRYPTO_USER_API_HASH"
-    "CONFIG_INPUT_MOUSEDEV"
-)
-
-for opt in "${OPTIONS[@]}"; do
-    sudo sed -i -E "s/^# $opt is not set/$opt=y/" "$CONFIG_FILE"
-done
-
-for opt in "${OPTIONS[@]}"; do
-    if ! sudo grep -q "^$opt=" "$CONFIG_FILE"; then
-        echo "$opt=y" | sudo tee -a "$CONFIG_FILE" >/dev/null
-    fi
-done
-
-sudo grep -E "CONFIG_CGROUP_BPF|CONFIG_FANOTIFY|CONFIG_USER_NS|CONFIG_CRYPTO_USER_API_HASH|CONFIG_INPUT_MOUSEDEV" "$CHARD_ROOT/usr/src/linux/.config" | wc -l
-
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home")
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user")
-USER_ID=1000
-GROUP_ID=1000
-PASSWD_FILE="$CHARD_ROOT/etc/passwd"
-
-if grep -q "^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::" "$PASSWD_FILE"; then
-    echo "Fixing empty GECOS field for $CHARD_USER"
-    sudo sed -i "s/^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::/${CHARD_USER}:x:${USER_ID}:${GROUP_ID}:${CHARD_USER} User:/" "$PASSWD_FILE"
-else
-    echo "GECOS field for $CHARD_USER is already set or missing."
-fi
 
 sudo mkdir -p "$CHARD_ROOT/etc/portage"
 sudo mkdir -p "$CHARD_ROOT/etc/sandbox.d"
@@ -478,45 +355,45 @@ sudo cp /run/user/1000/.mutter-Xwaylandauth.ID0RE3 $CHARD_ROOT/run/user/1000/.mu
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"            -o "$CHARD_ROOT/.chardrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chardrc"            -o "$CHARD_ROOT/.chardrc"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"          -o "$CHARD_ROOT/.chard.env"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chard.env"          -o "$CHARD_ROOT/.chard.env"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
+#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard.sh"            -o "$CHARD_ROOT/bin/chard"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard.sh"            -o "$CHARD_ROOT/bin/chard"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/wx"                  -o "$CHARD_ROOT/bin/wx"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/wx"                  -o "$CHARD_ROOT/bin/wx"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/wx"                  -o "$CHARD_ROOT/bin/wx"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/wx"                  -o "$CHARD_ROOT/bin/wx"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
 sleep 0.5
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
 sleep 0.5
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
@@ -536,7 +413,7 @@ for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
     "$CHARD_ROOT/.chard.logic" \
-    "$CHARD_ROOT/.chard.preload" \
+    #"$CHARD_ROOT/.chard.preload" \
     "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
     "$CHARD_ROOT/bin/.rootrc" \
@@ -597,6 +474,119 @@ add_chard_marker() {
 }
 
 add_chard_marker "$TARGET_FILE"
+
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+
+KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
+    | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
+    | sed 's/href="linux-\(.*\)\.tar\.xz"/\1/' )
+
+KERNEL_VER=$(echo "$KERNEL_INDEX" | sort -V | tail -n2 | head -n1)
+KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
+KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
+KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
+
+echo "Fetching kernel version: $KERNEL_VER"
+echo "URL: $KERNEL_URL"
+
+sudo mkdir -p "$BUILD_DIR"
+
+if [ ! -f "$BUILD_DIR/$KERNEL_TAR" ]; then
+    echo "${RESET}${GREEN}[+] Fetching $KERNEL_TAR..."
+    sudo curl -L --progress-bar -o "$BUILD_DIR/$KERNEL_TAR" "$KERNEL_URL"
+else
+    echo "${RESET}${RED}[!] Kernel tarball already exists, skipping download."
+fi
+
+sudo rm -rf "$KERNEL_BUILD"
+sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
+    --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
+
+PACMAN_CONF="$CHARD_ROOT/etc/pacman.conf"
+sudo mkdir -p "$(dirname "$PACMAN_CONF")"
+
+sudo tee "$PACMAN_CONF" >/dev/null <<'EOF'
+[options]
+Architecture = x86_64
+Color
+CheckSpace
+VerbosePkgLists
+
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+[community]
+Include = /etc/pacman.d/mirrorlist
+EOF
+
+
+echo "${RESET}${CYAN}[+] Installing Linux headers into Chard Root..."
+
+sudo chroot "$CHARD_ROOT" /bin/bash -c "
+cd /var/tmp/build/linux-$KERNEL_VER
+
+HOST_ARCH=\$(uname -m)
+case \"\$HOST_ARCH\" in
+    x86_64) KERNEL_ARCH=x86_64 ;;
+    aarch64) KERNEL_ARCH=arm64 ;;
+    *) echo \"Unsupported Architecture: \$HOST_ARCH\"; exit 1 ;;
+esac
+
+make mrproper
+make defconfig
+
+rm -rf /usr/src/linux
+cp -a . /usr/src/linux
+
+make INSTALL_HDR_PATH=/usr headers_install
+
+cp .config /usr/src/linux/.config
+"
+
+echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
+echo ""
+
+sudo rm -rf "$KERNEL_BUILD"
+
+CONFIG_FILE="$CHARD_ROOT/usr/src/linux/.config"
+OPTIONS=(
+    "CONFIG_CGROUP_BPF"
+    "CONFIG_FANOTIFY"
+    "CONFIG_USER_NS"
+    "CONFIG_CRYPTO_USER_API_HASH"
+    "CONFIG_INPUT_MOUSEDEV"
+)
+
+for opt in "${OPTIONS[@]}"; do
+    sudo sed -i -E "s/^# $opt is not set/$opt=y/" "$CONFIG_FILE"
+done
+
+for opt in "${OPTIONS[@]}"; do
+    if ! sudo grep -q "^$opt=" "$CONFIG_FILE"; then
+        echo "$opt=y" | sudo tee -a "$CONFIG_FILE" >/dev/null
+    fi
+done
+
+sudo grep -E "CONFIG_CGROUP_BPF|CONFIG_FANOTIFY|CONFIG_USER_NS|CONFIG_CRYPTO_USER_API_HASH|CONFIG_INPUT_MOUSEDEV" "$CHARD_ROOT/usr/src/linux/.config" | wc -l
+
+USER_ID=1000
+GROUP_ID=1000
+PASSWD_FILE="$CHARD_ROOT/etc/passwd"
+
+if grep -q "^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::" "$PASSWD_FILE"; then
+    echo "Fixing empty GECOS field for $CHARD_USER"
+    sudo sed -i "s/^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::/${CHARD_USER}:x:${USER_ID}:${GROUP_ID}:${CHARD_USER} User:/" "$PASSWD_FILE"
+else
+    echo "GECOS field for $CHARD_USER is already set or missing."
+fi
+
+
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
