@@ -44,7 +44,7 @@ else
     IS_CHROMEOS=0
 fi
 
-#[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
+[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
 #if [ "$IS_CHROMEOS" -eq 1 ]; then
@@ -54,9 +54,7 @@ fi
 alias cr='chard root'
 alias smrt='SMRT'
 alias chariot='chard chariot'
-#alias emerge='emerge --root="$CHARD_ROOT" --sysroot="$CHARD_ROOT" --config-root="$CHARD_ROOT" --root-deps=rdeps'
 CR="$CHARD_ROOT"
-CH="$CHARD_HOME"
 
 #if [[ -f $CHARD_ROOT/usr/bin/.smrt_env.sh ]]; then
 #    source $CHARD_ROOT/usr/bin/.smrt_env.sh
