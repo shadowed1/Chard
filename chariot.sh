@@ -1101,6 +1101,7 @@ checkpoint_126() {
 run_checkpoint 126 "sudo -E emerge yt-dlp + vlc" checkpoint_126
 
 checkpoint_127() {
+    sudo chown -R 1000:1000 ~/
     sudo -E emerge dev-util/vulkan-tools
     sudo -E emerge app-eselect/eselect-repository dev-vcs/git
     sudo -E eselect repository enable another-brave-overlay
