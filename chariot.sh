@@ -155,820 +155,579 @@ checkpoint_1() {
 run_checkpoint 1 "sudo chown -R 1000:1000 ~/" checkpoint_1
 
 checkpoint_2() {
-    sudo -E pacman -S cmake --overwrite '*'
+    sudo -E pacman -Syu cmake
 }
-run_checkpoint 2 "sudo -E pacman -S cmake --overwrite '*'" checkpoint_2
+run_checkpoint 2 "sudo -E pacman -Syu cmake" checkpoint_2
+
+checkpoint_3() {
+    sudo -E pacman -Syu --noconfirm gmp
+}
+run_checkpoint 3 "sudo -E pacman -Syu --noconfirm gmp" checkpoint_3
+
+checkpoint_4() {
+    sudo -E pacman -Syu --noconfirm mpfr
+}
+run_checkpoint 4 "sudo -E pacman -Syu --noconfirm mpfr" checkpoint_4
 
 checkpoint_5() {
-    sudo -E emerge dev-libs/gmp
-    rm -rf /var/tmp/portage/dev-libs/gmp-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm binutils
 }
-run_checkpoint 5 "sudo -E emerge dev-libs/gmp" checkpoint_5
+run_checkpoint 5 "sudo -E pacman -Syu --noconfirm binutils" checkpoint_5
 
 checkpoint_6() {
-    sudo -E emerge dev-libs/mpfr
-    rm -rf /var/tmp/portage/dev-libs/mpfr-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm diffutils
 }
-run_checkpoint 6 "sudo -E emerge dev-libs/mpfr" checkpoint_6
+run_checkpoint 6 "sudo -E pacman -Syu --noconfirm diffutils" checkpoint_6
 
 checkpoint_7() {
-    sudo -E emerge sys-devel/binutils
-    rm -rf /var/tmp/portage/sys-devel/binutils-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm openssl
 }
-run_checkpoint 7 "sudo -E emerge sys-devel/binutils" checkpoint_7
+run_checkpoint 7 "sudo -E pacman -Syu --noconfirm openssl" checkpoint_7
 
 checkpoint_8() {
-    sudo -E emerge sys-apps/diffutils
-    rm -rf /var/tmp/portage/sys-apps/diffutils-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm curl
 }
-run_checkpoint 8 "sudo -E emerge sys-apps/diffutils" checkpoint_8
+run_checkpoint 8 "sudo -E pacman -Syu --noconfirm curl" checkpoint_8
 
 checkpoint_9() {
-    sudo -E emerge dev-libs/openssl
-    rm -rf /var/tmp/portage/dev-libs/openssl-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm git
 }
-run_checkpoint 9 "sudo -E emerge dev-libs/openssl" checkpoint_9
+run_checkpoint 9 "sudo -E pacman -Syu --noconfirm git" checkpoint_9
 
 checkpoint_10() {
-    sudo -E emerge net-misc/curl
-    rm -rf /var/tmp/portage/net-misc/curl-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm coreutils
 }
-run_checkpoint 10 "sudo -E emerge net-misc/curl" checkpoint_10
+run_checkpoint 10 "sudo -E pacman -Syu --noconfirm coreutils" checkpoint_10
 
 checkpoint_11() {
-    sudo -E emerge dev-vcs/git
-    rm -rf /var/tmp/portage/dev-vcs/git-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm fastfetch
 }
-run_checkpoint 11 "sudo -E emerge dev-vcs/git" checkpoint_11
+run_checkpoint 11 "sudo -E pacman -Syu --noconfirm fastfetch" checkpoint_11
 
 checkpoint_12() {
-    sudo -E emerge sys-apps/coreutils
-    rm -rf /var/tmp/portage/sys-apps/coreutils-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm perl
 }
-run_checkpoint 12 "sudo -E emerge sys-apps/coreutils" checkpoint_12
+run_checkpoint 12 "sudo -E pacman -Syu --noconfirm perl" checkpoint_12
 
-#checkpoint_13() {
-#    sudo -E emerge app-misc/fastfetch
-#    rm -rf /var/tmp/portage/app-misc/fastfetch-*
-#    eclean-dist -d
-#}
-#run_checkpoint 13 "sudo -E emerge app-misc/fastfetch" checkpoint_13
+checkpoint_13() {
+    sudo -E pacman -Syu --noconfirm perl-capture-tiny
+}
+run_checkpoint 13 "sudo -E pacman -Syu --noconfirm perl-capture-tiny" checkpoint_13
 
 checkpoint_14() {
-    sudo -E emerge dev-lang/perl
-    rm -rf /var/tmp/portage/dev-lang/perl-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm perl-try-tiny
 }
-run_checkpoint 14 "sudo -E emerge dev-lang/perl" checkpoint_14
+run_checkpoint 14 "sudo -E pacman -Syu --noconfirm perl-try-tiny" checkpoint_14
 
 checkpoint_15() {
-    sudo -E emerge dev-perl/Capture-Tiny
-    rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
-    eclean-dist -d
-    sudo -E perl-cleaner --all
+    sudo -E pacman -Syu --noconfirm perl-config-autoconf
 }
-run_checkpoint 15 "sudo -E emerge dev-perl/Capture-Tiny" checkpoint_15
+run_checkpoint 15 "sudo -E pacman -Syu --noconfirm perl-config-autoconf" checkpoint_15
 
 checkpoint_16() {
-    sudo -E emerge dev-perl/Try-Tiny
-    rm -rf /var/tmp/portage/dev-perl/Try-Tiny-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm perl-test-fatal
 }
-run_checkpoint 16 "sudo -E emerge dev-perl/Try-Tiny" checkpoint_16
+run_checkpoint 16 "sudo -E pacman -Syu --noconfirm perl-test-fatal" checkpoint_16
 
 checkpoint_17() {
-    sudo -E emerge dev-perl/Config-AutoConf
-    rm -rf /var/tmp/portage/dev-perl/Config-AutoConf-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm findutils
 }
-run_checkpoint 17 "sudo -E emerge dev-perl/Config-AutoConf" checkpoint_17
+run_checkpoint 17 "sudo -E pacman -Syu --noconfirm findutils" checkpoint_17
 
 checkpoint_18() {
-    sudo -E emerge dev-perl/Test-Fatal
-    rm -rf /var/tmp/portage/dev-perl/Test-Fatal-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm elfutils
 }
-run_checkpoint 18 "sudo -E emerge dev-perl/Test-Fatal" checkpoint_18
+run_checkpoint 18 "sudo -E pacman -S elfutils" checkpoint_18
+
 
 checkpoint_19() {
-    sudo -E emerge sys-apps/findutils
-    rm -rf /var/tmp/portage/sys-apps/findutils-*
-    eclean-dist -d
-}
-run_checkpoint 19 "sudo -E emerge sys-apps/findutils" checkpoint_19
 
-checkpoint_20() {
-    sudo -E emerge dev-libs/elfutils
-    rm -rf /var/tmp/portage/dev-libs/elfutils-*
-    eclean-dist -d
-}
-run_checkpoint 20 "sudo -E emerge dev-libs/elfutils" checkpoint_20
-
-checkpoint_21() {
-    if [ $(uname -m) = aarch64 ]; then
+    if [ "$(uname -m)" = "aarch64" ]; then
         export ARCH=arm64
     fi
-    cd /usr/src/linux
+
+    cd /usr/src/linux || exit 1
+
     scripts/kconfig/merge_config.sh -m .config enable_features.cfg
     make olddefconfig
-    make -j$(nproc) tools/objtool
-    make -j$(nproc)
+
+    make -j"$(nproc)" tools/objtool
+    make -j"$(nproc)"
+
     make modules_install
     make INSTALL_PATH=/boot install
-    sudo make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-$(uname -r)
-    if [ $(uname -m) = aarch64 ]; then
+
+    sudo make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-"$(uname -r)"
+
+    if [ "$(uname -m)" = "aarch64" ]; then
         export ARCH=aarch64
     fi
 }
-run_checkpoint 21 "build and install kernel + modules" checkpoint_21
+run_checkpoint 19 "build and install kernel + modules" checkpoint_19
+
+
+checkpoint_20() {
+    sudo -E pacman -S --noconfirm python
+}
+run_checkpoint 20 "sudo -E pacman -S python" checkpoint_20
+
+
+checkpoint_21() {
+    sudo -E pacman -S --noconfirm meson
+}
+run_checkpoint 21 "sudo -E pacman -S meson" checkpoint_21
 
 checkpoint_22() {
-    sudo -E emerge dev-lang/python
-    rm -rf /var/tmp/portage/dev-lang/python-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libwebp
+    sudo -E pacman -S --noconfirm python-pillow
 }
-run_checkpoint 22 "sudo -E emerge dev-lang/python" checkpoint_22
+run_checkpoint 22 "sudo -E pacman -S libwebp python-pillow" checkpoint_22
 
 checkpoint_23() {
-    sudo -E emerge dev-build/meson
-    rm -rf /var/tmp/portage/dev-build/meson-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm harfbuzz
 }
-run_checkpoint 23 "sudo -E emerge dev-build/meson" checkpoint_23
+run_checkpoint 23 "sudo -E pacman -S harfbuzz" checkpoint_23
 
 checkpoint_24() {
-    USE="-tiff" sudo -E emerge media-libs/libwebp
-    USE="-truetype" sudo -E emerge -1 dev-python/pillow
-    sudo -E emerge media-libs/libwebp
-    rm -rf /var/tmp/portage/dev-python/pillow-*
-    rm -rf /var/tmp/portage/media-libs/libwebp-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm glib2
 }
-run_checkpoint 24 "sudo -E emerge dev-python/pillow and libwebp" checkpoint_24
+run_checkpoint 24 "sudo -E pacman -S glib2" checkpoint_24
 
 checkpoint_25() {
-    sudo -E emerge media-libs/harfbuzz
-    rm -rf /var/tmp/portage/media-libs/harfbuzz-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm pkgconf
 }
-run_checkpoint 25 "sudo -E emerge media-libs/harfbuzz" checkpoint_25
+run_checkpoint 25 "sudo -E pacman -S pkgconf" checkpoint_25
 
 checkpoint_26() {
-    sudo -E emerge dev-libs/glib
-    rm -rf /var/tmp/portage/dev-libs/glib-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gtest
 }
-run_checkpoint 26 "sudo -E emerge dev-libs/glib" checkpoint_26
+run_checkpoint 26 "sudo -E pacman -S gtest" checkpoint_26
 
 checkpoint_27() {
-    sudo -E emerge dev-util/pkgcon
-    rm -rf /var/tmp/portage/dev-util/pkgcon-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gtest-parallel
 }
-run_checkpoint 27 "sudo -E emerge dev-util/pkgcon" checkpoint_27
+run_checkpoint 27 "sudo -E pacman -S gtest-parallel" checkpoint_27
 
 checkpoint_28() {
-    sudo -E emerge dev-cpp/gtest
-    rm -rf /var/tmp/portage/dev-cpp/gtest-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm re2c
 }
-run_checkpoint 28 "sudo -E emerge dev-cpp/gtest" checkpoint_28
+run_checkpoint 28 "sudo -E pacman -S re2c" checkpoint_28
 
 checkpoint_29() {
-    sudo -E emerge dev-util/gtest-parallel
-    rm -rf /var/tmp/portage/dev-util/gtest-parallel-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm ninja
 }
-run_checkpoint 29 "sudo -E emerge dev-util/gtest-parallel" checkpoint_29
+run_checkpoint 29 "sudo -E pacman -S ninja" checkpoint_29
 
 checkpoint_30() {
-    sudo -E emerge dev-util/re2c
-    rm -rf /var/tmp/portage/dev-util/re2c-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm docbook2x
 }
-run_checkpoint 30 "sudo -E emerge dev-util/re2c" checkpoint_30
+run_checkpoint 30 "sudo -E pacman -S docbook2x" checkpoint_30
 
 checkpoint_31() {
-    sudo -E emerge dev-build/ninja
-    rm -rf /var/tmp/portage/dev-build/ninja-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm build-docbook-catalog
 }
-run_checkpoint 31 "sudo -E emerge dev-build/ninja" checkpoint_31
+run_checkpoint 31 "sudo -E pacman -S build-docbook-catalog" checkpoint_31
 
 checkpoint_32() {
-    sudo -E emerge app-text/docbook2X
-    rm -rf /var/tmp/portage/app-text/docbook2X-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gtk-doc
 }
-run_checkpoint 32 "sudo -E emerge app-text/docbook2X" checkpoint_32
+run_checkpoint 32 "sudo -E pacman -S gtk-doc" checkpoint_32
 
 checkpoint_33() {
-    sudo -E emerge app-text/build-docbook-catalog
-    rm -rf /var/tmp/portage/app-text/build-docbook-catalog-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm zlib
 }
-run_checkpoint 33 "sudo -E emerge app-text/build-docbook-catalog" checkpoint_33
+run_checkpoint 33 "sudo -E pacman -S zlib" checkpoint_33
 
 checkpoint_34() {
-    sudo -E emerge dev-util/gtk-doc
-    rm -rf /var/tmp/portage/dev-util/gtk-doc-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libunistring
 }
-run_checkpoint 34 "sudo -E emerge dev-util/gtk-doc" checkpoint_34
+run_checkpoint 34 "sudo -E pacman -S libunistring" checkpoint_34
 
 checkpoint_35() {
-    sudo -E emerge sys-libs/zlib
-    rm -rf /var/tmp/portage/sys-libs/zlib-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm file
 }
-run_checkpoint 35 "sudo -E emerge sys-libs/zlib" checkpoint_35
+run_checkpoint 35 "sudo -E pacman -S file" checkpoint_35
 
 checkpoint_36() {
-    sudo -E emerge dev-libs/libunistring
-    rm -rf /var/tmp/portage/dev-libs/libunistring-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm extra-cmake-modules
 }
-run_checkpoint 36 "sudo -E emerge dev-libs/libunistring" checkpoint_36
+run_checkpoint 36 "sudo -E pacman -S extra-cmake-modules" checkpoint_36
 
 checkpoint_37() {
-    sudo -E emerge sys-apps/file
-    rm -rf /var/tmp/portage/sys-apps/file-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm perl-file-libmagic
 }
-run_checkpoint 37 "sudo -E emerge sys-apps/file" checkpoint_37
+run_checkpoint 37 "sudo -E pacman -S perl-file-libmagic" checkpoint_37
 
 checkpoint_38() {
-    sudo -E emerge kde-frameworks/extra-cmake-modules
-    rm -rf /var/tmp/portage/kde-frameworks/extra-cmake-modules-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libpsl
 }
-run_checkpoint 38 "sudo -E emerge kde-frameworks/extra-cmake-modules" checkpoint_38
+run_checkpoint 38 "sudo -E pacman -S libpsl" checkpoint_38
 
 checkpoint_39() {
-    sudo -E emerge -j$(nproc) dev-perl/File-LibMagic
-    rm -rf /var/tmp/portage/dev-perl/File-LibMagic-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm expat
 }
-run_checkpoint 39 "sudo -E emerge dev-perl/File-LibMagic" checkpoint_39
+run_checkpoint 39 "sudo -E pacman -S expat" checkpoint_39
 
 checkpoint_40() {
-    sudo -E emerge net-libs/libpsl
-    rm -rf /var/tmp/portage/net-libs/libpsl-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm duktape
 }
-run_checkpoint 40 "sudo -E emerge net-libs/libpsl" checkpoint_40
+run_checkpoint 40 "sudo -E pacman -S duktape" checkpoint_40
 
 checkpoint_41() {
-    sudo -E emerge dev-libs/expat
-    rm -rf /var/tmp/portage/dev-libs/expat-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm brotli
 }
-run_checkpoint 41 "sudo -E emerge dev-libs/expat" checkpoint_41
+run_checkpoint 41 "sudo -E pacman -S brotli" checkpoint_41
 
 checkpoint_42() {
-    sudo -E emerge dev-lang/duktape
-    rm -rf /var/tmp/portage/dev-lang/duktape-*
-    eclean-dist -d
-}
-run_checkpoint 42 "sudo -E emerge dev-lang/duktape" checkpoint_42
-
-checkpoint_43() {
-    sudo -E emerge app-arch/brotli
-    rm -rf /var/tmp/portage/app-arch/brotli-*
-    eclean-dist -d
-}
-run_checkpoint 43 "sudo -E emerge app-arch/brotli" checkpoint_43
-
-checkpoint_44() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 }
-run_checkpoint 44 "install rustup" checkpoint_44
+run_checkpoint 42 "install rustup" checkpoint_42
+
+checkpoint_43() {
+    sudo -E pacman -S --noconfirm boehm-gc
+}
+run_checkpoint 43 "sudo -E pacman -S boehm-gc" checkpoint_43
+
+checkpoint_44() {
+    sudo -E pacman -S --noconfirm polkit
+}
+run_checkpoint 44 "sudo -E pacman -S polkit" checkpoint_44
 
 checkpoint_45() {
-    sudo -E emerge -j$(nproc) dev-libs/boehm-gc
-    rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm bubblewrap
 }
-run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
+run_checkpoint 45 "sudo -E pacman -S bubblewrap" checkpoint_45
 
 checkpoint_46() {
-    MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-    MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
-    THREADS=$(( MEM_GB / 2 ))
-    (( THREADS < 1 )) && THREADS=1 
-    TOTAL_CORES=$(nproc)
-    PCT=$(( THREADS * 100 / TOTAL_CORES ))
-    (( PCT > 100 )) && PCT=100
-    SMRT "$PCT"
-    sudo -E emerge sys-auth/polkit
-    rm -rf /var/tmp/portage/sys-auth/polkit-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libclc
 }
-run_checkpoint 46 "sudo -E emerge sys-auth/polkit" checkpoint_46
+run_checkpoint 46 "sudo -E pacman -S libclc" checkpoint_46
 
 checkpoint_47() {
-    sudo -E emerge sys-apps/bubblewrap
-    rm -rf /var/tmp/portage/sys-apps/bubblewrap-*
-    eclean-dist -d
+    SMRT 75
+    sudo -E pacman -S --noconfirm xorg-drivers
 }
-run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
-# Fix for long term
+run_checkpoint 47 "sudo -E pacman -S xorg-drivers" checkpoint_47
+
 checkpoint_48() {
-    sudo -E emerge -v =llvm-core/libclc-20*
-    rm -rf /var/tmp/portage/llvm-core/libclc-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xorg-server
 }
-run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
+run_checkpoint 48 "sudo -E pacman -S xorg-server" checkpoint_48
 
 checkpoint_49() {
-    SMRT 75
-    sudo -E emerge x11-base/xorg-drivers
-    rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xorg-apps
 }
-run_checkpoint 49 "sudo -E emerge x11-base/xorg-drivers" checkpoint_49
+run_checkpoint 49 "sudo -E pacman -S xorg-apps" checkpoint_49
 
 checkpoint_50() {
-    sudo -E emerge x11-base/xorg-server
-    rm -rf /var/tmp/portage/x11-base/xorg-server-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libx11
 }
-run_checkpoint 50 "sudo -E emerge x11-base/xorg-server" checkpoint_50
+run_checkpoint 50 "sudo -E pacman -S libx11" checkpoint_50
 
 checkpoint_51() {
-    sudo -E emerge x11-base/xorg-apps
-    rm -rf /var/tmp/portage/x11-base/xorg-apps-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxft
 }
-run_checkpoint 51 "sudo -E emerge x11-base/xorg-apps" checkpoint_51
+run_checkpoint 51 "sudo -E pacman -S libxft" checkpoint_51
 
 checkpoint_52() {
-    sudo -E emerge x11-libs/libX11
-    rm -rf /var/tmp/portage/x11-libs/libX11-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxrender
 }
-run_checkpoint 52 "sudo -E emerge x11-libs/libX11" checkpoint_52
+run_checkpoint 52 "sudo -E pacman -S libxrender" checkpoint_52
 
 checkpoint_53() {
-    sudo -E emerge x11-libs/libXft
-    rm -rf /var/tmp/portage/x11-libs/libXft-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxrandr
 }
-run_checkpoint 53 "sudo -E emerge x11-libs/libXft" checkpoint_53
+run_checkpoint 53 "sudo -E pacman -S libxrandr" checkpoint_53
 
 checkpoint_54() {
-    sudo -E emerge x11-libs/libXrender
-    rm -rf /var/tmp/portage/x11-libs/libXrender-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxcursor
 }
-run_checkpoint 54 "sudo -E emerge x11-libs/libXrender" checkpoint_54
+run_checkpoint 54 "sudo -E pacman -S libxcursor" checkpoint_54
 
 checkpoint_55() {
-    sudo -E emerge x11-libs/libXrandr
-    rm -rf /var/tmp/portage/x11-libs/libXrandr-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxi
 }
-run_checkpoint 55 "sudo -E emerge x11-libs/libXrandr" checkpoint_55
+run_checkpoint 55 "sudo -E pacman -S libxi" checkpoint_55
 
 checkpoint_56() {
-    sudo -E emerge x11-libs/libXcursor
-    rm -rf /var/tmp/portage/x11-libs/libXcursor-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxinerama
 }
-run_checkpoint 56 "sudo -E emerge x11-libs/libXcursor" checkpoint_56
+run_checkpoint 56 "sudo -E pacman -S libxinerama" checkpoint_56
 
 checkpoint_57() {
-    sudo -E emerge x11-libs/libXi
-    rm -rf /var/tmp/portage/x11-libs/libXi-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm pango
 }
-run_checkpoint 57 "sudo -E emerge x11-libs/libXi" checkpoint_57
+run_checkpoint 57 "sudo -E pacman -S pango" checkpoint_57
 
 checkpoint_58() {
-    sudo -E emerge x11-libs/libXinerama
-    rm -rf /var/tmp/portage/x11-libs/libXinerama-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm wayland
 }
-run_checkpoint 58 "sudo -E emerge x11-libs/libXinerama" checkpoint_58
-
-checkpoint_59() {
-    sudo -E emerge x11-libs/pango
-    rm -rf /var/tmp/portage/x11-libs/pango-*
-    eclean-dist -d
-}
-run_checkpoint 59 "sudo -E emerge x11-libs/pango" checkpoint_59
-
-checkpoint_60() {
-    sudo -E emerge dev-libs/wayland
-    rm -rf /var/tmp/portage/dev-libs/wayland-*
-    eclean-dist -d
-}
-run_checkpoint 60 "sudo -E emerge dev-libs/wayland" checkpoint_60
-
-checkpoint_61() {
-    sudo -E emerge dev-libs/wayland-protocols
-    rm -rf /var/tmp/portage/dev-libs/wayland-protocols-*
-    eclean-dist -d
-}
-run_checkpoint 61 "sudo -E emerge dev-libs/wayland-protocols" checkpoint_61
-
-checkpoint_62() {
-    sudo -E emerge x11-base/xwayland
-    rm -rf /var/tmp/portage/x11-base/xwayland-*
-    eclean-dist -d
-}
-run_checkpoint 62 "sudo -E emerge x11-base/xwayland" checkpoint_62
+run_checkpoint 58 "sudo -E pacman -S wayland" checkpoint_58
 
 checkpoint_63() {
-    sudo -E emerge x11-libs/libxkbcommon
-    rm -rf /var/tmp/portage/x11-libs/libxkbcommon-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm wayland-protocols
 }
-run_checkpoint 63 "sudo -E emerge x11-libs/libxkbcommon" checkpoint_63
+run_checkpoint 63 "pacman -S --noconfirm wayland-protocols" checkpoint_63
 
 checkpoint_64() {
-    sudo -E emerge gui-libs/gtk
-    rm -rf /var/tmp/portage/gui-libs/gtk-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xorg-xwayland
 }
-run_checkpoint 64 "sudo -E emerge gui-libs/gtk" checkpoint_64
+run_checkpoint 64 "pacman -S --noconfirm xorg-xwayland" checkpoint_64
 
 checkpoint_65() {
-    sudo -E emerge xfce-base/libxfce4util
-    rm -rf /var/tmp/portage/xfce-base/libxfce4util-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxkbcommon
 }
-run_checkpoint 65 "sudo -E emerge xfce-base/libxfce4util" checkpoint_65
+run_checkpoint 65 "pacman -S --noconfirm libxkbcommon" checkpoint_65
 
 checkpoint_66() {
-    sudo -E emerge xfce-base/xfconf
-    rm -rf /var/tmp/portage/xfce-base/xfconf-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gtk4 gtk3
 }
-run_checkpoint 66 "sudo -E emerge xfce-base/xfconf" checkpoint_66
+run_checkpoint 66 "pacman -S --noconfirm gtk4 gtk3" checkpoint_66
 
 checkpoint_67() {
-    sudo -E emerge sys-apps/xdg-desktop-portal
-    rm -rf /var/tmp/portage/sys-apps/xdg-desktop-portal-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libxfce4util
 }
-run_checkpoint 67 "sudo -E emerge sys-apps/xdg-desktop-portal" checkpoint_67
+run_checkpoint 67 "pacman -S --noconfirm libxfce4util" checkpoint_67
 
 checkpoint_68() {
-    sudo -E emerge gui-libs/xdg-desktop-portal-wlr
-    rm -rf /var/tmp/portage/gui-libs/xdg-desktop-portal-wlr-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xfconf
 }
-run_checkpoint 68 "sudo -E emerge gui-libs/xdg-desktop-portal-wlr" checkpoint_68
+run_checkpoint 68 "pacman -S --noconfirm xfconf" checkpoint_68
 
 checkpoint_69() {
-    sudo -E emerge media-libs/mesa
-    rm -rf /var/tmp/portage/media-libs/mesa-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xdg-desktop-portal
 }
-run_checkpoint 69 "sudo -E emerge media-libs/mesa" checkpoint_69
+run_checkpoint 69 "pacman -S --noconfirm xdg-desktop-portal" checkpoint_69
 
 checkpoint_70() {
-    sudo -E emerge x11-apps/mesa-progs
-    rm -rf /var/tmp/portage/x11-apps/mesa-progs-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xdg-desktop-portal-wlr
 }
-run_checkpoint 70 "sudo -E emerge x11-apps/mesa-progs" checkpoint_70
+run_checkpoint 70 "pacman -S --noconfirm xdg-desktop-portal-wlr" checkpoint_70
 
 checkpoint_71() {
-    sudo -E emerge dev-qt/qtbase
-    rm -rf /var/tmp/portage/dev-qt/qtbase-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm mesa
 }
-run_checkpoint 71 "sudo -E emerge dev-qt/qtbase" checkpoint_71
+run_checkpoint 71 "pacman -S --noconfirm mesa" checkpoint_71
 
 checkpoint_72() {
-    sudo -E emerge dev-qt/qttools
-    rm -rf /var/tmp/portage/dev-qt/qttools-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm mesa-demos
 }
-run_checkpoint 72 "sudo -E emerge dev-qt/qttools" checkpoint_72
+run_checkpoint 72 "pacman -S --noconfirm mesa-demos" checkpoint_72
 
 checkpoint_73() {
-    sudo -E emerge dev-qt/qtnetwork
-    rm -rf /var/tmp/portage/dev-qt/qtnetwork-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm qt6-tools
 }
-run_checkpoint 73 "sudo -E emerge dev-qt/qtnetwork" checkpoint_73
+run_checkpoint 73 "pacman -S --noconfirm qt6-tools" checkpoint_73
 
 checkpoint_74() {
-    sudo -E emerge dev-qt/qtconcurrent
-    rm -rf /var/tmp/portage/dev-qt/qtconcurrent-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm qt6-base
 }
-run_checkpoint 74 "sudo -E emerge dev-qt/qtconcurrent" checkpoint_74
+run_checkpoint 74 "pacman -S --noconfirm qt6-base" checkpoint_74
 
 checkpoint_75() {
-    sudo -E emerge dev-qt/qtxml
-    rm -rf /var/tmp/portage/dev-qt/qtxml-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm qt6-wayland
 }
-run_checkpoint 75 "sudo -E emerge dev-qt/qtxml" checkpoint_75
+run_checkpoint 75 "pacman -S --noconfirm qt6-wayland" checkpoint_75
 
 checkpoint_76() {
-    sudo -E emerge dev-qt/qtgui
-    rm -rf /var/tmp/portage/dev-qt/qtgui-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm qt6-5compat
 }
-run_checkpoint 76 "sudo -E emerge dev-qt/qtgui" checkpoint_76
+run_checkpoint 76 "pacman -S --noconfirm qt6-5compat" checkpoint_76
 
 checkpoint_77() {
-    sudo -E emerge dev-qt/qtcore
-    rm -rf /var/tmp/portage/dev-qt/qtcore-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm cmake
 }
-run_checkpoint 77 "sudo -E emerge dev-qt/qtcore" checkpoint_77
-
-checkpoint_78() {
-    sudo -E emerge dev-build/cmake
-    rm -rf /var/tmp/portage/dev-build/cmake-*
-    eclean-dist -d
-}
-run_checkpoint 78 "sudo -E emerge dev-build/cmake" checkpoint_78
+run_checkpoint 77 "pacman -S --noconfirm cmake" checkpoint_77
 
 checkpoint_79() {
-    sudo -E emerge sys-apps/dbus
-    rm -rf /var/tmp/portage/sys-apps/dbus-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm dbus
 }
-run_checkpoint 79 "sudo -E emerge sys-apps/dbus" checkpoint_79
+run_checkpoint 79 "pacman -S --noconfirm dbus" checkpoint_79
 
 checkpoint_80() {
-    sudo -E emerge app-accessibility/at-spi2-core
-    rm -rf /var/tmp/portage/app-accessibility/at-spi2-core-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm at-spi2-core
 }
-run_checkpoint 80 "sudo -E emerge app-accessibility/at-spi2-core" checkpoint_80
+run_checkpoint 80 "pacman -S --noconfirm at-spi2-core" checkpoint_80
 
 checkpoint_81() {
-    sudo -E emerge app-accessibility/at-spi2-atk
-    rm -rf /var/tmp/portage/app-accessibility/at-spi2-atk-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm at-spi2-atk
 }
-run_checkpoint 81 "sudo -E emerge app-accessibility/at-spi2-atk" checkpoint_81
+run_checkpoint 81 "pacman -S --noconfirm at-spi2-atk" checkpoint_81
 
 checkpoint_82() {
-    sudo -E emerge media-libs/fontconfig
-    rm -rf /var/tmp/portage/media-libs/fontconfig-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm fontconfig
 }
-run_checkpoint 82 "sudo -E emerge media-libs/fontconfig" checkpoint_82
+run_checkpoint 82 "pacman -S --noconfirm fontconfig" checkpoint_82
 
 checkpoint_83() {
-    sudo -E emerge media-fonts/dejavu
-    rm -rf /var/tmp/portage/media-fonts/dejavu-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm ttf-dejavu
 }
-run_checkpoint 83 "sudo -E emerge media-fonts/dejavu" checkpoint_83
+run_checkpoint 83 "pacman -S --noconfirm ttf-dejavu" checkpoint_83
 
 checkpoint_84() {
-    sudo -E emerge x11-themes/gtk-engines
-    rm -rf /var/tmp/portage/x11-themes/gtk-engines-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gtk-engines
 }
-run_checkpoint 84 "sudo -E emerge x11-themes/gtk-engines" checkpoint_84
+run_checkpoint 84 "pacman -S --noconfirm gtk-engines" checkpoint_84
 
 checkpoint_85() {
-    sudo -E emerge x11-themes/gtk-engines-murrine
-    rm -rf /var/tmp/portage/x11-themes/gtk-engines-murrine-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gtk-engine-murrine
 }
-run_checkpoint 85 "sudo -E emerge x11-themes/gtk-engines-murrine" checkpoint_85
+run_checkpoint 85 "pacman -S --noconfirm gtk-engine-murrine" checkpoint_85
 
 checkpoint_86() {
-    sudo -E emerge dev-lang/python
-    sudo -E emerge dev-python/pip
-    rm -rf /var/tmp/portage/dev-lang/python-*
-    rm -rf /var/tmp/portage/dev-lang/pip-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm python python-pip
 }
-run_checkpoint 86 "sudo -E emerge dev-lang/python" checkpoint_86
+run_checkpoint 86 "pacman -S --noconfirm python python-pip" checkpoint_86
 
 checkpoint_87() {
-    sudo -E emerge x11-libs/libnotify
-    rm -rf /var/tmp/portage/x11-libs/libnotify-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libnotify
 }
-run_checkpoint 87 "sudo -E emerge x11-libs/libnotify" checkpoint_87
+run_checkpoint 87 "pacman -S --noconfirm libnotify" checkpoint_87
 
 checkpoint_88() {
-    sudo -E emerge dev-libs/libdbusmenu
-    rm -rf /var/tmp/portage/dev-libs/libdbusmenu-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libdbusmenu-gtk3
 }
-run_checkpoint 88 "sudo -E emerge dev-libs/libdbusmenu" checkpoint_88
+run_checkpoint 88 "pacman -S --noconfirm libdbusmenu-gtk3" checkpoint_88
 
 checkpoint_89() {
-    sudo -E emerge x11-libs/libSM
-    rm -rf /var/tmp/portage/x11-libs/libSM-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libsm
 }
-run_checkpoint 89 "sudo -E emerge x11-libs/libSM" checkpoint_89
+run_checkpoint 89 "pacman -S --noconfirm libsm" checkpoint_89
 
 checkpoint_90() {
-    sudo -E emerge x11-libs/libICE
-    rm -rf /var/tmp/portage/x11-libs/libICE-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libice
 }
-run_checkpoint 90 "sudo -E emerge x11-libs/libICE" checkpoint_90
+run_checkpoint 90 "pacman -S --noconfirm libice" checkpoint_90
 
 checkpoint_91() {
-    sudo -E emerge x11-libs/libwnck
-    rm -rf /var/tmp/portage/x11-libs/libwnck-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libwnck3
 }
-run_checkpoint 91 "sudo -E emerge x11-libs/libwnck" checkpoint_91
+run_checkpoint 91 "pacman -S --noconfirm libwnck3" checkpoint_91
 
 checkpoint_92() {
-    sudo -E emerge dev-build/cmake
-    rm -rf /var/tmp/portage/dev-build/cmake-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm cmake
 }
-run_checkpoint 92 "sudo -E emerge dev-build/cmake" checkpoint_92
+run_checkpoint 92 "pacman -S --noconfirm cmake" checkpoint_92
 
 checkpoint_93() {
-    sudo -E emerge xfce-base/exo
-    rm -rf /var/tmp/portage/xfce-base/exo-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm exo
 }
-run_checkpoint 93 "sudo -E emerge xfce-base/exo" checkpoint_93
+run_checkpoint 93 "pacman -S --noconfirm exo" checkpoint_93
 
 checkpoint_94() {
-    sudo -E emerge app-admin/exo
-    rm -rf /var/tmp/portage/app-admin/exo-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm exo
 }
-run_checkpoint 94 "sudo -E emerge app-admin/exo" checkpoint_94
+run_checkpoint 94 "pacman -S --noconfirm exo" checkpoint_94
 
 checkpoint_95() {
-    sudo -E emerge app-arch/tar
-    rm -rf /var/tmp/portage/app-arch/tar-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm tar
 }
-run_checkpoint 95 "sudo -E emerge app-arch/tar" checkpoint_95
+run_checkpoint 95 "pacman -S --noconfirm tar" checkpoint_95
 
 checkpoint_96() {
-    sudo -E emerge app-arch/xz-utils
-    rm -rf /var/tmp/portage/app-arch/xz-utils-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xz
 }
-run_checkpoint 96 "sudo -E emerge app-arch/xz-utils" checkpoint_96
+run_checkpoint 96 "pacman -S --noconfirm xz" checkpoint_96
 
 checkpoint_97() {
-    sudo -E emerge net-libs/gnutls
-    rm -rf /var/tmp/portage/net-libs/gnutls-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gnutls
 }
-run_checkpoint 97 "sudo -E emerge net-libs/gnutls" checkpoint_97
+run_checkpoint 97 "pacman -S --noconfirm gnutls" checkpoint_97
 
 checkpoint_98() {
-    sudo -E emerge net-libs/glib-networking
-    rm -rf /var/tmp/portage/net-libs/glib-networking-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm glib-networking
 }
-run_checkpoint 98 "sudo -E emerge net-libs/glib-networking" checkpoint_98
+run_checkpoint 98 "pacman -S --noconfirm glib-networking" checkpoint_98
 
 checkpoint_99() {
-    sudo -E emerge sys-libs/libseccomp
-    rm -rf /var/tmp/portage/sys-libs/libseccomp-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libseccomp
 }
-run_checkpoint 99 "sudo -E emerge sys-libs/libseccomp" checkpoint_99
+run_checkpoint 99 "sudo -E pacman -S --noconfirm libseccomp" checkpoint_99
 
 checkpoint_100() {
-    sudo -E emerge app-eselect/eselect-repository
-    rm -rf /var/tmp/portage/app-eselect/eselect-repository-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm eselect-repository
 }
-run_checkpoint 100 "sudo -E emerge app-eselect/eselect-repository" checkpoint_100
+run_checkpoint 100 "sudo -E pacman -S --noconfirm eselect-repository" checkpoint_100
 
 checkpoint_101() {
-    sudo -E emerge dev-libs/appstream-glib
-    rm -rf /var/tmp/portage/dev-libs/appstream-glib-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm appstream-glib
 }
-run_checkpoint 101 "sudo -E emerge dev-libs/appstream-glib" checkpoint_101
+run_checkpoint 101 "sudo -E pacman -S --noconfirm appstream-glib" checkpoint_101
 
 checkpoint_102() {
-    sudo -E emerge app-crypt/gpgme
-    rm -rf /var/tmp/portage/app-crypt/gpgme-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gpgme
 }
-run_checkpoint 102 "sudo -E emerge app-crypt/gpgme" checkpoint_102
+run_checkpoint 102 "sudo -E pacman -S --noconfirm gpgme" checkpoint_102
 
 checkpoint_103() {
-    sudo -E emerge dev-util/ostree
-    rm -rf /var/tmp/portage/dev-util/ostree-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm ostree
 }
-run_checkpoint 103 "sudo -E emerge dev-util/ostree" checkpoint_103
+run_checkpoint 103 "sudo -E pacman -S --noconfirm ostree" checkpoint_103
 
 checkpoint_104() {
-    sudo -E emerge sys-apps/xdg-dbus-proxy
-    rm -rf /var/tmp/portage/sys-apps/xdg-dbus-proxy-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xdg-dbus-proxy
 }
-run_checkpoint 104 "sudo -E emerge sys-apps/xdg-dbus-proxy" checkpoint_104
+run_checkpoint 104 "sudo -E pacman -S --noconfirm xdg-dbus-proxy" checkpoint_104
 
 checkpoint_105() {
-    sudo -E emerge x11-libs/gdk-pixbuf
-    rm -rf /var/tmp/portage/x11-libs/gdk-pixbuf-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm gdk-pixbuf2
 }
-run_checkpoint 105 "sudo -E emerge x11-libs/gdk-pixbuf" checkpoint_105
+run_checkpoint 105 "sudo -E pacman -S --noconfirm gdk-pixbuf2" checkpoint_105
 
 checkpoint_106() {
-    sudo -E emerge sys-fs/fuse
-    rm -rf /var/tmp/portage/sys-fs/fuse-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm fuse3
 }
-run_checkpoint 106 "sudo -E emerge sys-fs/fuse" checkpoint_106
+run_checkpoint 106 "sudo -E pacman -S --noconfirm fuse3" checkpoint_106
 
 checkpoint_107() {
-    sudo -E emerge dev-python/pygobject
-    rm -rf /var/tmp/portage/dev-python/pygobject-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm python-gobject
 }
-run_checkpoint 107 "sudo -E emerge dev-python/pygobject" checkpoint_107
+run_checkpoint 107 "sudo -E pacman -S --noconfirm python-gobject" checkpoint_107
 
 checkpoint_108() {
-    sudo -E emerge gnome-base/dconf
-    rm -rf /var/tmp/portage/gnome-base/dconf-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm dconf
 }
-run_checkpoint 108 "sudo -E emerge gnome-base/dconf" checkpoint_108
+run_checkpoint 108 "sudo -E pacman -S --noconfirm dconf" checkpoint_108
 
 checkpoint_109() {
-    sudo -E emerge x11-misc/xdg-utils
-    rm -rf /var/tmp/portage/x11-misc/xdg-utils-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xdg-utils
 }
-run_checkpoint 109 "sudo -E emerge x11-misc/xdg-utils" checkpoint_109
+run_checkpoint 109 "sudo -E pacman -S --noconfirm xdg-utils" checkpoint_109
 
 checkpoint_110() {
-    sudo -E emerge x11-apps/xinit
-    rm -rf /var/tmp/portage/x11-apps/xinit-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xinit
 }
-run_checkpoint 110 "sudo -E emerge x11-apps/xinit" checkpoint_110
+run_checkpoint 110 "sudo -E pacman -S --noconfirm xinit" checkpoint_110
 
 checkpoint_111() {
-    sudo -E emerge x11-terms/xterm
-    rm -rf /var/tmp/portage/x11-terms/xterm-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm xterm
 }
-run_checkpoint 111 "sudo -E emerge x11-terms/xterm" checkpoint_111
+run_checkpoint 111 "sudo -E pacman -S --noconfirm xterm" checkpoint_111
 
 checkpoint_112() {
-    sudo -E emerge x11-wm/twm
-    rm -rf /var/tmp/portage/x11-wm/twm-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm twm
 }
-run_checkpoint 112 "sudo -E emerge x11-wm/twm" checkpoint_112
+run_checkpoint 112 "sudo -E pacman -S --noconfirm twm" checkpoint_112
 
 checkpoint_113() {
-    sudo -E emerge dev-python/pillow
-    sudo -E emerge app-misc/fastfetch
-    rm -rf /var/tmp/portage/dev-python/pillow-*
-    rm -rf /var/tmp/portage/app-misc/fastfetch-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm python-pillow fastfetch
 }
-run_checkpoint 113 "sudo -E emerge dev-python/pillow + fastfetch" checkpoint_113
+run_checkpoint 113 "sudo -E pacman -S --noconfirm python-pillow fastfetch" checkpoint_113
 
 checkpoint_114() {
-    sudo -E emerge media-gfx/chafa
-    rm -rf /var/tmp/portage/media-gfx/chafa-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm chafa
 }
-run_checkpoint 114 "sudo -E emerge media-gfx/chafa" checkpoint_114
+run_checkpoint 114 "sudo -E pacman -S --noconfirm chafa" checkpoint_114
 
 checkpoint_115() {
-    sudo -E emerge app-text/doxygen
-    rm -rf /var/tmp/portage/app-text/doxygen-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm doxygen
 }
-run_checkpoint 115 "sudo -E emerge app-text/doxygen" checkpoint_115
+run_checkpoint 115 "sudo -E pacman -S --noconfirm doxygen" checkpoint_115
 
 checkpoint_116() {
-    sudo -E emerge -1 =llvm-core/libclc-20*
-    sudo -E emerge gui-libs/egl-gbm
-    rm -rf /var/tmp/portage/gui-libs/egl-gbm-*
-    eclean-dist -d
+    sudo -E pacman -S --noconfirm libclc egl-gbm
 }
-run_checkpoint 116 "sudo -E emerge gui-libs/egl-gbm" checkpoint_116
+run_checkpoint 116 "sudo -E pacman -S --noconfirm libclc egl-gbm" checkpoint_116
 
 checkpoint_117() {
     cd /tmp
@@ -982,68 +741,39 @@ checkpoint_117() {
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
 checkpoint_118() {
-    sudo -E emerge sys-apps/flatpak
+    sudo -E pacman -S --noconfirm flatpak
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    rm -rf /var/tmp/portage/sys-apps/flatpak-*
-    chown -R 1000:1000 /home/chronos/.local/share/flatpak
-    eclean-dist -d
+    sudo chown -R 1000:1000 /home/chronos/.local/share/flatpak
 }
-run_checkpoint 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
+run_checkpoint 118 "sudo -E pacman -S --noconfirm flatpak" checkpoint_118
 
 checkpoint_119() {
-    sudo -E emerge app-admin/sudo
-    rm -rf /var/tmp/portage/app-admin/sudo-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm thunar
 }
-run_checkpoint 119 "sudo -E emerge app-admin/sudo" checkpoint_119
+run_checkpoint 119 "sudo -E pacman -Syu --noconfirm thunar" checkpoint_119
 
-#checkpoint_120() {
-#    sudo -E emerge x11-misc/xkeyboard-config
-#    rm -rf /var/tmp/portage/x11-misc/xkeyboard-config-*
-#    eclean-dist -d
-#}
-#run_checkpoint 120 "sudo -E emerge x11-misc/xkeyboard-config" checkpoint_120
-
+checkpoint_120() {
+    sudo -E pacman -Syu --noconfirm gvfs
+}
+run_checkpoint 120 "sudo -E pacman -Syu --noconfirm gvfs" checkpoint_120
 
 checkpoint_121() {
-    USE="udisks" sudo -E emerge xfce-base/thunar
-    rm -rf /var/tmp/portage/xfce-base/thunar-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm xfce4
 }
-run_checkpoint 121 "sudo -E emerge xfce-base/thunar" checkpoint_121
+run_checkpoint 121 "sudo -E pacman -Syu --noconfirm xfce4" checkpoint_121
 
 checkpoint_122() {
-    USE="udisks" sudo -E emerge gnome-base/gvfs
-    rm -rf /var/tmp/portage/gnome-base/gvfs-*
-    eclean-dist -d
+    echo "[*] Skipping Firefox install for now"
 }
-run_checkpoint 122 "sudo -E emerge gnome-base/gvfs" checkpoint_122
+run_checkpoint 122 "skip firefox-bin" checkpoint_122
 
 checkpoint_123() {
-    sudo -E emerge xfce-base/xfce4-meta
-    rm -rf /var/tmp/portage/xfce-base/xfce4-meta-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm libva libva-intel-driver
 }
-run_checkpoint 123 "sudo -E emerge xfce-base/xfce4-meta" checkpoint_123
-
-checkpoint_123() {
-    echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
-#    sudo -E emerge --autounmask-write firefox-bin
-#    rm -rf /var/tmp/portage/www-client/firefox-bin-*
-#    eclean-dist -d
-}
-run_checkpoint 123 "sudo -E emerge firefox-bin (skipping for now)" checkpoint_123
+run_checkpoint 123 "sudo -E pacman -Syu --noconfirm libva" checkpoint_123
 
 checkpoint_124() {
-    sudo -E emerge media-libs/libva
-    libva-intel-media-driver
-    rm -rf /var/tmp/portage/media-libs/libva-*
-    eclean-dist -d
-}
-run_checkpoint 124 "sudo -E emerge media-libs/libva" checkpoint_124
-
-checkpoint_125() {
     detect_intel_gpu() {
         if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
             GPU_MAX_FREQ=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
@@ -1058,179 +788,94 @@ checkpoint_125() {
     }
 
     if detect_intel_gpu; then
-        echo "[*] Installing libva-intel-media-driver for Gen9+ Intel GPU"
-        echo "media-libs/libva-intel-media-driver no-source-code" | sudo tee -a /etc/portage/package.license
-        sudo -E emerge media-libs/libva-intel-media-driver
-        rm -rf /var/tmp/portage/media-libs/libva-intel-media-driver-*
-        eclean-dist -d
+        echo "[*] Installing intel-media-driver for Gen9+ Intel GPU"
+        sudo -E pacman -Syu --noconfirm intel-media-driver
     else
         echo "[*] Skipping Intel driver installation"
     fi
 }
-run_checkpoint 125 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_125
+run_checkpoint 124 "sudo -E pacman -Syu --noconfirm intel-media-driver" checkpoint_124
+
+checkpoint_125() {
+    sudo -E pacman -Syu --noconfirm libao yt-dlp opus vlc
+}
+run_checkpoint 125 "sudo -E pacman -Syu --noconfirm yt-dlp + vlc" checkpoint_125
 
 checkpoint_126() {
-    sudo -E emerge media-libs/libao
-    sudo -E emerge net-misc/yt-dlp
-    sudo -E emerge media-libs/opus
-    sudo -E emerge media-video/vlc
-    rm -rf /var/tmp/portage/net-misc/libao-*
-    rm -rf /var/tmp/portage/net-misc/yt-dlp-*
-    rm -rf /var/tmp/portage/media-libs/libopus-*
-    rm -rf /var/tmp/portage/media-video/vlc-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm vulkan-tools git brave
 }
-run_checkpoint 126 "sudo -E emerge yt-dlp + vlc" checkpoint_126
+run_checkpoint 126 "sudo -E pacman -Syu --noconfirm brave-browser" checkpoint_126
 
 checkpoint_127() {
-    sudo -E emerge dev-util/vulkan-tools
-    sudo -E emerge app-eselect/eselect-repository dev-vcs/git
-    sudo -E eselect repository enable another-brave-overlay
-    sudo -E emerge --sync another-brave-overlay
-    sudo -E emerge www-client/brave-browser::another-brave-overlay
-    rm -rf /var/tmp/portage/dev-util/vulkan-tools-*
-    rm -rf /var/tmp/portage/eselect-repository dev-vcs/git-*
-    rm -rf /var/tmp/portage/www-client/brave-browser-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm p7zip arj lha lzop unrar unzip zip xarchiver
 }
-run_checkpoint 127 "sudo -E emerge www-client/brave-browser::another-brave-overlay" checkpoint_127
+run_checkpoint 127 "sudo -E pacman -Syu --noconfirm xarchiver + archivers" checkpoint_127
 
 checkpoint_128() {
-    echo "app-arch/lha lha" | sudo tee -a /etc/portage/package.license
-    echo "app-arch/unrar unRAR" | sudo tee -a /etc/portage/package.license
-    echo "app-arch/rar RAR" | sudo tee -a /etc/portage/package.license
-    sudo -E emerge app-arch/p7zip app-arch/arj app-arch/lha app-arch/lzop app-arch/unrar app-arch/rar app-arch/unzip app-arch/zip app-arch/xarchiver
-    rm -rf /var/tmp/portage/app-arch/p7zip-*
-    rm -rf /var/tmp/portage/app-arch/arj-*
-    rm -rf /var/tmp/portage/app-arch/lha-*
-    rm -rf /var/tmp/portage/app-arch/lzop-*
-    rm -rf /var/tmp/portage/app-arch/unrar-*
-    rm -rf /var/tmp/portage/app-arch/rar-*
-    rm -rf /var/tmp/portage/app-arch/unzip-*
-    rm -rf /var/tmp/portage/app-arch/zip-*
-    rm -rf /var/tmp/portage/app-arch/xarchiver-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm vscodium
 }
-run_checkpoint 128 "xarchiver" checkpoint_128
+run_checkpoint 128 "sudo -E pacman -Syu --noconfirm vscodium" checkpoint_128
 
 checkpoint_129() {
-    sudo -E emerge app-editors/vscodium
-    rm -rf /var/tmp/portage/app-editors/vscodium-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm gamemode prismlauncher
 }
-run_checkpoint 129 "sudo -E emerge app-editors/vscodium" checkpoint_129
+run_checkpoint 129 "sudo -E pacman -Syu --noconfirm prismlauncher" checkpoint_129
 
 checkpoint_130() {
-    sudo -E emerge games-util/gamemode
-    sudo -E emerge games-action/prismlauncher
-    rm -rf /var/tmp/portage/games-util/gamemode-*
-    rm -rf /var/tmp/portage/games-action/prismlauncher-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm gimp
 }
-run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
+run_checkpoint 130 "sudo -E pacman -Syu --noconfirm gimp" checkpoint_130
 
 checkpoint_131() {
-    sudo -E emerge media-gfx/gimp
-    rm -rf /var/tmp/portage/media-gfx/gimp-*
-    eclean-dist -d
+    cd /usr/share/X11/xkb/symbols
+    sudo cp inet ~/.inet.backup
+    sudo sed -i -E 's/^\s*key <I(360|362|368|370|373|374|376|377|381|384|385|386|387|388|389|391|392|393|394|395|396|398|417|421|570|598|599)>/\/\/ &/' inet
 }
-run_checkpoint 131 "sudo -E emerge media-gfx/gimp" checkpoint_131
+run_checkpoint 131 "Keyboard error spam fix" checkpoint_131
 
 checkpoint_132() {
-    cd /usr/share/xkeyboard-config-2/symbols/inet
-    sudo cp inet ~/.inet.backup
-    sudo sed -i -E 's/^\s*key <I(360|362|368|370|373|374|376|377|381|384|385|386|387|388|389|391|392|393|394|395|396|398|417|421|570|598|599)>/\/\/ &/' "/usr/share/xkeyboard-config-2/symbols/inet"
+    sudo -E pacman -Syu --noconfirm libreoffice-fresh
 }
-run_checkpoint 132 "Keyboard error spam fix" checkpoint_132
+run_checkpoint 132 "sudo -E pacman -Syu --noconfirm libreoffice" checkpoint_132
 
 checkpoint_133() {
-    sudo -E emerge app-office/libreoffice-bin
-    rm -rf /var/tmp/portage/app-office/libreoffice-bin-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm obs-studio obs-vkcapture obs-pipewire
 }
-run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
-
-sudo -E emerge app-office/libreoffice-bin
+run_checkpoint 133 "sudo -E pacman -Syu --noconfirm obs-studio" checkpoint_133
 
 checkpoint_134() {
-    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
-    sudo -E emerge media-plugins/obs-pipewire-audio-capture
-    sudo -E emerge media-plugins/obs-vkcapture
-    sudo -E emerge media-video/obs-studio
-    rm -rf /var/tmp/portage/media-video/obs-studio-*
-    rm -rf /var/tmp/portage/media-plugins/obs-pipewire-audio-capture-*
-    eclean-dist -d
+    sudo -E pacman -Syu --noconfirm ruby
 }
-run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_131
+run_checkpoint 134 "sudo -E pacman -Syu --noconfirm ruby" checkpoint_134
 
 checkpoint_135() {
-    USE="ruby_targets_ruby34" sudo -E emerge dev-lang/ruby
-    rm -rf /var/tmp/portage/dev-lang/ruby-*
-    eclean-dist -d
+    sudo chown -R $USER:$USER $HOME
 }
-run_checkpoint 135 "sudo -E emerge dev-lang/ruby" checkpoint_135
+run_checkpoint 135 "sudo chown -R $USER:$USER $HOME" checkpoint_135
 
 checkpoint_136() {
-sudo chown -R $USER:$USER $HOME
-}
-run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
-
-# dolphin
-# echo "games-emulation/dolphin ~amd64" | sudo tee -a /etc/portage/package.accept_keywords
-# echo "games-emulation/dolphin FatFs" | sudo tee -a /etc/portage/package.license
-# sudo -E emerge games-emulation/dolphin
-
-#checkpoint_118() {
-#    sudo -E emerge sys-apps/flatpak
-#    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-#    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-#    rm -rf /var/tmp/portage/sys-apps/flatpak-*
-#    chown -R 1000:1000 /home/chronos/.local/share/flatpak
-#    eclean-dist -d
-#}
-#run_checkpoint 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
-
-
-checkpoint_137() {
-    sudo -E emerge games-util/heroic-bin
+    sudo -E pacman -Syu --noconfirm heroic
     sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
     sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
     sudo chown -R $USER:$USER /home/chronos/.config/heroic
-    rm -rf /var/tmp/portage/games-util/heroic-bin-*
-    eclean-dist -d
 }
-run_checkpoint 137 "sudo -E emerge games-util/heroic-bin" checkpoint_137
+run_checkpoint 136 "sudo -E pacman -Syu --noconfirm heroic" checkpoint_136
+
+checkpoint_137() {
+    sudo -E pacman -Syu --noconfirm gparted exfatprogs dosfstools ntfs-3g mtools
+}
+run_checkpoint 137 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_137
 
 checkpoint_138() {
-    sudo -E emerge sys-block/gparted
-    sudo -E emerge sys-fs/exfatprogs sys-fs/dosfstools sys-fs/ntfs3g
-    sudo -E emerge sys-fs/mtools
-    rm -rf /var/tmp/portage/sys-block/gparted-*
-    rm -rf /var/tmp/portage/emerge sys-fs/exfatprogs-*
-    rm -rf /var/tmp/portage/sys-fs/dosfstools-*
-    rm -rf /var/tmp/portage/sys-fs/ntfs3g-*
-    rm -rf /var/tmp/portage/sys-fs/mtools-*
-    eclean-dist -d
-}
-run_checkpoint 138 "sudo -E emerge sys-block/gparted" checkpoint_138
-
-checkpoint_139() {
     sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
     sudo chmod +x /usr/local/bin/unetbootin
 }
-run_checkpoint 139 "unetbootin" checkpoint_139
+run_checkpoint 138 "unetbootin" checkpoint_138
 
-checkpoint_140() {
-    sudo -E emerge app-emulation/qemu
-    sudo -E emerge qemu-init-scripts
-    sudo -E emerge sys-apps/usermode-utilities
-    rm -rf /var/tmp/app-emulation/qemu*
-    rm -rf /var/tmp/qemu-init-scripts*
-    rm -rf /var/tmp/sys-apps/usermode-utilities*
-    eclean-dist -d
+checkpoint_139() {
+    sudo -E pacman -Syu --noconfirm qemu qemu-arch-extra qemu-user
 }
-run_checkpoint 140 "sudo -E emerge app-emulation/qemu" checkpoint_140
-
+run_checkpoint 139 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_139
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
