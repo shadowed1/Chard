@@ -155,9 +155,9 @@ checkpoint_1() {
 run_checkpoint 1 "sudo chown -R 1000:1000 ~/" checkpoint_1
 
 checkpoint_2() {
-    sudo -E pacman -Syu cmake
+    sudo -E pacman -Syu --noconfirm cmake
 }
-run_checkpoint 2 "sudo -E pacman -Syu cmake" checkpoint_2
+run_checkpoint 2 "sudo -E pacman -Syu --noconfirm cmake" checkpoint_2
 
 checkpoint_3() {
     sudo -E pacman -Syu --noconfirm gmp
