@@ -150,32 +150,14 @@ run_checkpoint() {
 }
 
 checkpoint_1() {
-    sudo chown -R $USER:$USER $HOME
-    sudo -E emerge dev-build/make
-    rm -rf /var/tmp/portage/dev-build/make-*
+    sudo chown -R 1000:1000 ~/
 }
-run_checkpoint 1 "sudo -E emerge dev-build/make" checkpoint_1
+run_checkpoint 1 "sudo chown -R 1000:1000 ~/" checkpoint_1
 
 checkpoint_2() {
-    sudo -E emerge --noreplace app-portage/gentoolkit
-    rm -rf /var/tmp/portage/app-portage/gentoolkit-*
-    eclean-dist -d
+    sudo -E pacman -S cmake --overwrite '*'
 }
-run_checkpoint 2 "sudo -E emerge app-portage/gentoolkit" checkpoint_2
-
-checkpoint_3() {
-    USE="-gui" sudo -E emerge -1 dev-build/cmake
-    rm -rf /var/tmp/portage/dev-build/cmake-*
-    eclean-dist -d
-}
-run_checkpoint 3 'USE="-gui" sudo -E emerge -1 dev-build/cmake' checkpoint_3
-
-checkpoint_4() {
-    sudo -E emerge app-misc/resolve-march-native
-    rm -rf /var/tmp/portage/app-misc/resolve-march-native-*
-    eclean-dist -d
-}
-run_checkpoint 4 "sudo -E emerge resolve-march-native" checkpoint_4
+run_checkpoint 2 "sudo -E pacman -S cmake --overwrite '*'" checkpoint_2
 
 checkpoint_5() {
     sudo -E emerge dev-libs/gmp
