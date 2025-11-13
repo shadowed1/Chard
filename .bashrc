@@ -40,7 +40,7 @@ fi
 export ARCH
 export CHOST
 export CHARD_RC="$ROOT/.chardrc"
-export GIT_EXEC_PATH="$ROOT/usr/libexec/git-core"
+export GIT_EXEC_PATH="$ROOT/usr/lib/git-core"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
 # <<< CHARD_XDG_RUNTIME_DIR >>>
