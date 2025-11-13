@@ -123,5 +123,6 @@ grep -E '^\[multilib\]|^Color|^VerbosePkgLists|^ParallelDownloads|^DisableSandbo
 pacman-key --init
 pacman-key --populate archlinux
 pacman-key --refresh-keys --keyserver hkps://keyserver.ubuntu.com --allow-weak-key-signatures
-pacman -Syu
-pacman -Syu make --overwrite '*'
+pacman -Syu --noconfirm
+pacman -Syu --noconfirm make --overwrite '*'
+pacman -Syu --noconfirm gcc --overwrite '*'
