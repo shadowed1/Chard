@@ -526,7 +526,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         
     dbus-daemon --system --fork 2>/dev/null
         
-    /bin/bash
+    exec /bin/chardsetup
             
     umount -l /dev/zram0   2>/dev/null || true
     umount -l /run/chrome  2>/dev/null || true
