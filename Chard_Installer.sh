@@ -1182,10 +1182,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
-                        chown \$USER:\$USER \"/\$CHARD_HOME\"
-        
-                        emerge app-admin/sudo
-        
+                        chown \$USER:\$USER \"/\$CHARD_HOME\"        
                         mkdir -p /etc/sudoers.d
                         chown root:root /etc/sudoers.d
                         chmod 755 /etc/sudoers.d
@@ -1592,7 +1589,6 @@ EOF
 fi
 
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
-sudo tee -a "$CHARD_ROOT/etc/env.d/99python-fork" <<< 'export PYTHONMULTIPROCESSING_START_METHOD=fork'
 
 WAYLAND_CONF_DIR="$CHARD_ROOT/etc/profile.d"
 sudo mkdir -p "$WAYLAND_CONF_DIR"
