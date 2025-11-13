@@ -119,3 +119,8 @@ fi
 
 echo
 grep -E '^\[multilib\]|^Color|^VerbosePkgLists|^ParallelDownloads|^DisableSandbox' "$PACCONF"
+
+pacman-key --init
+pacman-key --populate archlinux
+pacman-key --refresh-keys --keyserver hkps://keyserver.ubuntu.com --allow-weak-key-signatures
+pacman -Syu
