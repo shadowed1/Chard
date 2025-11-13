@@ -38,6 +38,11 @@ echo
 sed -i "${start_line},${end_line}s/^#Server/Server/" "$MIRRORLIST"
 echo "Mirrors enabled successfully!"
 echo
+
+mkdir -p /chard_var/lib/pacman /chard_var/cache/pacman/pkg /chard_var/log
+mkdir -p /chard_etc/pacman.d/gnupg /chard_etc/pacman.d/hooks
+chmod -R 755 /chard_var /chard_etc
+
 if [[ ! -f "$PACCONF" ]]; then
     echo "⚙️  pacman.conf not found — creating default config at $PACCONF..."
     cat <<'EOF' | tee "$PACCONF" >/dev/null
@@ -52,11 +57,11 @@ if [[ ! -f "$PACCONF" ]]; then
 [options]
 # The following paths are commented out with their default values listed.
 #RootDir     = /
-#DBPath      = /var/lib/pacman/
-#CacheDir    = /var/cache/pacman/pkg/
-#LogFile     = /var/log/pacman.log
-#GPGDir      = /etc/pacman.d/gnupg/
-#HookDir     = /etc/pacman.d/hooks/
+DBPath      = /chard_var/lib/pacman/
+CacheDir    = /chard_var/cache/pacman/pkg/
+LogFile     = /chard_var/log/pacman.log
+GPGDir      = /chard_etc/pacman.d/gnupg/
+HookDir     = /chard_etc/pacman.d/hooks/
 HoldPkg     = pacman glibc
 #XferCommand = /usr/bin/curl -L -C - -f -o %o %u
 #XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
@@ -117,5 +122,26 @@ elif ! grep -q "^\[multilib\]" "$PACCONF"; then
     echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist" >> "$PACCONF"
 fi
 
+sed -i "s|^[#[:space:]]*DBPath.*|DBPath      = /chard_var/lib/pacman/|" "$PACCONF"
+sed -i "s|^[#[:space:]]*CacheDir.*|CacheDir    = /chard_var/cache/pacman/pkg/|" "$PACCONF"
+sed -i "s|^[#[:space:]]*LogFile.*|LogFile     = /chard_var/log/pacman.log|" "$PACCONF"
+sed -i "s|^[#[:space:]]*GPGDir.*|GPGDir      = /chard_etc/pacman.d/gnupg/|" "$PACCONF"
+sed -i "s|^[#[:space:]]*HookDir.*|HookDir     = /chard_etc/pacman.d/hooks/|" "$PACCONF"
+
+grep -q "^DBPath" "$PACCONF" || echo "DBPath      = /chard_var/lib/pacman/" >> "$PACCONF"
+grep -q "^CacheDir" "$PACCONF" || echo "CacheDir    = /chard_var/cache/pacman/pkg/" >> "$PACCONF"
+grep -q "^LogFile" "$PACCONF" || echo "LogFile     = /chard_var/log/pacman.log" >> "$PACCONF"
+grep -q "^GPGDir" "$PACCONF" || echo "GPGDir      = /chard_etc/pacman.d/gnupg/" >> "$PACCONF"
+grep -q "^HookDir" "$PACCONF" || echo "HookDir     = /chard_etc/pacman.d/hooks/" >> "$PACCONF"
+
 echo
-grep -E '^\[multilib\]|^Color|^VerbosePkgLists|^ParallelDownloads|^DisableSandbox' "$PACCONF"
+grep -E '^\[multilib\]|^Color|^VerbosePkgLists|^ParallelDownloads|^DisableSandbox|^DBPath|^CacheDir|^LogFile|^GPGDir|^HookDir' "$PACCONF"
+
+pacman-key --init
+pacman-key --populate archlinux
+pacman-key --refresh-keys --keyserver hkps://keyserver.ubuntu.com --allow-weak-key-signatures
+pacman -Syu
+
+
+
+
