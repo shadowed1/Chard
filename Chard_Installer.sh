@@ -526,7 +526,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
         
     dbus-daemon --system --fork 2>/dev/null
         
-    exec /bin/chardsetup
+    /bin/bash
             
     umount -l /dev/zram0   2>/dev/null || true
     umount -l /run/chrome  2>/dev/null || true
@@ -559,11 +559,6 @@ fi
 
 sudo umount -l "$CHARD_ROOT"  || true
 
-################################################################################################################################################################
-################################################################################################################################################################
-################################################################################################################################################################
-################################################################################################################################################################
-
 KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
     | sed 's/href="linux-\(.*\)\.tar\.xz"/\1/' )
@@ -589,30 +584,58 @@ sudo rm -rf "$KERNEL_BUILD"
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
 
-PACMAN_CONF="$CHARD_ROOT/etc/pacman.conf"
-sudo mkdir -p "$(dirname "$PACMAN_CONF")"
-
-sudo tee "$PACMAN_CONF" >/dev/null <<'EOF'
-[options]
-Architecture = x86_64
-Color
-CheckSpace
-VerbosePkgLists
-
-[core]
-Include = /etc/pacman.d/mirrorlist
-
-[extra]
-Include = /etc/pacman.d/mirrorlist
-
-[community]
-Include = /etc/pacman.d/mirrorlist
-EOF
-
-
 echo "${RESET}${CYAN}[+] Installing Linux headers into Chard Root..."
 
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+
+else
+    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+fi
+        
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+        
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
+else
+    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
+fi
+
+sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
+sudo mount --make-rslave "$CHARD_ROOT"
+        
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
+
+mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+        
+if [ -e /dev/zram0 ]; then
+    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+    mount --make-rslave /dev/zram0 2>/dev/null
+fi
+        
+chmod 1777 /tmp /var/tmp
+        
+[ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+[ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+[ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+[ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+            
+CHARD_HOME=\$(cat /.chard_home)
+CHARD_USER=\$(cat /.chard_user)
+source \$HOME/.bashrc 2>/dev/null
+        
+dbus-daemon --system --fork 2>/dev/null
 cd /var/tmp/build/linux-$KERNEL_VER
 
 HOST_ARCH=\$(uname -m)
@@ -631,7 +654,36 @@ cp -a . /usr/src/linux
 make INSTALL_HDR_PATH=/usr headers_install
 
 cp .config /usr/src/linux/.config
-"
+    umount -l /dev/zram0   2>/dev/null || true
+    umount -l /run/chrome  2>/dev/null || true
+    umount -l /run/dbus    2>/dev/null || true
+    umount -l /etc/ssl     2>/dev/null || true
+    umount -l /dev/pts     2>/dev/null || true
+    umount -l /dev/shm     2>/dev/null || true
+    umount -l /dev         2>/dev/null || true
+    umount -l /sys         2>/dev/null || true
+    umount -l /proc        2>/dev/null || true
+ "
+        
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+
+else
+    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+fi
+        
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+        
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+else
+    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+fi
+
+sudo umount -l "$CHARD_ROOT"  || true
 
 echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
 echo ""
@@ -667,8 +719,15 @@ if grep -q "^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::" "$PASSWD_FILE"; then
     echo "Fixing empty GECOS field for $CHARD_USER"
     sudo sed -i "s/^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::/${CHARD_USER}:x:${USER_ID}:${GROUP_ID}:${CHARD_USER} User:/" "$PASSWD_FILE"
 else
-    echo "GECOS field for $CHARD_USER is already set or missing."
+    echo "GECOS field for $CHARD_USER is already set."
 fi
+
+#############################################################################################################################################################################
+#############################################################################################################################################################################
+#############################################################################################################################################################################
+#############################################################################################################################################################################
+#############################################################################################################################################################################
+#############################################################################################################################################################################
 
 
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
