@@ -732,18 +732,12 @@ fi
 #############################################################################################################################################################################
 
 
-sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo mkdir -p "$CHARD_ROOT/var/db/repos/gentoo/profiles"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/make.profile"
 sudo mkdir -p "$CHARD_ROOT/run/user/0"
 sudo chmod 700 "$CHARD_ROOT/run/user/0"
 sudo mkdir -p "$CHARD_ROOT/run/user/1000"
 sudo chmod 700 "$CHARD_ROOT/run/user/1000"
 exec > >(sudo tee -a "$LOG_FILE") 2>&1
-sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.use"
 sudo mkdir -p "$CHARD_ROOT/dev/dri"
 sudo mkdir -p "$CHARD_ROOT/dev/input"
 sudo mkdir -p "$CHARD_ROOT/tmp"
@@ -790,300 +784,10 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
-sudo tee "$CHARD_ROOT/bin/emerge" > /dev/null <<'EOF'
-#!/usr/bin/env python3
-import os
-import sys
-import errno
-import glob
-import tokenize
-
-CHROOT_PYTHON = "/usr/sbin/python"
-if os.path.exists(CHROOT_PYTHON):
-    python_exec = CHROOT_PYTHON
-else:
-    python_exec = sys.executable
-
-major = sys.version_info.major
-minor = sys.version_info.minor
-dotver = f"{major}.{minor}"
-
-PYEXEC_BASE = "/usr/lib/python-exec"
-if not os.path.isdir(PYEXEC_BASE):
-    PYEXEC_BASE = "/usr/lib/python-exec"
-
-exec_dirs = sorted(glob.glob(os.path.join(PYEXEC_BASE, "python[0-9]*.[0-9]*")))
-if not exec_dirs:
-    exec_dirs = [os.path.join(PYEXEC_BASE, f"python{dotver}")]
-
-python_dir = exec_dirs[-2] if len(exec_dirs) > 1 else exec_dirs[-1]
-
-python_ver = python_dir.split('/')[-1].replace("python", "")
-python_underscore = python_ver.replace(".", "_")
-
-os.environ["PYEXEC_DIR"] = python_dir
-os.environ["PYTHON_SINGLE_TARGET"] = f"python{python_underscore}"
-os.environ["PYTHON_TARGETS"] = f"python{python_underscore}"
-
-python_site = f"/usr/lib/python{python_ver}/site-packages"
-if os.environ.get("PYTHONPATH"):
-    os.environ["PYTHONPATH"] = f"{python_site}:{os.environ['PYTHONPATH']}"
-else:
-    os.environ["PYTHONPATH"] = python_site
-
-target_name = os.path.basename(sys.argv[0])
-target_path = os.path.join(python_dir, target_name)
-
-data = None
-while data is None:
-    try:
-        kwargs = {}
-        with open(target_path, "rb") as f:
-            kwargs["encoding"] = tokenize.detect_encoding(f.readline)[0]
-        with open(target_path, "r", **kwargs) as f:
-            data = f.read()
-    except IOError as e:
-        if e.errno == errno.EINTR:
-            continue
-        elif e.errno == errno.ENOENT:
-            sys.stderr.write(f"{target_path}: Python implementation not supported: {python_exec}\n")
-            sys.exit(127)
-        else:
-            raise
-
-sys.argv[0] = target_path
-new_globals = dict(globals())
-new_globals["__file__"] = target_path
-
-exec(data, new_globals)
-EOF
-
-sudo chmod +x "$CHARD_ROOT/bin/emerge"
-
-sudo tee "$CHARD_ROOT/etc/portage/repos.conf/gentoo.conf" > /dev/null <<'EOF'
-[gentoo]
-location = /var/db/repos/gentoo
-sync-type = rsync
-sync-uri = rsync://rsync.gentoo.org/gentoo-portage
-auto-sync = yes
-EOF
-
 sudo tee "$CHARD_ROOT/etc/profile.d/display.sh" > /dev/null <<'EOF'
 export DISPLAY=:0
 EOF
 sudo chmod +x "$CHARD_ROOT/etc/profile.d/display.sh"
-
-detect_gpu_freq() {
-    GPU_FREQ_PATH=""
-    GPU_MAX_FREQ=""
-    GPU_TYPE="unknown"
-
-    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
-        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
-        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-        GPU_TYPE="intel"
-        echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
-        return
-    fi
-
-    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
-        GPU_TYPE="nvidia"
-        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
-        MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
-        GPU_MAX_FREQ="$MAX_MHZ"
-        GPU_FREQ_PATH="$PP_DPM_SCLK"
-        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
-        return
-    fi
-
-    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
-        GPU_TYPE="amd"
-        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
-        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
-        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
-            GPU_MAX_FREQ="$MAX_MHZ"
-        fi
-        GPU_FREQ_PATH="$PP_OD_FILE"
-        echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
-        return
-    fi
-
-    if [[ -d /sys/class/drm ]]; then
-        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="mediatek"
-            echo "[*] Detected MediaTek GPU"
-            return
-        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="vivante"
-            echo "[*] Detected Vivante GPU"
-            return
-        elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="asahi"
-            echo "[*] Detected Asahi GPU"
-            return
-        elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
-            GPU_TYPE="mali"
-            echo "[*] Detected Mali/Panfrost GPU"
-            return
-        fi
-    fi
-
-    for d in /sys/class/devfreq/*; do
-        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
-            if [ -f "$d/max_freq" ]; then
-                GPU_FREQ_PATH="$d/max_freq"
-                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-                GPU_TYPE="mali"
-                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
-                return
-            elif [ -f "$d/available_frequencies" ]; then
-                GPU_FREQ_PATH="$d/available_frequencies"
-                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
-                GPU_TYPE="mali"
-                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
-                return
-            fi
-        fi
-    done
-
-    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
-        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
-            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
-            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-            GPU_TYPE="adreno"
-            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
-            return
-        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
-            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
-            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
-            GPU_TYPE="adreno"
-            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
-            return
-        fi
-    fi
-
-    echo "[*] No GPU detected, using unknown"
-    GPU_TYPE="unknown"
-}
-
-ARCH=$(uname -m)
-MAKECONF_DIR="$CHARD_ROOT/etc/portage"
-MAKECONF_FILE="$MAKECONF_DIR/make.conf"
-sudo mkdir -p "$MAKECONF_DIR"
-
-case "$ARCH" in
-    x86_64)
-        CHOST="x86_64-pc-linux-gnu"
-        ACCEPT_KEYWORDS="~amd64"
-        ;;
-    aarch64)
-        CHOST="aarch64-unknown-linux-gnu"
-        ACCEPT_KEYWORDS="~arm64"
-        ;;
-    *)
-        echo "Unknown architecture: $ARCH"
-        exit 1
-        ;;
-esac
-
-detect_gpu_freq
-
-case "$GPU_TYPE" in
-    intel)
-        VIDEO_CARDS="iris i915 intel"
-        ;;
-    amd)
-        VIDEO_CARDS="radeonsi r600"
-        ;;
-    nvidia)
-        VIDEO_CARDS="nouveau nvk"
-        ;;
-    mali)
-        VIDEO_CARDS="panfrost lima"
-        ;;
-    adreno)
-        VIDEO_CARDS="freedreno"
-        ;;
-    mediatek)
-        VIDEO_CARDS="panfrost lima"
-        ;;
-    vivante)
-        VIDEO_CARDS="etnaviv"
-        ;;
-    asahi)
-        VIDEO_CARDS="asahi"
-        ;;
-    *)
-        VIDEO_CARDS="lavapipe virgl"
-        ;;
-esac
-
-USE_FLAGS="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt cube dbus dri dri3 dts encode exif egl flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit kms layers lcms libnotify libtirpc llvm mad minizip mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp opus pam pango pcre pdf png postproc ppds proprietary-codecs pulseaudio qml qt5 qt6 readline sdl seccomp sound spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis wayland wxwidgets x264 x265 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd vpx zstd -elogind"
-
-case "$GPU_TYPE" in
-    amd|nvidia)
-        USE_FLAGS+=" vaapi vdpau vulkan"
-        ;;
-    intel)
-        USE_FLAGS+=" vulkan"
-        ;;
-    mediatek)
-        USE_FLAGS+=" virgl"
-esac
-
-sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
-# Chard Portage make.conf
-# Generated based on detected architecture ($ARCH) and GPU type ($GPU_TYPE)
-COMMON_FLAGS="-march=native -O2 -pipe"
-CFLAGS="\${COMMON_FLAGS}"
-CXXFLAGS="\${COMMON_FLAGS}"
-FCFLAGS="\${COMMON_FLAGS}"
-FFLAGS="\${COMMON_FLAGS}"
-LC_MESSAGES=C.utf8
-DISTDIR="/var/cache/distfiles"
-PKGDIR="/var/cache/packages"
-PORTAGE_TMPDIR="/var/tmp"
-PORTDIR="/usr/portage"
-SANDBOX="/usr/bin/sandbox"
-CHOST="$CHOST"
-CC="/usr/bin/gcc"
-CXX="/usr/bin/g++"
-AR="/usr/bin/gcc-ar"
-RANLIB="/usr/bin/gcc-ranlib"
-STRIP="/usr/bin/strip"
-FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
-USE="$USE_FLAGS"
-PYTHON_TARGETS="python3_13"
-ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
-VIDEO_CARDS="$VIDEO_CARDS"
-PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH"
-PKG_CONFIG="/usr/bin/pkg-config"
-PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
-MESON_NATIVE_FILE="/meson-cross.ini"
-PYTHONMULTIPROCESSING_START_METHOD=fork
-EOF
-
-echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE ${RESET}"
-
-sudo mkdir -p "$CHARD_ROOT/usr/share/sandbox"
-
-sudo tee "$CHARD_ROOT/etc/sandbox.conf" > /dev/null <<'EOF'
-SANDBOX_BASHRC="/usr/share/sandbox/sandbox.bashrc"
-SANDBOX_D="/etc/sandbox.d"
-ns-mount-off
-ns-pid-off
-ns-ipc-off
-ns-net-off
-ns-user-off
-EOF
-
-sudo tee "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
-export HOME="/$CHARD_HOME/"
-export USER="chronos"
-export LOGNAME="chronos"
-export PATH=/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
-EOF
 
 ARCH=$(uname -m)
 
@@ -1137,29 +841,6 @@ EOF
         exit 1
         ;;
 esac
-
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64)
-        CHOST=x86_64-pc-linux-gnu
-        PROFILE_DIR="$CHARD_ROOT/var/db/repos/gentoo/profiles/default/linux/amd64/17.1"
-        ;;
-    aarch64)
-        CHOST=aarch64-unknown-linux-gnu
-        PROFILE_DIR="$CHARD_ROOT/var/db/repos/gentoo/profiles/default/linux/arm64/17.1"
-        ;;
-    *)
-        echo "Unknown architecture: $ARCH"
-        exit 1
-        ;;
-esac
-
-sudo mkdir -p "$CHARD_ROOT/var/db/repos/gentoo/profiles"
-sudo mkdir -p "$PROFILE_DIR"
-
-sudo tee "$CHARD_ROOT/var/db/repos/gentoo/profiles/repo_name" > /dev/null <<'EOF'
-gentoo
-EOF
 
 echo "${RESET}${BLUE}Created $CHARD_ROOT/mesonrust.ini for $ARCH ${RESET}"
 ARCH=$(uname -m)
@@ -1403,63 +1084,31 @@ fi
 sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
 sudo chmod 1777 "$CHARD_ROOT/tmp/.X11-unix"
 
-
-echo "${RESET}${BLUE}[+] Mounting Chard Chroot${RESET}"
-sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
-
-echo "${RESET}${BLUE}${BOLD}Setting up Emerge!"
-sudo mkdir -p "$CHARD_ROOT/var/lib/portage/"
-sudo touch "$CHARD_ROOT/var/lib/portage/world"
-
-sudo chroot $CHARD_ROOT /bin/bash -c "
-
-    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /dev/input  || mount --bind /dev/input 2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-
-                        
-    if [ -e /dev/zram0 ]; then
-        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-        mount --make-rslave /dev/zram0 2>/dev/null
-    fi
-                    
-    chmod 1777 /tmp /var/tmp
-                    
-    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-    
-    CHARD_HOME=\$(cat /.chard_home)
-    CHARD_USER=\$(cat /.chard_user)
-    HOME=\$CHARD_HOME
-    USER=\$CHARD_USER
-    source \$HOME/.bashrc 2>/dev/null
-    mkdir -p /var/db/pkg /var/lib/portage
-    chown -R portage:portage /var/db/pkg /var/lib/portage
-    chmod -R 755 /var/db/pkg
-    chmod 644 /var/lib/portage/world
-
-    emerge --sync
-    umount -l /run/chrome  2>/dev/null || true
-    umount -l /run/dbus    2>/dev/null || true
-    umount -l /etc/ssl     2>/dev/null || true
-    umount -l /dev/input   2>/dev/null || true
-    umount -l /dev/pts     2>/dev/null || true
-    umount -l /dev/shm     2>/dev/null || true
-    umount -l /dev         2>/dev/null || true
-    umount -l /sys         2>/dev/null || true
-    umount -l /proc        2>/dev/null || true
-"
-
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
 sudo mkdir -p $CHARD_ROOT/etc/sudoers.d/
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
+
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+
+else
+    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+fi
+        
+sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+        
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
+else
+    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
+fi
+
+sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
+sudo mount --make-rslave "$CHARD_ROOT"
 
 sudo chroot $CHARD_ROOT /bin/bash -c "
 
@@ -1528,9 +1177,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group steam >/dev/null || groupadd -g 20001 steam 2>/dev/null
                         getent group render >/dev/null || groupadd -g 989 render 2>/dev/null
 
-
-
-
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
@@ -1560,72 +1206,28 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         umount -l /sys         2>/dev/null || true
                         umount -l /proc        2>/dev/null || true
                     "
+                    
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+
+else
+    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+fi
+        
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+        
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+else
+    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+fi
+
+sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
                 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
-
-sudo chroot $CHARD_ROOT /bin/bash -c "
-
-    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-
-    if [ -e /dev/zram0 ]; then
-        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-        mount --make-rslave /dev/zram0 2>/dev/null
-    fi
-
-    chmod 1777 /tmp /var/tmp
-
-    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-
-    mkdir -p /var/db/pkg /var/lib/portage
-    CHARD_HOME=\$(cat /.chard_home)
-    CHARD_USER=\$(cat /.chard_user)
-    HOME=\$CHARD_HOME
-    USER=\$CHARD_USER
-    source \$HOME/.bashrc 2>/dev/null
-    chown -R portage:portage /var/db/pkg /var/lib/portage
-    chmod -R 755 /var/db/pkg
-    chmod 644 /var/lib/portage/world
-    chown -R 1000:1000 \$HOME/
-    emerge app-portage/gentoolkit
-    emerge app-misc/resolve-march-native && \
-    MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
-    BASHRC=\"\$HOME/.bashrc\" && \
-    awk -v march=\"\$MARCH_FLAGS\" '
-        /^# <<< CHARD_MARCH_NATIVE >>>$/ {inblock=1; print; next}
-        /^# <<< END CHARD_MARCH_NATIVE >>>$/ {inblock=0; print; next}
-        inblock {
-            if (\$0 ~ /^CFLAGS=/) { print \"CFLAGS=\\\"\" march \" -O2 -pipe\\\"\"; next }
-            if (\$0 ~ /^COMMON_FLAGS=/) {
-                print \"COMMON_FLAGS=\\\"\" march \" -O2 -pipe\\\"\"
-                print \"FCFLAGS=\\\"\$COMMON_FLAGS\\\"\"
-                print \"FFLAGS=\\\"\$COMMON_FLAGS\\\"\"
-                print \"CXXFLAGS=\\\"\$CFLAGS\\\"\"
-                next
-            }
-            next
-        }
-        {print}
-    ' \"\$BASHRC\" > \"\$BASHRC.tmp\" && mv \"\$BASHRC.tmp\" \"\$BASHRC\"
-   
-    umount -l /run/chrome  2>/dev/null || true
-    umount -l /run/dbus    2>/dev/null || true
-    umount -l /etc/ssl     2>/dev/null || true
-    umount -l /dev/pts     2>/dev/null || true
-    umount -l /dev/shm     2>/dev/null || true
-    umount -l /dev         2>/dev/null || true
-    umount -l /sys         2>/dev/null || true
-    umount -l /proc        2>/dev/null || true
-"
 
 ARCH=$(uname -m)
 detect_gpu_freq() {
