@@ -127,3 +127,8 @@ pacman -Syu --noconfirm
 pacman -Syu --noconfirm make --overwrite '*'
 pacman -Syu --noconfirm gcc --overwrite '*'
 pacman -Syu --noconfirm rsync --overwrite '*'
+pacman -Syu --noconfirm base-devel --overwrite '*'
+pacman -Syu --noconfirm ncurses --overwrite '*'
+pacman -Syu --noconfirm flex --overwrite '*'
+pacman -Syu --noconfirm bison --overwrite '*'
+pacman -Syu --noconfirm bc --overwrite '*'
