@@ -124,3 +124,4 @@ pacman-key --init
 pacman-key --populate archlinux
 pacman-key --refresh-keys --keyserver hkps://keyserver.ubuntu.com --allow-weak-key-signatures
 pacman -Syu
+pacman -Syu make --overwrite '*'
