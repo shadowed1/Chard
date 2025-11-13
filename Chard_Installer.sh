@@ -389,6 +389,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_mo
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_unmount"       -o "$CHARD_ROOT/bin/chard_unmount"
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chardsetup.sh"       -o "$CHARD_ROOT/bin/chardsetup"
+sleep 0.2
 
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -401,6 +403,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
 sudo chmod +x "$CHARD_ROOT/bin/wx"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
+sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
+
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
@@ -409,6 +413,7 @@ for file in \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard_debug" \
+    "$CHARD_ROOT/bin/chardsetup" \
     "$CHARD_ROOT/bin/chard"; do
 
     if [ -f "$file" ]; then
@@ -429,7 +434,7 @@ CHARD_USER=\"$CHARD_USER\"\n\
 
         sudo chmod +x "$file"
     else
-        echo "${RED}[!] Missing: $file — download failed${RESET}"
+        echo "${RED}[!] Missing: $file ${RESET}"
     fi
 done
 
