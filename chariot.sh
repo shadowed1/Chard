@@ -185,14 +185,19 @@ checkpoint_7() {
 run_checkpoint 7 "sudo -E pacman -Syu --noconfirm openssl" checkpoint_7
 
 checkpoint_8() {
-    sudo -E pacman -Syu --noconfirm curl
+    sudo -E pacman -Syu --noconfirm curl ca-certificates
+
 }
 run_checkpoint 8 "sudo -E pacman -Syu --noconfirm curl" checkpoint_8
 
 checkpoint_9() {
     sudo -E pacman -Syu --noconfirm git
+    cd ~/
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    yes | makepkg -si
 }
-run_checkpoint 9 "sudo -E pacman -Syu --noconfirm git" checkpoint_9
+run_checkpoint 9 "sudo -E pacman -Syu --noconfirm git + yay" checkpoint_9
 
 checkpoint_10() {
     sudo -E pacman -Syu --noconfirm coreutils
@@ -299,14 +304,9 @@ checkpoint_25() {
 run_checkpoint 25 "sudo -E pacman -S pkgconf" checkpoint_25
 
 checkpoint_26() {
-    sudo -E pacman -S --noconfirm gtest
+    yay -S --noconfirm gtest
 }
-run_checkpoint 26 "sudo -E pacman -S gtest" checkpoint_26
-
-checkpoint_27() {
-    sudo -E pacman -S --noconfirm gtest-parallel
-}
-run_checkpoint 27 "sudo -E pacman -S gtest-parallel" checkpoint_27
+run_checkpoint 26 "yay-S gtest" checkpoint_26
 
 checkpoint_28() {
     sudo -E pacman -S --noconfirm re2c
@@ -404,7 +404,6 @@ checkpoint_46() {
 run_checkpoint 46 "sudo -E pacman -S libclc" checkpoint_46
 
 checkpoint_47() {
-    SMRT 75
     sudo -E pacman -S --noconfirm xorg-drivers
 }
 run_checkpoint 47 "sudo -E pacman -S xorg-drivers" checkpoint_47
@@ -645,91 +644,86 @@ checkpoint_99() {
 run_checkpoint 99 "sudo -E pacman -S --noconfirm libseccomp" checkpoint_99
 
 checkpoint_100() {
-    sudo -E pacman -S --noconfirm eselect-repository
-}
-run_checkpoint 100 "sudo -E pacman -S --noconfirm eselect-repository" checkpoint_100
-
-checkpoint_101() {
     sudo -E pacman -S --noconfirm appstream-glib
 }
-run_checkpoint 101 "sudo -E pacman -S --noconfirm appstream-glib" checkpoint_101
+run_checkpoint 100 "sudo -E pacman -S --noconfirm appstream-glib" checkpoint_100
 
-checkpoint_102() {
+checkpoint_101() {
     sudo -E pacman -S --noconfirm gpgme
 }
-run_checkpoint 102 "sudo -E pacman -S --noconfirm gpgme" checkpoint_102
+run_checkpoint 101 "sudo -E pacman -S --noconfirm gpgme" checkpoint_101
 
-checkpoint_103() {
+checkpoint_102() {
     sudo -E pacman -S --noconfirm ostree
 }
-run_checkpoint 103 "sudo -E pacman -S --noconfirm ostree" checkpoint_103
+run_checkpoint 102 "sudo -E pacman -S --noconfirm ostree" checkpoint_102
 
-checkpoint_104() {
+checkpoint_103() {
     sudo -E pacman -S --noconfirm xdg-dbus-proxy
 }
-run_checkpoint 104 "sudo -E pacman -S --noconfirm xdg-dbus-proxy" checkpoint_104
+run_checkpoint 103 "sudo -E pacman -S --noconfirm xdg-dbus-proxy" checkpoint_103
 
-checkpoint_105() {
+checkpoint_104() {
     sudo -E pacman -S --noconfirm gdk-pixbuf2
 }
-run_checkpoint 105 "sudo -E pacman -S --noconfirm gdk-pixbuf2" checkpoint_105
+run_checkpoint 104 "sudo -E pacman -S --noconfirm gdk-pixbuf2" checkpoint_104
 
-checkpoint_106() {
+checkpoint_105() {
     sudo -E pacman -S --noconfirm fuse3
 }
-run_checkpoint 106 "sudo -E pacman -S --noconfirm fuse3" checkpoint_106
+run_checkpoint 105 "sudo -E pacman -S --noconfirm fuse3" checkpoint_105
 
-checkpoint_107() {
+checkpoint_106() {
     sudo -E pacman -S --noconfirm python-gobject
 }
-run_checkpoint 107 "sudo -E pacman -S --noconfirm python-gobject" checkpoint_107
+run_checkpoint 106 "sudo -E pacman -S --noconfirm python-gobject" checkpoint_106
 
-checkpoint_108() {
+checkpoint_107() {
     sudo -E pacman -S --noconfirm dconf
 }
-run_checkpoint 108 "sudo -E pacman -S --noconfirm dconf" checkpoint_108
+run_checkpoint 107 "sudo -E pacman -S --noconfirm dconf" checkpoint_107
 
-checkpoint_109() {
+checkpoint_108() {
     sudo -E pacman -S --noconfirm xdg-utils
 }
-run_checkpoint 109 "sudo -E pacman -S --noconfirm xdg-utils" checkpoint_109
+run_checkpoint 108 "sudo -E pacman -S --noconfirm xdg-utils" checkpoint_108
 
-checkpoint_110() {
+checkpoint_109() {
     sudo -E pacman -S --noconfirm xinit
 }
-run_checkpoint 110 "sudo -E pacman -S --noconfirm xinit" checkpoint_110
+run_checkpoint 109 "sudo -E pacman -S --noconfirm xinit" checkpoint_109
 
-checkpoint_111() {
+checkpoint_110() {
     sudo -E pacman -S --noconfirm xterm
 }
-run_checkpoint 111 "sudo -E pacman -S --noconfirm xterm" checkpoint_111
+run_checkpoint 110 "sudo -E pacman -S --noconfirm xterm" checkpoint_110
 
-checkpoint_112() {
+checkpoint_111() {
     sudo -E pacman -S --noconfirm twm
 }
-run_checkpoint 112 "sudo -E pacman -S --noconfirm twm" checkpoint_112
+run_checkpoint 111 "sudo -E pacman -S --noconfirm twm" checkpoint_111
 
-checkpoint_113() {
+checkpoint_112() {
     sudo -E pacman -S --noconfirm python-pillow fastfetch
 }
-run_checkpoint 113 "sudo -E pacman -S --noconfirm python-pillow fastfetch" checkpoint_113
+run_checkpoint 112 "sudo -E pacman -S --noconfirm python-pillow fastfetch" checkpoint_112
 
-checkpoint_114() {
+checkpoint_113() {
     sudo -E pacman -S --noconfirm chafa
 }
-run_checkpoint 114 "sudo -E pacman -S --noconfirm chafa" checkpoint_114
+run_checkpoint 113 "sudo -E pacman -S --noconfirm chafa" checkpoint_113
 
-checkpoint_115() {
+checkpoint_114() {
     sudo -E pacman -S --noconfirm doxygen
 }
-run_checkpoint 115 "sudo -E pacman -S --noconfirm doxygen" checkpoint_115
+run_checkpoint 114 "sudo -E pacman -S --noconfirm doxygen" checkpoint_114
 
-checkpoint_116() {
+checkpoint_115() {
     sudo -E pacman -S --noconfirm libclc egl-gbm
 }
-run_checkpoint 116 "sudo -E pacman -S --noconfirm libclc egl-gbm" checkpoint_116
+run_checkpoint 115 "sudo -E pacman -S --noconfirm libclc egl-gbm" checkpoint_115
 
-checkpoint_117() {
+checkpoint_116() {
     cd /tmp
     git clone https://chromium.googlesource.com/chromiumos/platform2
     cd platform2/vm_tools/sommelier
@@ -738,42 +732,42 @@ checkpoint_117() {
     ninja -C build install
     sudo rm -rf /tmp/platform2
 }
-run_checkpoint 117 "Build Sommelier" checkpoint_117
+run_checkpoint 116 "Build Sommelier" checkpoint_116
 
-checkpoint_118() {
+checkpoint_117() {
     sudo -E pacman -S --noconfirm flatpak
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     sudo chown -R 1000:1000 /home/chronos/.local/share/flatpak
 }
-run_checkpoint 118 "sudo -E pacman -S --noconfirm flatpak" checkpoint_118
+run_checkpoint 117 "sudo -E pacman -S --noconfirm flatpak" checkpoint_117
 
-checkpoint_119() {
+checkpoint_118() {
     sudo -E pacman -Syu --noconfirm thunar
 }
-run_checkpoint 119 "sudo -E pacman -Syu --noconfirm thunar" checkpoint_119
+run_checkpoint 118 "sudo -E pacman -Syu --noconfirm thunar" checkpoint_118
 
-checkpoint_120() {
+checkpoint_119() {
     sudo -E pacman -Syu --noconfirm gvfs
 }
-run_checkpoint 120 "sudo -E pacman -Syu --noconfirm gvfs" checkpoint_120
+run_checkpoint 119 "sudo -E pacman -Syu --noconfirm gvfs" checkpoint_119
 
-checkpoint_121() {
+checkpoint_120() {
     sudo -E pacman -Syu --noconfirm xfce4
 }
-run_checkpoint 121 "sudo -E pacman -Syu --noconfirm xfce4" checkpoint_121
+run_checkpoint 120 "sudo -E pacman -Syu --noconfirm xfce4" checkpoint_120
 
-checkpoint_122() {
+checkpoint_121() {
     echo "[*] Skipping Firefox install for now"
 }
-run_checkpoint 122 "skip firefox-bin" checkpoint_122
+run_checkpoint 121 "skip firefox-bin" checkpoint_121
 
-checkpoint_123() {
+checkpoint_122() {
     sudo -E pacman -Syu --noconfirm libva libva-intel-driver
 }
-run_checkpoint 123 "sudo -E pacman -Syu --noconfirm libva" checkpoint_123
+run_checkpoint 122 "sudo -E pacman -Syu --noconfirm libva" checkpoint_122
 
-checkpoint_124() {
+checkpoint_123() {
     detect_intel_gpu() {
         if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
             GPU_MAX_FREQ=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
@@ -794,88 +788,80 @@ checkpoint_124() {
         echo "[*] Skipping Intel driver installation"
     fi
 }
-run_checkpoint 124 "sudo -E pacman -Syu --noconfirm intel-media-driver" checkpoint_124
+run_checkpoint 123 "sudo -E pacman -Syu --noconfirm intel-media-driver" checkpoint_123
 
-checkpoint_125() {
+checkpoint_124() {
     sudo -E pacman -Syu --noconfirm libao yt-dlp opus vlc
 }
-run_checkpoint 125 "sudo -E pacman -Syu --noconfirm yt-dlp + vlc" checkpoint_125
+run_checkpoint 124 "sudo -E pacman -Syu --noconfirm yt-dlp + vlc" checkpoint_124
+
+checkpoint_125() {
+    sudo -E pacman -Syu --noconfirm vulkan-tools
+}
+run_checkpoint 125 "sudo -E pacman -Syu --noconfirm vulkan-tools" checkpoint_125
 
 checkpoint_126() {
-    sudo -E pacman -Syu --noconfirm vulkan-tools git brave
-}
-run_checkpoint 126 "sudo -E pacman -Syu --noconfirm brave-browser" checkpoint_126
-
-checkpoint_127() {
     sudo -E pacman -Syu --noconfirm p7zip arj lha lzop unrar unzip zip xarchiver
 }
-run_checkpoint 127 "sudo -E pacman -Syu --noconfirm xarchiver + archivers" checkpoint_127
+run_checkpoint 126 "sudo -E pacman -Syu --noconfirm xarchiver + archivers" checkpoint_126
 
-checkpoint_128() {
-    sudo -E pacman -Syu --noconfirm vscodium
-}
-run_checkpoint 128 "sudo -E pacman -Syu --noconfirm vscodium" checkpoint_128
-
-checkpoint_129() {
-    sudo -E pacman -Syu --noconfirm gamemode prismlauncher
-}
-run_checkpoint 129 "sudo -E pacman -Syu --noconfirm prismlauncher" checkpoint_129
-
-checkpoint_130() {
+checkpoint_127() {
     sudo -E pacman -Syu --noconfirm gimp
 }
-run_checkpoint 130 "sudo -E pacman -Syu --noconfirm gimp" checkpoint_130
+run_checkpoint 127 "sudo -E pacman -Syu --noconfirm gimp" checkpoint_127
 
-checkpoint_131() {
+checkpoint_128() {
     cd /usr/share/X11/xkb/symbols
     sudo cp inet ~/.inet.backup
     sudo sed -i -E 's/^\s*key <I(360|362|368|370|373|374|376|377|381|384|385|386|387|388|389|391|392|393|394|395|396|398|417|421|570|598|599)>/\/\/ &/' inet
 }
-run_checkpoint 131 "Keyboard error spam fix" checkpoint_131
+run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 
-checkpoint_132() {
+checkpoint_129() {
     sudo -E pacman -Syu --noconfirm libreoffice-fresh
 }
-run_checkpoint 132 "sudo -E pacman -Syu --noconfirm libreoffice" checkpoint_132
+run_checkpoint 129 "sudo -E pacman -Syu --noconfirm libreoffice" checkpoint_129
 
-checkpoint_133() {
+checkpoint_130() {
     sudo -E pacman -Syu --noconfirm obs-studio obs-vkcapture obs-pipewire
 }
-run_checkpoint 133 "sudo -E pacman -Syu --noconfirm obs-studio" checkpoint_133
+run_checkpoint 130 "sudo -E pacman -Syu --noconfirm obs-studio" checkpoint_130
 
-checkpoint_134() {
+checkpoint_131() {
     sudo -E pacman -Syu --noconfirm ruby
 }
-run_checkpoint 134 "sudo -E pacman -Syu --noconfirm ruby" checkpoint_134
+run_checkpoint 131 "sudo -E pacman -Syu --noconfirm ruby" checkpoint_131
 
-checkpoint_135() {
-    sudo chown -R $USER:$USER $HOME
-}
-run_checkpoint 135 "sudo chown -R $USER:$USER $HOME" checkpoint_135
-
-checkpoint_136() {
-    sudo -E pacman -Syu --noconfirm heroic
-    sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
-    sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
-    sudo chown -R $USER:$USER /home/chronos/.config/heroic
-}
-run_checkpoint 136 "sudo -E pacman -Syu --noconfirm heroic" checkpoint_136
-
-checkpoint_137() {
+checkpoint_132() {
     sudo -E pacman -Syu --noconfirm gparted exfatprogs dosfstools ntfs-3g mtools
 }
-run_checkpoint 137 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_137
+run_checkpoint 136 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_136
 
-checkpoint_138() {
+checkpoint_133() {
     sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
     sudo chmod +x /usr/local/bin/unetbootin
 }
-run_checkpoint 138 "unetbootin" checkpoint_138
+run_checkpoint 137 "unetbootin" checkpoint_137
 
-checkpoint_139() {
+checkpoint_134() {
     sudo -E pacman -Syu --noconfirm qemu qemu-arch-extra qemu-user
 }
-run_checkpoint 139 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_139
+run_checkpoint 138 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_138
+
+checkpoint_135() {
+    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
+}
+run_checkpoint 135 "yay -S --noconfirm heroic-games-launcher" checkpoint_135
+
+checkpoint_136() {
+    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm vscodium
+}
+run_checkpoint 136 "yay -S --noconfirm vscodium" checkpoint_136
+
+checkpoint_137() {
+    yay -S --noconfirm prismlauncher
+}
+run_checkpoint 137 "sudo -E pacman -Syu --noconfirm prismlauncher" checkpoint_137
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
