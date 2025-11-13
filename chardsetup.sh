@@ -1,4 +1,14 @@
 #!/bin/bash
+
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
+# <<< END_CHARD_ROOT_MARKER >>>
+
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+
 MIRRORLIST="/etc/pacman.d/mirrorlist"
 PACCONF="${PACCONF:-/etc/pacman.conf}"
 [[ -f "$MIRRORLIST" ]] || { echo "Mirrorlist not found: $MIRRORLIST"; exit 1; }
