@@ -683,7 +683,7 @@ else
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
 fi
 
-sudo umount -l "$CHARD_ROOT"  || true
+sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 
 echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
 echo ""
