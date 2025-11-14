@@ -287,8 +287,9 @@ if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
     echo "    $MIRROR_URL"
     echo
 
-    sudo curl -L --fail --retry 5 --retry-delay 5 -C - \
-        -o "$TMP_BOOTSTRAP" \
+    sudo curl -L --fail --retry 5 --retry-delay 5 \
+        --progress-bar \
+        -C - -o "$TMP_BOOTSTRAP" \
         "$MIRROR_URL"
 else
     sudo curl -L --fail --retry 5 --retry-delay 5 -C - \
