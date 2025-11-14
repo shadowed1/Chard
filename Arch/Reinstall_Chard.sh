@@ -55,7 +55,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Arch/cha
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
 sleep 0.2
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Arch/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
 sleep 0.2
