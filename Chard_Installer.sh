@@ -489,6 +489,7 @@ else
     sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
 fi
 
+sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
 sudo mount --make-rslave "$CHARD_ROOT"
         
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
@@ -603,6 +604,7 @@ else
     sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
 fi
 
+sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
 sudo mount --make-rslave "$CHARD_ROOT"
         
 sudo chroot "$CHARD_ROOT" /bin/bash -c "
@@ -1102,6 +1104,7 @@ else
     sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
 fi
 
+sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
 sudo mount --make-rslave "$CHARD_ROOT"
 
 sudo chroot $CHARD_ROOT /bin/bash -c "
@@ -1706,6 +1709,7 @@ else
     sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
 fi
 
+sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
 sudo mount --make-rslave "$CHARD_ROOT"
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
