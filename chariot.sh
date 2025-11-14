@@ -873,7 +873,6 @@ checkpoint_137() {
 }
 run_checkpoint 137 "steam | sh" checkpoint_137
 
-
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
 #}
