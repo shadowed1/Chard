@@ -160,7 +160,6 @@ case "$cmd" in
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
         sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
-        sudo mount --make-rslave  "$CHARD_ROOT/$CHARD_HOME/bwrap"
         sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         if [ -f "/home/chronos/user/.bashrc" ]; then
