@@ -213,40 +213,45 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod 1777 "$CHARD_ROOT/tmp/.X11-unix"
                 
                 echo "${BLUE}[*] Downloading Chard components..."
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chardrc"            -o "$CHARD_ROOT/.chardrc"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.env"          -o "$CHARD_ROOT/.chard.env"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard.sh"            -o "$CHARD_ROOT/bin/chard"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_mount"           -o "$CHARD_ROOT/bin/chard_mount"
-                sleep 0.5
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_unmount"           -o "$CHARD_ROOT/bin/chard_unmount"
-                sleep 0.5
+                
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/.chardrc"            -o "$CHARD_ROOT/.chardrc"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/.chard.env"          -o "$CHARD_ROOT/.chard.env"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/chard.sh"            -o "$CHARD_ROOT/bin/chard"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/wx"                  -o "$CHARD_ROOT/bin/wx"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
+                sleep 0.2
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
