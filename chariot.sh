@@ -273,7 +273,7 @@ run_checkpoint 19 "build and install kernel + modules" checkpoint_19
 
 
 checkpoint_20() {
-    sudo -E pacman -Syu --noconfirm python python3 jinja2
+    sudo -E pacman -Syu --noconfirm python python3 python-jinja
 }
 run_checkpoint 20 "sudo -E pacman -S python" checkpoint_20
 
