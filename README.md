@@ -8,15 +8,9 @@
 
 <br>
 
-- For **ChromeOS + FydeOS** open crosh, type in `shell` and paste:
+- For **ChromeOS, FydeOS, and most Linux Distros,** open crosh, type in `shell` and paste:
 
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
-
-<br>
-
-- For **all Linux distros**, open terminal and paste :
-
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")</pre> 
+<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_download?$(date +%s)")</pre>
 
 <br>
 
