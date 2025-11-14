@@ -244,29 +244,29 @@ checkpoint_18() {
 }
 run_checkpoint 18 "sudo -E pacman -S elfutils" checkpoint_18
 
-
 checkpoint_19() {
+     sudo bash -c '
+        if [ "$(uname -m)" = "aarch64" ]; then
+            export ARCH=arm64
+        fi
 
-    if [ "$(uname -m)" = "aarch64" ]; then
-        export ARCH=arm64
-    fi
+        cd /usr/src/linux || exit 1
 
-    cd /usr/src/linux || exit 1
+        scripts/kconfig/merge_config.sh -m .config enable_features.cfg
+        make olddefconfig
 
-    scripts/kconfig/merge_config.sh -m .config enable_features.cfg
-    make olddefconfig
+        make -j"$(nproc)" tools/objtool
+        make -j"$(nproc)"
 
-    make -j"$(nproc)" tools/objtool
-    make -j"$(nproc)"
+        make modules_install
+        make INSTALL_PATH=/boot install
 
-    make modules_install
-    make INSTALL_PATH=/boot install
+        make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-"$(uname -r)"
 
-    sudo make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-"$(uname -r)"
-
-    if [ "$(uname -m)" = "aarch64" ]; then
-        export ARCH=aarch64
-    fi
+        if [ "$(uname -m)" = "aarch64" ]; then
+            export ARCH=aarch64
+        fi
+    '
 }
 run_checkpoint 19 "build and install kernel + modules" checkpoint_19
 
