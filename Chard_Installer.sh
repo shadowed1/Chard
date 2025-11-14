@@ -1687,9 +1687,6 @@ sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
 
 source "$CHARD_ROOT/.chardrc"
 
-sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
-sudo mount --make-rslave "$CHARD_ROOT"
-
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
@@ -1708,6 +1705,9 @@ if [ -f "/home/chronos/user/.bashrc" ]; then
 else
     sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
 fi
+
+sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
+sudo mount --make-rslave "$CHARD_ROOT"
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
     mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
