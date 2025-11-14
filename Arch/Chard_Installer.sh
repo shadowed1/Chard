@@ -167,6 +167,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+    sudo umount -l "$CHARD_ROOT/run"                                2>/dev/null || true
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
@@ -195,6 +196,7 @@ sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || t
 sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run"                                2>/dev/null || true
 sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
