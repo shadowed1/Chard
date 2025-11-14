@@ -1,0 +1,29 @@
+# <<< CHARD_ENV <<<
+
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
+# <<< END_CHARD_ROOT_MARKER >>>
+
+case ":$PATH:" in
+    *":$CHARD_ROOT/usr/bin:"*) ;;
+    *) PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
+esac
+
+case ":$PATH:" in
+    *":$CHARD_ROOT/bin:"*) ;;
+    *) PATH="$PATH:$CHARD_ROOT/bin" ;;
+esac
+
+export PATH
+
+[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
+[ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
+
+alias safe='chard safe'
+alias cr='chard root'
+alias chariot='chard chariot'
+CR="$CHARD_ROOT"
+
+# <<< END CHARD_ENV <<<
