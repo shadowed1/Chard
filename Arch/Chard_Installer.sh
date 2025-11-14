@@ -471,7 +471,6 @@ add_chard_marker() {
 }
 
 add_chard_marker "$TARGET_FILE"
-sudo rm "$CHARD_ROOT/etc/resolv.conf"
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
