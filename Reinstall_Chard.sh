@@ -29,3 +29,118 @@ cleanup_chroot() {
 }
 
 trap cleanup_chroot EXIT INT TERM
+
+echo "${BLUE}[*] Downloading Chard components...${RESET}"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chardrc"            -o "$CHARD_ROOT/.chardrc"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.chard.env"          -o "$CHARD_ROOT/.chard.env"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard.sh"            -o "$CHARD_ROOT/bin/chard"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/wx"                  -o "$CHARD_ROOT/bin/wx"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/wx"                  -o "$CHARD_ROOT/bin/wx"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_unmount"       -o "$CHARD_ROOT/bin/chard_unmount"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/chardsetup.sh"       -o "$CHARD_ROOT/bin/chardsetup"
+sleep 0.2
+
+sudo chmod +x "$CHARD_ROOT/bin/chard"
+sudo chmod +x "$CHARD_ROOT/bin/chariot"
+sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
+sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
+sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
+sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
+sudo chmod +x "$CHARD_ROOT/bin/wx"
+sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
+sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
+sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
+
+
+for file in \
+    "$CHARD_ROOT/.chardrc" \
+    "$CHARD_ROOT/.chard.env" \
+    "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
+    "$CHARD_ROOT/bin/.rootrc" \
+    "$CHARD_ROOT/bin/chariot" \
+    "$CHARD_ROOT/bin/chard_debug" \
+    "$CHARD_ROOT/bin/chardsetup" \
+    "$CHARD_ROOT/bin/chard"; do
+
+    if [ -f "$file" ]; then
+        if sudo grep -q '^# <<< CHARD_ROOT_MARKER >>>' "$file"; then
+            sudo sed -i -E "/^# <<< CHARD_ROOT_MARKER >>>/,/^# <<< END_CHARD_ROOT_MARKER >>>/c\
+# <<< CHARD_ROOT_MARKER >>>\n\
+CHARD_ROOT=\"$CHARD_ROOT\"\n\
+CHARD_HOME=\"$CHARD_HOME\"\n\
+CHARD_USER=\"$CHARD_USER\"\n\
+# <<< END_CHARD_ROOT_MARKER >>>" "$file"
+        else
+            sudo sed -i "1i # <<< CHARD_ROOT_MARKER >>>\n\
+CHARD_ROOT=\"$CHARD_ROOT\"\n\
+CHARD_HOME=\"$CHARD_HOME\"\n\
+CHARD_USER=\"$CHARD_USER\"\n\
+# <<< END_CHARD_ROOT_MARKER >>>\n" "$file"
+        fi
+
+        sudo chmod +x "$file"
+    else
+        echo "${RED}[!] Missing: $file ${RESET}"
+    fi
+done
+
+sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
+
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+TARGET_FILE=""
+
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    TARGET_FILE="$CHROMEOS_BASHRC"
+    sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+else
+    TARGET_FILE="$DEFAULT_BASHRC"
+fi
+
+add_chard_marker() {
+    local FILE="$1"
+    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE"
+
+    if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
+        {
+            echo "# <<< CHARD ENV MARKER <<<"
+            echo "source \"$CHARD_RC\""
+            echo "# <<< END CHARD ENV MARKER <<<"
+        } >> "$FILE"
+        echo "${BLUE}[+] Chard sourced to $FILE"
+    else
+        echo "${YELLOW}[!] Chard already sourced in $FILE"
+    fi
+}
+
+add_chard_marker "$TARGET_FILE"
