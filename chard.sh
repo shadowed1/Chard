@@ -156,9 +156,13 @@ case "$cmd" in
     uninstall)
          chard_uninstall
         ;;
-    root) 
+    root)
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
+        sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+        sudo mount --make-rslave  "$CHARD_ROOT/$CHARD_HOME/bwrap"
+        sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+        sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
@@ -255,13 +259,11 @@ case "$cmd" in
             sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
         fi
         
+        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 
         killall -9 pulseaudio 2>/dev/null
 
-        #sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
-        #sudo umount -l "$CHARD_ROOT/$CHARD_HOME" 2>/dev/null || true
-        #sudo umount -l "$CHARD_ROOT"
         ;;
     chariot)
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
