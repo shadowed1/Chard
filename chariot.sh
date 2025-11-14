@@ -848,20 +848,20 @@ checkpoint_134() {
 }
 run_checkpoint 138 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_138
 
-checkpoint_135() {
-    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
-}
-run_checkpoint 135 "yay -S --noconfirm heroic-games-launcher" checkpoint_135
+#checkpoint_135() {
+#    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
+#}
+#run_checkpoint 135 "yay -S --noconfirm heroic-games-launcher" checkpoint_135
 
-checkpoint_136() {
-    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm vscodium
-}
-run_checkpoint 136 "yay -S --noconfirm vscodium" checkpoint_136
+#checkpoint_136() {
+#    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm vscodium
+#}
+#run_checkpoint 136 "yay -S --noconfirm vscodium" checkpoint_136
 
-checkpoint_137() {
-    yay -S --noconfirm prismlauncher
-}
-run_checkpoint 137 "sudo -E pacman -Syu --noconfirm prismlauncher" checkpoint_137
+#checkpoint_137() {
+#    yay -S --noconfirm prismlauncher
+#}
+#run_checkpoint 137 "sudo -E pacman -Syu --noconfirm prismlauncher" checkpoint_137
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
