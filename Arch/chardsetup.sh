@@ -98,17 +98,20 @@ else
 fi
 
 grep -E '^\[multilib\]|^Color|^VerbosePkgLists|^ParallelDownloads|^DisableSandbox' "$PACCONF"
-
 pacman-key --init
-pacman-key --populate archlinux
+if [ "$(uname -m)" = "aarch64" ]; then
+    pacman-key --populate archlinuxarm
+else
+    pacman-key --populate archlinux
+fi
 pacman-key --refresh-keys --keyserver --allow-weak-key-signatures hkps://keyserver.ubuntu.com 2>/dev/null
 pacman -Syu --noconfirm
-pacman -Syu --noconfirm make --overwrite '*'
-pacman -Syu --noconfirm gcc --overwrite '*'
-pacman -Syu --noconfirm rsync --overwrite '*'
-pacman -Syu --noconfirm base-devel --overwrite '*'
-pacman -Syu --noconfirm ncurses --overwrite '*'
-pacman -Syu --noconfirm flex --overwrite '*'
-pacman -Syu --noconfirm bison --overwrite '*'
-pacman -Syu --noconfirm bc --overwrite '*'
-pacman -Syu --noconfirm sudo --overwrite '*'
+pacman -Syu --noconfirm make
+pacman -Syu --noconfirm gcc
+pacman -Syu --noconfirm rsync
+pacman -Syu --noconfirm base-devel
+pacman -Syu --noconfirm ncurses
+pacman -Syu --noconfirm flex
+pacman -Syu --noconfirm bison
+pacman -Syu --noconfirm bc
+pacman -Syu --noconfirm sudo
