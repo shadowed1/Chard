@@ -824,20 +824,24 @@ checkpoint_131() {
 run_checkpoint 131 "sudo -E pacman -Syu --noconfirm ruby" checkpoint_131
 
 checkpoint_132() {
-    sudo -E pacman -Syu --noconfirm gparted exfatprogs dosfstools ntfs-3g mtools
+    sudo -E pacman -Syu --noconfirm gparted
+    sudo -E pacman -Syu --noconfirm exfatprogs
+    sudo -E pacman -Syu --noconfirm dosfstools
+    sudo -E pacman -Syu --noconfirm ntfs-3g 
+    sudo -E pacman -Syu --noconfirm mtools
 }
-run_checkpoint 136 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_136
+run_checkpoint 132 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_132
 
 checkpoint_133() {
     sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
     sudo chmod +x /usr/local/bin/unetbootin
 }
-run_checkpoint 137 "unetbootin" checkpoint_137
+run_checkpoint 133 "unetbootin" checkpoint_133
 
 checkpoint_134() {
     sudo -E pacman -Syu --noconfirm qemu-desktop
 }
-run_checkpoint 138 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_138
+run_checkpoint 134 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_134
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
