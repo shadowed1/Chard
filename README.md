@@ -198,7 +198,7 @@
 ### Commands (Some not listed) <br>
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
 - `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
-- `chard safe` -- Enter Chard Root without GUI support.
+- `chard safe` -- Enter Chard Root without GUI support -- Useful to for emerge or entering Chard prior to finishing Installer.
 - `chard reinstall` -- Option 1 for FAST reinstall. Option 2 is a FULL reinstall.
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
