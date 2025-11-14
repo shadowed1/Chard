@@ -787,7 +787,7 @@ checkpoint_123() {
 run_checkpoint 123 "sudo -E pacman -Syu --noconfirm intel-media-driver" checkpoint_123
 
 checkpoint_124() {
-    sudo -E pacman -Syu --noconfirm libao yt-dlp opus vlc
+    sudo -E pacman -Syu --noconfirm libao yt-dlp opus ffmpeg vlc
 }
 run_checkpoint 124 "sudo -E pacman -Syu --noconfirm yt-dlp + vlc" checkpoint_124
 
