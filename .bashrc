@@ -107,7 +107,7 @@ unique_join() {
 
 export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
 export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export MAGIC="$ROOT/usr/share/misc/magic.mgc"
+export MAGIC="$ROOT/usr/share/file/misc/magic.mgc"
 export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
 export CPPFLAGS="-I$ROOT/usr/include"
 export ACLOCAL_PATH="$ROOT/usr/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
