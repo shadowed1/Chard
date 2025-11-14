@@ -1666,9 +1666,6 @@ sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR 
 # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
 "$CHARD_ROOT/bin/chard_sommelier"
 
-sudo mkdir -p "$CHARD_ROOT/etc/portage/env"
-sudo mkdir -p "$CHARD_ROOT/etc/portage/package.env"
-
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
 echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
