@@ -291,20 +291,28 @@ checkpoint_20() {
 run_checkpoint 20 "sudo -E emerge dev-libs/elfutils" checkpoint_20
 
 checkpoint_21() {
-    if [ $(uname -m) = aarch64 ]; then
-        export ARCH=arm64
-    fi
-    cd /usr/src/linux
-    scripts/kconfig/merge_config.sh -m .config enable_features.cfg
-    make olddefconfig
-    make -j$(nproc) tools/objtool
-    make -j$(nproc)
-    make modules_install
-    make INSTALL_PATH=/boot install
-    sudo make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-$(uname -r)
-    if [ $(uname -m) = aarch64 ]; then
-        export ARCH=aarch64
-    fi
+    sudo bash -c '
+        if [ "$(uname -m)" = "aarch64" ]; then
+            export ARCH=arm64
+        fi
+
+        cd /usr/src/linux || exit 1
+
+        scripts/kconfig/merge_config.sh -m .config enable_features.cfg
+        make olddefconfig
+
+        make -j"$(nproc)" tools/objtool
+        make -j"$(nproc)"
+
+        make modules_install
+        make INSTALL_PATH=/boot install
+
+        make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-"$(uname -r)"
+
+        if [ "$(uname -m)" = "aarch64" ]; then
+            export ARCH=aarch64
+        fi
+    '
 }
 run_checkpoint 21 "build and install kernel + modules" checkpoint_21
 
@@ -994,7 +1002,7 @@ checkpoint_117() {
     cd platform2/vm_tools/sommelier
     meson setup build
     ninja -C build
-    ninja -C build install
+    sudo -E ninja -C build install
     sudo rm -rf /tmp/platform2
 }
 run_checkpoint 117 "Build Sommelier" checkpoint_117
