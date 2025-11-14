@@ -723,12 +723,9 @@ checkpoint_116() {
     sudo -E ninja -C build install
     cd /tmp
     sudo rm -rf /tmp/platform2
-    git clone https://aur.archlinux.org/cros-container-guest-tools-git.git
-    cd cros-container-guest-tools-git
-    makepkg -si --noconfirm
 
 }
-run_checkpoint 116 "Build Sommelier and Audio support" checkpoint_116
+run_checkpoint 116 "Build Sommelier" checkpoint_116
 
 checkpoint_117() {
     sudo -E pacman -Syu --noconfirm flatpak
