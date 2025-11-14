@@ -94,7 +94,7 @@ chard_reinstall() {
             echo "Reinstalling Chard..."
             sudo bash "$script"
         else
-            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
             sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
             $CHARD_ROOT/bin/Reinstall_Chard.sh
         fi
@@ -117,7 +117,7 @@ chard_uninstall() {
             echo "Uninstalling Chard..."
             sudo bash "$script"
         else
-            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/arch/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
             sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
             $CHARD_ROOT/bin/Uninstall_Chard.sh
         fi
@@ -460,7 +460,7 @@ case "$cmd" in
             CURRENT_VER=$(cat "$HOME/opt/bin/version")
             CURRENT_VER_NO=$(echo "$CURRENT_VER" | sed -e 's/VERSION=//' -e 's/"//g' -e 's/\.//g' -e 's/^0*//')
         
-            LATEST_VER=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_version")
+            LATEST_VER=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_version")
             LATEST_VER_NO=$(echo "$LATEST_VER" | sed -e 's/VERSION=//' -e 's/"//g' -e 's/\.//g' -e 's/^0*//')
         
             if [[ "$CURRENT_VER_NO" =~ ^[0-9]+$ && "$LATEST_VER_NO" =~ ^[0-9]+$ ]]; then
@@ -469,7 +469,7 @@ case "$cmd" in
                     read -rp "Would you like to 'reinstall' to get $LATEST_VER ? (Y/n): " choice
                     if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
                         echo "${CYAN}Reinstalling!${RESET}"
-                        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")
+                        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/arch/Chard_Installer.sh?$(date +%s)")
                     else
                         echo "${YELLOW}Skipping reinstall.${RESET}"
                     fi
