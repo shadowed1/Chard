@@ -146,3 +146,17 @@ add_chard_marker() {
 }
 
 add_chard_marker "$TARGET_FILE"
+
+if grep -q "CHROMEOS_RELEASE" /etc/lsb-release 2>/dev/null; then
+    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/chrome"'
+else
+    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/user/1000"'
+fi
+
+sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
+# <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
+"$CHARD_ROOT/$CHARD_HOME/.bashrc"
+
+sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
+# <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
+"$CHARD_ROOT/bin/chard_sommelier"
