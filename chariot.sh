@@ -729,7 +729,7 @@ checkpoint_117() {
     sudo -E pacman -Syu --noconfirm flatpak
     sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    sudo chown -R 1000:1000 /$HOME/.local/share/flatpak
+    sudo chown -R 1000:1000 ~/.local/share/flatpak
 }
 run_checkpoint 117 "sudo -E pacman -Syu --noconfirm flatpak" checkpoint_117
 
@@ -808,13 +808,13 @@ checkpoint_128() {
 }
 run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 
-checkpoint_129() {
-    sudo -E pacman -Syu --noconfirm libreoffice-fresh
-}
-run_checkpoint 129 "sudo -E pacman -Syu --noconfirm libreoffice" checkpoint_129
+#checkpoint_129() {
+#    sudo -E pacman -Syu --noconfirm libreoffice-fresh
+#}
+#run_checkpoint 129 "sudo -E pacman -Syu --noconfirm libreoffice" checkpoint_129
 
 checkpoint_130() {
-    sudo -E pacman -Syu --noconfirm obs-studio obs-vkcapture obs-pipewire
+    sudo -E pacman -Syu --noconfirm obs-studio
 }
 run_checkpoint 130 "sudo -E pacman -Syu --noconfirm obs-studio" checkpoint_130
 
@@ -835,7 +835,7 @@ checkpoint_133() {
 run_checkpoint 137 "unetbootin" checkpoint_137
 
 checkpoint_134() {
-    sudo -E pacman -Syu --noconfirm qemu qemu-arch-extra qemu-user
+    sudo -E pacman -Syu --noconfirm qemu-desktop
 }
 run_checkpoint 138 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_138
 
