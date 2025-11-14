@@ -567,7 +567,7 @@ run_checkpoint 83 "pacman -Syu --noconfirm ttf-dejavu" checkpoint_83
 checkpoint_84() {
     yay -S --noconfirm gtk-engines
 }
-run_checkpoint 84 "pacman -Syu --noconfirm gtk-engines" checkpoint_84
+run_checkpoint 84 "yay -S --noconfirm gtk-engines" checkpoint_84
 
 checkpoint_86() {
     sudo -E pacman -Syu --noconfirm python python-pip
