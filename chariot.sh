@@ -749,9 +749,9 @@ checkpoint_120() {
 run_checkpoint 120 "sudo -E pacman -Syu --noconfirm xfce4" checkpoint_120
 
 checkpoint_121() {
-    echo "[*] Skipping Firefox install for now"
+    sudo -E pacman -Syu  --noconfirm pulseaudio
 }
-run_checkpoint 121 "skip firefox-bin" checkpoint_121
+run_checkpoint 121 "pulse audio" checkpoint_121
 
 checkpoint_122() {
     sudo -E pacman -Syu --noconfirm libva libva-intel-driver
