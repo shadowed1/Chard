@@ -1751,7 +1751,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
         source \$HOME/.bashrc 2>/dev/null
         sudo chown -R 1000:1000 $HOME
         cd \$HOME
-        sudo -E /bin/chariot
+        /bin/chariot
     "
 
     umount -l /dev/zram0   2>/dev/null || true
