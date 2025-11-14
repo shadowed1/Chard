@@ -843,6 +843,23 @@ checkpoint_134() {
 }
 run_checkpoint 134 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_134
 
+checkpoint_135() {
+    sudo -E pacman -Syu --noconfirm lib32-libxtst
+    sudo -E pacman -Syu --noconfirm lib32-libxrandr
+    sudo -E pacman -Syu --noconfirm lib32-libxrender
+    sudo -E pacman -Syu --noconfirm lib32-libxi
+    sudo -E pacman -Syu --noconfirm lib32-gdk-pixbuf2
+    sudo -E pacman -Syu --noconfirm lib32-pulseaudio
+    sudo -E pacman -Syu --noconfirm lib32-vdpau-driver
+}
+run_checkpoint 135 "sudo -E pacman -Syu --noconfirm lib32gpu" checkpoint_135
+
+checkpoint_136() {
+    curl -fsS https://dl.brave.com/install.sh | sh
+}
+run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
+
+
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
 #}
