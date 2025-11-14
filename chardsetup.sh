@@ -22,7 +22,7 @@ for i in "${!countries[@]}"; do
 done
 echo
 while true; do
-    read -rp "Select a region number to enable its mirrors: " choice
+    read -rp "Enter the best region number to enable its mirrors: " choice
     if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#countries[@]} )); then
         break
     fi
