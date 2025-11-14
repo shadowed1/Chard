@@ -720,16 +720,16 @@ checkpoint_116() {
     cd platform2/vm_tools/sommelier
     meson setup build
     ninja -C build
-    ninja -C build install
+    sudo -E ninja -C build install
     sudo rm -rf /tmp/platform2
 }
 run_checkpoint 116 "Build Sommelier" checkpoint_116
 
 checkpoint_117() {
     sudo -E pacman -Syu --noconfirm flatpak
-    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    sudo chown -R 1000:1000 /home/chronos/.local/share/flatpak
+    sudo chown -R 1000:1000 /$HOME/.local/share/flatpak
 }
 run_checkpoint 117 "sudo -E pacman -Syu --noconfirm flatpak" checkpoint_117
 
