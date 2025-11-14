@@ -55,6 +55,102 @@ if [[ "$1" == "reset" ]]; then
     reset
 fi
 
+detect_gpu_freq() {
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+    GPU_TYPE="unknown"
+
+    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        GPU_TYPE="intel"
+        echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+        GPU_TYPE="nvidia"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+        GPU_MAX_FREQ="$MAX_MHZ"
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
+        GPU_TYPE="amd"
+        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
+            GPU_MAX_FREQ="$MAX_MHZ"
+        fi
+        GPU_FREQ_PATH="$PP_OD_FILE"
+        echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [[ -d /sys/class/drm ]]; then
+        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mediatek"
+            echo "[*] Detected MediaTek GPU"
+            return
+        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="vivante"
+            echo "[*] Detected Vivante GPU"
+            return
+        elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="asahi"
+            echo "[*] Detected Asahi GPU"
+            return
+        elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mali"
+            echo "[*] Detected Mali/Panfrost GPU"
+            return
+        fi
+    fi
+
+    for d in /sys/class/devfreq/*; do
+        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
+            if [ -f "$d/max_freq" ]; then
+                GPU_FREQ_PATH="$d/max_freq"
+                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                GPU_TYPE="mali"
+                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                return
+            elif [ -f "$d/available_frequencies" ]; then
+                GPU_FREQ_PATH="$d/available_frequencies"
+                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
+                GPU_TYPE="mali"
+                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                return
+            fi
+        fi
+    done
+
+    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+            return
+        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+            return
+        fi
+    fi
+
+    echo "[*] No GPU detected, using unknown"
+    GPU_TYPE="unknown"
+}
+
+detect_gpu_freq
+
 echo ""
 echo ""
 echo "${RESET}${RED}"        
@@ -870,9 +966,68 @@ run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_1
 
 checkpoint_137() {
     sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
+    yay -S --noconfirm lib32-gtk2
     sudo -E pacman -Syu --noconfirm steam
 }
 run_checkpoint 137 "steam | sh" checkpoint_137
+
+checkpoint_138() {
+   echo "[*] Installing Vulkan driver packages for GPU type: $GPU_TYPE"
+    case "$GPU_TYPE" in
+        intel)
+            echo "[+] Installing Intel Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa mesa-vdpau lib32-mesa \
+                vulkan-intel lib32-vulkan-intel
+            ;;
+        amd)
+            echo "[+] Installing AMD Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa mesa-vdpau lib32-mesa \
+                vulkan-radeon lib32-vulkan-radeon
+            ;;
+
+        nvidia)
+            echo "[+] Installing NVIDIA Vulkan drivers..."
+            KVER=$(uname -r)
+            if [[ "$KVER" == *"lts"* ]]; then
+                DRIVER="nvidia-lts"
+            else
+                DRIVER="nvidia"
+            fi
+
+            sudo -E pacman -Syu --noconfirm \
+                $DRIVER nvidia-utils lib32-nvidia-utils \
+                vulkan-icd-loader lib32-vulkan-icd-loader
+            ;;
+
+        mali|panfrost|mediatek|vivante|asahi)
+            echo "[+] Installing Mesa ARM Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa \
+                mesa-vdpau \
+                mesa-vulkan-drivers \
+                lib32-mesa 2>/dev/null || true
+            ;;
+
+        adreno)
+            echo "[+] Installing Adreno Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa \
+                mesa-vulkan-drivers \
+                mesa-vdpau \
+                lib32-mesa 2>/dev/null || true
+            ;;
+
+        *)
+            echo "[!] Unknown GPU type. Installing generic Vulkan support..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa mesa-vdpau lib32-mesa \
+                vulkan-icd-loader lib32-vulkan-icd-loader
+            ;;
+    esac
+}
+run_checkpoint 138 "vulkan" checkpoint_138
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
