@@ -565,7 +565,7 @@ checkpoint_83() {
 run_checkpoint 83 "pacman -Syu --noconfirm ttf-dejavu" checkpoint_83
 
 checkpoint_84() {
-    sudo -E pacman -Syu --noconfirm gtk-engines
+    yay -S --noconfirm gtk-engines
 }
 run_checkpoint 84 "pacman -Syu --noconfirm gtk-engines" checkpoint_84
 
