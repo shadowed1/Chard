@@ -785,6 +785,15 @@ run_checkpoint 123 "sudo -E pacman -Syu --noconfirm intel-media-driver" checkpoi
 
 checkpoint_124() {
     sudo -E pacman -Syu --noconfirm libao yt-dlp opus ffmpeg vlc
+    sudo -E pacman -Syu --noconfirm ffmpeg
+    sudo -E pacman -Syu --noconfirm gst-plugins-base
+    sudo -E pacman -Syu --noconfirm gst-plugins-good
+    sudo -E pacman -Syu --noconfirm gst-plugins-bad
+    sudo -E pacman -Syu --noconfirm gst-plugins-ugly
+    sudo -E pacman -Syu --noconfirm lib32-gst-plugins-base
+    sudo -E pacman -Syu --noconfirm lib32-gst-plugins-good
+    sudo -E pacman -Syu --noconfirm lib32-gst-plugins-bad
+    sudo -E pacman -Syu --noconfirm lib32-gst-plugins-ugly
 }
 run_checkpoint 124 "sudo -E pacman -Syu --noconfirm yt-dlp + vlc" checkpoint_124
 
