@@ -10,13 +10,13 @@
 
 - For **ChromeOS + FydeOS** open crosh, type in `shell` and paste:
 
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
+<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/arch/chard_download?$(date +%s)")</pre>
 
 <br>
 
 - For **all Linux distros**, open terminal and paste :
 
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")</pre> 
+<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/arch/Chard_Installer.sh?$(date +%s)")</pre> 
 
 <br>
 
@@ -129,7 +129,7 @@
 <br>
 
 - *ChromeOS_PowerControl is recommended for custom fan curve, custom CPU clock speed curve, and enabling custom sleep thresholds for ChromeOS users:*
-<pre>https://github.com/shadowed1/ChromeOS_PowerControl/blob/main/README.md</pre>
+<pre>https://github.com/shadowed1/ChromeOS_PowerControl/blob/arch/README.md</pre>
 
 <br>
 
