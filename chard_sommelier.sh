@@ -9,7 +9,7 @@ SOMMELIER_CMD=(
     -X
     --glamor
     --enable-linux-dmabuf
-    --xwayland-path=/usr/libexec/Xwayland
+    --xwayland-path=/usr/bin/Xwayland
 )
 "${SOMMELIER_CMD[@]}" -- bash -c '
     sleep 0.1
