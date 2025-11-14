@@ -860,6 +860,14 @@ checkpoint_135() {
     sudo -E pacman -Syu --noconfirm lib32-gdk-pixbuf2
     sudo -E pacman -Syu --noconfirm lib32-pulseaudio
     sudo -E pacman -Syu --noconfirm lib32-vdpau-driver
+    yay -S --noconfirm lib32-gtk2
+    yay -S --noconfirm lib32-atk
+    yay -S --noconfirm lib32-pango
+    yay -S --noconfirm lib32-gdk-pixbuf2
+    yay -S --noconfirm lib32-cairo
+    yay -S --noconfirm lib32-libxft
+    yay -S --noconfirm lib32-harfbuzz
+
 }
 run_checkpoint 135 "sudo -E pacman -Syu --noconfirm lib32gpu" checkpoint_135
 
@@ -869,9 +877,69 @@ checkpoint_136() {
 run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
 
 checkpoint_137() {
+    sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
+    yay -S --noconfirm lib32-gtk2
     sudo -E pacman -Syu --noconfirm steam
 }
 run_checkpoint 137 "steam | sh" checkpoint_137
+
+checkpoint_138() {
+   echo "[*] Installing Vulkan driver packages for GPU type: $GPU_TYPE"
+    case "$GPU_TYPE" in
+        intel)
+            echo "[+] Installing Intel Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa mesa-vdpau lib32-mesa \
+                vulkan-intel lib32-vulkan-intel
+            ;;
+        amd)
+            echo "[+] Installing AMD Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa mesa-vdpau lib32-mesa \
+                vulkan-radeon lib32-vulkan-radeon
+            ;;
+
+        nvidia)
+            echo "[+] Installing NVIDIA Vulkan drivers..."
+            KVER=$(uname -r)
+            if [[ "$KVER" == *"lts"* ]]; then
+                DRIVER="nvidia-lts"
+            else
+                DRIVER="nvidia"
+            fi
+
+            sudo -E pacman -Syu --noconfirm \
+                $DRIVER nvidia-utils lib32-nvidia-utils \
+                vulkan-icd-loader lib32-vulkan-icd-loader
+            ;;
+
+        mali|panfrost|mediatek|vivante|asahi)
+            echo "[+] Installing Mesa ARM Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa \
+                mesa-vdpau \
+                mesa-vulkan-drivers \
+                lib32-mesa 2>/dev/null || true
+            ;;
+
+        adreno)
+            echo "[+] Installing Adreno Vulkan drivers..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa \
+                mesa-vulkan-drivers \
+                mesa-vdpau \
+                lib32-mesa 2>/dev/null || true
+            ;;
+
+        *)
+            echo "[!] Unknown GPU type. Installing generic Vulkan support..."
+            sudo -E pacman -Syu --noconfirm \
+                mesa mesa-vdpau lib32-mesa \
+                vulkan-icd-loader lib32-vulkan-icd-loader
+            ;;
+    esac
+}
+run_checkpoint 138 "vulkan" checkpoint_138
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
