@@ -152,7 +152,6 @@ obs() {
     /usr/bin/obs "$@" &
 }
 
-
 #x() {
 #    if [[ -z "$WAYLAND_DISPLAY" ]]; then
 #        echo "ERROR: WAYLAND_DISPLAY is not set"
