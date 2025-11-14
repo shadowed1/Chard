@@ -160,3 +160,33 @@ sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR 
 sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
 # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
 "$CHARD_ROOT/bin/chard_sommelier"
+
+if [[ -f /etc/lsb-release ]]; then
+    BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
+    BOARD_NAME=${BOARD_NAME:-$(crossystem board 2>/dev/null || crossystem hwid 2>/dev/null || echo "root")}
+else
+    BOARD_NAME=$(hostnamectl 2>/dev/null | awk -F: '/Chassis/ {print $2}' | xargs)
+    BOARD_NAME=${BOARD_NAME:-$(uname -n)}
+fi
+
+BOARD_NAME=${BOARD_NAME%%-*}
+
+sudo tee "$CHARD_ROOT/usr/.chard_prompt.sh" >/dev/null <<EOF
+#!/bin/bash
+BOLD='\\[\\e[1m\\]'
+RED='\\[\\e[31m\\]'
+YELLOW='\\[\\e[33m\\]'
+GREEN='\\[\\e[32m\\]'
+RESET='\\[\\e[0m\\]'
+PS1="\${BOLD}\${RED}\\u\${BOLD}\${YELLOW}@\${BOLD}\${GREEN}$BOARD_NAME\${RESET} \\w # "
+export PS1
+EOF
+
+sudo chmod +x "$CHARD_ROOT/usr/.chard_prompt.sh"
+if ! grep -q '/usr/.chard_prompt.sh' "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null; then
+    sudo tee -a "$CHARD_ROOT/$CHARD_HOME/.bashrc" > /dev/null <<'EOF'
+source /usr/.chard_prompt.sh
+EOF
+fi
+
+sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
