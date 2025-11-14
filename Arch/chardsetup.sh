@@ -25,8 +25,18 @@ for i in "${!countries[@]}"; do
 done
 echo
 
+ARCH=$(uname -m)
+if [[ "$ARCH" == "aarch64" ]]; then
+    default_choice=1
+else
+    default_choice=3
+fi
+
 while true; do
-    read -rp "Enter the best region number to enable its mirrors: " choice
+    read -t 15 -rp "Enter the best region number to enable its mirrors [default: $default_choice]: " choice
+
+    choice=${choice:-$default_choice}
+
     if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#countries[@]} )); then
         break
     fi
