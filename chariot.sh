@@ -176,8 +176,9 @@ run_checkpoint 5 "sudo -E pacman -Syu --noconfirm binutils" checkpoint_5
 
 checkpoint_6() {
     sudo -E pacman -Syu --noconfirm diffutils
+    sudo -E pacman -Syu --noconfirm nano
 }
-run_checkpoint 6 "sudo -E pacman -Syu --noconfirm diffutils" checkpoint_6
+run_checkpoint 6 "sudo -E pacman -Syu --noconfirm diffutils and nano" checkpoint_6
 
 checkpoint_7() {
     sudo -E pacman -Syu --noconfirm openssl
