@@ -1004,7 +1004,7 @@ checkpoint_118() {
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
-    chown -R 1000:1000 /home/chronos/.local/share/flatpak
+    chown -R 1000:1000 ~/.local/share/flatpak
     eclean-dist -d
 }
 run_checkpoint 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
@@ -1214,7 +1214,7 @@ checkpoint_137() {
     sudo -E emerge games-util/heroic-bin
     sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
     sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
-    sudo chown -R $USER:$USER /home/chronos/.config/heroic
+    sudo chown -R 1000:1000 ~/.config/heroic
     rm -rf /var/tmp/portage/games-util/heroic-bin-*
     eclean-dist -d
 }
