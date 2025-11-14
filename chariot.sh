@@ -859,6 +859,11 @@ checkpoint_136() {
 }
 run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
 
+checkpoint_137() {
+    sudo -E pacman -Syu --noconfirm steam
+}
+run_checkpoint 137 "steam | sh" checkpoint_137
+
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
