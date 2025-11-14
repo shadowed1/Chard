@@ -45,7 +45,7 @@ echo "Mirrors enabled successfully!"
 echo
 
 if [[ ! -f "$PACCONF" ]]; then
-    echo "⚙️  pacman.conf not found — creating default config at $PACCONF..."
+    echo "pacman.conf not found — creating default config at $PACCONF..."
     cat <<'EOF' | tee "$PACCONF" >/dev/null
 [options]
 HoldPkg     = pacman glibc
@@ -93,7 +93,12 @@ pacman-key --init
 pacman-key --populate archlinux
 pacman-key --refresh-keys --keyserver --allow-weak-key-signatures hkps://keyserver.ubuntu.com 2>/dev/null
 pacman -Syu --noconfirm
-
-for pkg in make gcc rsync base-devel ncurses flex bison bc sudo; do
-    pacman -Syu --noconfirm "$pkg" --overwrite '*'
-done
+pacman -Syu --noconfirm make --overwrite '*'
+pacman -Syu --noconfirm gcc --overwrite '*'
+pacman -Syu --noconfirm rsync --overwrite '*'
+pacman -Syu --noconfirm base-devel --overwrite '*'
+pacman -Syu --noconfirm ncurses --overwrite '*'
+pacman -Syu --noconfirm flex --overwrite '*'
+pacman -Syu --noconfirm bison --overwrite '*'
+pacman -Syu --noconfirm bc --overwrite '*'
+pacman -Syu --noconfirm sudo --overwrite '*'
