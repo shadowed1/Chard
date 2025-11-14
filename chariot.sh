@@ -863,7 +863,7 @@ run_checkpoint 138 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_138
 #}
 #run_checkpoint 137 "sudo -E pacman -Syu --noconfirm prismlauncher" checkpoint_137
 
-sudo -E chown -R $USER:$USER $HOME
+sudo chown -R 1000:1000 ~/
 echo "Chard Root is Ready! ${RESET}"
 show_progress
 
