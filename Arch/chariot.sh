@@ -17,6 +17,8 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+ARCH=$(uname -m)
+
 touch ~/chariot.log
 LOG_FILE=~/chariot.log
 exec > >( tee -a "$LOG_FILE") 2>&1
