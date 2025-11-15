@@ -8,15 +8,9 @@
 
 <br>
 
-- For **ChromeOS + FydeOS** open crosh, type in `shell` and paste:
+- For **ChromeOS, FydeOS, and most Linux Distros,** open crosh, type in `shell` and paste:
 
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/chard_download?$(date +%s)")</pre>
-
-<br>
-
-- For **all Linux distros**, open terminal and paste :
-
-<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Chard_Installer.sh?$(date +%s)")</pre> 
+<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/beta/bin/chard_download?$(date +%s)")</pre>
 
 <br>
 
@@ -25,7 +19,7 @@
 <br>
 
 - Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
-- This is a Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
+- This is either a Gentoo Stage3 or Arch bootstrap chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed with full hardware detection.
 - *Chard is in early development. Bug reports, suggestions, and ideas are greatly appreciated.*
   
@@ -298,6 +292,7 @@ QEMU Example:
 - 0.01: `Initial Release` <br><br>
 - 0.02: `Added Wayland or X script. Prepend wx to an app if it cannot find display :0. Added header install command for Linux Kernel. Cleaned up Sommelier tmp directory.
 Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GParted, UNetBootin and QEMU support. QEMU will use KVM + OpenGL for excellent performance!Now we can format USB's with nearly all file systems and create bootable media in ChromeOS!` <br><br>
+- 0.03: `Added Arch Linux support for 10-30x faster install time. Added Steam support, added native volume controls for Arch.` <br><br>
 
 <br>
 
