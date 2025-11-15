@@ -56,7 +56,102 @@ reset() {
 if [[ "$1" == "reset" ]]; then
     reset
 fi
+detect_gpu_freq() {
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+    GPU_TYPE="unknown"
 
+    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        GPU_TYPE="intel"
+        echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+        GPU_TYPE="nvidia"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+        GPU_MAX_FREQ="$MAX_MHZ"
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
+        GPU_TYPE="amd"
+        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
+            GPU_MAX_FREQ="$MAX_MHZ"
+        fi
+        GPU_FREQ_PATH="$PP_OD_FILE"
+        echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [[ -d /sys/class/drm ]]; then
+        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mediatek"
+            echo "[*] Detected MediaTek GPU"
+            return
+        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="vivante"
+            echo "[*] Detected Vivante GPU"
+            return
+        elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="asahi"
+            echo "[*] Detected Asahi GPU"
+            return
+        elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mali"
+            echo "[*] Detected Mali/Panfrost GPU"
+            return
+        fi
+    fi
+
+    for d in /sys/class/devfreq/*; do
+        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
+            if [ -f "$d/max_freq" ]; then
+                GPU_FREQ_PATH="$d/max_freq"
+                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                GPU_TYPE="mali"
+                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                return
+            elif [ -f "$d/available_frequencies" ]; then
+                GPU_FREQ_PATH="$d/available_frequencies"
+                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
+                GPU_TYPE="mali"
+                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                return
+            fi
+        fi
+    done
+
+    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+            return
+        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+            return
+        fi
+    fi
+
+    GPU_TYPE="unknown"
+}
+
+detect_gpu_freq
+GPU_VENDOR="$GPU_TYPE"
+    
 echo ""
 echo ""
 echo "${RESET}${RED}"        
@@ -571,7 +666,7 @@ checkpoint_83() {
 run_checkpoint 83 "pacman -Syu --noconfirm ttf-dejavu" checkpoint_83
 
 checkpoint_84() {
-     if [[ "$ARCH" == "x86_64" ]]; then
+    if [[ "$ARCH" == "x86_64" ]]; then
         yay -S --noconfirm gtk-engines
     else
         echo "Skipping gtk-engines on $ARCH"
@@ -655,7 +750,11 @@ checkpoint_101() {
 run_checkpoint 101 "sudo -E pacman -Syu --noconfirm gpgme" checkpoint_101
 
 checkpoint_102() {
-    sudo -E pacman -Syu --noconfirm ostree
+    if [[ "$ARCH" == "x86_64" ]]; then
+        sudo -E pacman -Syu --noconfirm ostree
+    else
+        echo "Skipping ostree on $ARCH"
+    fi
 }
 run_checkpoint 102 "sudo -E pacman -Syu --noconfirm ostree" checkpoint_102
 
@@ -766,7 +865,7 @@ checkpoint_121() {
 run_checkpoint 121 "pulse audio" checkpoint_121
 
 checkpoint_122() {
-    sudo -E pacman -Syu --noconfirm libva libva-intel-driver
+    sudo -E pacman -Syu --noconfirm libva
 }
 run_checkpoint 122 "sudo -E pacman -Syu --noconfirm libva" checkpoint_122
 
@@ -786,7 +885,7 @@ checkpoint_123() {
 
     if detect_intel_gpu; then
         echo "[*] Installing intel-media-driver for Gen9+ Intel GPU"
-        sudo -E pacman -Syu --noconfirm intel-media-driver
+        sudo -E pacman -Syu --noconfirm libva-intel-driver intel-media-driver
     else
         echo "[*] Skipping Intel driver installation"
     fi
@@ -799,8 +898,12 @@ checkpoint_124() {
     sudo -E pacman -Syu --noconfirm gst-plugins-good
     sudo -E pacman -Syu --noconfirm gst-plugins-bad
     sudo -E pacman -Syu --noconfirm gst-plugins-ugly
-    sudo -E pacman -Syu --noconfirm lib32-gst-plugins-base
-    sudo -E pacman -Syu --noconfirm lib32-gst-plugins-good
+    if [[ "$ARCH" == "x86_64" ]]; then
+        sudo -E pacman -Syu --noconfirm lib32-gst-plugins-base
+        sudo -E pacman -Syu --noconfirm lib32-gst-plugins-good
+    else
+        echo "Skipping lib32-gst on $ARCH"
+    fi
     #yay -S --noconfirm lib32-ffmpeg lib32-gst-plugins-base lib32-gst-plugins-good lib32-gst-plugins-bad lib32-gst-plugins-ugly
     sudo -E pacman -Syu --noconfirm libao yt-dlp opus ffmpeg vlc
 }
@@ -864,13 +967,17 @@ checkpoint_134() {
 run_checkpoint 134 "sudo -E pacman -Syu --noconfirm qemu" checkpoint_134
 
 checkpoint_135() {
-    sudo -E pacman -Syu --noconfirm lib32-libxtst
-    sudo -E pacman -Syu --noconfirm lib32-libxrandr
-    sudo -E pacman -Syu --noconfirm lib32-libxrender
-    sudo -E pacman -Syu --noconfirm lib32-libxi
-    sudo -E pacman -Syu --noconfirm lib32-gdk-pixbuf2
-    sudo -E pacman -Syu --noconfirm lib32-pulseaudio
-    yay -S --noconfirm lib32-gtk2
+    if [[ "$ARCH" == "x86_64" ]]; then
+        sudo -E pacman -Syu --noconfirm lib32-libxtst
+        sudo -E pacman -Syu --noconfirm lib32-libxrandr
+        sudo -E pacman -Syu --noconfirm lib32-libxrender
+        sudo -E pacman -Syu --noconfirm lib32-libxi
+        sudo -E pacman -Syu --noconfirm lib32-gdk-pixbuf2
+        sudo -E pacman -Syu --noconfirm lib32-pulseaudio
+        yay -S --noconfirm lib32-gtk2
+    else
+        echo "Skipping lib32 audio on $ARCH"
+    fi
 }
 run_checkpoint 135 "sudo -E pacman -Syu --noconfirm lib32gpu" checkpoint_135
 
@@ -880,11 +987,15 @@ checkpoint_136() {
 run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
 
 checkpoint_137() {
-    sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
-    yay -S --noconfirm lib32-gtk2
-    sudo -E pacman -Syu --noconfirm steam
+    if [[ "$ARCH" == "x86_64" ]]; then
+        sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
+        yay -S --noconfirm lib32-gtk2
+        sudo -E pacman -Syu --noconfirm steam
+    else
+        echo "Skipping Steam on $ARCH"
+    fi
 }
-run_checkpoint 137 "steam | sh" checkpoint_137
+run_checkpoint 137 "Steam" checkpoint_137
 
 checkpoint_138() {
    echo "[*] Installing Vulkan driver packages for GPU type: $GPU_TYPE"
@@ -937,7 +1048,7 @@ checkpoint_138() {
         *)
             echo "[!] Unknown GPU type. Installing generic Vulkan support..."
             sudo -E pacman -Syu --noconfirm \
-                mesa mesa-vdpau lib32-mesa \
+                mesa mesa-vdpau \
                 vulkan-icd-loader lib32-vulkan-icd-loader
             ;;
     esac
