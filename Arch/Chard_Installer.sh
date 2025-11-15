@@ -183,7 +183,6 @@ cleanup_chroot() {
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-    echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
 }
 
 existing_int_trap=$(trap -p INT | cut -d"'" -f2)
