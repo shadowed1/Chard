@@ -1,5 +1,0 @@
-#!/bin/bash
-GDK_BACKEND=wayland "$@"
-if [ $? -ne 0 ]; then
-    GDK_BACKEND=x11 "$@"
-fi
