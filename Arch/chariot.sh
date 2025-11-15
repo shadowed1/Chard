@@ -937,7 +937,11 @@ run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 #run_checkpoint 129 "sudo -E pacman -Syu --noconfirm libreoffice" checkpoint_129
 
 checkpoint_130() {
-    sudo -E pacman -Syu --noconfirm obs-studio
+    if [[ "$ARCH" == "x86_64" ]]; then
+        sudo -E pacman -Syu --noconfirm obs-studio
+    else
+        echo "Skipping OBS on $ARCH"
+    fi
 }
 run_checkpoint 130 "sudo -E pacman -Syu --noconfirm obs-studio" checkpoint_130
 
