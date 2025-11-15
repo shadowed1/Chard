@@ -863,53 +863,6 @@ run_checkpoint 120 "sudo -E pacman -Syu --noconfirm xfce4" checkpoint_120
 
 checkpoint_121() { 
     sudo -E pacman -Syu --noconfirm pulseaudio
-    if [[ "$ARCH" == "x86_64" ]]; then
-        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
-    elif [[ "$ARCH" == "aarch64" ]]; then
-        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
-    else
-        echo "Unsupported architecture: $ARCH"
-        exit 1
-    fi
-    echo "Downloading Bazel from: $BAZEL_URL"
-    sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
-    sudo chmod +x /usr/bin/bazel65
-    cd ~/
-    git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
-    cd adhd/
-    sudo -E /usr/bin/bazel65 build //dist:alsa_lib
-    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so-2.params /usr/lib/
-    yay -S --noconfirm cros-container-guest-tools-git
-    sudo mkdir -p /etc/pipewire/pipewire.conf.d
-sudo tee /etc/pipewire/pipewire.conf.d/crostini-audio.conf >/dev/null << 'EOF'
-context.objects = [
-    { factory = adapter
-        args = {
-            factory.name           = api.alsa.pcm.sink
-            node.name              = "Virtio Soundcard Sink"
-            media.class            = "Audio/Sink"
-            api.alsa.path          = "hw:0,0"
-            audio.channels         = 2
-            audio.position         = "FL,FR"
-        }
-    }
-    { factory = adapter
-        args = {
-            factory.name           = api.alsa.pcm.source
-            node.name              = "Virtio Soundcard Source"
-            media.class            = "Audio/Source"
-            api.alsa.path          = "hw:0,0"
-            audio.channels         = 2
-            audio.position         = "FL,FR"
-        }
-    }
-]
-EOF
-    cd ~/
-    rm -rf ~/adhd
 }
 run_checkpoint 121 "pulse audio" checkpoint_121
 
@@ -1114,6 +1067,59 @@ checkpoint_139() {
     sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id
 }
 run_checkpoint 139 "Fix machine-id" checkpoint_139
+
+checkpoint_140() {
+    if [[ "$ARCH" == "x86_64" ]]; then
+        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
+    elif [[ "$ARCH" == "aarch64" ]]; then
+        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
+    else
+        echo "Unsupported architecture: $ARCH"
+        exit 1
+    fi
+    echo "Downloading Bazel from: $BAZEL_URL"
+    sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
+    sudo chmod +x /usr/bin/bazel65
+    cd ~/
+    git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
+    cd adhd/
+    sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
+    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
+    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
+    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so-2.params /usr/lib/
+    yay -S --noconfirm cros-container-guest-tools-git
+    sudo mkdir -p /etc/pipewire/pipewire.conf.d
+sudo tee /etc/pipewire/pipewire.conf.d/crostini-audio.conf >/dev/null << 'EOF'
+context.objects = [
+    { factory = adapter
+        args = {
+            factory.name           = api.alsa.pcm.sink
+            node.name              = "Virtio Soundcard Sink"
+            media.class            = "Audio/Sink"
+            api.alsa.path          = "hw:0,0"
+            audio.channels         = 2
+            audio.position         = "FL,FR"
+        }
+    }
+    { factory = adapter
+        args = {
+            factory.name           = api.alsa.pcm.source
+            node.name              = "Virtio Soundcard Source"
+            media.class            = "Audio/Source"
+            api.alsa.path          = "hw:0,0"
+            audio.channels         = 2
+            audio.position         = "FL,FR"
+        }
+    }
+]
+EOF
+    cd ~/
+    rm -rf ~/adhd
+}
+run_checkpoint 140 "CRAS" checkpoint_140
+
+
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
