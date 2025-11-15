@@ -91,10 +91,12 @@ for opt in "Color" "VerbosePkgLists" "DisableSandbox" "ParallelDownloads = 5"; d
     fi
 done
 
-if [[ "$ARCH" == "aarch64" ]]; then
-    sed -i '/^\[multilib\]/,/Include/s/^/#/' "$PACCONF"
+if [[ "$ARCH" == "x86_64" ]]; then
+    echo "Enabling multilib..."
+    sed -i '/^\[multilib\]/,/Include/ s/^#//' "$PACCONF"
 else
-    sed -i '/^\[multilib\]/,/Include/s/^#//' "$PACCONF"
+    echo "Disabling multilib for non-x86 systems..."
+    sed -i '/^\[multilib\]/,/Include/ s/^/#/' "$PACCONF"
 fi
 
 grep -E '^\[multilib\]|^Color|^VerbosePkgLists|^ParallelDownloads|^DisableSandbox' "$PACCONF"
