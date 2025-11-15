@@ -32,6 +32,17 @@ cleanup_chroot() {
 
 trap cleanup_chroot EXIT INT TERM
 
+ echo "${RESET}${GREEN}"
+        echo "[1] Quick Reinstall (Update Chard)"
+        echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
+        echo "${RESET}${RED}[q] Cancel"
+        echo "${RESET}${GREEN}"
+        read -p "Choose an option [1/2/q]: " choice
+        
+        case "$choice" in
+            1)
+                echo "${RESET}${GREEN}[*] Performing quick reinstall..."
+
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"            -o "$CHARD_ROOT/.chardrc"
 sleep 0.2
@@ -188,3 +199,15 @@ EOF
 fi
 
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
+sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc   
+
+                echo "${GREEN}[*] Quick reinstall complete.${RESET}"
+                ;;
+            2)
+                echo "${RESET}${YELLOW}[*] Performing full reinstall..."
+                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")
+                ;;
+            q|Q|*)
+                echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
+                ;;
+         esac
