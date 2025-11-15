@@ -552,7 +552,11 @@ checkpoint_80() {
 run_checkpoint 80 "pacman -Syu --noconfirm at-spi2-core" checkpoint_80
 
 checkpoint_81() {
-    sudo -E pacman -Syu --noconfirm at-spi2-atk
+    if [[ "$ARCH" == "x86_64" ]]; then
+        sudo -E pacman -Syu --noconfirm at-spi2-atk
+    else
+        echo "Skipping at-spi2-atk upgrade on $ARCH"
+    fi
 }
 run_checkpoint 81 "pacman -Syu --noconfirm at-spi2-atk" checkpoint_81
 
@@ -567,7 +571,11 @@ checkpoint_83() {
 run_checkpoint 83 "pacman -Syu --noconfirm ttf-dejavu" checkpoint_83
 
 checkpoint_84() {
-    yay -S --noconfirm gtk-engines
+     if [[ "$ARCH" == "x86_64" ]]; then
+        yay -S --noconfirm gtk-engines
+    else
+        echo "Skipping gtk-engines on $ARCH"
+    fi
 }
 run_checkpoint 84 "yay -S --noconfirm gtk-engines" checkpoint_84
 
