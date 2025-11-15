@@ -339,7 +339,6 @@ run_checkpoint 17 "sudo -E pacman -Syu --noconfirm findutils" checkpoint_17
 
 checkpoint_18() {
     sudo -E pacman -Syu --noconfirm elfutils
-    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled
 }
 run_checkpoint 18 "sudo -E pacman -S elfutils" checkpoint_18
 
@@ -1065,6 +1064,8 @@ checkpoint_139() {
     sudo rm -f /etc/machine-id /var/lib/dbus/machine-id
     sudo dbus-uuidgen --ensure=/etc/machine-id
     sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id
+    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled
+
 }
 run_checkpoint 139 "Fix machine-id" checkpoint_139
 
