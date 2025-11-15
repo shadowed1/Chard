@@ -1069,6 +1069,7 @@ checkpoint_139() {
 run_checkpoint 139 "Fix machine-id" checkpoint_139
 
 checkpoint_140() {
+    sudo rm -rf ~/.cache/bazel 2>/dev/null
     if [[ "$ARCH" == "x86_64" ]]; then
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
     elif [[ "$ARCH" == "aarch64" ]]; then
@@ -1084,6 +1085,7 @@ checkpoint_140() {
     git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
     cd adhd/
     sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+    sleep 1
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
