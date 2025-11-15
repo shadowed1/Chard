@@ -1052,15 +1052,6 @@ checkpoint_138() {
 run_checkpoint 138 "vulkan" checkpoint_138
 
 checkpoint_139() {
-    sudo rm -f /etc/machine-id /var/lib/dbus/machine-id
-    sudo dbus-uuidgen --ensure=/etc/machine-id
-    sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id
-    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled
-
-}
-run_checkpoint 139 "Fix machine-id" checkpoint_139
-
-checkpoint_140() {
     sudo rm -rf ~/.cache/bazel 2>/dev/null
     if [[ "$ARCH" == "x86_64" ]]; then
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
@@ -1112,7 +1103,23 @@ EOF
     rm -rf ~/adhd
     cp -rT /etc/skel/.config/pulse ~/.config/pulse
 }
-run_checkpoint 140 "CRAS" checkpoint_140
+run_checkpoint 139 "CRAS" checkpoint_139
+
+
+checkpoint_140() {
+    for f in /etc/machine-id /var/lib/dbus/machine-id; do
+        if [ -f "$f" ]; then
+            sudo rm "$f"
+        fi
+    done
+    sudo dbus-uuidgen --ensure=/etc/machine-id
+    sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id
+    file=/usr/share/libalpm/hooks/90-packagekit-refresh.hook
+    if [ -e "$file" ]; then
+        sudo mv "$file" "$file.disabled"
+    fi
+}
+run_checkpoint 140 "Fix machine-id" checkpoint_140
 
 
 
