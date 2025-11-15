@@ -558,6 +558,22 @@ fi
 
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 
+sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
+
 KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
     | sed 's/href="linux-\(.*\)\.tar\.xz"/\1/' )
@@ -687,6 +703,22 @@ sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
 echo ""
 
+sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
+
 sudo rm -rf "$KERNEL_BUILD"
 
 CONFIG_FILE="$CHARD_ROOT/usr/src/linux/.config"
@@ -720,14 +752,6 @@ if grep -q "^${CHARD_USER}:x:${USER_ID}:${GROUP_ID}::" "$PASSWD_FILE"; then
 else
     echo "GECOS field for $CHARD_USER is already set."
 fi
-
-#############################################################################################################################################################################
-#############################################################################################################################################################################
-#############################################################################################################################################################################
-#############################################################################################################################################################################
-#############################################################################################################################################################################
-#############################################################################################################################################################################
-
 
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "$CHARD_ROOT/run/user/0"
@@ -1085,28 +1109,6 @@ sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 
 sudo mkdir -p $CHARD_ROOT/etc/sudoers.d/
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
-    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
-
-else
-    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
-fi
-        
-sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
-sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
-sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
-        
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
-else
-    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
-fi
-
-sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
-sudo mount --make-rslave "$CHARD_ROOT"
-
 sudo chroot $CHARD_ROOT /bin/bash -c "
 
                         mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
@@ -1134,7 +1136,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         CHARD_HOME=\$(cat /.chard_home)
                         USER=\$CHARD_USER
                         HOME=\$CHARD_HOME
-                        source \$HOME/.bashrc 2>/dev/null                        
+                        source \$HOME/.bashrc 2>/dev/null
+                        userdel -r alarm 2>/dev/null
+                        groupdel alarm 2>/dev/null
                         getent group 1000 >/dev/null   || groupadd -g 1000 chronos 2>/dev/null
                         getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
                         getent group 602  >/dev/null   || groupadd -g 602 arc-bridge 2>/dev/null
@@ -1220,6 +1224,22 @@ else
 fi
 
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+
+sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
                 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 
