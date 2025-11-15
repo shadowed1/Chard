@@ -94,7 +94,7 @@ chard_reinstall() {
             echo "Reinstalling Chard..."
             sudo bash "$script"
         else
-            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/beta/Arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
             sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
             $CHARD_ROOT/bin/Reinstall_Chard.sh
         fi
