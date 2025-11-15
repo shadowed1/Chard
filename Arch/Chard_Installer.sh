@@ -153,20 +153,35 @@ echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
     sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+    sleep 0.2
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
 }
@@ -180,22 +195,38 @@ trap cleanup_chroot EXIT
 
 echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+sleep 0.2
 sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
+sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
@@ -1803,23 +1834,40 @@ fi
 
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 
-sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
-sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+sleep 1
 
+sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+sleep 0.2
+sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+sleep 0.2
 show_progress
 echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
 sudo cp "$CHARD_ROOT/chardbuild.log" ~/
