@@ -339,6 +339,7 @@ run_checkpoint 17 "sudo -E pacman -Syu --noconfirm findutils" checkpoint_17
 
 checkpoint_18() {
     sudo -E pacman -Syu --noconfirm elfutils
+    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled
 }
 run_checkpoint 18 "sudo -E pacman -S elfutils" checkpoint_18
 
@@ -473,6 +474,7 @@ run_checkpoint 40 "sudo -E pacman -S duktape" checkpoint_40
 
 checkpoint_41() {
     sudo -E pacman -Syu --noconfirm brotli
+    
 }
 run_checkpoint 41 "sudo -E pacman -S brotli" checkpoint_41
 
