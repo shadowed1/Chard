@@ -941,7 +941,7 @@ checkpoint_139() {
     sudo dbus-uuidgen --ensure=/etc/machine-id
     sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id
 }
-run_checkpoint 139 "steam | sh" checkpoint_139
+run_checkpoint 139 "Fix machine-id" checkpoint_139
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
