@@ -1119,6 +1119,7 @@ context.objects = [
 EOF
     cd ~/
     rm -rf ~/adhd
+    cp -rT /etc/skel/.config/pulse ~/.config/pulse
 }
 run_checkpoint 140 "CRAS" checkpoint_140
 
