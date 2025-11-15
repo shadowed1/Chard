@@ -4,6 +4,7 @@
 
 <br>
 
+
 ### How to Install:
 
 <br>
@@ -14,12 +15,12 @@
 
 <br>
 
-### About Chard:
+### About Chard (*Chrome-Arch Development*):
 
 <br>
 
 - Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
-- This is either a Gentoo Stage3 or Arch bootstrap chroot that builds an independent Linux environment in a semi-sandboxed environment.
+- This is either an Arch or Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed with full hardware detection.
 - *Chard is in early development. Bug reports, suggestions, and ideas are greatly appreciated.*
   
