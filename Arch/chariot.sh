@@ -1034,27 +1034,18 @@ checkpoint_138() {
 
         mali|panfrost|mediatek|vivante|asahi)
             echo "[+] Installing Mesa ARM Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm \
-                mesa \
-                mesa-vdpau \
-                mesa-vulkan-drivers \
-                lib32-mesa 2>/dev/null || true
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau mesa-vulkan-drivers 2>/dev/null
             ;;
 
         adreno)
             echo "[+] Installing Adreno Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm \
-                mesa \
-                mesa-vulkan-drivers \
-                mesa-vdpau \
-                lib32-mesa 2>/dev/null || true
+            sudo -E pacman -Syu --noconfirm mesa mesa-vulkan-drivers mesa-vdpau 2>/dev/null
             ;;
 
         *)
             echo "[!] Unknown GPU type. Installing generic Vulkan support..."
             sudo -E pacman -Syu --noconfirm \
-                mesa mesa-vdpau \
-                vulkan-icd-loader lib32-vulkan-icd-loader
+                mesa mesa-vdpau vulkan-icd-loader
             ;;
     esac
 }
