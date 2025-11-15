@@ -1,0 +1,59 @@
+#!/bin/bash
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+echo ""
+echo "${BOLD}${GREEN}Select Chard Distro to install:${RESET}"
+echo ""
+echo "${CYAN}1) Arch Linux -${RESET}${GREEN} ~10x faster install than Gentoo, and easier to use.${RESET}${RED} Cannot run apps outside of chroot in ChromeOS.${RESET}"
+echo "${MAGENTA}2) Gentoo Linux -${RESET}${GREEN} Run/compile apps directly in ChromeOS without chroot.${RESET}${RED} Much slower install and more complex.${RESET}"
+echo "${RED}3) Quit${RESET}"
+echo "${BLUE}"
+
+read -rp "Enter choice [1-3]: " choice
+
+case "$choice" in
+    1)
+        URL="https://raw.githubusercontent.com/shadowed1/Chard/beta/Arch/Chard_Installer.sh"
+        ;;
+    2)
+        URL="https://raw.githubusercontent.com/shadowed1/Chard/beta/Gentoo/Chard_Installer.sh"
+        ;;
+    3)
+        echo "Exiting."
+        exit 0
+        ;;
+    *)
+        echo "Invalid choice."
+        exit 1
+        ;;
+esac
+
+echo "${RESET}"
+echo -e "${GREEN}Downloading to: ~/Chard_Installer${RESET}"
+echo ""
+
+curl -L "$URL" -o ~/Chard_Installer || {
+    echo "${RED}Download failed. ${RESET}"
+    exit 1
+}
+
+echo ""
+echo "${YELLOW}${BOLD}Run commands below with sudo in crosh or VT-2:${RESET}"
+echo ""
+echo ""
+
+echo "${GREEN}If on ChromeOS/FydeOS, run:${RESET}"
+echo "${GREEN}${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
+echo "sudo bash /usr/local/Chard_Installer${RESET}"
+echo ""
+echo ""
+echo "${CYAN}If on anything else, run:${RESET}"
+echo "${BLUE}${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}"
+echo ""
