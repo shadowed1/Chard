@@ -944,6 +944,13 @@ checkpoint_138() {
 }
 run_checkpoint 138 "vulkan" checkpoint_138
 
+checkpoint_139() {
+    sudo rm -f /etc/machine-id /var/lib/dbus/machine-id
+    sudo dbus-uuidgen --ensure=/etc/machine-id
+    sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id
+}
+run_checkpoint 139 "steam | sh" checkpoint_139
+
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
 #}
