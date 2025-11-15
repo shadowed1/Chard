@@ -29,8 +29,14 @@
 
 <br>
 
+*Native Steam + Game Support:*
+<p align="center">
+  <img src="https://i.imgur.com/ILkV5tB.png" alt="logo" width="1000" />
+</p>  
 
-*QEMU running VMs::*
+<br>
+
+*QEMU running VMs:*
 <p align="center">
   <img src="https://i.imgur.com/FpEkYoM.png" alt="logo" width="1000" />
 </p>  
