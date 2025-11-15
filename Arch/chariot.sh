@@ -956,11 +956,7 @@ checkpoint_132() {
 run_checkpoint 132 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_132
 
 checkpoint_133() {
-    if [[ "$ARCH" == "x86_64" ]]; then
-        yay -S --noconfirm balena-etcher   
-    else
-        echo "Skipping Balena Etcher for $ARCH"
-    fi 
+    yay -S --noconfirm balena-etcher
 }
 run_checkpoint 133 "balena-etcher" checkpoint_133
 
