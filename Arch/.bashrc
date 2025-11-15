@@ -127,8 +127,15 @@ if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     export DBUS_SESSION_BUS_PID
 fi
 
-export LIBGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
-export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
+ARCH=$(uname -m)
+if [[ "$ARCH" == "x86_64" ]]; then
+    export LIBGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
+    export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
+elif [[ "$ARCH" == "aarch64" ]]; then
+    export LIBGL_DRIVERS_PATH="$ROOT/usr/lib/dri"
+    export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib/dri"
+fi
+
 export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
