@@ -988,6 +988,7 @@ run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 checkpoint_130() {
     if [[ "$ARCH" == "x86_64" ]]; then
         sudo -E pacman -Syu --noconfirm obs-studio
+        yay -S --noconfirm obs-vkcapture
     else
         echo "Skipping OBS on $ARCH"
     fi
