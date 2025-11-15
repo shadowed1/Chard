@@ -862,15 +862,7 @@ checkpoint_135() {
     sudo -E pacman -Syu --noconfirm lib32-libxi
     sudo -E pacman -Syu --noconfirm lib32-gdk-pixbuf2
     sudo -E pacman -Syu --noconfirm lib32-pulseaudio
-    sudo -E pacman -Syu --noconfirm lib32-vdpau-driver
     yay -S --noconfirm lib32-gtk2
-    yay -S --noconfirm lib32-atk
-    yay -S --noconfirm lib32-pango
-    yay -S --noconfirm lib32-gdk-pixbuf2
-    yay -S --noconfirm lib32-cairo
-    yay -S --noconfirm lib32-libxft
-    yay -S --noconfirm lib32-harfbuzz
-
 }
 run_checkpoint 135 "sudo -E pacman -Syu --noconfirm lib32gpu" checkpoint_135
 
