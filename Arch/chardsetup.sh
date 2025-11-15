@@ -93,10 +93,10 @@ done
 
 if [[ "$ARCH" == "x86_64" ]]; then
     echo "Enabling multilib..."
-    sed -i '/^\[multilib\]/,/Include/ s/^#//' "$PACCONF"
+    sed -i '/^#\?\[multilib\]/,/^#\?Include/ s/^#//' "$PACCONF"
 else
     echo "Disabling multilib for non-x86 systems..."
-    sed -i '/^\[multilib\]/,/Include/ s/^/#/' "$PACCONF"
+    sed -i '/^#\?\[multilib\]/,/^#\?Include/ s/^/#/' "$PACCONF"
 fi
 
 grep -E '^\[multilib\]|^Color|^VerbosePkgLists|^ParallelDownloads|^DisableSandbox' "$PACCONF"
