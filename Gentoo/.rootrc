@@ -1,0 +1,17 @@
+# CHARD .ROOTRC
+
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
+# <<< END_CHARD_ROOT_MARKER >>>
+
+HOME="/$CHARD_HOME"
+USER="$CHARD_USER"
+export HOME
+export USER
+source /$HOME/.smrt_env.sh
+source /$HOME/.bashrc
+
+
+# <<< END CHARD .ROOTRC >>>
