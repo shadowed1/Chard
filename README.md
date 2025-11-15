@@ -79,13 +79,6 @@
 
 <br>
 
-*Kerbal Space Program:*
-<p align="center">
-  <img src="https://i.imgur.com/sOLWL73.jpeg" alt="logo" width="1000" />
-</p>
-
-<br>
-
 ### Features:
 
 <br>
