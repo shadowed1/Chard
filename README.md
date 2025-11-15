@@ -269,12 +269,8 @@ QEMU Example:
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
-- Bubblewrap support is not functioning. This means Steam, Flatpak, Firefox, and other apps requiring user namespace support are unsupported (for now?).
-
-<br>
-
-- Volume is currently only adjustable via in-app controls.
-- PulseAudio can only bind itself to CRAS socket one application at a time. 
+- Partial Flatpak support and Firefox is not working yet.
+- Chard Arch cannot run multiple `chard root` shells simultaneously. 
 
 <br>
 
