@@ -957,13 +957,12 @@ run_checkpoint 132 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_132
 
 checkpoint_133() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
-        sudo chmod +x /usr/local/bin/unetbootin    
+        yay -S --noconfirm balena-etcher   
     else
-        echo "Skipping unetbootin for $ARCH"
+        echo "Skipping Balena Etcher for $ARCH"
     fi 
 }
-run_checkpoint 133 "unetbootin" checkpoint_133
+run_checkpoint 133 "balena-etcher" checkpoint_133
 
 checkpoint_134() {
     sudo -E pacman -Syu --noconfirm qemu-desktop
