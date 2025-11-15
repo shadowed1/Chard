@@ -956,8 +956,12 @@ checkpoint_132() {
 run_checkpoint 132 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_132
 
 checkpoint_133() {
-    sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
-    sudo chmod +x /usr/local/bin/unetbootin
+    if [[ "$ARCH" == "x86_64" ]]; then
+        sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
+        sudo chmod +x /usr/local/bin/unetbootin    
+    else
+        echo "Skipping unetbootin for $ARCH"
+    fi 
 }
 run_checkpoint 133 "unetbootin" checkpoint_133
 
