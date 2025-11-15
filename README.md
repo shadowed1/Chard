@@ -270,6 +270,11 @@ QEMU Example:
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
+*To Fix Steam Window not rendering:*
+<p align="left">
+  <img src="https://i.imgur.com/KmxFMkB.png" alt="logo" width="500" />
+</p>
+
 - Partial Flatpak support and Firefox is not working yet.
 - Chard Arch cannot run multiple `chard root` shells simultaneously. 
 
