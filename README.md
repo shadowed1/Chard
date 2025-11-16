@@ -30,7 +30,7 @@
 
 <br>
 
-*Native Steam + Game Support: (Steam currently only running on ChromeOS 139 and older)*
+*Native Steam + Game Support(Steam currently only running on ChromeOS 139 and older):*
 <p align="center">
   <img src="https://i.imgur.com/ILkV5tB.png" alt="logo" width="1000" />
 </p>  
