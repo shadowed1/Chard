@@ -268,7 +268,7 @@ QEMU Example:
   <img src="https://i.imgur.com/KmxFMkB.png" alt="logo" width="500" />
 </p>
 
-- Steam support for ChromeOS 139 only for now.
+- Steam support for ChromeOS 139 and older for now...
 
 - Partial Flatpak support and Firefox is not working yet.
 - Chard Arch cannot run multiple `chard root` shells simultaneously. 
