@@ -1138,6 +1138,9 @@ run_checkpoint 140 "Fix machine-id" checkpoint_140
 #}
 #run_checkpoint 137 "sudo -E pacman -Syu --noconfirm prismlauncher" checkpoint_137
 
+# yay -S --noconfirm libselinux
+# yay -S --noconfirm bash-completion
+
 sudo chown -R 1000:1000 ~/
 echo "Chard Root is Ready! ${RESET}"
 show_progress
