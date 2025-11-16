@@ -207,6 +207,15 @@ export _JAVA_OPTIONS="-Dsun.java2d.uiScale=$CHARD_SCALE"
 export XCURSOR_SIZE
 export XCURSOR_THEME
 
+safe_wine() {
+    wineserver -k 2>/dev/null
+    pkill -9 -f 'wine|winedevice|wineserver' 2>/dev/null
+    sleep 0.5
+    rm -rf ~/.wine/*.lock ~/.wine/dosdevices/* 2>/dev/null
+    winegui
+}
+
+alias winegui='safe_wine'
 # KSP
 alias ksp='LC_ALL=C ./KSP_x86_64'
 
@@ -217,5 +226,7 @@ alias seamonkey='GDK_BACKEND=x11 seamonkey'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
+
+
 
 # <<< END CHARD .BASHRC >>>
