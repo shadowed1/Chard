@@ -289,6 +289,7 @@ QEMU Example:
 Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GParted, UNetBootin and QEMU support. QEMU will use KVM + OpenGL for excellent performance!Now we can format USB's with nearly all file systems and create bootable media in ChromeOS!` <br><br>
 - 0.03: `Added Arch Linux support for 10-30x faster install time. Added Steam support (139 only), added native volume controls for Arch.` <br><br>
 - 0.04: `Updated to include Steam and Flatpak support for ChromeOS 141+. Chard Arch gets SMRT support`
+- 0.05: `Isolated Chard forked bubblewrap so other apps will use regular bubblewrap.`
 
 <br>
 
