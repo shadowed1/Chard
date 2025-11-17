@@ -261,7 +261,7 @@ case "$cmd" in
         
         sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-        sudo chmod -R 1000:1000 /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         ;;
     chariot)
