@@ -214,7 +214,6 @@ case "$cmd" in
             USER=$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
-        
             sudo -u "$USER" bash -c "
                 cleanup() {
                     echo \"Logging out $USER\"
@@ -223,7 +222,7 @@ case "$cmd" in
                     fi
                 }
                 trap cleanup EXIT INT TERM
-            
+                sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 dbus-daemon --system --fork 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 
@@ -232,6 +231,7 @@ case "$cmd" in
             
                 exec chard_sommelier
             "
+            setfacl -Rb /root 2>/dev/null
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
