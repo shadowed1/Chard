@@ -118,12 +118,6 @@
 <br>
 
 - *Intel CPU's are recommended to enable hyperthreading in `chrome://flags` via Scheduler setting.*
-- *Building apps will heat up your system and require delayed/disabled sleep times!*
-
-<br>
-
-- *ChromeOS_PowerControl is recommended for custom fan curve, custom CPU clock speed curve, and enabling custom sleep thresholds for ChromeOS users:*
-<pre>https://github.com/shadowed1/ChromeOS_PowerControl/blob/main/README.md</pre>
 
 <br>
 
