@@ -1206,7 +1206,8 @@ run_checkpoint 140 "Fix machine-id" checkpoint_140
 # yay -S --noconfirm bash-completion
 
 sudo chown -R 1000:1000 ~/
-echo "Chard Root is Ready! ${RESET}"
+sudo setfacl -Rb /run/chrome 2>/dev/null
+echo "Chard Root is Ready! Open a new shell and run: chard root${RESET}"
 show_progress
 
 case "$1" in
