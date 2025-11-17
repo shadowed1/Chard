@@ -18,6 +18,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 ARCH=$(uname -m)
+CHROME_VER=$(cat /chard_chrome)
 
 touch ~/chariot.log
 LOG_FILE=~/chariot.log
@@ -993,28 +994,23 @@ run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_1
 
 checkpoint_137() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
-        yay -S --noconfirm lib32-gtk2
+        if [ "$CHROME_VER" -le 139 ]; then
         sudo -E pacman -Syu --noconfirm steam
-        sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng libselinux glib2 git
-        
+    else
+        sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
         cd ~/
+        rm -rf bubblewrap
         git clone https://github.com/shadowed1/bubblewrap.git
         cd bubblewrap
-        
         meson setup -Dprefix=/usr build
         ninja -C build
         sudo rm -rf /usr/bin/bwrap
         sudo ninja -C build install
-        
         cd ~/
         rm -rf bubblewrap
-        
         sudo -E pacman -Syu --noconfirm steam
-        
         STEAM_SCRIPT="/usr/lib/steam/steam"
         sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
-
         sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
 xhost +SI:localuser:root
@@ -1026,6 +1022,7 @@ INNER
 sudo chmod -R 1000:1000 /run/chrome 2>/dev/null
 EOF
         sudo chmod +x /bin/chard_steam
+    fi
     else
         echo "Skipping Steam on $ARCH"
     fi
@@ -1135,7 +1132,6 @@ EOF
 }
 run_checkpoint 139 "CRAS" checkpoint_139
 
-
 checkpoint_140() {
     for f in /etc/machine-id /var/lib/dbus/machine-id; do
         if [ -f "$f" ]; then
@@ -1150,8 +1146,6 @@ checkpoint_140() {
     fi
 }
 run_checkpoint 140 "Fix machine-id" checkpoint_140
-
-
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
