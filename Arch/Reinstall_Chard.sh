@@ -153,7 +153,7 @@ TARGET_FILE=""
 if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
-    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/chard_chrome" > /dev/null
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
 fi
