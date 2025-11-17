@@ -83,9 +83,9 @@
 
 <br>
 
-- Chard auto-detects the Host's hardware and builds Gentoo + psuedo-Kernel automatically.
+- Chard auto-detects the Host's hardware and builds Arch or Gentoo + psuedo-Kernel automatically.
 - Includes ability to resume installer if interrupted; even if system shuts down.
-- Greatly exceeds Crostini performance and can achieve equal performance to Borealis (RIP) with significantly lower memory overhead.
+- Greatly exceeds Crostini performance and can achieve superior performance to Borealis (RIP) with significantly lower memory overhead.
 
 <br>
 
