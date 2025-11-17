@@ -1877,6 +1877,8 @@ sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap"                   2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
+sudo setfacl -Rb /run/chrome 2>/dev/null
+sleep 0.2
 show_progress
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
