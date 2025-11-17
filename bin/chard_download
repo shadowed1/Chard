@@ -11,8 +11,8 @@ RESET=$(tput sgr0)
 echo ""
 echo "${BOLD}${GREEN}Select Chard Distro to install:${RESET}"
 echo ""
-echo "${CYAN}1) Arch Linux -${RESET}${GREEN} ~10x faster install than Gentoo, and easier to use.${RESET}${RED} Cannot run apps outside of chroot in ChromeOS.${RESET}"
-echo "${MAGENTA}2) Gentoo Linux -${RESET}${GREEN} Run/compile apps directly in ChromeOS without chroot.${RESET}${RED} Much slower install and more complex.${RESET}"
+echo "${CYAN}1) Arch Linux -${RESET}${GREEN} 10x faster install than Gentoo, and easier to use.${RESET}${RED} Cannot run apps outside of chroot in ChromeOS.${RESET}"
+echo "${MAGENTA}2) Gentoo Linux -${RESET}${GREEN} Can compile directly in ChromeOS without chroot.${RESET}${RED} Much slower install and more complex.${RESET}"
 echo "${RED}3) Quit${RESET}"
 echo "${BLUE}"
 
