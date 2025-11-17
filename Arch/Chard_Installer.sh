@@ -1867,11 +1867,15 @@ sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
 sleep 0.2
-sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap"                   2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
 show_progress
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/chard_chrome" > /dev/null
+fi
 sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf" 2>/dev/null
-echo "${GREEN}[+] Chard Root is ready! Restart is recommended. ${RESET}"
-
+echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
