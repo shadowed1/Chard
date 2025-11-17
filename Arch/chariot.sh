@@ -996,6 +996,36 @@ checkpoint_137() {
         sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
         yay -S --noconfirm lib32-gtk2
         sudo -E pacman -Syu --noconfirm steam
+        sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng libselinux glib2 git
+        
+        cd ~/
+        git clone https://github.com/shadowed1/bubblewrap.git
+        cd bubblewrap
+        
+        meson setup -Dprefix=/usr build
+        ninja -C build
+        sudo rm -rf /usr/bin/bwrap
+        sudo ninja -C build install
+        
+        cd ~/
+        rm -rf bubblewrap
+        
+        sudo -E pacman -Syu --noconfirm steam
+        
+        STEAM_SCRIPT="/usr/lib/steam/steam"
+        sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
+
+        sudo tee /bin/chard_steam >/dev/null <<'EOF'
+#!/bin/bash
+xhost +SI:localuser:root
+sudo -i <<'INNER'
+chmod -R root:root /run/chrome 2>/dev/null
+/usr/bin/steam
+exit
+INNER
+sudo chmod -R 1000:1000 /run/chrome 2>/dev/null
+EOF
+        sudo chmod +x /bin/chard_steam
     else
         echo "Skipping Steam on $ARCH"
     fi
