@@ -1872,6 +1872,6 @@ sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
 show_progress
-sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf"
+sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf" 2>/dev/null
 echo "${GREEN}[+] Chard Root is ready! Restart is recommended. ${RESET}"
 
