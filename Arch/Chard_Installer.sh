@@ -1232,7 +1232,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         chmod 440 /etc/sudoers.d/\$USER
                         chown root:root /usr/bin/sudo
                         chmod 4755 /usr/bin/sudo
-                        echo \"Passwordless sudo configured for \$CHARD_USER\"
                         umount -l /dev/zram0   2>/dev/null || true
                         umount -l /run/chrome  2>/dev/null || true
                         umount -l /run/dbus    2>/dev/null || true
@@ -1278,10 +1277,9 @@ sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
-                
+sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
-
+echo "Passwordless sudo configured for $CHARD_USER"
 ARCH=$(uname -m)
 detect_gpu_freq() {
     GPU_FREQ_PATH=""
