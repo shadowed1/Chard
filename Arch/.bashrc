@@ -231,4 +231,18 @@ dbus-daemon --system --fork 2>/dev/null
 if [ "$CHROME_VER" -ge 140 ]; then
     alias steam='/bin/chard_steam'
 fi
+
+# <<< CHARD_SMRT >>>
+SMRT_ENV_FILE="$HOME/.smrt_env.sh"
+
+smrt_refresh_prompt() {
+    [[ -f "$SMRT_ENV_FILE" ]] && source "$SMRT_ENV_FILE" 2>/dev/null
+}
+
+case "$PROMPT_COMMAND" in
+  *smrt_refresh_prompt*) ;;
+  *) PROMPT_COMMAND="smrt_refresh_prompt; $PROMPT_COMMAND" ;;
+esac
+# <<< END_CHARD_SMRT >>>
+
 # <<< END CHARD .BASHRC >>>
