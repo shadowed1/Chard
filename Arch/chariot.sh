@@ -1117,7 +1117,6 @@ checkpoint_139() {
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so-2.params /usr/lib/
     yay -S --noconfirm cros-container-guest-tools-git
     sudo mkdir -p /etc/pipewire/pipewire.conf.d
 sudo tee /etc/pipewire/pipewire.conf.d/crostini-audio.conf >/dev/null << 'EOF'
