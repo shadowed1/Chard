@@ -109,7 +109,7 @@ export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-avera
 # Aliases
 EOF
 
-parallel_build_tools=(make emerge ninja scons meson cmake)
+parallel_build_tools=(make emerge ninja scons meson cmake gcc g++ cc ld)
 parallel_data_tools=(tar gzip bzip2 xz rsync pigz pxz pbzip2)
 
 for tool in "${parallel_build_tools[@]}"; do
