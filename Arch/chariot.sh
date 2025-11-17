@@ -994,6 +994,7 @@ checkpoint_136() {
 run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
 
 checkpoint_137() {
+    ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
     
     if [ ! -f "/chard_chrome" ]; then
@@ -1030,12 +1031,13 @@ checkpoint_137() {
         sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
 xhost +SI:localuser:root
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
 sudo -i <<'INNER'
-chmod -R root:root /run/chrome 2>/dev/null
 /usr/bin/steam
 exit
 INNER
-sudo chmod -R 1000:1000 /run/chrome 2>/dev/null
+sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
         sudo chmod +x /bin/chard_steam
     fi
