@@ -350,7 +350,7 @@ checkpoint_19() {
             export ARCH=arm64
         fi
 
-        cd /usr/src/linux || exit 1
+        cd /usr/src/linux
 
         scripts/kconfig/merge_config.sh -m .config enable_features.cfg
         make olddefconfig
@@ -1128,7 +1128,6 @@ checkpoint_139() {
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
     else
         echo "Unsupported architecture: $ARCH"
-        exit 1
     fi
     echo "Downloading Bazel from: $BAZEL_URL"
     sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
