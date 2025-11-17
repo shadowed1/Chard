@@ -417,6 +417,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/wx"                  -o "$CHARD_ROOT/bin/wx"
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/SMRT.sh"                  -o "$CHARD_ROOT/bin/SMRT"
+sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_unmount"       -o "$CHARD_ROOT/bin/chard_unmount"
@@ -433,6 +435,7 @@ sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
 sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
 sudo chmod +x "$CHARD_ROOT/bin/wx"
+sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
@@ -445,6 +448,7 @@ for file in \
     "$CHARD_ROOT/bin/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard_debug" \
+    "$CHARD_ROOT/bin/SMRT" \
     "$CHARD_ROOT/bin/chardsetup" \
     "$CHARD_ROOT/bin/chard"; do
 
