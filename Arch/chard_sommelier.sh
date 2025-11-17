@@ -19,6 +19,7 @@ SOMMELIER_CMD=(
     cd ~/
     exec bash
 '
+sudo setfacl -Rb /root 2>/dev/null
 if [ -f /tmp/.pulseaudio_pid ]; then
     kill "$(cat /tmp/.pulseaudio_pid)" 2>/dev/null
     rm -f /tmp/.pulseaudio_pid
