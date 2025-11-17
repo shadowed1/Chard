@@ -840,10 +840,33 @@ checkpoint_116() {
 run_checkpoint 116 "Build Sommelier" checkpoint_116
 
 checkpoint_117() {
+if [ ! -f "/.chard_chrome" ]; then
+    CHROME_VER=139
+else
+    CHROME_VER=$(cat /.chard_chrome)
+fi
+if [ "$CHROME_VER" -le 139 ]; then
     sudo -E pacman -Syu --noconfirm flatpak
     sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     sudo chown -R 1000:1000 ~/.local/share/flatpak
+else
+    sudo -E pacman -Syu --noconfirm flatpak
+    sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    sudo chown -R 1000:1000 ~/.local/share/flatpak
+    sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
+#!/bin/bash
+xhost +SI:localuser:root
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
+sudo -i bash <<'INNER'
+exec /usr/bin/flatpak "$@"
+INNER
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+    sudo chmod +x /bin/chard_flatpak
+fi
 }
 run_checkpoint 117 "sudo -E pacman -Syu --noconfirm flatpak" checkpoint_117
 
@@ -907,7 +930,6 @@ checkpoint_124() {
     else
         echo "Skipping lib32-gst on $ARCH"
     fi
-    #yay -S --noconfirm lib32-ffmpeg lib32-gst-plugins-base lib32-gst-plugins-good lib32-gst-plugins-bad lib32-gst-plugins-ugly
     sudo -E pacman -Syu --noconfirm libao yt-dlp opus ffmpeg vlc
 }
 run_checkpoint 124 "sudo -E pacman -Syu --noconfirm yt-dlp + vlc" checkpoint_124
