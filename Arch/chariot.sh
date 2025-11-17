@@ -18,7 +18,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 ARCH=$(uname -m)
-CHROME_VER=$(cat /chard_chrome)
+CHROME_VER=$(cat /.chard_chrome)
 
 touch ~/chariot.log
 LOG_FILE=~/chariot.log
@@ -997,10 +997,10 @@ checkpoint_137() {
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
     
-    if [ ! -f "/chard_chrome" ]; then
+    if [ ! -f "/.chard_chrome" ]; then
         CHROME_VER=139
     else
-        CHROME_VER=$(cat /chard_chrome)
+        CHROME_VER=$(cat /.chard_chrome)
     fi
     
     if [ "$CHROME_VER" -le 139 ]; then
