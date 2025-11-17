@@ -148,7 +148,7 @@
 - Emerge
 - CRAS
 
-# Chard will use Emerge to build: <br>
+# Chard will use Emerge/Pacman to build: <br>
 - Make
 - CMake
 - Curl with OpenSSL
