@@ -269,7 +269,7 @@ QEMU Example:
   <img src="https://i.imgur.com/KmxFMkB.png" alt="logo" width="500" />
 </p>
 
-- Partial Flatpak support and Firefox is not working.
+- Firefox is not working.
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
 
 <br>
