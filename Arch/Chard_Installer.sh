@@ -143,7 +143,6 @@ echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
 CHARD_ROOT="${CHARD_ROOT%/}"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
-LOG_FILE="$CHARD_ROOT/chardbuild.log"
 
 echo
 echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
@@ -1874,6 +1873,5 @@ sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
 show_progress
 sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf"
-echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
-sudo cp "$CHARD_ROOT/chardbuild.log" ~/
-echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
+echo "${GREEN}[+] Chard Root is ready! Restart is recommended. ${RESET}"
+
