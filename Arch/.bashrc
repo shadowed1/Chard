@@ -27,7 +27,7 @@ case "$ARCH" in
         echo "[!] Unsupported architecture: $ARCH"
         ;;
 esac
-CHROME_VER=$(cat /chard_chrome)
+CHROME_VER=$(cat /.chard_chrome)
 HOME="/$CHARD_HOME"
 USER="$CHARD_USER"
 export LANG=C.UTF-8
