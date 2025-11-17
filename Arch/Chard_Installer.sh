@@ -562,7 +562,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     source \$HOME/.bashrc 2>/dev/null
         
     dbus-daemon --system --fork 2>/dev/null
-        
+    /bin/SMRT
+    source \$HOME/.smrt_env.sh
     exec /bin/chardsetup
             
     umount -l /dev/zram0   2>/dev/null || true
