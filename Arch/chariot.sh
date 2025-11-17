@@ -348,8 +348,11 @@ checkpoint_19() {
         if [ "$(uname -m)" = "aarch64" ]; then
             export ARCH=arm64
         fi
-
-        cd /usr/src/linux || exit 1
+        
+        /bin/SMRT
+        source \$HOME/.smrt_env.sh
+        
+        cd /usr/src/linux
 
         scripts/kconfig/merge_config.sh -m .config enable_features.cfg
         make olddefconfig
