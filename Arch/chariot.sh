@@ -353,9 +353,9 @@ checkpoint_19() {
 
         scripts/kconfig/merge_config.sh -m .config enable_features.cfg
         make olddefconfig
-
-        make -j"$(nproc)" tools/objtool
-        make -j"$(nproc)"
+        
+        make tools/objtool
+        make
 
         make modules_install
         make INSTALL_PATH=/boot install
