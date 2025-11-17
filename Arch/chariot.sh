@@ -857,6 +857,7 @@ else
     sudo chown -R 1000:1000 ~/.local/share/flatpak
     sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
@@ -1038,9 +1039,9 @@ checkpoint_137() {
         rm -rf bubblewrap
         git clone https://github.com/shadowed1/bubblewrap.git
         cd bubblewrap
-        meson setup -Dprefix=/usr build
+        mkdir -p /usr/local/bubblepatch
+        meson setup -Dprefix=/usr/local/bubblepatch build
         ninja -C build
-        sudo rm -rf /usr/bin/bwrap
         sudo ninja -C build install
         cd ~/
         rm -rf bubblewrap
@@ -1052,6 +1053,7 @@ checkpoint_137() {
 
         sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
