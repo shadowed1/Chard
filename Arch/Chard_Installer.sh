@@ -235,7 +235,7 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
     echo "${RED}ChromeOS Version: $CHROME_MILESTONE"
-    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/chard_chrome" > /dev/null
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
 fi
@@ -1745,7 +1745,7 @@ source "$CHARD_ROOT/.chardrc"
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
-    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/chard_chrome" > /dev/null
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 fi
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
@@ -1881,7 +1881,7 @@ show_progress
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
-    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/chard_chrome" > /dev/null
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 fi
 sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf" 2>/dev/null
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
