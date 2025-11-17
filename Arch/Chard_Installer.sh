@@ -1725,7 +1725,6 @@ sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR 
 
 echo "export SOMMELIER_USE_WAYLAND=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
 sudo chmod +x "$WAYLAND_CONF_FILE"
-echo "${MAGENTA}Detected GPU: $GPU_VENDOR ($ARCH)${RESET}"
 
 PULSEHOME="$CHARD_ROOT/$CHARD_HOME/.config/pulse"
 sudo mkdir -p "$PULSEHOME"
