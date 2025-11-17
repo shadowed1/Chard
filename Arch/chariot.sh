@@ -349,9 +349,11 @@ checkpoint_19() {
         if [ "$(uname -m)" = "aarch64" ]; then
             export ARCH=arm64
         fi
-        
+        CHARD_HOME=$(cat /.chard_home)
+        CHARD_USER=$(cat /.chard_user)
+
         /bin/SMRT
-        source \$HOME/.smrt_env.sh
+        source "/$CHARD_HOME/.smrt_env.sh"
         
         cd /usr/src/linux
 
