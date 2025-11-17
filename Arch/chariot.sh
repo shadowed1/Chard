@@ -994,7 +994,14 @@ run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_1
 
 checkpoint_137() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        if [ "$CHROME_VER" -le 139 ]; then
+    
+    if [ ! -f "/chard_chrome" ]; then
+        CHROME_VER=139
+    else
+        CHROME_VER=$(cat /chard_chrome)
+    fi
+    
+    if [ "$CHROME_VER" -le 139 ]; then
         sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
         yay -S --noconfirm lib32-gtk2
         sudo -E pacman -Syu --noconfirm steam
@@ -1002,6 +1009,7 @@ checkpoint_137() {
         sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
         yay -S --noconfirm lib32-gtk2
         sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
+
         cd ~/
         rm -rf bubblewrap
         git clone https://github.com/shadowed1/bubblewrap.git
@@ -1012,9 +1020,12 @@ checkpoint_137() {
         sudo ninja -C build install
         cd ~/
         rm -rf bubblewrap
+
         sudo -E pacman -Syu --noconfirm steam
+
         STEAM_SCRIPT="/usr/lib/steam/steam"
         sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
+
         sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
 xhost +SI:localuser:root
@@ -1027,9 +1038,9 @@ sudo chmod -R 1000:1000 /run/chrome 2>/dev/null
 EOF
         sudo chmod +x /bin/chard_steam
     fi
-    else
-        echo "Skipping Steam on $ARCH"
-    fi
+else
+    echo "Skipping Steam on $ARCH"
+fi
 }
 run_checkpoint 137 "Steam" checkpoint_137
 
