@@ -1034,7 +1034,7 @@ checkpoint_137() {
         sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
         yay -S --noconfirm lib32-gtk2
         sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
-
+        sudo -E pacman -Syu --noconfirm bubblewrap
         cd ~/
         rm -rf bubblewrap
         git clone https://github.com/shadowed1/bubblewrap.git
@@ -1054,6 +1054,14 @@ checkpoint_137() {
         sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
 export PATH=/usr/local/bubblepatch/bin:$PATH
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
+GROUP_ID=1000
+USER_ID=1000
+source ~/.bashrc
 xhost +SI:localuser:root
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
