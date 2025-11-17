@@ -349,19 +349,14 @@ checkpoint_19() {
         if [ "$(uname -m)" = "aarch64" ]; then
             export ARCH=arm64
         fi
-        CHARD_HOME=$(cat /.chard_home)
-        CHARD_USER=$(cat /.chard_user)
 
-        /bin/SMRT
-        source "/$CHARD_HOME/.smrt_env.sh"
-        
-        cd /usr/src/linux
+        cd /usr/src/linux || exit 1
 
         scripts/kconfig/merge_config.sh -m .config enable_features.cfg
         make olddefconfig
-        
-        make tools/objtool
-        make
+
+        make -j"$(nproc)" tools/objtool
+        make -j"$(nproc)"
 
         make modules_install
         make INSTALL_PATH=/boot install
