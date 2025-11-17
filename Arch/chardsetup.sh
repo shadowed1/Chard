@@ -33,7 +33,7 @@ else
 fi
 
 while true; do
-    read -t 15 -rp "Enter the best region number to enable its mirrors [default: $default_choice]: " choice
+    read -t 15 -rp "Enter a region number to enable its mirrors [default: $default_choice]: " choice
 
     choice=${choice:-$default_choice}
 
