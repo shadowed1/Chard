@@ -27,7 +27,7 @@ case "$ARCH" in
         echo "[!] Unsupported architecture: $ARCH"
         ;;
 esac
-
+CHROME_VER=$(cat /chard_chrome)
 HOME="/$CHARD_HOME"
 USER="$CHARD_USER"
 export LANG=C.UTF-8
@@ -227,6 +227,8 @@ alias cs='chard_sommelier'
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
-alias steam='/bin/chard_steam'
-
+# Steam
+if [ "$CHROME_VER" -ge 140 ]; then
+    alias steam='/bin/chard_steam'
+fi
 # <<< END CHARD .BASHRC >>>
