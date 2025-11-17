@@ -199,14 +199,13 @@
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
 - `chard_scale display 2` -- Set display scaling to 2x scaling
 - `chard_scale cursor 64` -- Set cursor to 64px.
+
 - Refresh a new shell after adjusting scaling.
 
 - Prepend `wx` to a command to give an app a choice to try wayland and x11 if unsure.
-- `chard mount` to mount a USB device (ignores SSD and USB devices) for UNetBootin
+- `chard mount` to mount a USB device (ignores SSD and USB devices) for UNetBootin.
 - `chard unmount` or `exit` to unmount the device.
 - `exit` -- Leave Chard Root
-- This is a full Gentoo Linux environment. Read up on Gentoo Linux commands:
-<pre>https://wiki.gentoo.org/wiki/Main_Page</pre>
 
 <br>
 
