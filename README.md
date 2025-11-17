@@ -174,6 +174,7 @@
 - VLC
 - KDE Plasma
 - Brave Browser
+- Flatpak
 - xarchiver
 - Gedit
 - Codium
