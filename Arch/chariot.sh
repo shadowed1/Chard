@@ -995,8 +995,12 @@ run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_1
 checkpoint_137() {
     if [[ "$ARCH" == "x86_64" ]]; then
         if [ "$CHROME_VER" -le 139 ]; then
+        sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
+        yay -S --noconfirm lib32-gtk2
         sudo -E pacman -Syu --noconfirm steam
     else
+        sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
+        yay -S --noconfirm lib32-gtk2
         sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
         cd ~/
         rm -rf bubblewrap
