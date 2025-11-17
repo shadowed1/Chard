@@ -1742,6 +1742,12 @@ sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
 
 source "$CHARD_ROOT/.chardrc"
 
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/chard_chrome" > /dev/null
+fi
+
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
