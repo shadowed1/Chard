@@ -227,6 +227,6 @@ alias cs='chard_sommelier'
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
 
-
+alias steam='/bin/chard_steam'
 
 # <<< END CHARD .BASHRC >>>
