@@ -132,7 +132,7 @@
 
 <br>
 
-- *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 3-6 hours.*
+- *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 20-60 minutes.*
 - *Lower end Chromebooks (2-4 thread Intel, Mediatek 500 series, and older) can expect much longer install times.*
 
 <br>
