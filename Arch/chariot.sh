@@ -1200,6 +1200,7 @@ run_checkpoint 140 "Fix machine-id" checkpoint_140
 checkpoint_141() {
 yay -S --noconfirm prismlauncher
 sudo -E pacman -Syu --noconfirm gamemode
+sudo pacman -Syu --noconfirm flite
     
 }
 run_checkpoint 141 "Prism Launcher" checkpoint_141
