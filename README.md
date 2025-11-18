@@ -177,7 +177,7 @@
 - Prism Launcher + Minecraft Java
 - OBS with Game Capture, Recording, and Streaming support
 - Heroic Game Launcher
-- Supports game emulators and Kerbal Space Program
+- Steam!
 - And too many to test. 
 
 ### Commands (Some not listed) <br>
