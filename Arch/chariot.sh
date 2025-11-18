@@ -1191,6 +1191,8 @@ checkpoint_140() {
     if [ -e "$file" ]; then
         sudo mv "$file" "$file.disabled"
     fi
+    sudo pacman -Rdd --noconfirm xfce4-notifyd xfce4-power-manager
+    
 }
 run_checkpoint 140 "Fix machine-id" checkpoint_140
 
