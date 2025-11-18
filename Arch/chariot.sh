@@ -1019,18 +1019,6 @@ run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_1
 checkpoint_137() {
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
-    
-    if [ ! -f "/.chard_chrome" ]; then
-        CHROME_VER=139
-    else
-        CHROME_VER=$(cat /.chard_chrome)
-    fi
-    
-    if [ "$CHROME_VER" -le 139 ]; then
-        sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
-        yay -S --noconfirm lib32-gtk2
-        sudo -E pacman -Syu --noconfirm steam
-    else
         sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
         yay -S --noconfirm lib32-gtk2
         sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
@@ -1072,9 +1060,20 @@ INNER
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
         sudo chmod +x /bin/chard_steam
-    fi
+elif [[ "$ARCH" == "aarch64" ]]; then
+    sudo -E pacman -Syu --needed --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git bubblewrap
+    cd ~/
+    rm -rf bubblewrap
+    git clone https://github.com/shadowed1/bubblewrap.git
+    cd bubblewrap
+    mkdir -p /usr/local/bubblepatch
+    meson setup -Dprefix=/usr/local/bubblepatch build
+    ninja -C build
+    sudo ninja -C build install
+    cd ~/
+    rm -rf bubblewrap
 else
-    echo "Skipping Steam on $ARCH"
+    echo "Unsupported architecture: $ARCH"
 fi
 }
 run_checkpoint 137 "Steam" checkpoint_137
