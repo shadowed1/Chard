@@ -538,7 +538,9 @@ case "$cmd" in
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.2
         sudo setfacl -Rb /run/chrome 2>/dev/null
+        echo
         echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+        echo
         ;;
     *)
         chard_run "$cmd" "$@"
