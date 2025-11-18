@@ -182,8 +182,6 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
-
-       
         
         sudo chroot "$CHARD_ROOT" /bin/bash -c '
         
@@ -228,7 +226,7 @@ case "$cmd" in
                 
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
-            
+                startxfce4 2>/dev/null &
                 exec chard_sommelier
             "
             setfacl -Rb /root 2>/dev/null
@@ -265,6 +263,13 @@ case "$cmd" in
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sudo setfacl -Rb /run/chrome 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
+        pkill -f xfce4-session
+        pkill -f xfwm4
+        pkill -f xfce4-panel
+        pkill -f xfdesktop
+        pkill -f xfce4-terminal
+        pkill -f xfce4-*
+        pkill -f Xorg
         ;;
     chariot)
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
