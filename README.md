@@ -117,11 +117,7 @@
 
 <br>
 
-- *Intel CPU's are recommended to enable hyperthreading in `chrome://flags` via Scheduler setting.*
-
-<br>
-
-- *Requires 8GB of storage, 2GB of RAM, and an internet connection.*
+- *Requires 16GB of storage, 2GB of RAM, and an internet connection.*
 - *CPU Support: x86_64 & ARM64 - CPU must be 64-bit*
 - *GPU Support: AMD, Intel, NVIDIA, ARM, Mali, Rockchip, Mediatek, Adreno, & Vivanti*
 
