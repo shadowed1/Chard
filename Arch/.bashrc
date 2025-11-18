@@ -224,7 +224,7 @@ alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 alias seamonkey='GDK_BACKEND=x11 seamonkey'
 alias gvim='wx gvim'
 alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
-
+alias prismlauncher='QT_QPA_PLATFORM=xcb prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
 dbus-daemon --system --fork 2>/dev/null
