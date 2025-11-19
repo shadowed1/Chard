@@ -1184,7 +1184,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group 604  >/dev/null   || groupadd -g 604 arc-sensor 2>/dev/null
                         getent group 665357 >/dev/null || groupadd -g 665357 android-everybody 2>/dev/null
                         getent group 18   >/dev/null   || groupadd -g 18 audio 2>/dev/null
-                        getent group 993  >/dev/null   || groupadd -g 993 input 2>/dev/null
+                        getent group 222  >/dev/null   || groupadd -g 222 input 2>/dev/null
                         getent group 10  >/dev/null    || groupadd -g 10 uinput 2>/dev/null
                         getent group 7    >/dev/null   || groupadd -g 7 lp 2>/dev/null
                         getent group 27   >/dev/null   || groupadd -g 27 video 2>/dev/null
