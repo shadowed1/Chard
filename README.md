@@ -30,10 +30,17 @@
 
 <br>
 
-*Native Steam + Game Support:*
+*Steam + Game Support:*
 <p align="center">
   <img src="https://i.imgur.com/ILkV5tB.png" alt="logo" width="1000" />
-</p>  
+</p>
+
+<br>
+
+*Firefox:*
+<p align="center">
+  <img src="https://i.imgur.com/5fgNRlJ.png" alt="logo" width="1000" />
+</p>
 
 <br>
 
@@ -259,7 +266,7 @@ QEMU Example:
   <img src="https://i.imgur.com/KmxFMkB.png" alt="logo" width="500" />
 </p>
 
-- Firefox is not working.
+- Mouse Capture/Lock in Games is not working.
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
 
 <br>
