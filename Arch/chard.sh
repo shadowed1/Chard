@@ -201,7 +201,8 @@ case "$cmd" in
             fi
         
             chmod 1777 /tmp /var/tmp
-
+    
+            [ -e /dev/ptmx ]    || mknod -m 666 /dev/ptmx c 5 2
             [ -e /dev/uinput ]  || mknod -m 660 /dev/uinput c 10 223
             [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
