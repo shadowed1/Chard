@@ -1205,6 +1205,31 @@ sudo pacman -Syu --noconfirm flite
 }
 run_checkpoint 141 "Prism Launcher" checkpoint_141
 
+checkpoint_142() {
+sudo -E pacman -Syu --noconfirm firefox
+sudo tee /bin/chard_firefox >/dev/null <<'EOF'
+#!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
+GROUP_ID=1000
+USER_ID=1000
+source ~/.bashrc
+xhost +SI:localuser:root
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
+sudo -i <<'INNER'
+/usr/bin/firefox
+exit
+INNER
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+    
+}
+run_checkpoint 142 "Firefox" checkpoint_142
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
 #}
