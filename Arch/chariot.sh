@@ -1227,7 +1227,7 @@ exit
 INNER
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
-    
+sudo chmod +x /bin/chard_firefox
 }
 run_checkpoint 142 "Firefox" checkpoint_142
 #checkpoint_135() {
