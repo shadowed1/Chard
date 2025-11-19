@@ -22,7 +22,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-colors=($RED $GREEN $YELLOW $BLUE $MAGENTA $CYAN)
+colors=($RED $YELLOW $GREEN $CYAN $BLUE $MAGENTA )
 num_colors=${#colors[@]}
 count=0
 color_index=0
