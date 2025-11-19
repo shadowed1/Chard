@@ -98,12 +98,15 @@ ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
 
 TASKSET="taskset -c $ALLOCATED_CORES"
 MAKEOPTS="-j$ALLOCATED_COUNT"
+MAKEFLAGS="-j$ALLOCATED_COUNT"
+
 
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
 export SMRT_LAST_PCT=$PCT
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
+export MAKEFLAGS='-j$ALLOCATED_COUNT'
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
 
 # Aliases
