@@ -1055,9 +1055,9 @@ run_checkpoint 123 "sudo -E emerge xfce-base/xfce4-meta" checkpoint_123
 
 checkpoint_123() {
     echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
-#    sudo -E emerge --autounmask-write firefox-bin
-#    rm -rf /var/tmp/portage/www-client/firefox-bin-*
-#    eclean-dist -d
+    sudo -E emerge --autounmask-write firefox-bin
+    rm -rf /var/tmp/portage/www-client/firefox-bin-*
+    eclean-dist -d
 }
 run_checkpoint 123 "sudo -E emerge firefox-bin (skipping for now)" checkpoint_123
 
@@ -1257,6 +1257,69 @@ checkpoint_140() {
     eclean-dist -d
 }
 run_checkpoint 140 "sudo -E emerge app-emulation/qemu" checkpoint_140
+
+checkpoint_141() {
+    cd ~/
+    rm -rf bubblewrap
+    git clone https://github.com/shadowed1/bubblewrap.git
+    cd bubblewrap
+    sudo mkdir -p /usr/local/bubblepatch
+    meson setup -Dprefix=/usr/local/bubblepatch build
+    ninja -C build
+    sudo ninja -C build install
+    cd ~/
+    rm -rf bubblewrap
+
+    sudo tee /bin/chard_firefox >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root
+source ~/.bashrc
+sudo -u $CHARD_USER /usr/bin/firefox
+EOF
+
+sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
+#!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
+sudo -E /usr/bin/env bash -c '
+  exec /usr/bin/flatpak "$@"
+' -- "$@"
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+    sudo chmod +x /bin/chard_flatpak
+
+    STEAM_SCRIPT="/usr/lib/steam/steam"
+    sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
+    sudo tee /bin/chard_steam >/dev/null <<'EOF'
+#!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
+GROUP_ID=1000
+USER_ID=1000
+source ~/.bashrc
+xhost +SI:localuser:root
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
+sudo -i <<'INNER'
+/usr/bin/steam
+exit
+INNER
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+
+}
+run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
 
 sudo -E chown -R $USER:$USER $HOME
