@@ -114,12 +114,12 @@ export ACLOCAL_PATH="$ROOT/usr/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
 export M4PATH="$ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
 export MANPATH="$ROOT/usr/share/man:$ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
 export XDG_DATA_DIRS="$ROOT/usr/share:$ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
-#export DISPLAY=":0"
-#export GDK_BACKEND="wayland"
-#export CLUTTER_BACKEND="wayland"
+export DISPLAY=":0"
+export GDK_BACKEND="wayland"
+export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
-#export EGL_PLATFORM=wayland
+export EGL_PLATFORM=wayland
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
@@ -138,26 +138,26 @@ fi
 
 export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
-#export QT_QPA_PLATFORM=wayland
+export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
 
-#obs() {
-#    export QT_QPA_PLATFORM=xcb
-#    export OBS_VKCAPTURE=1
-#    export OBS_GAMECAPTURE=1
-#    local LD_PRELOAD_LIBS=(
-#        "/usr/lib64/obs-plugins/linux-vkcapture.so"
-#        "/usr/lib64/obs_glcapture/libobs_glcapture.so"
-#    )
-#    local LD_PRELOAD=""
-#    for lib in "${LD_PRELOAD_LIBS[@]}"; do
-#        [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
-#    done
-#    export LD_PRELOAD
-#    /usr/bin/obs "$@" &
-#}
+obs() {
+    export QT_QPA_PLATFORM=xcb
+    export OBS_VKCAPTURE=1
+    export OBS_GAMECAPTURE=1
+    local LD_PRELOAD_LIBS=(
+        "/usr/lib64/obs-plugins/linux-vkcapture.so"
+        "/usr/lib64/obs_glcapture/libobs_glcapture.so"
+    )
+    local LD_PRELOAD=""
+    for lib in "${LD_PRELOAD_LIBS[@]}"; do
+        [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
+    done
+    export LD_PRELOAD
+    /usr/bin/obs "$@" &
+}
 
 #x() {
 #    if [[ -z "$WAYLAND_DISPLAY" ]]; then
