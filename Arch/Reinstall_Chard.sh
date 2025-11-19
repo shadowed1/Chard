@@ -58,7 +58,7 @@ trap cleanup_chroot EXIT INT TERM
             1)
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
 
-echo "${BLUE}[*] Downloading Chard components...${RESET}"
+echo "${CYAN}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"            -o "$CHARD_ROOT/.chardrc"
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.env"          -o "$CHARD_ROOT/.chard.env"
@@ -221,7 +221,7 @@ fi
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc   
 
-                echo "${GREEN}[*] Quick reinstall complete.${RESET}"
+                echo "${MAGENTA}[*] Quick reinstall complete.${RESET}"
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
