@@ -9,7 +9,6 @@ SOMMELIER_CMD=(
     -X
     --glamor
     --enable-linux-dmabuf
-    --fullscreen-mode=immersive
     --xwayland-path=/usr/bin/Xwayland
 )
 "${SOMMELIER_CMD[@]}" -- bash -c '
