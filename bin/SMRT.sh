@@ -117,7 +117,11 @@ parallel_data_tools=(tar gzip bzip2 xz rsync pigz pxz pbzip2)
 
 for tool in "${parallel_build_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
-        echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
+        if [[ "$tool" == "make" ]]; then
+            echo "alias make='${TASKSET} make'" >> "$SMRT_ENV_FILE"
+        else
+            echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
+        fi
     fi
 done
 
@@ -126,6 +130,7 @@ for tool in "${parallel_data_tools[@]}"; do
         echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
     fi
 done
+
 
 source "$SMRT_ENV_FILE"
 
