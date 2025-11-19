@@ -172,11 +172,12 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
-        
+
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
-        
+        sudo mountpoint -q "$CHARD_ROOT/dev/uinput" || sudo mount --bind /dev/uinput "$CHARD_ROOT/dev/uinput" 2>/dev/null
+
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
         else
@@ -200,7 +201,9 @@ case "$cmd" in
             fi
         
             chmod 1777 /tmp /var/tmp
-        
+    
+            [ -e /dev/ptmx ]    || mknod -m 666 /dev/ptmx c 5 2
+            [ -e /dev/uinput ]  || mknod -m 660 /dev/uinput c 10 223
             [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
@@ -247,7 +250,7 @@ case "$cmd" in
         else
             sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
         fi
-        
+        sudo umount -l "$CHARD_ROOT/dev/uinput"  2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
