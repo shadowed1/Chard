@@ -98,15 +98,12 @@ ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
 
 TASKSET="taskset -c $ALLOCATED_CORES"
 MAKEOPTS="-j$ALLOCATED_COUNT"
-MAKEFLAGS="-j$ALLOCATED_COUNT"
-
 
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
 export SMRT_LAST_PCT=$PCT
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
-export MAKEFLAGS='-j$ALLOCATED_COUNT'
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
 
 # Aliases
@@ -117,11 +114,7 @@ parallel_data_tools=(tar gzip bzip2 xz rsync pigz pxz pbzip2)
 
 for tool in "${parallel_build_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
-        if [[ "$tool" == "make" ]]; then
-            echo "alias make='${TASKSET} make'" >> "$SMRT_ENV_FILE"
-        else
-            echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
-        fi
+        echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
     fi
 done
 
@@ -130,7 +123,6 @@ for tool in "${parallel_data_tools[@]}"; do
         echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
     fi
 done
-
 
 source "$SMRT_ENV_FILE"
 
