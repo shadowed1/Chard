@@ -1,16 +1,21 @@
-# <<< CHARD_SOMMELIER >>>
+#!/bin/bash
 SOMMELIER_DISPLAY="/run/chrome/wayland-0"
 SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
+ARCH="$(uname -m)"
 SOMMELIER_CMD=(
     sommelier
     --display="$SOMMELIER_DISPLAY"
     --noop-driver
-    --force-drm-device="$SOMMELIER_DRM_DEVICE"
     -X
     --glamor
     --enable-linux-dmabuf
     --xwayland-path=/usr/bin/Xwayland
 )
+
+if [[ "$ARCH" == "x86_64" ]]; then
+    SOMMELIER_CMD+=( --force-drm-device="$SOMMELIER_DRM_DEVICE" )
+fi
+
 "${SOMMELIER_CMD[@]}" -- bash -c '
     sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
@@ -24,4 +29,3 @@ if [ -f /tmp/.pulseaudio_pid ]; then
     kill "$(cat /tmp/.pulseaudio_pid)" 2>/dev/null
     rm -f /tmp/.pulseaudio_pid
 fi
-# <<< END CHARD_SOMMELIER >>>
