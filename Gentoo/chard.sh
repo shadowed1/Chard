@@ -400,7 +400,16 @@ case "$cmd" in
             sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
         fi
 
+        sudo umount -l -f "$CHARD_ROOT/usr/local/bubbepatch/bin/bwrap" 2>/dev/null || true
+        sudo setfacl -Rb /run/chrome 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
+        pkill -f xfce4-session
+        pkill -f xfwm4
+        pkill -f xfce4-panel
+        pkill -f xfdesktop
+        pkill -f xfce4-terminal
+        pkill -f xfce4-*
+        pkill -f Xorg
 
         #sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         #sudo umount -l "$CHARD_ROOT/$CHARD_HOME" 2>/dev/null || true
