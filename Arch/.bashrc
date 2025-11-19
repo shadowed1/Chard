@@ -234,6 +234,9 @@ if [ "$CHROME_VER" -ge 140 ]; then
     alias steam='/bin/chard_steam'
 fi
 
+# Firefox
+alias firefox='/bin/chard_firefox'
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
