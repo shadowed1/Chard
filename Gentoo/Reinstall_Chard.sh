@@ -226,7 +226,7 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
                 sleep 0.2
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard.sh"            -o "$CHARD_ROOT/bin/chard"
                 sleep 0.2
