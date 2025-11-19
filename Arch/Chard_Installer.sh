@@ -1185,6 +1185,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group 665357 >/dev/null || groupadd -g 665357 android-everybody 2>/dev/null
                         getent group 18   >/dev/null   || groupadd -g 18 audio 2>/dev/null
                         getent group 993  >/dev/null   || groupadd -g 993 input 2>/dev/null
+                        getent group 10  >/dev/null    || groupadd -g 10 uinput 2>/dev/null
                         getent group 7    >/dev/null   || groupadd -g 7 lp 2>/dev/null
                         getent group 27   >/dev/null   || groupadd -g 27 video 2>/dev/null
                         getent group 423  >/dev/null   || groupadd -g 423 bluetooth-audio 2>/dev/null
@@ -1220,7 +1221,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
 
-                        usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render \$CHARD_USER
+                        usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
                         chown \$USER:\$USER \"/\$CHARD_HOME\"        
