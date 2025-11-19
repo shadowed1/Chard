@@ -1027,7 +1027,7 @@ checkpoint_137() {
         rm -rf bubblewrap
         git clone https://github.com/shadowed1/bubblewrap.git
         cd bubblewrap
-        mkdir -p /usr/local/bubblepatch
+        sudo mkdir -p /usr/local/bubblepatch
         meson setup -Dprefix=/usr/local/bubblepatch build
         ninja -C build
         sudo ninja -C build install
