@@ -222,6 +222,7 @@ case "$cmd" in
                     fi
                 }
                 trap cleanup EXIT INT TERM
+                sudo setfacl -m u:1000:rw /dev/uinput
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 dbus-daemon --system --fork 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
@@ -231,6 +232,7 @@ case "$cmd" in
                 startxfce4 2>/dev/null &
                 exec chard_sommelier
             "
+            setfacl -Rb /dev/uinput 2>/dev/null
             setfacl -Rb /root 2>/dev/null
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
