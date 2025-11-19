@@ -98,12 +98,15 @@ ALLOCATED_COUNT=$(echo "$ALLOCATED_CORES" | tr ',' '\n' | wc -l)
 
 TASKSET="taskset -c $ALLOCATED_CORES"
 MAKEOPTS="-j$ALLOCATED_COUNT"
+MAKEFLAGS="-j$ALLOCATED_COUNT"
+
 
 cat > "$SMRT_ENV_FILE" <<EOF
 # SMRT exports
 export SMRT_LAST_PCT=$PCT
 export TASKSET='taskset -c $ALLOCATED_CORES'
 export MAKEOPTS='-j$ALLOCATED_COUNT'
+export MAKEFLAGS='-j$ALLOCATED_COUNT'
 export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-average=$ALLOCATED_COUNT"
 
 # Aliases
@@ -112,17 +115,37 @@ EOF
 parallel_build_tools=(make emerge ninja scons meson cmake gcc g++ cc ld)
 parallel_data_tools=(tar gzip bzip2 xz rsync pigz pxz pbzip2)
 
+parallel_build_tools=(make emerge ninja scons meson cmake gcc g++ cc ld)
+
 for tool in "${parallel_build_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
-        echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
+        case "$tool" in
+            make)
+                echo "alias make='${TASKSET} make'" >> "$SMRT_ENV_FILE"
+                ;;
+            emerge|ninja)
+                echo "alias $tool='${TASKSET} $tool $MAKEOPTS'" >> "$SMRT_ENV_FILE"
+                ;;
+            meson)
+                echo "alias meson='${TASKSET} meson'" >> "$SMRT_ENV_FILE"
+                ;;
+            cmake)
+                echo "alias cmake='${TASKSET} cmake'" >> "$SMRT_ENV_FILE"
+                ;;
+            *)
+                echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
+                ;;
+        esac
     fi
 done
+
 
 for tool in "${parallel_data_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
         echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
     fi
 done
+
 
 source "$SMRT_ENV_FILE"
 
