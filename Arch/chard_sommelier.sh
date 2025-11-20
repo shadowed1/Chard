@@ -9,6 +9,7 @@ SOMMELIER_CMD=(
     --noop-driver
     --stable-scaling
     --enable-xshape
+    --no-exit-with-child
     --sd-notify=READY=1
     -X
     --glamor
