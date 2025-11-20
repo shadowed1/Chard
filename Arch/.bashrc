@@ -240,6 +240,9 @@ fi
 # Firefox
 alias firefox='/bin/chard_firefox'
 
+# Minecraft fix
+export ALSOFT_DRIVERS=alsa
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
