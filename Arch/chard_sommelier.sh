@@ -7,6 +7,9 @@ SOMMELIER_CMD=(
     --force-drm-device="$SOMMELIER_DRM_DEVICE
     --display="$SOMMELIER_DISPLAY"
     --noop-driver
+    --stable-scaling
+    --enable-xshape
+    --sd-notify=READY=1
     -X
     --glamor
     --enable-linux-dmabuf
