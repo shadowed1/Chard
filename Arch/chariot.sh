@@ -996,10 +996,10 @@ checkpoint_132() {
 }
 run_checkpoint 132 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_132
 
-#checkpoint_133() {
-#   yay -S --noconfirm balena-etcher
-#}
-#run_checkpoint 133 "balena-etcher" checkpoint_133
+checkpoint_133() {
+    yay -S --noconfirm balena-etcher
+}
+run_checkpoint 133 "balena-etcher" checkpoint_133
 
 checkpoint_134() {
     sudo -E pacman -Syu --noconfirm qemu-desktop
@@ -1089,6 +1089,101 @@ fi
 run_checkpoint 137 "Steam" checkpoint_137
 
 checkpoint_138() {
+    detect_gpu_freq() {
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+    GPU_TYPE="unknown"
+
+    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+        GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        GPU_TYPE="intel"
+        echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+        GPU_TYPE="nvidia"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+        GPU_MAX_FREQ="$MAX_MHZ"
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
+        GPU_TYPE="amd"
+        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
+            GPU_MAX_FREQ="$MAX_MHZ"
+        fi
+        GPU_FREQ_PATH="$PP_OD_FILE"
+        echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    if [[ -d /sys/class/drm ]]; then
+        if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mediatek"
+            echo "[*] Detected MediaTek GPU"
+            return
+        elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="vivante"
+            echo "[*] Detected Vivante GPU"
+            return
+        elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="asahi"
+            echo "[*] Detected Asahi GPU"
+            return
+        elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
+            GPU_TYPE="mali"
+            echo "[*] Detected Mali/Panfrost GPU"
+            return
+        fi
+    fi
+
+    for d in /sys/class/devfreq/*; do
+        if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
+            if [ -f "$d/max_freq" ]; then
+                GPU_FREQ_PATH="$d/max_freq"
+                GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+                GPU_TYPE="mali"
+                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                return
+            elif [ -f "$d/available_frequencies" ]; then
+                GPU_FREQ_PATH="$d/available_frequencies"
+                GPU_MAX_FREQ=$(tr ' ' '\n' < "$GPU_FREQ_PATH" | sort -nr | head -n1)
+                GPU_TYPE="mali"
+                echo "[*] Detected Mali GPU via devfreq: max freq ${GPU_MAX_FREQ} Hz"
+                return
+            fi
+        fi
+    done
+
+    if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+        if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+            return
+        elif [ -f "/sys/class/kgsl/kgsl-3d0/gpuclk" ]; then
+            GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+            GPU_TYPE="adreno"
+            echo "[*] Detected Adreno GPU: max freq ${GPU_MAX_FREQ} Hz"
+            return
+        fi
+    fi
+
+    GPU_TYPE="unknown"
+}
+
+detect_gpu_freq
+GPU_VENDOR="$GPU_TYPE"
    echo "[*] Installing Vulkan driver packages for GPU type: $GPU_TYPE"
     case "$GPU_TYPE" in
         intel)
@@ -1120,12 +1215,12 @@ checkpoint_138() {
 
         mali|panfrost|mediatek|vivante|asahi)
             echo "[+] Installing Mesa ARM Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau mesa-vulkan-drivers 2>/dev/null
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau 2>/dev/null
             ;;
 
         adreno)
             echo "[+] Installing Adreno Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm mesa mesa-vulkan-drivers mesa-vdpau 2>/dev/null
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau 2>/dev/null
             ;;
 
         *)
