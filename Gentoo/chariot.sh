@@ -1260,15 +1260,15 @@ run_checkpoint 140 "sudo -E emerge app-emulation/qemu" checkpoint_140
 
 checkpoint_141() {
     cd ~/
-    rm -rf bubblewrap
-    git clone https://github.com/shadowed1/bubblewrap.git
-    cd bubblewrap
+    rm -rf bubblepatch 2>/dev/null
+    git clone https://github.com/shadowed1/bubblepatch.git
+    cd bubblepatch
     sudo mkdir -p /usr/local/bubblepatch
     meson setup -Dprefix=/usr/local/bubblepatch build
     ninja -C build
     sudo ninja -C build install
     cd ~/
-    rm -rf bubblewrap
+    rm -rf bubblepatch 2>/dev/null
 
     sudo tee /bin/chard_firefox >/dev/null <<'EOF'
 #!/bin/bash
