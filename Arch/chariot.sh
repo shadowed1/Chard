@@ -1297,8 +1297,10 @@ checkpoint_140() {
         sudo mv "$file" "$file.disabled"
     fi
     sudo pacman -Rdd --noconfirm xfce4-notifyd xfce4-power-manager
-    sed -i 's/<property name="position-locked" type="bool" value="true"\/>/<property name="position-locked" type="bool" value="false"\/>/' ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-    
+    PANEL_CFG="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml"
+    if [[ -f "$PANEL_CFG" ]]; then
+        sed -i 's/<property name="position-locked" type="bool" value="true"\/>/<property name="position-locked" type="bool" value="false"\/>/' "$PANEL_CFG"
+    fi  
 }
 run_checkpoint 140 "Fix machine-id" checkpoint_140
 
