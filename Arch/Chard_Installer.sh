@@ -1105,7 +1105,7 @@ case "$GPU_VENDOR" in
         ;;
     mali)
         IDENTIFIER="ARM Mali Graphics"
-        DRIVER="panfrost"
+        DRIVER="modesetting"
         ;;
     adreno)
         IDENTIFIER="Qualcomm Adreno Graphics"
@@ -1113,7 +1113,7 @@ case "$GPU_VENDOR" in
         ;;
     mediatek)
         IDENTIFIER="MediaTek GPU"
-        DRIVER="panfrost"
+        DRIVER="modesetting"
         ;;
     vivante)
         IDENTIFIER="Vivante GPU"
@@ -1481,7 +1481,8 @@ EOF
                 CONFIG_MEDIATEK_CMDQ=n
                 CONFIG_MTK_CMDQ_MBOX=n
                 CONFIG_MTK_IOMMU=n
-                CONFIG_DRM_PANFROST=y
+                CONFIG_DRM_PANFROST=yx
+                CONFIG_DRM_VIRTIO_GPU=y
                 ;;
             adreno)
                 CONFIG_DRM_MALI=n
@@ -1509,8 +1510,8 @@ EOF
                 CONFIG_MEDIATEK_CMDQ=y
                 CONFIG_MTK_CMDQ_MBOX=y
                 CONFIG_MTK_IOMMU=y
-                CONFIG_DRM_PANFROST=y
-                
+                CONFIG_DRM_PANFROST=n
+                CONFIG_DRM_VIRTIO_GPU=y
                 ;;
             vivante)
                 CONFIG_DRM_MALI=n
@@ -1611,6 +1612,7 @@ CONFIG_MTK_IOMMU=$CONFIG_MTK_IOMMU
 CONFIG_DEVFREQ_THERMAL=y
 CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
 CONFIG_DRM_GEM_SHMEM_HELPER=y
+CONFIG_DRM_VIRTIO_GPU
 EOF
         ;;
     *)
@@ -1672,19 +1674,21 @@ case "$GPU_TYPE" in
         echo "export MESA_LOADER_DRIVER_OVERRIDE='nouveau nvk'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mali)
-        DRIVER="panfrost"
-        echo "export MESA_LOADER_DRIVER_OVERRIDE='panfrost lima'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
-        ;;
-    adreno)
+        DRIVER="virgl"
+    sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
+export DRIVER="virgl"
+export MESA_LOADER_DRIVER_OVERRIDE=virgl
+export VIRGL_RENDERER=1
+EOF
         DRIVER="freedreno"
         echo "export MESA_LOADER_DRIVER_OVERRIDE='freedreno'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
    mediatek)
-        DRIVER="panfrost"
-        sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
-export DRIVER="panfrost"
-export MESA_LOADER_DRIVER_OVERRIDE=panfrost,lima
-export MALI_PLATFORM_CONFIG=/etc/mali_platform.conf
+            DRIVER="virgl"
+    sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
+export DRIVER="virgl"
+export MESA_LOADER_DRIVER_OVERRIDE=virgl
+export VIRGL_RENDERER=1
 EOF
     ;;
 
