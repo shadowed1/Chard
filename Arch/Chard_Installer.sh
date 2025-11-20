@@ -227,6 +227,11 @@ echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
+sudo mkdir -p "$CHARD_ROOT/run/dbus"
+sudo mkdir -p "$CHARD_ROOT/tmp"
+sudo mkdir -p "$CHARD_ROOT/run/cras"
+sudo mkdir -p "$CHARD_ROOT/run/chrome"
+
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
@@ -235,6 +240,7 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
     echo "${RED}ChromeOS Version: $CHROME_MILESTONE"
+    sleep 0.5
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
@@ -253,11 +259,6 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
         echo "# <<< END CHARD ENV MARKER <<<"
     } >> "$TARGET_FILE"
 fi
-
-sudo mkdir -p "$CHARD_ROOT/run/dbus"
-sudo mkdir -p "$CHARD_ROOT/tmp"
-sudo mkdir -p "$CHARD_ROOT/run/cras"
-sudo mkdir -p "$CHARD_ROOT/run/chrome"
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
