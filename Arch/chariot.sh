@@ -996,10 +996,10 @@ checkpoint_132() {
 }
 run_checkpoint 132 "sudo -E pacman -Syu --noconfirm gparted" checkpoint_132
 
-checkpoint_133() {
-    yay -S --noconfirm balena-etcher
-}
-run_checkpoint 133 "balena-etcher" checkpoint_133
+#checkpoint_133() {
+#   yay -S --noconfirm balena-etcher
+#}
+#run_checkpoint 133 "balena-etcher" checkpoint_133
 
 checkpoint_134() {
     sudo -E pacman -Syu --noconfirm qemu-desktop
