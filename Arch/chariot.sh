@@ -858,16 +858,25 @@ else
     sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
 export PATH=/usr/local/bubblepatch/bin:$PATH
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+USER_ID=1000
+GROUP_ID=1000
+export STEAM_USER_HOME="$HOME/.local/share/Steam"
+
+source ~/.bashrc
 xhost +SI:localuser:root
+
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
-sudo -E /usr/bin/env bash -c '
-  exec /usr/bin/flatpak "$@"
-' -- "$@"
+
+sudo -i /usr/bin/env bash -c 'exec /usr/bin/flatpak "$@"' _ "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
-    sudo chmod +x /bin/chard_flatpak
-fi
+
+sudo chmod +x /bin/chard_flatpak
 }
 run_checkpoint 117 "sudo -E pacman -Syu --noconfirm flatpak" checkpoint_117
 
