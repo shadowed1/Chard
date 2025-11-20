@@ -235,6 +235,11 @@ echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
+sudo mkdir -p "$CHARD_ROOT/run/dbus"
+sudo mkdir -p "$CHARD_ROOT/tmp"
+sudo mkdir -p "$CHARD_ROOT/run/cras"
+sudo mkdir -p "$CHARD_ROOT/run/chrome"
+
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
@@ -261,11 +266,6 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
         echo "# <<< END CHARD ENV MARKER <<<"
     } >> "$TARGET_FILE"
 fi
-
-sudo mkdir -p "$CHARD_ROOT/run/dbus"
-sudo mkdir -p "$CHARD_ROOT/tmp"
-sudo mkdir -p "$CHARD_ROOT/run/cras"
-sudo mkdir -p "$CHARD_ROOT/run/chrome"
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
@@ -809,7 +809,6 @@ sudo mkdir -p "$CHARD_ROOT/run/user/0"
 sudo chmod 700 "$CHARD_ROOT/run/user/0"
 sudo mkdir -p "$CHARD_ROOT/run/user/1000"
 sudo chmod 700 "$CHARD_ROOT/run/user/1000"
-exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/dev/dri"
 sudo mkdir -p "$CHARD_ROOT/dev/input"
 sudo mkdir -p "$CHARD_ROOT/tmp"
