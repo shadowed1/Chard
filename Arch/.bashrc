@@ -138,6 +138,7 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib/dri"
 fi
 
+export GTK_IM_MODULE=cros
 export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
