@@ -147,7 +147,7 @@ BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 echo
 echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
 echo
-echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
+echo "${GREEN}[+] Creating ${RESET}${RED}Chard ${RESET}${YELLOW}Root${RESET}"
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
