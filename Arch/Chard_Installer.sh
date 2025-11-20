@@ -181,11 +181,9 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
     sleep 0.2
-    sudo umount -l -f "$CHARD_ROOT/usr/local/bubbepatch/bin/bwrap" 2>/dev/null || true
+    sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-    sleep 0.2
-    sudo setfacl -Rb /run/chrome 2>/dev/null
 }
 
 existing_int_trap=$(trap -p INT | cut -d"'" -f2)
@@ -226,19 +224,12 @@ sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || t
 sleep 0.2
 sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
 sleep 0.2
-sudo umount -l -f "$CHARD_ROOT/usr/local/bubbepatch/bin/bwrap" 2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-sleep 0.2
-sudo setfacl -Rb /run/chrome 2>/dev/null
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
-
-sudo mkdir -p "$CHARD_ROOT/run/dbus"
-sudo mkdir -p "$CHARD_ROOT/tmp"
-sudo mkdir -p "$CHARD_ROOT/run/cras"
-sudo mkdir -p "$CHARD_ROOT/run/chrome"
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
@@ -248,7 +239,6 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
     echo "${RED}ChromeOS Version: $CHROME_MILESTONE"
-    sleep 0.5
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
@@ -267,6 +257,11 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
         echo "# <<< END CHARD ENV MARKER <<<"
     } >> "$TARGET_FILE"
 fi
+
+sudo mkdir -p "$CHARD_ROOT/run/dbus"
+sudo mkdir -p "$CHARD_ROOT/tmp"
+sudo mkdir -p "$CHARD_ROOT/run/cras"
+sudo mkdir -p "$CHARD_ROOT/run/chrome"
 
 echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
@@ -522,7 +517,7 @@ sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf"
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
 
 else
     sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
@@ -623,6 +618,7 @@ sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
 sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
 
 KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
@@ -768,6 +764,7 @@ sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
 sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
+sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
 
 sudo rm -rf "$KERNEL_BUILD"
 
@@ -808,6 +805,7 @@ sudo mkdir -p "$CHARD_ROOT/run/user/0"
 sudo chmod 700 "$CHARD_ROOT/run/user/0"
 sudo mkdir -p "$CHARD_ROOT/run/user/1000"
 sudo chmod 700 "$CHARD_ROOT/run/user/1000"
+exec > >(sudo tee -a "$LOG_FILE") 2>&1
 sudo mkdir -p "$CHARD_ROOT/dev/dri"
 sudo mkdir -p "$CHARD_ROOT/dev/input"
 sudo mkdir -p "$CHARD_ROOT/tmp"
@@ -1113,7 +1111,7 @@ case "$GPU_VENDOR" in
         ;;
     mali)
         IDENTIFIER="ARM Mali Graphics"
-        DRIVER="modesetting"
+        DRIVER="panfrost"
         ;;
     adreno)
         IDENTIFIER="Qualcomm Adreno Graphics"
@@ -1121,7 +1119,7 @@ case "$GPU_VENDOR" in
         ;;
     mediatek)
         IDENTIFIER="MediaTek GPU"
-        DRIVER="modesetting"
+        DRIVER="panfrost"
         ;;
     vivante)
         IDENTIFIER="Vivante GPU"
@@ -1489,8 +1487,7 @@ EOF
                 CONFIG_MEDIATEK_CMDQ=n
                 CONFIG_MTK_CMDQ_MBOX=n
                 CONFIG_MTK_IOMMU=n
-                CONFIG_DRM_PANFROST=yx
-                CONFIG_DRM_VIRTIO_GPU=y
+                CONFIG_DRM_PANFROST=y
                 ;;
             adreno)
                 CONFIG_DRM_MALI=n
@@ -1518,8 +1515,8 @@ EOF
                 CONFIG_MEDIATEK_CMDQ=y
                 CONFIG_MTK_CMDQ_MBOX=y
                 CONFIG_MTK_IOMMU=y
-                CONFIG_DRM_PANFROST=n
-                CONFIG_DRM_VIRTIO_GPU=y
+                CONFIG_DRM_PANFROST=y
+                
                 ;;
             vivante)
                 CONFIG_DRM_MALI=n
@@ -1620,7 +1617,7 @@ CONFIG_MTK_IOMMU=$CONFIG_MTK_IOMMU
 CONFIG_DEVFREQ_THERMAL=y
 CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
 CONFIG_DRM_GEM_SHMEM_HELPER=y
-CONFIG_DRM_VIRTIO_GPU
+CONFIG_DRM_VIRTIO_GPU=y
 EOF
         ;;
     *)
@@ -1682,21 +1679,19 @@ case "$GPU_TYPE" in
         echo "export MESA_LOADER_DRIVER_OVERRIDE='nouveau nvk'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mali)
-        DRIVER="virgl"
-    sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
-export DRIVER="virgl"
-export MESA_LOADER_DRIVER_OVERRIDE=virgl
-export VIRGL_RENDERER=1
-EOF
+        DRIVER="panfrost"
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='panfrost lima'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        ;;
+    adreno)
         DRIVER="freedreno"
         echo "export MESA_LOADER_DRIVER_OVERRIDE='freedreno'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
    mediatek)
-            DRIVER="virgl"
-    sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
-export DRIVER="virgl"
-export MESA_LOADER_DRIVER_OVERRIDE=virgl
-export VIRGL_RENDERER=1
+        DRIVER="panfrost"
+        sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
+export DRIVER="panfrost"
+export MESA_LOADER_DRIVER_OVERRIDE=panfrost,lima
+export MALI_PLATFORM_CONFIG=/etc/mali_platform.conf
 EOF
     ;;
 
@@ -1767,7 +1762,7 @@ fi
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
 
 else
     sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
