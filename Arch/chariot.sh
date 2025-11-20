@@ -1331,10 +1331,12 @@ run_checkpoint 142 "Firefox" checkpoint_142
 
 checkpoint_143() {
 cd ~/
-rm ~/.Xauthority
+XA="$HOME/.Xauthority"
+if [[ -f "$XA" ]]; then
+    rm "$XA"
+fi
+ 
 touch ~/.Xauthority
-sleep 2
-xauth generate :0 . trusted
 }
 run_checkpoint 143 "X Authority" checkpoint_143
 #checkpoint_135() {
