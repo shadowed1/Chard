@@ -1335,10 +1335,10 @@ XA="$HOME/.Xauthority"
 if [[ -f "$XA" ]]; then
     rm "$XA"
 fi
- 
-touch ~/.Xauthority
+touch ~/.Xauthority 2>/dev/null
+sudo -E pacman -Syu gedit 2>/dev/null
 }
-run_checkpoint 143 "X Authority" checkpoint_143
+run_checkpoint 143 "X Authority & gedit" checkpoint_143
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
 #}
