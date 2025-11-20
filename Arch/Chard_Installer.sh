@@ -184,6 +184,8 @@ cleanup_chroot() {
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+    sleep 0.2
+    sudo setfacl -Rb /run/chrome 2>/dev/null
 }
 
 existing_int_trap=$(trap -p INT | cut -d"'" -f2)
@@ -227,6 +229,8 @@ sleep 0.2
 sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+sleep 0.2
+sudo setfacl -Rb /run/chrome 2>/dev/null
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
