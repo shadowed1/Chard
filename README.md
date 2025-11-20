@@ -206,9 +206,10 @@
 
 - Refresh a new shell after adjusting scaling.
 
-- Prepend `wx` to a command to give an app a choice to try wayland and x11 if unsure.
+- Prepend `wx` to an app to try wayland and x11 if unsure.
 - `chard mount` to mount a USB device (ignores SSD and USB devices) for UNetBootin.
 - `chard unmount` or `exit` to unmount the device.
+- Prepend `root` to an app that requires user namespace creation and it might work.
 - `exit` -- Leave Chard Root
 
 <br>
