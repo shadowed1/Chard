@@ -302,8 +302,8 @@ case "$cmd" in
         #sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         #sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
 
-        sudo chown root:root "$CHARD_ROOT/usr/local/bubbepatch/bin/bwrap" 2>/dev/null
-        sudo chmod u+s "$CHARD_ROOT/usr/local/bubbepatch/bin/bwrap" 2>/dev/null
+        sudo chown root:root "$CHARD_ROOT/usr/local/bubblewrap/bin/bwrap" 2>/dev/null
+        sudo chmod u+s "$CHARD_ROOT/usr/local/bubblewrap/bin/bwrap" 2>/dev/null
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
@@ -400,7 +400,7 @@ case "$cmd" in
             sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
         fi
 
-        sudo umount -l -f "$CHARD_ROOT/usr/local/bubbepatch/bin/bwrap" 2>/dev/null || true
+        sudo umount -l -f "$CHARD_ROOT/usr/local/bubblewrap/bin/bwrap" 2>/dev/null || true
         sudo setfacl -Rb /run/chrome 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         pkill -f xfce4-session
