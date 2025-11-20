@@ -226,7 +226,7 @@ case "$cmd" in
                 
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
-                startxfce4 2>/dev/null &
+                xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
             setfacl -Rb /root 2>/dev/null
