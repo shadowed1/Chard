@@ -1230,6 +1230,15 @@ EOF
 sudo chmod +x /bin/chard_firefox
 }
 run_checkpoint 142 "Firefox" checkpoint_142
+
+checkpoint_143() {
+cd ~/
+rm ~/.Xauthority
+touch ~/.Xauthority
+sleep 2
+xauth generate :0 . trusted
+}
+run_checkpoint 143 "X Authority" checkpoint_143
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
 #}
