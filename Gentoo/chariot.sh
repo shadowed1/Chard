@@ -1281,6 +1281,7 @@ xhost +SI:localuser:root
 source ~/.bashrc
 sudo -u $CHARD_USER /usr/bin/firefox
 EOF
+    sudo chmod +x /bin/chard_firefox
 
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
@@ -1317,7 +1318,7 @@ exit
 INNER
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
-
+    sudo chmod +x /bin/chard_steam
 }
 run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
