@@ -44,27 +44,28 @@ case "$choice" in
         exit 1
         ;;
 esac
-
-echo "${RESET}"
-echo "${GREEN}Downloading to: ~/Chard_Installer${RESET}"
+echo "${RESET}${BLUE}"
+echo "                           ╔═══════════════════════════════════╗" 
+echo "                           ║ Downloading to: ~/Chard_Installer ║"
+echo "                           ╚═══════════════════════════════════╝${RESET}" 
 
 curl -L "$URL" -o ~/Chard_Installer || {
     echo "${RED}Download failed. ${RESET}"
     exit 1
 }
 
-echo ""
-echo "${YELLOW}${BOLD}Run commands below with sudo in crosh or VT-2:${RESET}"
-echo ""
-echo ""
-
-echo "${GREEN}If on ChromeOS/FydeOS, run:${RESET}"
+echo "                      ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${BOLD}${MAGENTA}VT-2${RESET}${YELLOW}:${RESET}"
 echo
-echo "${GREEN}${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
-echo "sudo bash /usr/local/Chard_Installer${RESET}"
-echo ""
-echo ""
-echo "${CYAN}If on anything else, run:${RESET}"
 echo
-echo "${BLUE}${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}"
+echo "${GREEN}${BOLD}If on ChromeOS/FydeOS, run:${RESET}${GREEN}"
+echo "╔═════════════════════════════════════════════════════╗" 
+echo " ${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
+echo " sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
+echo "╚═════════════════════════════════════════════════════╝"
 echo ""
+echo "${CYAN}${BOLD}If on anything else, run:${RESET}${CYAN}"
+echo "╔═════════════════════════════════════════════════════╗" 
+echo " ${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}${CYAN}"
+echo "╚═════════════════════════════════════════════════════╝"
+echo
+echo
