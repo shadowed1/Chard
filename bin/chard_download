@@ -12,7 +12,6 @@ echo "${GREEN}"
 echo "╔═══════════════════════════════════════════════════════════════════════════════════════════╗"
 echo "║${BOLD}                                   Select Chard Distro:${RESET}${GREEN}                                    ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════╝"
-echo
 echo "${CYAN}╔════════════════════════════════════════════╗${RESET}${MAGENTA} ╔════════════════════════════════════════════╗${RESET}"
 echo "${CYAN}║                                            ║${RESET}${MAGENTA} ║                                            ║${RESET}"
 echo "${CYAN}║${BOLD}   Option 1 - Chard Arch:${RESET}${CYAN}                   ║${RESET}${MAGENTA} ║${BOLD}   Option 2 - Chard Gentoo:${RESET}${MAGENTA}                 ║${RESET}"           
