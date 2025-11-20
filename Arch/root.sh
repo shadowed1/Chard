@@ -8,7 +8,7 @@ USER_ID=1000
 GROUP_ID=1000
 export STEAM_USER_HOME="$HOME/.local/share/Steam"
 
-[ -f ~/.bashrc ] && source ~/.bashrc
+source ~/.bashrc
 xhost +SI:localuser:root
 
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
