@@ -15,7 +15,7 @@ sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
 
 if [ $# -eq 0 ]; then
-    echo "Example: root flatpak list"
+    echo "Example: root [app] --argument"
     sudo setfacl -Rb /run/chrome 2>/dev/null
     exit 1
 fi
