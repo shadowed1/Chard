@@ -43,7 +43,7 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
     sleep 0.2
-    sudo umount -l -f "$CHARD_ROOT/usr/local/bubbepatch/bin/bwrap" 2>/dev/null || true
+    sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.2
