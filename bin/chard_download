@@ -44,8 +44,7 @@ case "$choice" in
         exit 1
         ;;
 esac
-echo "${RESET}${BLUE}"
-echo "                           ╔═══════════════════════════════════╗" 
+echo "${RESET}${BLUE}                           ╔═══════════════════════════════════╗" 
 echo "                           ║ Downloading to: ~/Chard_Installer ║"
 echo "                           ╚═══════════════════════════════════╝${RESET}" 
 
@@ -54,18 +53,18 @@ curl -L "$URL" -o ~/Chard_Installer || {
     exit 1
 }
 
-echo "                     ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${BOLD}${MAGENTA}VT-2${RESET}${YELLOW}:${RESET}"
+echo "                      ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${BOLD}${MAGENTA}VT-2${RESET}${YELLOW}:${RESET}"
 echo
 echo
-echo "${GREEN}${BOLD}If on ChromeOS/FydeOS, run:${RESET}${GREEN}"
-echo "╔═════════════════════════════════════════════════════╗" 
-echo " ${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
-echo " sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
-echo "╚═════════════════════════════════════════════════════╝"
+echo "                                  ${GREEN}${BOLD}If on ChromeOS/FydeOS, run:${RESET}${GREEN}"
+echo "                  ╔═════════════════════════════════════════════════════╗" 
+echo "                   ${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
+echo "                   sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
+echo "                  ╚═════════════════════════════════════════════════════╝"
 echo ""
-echo "${CYAN}${BOLD}If on anything else, run:${RESET}${CYAN}"
-echo "╔═════════════════════════════════════════════════════╗" 
-echo " ${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}${CYAN}"
-echo "╚═════════════════════════════════════════════════════╝"
+echo "                                  ${CYAN}${BOLD}If on anything else, run:${RESET}${CYAN}"
+echo "                  ╔═════════════════════════════════════════════════════╗" 
+echo "                   ${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}${CYAN}"
+echo "                  ╚═════════════════════════════════════════════════════╝"
 echo
 echo
