@@ -1034,15 +1034,15 @@ checkpoint_137() {
         sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
         sudo -E pacman -Syu --noconfirm bubblewrap
         cd ~/
-        rm -rf bubblewrap
-        git clone https://github.com/shadowed1/bubblewrap.git
-        cd bubblewrap
+        rm -rf bubblepatch 2>/dev/null
+        git clone https://github.com/shadowed1/bubblepatch.git
+        cd bubblepatch
         sudo mkdir -p /usr/local/bubblepatch
         meson setup -Dprefix=/usr/local/bubblepatch build
         ninja -C build
         sudo ninja -C build install
         cd ~/
-        rm -rf bubblewrap
+        rm -rf bubblepatch 2>/dev/null
 
         sudo -E pacman -Syu --noconfirm steam
 
