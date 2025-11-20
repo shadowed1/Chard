@@ -4,6 +4,7 @@ SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 ARCH="$(uname -m)"
 SOMMELIER_CMD=(
     sommelier
+    --force-drm-device="$SOMMELIER_DRM_DEVICE
     --display="$SOMMELIER_DISPLAY"
     --noop-driver
     -X
@@ -11,10 +12,6 @@ SOMMELIER_CMD=(
     --enable-linux-dmabuf
     --xwayland-path=/usr/bin/Xwayland
 )
-
-if [[ "$ARCH" == "x86_64" ]]; then
-    SOMMELIER_CMD+=( --force-drm-device="$SOMMELIER_DRM_DEVICE" )
-fi
 
 "${SOMMELIER_CMD[@]}" -- bash -c '
     sleep 0.1
