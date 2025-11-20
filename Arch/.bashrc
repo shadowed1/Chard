@@ -120,7 +120,8 @@ export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
-XDG_SESSION_TYPE=wayland
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=X-Generic
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
