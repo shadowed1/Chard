@@ -1336,7 +1336,7 @@ if [[ -f "$XA" ]]; then
     rm "$XA"
 fi
 touch ~/.Xauthority 2>/dev/null
-sudo -E pacman -Syu gedit 2>/dev/null
+sudo -E pacman -Syu --noconfirm gedit 2>/dev/null
 }
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 #checkpoint_135() {
