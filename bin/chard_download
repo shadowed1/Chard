@@ -7,25 +7,27 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
-echo ""
+echo
+echo "${GREEN}"
 echo "╔═══════════════════════════════════════════════════════════════════════════════════════════╗"
-echo "║                                   Select Chard Distro:                                    ║"
+echo "║${BOLD}                                   Select Chard Distro:${RESET}${GREEN}                                    ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════╝"
-echo "╔════════════════════════════════════════════╗ ╔════════════════════════════════════════════╗"
-echo "║                                            ║ ║                                            ║"
-echo "║   Option 1 - Chard Arch:                   ║ ║   Option 2 - Chard Gentoo                  ║"           
-echo "║                                            ║ ║                                            ║"           
-echo "║ - Installs 10x faster than Chard Gentoo.   ║ ║ - Export tools directly to ChromeOS.       ║"          
-echo "║ - Supports Steam, Heroic, and most games.  ║ ║ - Optimized builds for applications.       ║"           
-echo "║ - Multilib support for x86_64.             ║ ║ -                                          ║"
-echo "║                                            ║ ║                                            ║"
-echo "╚════════════════════════════════════════════╝ ╚════════════════════════════════════════════╝"
-echo "╔═══════════════════════════════════════════════════════════════════════════════════════════╗"
-echo "║                                       Option 3 - Exit                                     ║"
+echo
+echo "${CYAN}╔════════════════════════════════════════════╗${RESET}${MAGENTA} ╔════════════════════════════════════════════╗${RESET}"
+echo "${CYAN}║                                            ║${RESET}${MAGENTA} ║                                            ║${RESET}"
+echo "${CYAN}║${BOLD}   Option 1 - Chard Arch:${RESET}${CYAN}                   ║${RESET}${MAGENTA} ║${BOLD}   Option 2 - Chard Gentoo:${RESET}${MAGENTA}                 ║${RESET}"           
+echo "${CYAN}║                                            ║${RESET}${MAGENTA} ║                                            ║${RESET}"           
+echo "${CYAN}║ - Installs 10x faster than Chard Gentoo.   ║${RESET}${MAGENTA} ║ - Export tools directly to ChromeOS.       ║${RESET}"          
+echo "${CYAN}║ - Supports Steam, Heroic, and most games.  ║${RESET}${MAGENTA} ║ - Optimized builds for applications.       ║${RESET}"           
+echo "${CYAN}║ - Multilib support for x86_64.             ║${RESET}${MAGENTA} ║ - Recommended for ChromeOS developing.     ║${RESET}"
+echo "${CYAN}║                                            ║${RESET}${MAGENTA} ║                                            ║${RESET}"
+echo "${CYAN}╚════════════════════════════════════════════╝${RESET}${MAGENTA} ╚════════════════════════════════════════════╝${RESET}"
+echo "${RED}╔═══════════════════════════════════════════════════════════════════════════════════════════╗"
+echo "║${BOLD}                                     Option 3 - Exit${RESET}${RED}                                       ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════╝"
+echo "${RESET}${BLUE}${BOLD}"
 
-read -rp "Enter choice [1-3]: " choice
+read -rp "                                    Enter choice [1-3]: " choice
 
 case "$choice" in
     1)
