@@ -26,6 +26,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
+    sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
 }
 
 trap cleanup_chroot EXIT INT TERM
