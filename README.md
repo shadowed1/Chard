@@ -141,11 +141,11 @@
 <br>
 
 # Tools: <br>
-- Latest Boostrapped Stage3 Gentoo Linux + Linux Kernel
+- Latest Bootsrapped Stage3 Arch or Gentoo Linux + Linux Kernel
 - Emerge
 - CRAS
 
-# Chard will use Emerge/Pacman to build: <br>
+# Chard will use Pacman or Emerge to build: <br>
 - Make
 - CMake
 - Curl with OpenSSL
@@ -227,8 +227,9 @@ QEMU Example:
 
 <br>
 
-`xhost +SI:localuser:root`
-`sudo qemu-system-x86_64 \
+```
+xhost +SI:localuser:root
+sudo qemu-system-x86_64 \
   -m 4G \
   -cpu host \
   -smp 4 \
@@ -237,7 +238,8 @@ QEMU Example:
   -cdrom ~/Downloads/ubuntu.iso \
   -display sdl,gl=on \
   -boot d \
-  -name "Ubuntu VM"`
+  -name "Ubuntu VM"
+```
 
   - -m 4G allocated 4GB of RAM to the VM
   - -smp 4 allocates 4 threads to the VM
