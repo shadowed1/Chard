@@ -4,7 +4,7 @@ SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 ARCH="$(uname -m)"
 SOMMELIER_CMD=(
     sommelier
-    --force-drm-device="$SOMMELIER_DRM_DEVICE
+    --force-drm-device="$SOMMELIER_DRM_DEVICE"
     --display="$SOMMELIER_DISPLAY"
     --noop-driver
     --stable-scaling
