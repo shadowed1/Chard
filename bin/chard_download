@@ -27,7 +27,7 @@ echo "║${BOLD}                                     Option 3 - Exit${RESET}${RE
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════╝"
 echo "${RESET}${BLUE}${BOLD}"
 
-read -rp "                                    Enter choice [1-3]: " choice
+read -rp "                                    Enter Option [1-3]: " choice
 
 case "$choice" in
     1)
@@ -47,8 +47,7 @@ case "$choice" in
 esac
 
 echo "${RESET}"
-echo -e "${GREEN}Downloading to: ~/Chard_Installer${RESET}"
-echo ""
+echo "${GREEN}Downloading to: ~/Chard_Installer${RESET}"
 
 curl -L "$URL" -o ~/Chard_Installer || {
     echo "${RED}Download failed. ${RESET}"
@@ -61,10 +60,12 @@ echo ""
 echo ""
 
 echo "${GREEN}If on ChromeOS/FydeOS, run:${RESET}"
+echo
 echo "${GREEN}${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
 echo "sudo bash /usr/local/Chard_Installer${RESET}"
 echo ""
 echo ""
 echo "${CYAN}If on anything else, run:${RESET}"
+echo
 echo "${BLUE}${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}"
 echo ""
