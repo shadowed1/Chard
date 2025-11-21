@@ -146,6 +146,12 @@ export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
 
+prismlauncher() {
+    export QT_QPA_PLATFORM=xcb
+    export ALSOFT_DRIVERS=alsa
+    /usr/bin/prismlauncher "$@" &
+}
+
 obs() {
     export QT_QPA_PLATFORM=xcb
     export OBS_VKCAPTURE=1
@@ -230,6 +236,7 @@ alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
 alias prismlauncher='QT_QPA_PLATFORM=xcb prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
+
 dbus-daemon --system --fork 2>/dev/null
 
 # Steam
@@ -239,13 +246,6 @@ fi
 
 # Firefox
 alias firefox='/bin/chard_firefox'
-
-# Minecraft fix
-prismlauncher() {
-    export QT_QPA_PLATFORM=xcb
-    export ALSOFT_DRIVERS=alsa
-    /usr/bin/prismlauncher "$@" &
-}
 
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
