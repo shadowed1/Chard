@@ -241,7 +241,11 @@ fi
 alias firefox='/bin/chard_firefox'
 
 # Minecraft fix
-export ALSOFT_DRIVERS=alsa
+prismlauncher() {
+    export QT_QPA_PLATFORM=xcb
+    export ALSOFT_DRIVERS=alsa
+    /usr/bin/prismlauncher "$@" &
+}
 
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
