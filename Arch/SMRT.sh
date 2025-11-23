@@ -139,13 +139,11 @@ for tool in "${parallel_build_tools[@]}"; do
     fi
 done
 
-
 for tool in "${parallel_data_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
         echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
     fi
 done
-
 
 source "$SMRT_ENV_FILE"
 
