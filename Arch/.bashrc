@@ -120,8 +120,6 @@ export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
-export XDG_SESSION_TYPE=wayland
-export XDG_CURRENT_DESKTOP=X-Generic
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
@@ -138,19 +136,12 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib/dri"
 fi
 
-export GTK_IM_MODULE=cros
 export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
-
-prismlauncher() {
-    export QT_QPA_PLATFORM=xcb
-    export ALSOFT_DRIVERS=alsa
-    /usr/bin/prismlauncher "$@" &
-}
 
 obs() {
     export QT_QPA_PLATFORM=xcb
@@ -236,7 +227,6 @@ alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
 alias prismlauncher='QT_QPA_PLATFORM=xcb prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
-
 dbus-daemon --system --fork 2>/dev/null
 
 # Steam
