@@ -1308,6 +1308,18 @@ checkpoint_141() {
 yay -S --noconfirm prismlauncher
 sudo -E pacman -Syu --noconfirm gamemode
 sudo pacman -Syu --noconfirm flite
+sudo tee /bin/chard_prismlauncher >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+source ~/.bashrc
+export QT_QPA_PLATFORM=xcb
+export ALSOFT_DRIVERS=alsa
+/usr/bin/prismlauncher "$@" &
+EOF
+sudo chmod +x /bin/chard_prismlauncher
     
 }
 run_checkpoint 141 "Prism Launcher" checkpoint_141
