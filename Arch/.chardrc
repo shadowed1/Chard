@@ -24,6 +24,7 @@ export PATH
 alias safe='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
+alias chard reinstall='$CHARD_ROOT/bin/Reinstall_Chard.sh'
 CR="$CHARD_ROOT"
 
 # <<< END CHARD_ENV <<<
