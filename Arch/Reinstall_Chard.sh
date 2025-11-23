@@ -229,7 +229,7 @@ fi
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc   
 
-sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_flatpak" >/dev/null <<'EOF'
 #!/bin/bash
 export PATH=/usr/local/bubblepatch/bin:$PATH
 CHARD_HOME=$(cat /.chard_home)
@@ -246,9 +246,9 @@ sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
 sudo -i /usr/bin/env bash -c 'exec /usr/bin/flatpak "$@"' _ "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
-sudo chmod +x /bin/chard_flatpak
+sudo chmod +x "$CHARD_ROOT/bin/chard_flatpak"
 
-sudo tee /bin/chard_steam >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_steam" >/dev/null <<'EOF'
 #!/bin/bash
 export PATH=/usr/local/bubblepatch/bin:$PATH
 CHARD_HOME=$(cat /.chard_home)
@@ -268,9 +268,9 @@ exit
 INNER
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
-sudo chmod +x /bin/chard_steam
+sudo chmod +x "$CHARD_ROOT/bin/chard_steam"
 
-sudo tee /bin/chard_prismlauncher >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_prismlauncher" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -281,9 +281,9 @@ export QT_QPA_PLATFORM=xcb
 export ALSOFT_DRIVERS=alsa
 /usr/bin/prismlauncher "$@" &
 EOF
-sudo chmod +x /bin/chard_prismlauncher
+sudo chmod +x "$CHARD_ROOT/bin/chard_prismlauncher"
 
-sudo tee /bin/chard_firefox >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_firefox" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -294,7 +294,7 @@ xhost +SI:localuser:root
 source ~/.bashrc
 sudo -u $CHARD_USER /usr/bin/firefox
 EOF
-sudo chmod +x /bin/chard_firefox
+sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
                 echo "${MAGENTA}[*] Quick reinstall complete.${RESET}"
                 ;;
