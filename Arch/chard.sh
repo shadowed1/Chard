@@ -81,29 +81,6 @@ esac
         "$@"
 }
 
-chard_reinstall() {
-    if [ -z "$CHARD_ROOT" ]; then
-        echo "Error: CHARD_ROOT not found."
-        exit 1
-    fi
-
-    local script="$CHARD_ROOT/Reinstall_Chard.sh"
-
-    if [ -d "$CHARD_ROOT" ]; then
-        if [ -x "$script" ]; then
-            echo "Reinstalling Chard..."
-            sudo bash "$script"
-        else
-            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-            sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-            $CHARD_ROOT/bin/Reinstall_Chard.sh
-        fi
-    else
-        echo "${RED}Installation directory not found: $CHARD_ROOT ${RESET}"
-        exit 1
-    fi
-}
-
 chard_uninstall() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "Error: CHARD_ROOT not found."
@@ -149,9 +126,6 @@ case "$cmd" in
         echo
         echo "${RESET}"
         echo
-        ;;
-    reinstall)
-        chard_reinstall
         ;;
     uninstall)
          chard_uninstall
@@ -495,7 +469,7 @@ case "$cmd" in
                     read -rp "Would you like to 'reinstall' to get $LATEST_VER ? (Y/n): " choice
                     if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
                         echo "${CYAN}Reinstalling!${RESET}"
-                        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
+                        "$CHARD_ROOT/bin/Reinstall_Chard.sh"
                     else
                         echo "${YELLOW}Skipping reinstall.${RESET}"
                     fi
