@@ -1233,6 +1233,7 @@ GPU_VENDOR="$GPU_TYPE"
 run_checkpoint 138 "vulkan" checkpoint_138
 
 checkpoint_139() {
+    sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins
     sudo rm -rf ~/.cache/bazel 2>/dev/null
     if [[ "$ARCH" == "x86_64" ]]; then
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
