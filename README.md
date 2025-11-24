@@ -121,6 +121,8 @@
 <br>
 
 - **Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist!**
+- Enabling sudo in crosh natively will allow for fast app launches:
+  <pre>https://github.com/shadowed1/sudoCrosh/blob/main/README.md</pre>
 
 <br>
 
