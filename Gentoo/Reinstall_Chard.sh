@@ -661,7 +661,7 @@ EOF
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
-                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/Chard_Installer.sh?$(date +%s)")
+                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")
                 ;;
             q|Q|*)
                 echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
