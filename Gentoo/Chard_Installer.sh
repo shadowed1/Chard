@@ -2027,6 +2027,9 @@ else
 fi
 
 show_progress
-echo "${GREEN}[+] Chard Root is ready! Open a new shell and enter chard root with: ${RESET}"
 sudo cp "$CHARD_ROOT/chardbuild.log" ~/
 echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
+echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
+if [[ "$(uname -m)" == "aarch64" ]]; then
+    echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
+fi
