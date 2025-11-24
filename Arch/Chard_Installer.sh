@@ -1901,3 +1901,6 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
 fi
 sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf" 2>/dev/null
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
+if [[ "$(uname -m)" == "aarch64" ]]; then
+    echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
+fi
