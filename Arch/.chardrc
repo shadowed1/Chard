@@ -21,10 +21,22 @@ export PATH
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
+chard() {
+    case "$1" in
+        reinstall)
+            shift
+            "$CHARD_ROOT/bin/Reinstall_Chard.sh" "$@"
+            ;;
+        *)
+            "$CHARD_ROOT/bin/chard" "$@"
+            ;;
+    esac
+}
+
 alias safe='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
-alias chard reinstall='$CHARD_ROOT/bin/Reinstall_Chard.sh'
+
 CR="$CHARD_ROOT"
 
 # <<< END CHARD_ENV <<<
