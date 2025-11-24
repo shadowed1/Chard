@@ -61,7 +61,8 @@ trap cleanup_chroot EXIT INT TERM
         
         case "$choice" in
             1)
-                echo "${RESET}${GREEN}[*] Performing quick reinstall..."
+                echo
+                echo "${RESET}${GREEN}[*] Performing Quick Reinstall!"
 
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"           -o "$CHARD_ROOT/.chardrc"
@@ -296,7 +297,8 @@ sudo -u $CHARD_USER /usr/bin/firefox
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
-                echo "${MAGENTA}[*] Quick reinstall complete.${RESET}"
+                echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
+                echo
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
