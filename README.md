@@ -97,8 +97,7 @@
 <br>
 
 - Intelligent CPU task scheduler for building packages.
-- User can customize how many threads Chard can use dynamically. Useful for devices with low memory.
-- Hardware detection scripts allows compilers to enable native architectural tweaks.
+- Hardware detection scripts allows compilers to enable native architectural tweaks (Gentoo only).
 - ChromeOS' Downloads folder is shared when entering Chard Root, allowing for fast file sharing. 
 
 <br>
@@ -271,7 +270,7 @@ sudo qemu-system-x86_64 \
   <img src="https://i.imgur.com/KmxFMkB.png" alt="logo" width="500" />
 </p>
 
-- Mouse Capture/Lock in Games is not working.
+- Mouse Capture/Lock in Games (spinning around with a mouse) is not working.
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
 
 <br>
