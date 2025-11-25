@@ -1,0 +1,262 @@
+// Chard Exo Attempt #9000
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chard Chrome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #info {
+            padding: 20px;
+            background: #2a2a2a;
+            border-bottom: 2px solid #444;
+        }
+        #canvas {
+            flex: 1;
+            background: #000;
+            cursor: crosshair;
+        }
+        #canvas.locked {
+            cursor: none;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .status.active {
+            background: #2a5;
+            color: #fff;
+        }
+        .status.inactive {
+            background: #a52;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #4a9eff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #3a7edf;
+        }
+        #log {
+            max-height: 100px;
+            overflow-y: auto;
+            margin-top: 10px;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="info">
+            <h2>Chard Mouse Capture Proof of Concept</h2>
+            <div>
+                <span id="lockStatus" class="status inactive">Pointer: Unlocked</span>
+                <span id="wsStatus" class="status inactive">WebSocket: Disconnected</span>
+            </div>
+            <div>
+                <button id="lockBtn">Click to Lock Pointer</button>
+                <button id="connectBtn">Connect to Chard</button>
+                <button id="fullscreenBtn">Toggle Fullscreen</button>
+            </div>
+            <div>
+                <input type="text" id="wsUrl" value="ws://localhost:9999" style="width: 300px; padding: 5px; margin: 5px;">
+                <label>WebSocket URL</label>
+            </div>
+            <div id="log"></div>
+        </div>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const lockBtn = document.getElementById('lockBtn');
+        const connectBtn = document.getElementById('connectBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const lockStatus = document.getElementById('lockStatus');
+        const wsStatus = document.getElementById('wsStatus');
+        const wsUrlInput = document.getElementById('wsUrl');
+        const logDiv = document.getElementById('log');
+
+        let ws = null;
+        let isLocked = false;
+
+        function log(msg) {
+            const time = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${time}] ${msg}<br>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function connectWebSocket() {
+            const url = wsUrlInput.value;
+            log(`Connecting to ${url}...`);
+            
+            try {
+                ws = new WebSocket(url);
+                
+                ws.onopen = () => {
+                    log('WebSocket connected!');
+                    wsStatus.textContent = 'WebSocket: Connected';
+                    wsStatus.className = 'status active';
+                };
+                
+                ws.onclose = () => {
+                    log('WebSocket disconnected');
+                    wsStatus.textContent = 'WebSocket: Disconnected';
+                    wsStatus.className = 'status inactive';
+                    ws = null;
+                };
+                
+                ws.onerror = (err) => {
+                    log(`WebSocket error: ${err.message || 'Connection failed'}`);
+                };
+                
+                ws.onmessage = (event) => {
+                    log(`Received: ${event.data}`);
+                };
+            } catch (err) {
+                log(`Error: ${err.message}`);
+            }
+        }
+
+        function sendEvent(type, data) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type, data, timestamp: Date.now() }));
+            }
+        }
+
+        function requestPointerLock() {
+            canvas.requestPointerLock = canvas.requestPointerLock ||
+                                       canvas.mozRequestPointerLock ||
+                                       canvas.webkitRequestPointerLock;
+            canvas.requestPointerLock();
+        }
+
+        document.addEventListener('pointerlockchange', () => {
+            isLocked = document.pointerLockElement === canvas ||
+                      document.mozPointerLockElement === canvas ||
+                      document.webkitPointerLockElement === canvas;
+            
+            if (isLocked) {
+                log('Pointer locked! Mouse movements will be captured.');
+                lockStatus.textContent = 'Pointer: LOCKED';
+                lockStatus.className = 'status active';
+                canvas.classList.add('locked');
+            } else {
+                log('Pointer unlocked (ESC pressed)');
+                lockStatus.textContent = 'Pointer: Unlocked';
+                lockStatus.className = 'status inactive';
+                canvas.classList.remove('locked');
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isLocked) {
+                const movementX = e.movementX || e.mozMovementX || e.webkitMovementX || 0;
+                const movementY = e.movementY || e.mozMovementY || e.webkitMovementY || 0;
+                
+                sendEvent('mouse_move', {
+                    dx: movementX,
+                    dy: movementY
+                });
+            }
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (isLocked) {
+                sendEvent('mouse_button', {
+                    button: e.button,
+                    pressed: true
+                });
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (isLocked) {
+                sendEvent('mouse_button', {
+                    button: e.button,
+                    pressed: false
+                });
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (isLocked) {
+                e.preventDefault();
+                sendEvent('key', {
+                    code: e.code,
+                    key: e.key,
+                    pressed: true
+                });
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (isLocked) {
+                e.preventDefault();
+                sendEvent('key', {
+                    code: e.code,
+                    key: e.key,
+                    pressed: false
+                });
+            }
+        });
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        lockBtn.onclick = requestPointerLock;
+        connectBtn.onclick = connectWebSocket;
+        fullscreenBtn.onclick = toggleFullscreen;
+
+        canvas.onclick = () => {
+            if (!isLocked) {
+                requestPointerLock();
+            }
+        };
+
+        function resizeCanvas() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        log('Ready! Click "Connect to Chard" to start WebSocket, then click "Lock Pointer"');
+        log('Press ESC to unlock.');
+    </script>
+</body>
+</html>
