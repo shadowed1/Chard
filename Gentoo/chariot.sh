@@ -1054,7 +1054,7 @@ checkpoint_123() {
 run_checkpoint 123 "sudo -E emerge xfce-base/xfce4-meta" checkpoint_123
 
 checkpoint_123() {
-    echo "media-plugins/alsa-plugins pulseaudio" >> /etc/portage/package.use/firefox-bin
+    echo "media-plugins/alsa-plugins pulseaudio" | sudo tee -a /etc/portage/package.use/firefox-bin
     sudo -E emerge --autounmask-write firefox-bin
     rm -rf /var/tmp/portage/www-client/firefox-bin-*
     eclean-dist -d
@@ -1270,7 +1270,7 @@ checkpoint_141() {
     cd ~/
     rm -rf bubblepatch 2>/dev/null
 
-    sudo tee /bin/chard_firefox >/dev/null <<'EOF'
+    sudo tee /bin/chard_firefox-bin >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -1279,9 +1279,9 @@ USER=$CHARD_USER
 PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root
 source ~/.bashrc
-sudo -u $CHARD_USER /usr/bin/firefox
+sudo -u $CHARD_USER /usr/bin/firefox-bin
 EOF
-    sudo chmod +x /bin/chard_firefox
+    sudo chmod +x /bin/chard_firefox-bin
 
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
@@ -1295,30 +1295,6 @@ sudo -E /usr/bin/env bash -c '
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
     sudo chmod +x /bin/chard_flatpak
-
-    STEAM_SCRIPT="/usr/lib/steam/steam"
-    sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
-    sudo tee /bin/chard_steam >/dev/null <<'EOF'
-#!/bin/bash
-export PATH=/usr/local/bubblepatch/bin:$PATH
-CHARD_HOME=$(cat /.chard_home)
-CHARD_USER=$(cat /.chard_user)
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
-GROUP_ID=1000
-USER_ID=1000
-source ~/.bashrc
-xhost +SI:localuser:root
-sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
-sudo -i <<'INNER'
-/usr/bin/steam
-exit
-INNER
-sudo setfacl -Rb /run/chrome 2>/dev/null
-EOF
-    sudo chmod +x /bin/chard_steam
 }
 run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
