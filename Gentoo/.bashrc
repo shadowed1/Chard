@@ -390,7 +390,6 @@ export XCURSOR_THEME
 
 # Firefox
 alias firefox-bin='chard_firefox-bin
-alias firefox='chard_firefox'
 
 # KSP
 alias ksp='LC_ALL=C ./KSP_x86_64'
