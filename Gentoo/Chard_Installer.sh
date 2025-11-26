@@ -1957,6 +1957,15 @@ fi
 
 sudo ln -s $CHARD_ROOT/usr/lib/python-exec /usr/lib/python-exec 2>/dev/null
 
+sudo mkdir -p $CHARD_ROOT/usr/lib64
+sudo mkdir -p $CHARD_ROOT/usr/share/vulkan/icd.d
+
+if [[ "$(uname -m)" == "aarch64" ]]; then
+    sudo cp /usr/lib64/libmali.so.0 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
+    sudo cp /usr/lib64/libmali.so.0.44.1 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
+    sudo cp /usr/share/vulkan/icd.d/mali_icd.json "$CHARD_ROOT/usr/share/vulkan/icd.d/" 2>/dev/null
+fi
+
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
     mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
     mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
