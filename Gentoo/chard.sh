@@ -361,14 +361,14 @@ case "$cmd" in
                     fi
                 }
                 trap cleanup EXIT INT TERM
-            
+                
                 dbus-daemon --system --fork 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
-            
+                xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
             umount -l /tmp/usb_mount 2>/dev/null || true
@@ -403,13 +403,13 @@ case "$cmd" in
         sudo umount -l -f "$CHARD_ROOT/usr/local/bubblewrap/bin/bwrap" 2>/dev/null || true
         sudo setfacl -Rb /run/chrome 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
-        pkill -f xfce4-session
-        pkill -f xfwm4
-        pkill -f xfce4-panel
-        pkill -f xfdesktop
-        pkill -f xfce4-terminal
-        pkill -f xfce4-*
-        pkill -f Xorg
+        sudo pkill -f xfce4-session
+        sudo pkill -f xfwm4
+        sudo pkill -f xfce4-panel
+        sudo pkill -f xfdesktop
+        sudo pkill -f xfce4-terminal
+        sudo pkill -f xfce4-*
+        sudo pkill -f Xorg
 
         #sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         #sudo umount -l "$CHARD_ROOT/$CHARD_HOME" 2>/dev/null || true
