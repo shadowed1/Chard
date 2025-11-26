@@ -192,7 +192,7 @@
 ### Commands (Some not listed) <br>
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
 - `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
-- `chard safe` -- Enter Chard Root without GUI support -- Useful to for emerge or entering Chard prior to finishing Installer.
+- `chard safe` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
 - `chard reinstall` -- Option 1 for FAST reinstall. Option 2 is a FULL reinstall.
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
@@ -276,7 +276,7 @@ sudo qemu-system-x86_64 \
 <br>
 
 - Chrome app shelf is missing icon + pin support. Remedied by customizing xfce4 shelf.
-- Entering Chard Root with Sommelier support will have harmless errors generated.
+- Entering Chard Root with Sommelier support will generate some harmless errors.
 
 <br>
 
@@ -286,7 +286,7 @@ sudo qemu-system-x86_64 \
 <br>
 
 - Exiting Chard Root session while others are active is not recommended. Exit them all at once!
-- OBS game capture is suggested to run it all in one shell. So run `obs & prismlauncher` for example. 
+- When using OBS game capture, it is recommended (and required if using chard arch) to run everything in one shell. So run `obs & prismlauncher` for example. 
   
 <br>
 
