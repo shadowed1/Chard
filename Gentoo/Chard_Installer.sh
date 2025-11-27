@@ -1964,6 +1964,10 @@ sudo tee "$CHARD_ROOT/etc/portage/env/glibc.conf" > /dev/null <<'EOF'
 LDFLAGS="${LDFLAGS} -Wl,--pack-dyn-relocs=relr"
 EOF
 
+sudo tee "$CHARD_ROOT/etc/portage/package.env/sys-libs/glibc" > /dev/null <<'EOF'
+glibc.conf
+EOF
+
 if [[ "$(uname -m)" == "aarch64" ]]; then
     sudo cp /usr/lib64/libmali.so "$CHARD_ROOT/usr/lib64/" 2>/dev/null
     sudo cp /usr/lib64/libmali.so.0 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
