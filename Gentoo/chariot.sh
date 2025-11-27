@@ -151,6 +151,7 @@ run_checkpoint() {
 
 checkpoint_1() {
     sudo chown -R 1000:1000 ~/
+    sudo -E emerge --oneshot sys-libs/glibc
     sudo -E emerge dev-build/make
     rm -rf /var/tmp/portage/dev-build/make-*
 }
