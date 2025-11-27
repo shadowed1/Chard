@@ -1960,6 +1960,10 @@ sudo ln -s $CHARD_ROOT/usr/lib/python-exec /usr/lib/python-exec 2>/dev/null
 sudo mkdir -p $CHARD_ROOT/usr/lib64
 sudo mkdir -p $CHARD_ROOT/usr/share/vulkan/icd.d
 
+sudo tee "$CHARD_ROOT/etc/portage/env/glibc.conf" > /dev/null <<'EOF'
+LDFLAGS="${LDFLAGS} -Wl,--pack-dyn-relocs=relr"
+EOF
+
 if [[ "$(uname -m)" == "aarch64" ]]; then
     sudo cp /usr/lib64/libmali.so "$CHARD_ROOT/usr/lib64/" 2>/dev/null
     sudo cp /usr/lib64/libmali.so.0 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
