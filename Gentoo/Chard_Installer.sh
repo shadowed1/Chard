@@ -1959,6 +1959,8 @@ sudo ln -s $CHARD_ROOT/usr/lib/python-exec /usr/lib/python-exec 2>/dev/null
 
 sudo mkdir -p $CHARD_ROOT/usr/lib64
 sudo mkdir -p $CHARD_ROOT/usr/share/vulkan/icd.d
+sudo mkdir -p $CHARD_ROOT/etc/portage/env
+sudo mkdir -p $CHARD_ROOT/etc/portage/package.env/sys-libs
 
 sudo tee "$CHARD_ROOT/etc/portage/env/glibc.conf" > /dev/null <<'EOF'
 LDFLAGS="${LDFLAGS} -Wl,--pack-dyn-relocs=relr"
