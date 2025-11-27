@@ -245,7 +245,7 @@ LDFLAGS=""
 [[ -d "$ROOT/usr/lib" ]] && LDFLAGS+="-L$ROOT/usr/lib "
 [[ -d "$ROOT/lib" ]] && LDFLAGS+="-L$ROOT/lib "
 [[ -d "$ROOT/usr/local/lib" ]] && LDFLAGS+="-L$ROOT/usr/local/lib "
-
+LDFLAGS+=" -Wl,--pack-dyn-relocs=relr"
 export LDFLAGS
 export FCFLAGS
 export FFLAGS
