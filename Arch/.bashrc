@@ -159,17 +159,6 @@ obs() {
     /usr/bin/obs "$@" &
 }
 
-MAKECONF="$ROOT/etc/portage/make.conf"
-if [[ -w "$MAKECONF" ]]; then
-    sed -i "/^PYTHON_TARGETS=/d" "$MAKECONF"
-    sed -i "/^PYTHON_SINGLE_TARGET=/d" "$MAKECONF"
-    echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
-    echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
-fi
-
-eselect python set "python${second_underscore}" 2>/dev/null || true
-eselect python set --python3 "python${second_underscore}" 2>/dev/null || true
-
 # Chard Scale
 : "${CHARD_SCALE:=1.25}"
 : "${XCURSOR_SIZE:=32}"
