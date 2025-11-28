@@ -53,7 +53,7 @@ if command -v equery >/dev/null 2>&1; then
     while read -r line; do
         ver=$(echo "$line" | grep -oP 'dev-lang/perl-\K[0-9]+\.[0-9]+')
         [[ -n "$ver" ]] && all_perl_versions+=("$ver")
-    done < <(equery list -p dev-lang/perl 2>/dev/null | grep 'dev-lang/perl-')
+    done < <(timeout 3 equery list -p dev-lang/perl 2>/dev/null | grep 'dev-lang/perl-')
 fi
 
 if [[ ${#all_perl_versions[@]} -eq 0 ]]; then
@@ -98,7 +98,7 @@ if command -v equery >/dev/null 2>&1; then
     while read -r line; do
         ver=$(echo "$line" | grep -oP 'dev-lang/python-\K[0-9]+\.[0-9]+')
         [[ -n "$ver" ]] && all_python_versions+=("$ver")
-    done < <(equery list -p dev-lang/python 2>/dev/null | grep 'dev-lang/python-')
+    done < <(timeout 3 equery list -p dev-lang/python 2>/dev/null | grep 'dev-lang/python-')
 fi
 
 if (( ${#all_python_versions[@]} == 0 )); then
@@ -147,7 +147,7 @@ if command -v equery >/dev/null 2>&1; then
     while read -r line; do
         ver=$(echo "$line" | grep -oP 'sys-devel/gcc-\K[0-9]+')
         [[ -n "$ver" ]] && all_gcc_versions+=("$ver")
-    done < <(equery list -p sys-devel/gcc 2>/dev/null | grep 'sys-devel/gcc-')
+    done < <(timeout 3 equery list -p sys-devel/gcc 2>/dev/null | grep 'sys-devel/gcc-')
 fi
 
 if [[ ${#all_gcc_versions[@]} -eq 0 && -d "$ROOT/usr/$CHOST/gcc-bin" ]]; then
@@ -182,7 +182,7 @@ if command -v equery >/dev/null 2>&1; then
     while read -r line; do
         ver=$(echo "$line" | grep -oP 'llvm-core/llvm-\K[0-9]+\.[0-9]+')
         [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
-    done < <(equery list -p llvm-core/llvm 2>/dev/null | grep 'llvm-core/llvm-')
+    done < <(timeout 3 equery list -p llvm-core/llvm 2>/dev/null | grep 'llvm-core/llvm-')
 fi
 
 if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
