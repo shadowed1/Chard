@@ -200,6 +200,7 @@ case "$cmd" in
                 
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
+                cd ~/
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
