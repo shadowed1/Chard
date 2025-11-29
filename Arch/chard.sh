@@ -442,18 +442,6 @@ case "$cmd" in
         
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         ;;
-    categories|cat)
-        PORTAGE_DIR="$CHARD_ROOT/usr/portage"
-        if [ ! -d "$PORTAGE_DIR" ]; then
-            echo "ERROR: Portage tree not found at $PORTAGE_DIR"
-            exit 1
-        fi
-        echo "${GREEN}[*] Available Portage categories in $CHARD_ROOT/usr/portage:${RESET}"
-        for cat in "$PORTAGE_DIR"/*/; do
-            [ -d "$cat" ] || continue
-            basename "$cat"
-        done | sort
-        ;;
         # Denny's version checker
     version)
         if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
