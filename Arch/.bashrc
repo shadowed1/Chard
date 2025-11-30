@@ -203,6 +203,9 @@ fi
 # Firefox
 alias firefox='/bin/chard_firefox'
 
+# Flatpak
+alias flatpak='/bin/chard_flatpak'
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
