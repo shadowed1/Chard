@@ -1234,6 +1234,10 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group steam >/dev/null   || groupadd -g 20001 steam 2>/dev/null
                         getent group render >/dev/null  || groupadd -g 989 render 2>/dev/null
 
+                        if ! id \"\$CHARD_USER\" &>/dev/null; then
+                            useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
+                        fi
+
                         usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,lp,input \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
