@@ -1189,6 +1189,8 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         source \$HOME/.bashrc 2>/dev/null
                         userdel -r alarm 2>/dev/null
                         groupdel alarm 2>/dev/null
+                        groupdel audio 2>/dev/null
+                        groupdel video 2>/dev/null
                         getent group 1000 >/dev/null   || groupadd -g 1000 chronos 2>/dev/null
                         getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
                         getent group 602  >/dev/null   || groupadd -g 602 arc-bridge 2>/dev/null
