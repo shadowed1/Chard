@@ -309,4 +309,5 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - *DennyL* - Testing Chard and making suggestions.
 - *Saragon* - Providing documentation and suggestions.
 - *Zhil* - Sending documentation for XFCE4 theme ideas.
-- *Sebanc* - Helping me move from Gentoo to Arch and enabling audio for Arch. 
+- *Sebanc* - Helping me move from Gentoo to Arch and enabling audio for Arch.
+- *days* - Helping fix audio issues with Wine.
