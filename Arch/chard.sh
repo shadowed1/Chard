@@ -198,7 +198,7 @@ case "$cmd" in
                 dbus-daemon --system --fork 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 
-                pulseaudio 2>/dev/null &
+                pulseaudio -v -D 2>/dev/null
                 PULSEAUDIO_PID=\"\$!\"
                 cd ~/
                 xfce4-terminal 2>/dev/null &
