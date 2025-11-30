@@ -1520,7 +1520,6 @@ EOF
                 CONFIG_MTK_CMDQ_MBOX=y
                 CONFIG_MTK_IOMMU=y
                 CONFIG_DRM_PANFROST=y
-                
                 ;;
             vivante)
                 CONFIG_DRM_MALI=n
