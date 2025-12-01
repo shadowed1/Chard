@@ -1894,7 +1894,7 @@ sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
 sudo setfacl -Rb /run/chrome 2>/dev/null
 sleep 0.2
-show_progress
+#show_progress
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
