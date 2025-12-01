@@ -570,8 +570,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     GROUP_ID=1000
     USER_ID=1000
     source \$HOME/.bashrc 2>/dev/null
-        
-    dbus-daemon --system --fork 2>/dev/null
     /bin/SMRT
     source \$HOME/.smrt_env.sh
     exec /bin/chardsetup
@@ -699,8 +697,6 @@ chmod 1777 /tmp /var/tmp
 CHARD_HOME=\$(cat /.chard_home)
 CHARD_USER=\$(cat /.chard_user)
 source \$HOME/.bashrc 2>/dev/null
-        
-dbus-daemon --system --fork 2>/dev/null
 cd /var/tmp/build/linux-$KERNEL_VER
 
 HOST_ARCH=\$(uname -m)
@@ -1825,8 +1821,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
             echo \"Logging out $USER\"
         }
         trap cleanup EXIT INT TERM
-
-        dbus-daemon --system --fork 2>/dev/null
         source \$HOME/.bashrc 2>/dev/null
         sudo chown -R 1000:1000 $HOME
         cd \$HOME
