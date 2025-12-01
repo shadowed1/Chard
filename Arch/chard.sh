@@ -237,7 +237,6 @@ case "$cmd" in
                 }
                 trap cleanup EXIT INT TERM
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
-                dbus-daemon --system --fork 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 
                 pulseaudio 2>/dev/null &
@@ -347,8 +346,6 @@ case "$cmd" in
                     echo \"Logging out $USER\"
                 }
                 trap cleanup EXIT INT TERM
-        
-                dbus-daemon --system --fork 2>/dev/null
                 source \$HOME/.bashrc 2>/dev/null
                 sudo chown -R 1000:1000 $HOME
                 cd \$HOME
@@ -447,12 +444,8 @@ case "$cmd" in
             GROUP_ID=1000
             USER_ID=1000
             su \$USER
-            source \$HOME/.bashrc 2>/dev/null
-        
-            dbus-daemon --system --fork 2>/dev/null
-        
+            source \$HOME/.bashrc 2>/dev/null        
             /bin/bash
-            
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
