@@ -1,4 +1,5 @@
 #!/bin/bash
+# sudo ln -s $CHARD_ROOT/usr/bin/xkbcomp /usr/bin/xkbcomp
 SOMMELIER_DISPLAY="/run/chrome/wayland-0"
 SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 ARCH="$(uname -m)"
