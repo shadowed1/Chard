@@ -1222,7 +1222,6 @@ run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 #}
 #run_checkpoint 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
 
-
 checkpoint_137() {
     sudo -E emerge games-util/heroic-bin
     sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
@@ -1303,6 +1302,11 @@ EOF
 }
 run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
+checkpoint_142() {
+    sudo -E emerge gedit
+    eclean-dist -d
+}
+run_checkpoint 142 "sudo -E emerge gedit" checkpoint_142
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
