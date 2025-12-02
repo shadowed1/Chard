@@ -1059,13 +1059,17 @@ checkpoint_123() {
 run_checkpoint 123 "sudo -E emerge xfce-base/xfce4-meta" checkpoint_123
 
 checkpoint_123() {
-    echo "media-plugins/alsa-plugins pulseaudio" | sudo tee -a /etc/portage/package.use/firefox-bin
-    sudo -E emerge --autounmask-write firefox-bin
-    sudo -E emerge firefox-bin
-    rm -rf /var/tmp/portage/www-client/firefox-bin-*
+    sudo -E emerge media-libs/libao
+    sudo -E emerge net-misc/yt-dlp
+    sudo -E emerge media-libs/opus
+    sudo -E emerge media-video/vlc
+    rm -rf /var/tmp/portage/net-misc/libao-*
+    rm -rf /var/tmp/portage/net-misc/yt-dlp-*
+    rm -rf /var/tmp/portage/media-libs/libopus-*
+    rm -rf /var/tmp/portage/media-video/vlc-*
     eclean-dist -d
 }
-run_checkpoint 123 "sudo -E emerge firefox-bin (skipping for now)" checkpoint_123
+run_checkpoint 123 "sudo -E emerge vlc" checkpoint_123
 
 checkpoint_124() {
     sudo -E emerge media-libs/libva
@@ -1102,17 +1106,13 @@ checkpoint_125() {
 run_checkpoint 125 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_125
 
 checkpoint_126() {
-    sudo -E emerge media-libs/libao
-    sudo -E emerge net-misc/yt-dlp
-    sudo -E emerge media-libs/opus
-    sudo -E emerge media-video/vlc
-    rm -rf /var/tmp/portage/net-misc/libao-*
-    rm -rf /var/tmp/portage/net-misc/yt-dlp-*
-    rm -rf /var/tmp/portage/media-libs/libopus-*
-    rm -rf /var/tmp/portage/media-video/vlc-*
+    echo "media-plugins/alsa-plugins pulseaudio" | sudo tee -a /etc/portage/package.use/firefox-bin
+    sudo -E emerge --autounmask-write firefox-bin
+    sudo -E emerge firefox-bin
+    rm -rf /var/tmp/portage/www-client/firefox-bin-*
     eclean-dist -d
 }
-run_checkpoint 126 "sudo -E emerge yt-dlp + vlc" checkpoint_126
+run_checkpoint 126 "sudo -E emerge firefox" checkpoint_126
 
 checkpoint_127() {
     sudo chown -R 1000:1000 ~/
