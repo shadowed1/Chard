@@ -17,7 +17,7 @@ fi
 
 "${SOMMELIER_CMD[@]}" -- bash -c '
     sleep 0.1
-    export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
+    export DISPLAY=$(ls $CHARD_ROOT/tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
     pulseaudio &>/dev/null &
     cd ~/
