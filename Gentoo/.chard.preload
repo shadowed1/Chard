@@ -3,7 +3,6 @@
 # Manual entries.
 
 CHARD_LIB64="$CHARD_ROOT/usr/lib64"
-
 LD_PRELOAD_LIBS=(
     "$CHARD_LIB64/libpython3.13.so.1.0"
     "$CHARD_LIB64/libpython3.14.so.1.0"
@@ -56,17 +55,14 @@ for f in "$CHARD_LIB64"/libX*.so*; do
     fi
 done
 shopt -u nullglob
-
 LD_PRELOAD=""
 declare -A SEEN=()
-
 for lib in "${LD_PRELOAD_LIBS[@]}"; do
     if [[ -f "$lib" && -z "${SEEN[$lib]}" ]]; then
         SEEN["$lib"]=1
         LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
     fi
 done
-
 export LD_PRELOAD
 
 # <<< END CHARD_PRELOAD <<<
