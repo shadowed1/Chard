@@ -23,6 +23,7 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libfontenc.so.1"
     "$CHARD_ROOT/usr/lib64/libGLdispatch.so.0"
     "$CHARD_ROOT/usr/lib64/libGLX.so.0"
+    "$CHARD_ROOT/usr/lib64/libxkbfile.so.1"
 )
 
 LD_PRELOAD=""
