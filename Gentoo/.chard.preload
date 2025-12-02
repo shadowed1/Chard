@@ -1,68 +1,52 @@
+
 # <<< CHARD_PRELOAD <<<
 # ChromeOS Only. Does not support FydeOS.
 # Manual entries.
+# <<< CHARD_ROOT_MARKER >>>
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
+# <<< END_CHARD_ROOT_MARKER >>>
 
-CHARD_LIB64="$CHARD_ROOT/usr/lib64"
 LD_PRELOAD_LIBS=(
-    "$CHARD_LIB64/libpython3.13.so.1.0"
-    "$CHARD_LIB64/libpython3.14.so.1.0"
-    "$CHARD_LIB64/libb2.so.1"
-    "$CHARD_LIB64/libcrypto.so.3"
-    "$CHARD_LIB64/libsystemd.so.0"
-    "$CHARD_LIB64/libassuan.so.9"
-    "$CHARD_LIB64/libffi.so.8"
-    "$CHARD_LIB64/libpython3.14.so.1.0"
-    "$CHARD_LIB64/libperl.so.5.42"
-    "$CHARD_LIB64/libseccomp.so.2"
-    "$CHARD_LIB64/libmagic.so.1"
-    "$CHARD_LIB64/libXfont2.so.2"
-    "$CHARD_LIB64/libxcvt.so.0"
-    "$CHARD_LIB64/libxshmfence.so.1"
-    "$CHARD_LIB64/libei.so.1"
-    "$CHARD_LIB64/liboeffis.so.1"
-    "$CHARD_LIB64/libGL.so.1"
-    "$CHARD_LIB64/libfontenc.so.1"
-    "$CHARD_LIB64/libGLdispatch.so.0"
-    "$CHARD_LIB64/libGLX.so.0"
-    "$CHARD_LIB64/gedit/libgedit-48.1.so"
-    "$CHARD_LIB64/libgedit-tepl-6.so.2"
-    "$CHARD_LIB64/libgtk-3.so.0"
-    "$CHARD_LIB64/libgdk-3.so.0"
-    "$CHARD_LIB64/libgedit-gtksourceview-300.so.3"
-    "$CHARD_LIB64/libgedit-amtk-5.so.0"
-    "$CHARD_LIB64/libgedit-gfls-1.so.0"
-    "$CHARD_LIB64/libpeas-gtk-1.0.so.0"
-    "$CHARD_LIB64/libpeas-1.0.so.0"
-    "$CHARD_LIB64/libgirepository-1.0.so.1"
-    "$CHARD_LIB64/libicuuc.so.77"
-    "$CHARD_LIB64/libicui18n.so.77"
-    "$CHARD_LIB64/libhandy-1.so.0"
-    "$CHARD_LIB64/libgdk_pixbuf-2.0.so.0"
-    "$CHARD_LIB64/libatk-1.0.so.0"
-    "$CHARD_LIB64/libXi.so.6"
-    "$CHARD_LIB64/libatk-bridge-2.0.so.0"
-    "$CHARD_LIB64/libXfixes.so.3"
-    "$CHARD_LIB64/libXext.so.6"
-    "$CHARD_LIB64/libXcursor.so.1"
-    "$CHARD_LIB64/libXdamage.so.1"
-    "$CHARD_LIB64/libXcomposite.so.1"
+    "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
+    "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
+    "$CHARD_ROOT/usr/lib64/libb2.so.1"
+    "$CHARD_ROOT/usr/lib64/libcrypto.so.3"
+    "$CHARD_ROOT/usr/lib64/libsystemd.so.0"
+    "$CHARD_ROOT/usr/lib64/libassuan.so.9"
+    "$CHARD_ROOT/usr/lib64/libffi.so.8"
+    "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
+    "$CHARD_ROOT/usr/lib64/libperl.so.5.42"
+    #"$CHARD_ROOT/usr/lib64/libperl.so.5.40"
+    #"$CHARD_ROOT/usr/lib64/libappstream.so.5"
+    #"$CHARD_ROOT/usr/lib64/libostree-1.so.1"
+    #"$CHARD_ROOT/usr/lib64/libpolkit-agent-1.so.0"
+    #"$CHARD_ROOT/usr/lib64/libpolkit-gobject-1.so.0"
+    #"$CHARD_ROOT/usr/lib64/libgpgme.so.45"
+    #"$CHARD_ROOT/usr/lib64/libyyjson.so.0"
+    #"$CHARD_ROOT/usr/lib64/libGLX.so.0"
+    #"$CHARD_ROOT/usr/lib64/libxml2.so.16"
+    #"$CHARD_ROOT/usr/lib64/libstemmer.so.3"
+    #"$CHARD_ROOT/usr/lib64/libdconf.so.1"
+    "$CHARD_ROOT/usr/lib64/libseccomp.so.2"
+    #"$CHARD_ROOT/usr/lib64/libjson-glib-1.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libnghttp3.so.9"
+    "$CHARD_ROOT/usr/lib64/libmagic.so.1"
+    #"$CHARD_ROOT/usr/lib64/libjsoncpp.so.26"    
+    #"$CHARD_ROOT/usr/lib64/librhash.so.1"
+    #"$CHARD_ROOT/usr/lib64/libuv.so.1"
+    #"$CHARD_ROOT/usr/lib64/libruby34.so.3.4"
 )
 
-shopt -s nullglob
-for f in "$CHARD_LIB64"/libX*.so*; do
-    if [[ -f "$f" ]]; then
-        LD_PRELOAD_LIBS+=("$f")
-    fi
-done
-shopt -u nullglob
 LD_PRELOAD=""
-declare -A SEEN=()
+
 for lib in "${LD_PRELOAD_LIBS[@]}"; do
-    if [[ -f "$lib" && -z "${SEEN[$lib]}" ]]; then
-        SEEN["$lib"]=1
+    if [[ -f "$lib" ]]; then
         LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
     fi
 done
+
 export LD_PRELOAD
 
 # <<< END CHARD_PRELOAD <<<
