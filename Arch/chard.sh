@@ -218,6 +218,10 @@ case "$cmd" in
     root)
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+        killall -9 pipewire 2>/dev/null
+        killall -9 pipewire-pulse 2>/dev/null
+        killall -9 pulseaudio 2>/dev/null
+        killall -9 wireplumber 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
         sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
@@ -273,14 +277,18 @@ case "$cmd" in
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
+                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
+                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+                killall -9 pipewire 2>/dev/null
+                killall -9 pipewire-pulse 2>/dev/null
+                killall -9 pulseaudio 2>/dev/null
+                killall -9 wireplumber 2>/dev/null
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 sudo setfacl -R -m u:1000:rw /dev/snd
                 sudo setfacl -R -d -m u:1000:rw /dev/snd
-                pipewire 2>/dev/null &
-                sleep 0.2
-                wireplumber 2>/dev/null &
-                sleep 0.2
-                pipewire-pulse 2>/dev/null &
+                sudo mkdir -p /run/chrome/pulse
+                sudo chown 1000:1000 /run/chrome/pulse
+                sudo chmod 770 /run/chrome/pulse
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
                 xfce4-terminal 2>/dev/null &
