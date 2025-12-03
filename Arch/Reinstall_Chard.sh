@@ -338,6 +338,7 @@ source ~/.bashrc
 sudo -u $CHARD_USER /usr/bin/firefox
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
+echo "${BLUE}Setting up Pipewire..."
 
                 if [ -f "/home/chronos/user/.bashrc" ]; then
                     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
@@ -391,10 +392,6 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
                     USER_ID=1000
                 
                     sudo -u "$USER" bash -c "
-                        cleanup() {
-                            echo \"Logging out $USER\"
-                        }
-                        trap cleanup EXIT INT TERM
                         source \$HOME/.bashrc 2>/dev/null
                         sudo chown -R 1000:1000 $HOME
                         cd \$HOME
@@ -404,7 +401,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
                         rm -rf ~/.config/pulse 2>/dev/null
                         rm -rf ~/.pulse 2>/dev/null
                         rm -rf ~/.cache/pulse 2>/dev/null
-                        sudo -E pacman -Syu --noconfirm pipewire-pulse
+                        sudo -E pacman -Syu --noconfirm pipewire-pulse 2>/dev/null
                     "
                 
                     umount -l /dev/zram0   2>/dev/null || true
