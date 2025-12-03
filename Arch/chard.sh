@@ -297,6 +297,9 @@ case "$cmd" in
         '
         
         chard_unmount
+        killall -9 pipewire 2>/dev/null
+        killall -9 pipewire-pulse 2>/dev/null
+        killall -9 pulseaudio 2>/dev/null
         sudo pkill -f xfce4-session
         sudo pkill -f xfwm4
         sudo pkill -f xfce4-panel
