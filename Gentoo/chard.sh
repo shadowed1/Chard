@@ -405,7 +405,7 @@ case "$cmd" in
                 }
                 trap cleanup EXIT INT TERM
                 
-                dbus-daemon --system --fork 2>/dev/null
+                
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 
@@ -502,7 +502,7 @@ case "$cmd" in
             SMRT \$CPU_ALLOC
         
             source \$HOME/.smrt_env.sh
-            dbus-daemon --system --fork 2>/dev/null
+            
             env-update
         
             /bin/chariot
@@ -571,8 +571,6 @@ case "$cmd" in
             su \$USER
             source \$HOME/.bashrc 2>/dev/null
             source \$HOME/.smrt_env.sh
-        
-            dbus-daemon --system --fork 2>/dev/null
         
             /bin/bash
             
