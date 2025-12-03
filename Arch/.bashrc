@@ -194,7 +194,7 @@ alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
 alias prismlauncher='chard_prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
-dbus-daemon --system --fork 2>/dev/null
+#dbus-daemon --system --fork 2>/dev/null
 
 # Steam
 if [ "$CHROME_VER" -ge 140 ]; then
@@ -203,7 +203,7 @@ fi
 
 # Firefox
 alias firefox='/bin/chard_firefox'
-export MOZ_CUBEB_FORCE_PULSE=1
+#export MOZ_CUBEB_FORCE_PULSE=1
 
 # Brave
 export BRAVE_USE_SYSTEM_KEYRING=0
