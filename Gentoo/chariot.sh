@@ -1186,6 +1186,7 @@ run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
 sudo -E emerge app-office/libreoffice-bin
 
 checkpoint_134() {
+    sudo -E emerge pipewire
     echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
     sudo -E emerge media-plugins/obs-pipewire-audio-capture
     sudo -E emerge media-plugins/obs-vkcapture
@@ -1308,6 +1309,38 @@ checkpoint_142() {
     eclean-dist -d
 }
 run_checkpoint 142 "sudo -E emerge gedit" checkpoint_142
+
+checkpoint_143() {
+    ARCH=$(uname -m)
+    sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+    rm -rf ~/.config/pulse 2>/dev/null
+    rm -rf ~/.pulse 2>/dev/null
+    rm -rf ~/.cache/pulse 2>/dev/null
+    sudo rm -rf ~/.cache/bazel 2>/dev/null
+    if [[ "$ARCH" == "x86_64" ]]; then
+        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
+    elif [[ "$ARCH" == "aarch64" ]]; then
+        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
+    else
+        echo "Unsupported architecture: $ARCH"
+    fi
+    echo "Downloading Bazel from: $BAZEL_URL"
+    sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
+    sudo chmod +x /usr/bin/bazel65
+    cd ~/
+    git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
+    cd adhd/
+    sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+    sleep 1
+    sudo mkdir -p /usr/lib64/alsa-lib/
+    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib64/alsa-lib/
+    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib64/alsa-lib/
+    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib64/
+    sudo mkdir -p /etc/pipewire/pipewire.conf.d
+    cd ~/
+    rm -rf ~/adhd
+}
+run_checkpoint 143 "CRAS" checkpoint_142
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
