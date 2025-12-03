@@ -410,6 +410,7 @@ case "$cmd" in
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 sudo setfacl -m u:1000:rwx /run/chrome/pulse
                 sudo setfacl -m u:1000:rwx /run/chrome
+                pipewire 2>/dev/null & pipewire-pulse 2>/dev/null &
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
