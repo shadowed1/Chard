@@ -69,8 +69,6 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.ch
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.env"         -o "$CHARD_ROOT/.chard.env"
 sleep 0.2
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh" -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard.sh"           -o "$CHARD_ROOT/bin/chard"
@@ -395,7 +393,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
                 fi
                 
                 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh" -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+                sleep 0.2
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
                 ;;
