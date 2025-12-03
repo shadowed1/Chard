@@ -342,6 +342,30 @@ EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 echo "${BLUE}Setting up Pipewire..."
 
+sudo tee "$CHARD_ROOT/etc/pipewire/pipewire.conf.d/crostini-audio.conf" 2>/dev/null << 'EOF'
+context.objects = [
+    { factory = adapter
+      args = {
+        factory.name           = api.alsa.pcm.sink
+        node.name              = "Virtio Soundcard Sink"
+        media.class            = "Audio/Sink"
+        api.alsa.path          = "hw:0,0"
+        audio.channels         = 2
+        audio.position         = "FL,FR"
+      }
+    }
+    { factory = adapter
+      args = {
+        factory.name           = api.alsa.pcm.source
+        node.name              = "Virtio Soundcard Source"
+        media.class            = "Audio/Source"
+        api.alsa.path          = "hw:0,1"
+        audio.channels         = 2
+        audio.position         = "FL,FR"
+      }
+    }
+]
+EOF
                 if [ -f "/home/chronos/user/.bashrc" ]; then
                     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
                     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
@@ -404,6 +428,8 @@ echo "${BLUE}Setting up Pipewire..."
                         rm -rf ~/.pulse 2>/dev/null
                         rm -rf ~/.cache/pulse 2>/dev/null
                         sudo -E pacman -Syu --noconfirm pipewire-pulse 2>/dev/null
+                        pactl set-default-sink "Virtio Soundcard Sink"
+                        pactl set-default-source "Virtio Soundcard Source"
                     "
                 
                     umount -l /dev/zram0   2>/dev/null || true
@@ -418,30 +444,6 @@ echo "${BLUE}Setting up Pipewire..."
                 '
                 
                 chard_unmount
-                sudo tee $CHARD_ROOT/etc/pipewire/pipewire.conf.d/crostini-audio.conf >/dev/null << 'EOF'
-context.objects = [
-    { factory = adapter
-      args = {
-        factory.name           = api.alsa.pcm.sink
-        node.name              = "Virtio Soundcard Sink"
-        media.class            = "Audio/Sink"
-        api.alsa.path          = "hw:0,0"
-        audio.channels         = 2
-        audio.position         = "FL,FR"
-      }
-    }
-    { factory = adapter
-      args = {
-        factory.name           = api.alsa.pcm.source
-        node.name              = "Virtio Soundcard Source"
-        media.class            = "Audio/Source"
-        api.alsa.path          = "hw:0,1"
-        audio.channels         = 2
-        audio.position         = "FL,FR"
-      }
-    }
-]
-EOF
 
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
