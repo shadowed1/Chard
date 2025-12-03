@@ -513,6 +513,49 @@ add_chard_marker() {
     fi
 }
 
+chard_unmount() {        
+    sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+    sleep 0.2
+    sudo setfacl -Rb /run/chrome 2>/dev/null
+    echo
+    echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+    echo
+}
+
 add_chard_marker "$TARGET_FILE"
 sudo rm "$CHARD_ROOT/etc/resolv.conf"
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
@@ -585,42 +628,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c "
     umount -l /proc        2>/dev/null || true
  "
         
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-
-else
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-fi
-        
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-else
-    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-fi
-
-sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-
-sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
-sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+chard_unmount
 
 KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
@@ -725,46 +733,10 @@ cp .config /usr/src/linux/.config
     umount -l /sys         2>/dev/null || true
     umount -l /proc        2>/dev/null || true
  "
-        
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-
-else
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-fi
-        
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-else
-    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-fi
-
-sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+chard_unmount
 
 echo "${RESET}${BLUE}[+] Linux headers and sources installed to $CHARD_ROOT/usr/src/linux"
 echo ""
-
-sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
-sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
 
 sudo rm -rf "$KERNEL_BUILD"
 
@@ -1259,41 +1231,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         umount -l /proc        2>/dev/null || true
                     "
                     
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-
-else
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-fi
-        
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-else
-    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-fi
-
-sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-
-sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true 
+chard_unmount 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 echo "Passwordless sudo configured for $CHARD_USER"
 ARCH=$(uname -m)
@@ -1838,69 +1776,16 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
     umount -l /proc        2>/dev/null || true
 '
 
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+chard_unmount
 
-else
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-fi
-        
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-else
-    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-fi
-
-sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-
-sleep 1
-
-sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
-sleep 0.2
-sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap"                   2>/dev/null || true
-sleep 0.2
-sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-sleep 0.2
-sudo setfacl -Rb /run/chrome 2>/dev/null
-sleep 0.2
-#show_progress
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 fi
+
 sudo cp /etc/asound.conf "$CHARD_ROOT/etc/asound.conf" 2>/dev/null
+
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
 if [[ "$(uname -m)" == "aarch64" ]]; then
     echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
