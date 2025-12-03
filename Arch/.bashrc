@@ -204,6 +204,8 @@ fi
 alias firefox='/bin/chard_firefox'
 export MOZ_CUBEB_FORCE_PULSE=1
 
+# Brave
+export BRAVE_USE_SYSTEM_KEYRING=0
 
 # Flatpak
 alias flatpak='/bin/chard_flatpak'
