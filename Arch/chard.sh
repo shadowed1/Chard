@@ -216,6 +216,8 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
+        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
+        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
         sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
@@ -272,7 +274,12 @@ case "$cmd" in
             USER_ID=1000
             sudo -u "$USER" bash -c "
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
-                pipewire 2>/dev/null & 
+                sudo setfacl -R -m u:1000:rw /dev/snd
+                sudo setfacl -R -d -m u:1000:rw /dev/snd
+                pipewire 2>/dev/null &
+                sleep 0.2
+                wireplumber 2>/dev/null &
+                sleep 0.2
                 pipewire-pulse 2>/dev/null &
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
