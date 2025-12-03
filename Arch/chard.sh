@@ -272,6 +272,8 @@ case "$cmd" in
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
+                sudo setfacl -m u:1000:rwx /run/chrome/pulse
+                sudo setfacl -m u:1000:rwx /run/chrome
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
