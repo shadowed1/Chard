@@ -141,11 +141,6 @@
 
 <br>
 
-# Tools: <br>
-- Latest Bootsrapped Stage3 Arch or Gentoo Linux + Linux Kernel
-- Pacman or Emerge
-- CRAS
-
 # Chard will use Pacman or Emerge to build: <br>
 - Make
 - CMake
