@@ -1333,6 +1333,7 @@ if [[ -f "$XA" ]]; then
 fi
 touch ~/.Xauthority 2>/dev/null
 sudo -E pacman -Syu --noconfirm gedit 2>/dev/null
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 }
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 
