@@ -25,6 +25,12 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libGLX.so.0"
     "$CHARD_ROOT/usr/lib64/libxkbfile.so.1"
     "$CHARD_ROOT/usr/lib64/systemd/libsystemd-shared-258.so"
+    "$CHARD_ROOT/usr/lib64/libXext.so.6"
+    "$CHARD_ROOT/usr/lib64/libXmuu.so.1"
+    "$CHARD_ROOT/usr/lib64/libpciaccess.so.0"
+    "$CHARD_ROOT/usr/lib64/libXi.so.6"
+    "$CHARD_ROOT/usr/lib64/libXmu.so.6"
+    "$CHARD_ROOT/usr/lib64/libXt.so.6"
 )
 
 LD_PRELOAD=""
