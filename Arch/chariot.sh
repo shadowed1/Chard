@@ -1249,7 +1249,7 @@ checkpoint_139() {
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
     else
         echo "Unsupported architecture: $ARCH"
-    fia
+    fi
     echo "Downloading Bazel from: $BAZEL_URL"
     sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
     sudo chmod +x /usr/bin/bazel65
