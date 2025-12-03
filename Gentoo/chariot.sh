@@ -1186,7 +1186,7 @@ run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
 sudo -E emerge app-office/libreoffice-bin
 
 checkpoint_134() {
-    sudo -E emerge pipewire
+    USE=sound-server sudo -E emerge pipewire
     echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
     sudo -E emerge media-plugins/obs-pipewire-audio-capture
     sudo -E emerge media-plugins/obs-vkcapture
