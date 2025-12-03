@@ -272,14 +272,17 @@ case "$cmd" in
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
-                sudo setfacl -m u:1000:rwx /run/chrome/pulse
-                sudo setfacl -m u:1000:rwx /run/chrome
+                sudo setfacl -m u:1000:rwx /run/chrome/pulse 2>/dev/null
+                sudo setfacl -m u:1000:rwx /run/chrome 2>/dev/null
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
+                pipewire 2>/dev/null & pipewire-pulse 2>/dev/null &
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
+            setfacl -Rb /run/chrome/pulse 2>/dev/null
+            setfacl -Rb /run/chrome 2>/dev/null
             setfacl -Rb /root 2>/dev/null
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
