@@ -1258,6 +1258,7 @@ checkpoint_139() {
     cd adhd/
     sudo -E /usr/bin/bazel65 build //dist:alsa_lib
     sleep 1
+    sudo mkdir -p /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
