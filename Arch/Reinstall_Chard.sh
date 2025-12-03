@@ -397,6 +397,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
                 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
+                trap '' SIGTERM
+                exit 0
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
