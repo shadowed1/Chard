@@ -1231,7 +1231,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group portage >/dev/null || groupadd -g 250 portage 2>/dev/null
                         getent group steam >/dev/null   || groupadd -g 20001 steam 2>/dev/null
                         getent group render >/dev/null  || groupadd -g 989 render 2>/dev/null
-                        getent group 238 >/dev/null     || groupadd -g 403 hidraw 2>/dev/null
+                        getent group 238 >/dev/null     || groupadd -g 238 hidraw 2>/dev/null
 
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
