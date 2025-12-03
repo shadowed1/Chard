@@ -400,7 +400,6 @@ alias seamonkey='GDK_BACKEND=x11 seamonkey'
 
 alias cs='chard_sommelier'
 alias smrt='SMRT'
-dbus-daemon --system --fork 2>/dev/null
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
 
 # <<< CHARD_SMRT >>>
