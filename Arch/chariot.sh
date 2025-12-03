@@ -1283,8 +1283,6 @@ context.objects = [
     }
 ]
 EOF
-pactl set-default-sink "Virtio Soundcard Sink"
-pactl set-default-source "Virtio Soundcard Source"
 }
 run_checkpoint 139 "CRAS" checkpoint_139
 
