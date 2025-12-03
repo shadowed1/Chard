@@ -321,6 +321,7 @@ export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
+export PULSE_SERVER=unix:/run/chrome/pulse/native
 
 obs() {
     export QT_QPA_PLATFORM=xcb
