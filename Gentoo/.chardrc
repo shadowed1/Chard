@@ -54,9 +54,10 @@ fi
 alias cr='chard root'
 alias smrt='SMRT'
 alias chariot='chard chariot'
+alias safe='chard safe'
 #alias emerge='emerge --root="$CHARD_ROOT" --sysroot="$CHARD_ROOT" --config-root="$CHARD_ROOT" --root-deps=rdeps'
 CR="$CHARD_ROOT"
-CH="$CHARD_HOME"
+#CH="$CHARD_HOME"
 
 if [[ -f $CHARD_ROOT/usr/bin/.smrt_env.sh ]]; then
     source $CHARD_ROOT/usr/bin/.smrt_env.sh
