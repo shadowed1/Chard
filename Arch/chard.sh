@@ -243,7 +243,6 @@ case "$cmd" in
         fi
         
         sudo chroot "$CHARD_ROOT" /bin/bash -c '
-        
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
             mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
@@ -272,8 +271,6 @@ case "$cmd" in
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
-                sudo setfacl -m u:1000:rwx /run/chrome/pulse 2>/dev/null
-                sudo setfacl -m u:1000:rwx /run/chrome 2>/dev/null
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 pipewire 2>/dev/null & 
                 pipewire-pulse 2>/dev/null &
