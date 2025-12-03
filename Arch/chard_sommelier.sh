@@ -20,12 +20,7 @@ SOMMELIER_CMD=(
     sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
-    pulseaudio &>/dev/null &
     cd ~/
     exec bash
 '
 sudo setfacl -Rb /root 2>/dev/null
-if [ -f /tmp/.pulseaudio_pid ]; then
-    kill "$(cat /tmp/.pulseaudio_pid)" 2>/dev/null
-    rm -f /tmp/.pulseaudio_pid
-fi
