@@ -275,6 +275,7 @@ case "$cmd" in
                 sudo setfacl -m u:1000:rwx /run/chrome/pulse 2>/dev/null
                 sudo setfacl -m u:1000:rwx /run/chrome 2>/dev/null
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
+                pipewire 2>/dev/null & pipewire-pulse 2>/dev/null &
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
                 xfce4-terminal 2>/dev/null &
