@@ -123,6 +123,49 @@ esac
         "$@"
 }
 
+chard_unmount() {        
+    sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+    sleep 0.2
+    sudo setfacl -Rb /run/chrome 2>/dev/null
+    echo
+    echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+    echo
+}
+
 chard_uninstall() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "Error: CHARD_ROOT not found."
@@ -248,26 +291,7 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         '
         
-        if [ -f "/home/chronos/user/.bashrc" ]; then
-            sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-        else
-            sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-        fi
-        
-        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        
-        if [ -f "/home/chronos/user/.bashrc" ]; then
-            sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-        else
-            sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        fi
-        sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
-        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        chard_unmount
         sudo pkill -f xfce4-session
         sudo pkill -f xfwm4
         sudo pkill -f xfce4-panel
@@ -352,25 +376,7 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         '
         
-        if [ -f "/home/chronos/user/.bashrc" ]; then
-            sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-        
-        else
-            sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-        fi
-                
-        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-                
-        if [ -f "/home/chronos/user/.bashrc" ]; then
-            sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-        else
-            sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        fi
-        
-        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+        chard_unmount
         ;;
     safe)
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
@@ -446,25 +452,7 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         "
         
-        if [ -f "/home/chronos/user/.bashrc" ]; then
-            sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-        
-        else
-            sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-        fi
-                
-        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-                
-        if [ -f "/home/chronos/user/.bashrc" ]; then
-            sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-            sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-        else
-            sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        fi
-        
-        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+        chard_unmount
         ;;
         # Denny's version checker
     version)
@@ -498,44 +486,7 @@ case "$cmd" in
         fi
         ;;
     unmount)
-        sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap"                   2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-        sleep 0.2
-        sudo setfacl -Rb /run/chrome 2>/dev/null
-        echo
-        echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
-        echo
+        chard_unmount
         ;;
     *)
         chard_run "$cmd" "$@"
