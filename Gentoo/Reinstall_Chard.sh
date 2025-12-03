@@ -680,7 +680,6 @@ EOF
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc  
                 echo
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
-                trap '' SIGTERM
                 exit 0
                 ;;
             2)
