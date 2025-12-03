@@ -408,7 +408,8 @@ case "$cmd" in
                 
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
-                
+                sudo setfacl -m u:1000:rwx /run/chrome/pulse
+                sudo setfacl -m u:1000:rwx /run/chrome
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
