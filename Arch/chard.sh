@@ -229,18 +229,8 @@ case "$cmd" in
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
-                cleanup() {
-                    echo \"Logging out $USER\"
-                    if [ -n \"\$PULSEAUDIO_PID\" ]; then
-                        kill -9 \"\$PULSEAUDIO_PID\" 2>/dev/null
-                    fi
-                }
-                trap cleanup EXIT INT TERM
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
-                
-                pulseaudio 2>/dev/null &
-                PULSEAUDIO_PID=\"\$!\"
                 cd ~/
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
@@ -278,7 +268,6 @@ case "$cmd" in
         sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sudo setfacl -Rb /run/chrome 2>/dev/null
-        sudo killall -9 pulseaudio 2>/dev/null
         sudo pkill -f xfce4-session
         sudo pkill -f xfwm4
         sudo pkill -f xfce4-panel
