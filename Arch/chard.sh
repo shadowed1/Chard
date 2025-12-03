@@ -289,6 +289,10 @@ case "$cmd" in
             setfacl -Rb /run/chrome/pulse 2>/dev/null
             setfacl -Rb /run/chrome 2>/dev/null
             setfacl -Rb /root 2>/dev/null
+            killall -9 pipewire 2>/dev/null
+            killall -9 pipewire-pulse 2>/dev/null
+            killall -9 pulseaudio 2>/dev/null
+            killall -9 wireplumber 2>/dev/null
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
@@ -302,6 +306,11 @@ case "$cmd" in
         '
         
         chard_unmount
+        sudo rm -f /run/chrome/pulse/native
+        sudo rm -f /run/chrome/pulse/*
+        sudo mkdir -p /run/chrome/pulse
+        sudo chown chronos:chronos /run/chrome/pulse
+        sudo chmod 770 /run/chrome/pulse
         killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
