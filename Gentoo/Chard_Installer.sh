@@ -2085,12 +2085,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
     USER_ID=1000
 
     sudo -u "$USER" bash -c "
-        cleanup() {
-            echo \"Logging out $USER\"
-        }
-        trap cleanup EXIT INT TERM
-
-        dbus-daemon --system --fork 2>/dev/null
         source \$HOME/.bashrc 2>/dev/null
         source \$HOME/.smrt_env.sh 2>/dev/null
         sudo chown -R 1000:1000 $HOME
