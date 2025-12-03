@@ -220,8 +220,10 @@ add_chard_marker() {
             echo "# <<< END CHARD ENV MARKER <<<"
         } >> "$FILE"
         echo "${BLUE}[+] Chard sourced to $FILE"
+        echo
     else
         echo "${YELLOW}[!] Chard already sourced in $FILE"
+        echo
     fi
 }
 
