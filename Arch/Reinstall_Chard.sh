@@ -438,7 +438,11 @@ EOF
                         pactl set-default-sink "Virtio Soundcard Sink" 2>/dev/null
                         pactl set-default-source "Virtio Soundcard Source" 2>/dev/null
                     "
-                
+
+                    killall -9 pipewire 2>/dev/null
+                    killall -9 pipewire-pulse 2>/dev/null
+                    killall -9 pulseaudio 2>/dev/null
+                    killall -9 wireplumber 2>/dev/null
                     umount -l /dev/zram0   2>/dev/null || true
                     umount -l /run/chrome  2>/dev/null || true
                     umount -l /run/dbus    2>/dev/null || true
@@ -451,10 +455,6 @@ EOF
                 '
                 
                 chard_unmount
-                killall -9 pipewire 2>/dev/null
-                killall -9 pipewire-pulse 2>/dev/null
-                killall -9 pulseaudio 2>/dev/null
-                killall -9 wireplumber 2>/dev/null
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
