@@ -412,7 +412,7 @@ case "$cmd" in
                 pulseaudio 2>/dev/null &
                 PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
-                /bin/bash
+                exec chard_sommelier
             "
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
