@@ -1057,16 +1057,10 @@ CHARD_USER=$(cat /.chard_user)
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
 STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
-GROUP_ID=1000
-USER_ID=1000
-source ~/.bashrc
-xhost +SI:localuser:root
+xhost +SI:localuser:$USER
+sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
-sudo -i <<'INNER'
 /usr/bin/steam
-exit
-INNER
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
         sudo chmod +x /bin/chard_steam
