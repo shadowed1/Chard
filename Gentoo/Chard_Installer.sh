@@ -235,6 +235,49 @@ echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
+ chard_unmount() {        
+        sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+        sleep 0.2
+        sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+        sleep 0.2
+        sudo setfacl -Rb /run/chrome 2>/dev/null
+        echo
+        echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+        echo
+}
+
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
 TARGET_FILE=""
@@ -1408,8 +1451,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group render >/dev/null || groupadd -g 989 render 2>/dev/null
 
 
-
-
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
@@ -2067,21 +2108,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
     umount -l /proc        2>/dev/null || true
 '
 
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-else
-    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
-fi
-        
-sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-else
-    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-fi
+chard_unmount
 
 show_progress
 sudo cp "$CHARD_ROOT/chardbuild.log" ~/
