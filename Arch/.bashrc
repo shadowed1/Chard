@@ -202,6 +202,8 @@ fi
 
 # Firefox
 alias firefox='/bin/chard_firefox'
+export MOZ_CUBEB_FORCE_PULSE=1
+
 
 # Flatpak
 alias flatpak='/bin/chard_flatpak'
