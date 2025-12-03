@@ -391,6 +391,9 @@ export XCURSOR_THEME
 # Firefox
 alias firefox-bin='chard_firefox-bin'
 
+# Brave
+export BRAVE_USE_SYSTEM_KEYRING=0
+
 # KSP
 alias ksp='LC_ALL=C ./KSP_x86_64'
 
