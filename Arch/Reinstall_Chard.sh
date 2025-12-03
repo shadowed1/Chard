@@ -418,7 +418,31 @@ echo "${BLUE}Setting up Pipewire..."
                 '
                 
                 chard_unmount
-                
+                sudo tee $CHARD_ROOT/etc/pipewire/pipewire.conf.d/crostini-audio.conf >/dev/null << 'EOF'
+context.objects = [
+    { factory = adapter
+      args = {
+        factory.name           = api.alsa.pcm.sink
+        node.name              = "Virtio Soundcard Sink"
+        media.class            = "Audio/Sink"
+        api.alsa.path          = "hw:0,0"
+        audio.channels         = 2
+        audio.position         = "FL,FR"
+      }
+    }
+    { factory = adapter
+      args = {
+        factory.name           = api.alsa.pcm.source
+        node.name              = "Virtio Soundcard Source"
+        media.class            = "Audio/Source"
+        api.alsa.path          = "hw:0,1"
+        audio.channels         = 2
+        audio.position         = "FL,FR"
+      }
+    }
+]
+EOF
+
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
                 ;;
