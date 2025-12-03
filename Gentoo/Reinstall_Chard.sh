@@ -677,8 +677,11 @@ load-module module-alsa-source device=cras source_name=cras-source
 set-default-sink cras-sink
 set-default-source cras-source
 EOF
-                sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc            
+                sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc  
+                echo
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
+                trap '' SIGTERM
+                exit 0
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
