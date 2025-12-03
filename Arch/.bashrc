@@ -194,7 +194,6 @@ alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
 alias prismlauncher='chard_prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
-dbus-daemon --system --fork 2>/dev/null
 
 # Steam
 if [ "$CHROME_VER" -ge 140 ]; then
