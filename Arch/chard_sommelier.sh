@@ -21,7 +21,6 @@ SOMMELIER_CMD=(
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
-    pipewire 2>/dev/null & pipewire-pulse 2>/dev/null &
     exec bash
 '
 sudo setfacl -Rb /root 2>/dev/null
