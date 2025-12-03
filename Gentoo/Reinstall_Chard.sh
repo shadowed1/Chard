@@ -61,6 +61,49 @@ trap cleanup_chroot EXIT INT TERM
         
         case "$choice" in
             1)
+                        chard_unmount() {        
+                sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+                sleep 0.2
+                sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+                sleep 0.2
+                sudo setfacl -Rb /run/chrome 2>/dev/null
+                echo
+                echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+                echo
+        }
+
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
 
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
@@ -680,7 +723,7 @@ EOF
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc  
                 echo
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
-                exit 0
+                chard_unmount
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
