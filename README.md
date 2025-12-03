@@ -300,7 +300,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.05: `Isolated Chard forked bubblewrap so other apps will use regular bubblewrap. Added chard unmount command. xfce4 now starts with CHard Arch. Fixed minor bugs.` <br><br>
 - 0.06: `Fixed GPU error popup in Mediatek GPU's. (still working on acceleration), Added Firefox support, added SMRT support for yay, fixed Minecraft audio support.` <br><br>
 - 0.07: `Fixed audio for ARM64. Fixed wayland crash when launching Brave. Moved prismlauncher to its own wrapper. Added wrapper updates to reinstaller. Fixed version command.` <br<br>
-- 0.08: `Removed pulseaudio and now using pipewire and native ChromeOS socket. (Arch only for now)` <br>br<>
+- 0.08: `Implemented pipewire with native ChromeOS socket support. Cleaned up unmount procedure.` <br>br<>
 
 <br>
 
