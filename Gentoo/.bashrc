@@ -404,6 +404,7 @@ alias seamonkey='GDK_BACKEND=x11 seamonkey'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
+dbus-daemon --system --fork 2>/dev/null
 
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
