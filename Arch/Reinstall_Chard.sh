@@ -1,6 +1,5 @@
 #!/bin/bash
 # Chard Reinstaller
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -118,7 +117,6 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
 sudo chmod +x "$CHARD_ROOT/bin/root"
-
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
