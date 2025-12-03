@@ -297,6 +297,105 @@ sudo -u $CHARD_USER /usr/bin/firefox
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
+                if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+                    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+                    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+                
+                else
+                    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+                fi
+                        
+                sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+                        
+                if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
+                else
+                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
+                fi
+                
+                sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
+                sudo mount --make-rslave "$CHARD_ROOT"
+                
+                sudo chroot "$CHARD_ROOT" /bin/bash -c '
+                    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+                    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+                
+                    if [ -e /dev/zram0 ]; then
+                        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                        mount --make-rslave /dev/zram0 2>/dev/null
+                    fi
+                
+                    chmod 1777 /tmp /var/tmp
+                
+                    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                
+                    CHARD_HOME=$(cat /.chard_home)
+                    HOME=$CHARD_HOME
+                    CHARD_USER=$(cat /.chard_user)
+                    USER=$CHARD_USER
+                    GROUP_ID=1000
+                    USER_ID=1000
+                
+                    sudo -u "$USER" bash -c "
+                        cleanup() {
+                            echo \"Logging out $USER\"
+                        }
+                        trap cleanup EXIT INT TERM
+                        source \$HOME/.bashrc 2>/dev/null
+                        sudo chown -R 1000:1000 $HOME
+                        cd \$HOME
+                        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+                        sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
+                        sudo -E pacman -R --noconfirm pulseaudio 2>/dev/null
+                        rm -rf ~/.config/pulse 2>/dev/null
+                        rm -rf ~/.pulse 2>/dev/null
+                        rm -rf ~/.cache/pulse 2>/dev/null
+                        sudo -E pacman -Syu --noconfirm pipewire-pulse
+                    "
+                
+                    umount -l /dev/zram0   2>/dev/null || true
+                    umount -l /run/chrome  2>/dev/null || true
+                    umount -l /run/dbus    2>/dev/null || true
+                    umount -l /etc/ssl     2>/dev/null || true
+                    umount -l /dev/pts     2>/dev/null || true
+                    umount -l /dev/shm     2>/dev/null || true
+                    umount -l /dev         2>/dev/null || true
+                    umount -l /sys         2>/dev/null || true
+                    umount -l /proc        2>/dev/null || true
+                '
+                
+                if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+                
+                else
+                    sudo umount -l "$CHARD_ROOT/run/cras" 2>/dev/null || true
+                fi
+                        
+                sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+                sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+                sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+                        
+                if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+                    sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+                else
+                    sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+                fi
+                
+                sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
                 ;;
