@@ -216,6 +216,43 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
+        CONF_DIR="$CHARD_ROOT/etc/pipewire/pipewire.conf.d"
+        sudo mkdir -p "$CONF_DIR"
+        CARD_INFO=$(aplay -l 2>/dev/null | awk -F: '/sof-/ {print $1, $2; exit}')
+        if [ -z "$CARD_INFO" ]; then
+            echo "No sof card found!"
+            exit 1
+        fi
+        CARD_NUM=$(echo "$CARD_INFO" | awk '{print $2}' | tr -d ' ')
+        DEVICE_NUM=$(arecord -l 2>/dev/null | awk -v card="$CARD_NUM" '$2==card {print $4; exit}' | tr -d ':' )
+        DEVICE_NUM="${DEVICE_NUM:-1}"
+        
+        CONF_FILE="$CONF_DIR/crostini-audio.conf"
+
+sudo tee "$CONF_FILE" >/dev/null << EOF
+context.objects = [
+    { factory = adapter
+      args = {
+        factory.name           = api.alsa.pcm.sink
+        node.name              = "Virtio Soundcard Sink"
+        media.class            = "Audio/Sink"
+        api.alsa.path          = "hw:$CARD_NUM,0"
+        audio.channels         = 2
+        audio.position         = "FL,FR"
+      }
+    }
+    { factory = adapter
+      args = {
+        factory.name           = api.alsa.pcm.source
+        node.name              = "Virtio Soundcard Source"
+        media.class            = "Audio/Source"
+        api.alsa.path          = "hw:$CARD_NUM,$DEVICE_NUM"
+        audio.channels         = 2
+        audio.position         = "FL,FR"
+      }
+    }
+]
+EOF
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
         killall -9 pipewire 2>/dev/null
