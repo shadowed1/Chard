@@ -284,8 +284,7 @@ case "$cmd" in
                 killall -9 pulseaudio 2>/dev/null
                 killall -9 wireplumber 2>/dev/null
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
-                sudo setfacl -R -m u:1000:rw /dev/snd
-                sudo setfacl -R -d -m u:1000:rw /dev/snd
+                sudo chown -R 1000:audio /dev/snd
                 sudo mkdir -p /run/chrome/pulse
                 sudo chown 1000:1000 /run/chrome/pulse
                 sudo chmod 770 /run/chrome/pulse
@@ -301,6 +300,7 @@ case "$cmd" in
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
             killall -9 wireplumber 2>/dev/null
+            sudo chown -R root:audio 2>/dev/null
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
