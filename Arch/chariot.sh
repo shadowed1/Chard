@@ -1234,6 +1234,13 @@ run_checkpoint 138 "vulkan" checkpoint_138
 
 checkpoint_139() {
     ARCH=$(uname -m)
+    sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+    sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
+    sudo -E pacman -R --noconfirm pulseaudio 2>/dev/null
+    rm -rf ~/.config/pulse 2>/dev/null
+    rm -rf ~/.pulse 2>/dev/null
+    rm -rf ~/.cache/pulse 2>/dev/null
+    sudo -E pacman -Syu --noconfirm pipewire-pulse
     sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins
     sudo rm -rf ~/.cache/bazel 2>/dev/null
     if [[ "$ARCH" == "x86_64" ]]; then
@@ -1242,7 +1249,7 @@ checkpoint_139() {
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
     else
         echo "Unsupported architecture: $ARCH"
-    fi
+    fia
     echo "Downloading Bazel from: $BAZEL_URL"
     sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
     sudo chmod +x /usr/bin/bazel65
@@ -1254,35 +1261,9 @@ checkpoint_139() {
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
     sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
-    yay -S --noconfirm cros-container-guest-tools-git
     sudo mkdir -p /etc/pipewire/pipewire.conf.d
-sudo tee /etc/pipewire/pipewire.conf.d/crostini-audio.conf >/dev/null << 'EOF'
-context.objects = [
-    { factory = adapter
-        args = {
-            factory.name           = api.alsa.pcm.sink
-            node.name              = "Virtio Soundcard Sink"
-            media.class            = "Audio/Sink"
-            api.alsa.path          = "hw:0,0"
-            audio.channels         = 2
-            audio.position         = "FL,FR"
-        }
-    }
-    { factory = adapter
-        args = {
-            factory.name           = api.alsa.pcm.source
-            node.name              = "Virtio Soundcard Source"
-            media.class            = "Audio/Source"
-            api.alsa.path          = "hw:0,0"
-            audio.channels         = 2
-            audio.position         = "FL,FR"
-        }
-    }
-]
-EOF
     cd ~/
     rm -rf ~/adhd
-    cp -rT /etc/skel/.config/pulse ~/.config/pulse
 }
 run_checkpoint 139 "CRAS" checkpoint_139
 
