@@ -1356,16 +1356,26 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 
 checkpoint_144() {
-yay -S --noconfirm pamac
+ARCH="$(uname -m)"
+if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    echo "Skipping pamac install on ARM ($ARCH)"
+else
+    yay -S --noconfirm pamac 2>/dev/null
+fi
 }
 run_checkpoint 144 "pamac" checkpoint_144
 
 checkpoint_145() {
-yay -S --noconfirm heroic-games-launcher-bin
-sudo chown root:root /opt/Heroic/chrome-sandbox
-sudo chmod 4755 /opt/Heroic/chrome-sandbox
+ARCH="$(uname -m)"
+if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    echo "Skipping Heroic install on ARM ($ARCH)"
+else
+    yay -S --noconfirm heroic-games-launcher-bin
+    sudo chown root:root /opt/Heroic/chrome-sandbox
+    sudo chmod 4755 /opt/Heroic/chrome-sandbox
+fi
 }
-run_checkpoint 145 "pamac" checkpoint_145
+run_checkpoint 145 "Heroic" checkpoint_145
 
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
