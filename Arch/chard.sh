@@ -553,7 +553,8 @@ EOF
                     read -rp "Would you like to 'reinstall' to get $LATEST_VER ? (Y/n): " choice
                     if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
                         echo "${CYAN}Reinstalling!${RESET}"
-                        "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+                        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
+
                     else
                         echo "${YELLOW}Skipping reinstall.${RESET}"
                     fi
