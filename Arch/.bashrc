@@ -184,7 +184,6 @@ alias ksp='LC_ALL=C ./KSP_x86_64'
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 alias seamonkey='GDK_BACKEND=x11 seamonkey'
 alias gvim='wx gvim'
-alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
 alias prismlauncher='chard_prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
@@ -204,6 +203,9 @@ export BRAVE_USE_SYSTEM_KEYRING=0
 
 # Flatpak
 alias flatpak='/bin/chard_flatpak'
+
+# Dolphin
+alias dolphin='QT_QPA_PLATFORM=xcb dolphin --style=kvantum'
 
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
