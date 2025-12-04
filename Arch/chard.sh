@@ -258,8 +258,8 @@ context.objects = [
 ]
 EOF
         fi
-        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
-        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
         killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
@@ -319,8 +319,8 @@ EOF
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
-                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
-                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
