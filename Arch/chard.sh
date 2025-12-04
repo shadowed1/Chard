@@ -258,7 +258,7 @@ context.objects = [
 ]
 EOF
         fi
-        nohup chard_volume > /dev/null 2>&1 &
+        chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
         killall -9 pipewire 2>/dev/null
@@ -342,7 +342,7 @@ EOF
                 pulseaudio -v -D 2>/dev/null
                 PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
-                nohup chardwire > /dev/null 2>&1 &
+                chardwire > /dev/null 2>&1 &
                 exec chard_sommelier
                 "
             
