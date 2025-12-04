@@ -8,7 +8,7 @@ get_volume() {
 update_volume() {
     volume=$(get_volume)
     if [ -n "$volume" ]; then
-        echo "$volume" > ~/MyFiles/Downloads/chard_volume
+        echo "$volume" > "$CHARD_ROOT/$CHARD_HOME/.chard_volume"
     fi
 }
 
