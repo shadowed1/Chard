@@ -113,8 +113,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.ch
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.env"         -o "$CHARD_ROOT/.chard.env" 2>/dev/null
 sleep 0.2
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh" -o "$CHARD_ROOT/bin/Reinstall_Chard.sh" 2>/dev/null
-sleep 0.2
+#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh" -o "$CHARD_ROOT/bin/Reinstall_Chard.sh" 2>/dev/null
+#sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh" 2>/dev/null
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard.sh"           -o "$CHARD_ROOT/bin/chard" 2>/dev/null
@@ -152,7 +152,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
-sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
+#sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
 sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
