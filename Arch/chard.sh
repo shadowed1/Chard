@@ -218,7 +218,7 @@ case "$cmd" in
     root)
         ARCH="$(uname -m)"
         if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-            echo "${MAGENTA}Skipping {ipewire configuration for ($ARCH) ${RESET}"
+            echo "${MAGENTA}Skipping Pipewire configuration for ($ARCH) ${RESET}"
         else
             CONF_DIR="$CHARD_ROOT/etc/pipewire/pipewire.conf.d"
         sudo mkdir -p "$CONF_DIR"
