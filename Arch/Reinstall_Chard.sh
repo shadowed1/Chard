@@ -334,7 +334,14 @@ source ~/.bashrc
 sudo -u $CHARD_USER /usr/bin/firefox
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
-echo "${BLUE}Setting up Pipewire..."
+
+ARCH="$(uname -m)"
+if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    echo "Skipping Pipewire on ($ARCH)"
+    echo
+else
+   echo "${BLUE}Setting up Pipewire..."
+   echo
 
 sudo tee "$CHARD_ROOT/etc/pipewire/pipewire.conf.d/crostini-audio.conf" 2>/dev/null << 'EOF'
 context.objects = [
@@ -460,6 +467,8 @@ EOF
                 chard_unmount
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+            fi
+
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
                 ;;
