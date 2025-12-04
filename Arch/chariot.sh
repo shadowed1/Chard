@@ -1332,16 +1332,17 @@ EOF
 run_checkpoint 139 "CRAS" checkpoint_139
 
 checkpoint_140() {
+    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
     for f in /etc/machine-id /var/lib/dbus/machine-id; do
         if [ -f "$f" ]; then
-            sudo rm "$f"
+            sudo rm "$f" 2>/dev/null
         fi
     done
-    sudo dbus-uuidgen --ensure=/etc/machine-id
-    sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id
+    sudo dbus-uuidgen --ensure=/etc/machine-id 2>/dev/null
+    sudo dbus-uuidgen --ensure=/var/lib/dbus/machine-id 2>/dev/null
     file=/usr/share/libalpm/hooks/90-packagekit-refresh.hook
     if [ -e "$file" ]; then
-        sudo mv "$file" "$file.disabled"
+        sudo mv "$file" "$file.disabled" 2>/dev/null
     fi
     sudo pacman -Rdd --noconfirm xfce4-notifyd xfce4-power-manager
     PANEL_CFG="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml"
