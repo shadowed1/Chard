@@ -449,6 +449,7 @@ echo
                         rm -rf ~/.pulse 2>/dev/null
                         rm -rf ~/.cache/pulse 2>/dev/null
                         sudo -E pacman -Syu --noconfirm pipewire-pulse 2>/dev/null
+                        sudo -E pacman -Syu --noconfirm pipewire-libcamera
                         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
                     "
