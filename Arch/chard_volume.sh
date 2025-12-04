@@ -14,7 +14,6 @@ update_volume() {
 }
 
 update_volume
-echo "Monitoring volume changes via D-Bus... (Press Ctrl+C to stop)"
 dbus-monitor --system "type='signal',interface='org.chromium.cras.Control'" 2>/dev/null | \
 while read -r line; do
     if echo "$line" | grep -q "signal"; then
