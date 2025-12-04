@@ -1083,6 +1083,7 @@ fi
 run_checkpoint 137 "Steam" checkpoint_137
 
 checkpoint_138() {
+    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
     detect_gpu_freq() {
     GPU_FREQ_PATH=""
     GPU_MAX_FREQ=""
