@@ -147,6 +147,10 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/cha
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/root.sh"            -o "$CHARD_ROOT/bin/root" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_volume.sh"            -o "$CHARD_ROOT/bin/chard_volume" 2>/dev/null
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chardwire.sh"            -o "$CHARD_ROOT/bin/chardwire" 2>/dev/null
+sleep 0.2
 
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -162,6 +166,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
 sudo chmod +x "$CHARD_ROOT/bin/root"
+sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
+sudo chmod +x "$CHARD_ROOT/bin/chardwire"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
