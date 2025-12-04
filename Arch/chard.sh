@@ -218,7 +218,7 @@ case "$cmd" in
     root)
         ARCH="$(uname -m)"
         if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-            echo "${MAGENTA}Skipping Pipewire configuration for ($ARCH) ${RESET}"
+            echo "${MAGENTA}Skipping {ipewire configuration for ($ARCH) ${RESET}"
         else
             CONF_DIR="$CHARD_ROOT/etc/pipewire/pipewire.conf.d"
         sudo mkdir -p "$CONF_DIR"
@@ -319,6 +319,12 @@ EOF
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
+                cleanup() {
+                    echo \"Logging out $USER\"
+                    if [ -n \"\$PULSEAUDIO_PID\" ]; then
+                        kill -9 \"\$PULSEAUDIO_PID\" 2>/dev/null
+                    fi
+                }
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
                 killall -9 pipewire 2>/dev/null
@@ -333,16 +339,24 @@ EOF
                 sudo chmod 770 /run/chrome/pulse
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
+                pulseaudio 2>/dev/null &
+                pulseaudio -v -D 2>/dev/null
+                PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
-            setfacl -Rb /run/chrome/pulse 2>/dev/null
-            setfacl -Rb /run/chrome 2>/dev/null
-            setfacl -Rb /root 2>/dev/null
-            killall -9 pipewire 2>/dev/null
-            killall -9 pipewire-pulse 2>/dev/null
-            killall -9 pulseaudio 2>/dev/null
-            killall -9 wireplumber 2>/dev/null
+            ARCH=$(uname -m)
+            if [ "$ARCH" = "x86_64" ]; then
+                setfacl -Rb /run/chrome/pulse 2>/dev/null
+                setfacl -Rb /run/chrome 2>/dev/null
+                killall -9 pipewire 2>/dev/null
+                killall -9 pipewire-pulse 2>/dev/null
+                killall -9 pulseaudio 2>/dev/null
+                killall -9 wireplumber 2>/dev/null
+                sudo chown -R root:audio /dev/snd 2>/dev/null
+                sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+            fi
+            
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chwon -R root:root /dev/snd/by-path 2>/dev/null
             umount -l /tmp/usb_mount 2>/dev/null || true
