@@ -452,6 +452,8 @@ echo
                         sudo -E pacman -Syu --noconfirm pipewire-libcamera 2>/dev/null
                         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+                        gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key "dummy-kde-wallet" default default never
+
                     "
 
                     killall -9 pipewire 2>/dev/null
