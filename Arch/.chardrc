@@ -25,7 +25,7 @@ chard() {
     case "$1" in
         reinstall)
             shift
-            "$CHARD_ROOT/bin/Reinstall_Chard.sh" "$@"
+            bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
             ;;
         *)
             "$CHARD_ROOT/bin/chard" "$@"
