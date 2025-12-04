@@ -1,15 +1,14 @@
 #!/bin/bash
 get_volume() {
-    output=$(cras_test_client)
+    output=$(cras_test_client 2>/dev/null)
     volume=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "yes" | grep "INTERNAL_SPEAKER" | awk '{print $3}')
     echo "$volume"
 }
 
 update_volume() {
     volume=$(get_volume)
-    if [ ! -z "$volume" ]; then
+    if [ -n "$volume" ]; then
         echo "$volume" > ~/MyFiles/Downloads/chard_volume
-        echo "Volume updated: $volume"
     fi
 }
 
