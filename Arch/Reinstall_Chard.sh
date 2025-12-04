@@ -449,13 +449,6 @@ EOF
                         sudo -E pacman -Syu --noconfirm pipewire-pulse 2>/dev/null
                         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
-                        pipewire 2>/dev/null &
-                        sleep 0.2
-                        wireplumber 2>/dev/null &
-                        sleep 0.2
-                        pipewire-pulse 2>/dev/null &
-                        pactl set-default-sink "Virtio Soundcard Sink" 2>/dev/null
-                        pactl set-default-source "Virtio Soundcard Source" 2>/dev/null
                     "
 
                     killall -9 pipewire 2>/dev/null
