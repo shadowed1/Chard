@@ -279,7 +279,6 @@ EOF
 
     echo "PipeWire crostini audio configuration written to $CONF_FILE"
 fi
-        fi
         chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
