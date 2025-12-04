@@ -1400,6 +1400,18 @@ fi
 touch ~/.Xauthority 2>/dev/null
 sudo -E pacman -Syu --noconfirm gedit 2>/dev/null
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+mkdir -p ~/.config/gtk-3.0
+tee ~/.config/gtk-3.0/settings.ini >/dev/null <<'EOF'
+[Settings]
+gtk-theme-name=Adwaita-dark
+gtk-application-prefer-dark-theme=1
+EOF
+mkdir -p ~/.config/gtk-4.0
+tee ~/.config/gtk-4.0/settings.ini >/dev/null <<'EOF'
+[Settings]
+gtk-theme-name=Adwaita-dark
+gtk-application-prefer-dark-theme=1
+EOF
 }
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 
