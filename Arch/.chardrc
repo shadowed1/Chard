@@ -24,7 +24,6 @@ export PATH
 chard() {
     case "$1" in
         reinstall)
-            shift
             bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
             ;;
         *)
