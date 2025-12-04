@@ -15,6 +15,8 @@ apply_volume() {
     fi
 }
 
-tail -n0 -F "$VOLUME_FILE" | while read -r line; do
+
+while read -r line; do
     apply_volume
-done
+    sleep 0.1
+done < <(tail -n0 -F "$VOLUME_FILE")
