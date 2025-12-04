@@ -320,8 +320,6 @@ EOF
             USER_ID=1000
             sudo -u "$USER" bash -c "
                 ARCH=\$(uname -m)
-
-                # Only do this on x86_64
                 if [ \"\$ARCH\" = \"x86_64\" ]; then
                     sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                     sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
