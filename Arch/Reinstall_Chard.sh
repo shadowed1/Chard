@@ -330,7 +330,7 @@ CHARD_USER=$(cat /.chard_user)
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:root
+xhost +SI:localuser:$USER
 source ~/.bashrc
 sudo -u $CHARD_USER /usr/bin/firefox
 EOF
