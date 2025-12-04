@@ -242,12 +242,11 @@ sudo qemu-system-x86_64 \
   - accel=kvm enables GPU passthrough
   - -display sdl,gl=on enables OpenGL acceleration
 
+<br>
 
-  
+- Use `pavucontrol` for volume mixer for Steam games.
 
-  
 
-  
 
 
 
@@ -269,6 +268,8 @@ sudo qemu-system-x86_64 \
 <p align="left">
   <img src="https://i.imgur.com/Hm2R0Es.png" alt="logo" width="500" />
 </p>
+
+<br>
 
 - Mouse Capture/Lock in Games (spinning around with a mouse) is not working.
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
