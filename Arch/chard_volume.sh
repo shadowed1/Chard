@@ -1,8 +1,23 @@
 #!/bin/bash
-output=$(cras_test_client)
-volume=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "yes" | grep "INTERNAL_SPEAKER" | awk '{print $3}')
-if [ -z "$volume" ]; then
-    echo "Error: Could not find volume value"
-fi
-echo "$volume" > ~/MyFiles/Downloads/chard_volume
-echo "Volume $volume read"
+get_volume() {
+    output=$(cras_test_client)
+    volume=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "yes" | grep "INTERNAL_SPEAKER" | awk '{print $3}')
+    echo "$volume"
+}
+
+update_volume() {
+    volume=$(get_volume)
+    if [ ! -z "$volume" ]; then
+        echo "$volume" > ~/MyFiles/Downloads/chard_volume
+        echo "Volume updated: $volume"
+    fi
+}
+
+update_volume
+echo "Monitoring volume changes via D-Bus... (Press Ctrl+C to stop)"
+dbus-monitor --system "type='signal',interface='org.chromium.cras.Control'" 2>/dev/null | \
+while read -r line; do
+    if echo "$line" | grep -q "signal"; then
+        update_volume
+    fi
+done
