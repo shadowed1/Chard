@@ -9,12 +9,11 @@ apply_volume() {
         if [[ "$volume" =~ ^[0-9]+$ ]] && [ "$volume" -ge 0 ] && [ "$volume" -le 100 ] && [ "$volume" != "$LAST_VOLUME" ]; then
             LAST_VOLUME="$volume"
             volume_decimal=$(echo "scale=2; $volume / 100" | bc)
-            wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal"
-            echo "Volume set to: $volume% ($volume_decimal)"
+            wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal" 2>/dev/null
         fi
     fi
 }
 
-tail -n0 -F "$VOLUME_FILE" | while read -r line; do
+tail -n0 -F "$VOLUME_FILE" 2>/dev/null | while read -r line; do
     apply_volume
 done
