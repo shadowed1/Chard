@@ -258,6 +258,7 @@ context.objects = [
 ]
 EOF
         fi
+        nohup chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
         killall -9 pipewire 2>/dev/null
@@ -341,6 +342,7 @@ EOF
                 pulseaudio -v -D 2>/dev/null
                 PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
+                nohup chardwire > /dev/null 2>&1 &
                 exec chard_sommelier
                 "
             
@@ -350,6 +352,7 @@ EOF
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
             killall -9 wireplumber 2>/dev/null
+            killall -9 chardwire 2>/dev/null
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             setfacl -Rb /root 2>/dev/null
@@ -364,13 +367,13 @@ EOF
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         '
-        
         chard_unmount
         sudo rm -f /run/chrome/pulse/native
         sudo rm -f /run/chrome/pulse/*
         sudo mkdir -p /run/chrome/pulse
         sudo chown chronos:chronos /run/chrome/pulse
         sudo chmod 770 /run/chrome/pulse
+        killall -9 chard_volume 2>/dev/null
         killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
