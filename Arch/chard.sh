@@ -374,6 +374,7 @@ EOF
         sudo chown chronos:chronos /run/chrome/pulse
         sudo chmod 770 /run/chrome/pulse
         killall -9 chard_volume 2>/dev/null
+        killall -9 cras_test_client 2>/dev/null
         killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
