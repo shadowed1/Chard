@@ -1437,6 +1437,12 @@ fi
 }
 run_checkpoint 145 "Heroic" checkpoint_145
 
+checkpoint_146() {
+    yay -S --noconfirm kvantum
+    sudo -E pacman -Syu --noconfirm dolphin
+}
+run_checkpoint 146 "dolphin" checkpoint_146
+
 #checkpoint_135() {
 #    printf "A\nN\ny\ny\ny\n" | yay -S --noconfirm heroic-games-launcher
 #}
