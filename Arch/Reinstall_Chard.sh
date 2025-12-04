@@ -337,7 +337,15 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
 ARCH="$(uname -m)"
 if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-    echo "Skipping Pipewire on ($ARCH)"
+    sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
+#Route all audio through the CRAS plugin.
+pcm.!default {
+        type cras
+}
+ctl.!default {
+        type cras
+}
+EOF
     echo
 else
    echo "${BLUE}Setting up Pipewire..."
