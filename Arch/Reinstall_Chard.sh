@@ -376,6 +376,7 @@ context.objects = [
     }
 ]
 EOF
+echo
 
 sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
 pcm.!default {
@@ -385,6 +386,7 @@ ctl.!default {
         type pipewire
 }
 EOF
+echo
                 if [ -f "/home/chronos/user/.bashrc" ]; then
                     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
                     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
