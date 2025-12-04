@@ -150,17 +150,9 @@ obs() {
     export QT_QPA_PLATFORM=xcb
     export OBS_VKCAPTURE=1
     export OBS_GAMECAPTURE=1
-    local LD_PRELOAD_LIBS=(
-        "/usr/lib64/obs-plugins/linux-vkcapture.so"
-        "/usr/lib64/obs_glcapture/libobs_glcapture.so"
-    )
-    local LD_PRELOAD=""
-    for lib in "${LD_PRELOAD_LIBS[@]}"; do
-        [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
-    done
-    export LD_PRELOAD
     /usr/bin/obs "$@" &
 }
+
 
 # Chard Scale
 : "${CHARD_SCALE:=1.25}"
