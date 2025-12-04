@@ -1238,6 +1238,7 @@ checkpoint_139() {
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
     sudo -E pacman -Syu --noconfirm pipewire-pulse
+    sudo -E pacman -Syu --noconfirm pipewire-libcamera
     sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins
     sudo rm -rf ~/.cache/bazel 2>/dev/null
     echo "Downloading Bazel from: $BAZEL_URL"
