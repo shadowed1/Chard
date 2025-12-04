@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VOLUME_FILE=~/user/MyFiles/Downloads/chard_volume
+VOLUME_FILE="$CHARD_ROOT/$CHARD_HOME/.chard_volume"
 LAST_VOLUME=""
 
 apply_volume() {
