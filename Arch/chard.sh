@@ -216,7 +216,11 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
-        CONF_DIR="$CHARD_ROOT/etc/pipewire/pipewire.conf.d"
+        ARCH="$(uname -m)"
+        if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+            echo "${MAGENTA}Skipping {ipewire configuration for ($ARCH) ${RESET}"
+        else
+            CONF_DIR="$CHARD_ROOT/etc/pipewire/pipewire.conf.d"
         sudo mkdir -p "$CONF_DIR"
         CARD_INFO=$(aplay -l 2>/dev/null | awk -F: '/sof-/ {print $1, $2; exit}')
         if [ -z "$CARD_INFO" ]; then
@@ -253,6 +257,7 @@ context.objects = [
     }
 ]
 EOF
+        fi
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
         killall -9 pipewire 2>/dev/null
