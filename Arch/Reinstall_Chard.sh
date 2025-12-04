@@ -107,7 +107,7 @@ trap cleanup_chroot EXIT INT TERM
         echo
 }
 
-
+sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"           -o "$CHARD_ROOT/.chardrc" 2>/dev/null
 sleep 0.2
@@ -476,6 +476,7 @@ echo
 
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
+                source $CHARD_ROOT/.chardrc
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
