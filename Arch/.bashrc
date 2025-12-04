@@ -120,8 +120,10 @@ export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
+ARCH="$(uname -m)"
+if [ "$ARCH" = "x86_64" ]; then
 export PULSE_SERVER=unix:/run/chrome/pulse/native
-
+fi
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
     export DBUS_SESSION_BUS_ADDRESS
