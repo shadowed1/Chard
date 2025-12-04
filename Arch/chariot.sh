@@ -1445,6 +1445,7 @@ run_checkpoint 146 "dolphin" checkpoint_146
 
 checkpoint_147() {
    sudo -E pacman -Syu --noconfirm pavucontrol 2>/dev/null
+   gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key "dummy-kde-wallet" default default never
 }
 run_checkpoint 147 "pavucontrol" checkpoint_147
 
