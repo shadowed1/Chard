@@ -1430,7 +1430,7 @@ ARCH="$(uname -m)"
 if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
     echo "Skipping Heroic install on ARM ($ARCH)"
 else
-    yay -S --noconfirm heroic-games-launcher-bin
+    yay -S --noconfirm heroic-games-launcher-bin 2>/dev/null
     sudo chown root:root /opt/Heroic/chrome-sandbox
     sudo chmod 4755 /opt/Heroic/chrome-sandbox
 fi
@@ -1438,13 +1438,13 @@ fi
 run_checkpoint 145 "Heroic" checkpoint_145
 
 checkpoint_146() {
-    yay -S --noconfirm kvantum
-    sudo -E pacman -Syu --noconfirm dolphin
+    yay -S --noconfirm kvantum 2>/dev/null
+    sudo -E pacman -Syu --noconfirm dolphin 2>/dev/null
 }
 run_checkpoint 146 "dolphin" checkpoint_146
 
 checkpoint_147() {
-   sudo -E pacman -Syu pavucontrol
+   sudo -E pacman -Syu --noconfirm pavucontrol 2>/dev/null
 }
 run_checkpoint 147 "pavucontrol" checkpoint_147
 
