@@ -1420,6 +1420,7 @@ ARCH="$(uname -m)"
 if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
     echo "Skipping pamac install on ARM ($ARCH)"
 else
+    sudo -E pacman -R --noconfirm pamac-full 2>/dev/null
     yay -S --noconfirm pamac 2>/dev/null
 fi
 }
