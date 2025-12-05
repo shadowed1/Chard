@@ -307,6 +307,7 @@ CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export QT_QPA_PLATFORM=xcb
 STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
 xhost +SI:localuser:$USER
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
