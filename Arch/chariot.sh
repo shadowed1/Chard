@@ -1183,15 +1183,11 @@ GPU_VENDOR="$GPU_TYPE"
     case "$GPU_TYPE" in
         intel)
             echo "[+] Installing Intel Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm \
-                mesa mesa-vdpau lib32-mesa \
-                vulkan-intel lib32-vulkan-intel
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null
             ;;
         amd)
             echo "[+] Installing AMD Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm \
-                mesa mesa-vdpau lib32-mesa \
-                vulkan-radeon lib32-vulkan-radeon
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null
             ;;
 
         nvidia)
@@ -1203,25 +1199,22 @@ GPU_VENDOR="$GPU_TYPE"
                 DRIVER="nvidia"
             fi
 
-            sudo -E pacman -Syu --noconfirm \
-                $DRIVER nvidia-utils lib32-nvidia-utils \
-                vulkan-icd-loader lib32-vulkan-icd-loader
+            sudo -E pacman -Syu --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils 2>/dev/null
             ;;
 
         mali|panfrost|mediatek|vivante|asahi)
             echo "[+] Installing Mesa ARM Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau 2>/dev/null
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau mesa-utils 2>/dev/null
             ;;
 
         adreno)
             echo "[+] Installing Adreno Vulkan drivers..."
-            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau 2>/dev/null
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau mesa-utils  2>/dev/null
             ;;
 
         *)
             echo "[!] Unknown GPU type. Installing generic Vulkan support..."
-            sudo -E pacman -Syu --noconfirm \
-                mesa mesa-vdpau vulkan-icd-loader
+            sudo -E pacman -Syu --noconfirm mesa mesa-vdpau vulkan-icd-loaderc mesa-utils 2>/dev/null
             ;;
     esac
 }
