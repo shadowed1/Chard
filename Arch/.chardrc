@@ -35,6 +35,7 @@ chard() {
 alias safe='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
+alias cu='chard unmount'
 
 CR="$CHARD_ROOT"
 
