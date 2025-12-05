@@ -199,8 +199,8 @@ alias firefox='/bin/chard_firefox'
 #export MOZ_CUBEB_FORCE_PULSE=1
 
 # Brave
-export BRAVE_USE_SYSTEM_KEYRING=0
-alias brave='brave --force-dark-mode --enable-features=WebUIDarkMode,UseOzonePlatform --ozone-platform=wayland'
+#export BRAVE_USE_SYSTEM_KEYRING=0
+alias brave='brave --force-dark-mode --enable-features=WebUIDarkMode'
 
 # Flatpak
 alias flatpak='/bin/chard_flatpak'
