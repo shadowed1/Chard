@@ -259,18 +259,6 @@ sudo qemu-system-x86_64 \
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
-*To Fix Steam Window not rendering:*
-
-<p align="left">
-  <img src="https://i.imgur.com/DuDosO8.png" alt="logo" width="500" />
-</p>
-
-<p align="left">
-  <img src="https://i.imgur.com/Hm2R0Es.png" alt="logo" width="500" />
-</p>
-
-<br>
-
 - Mouse Capture/Lock in Games (spinning around with a mouse) is not working.
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
 
