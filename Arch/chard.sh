@@ -130,6 +130,8 @@ chard_unmount() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
     sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
@@ -282,6 +284,7 @@ EOF
         fi
         
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+        sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
         
