@@ -284,21 +284,17 @@ case "$cmd" in
             GROUP_ID=1000
             USER_ID=1000
             sudo -u "$USER" bash -c "
-                ARCH=\$(uname -m)
-                if [ \"\$ARCH\" = \"x86_64\" ]; then
-                    sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
-                    sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-                    killall -9 pipewire 2>/dev/null
-                    killall -9 pipewire-pulse 2>/dev/null
-                    killall -9 pulseaudio 2>/dev/null
-                    killall -9 wireplumber 2>/dev/null
-                    sudo chown -R 1000:audio /dev/snd
-                    sudo chown -R 1000:1000 /dev/snd/by-path
-                    sudo mkdir -p /run/chrome/pulse
-                    sudo chown 1000:1000 /run/chrome/pulse
-                    sudo chmod 770 /run/chrome/pulse
-                fi
-                
+                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+                killall -9 pipewire 2>/dev/null
+                killall -9 pipewire-pulse 2>/dev/null
+                killall -9 pulseaudio 2>/dev/null
+                killall -9 wireplumber 2>/dev/null
+                sudo chown -R 1000:audio /dev/snd
+                sudo chown -R 1000:1000 /dev/snd/by-path
+                sudo mkdir -p /run/chrome/pulse
+                sudo chown 1000:1000 /run/chrome/pulse
+                sudo chmod 770 /run/chrome/pulse
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
