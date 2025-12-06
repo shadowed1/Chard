@@ -348,47 +348,6 @@ sudo -u $CHARD_USER /usr/bin/firefox
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
-ARCH="$(uname -m)"
-if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-    sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
-#Route all audio through the CRAS plugin.
-pcm.!default {
-        type cras
-}
-ctl.!default {
-        type cras
-}
-EOF
-    echo
-else
-   echo "${BLUE}Setting up Pipewire..."
-   echo
-
-sudo tee "$CHARD_ROOT/etc/pipewire/pipewire.conf.d/crostini-audio.conf" 2>/dev/null << 'EOF'
-context.objects = [
-    { factory = adapter
-      args = {
-        factory.name           = api.alsa.pcm.sink
-        node.name              = "Virtio Soundcard Sink"
-        media.class            = "Audio/Sink"
-        api.alsa.path          = "hw:0,0"
-        audio.channels         = 2
-        audio.position         = "FL,FR"
-      }
-    }
-    { factory = adapter
-      args = {
-        factory.name           = api.alsa.pcm.source
-        node.name              = "Virtio Soundcard Source"
-        media.class            = "Audio/Source"
-        api.alsa.path          = "hw:0,1"
-        audio.channels         = 2
-        audio.position         = "FL,FR"
-      }
-    }
-]
-EOF
-echo
 
 sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
 pcm.!default {
@@ -452,23 +411,34 @@ echo
                     USER_ID=1000
                 
                     sudo -u "$USER" bash -c "
-                        source \$HOME/.bashrc 2>/dev/null
+                                     source \$HOME/.bashrc 2>/dev/null
                         sudo chown -R 1000:1000 $HOME
                         cd \$HOME
+                        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+                        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+                        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
                         sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
                         sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
                         sudo -E pacman -R --noconfirm pulseaudio 2>/dev/null
                         rm -rf ~/.config/pulse 2>/dev/null
                         rm -rf ~/.pulse 2>/dev/null
                         rm -rf ~/.cache/pulse 2>/dev/null
-                        sudo -E pacman -Syu --noconfirm pipewire-pulse 2>/dev/null
-                        sudo -E pacman -Syu --noconfirm pipewire-libcamera 2>/dev/null
-                        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
-                        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+                        sudo -E pacman -Syu --noconfirm pipewire-pulse
+                        sudo -E pacman -Syu --noconfirm pipewire-libcamera
+                        sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins
+                        sudo rm -rf ~/.cache/bazel 2>/dev/null
+                        cd ~/
+                        git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
+                        cd alsa-ucm-conf-cros
+                        sudo mkdir -p /usr/share/alsa
+                        sudo cp -r ucm2 /usr/share/alsa
+                        sudo cp -r overrides /usr/share/alsa/ucm2/conf.d
+                        cd ~/
+                        rm -rf alsa-ucm-conf-cros
+                        sleep 1
                         gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key "dummy-kde-wallet" default default never 2>/dev/null
-
                     "
-
+                    
                     killall -9 pipewire 2>/dev/null
                     killall -9 pipewire-pulse 2>/dev/null
                     killall -9 pulseaudio 2>/dev/null
@@ -487,7 +457,6 @@ echo
                 chard_unmount
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
-            fi
 
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
