@@ -275,6 +275,8 @@ sudo qemu-system-x86_64 \
 - Exiting Chard Root session while others are active is not recommended. Exit them all at once!
 - When using OBS game capture, it is recommended (and required if using chard arch) to run everything in one shell. So run `obs & prismlauncher` for example.
 
+<br>
+
 - Pipewire support is flakey on certain x86_64 soundcards.
 - Pipewire support is unsupported on ARM64 (for now) and uses Pulseaudio + CRAS. 
   
