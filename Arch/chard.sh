@@ -304,6 +304,7 @@ EOF
             mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
             mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
             mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
         
             if [ -e /dev/zram0 ]; then
@@ -364,6 +365,7 @@ EOF
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
+            umount -l /run/udev    2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
             umount -l /etc/ssl     2>/dev/null || true
             umount -l /dev/pts     2>/dev/null || true
