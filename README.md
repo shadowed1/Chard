@@ -277,6 +277,7 @@ sudo qemu-system-x86_64 \
 
 <br>
 
+- Pipewire native volume controls are a bit coarse. 
 - Pipewire support is flakey on certain x86_64 soundcards.
 - Pipewire support is unsupported on ARM64 (for now) and uses Pulseaudio + CRAS. 
   
