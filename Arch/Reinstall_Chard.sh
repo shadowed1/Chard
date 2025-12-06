@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Chard Reinstaller
 RED=$(tput setaf 1)
