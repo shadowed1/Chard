@@ -291,6 +291,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.07: `Fixed audio for ARM64. Fixed wayland crash when launching Brave. Moved prismlauncher to its own wrapper. Added wrapper updates to reinstaller. Fixed version command.` <br><br>
 - 0.08: `Added Pipewire config creation script. Implemented pipewire with native ChromeOS socket support. Cleaned up unmount procedure. Fixed occasional internet loss issue when asleep. Fixed Steam to run as User for ChromeOS 140+. Added extra dark theme support. Added volume controls for pulseaudio using chardwire.` <br><br>
 - 0.09: `Fixed Wayland crash issue due to Brave alias.` <br><br>
+- 0.10: `Fixed Steam black screen bug on fresh install. Fixed Steam local files window from not expanding. Fixed Steam games having flickering lines bug when paired with multiple display + freesync.` <br><br>
 
 <br>
 
