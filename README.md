@@ -92,18 +92,29 @@
 
 - Chard auto-detects the Host's hardware and builds Arch or Gentoo + psuedo-Kernel automatically.
 - Includes ability to resume installer if interrupted; even if system shuts down.
+
+<br>
+
+- Supports running a vast array of apps and games (including Wine and Proton).
+- Control app volume with ChromeOS volume controls.
+
+<br>
+
 - Greatly exceeds Crostini performance and can achieve superior performance to Borealis (RIP) with significantly lower memory overhead.
+- USB + Bluetooth controller support for games.
 
 <br>
 
 - Intelligent CPU task scheduler for building packages.
-- Hardware detection scripts allows compilers to enable native architectural tweaks (Gentoo only).
 - ChromeOS' Downloads folder is shared when entering Chard Root, allowing for fast file sharing. 
 
 <br>
 
 - Includes most compiling tools as a basic toolchain. 
 - Uses Sommelier to communicate with ChromeOS' window management and support Desktop Environments, Apps, Games, and more.
+
+<br>
+
 - Runs GUI apps with full GPU acceleration including audio support for Chromebooks; including HDMI audio out. 
 - Native full screen support, multi-monitor support, and supports ChromeOS window managment gestures. 
 
@@ -111,8 +122,11 @@
 
 - Does *not* require removing files and includes an uninstaller script to clean up after itself.
 - When Installer finishes or exits a log file, 'chariot.log', is created for debugging.
-- Can run certain apps directly from Chard in the Host OS (Chard Gentoo + ChromeOS only).
-- `Chardwire` script psuedo-integrates ChromeOS volume controls to Pipewire.
+
+<br>
+
+- Can run certain apps directly from Chard in the Host OS (testing ChromeOS only).
+- Extremely resource light; RAM usage is below 100MB footprint. 
 
 <br>
 
