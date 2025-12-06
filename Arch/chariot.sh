@@ -1232,8 +1232,10 @@ checkpoint_139() {
     sudo -E pacman -Syu --noconfirm pipewire-libcamera
     sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins
     sudo rm -rf ~/.cache/bazel 2>/dev/null
-    echo "Downloading WeirdTreeThing's Alsa UCM Conf:"
     cd ~/
+    curl -L -o alsa-ucm-conf.tar.gz https://github.com/alsa-project/alsa-ucm-conf/archive/refs/heads/master.tar.gz
+    sudo tar xvzf alsa-ucm-conf.tar.gz -C /usr/share/alsa --strip-components=1 --wildcards "*/ucm" "*/ucm2"
+    rm alsa-ucm-conf.tar.gz
     git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
     cd alsa-ucm-conf-cros
     sudo mkdir -p /usr/share/alsa
