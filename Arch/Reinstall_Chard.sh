@@ -19,6 +19,8 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
     sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
@@ -70,6 +72,8 @@ trap cleanup_chroot EXIT INT TERM
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.2
@@ -152,6 +156,7 @@ sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chardwire.sh"            -o "$CHARD_ROOT/bin/chardwire" 2>/dev/null
 sleep 0.2
 
+sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
@@ -402,7 +407,8 @@ echo
                 else
                     sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
                 fi
-                        
+
+                sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
                 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
                 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
                 sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
