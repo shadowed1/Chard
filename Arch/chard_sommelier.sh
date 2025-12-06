@@ -16,7 +16,7 @@ SOMMELIER_CMD=(
     --xwayland-path=/usr/bin/Xwayland
 )
 
-   "${SOMMELIER_CMD[@]}" -- bash -c '
+"${SOMMELIER_CMD[@]}" -- bash -c '
     sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
