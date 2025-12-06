@@ -16,16 +16,6 @@ SOMMELIER_CMD=(
     --xwayland-path=/usr/bin/Xwayland
 )
 
-if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-    "${SOMMELIER_CMD[@]}" -- bash -c '
-    sleep 0.1
-    export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-    [ -f ~/.bashrc ] && source ~/.bashrc
-    pulseaudio &>/dev/null &
-    cd ~/
-    exec bash
-'
-else
    "${SOMMELIER_CMD[@]}" -- bash -c '
     sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
@@ -39,9 +29,4 @@ else
     sleep 0.2
     exec bash
 '
-fi
 sudo setfacl -Rb /root 2>/dev/null
-if [ -f /tmp/.pulseaudio_pid ]; then
-    kill "$(cat /tmp/.pulseaudio_pid)" 2>/dev/null
-    rm -f /tmp/.pulseaudio_pid
-fi
