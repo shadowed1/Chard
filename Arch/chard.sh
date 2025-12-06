@@ -229,7 +229,6 @@ case "$cmd" in
         CARD_INFO=$(aplay -l 2>/dev/null | awk -F: '/sof-/ {print $1, $2; exit}')
         if [ -z "$CARD_INFO" ]; then
             echo "No sof card found!"
-            exit 1
         fi
         CARD_NUM=$(echo "$CARD_INFO" | awk '{print $2}' | tr -d ' ')
         DEVICE_NUM=$(arecord -l 2>/dev/null | awk -v card="$CARD_NUM" '$2==card {print $4; exit}' | tr -d ':' )
