@@ -112,6 +112,7 @@
 - Does *not* require removing files and includes an uninstaller script to clean up after itself.
 - When Installer finishes or exits a log file, 'chariot.log', is created for debugging.
 - Can run certain apps directly from Chard in the Host OS (Chard Gentoo + ChromeOS only).
+- `Chardwire` script psuedo-integrates ChromeOS volume controls to Pipewire.
 
 <br>
 
@@ -245,9 +246,6 @@ sudo qemu-system-x86_64 \
 <br>
 
 - Use `pavucontrol` for volume mixer for Steam games.
-
-
-
 
 
 <br>
