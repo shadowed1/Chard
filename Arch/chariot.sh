@@ -233,7 +233,7 @@ run_checkpoint() {
             echo
             echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step / 147 ($desc) DNF ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
             echo
-            exit $ret
+            return $ret
         fi
 
         echo "$step" | sudo tee "$CHECKPOINT_FILE" >/dev/null
