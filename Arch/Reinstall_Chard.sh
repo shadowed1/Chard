@@ -433,21 +433,6 @@ echo
                         sudo mkdir -p /usr/share/alsa
                         sudo cp -r ucm2 /usr/share/alsa
                         sudo cp -r overrides /usr/share/alsa/ucm2/conf.d
-                        sudo -E pacman -Syu --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null
-                        sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers
-                        sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 
-                        sudo -E pacman -R --noconfirm vulkan-mesa-layers
-                        sudo -E pacman -R --noconfirm lib32-vulkan-intel
-                        sudo -E pacman -R --noconfirm vulkan-intel
-                        sudo -E pacman -Syu --noconfirm vulkan-mesa-device-select    
-                        rm -rf ~/intel_vulkan 2>/dev/null
-                        rm -rf ~/intel_vulkan_271.zip 2>/dev/null
-                        curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
-                        mkdir -p ~/intel_vulkan 2>/dev/null
-                        unzip ~/intel_vulkan_271.zip -d ~/intel_vulkan
-                        sudo cp -r ~/intel_vulkan/vulkantest/vulkan /usr/share/ 
-                        sudo cp ~/intel_vulkan/vulkantest/libvulkan_intel.so /usr/lib/
-                        rm -rf ~/intel_vulkan ~/intel_vulkan_271.zip 2>/dev/null
                         cd ~/
                         rm -rf alsa-ucm-conf-cros
                         sleep 1
