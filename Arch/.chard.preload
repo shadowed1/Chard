@@ -1,0 +1,20 @@
+# <<< CHARD_PRELOAD <<<
+# ChromeOS Only. Does not support FydeOS.
+# Manual entries.
+LD_PRELOAD_LIBS=(
+    "$CHARD_ROOT/usr/lib64/libunwind-ptrace.so.0"
+    "$CHARD_ROOT/usr/lib64/libunwind-x86_64.so.8"
+    "$CHARD_ROOT/usr/lib64/libunwind.so.8"
+)
+
+LD_PRELOAD=""
+
+for lib in "${LD_PRELOAD_LIBS[@]}"; do
+    if [[ -f "$lib" ]]; then
+        LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
+    fi
+done
+
+export LD_PRELOAD
+
+# <<< END CHARD_PRELOAD <<<
