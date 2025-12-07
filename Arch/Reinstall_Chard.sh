@@ -267,7 +267,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
 sudo chmod +x "$CHARD_ROOT/bin/root"
 sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
 sudo chmod +x "$CHARD_ROOT/bin/chardwire"
-sudo chmod +x "$CHARD_ROOT/.chard.preload
+sudo chmod +x "$CHARD_ROOT/.chard.preload"
 
 
 for file in \
