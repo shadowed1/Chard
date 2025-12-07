@@ -18,8 +18,28 @@ esac
 
 export PATH
 
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    if [ -d "/usr/share/fydeos_shell" ]; then
+        DEFAULT_BASHRC="$HOME/.bashrc"
+        BASHRC_PATH="$DEFAULT_BASHRC"
+        IS_CHROMEOS=0
+    else
+        CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+        BASHRC_PATH="$CHROMEOS_BASHRC"
+        IS_CHROMEOS=1
+    fi
+else
+    DEFAULT_BASHRC="$HOME/.bashrc"
+    BASHRC_PATH="$DEFAULT_BASHRC"
+    IS_CHROMEOS=0
+fi
+
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
+
+if [ "$IS_CHROMEOS" -eq 1 ]; then
+    [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
+fi
 
 chard() {
     case "$1" in
@@ -36,7 +56,6 @@ alias safe='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
 alias cu='chard unmount'
-
 CR="$CHARD_ROOT"
 
 # <<< END CHARD_ENV <<<
