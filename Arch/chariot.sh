@@ -1213,8 +1213,7 @@ GPU_VENDOR="$GPU_TYPE"
             else
                 DRIVER="nvidia"
             fi
-
-            sudo -E pacman -Syu --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils 2>/dev/null
+            sudo -E pacman -Syu --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null
             ;;
 
         mali|panfrost|mediatek|vivante|asahi)
