@@ -146,9 +146,6 @@ detect_gpu_freq() {
     GPU_TYPE="unknown"
 }
 
-detect_gpu_freq
-GPU_VENDOR="$GPU_TYPE"
-
  echo "${RESET}${GREEN}"
         echo "[1] Quick Reinstall (Update Chard)"
         echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
@@ -553,6 +550,108 @@ echo
                 chard_unmount
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+
+                detect_gpu_freq
+                GPU_VENDOR="$GPU_TYPE"
+                   echo "${CYAN}"
+                   echo "[*] Installing Vulkan driver packages for GPU type: $GPU_TYPE"
+                    case "$GPU_TYPE" in
+                        intel)
+                             echo "[+] Downgrading Intel..."
+                            if [ -f "/home/chronos/user/.bashrc" ]; then
+                                sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+                                sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+                                sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+                            
+                            else
+                                sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+                            fi
+            
+                            sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+                            sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
+                            sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+                            sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+                                    
+                            if [ -f "/home/chronos/user/.bashrc" ]; then
+                                sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
+                            else
+                                sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
+                            fi
+                            
+                            sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
+                            sudo mount --make-rslave "$CHARD_ROOT"
+                            
+                            sudo chroot "$CHARD_ROOT" /bin/bash -c '
+                                mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+                                mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+                                mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                                mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+                                mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+                                mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+                                mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                                mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+                            
+                                if [ -e /dev/zram0 ]; then
+                                    mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                                    mount --make-rslave /dev/zram0 2>/dev/null
+                                fi
+                            
+                                chmod 1777 /tmp /var/tmp
+                            
+                                [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                                [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                                [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                                [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                            
+                                CHARD_HOME=$(cat /.chard_home)
+                                HOME=$CHARD_HOME
+                                CHARD_USER=$(cat /.chard_user)
+                                USER=$CHARD_USER
+                                GROUP_ID=1000
+                                USER_ID=1000
+                            
+                                sudo -u "$USER" bash -c "
+                                    source \$HOME/.bashrc 2>/dev/null
+                                    sudo chown -R 1000:1000 $HOME
+                                    cd \$HOME
+                                    sudo -E pacman -Syu --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null
+                                    sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers 2>/dev/null
+                                    sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 2>/dev/null 
+                                    sudo -E pacman -R --noconfirm vulkan-mesa-layers 2>/dev/null
+                                    sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null
+                                    sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null
+                                    sudo -E pacman -Syu --noconfirm vulkan-mesa-device-select 2>/dev/null    
+                                    rm -rf ~/intel_vulkan 2>/dev/null
+                                    rm -rf ~/intel_vulkan_271.zip 2>/dev/null
+                                    curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
+                                    mkdir -p ~/intel_vulkan 2>/dev/null
+                                    unzip ~/intel_vulkan_271.zip -d ~/intel_vulkan
+                                    sudo cp -r ~/intel_vulkan/vulkantest/vulkan /usr/share/ 
+                                    sudo cp ~/intel_vulkan/vulkantest/libvulkan_intel.so /usr/lib/
+                                    rm -rf ~/intel_vulkan ~/intel_vulkan_271.zip 2>/dev/null
+                                "
+                                
+                                killall -9 pipewire 2>/dev/null
+                                killall -9 pipewire-pulse 2>/dev/null
+                                killall -9 pulseaudio 2>/dev/null
+                                killall -9 wireplumber 2>/dev/null
+                                umount -l /dev/zram0   2>/dev/null || true
+                                umount -l /run/chrome  2>/dev/null || true
+                                umount -l /run/dbus    2>/dev/null || true
+                                umount -l /etc/ssl     2>/dev/null || true
+                                umount -l /dev/pts     2>/dev/null || true
+                                umount -l /dev/shm     2>/dev/null || true
+                                umount -l /dev         2>/dev/null || true
+                                umount -l /sys         2>/dev/null || true
+                                umount -l /proc        2>/dev/null || true
+                            '
+                            
+                            chard_unmount
+                            ;;
+                        *)
+                            echo ""
+                            ;;
+                    esac
 
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
