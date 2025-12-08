@@ -444,16 +444,44 @@ sudo -u $CHARD_USER /usr/bin/firefox
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    if [ -d "/usr/share/fydeos_shell" ]; then
+        DEFAULT_BASHRC="$HOME/.bashrc"
+        BASHRC_PATH="$DEFAULT_BASHRC"
+        IS_CHROMEOS=0
+    else
+        CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+        BASHRC_PATH="$CHROMEOS_BASHRC"
+        IS_CHROMEOS=1
+    fi
+else
+    DEFAULT_BASHRC="$HOME/.bashrc"
+    BASHRC_PATH="$DEFAULT_BASHRC"
+    IS_CHROMEOS=0
+fi
 
-#sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
-#pcm.!default {
-#        type pipewire
-#}
-#ctl.!default {
-#        type pipewire
-#}
-#EOF
+if [ "$IS_CHROMEOS" -eq 1 ]; then
+    sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
+pcm.!default {
+        type cras
+}
+ctl.!default {
+        type cras
+}
+EOF
+else
+sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
+pcm.!default {
+        type pipewire
+}
+ctl.!default {
+        type pipewire
+}
+EOF
 echo
+fi
+
+
                 if [ -f "/home/chronos/user/.bashrc" ]; then
                     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
                     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
@@ -507,33 +535,88 @@ echo
                     USER_ID=1000
                 
                     sudo -u "$USER" bash -c "
-                                     source \$HOME/.bashrc 2>/dev/null
-                        sudo chown -R 1000:1000 $HOME
-                        cd \$HOME
-                        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
-                        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
-                        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-                        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
-                        sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
-                        sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
-                        rm -rf ~/.config/pulse 2>/dev/null
-                        rm -rf ~/.pulse 2>/dev/null
-                        rm -rf ~/.cache/pulse 2>/dev/null
-                        sudo -E pacman -Syu --noconfirm pulseaudio 2>/dev/null
-                        sudo -E pacman -Syu --noconfirm pipewire-libcamera 2>/dev/null
-                        sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
-                        cd ~/
-                        rm -rf alsa-ucm-conf-cros
-                        git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
-                        cd alsa-ucm-conf-cros
-                        sudo mkdir -p /usr/share/alsa
-                        sudo cp -r ucm2 /usr/share/alsa
-                        sudo cp -r overrides /usr/share/alsa/ucm2/conf.d
-                        cd ~/
-                        rm -rf alsa-ucm-conf-cros
-                        sleep 1
-                        gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key "dummy-kde-wallet" default default never 2>/dev/null
-                    "
+    source \$HOME/.bashrc 2>/dev/null
+    sudo chown -R 1000:1000 \$HOME
+    cd \$HOME
+    sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+    sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
+    sudo -E pacman -Syu --noconfirm pulseaudio 2>/dev/null
+    rm -rf ~/.config/pulse 2>/dev/null
+    rm -rf ~/.pulse 2>/dev/null
+    rm -rf ~/.cache/pulse 2>/dev/null
+    sudo -E pacman -Syu --noconfirm pipewire-libcamera 2>/dev/null
+    sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
+    sudo rm -rf ~/.cache/bazel 2>/dev/null
+
+    cd ~/
+    git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
+    cd alsa-ucm-conf-cros
+    sudo mkdir -p /usr/share/alsa
+    sudo cp -r ucm2 /usr/share/alsa
+    sudo cp -r overrides /usr/share/alsa/ucm2/conf.d
+    cd ~/
+    rm -rf alsa-ucm-conf-cros
+    sleep 1
+
+    ARCH=\$(uname -m)
+
+    if [[ \"\$ARCH\" == \"x86_64\" ]]; then
+        BAZEL_URL=\"https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64\"
+
+        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+        sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
+        sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
+        rm -rf ~/.config/pulse ~/.pulse ~/.cache/pulse 2>/dev/null
+        sudo -E pacman -Syu --noconfirm pulseaudio pipewire-libcamera alsa-lib alsa-utils alsa-plugins 2>/dev/null
+        sudo rm -rf ~/.cache/bazel 2>/dev/null
+
+        sudo curl -L \$BAZEL_URL -o /usr/bin/bazel65
+        sudo chmod +x /usr/bin/bazel65
+
+        cd ~/
+        git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
+        cd adhd/
+        sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+
+        sleep 1
+        sudo mkdir -p /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
+        sudo mkdir -p /etc/pipewire/pipewire.conf.d
+
+        cd ~/
+        rm -rf ~/adhd
+
+    elif [[ \"\$ARCH\" == \"aarch64\" ]]; then
+        BAZEL_URL=\"https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64\"
+
+        sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
+        sudo -E pacman -Syu --noconfirm pulseaudio alsa-lib alsa-utils alsa-plugins 2>/dev/null
+        sudo rm -rf ~/.cache/bazel 2>/dev/null
+
+        sudo curl -L \$BAZEL_URL -o /usr/bin/bazel65
+        sudo chmod +x /usr/bin/bazel65
+
+        cd ~/
+        git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
+        cd adhd/
+        sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+
+        sleep 1
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
+        yay -S --noconfirm cros-container-guest-tools-git 2>/dev/null
+        sudo mkdir -p /etc/pipewire/pipewire.conf.d
+
+        cd ~/
+        rm -rf ~/adhd
+    fi
+
+    gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
+"
+
                     
                     killall -9 pipewire 2>/dev/null
                     killall -9 pulseaudio 2>/dev/null
