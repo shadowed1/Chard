@@ -515,14 +515,13 @@ echo
                         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
                         sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
                         sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
-                        sudo -E pacman -R --noconfirm pulseaudio 2>/dev/null
+                        sudo -E pacman -R --noconfirm pipewire-pulseaudio 2>/dev/null
                         rm -rf ~/.config/pulse 2>/dev/null
                         rm -rf ~/.pulse 2>/dev/null
                         rm -rf ~/.cache/pulse 2>/dev/null
-                        sudo -E pacman -Syu --noconfirm pipewire-pulse
+                        sudo -E pacman -Syu --noconfirm pulseaudio
                         sudo -E pacman -Syu --noconfirm pipewire-libcamera
                         sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins
-                        sudo rm -rf ~/.cache/bazel 2>/dev/null
                         cd ~/
                         rm -rf alsa-ucm-conf-cros
                         git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
