@@ -713,6 +713,7 @@ fi
                                     sudo cp -r ~/intel_vulkan/vulkantest/vulkan /usr/share/ 
                                     sudo cp ~/intel_vulkan/vulkantest/libvulkan_intel.so /usr/lib/
                                     rm -rf ~/intel_vulkan ~/intel_vulkan_271.zip 2>/dev/null
+                                    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
                                 "
                                 
                                 killall -9 pipewire 2>/dev/null
