@@ -2,6 +2,16 @@
 
 VOLUME_FILE="$HOME/.chard_volume"
 LAST_VOLUME=""
+INTERVAL=5
+
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
 
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
@@ -37,7 +47,15 @@ apply_volume() {
     fi
 }
 
-while read -r line; do
+tail -n0 -F "$VOLUME_FILE" | while read -r line; do
     apply_volume
     sleep 0.1
-done < <(tail -n0 -F "$VOLUME_FILE")
+done &
+
+while true; do
+    if ! pactl info >/dev/null 2>&1; then
+        echo "${MAGENTA}$EPOCHSECONDS: PulseAudio killed by ChromeOS -- Chard is restarting Pulseaudio! ${RESET}" >&2
+        pulseaudio 2>/dev/null &
+    fi
+    sleep $INTERVAL
+done
