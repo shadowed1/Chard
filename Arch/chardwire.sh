@@ -6,15 +6,36 @@ LAST_VOLUME=""
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
         read -r volume < "$VOLUME_FILE"
+
         if [[ "$volume" =~ ^[0-9]+$ ]] && [ "$volume" -ge 0 ] && [ "$volume" -le 100 ] && [ "$volume" != "$LAST_VOLUME" ]; then
             LAST_VOLUME="$volume"
-            volume_decimal=$(echo "scale=2; $volume / 100" | bc)
-            wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal"
-            echo "Volume set to: $volume% ($volume_decimal)"
+
+            if command -v wpctl >/dev/null 2>&1; then
+                volume_decimal=$(echo "scale=2; $volume / 100" | bc)
+                wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal" 2>/dev/null
+                echo "Volume set via wpctl: $volume% ($volume_decimal)"
+                return
+            fi
+
+            if command -v pactl >/dev/null 2>&1; then
+                SINK=$(pactl get-default-sink 2>/dev/null)
+                if [ -z "$SINK" ]; then
+                    SINK=$(pactl list short sinks 2>/dev/null | awk 'NR==1 {print $1}')
+                fi
+
+                if [ -n "$SINK" ]; then
+                    pactl set-sink-volume "$SINK" "${volume}%" 2>/dev/null
+                    echo "Volume set via pactl: $volume% on sink $SINK"
+                else
+                    echo "No PulseAudio sink found."
+                fi
+                return
+            fi
+
+            echo "ERROR: Neither wpctl nor pactl is available."
         fi
     fi
 }
-
 
 while read -r line; do
     apply_volume
