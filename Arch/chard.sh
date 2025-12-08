@@ -299,7 +299,6 @@ case "$cmd" in
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
                 xfce4-terminal 2>/dev/null &
-                chardwire > /dev/null 2>&1 &
                 exec chard_sommelier
                 "
             
