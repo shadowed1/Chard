@@ -24,7 +24,6 @@ apply_volume() {
                 volume_decimal=$(echo "scale=2; $volume / 100" | bc)
                 wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal" 2>/dev/null
                 echo "Volume set via wpctl: $volume% ($volume_decimal)"
-                return
             fi
 
             if command -v pactl >/dev/null 2>&1; then
@@ -39,13 +38,15 @@ apply_volume() {
                 else
                     echo "No PulseAudio sink found."
                 fi
-                return
             fi
 
-            echo "ERROR: Neither wpctl nor pactl is available."
+            if ! command -v wpctl >/dev/null 2>&1 && ! command -v pactl >/dev/null 2>&1; then
+                echo "ERROR: Neither wpctl nor pactl is available."
+            fi
         fi
     fi
 }
+
 
 tail -n0 -F "$VOLUME_FILE" | while read -r line; do
     apply_volume
