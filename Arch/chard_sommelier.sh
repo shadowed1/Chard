@@ -12,6 +12,7 @@ SOMMELIER_CMD=(
     --sd-notify=READY=1
     -X
     --glamor
+    --frame-color="#202020"
     --enable-linux-dmabuf
     --xwayland-path=/usr/bin/Xwayland
 )
