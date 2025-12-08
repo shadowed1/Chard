@@ -228,7 +228,6 @@ case "$cmd" in
         killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
-        killall -9 wireplumber 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
         sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
@@ -291,7 +290,6 @@ case "$cmd" in
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
-                killall -9 wireplumber 2>/dev/null
                 sudo chown -R 1000:audio /dev/snd
                 sudo chown -R 1000:1000 /dev/snd/by-path
                 sudo mkdir -p /run/chrome/pulse
@@ -313,7 +311,6 @@ case "$cmd" in
             killall -9 pipewire 2>/dev/null
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
-            killall -9 wireplumber 2>/dev/null
             killall -9 chardwire 2>/dev/null
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chown -R root:root /dev/snd/by-path 2>/dev/null
@@ -341,7 +338,6 @@ case "$cmd" in
         killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
-        killall -9 wireplumber 2>/dev/null
         sudo pkill -f xfce4-session
         sudo pkill -f xfwm4
         sudo pkill -f xfce4-panel
