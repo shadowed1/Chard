@@ -445,14 +445,14 @@ EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
 
-sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
-pcm.!default {
-        type pipewire
-}
-ctl.!default {
-        type pipewire
-}
-EOF
+#sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
+#pcm.!default {
+#        type pipewire
+#}
+#ctl.!default {
+#        type pipewire
+#}
+#EOF
 echo
                 if [ -f "/home/chronos/user/.bashrc" ]; then
                     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
@@ -537,9 +537,7 @@ echo
                     "
                     
                     killall -9 pipewire 2>/dev/null
-                    killall -9 pipewire-pulse 2>/dev/null
                     killall -9 pulseaudio 2>/dev/null
-                    killall -9 wireplumber 2>/dev/null
                     umount -l /dev/zram0   2>/dev/null || true
                     umount -l /run/chrome  2>/dev/null || true
                     umount -l /run/dbus    2>/dev/null || true
@@ -636,9 +634,7 @@ echo
                                 "
                                 
                                 killall -9 pipewire 2>/dev/null
-                                killall -9 pipewire-pulse 2>/dev/null
                                 killall -9 pulseaudio 2>/dev/null
-                                killall -9 wireplumber 2>/dev/null
                                 umount -l /dev/zram0   2>/dev/null || true
                                 umount -l /run/chrome  2>/dev/null || true
                                 umount -l /run/dbus    2>/dev/null || true
