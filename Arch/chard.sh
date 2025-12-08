@@ -299,7 +299,6 @@ case "$cmd" in
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 cd ~/
                 pulseaudio 2>/dev/null &
-                pulseaudio -v -D 2>/dev/null
                 PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
                 chardwire > /dev/null 2>&1 &
