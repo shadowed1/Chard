@@ -26,6 +26,7 @@ SOMMELIER_CMD=(
     sleep 0.2
     pulseaudio &
     sleep 0.2
+    chardwire 2>/dev/null &
     exec bash
 '
 sudo setfacl -Rb /root 2>/dev/null
