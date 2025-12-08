@@ -78,6 +78,8 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
             else
                 echo "${RED}No .bashrc found! ${RESET}"
             fi
+
+            unset LD_PRELOAD
             
         echo "${CYAN}[+] Uninstalled ${RESET}"
 else
