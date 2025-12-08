@@ -23,8 +23,6 @@ SOMMELIER_CMD=(
     cd ~/
     pipewire &
     sleep 0.2
-    wireplumber &
-    sleep 0.2
     pipewire-pulse &
     sleep 0.2
     exec bash
