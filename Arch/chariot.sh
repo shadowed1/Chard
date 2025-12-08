@@ -1237,11 +1237,10 @@ run_checkpoint 138 "vulkan" checkpoint_138
 checkpoint_139() {
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
     sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
-    sudo -E pacman -R --noconfirm pulseaudio 2>/dev/null
+    sudo -E pacman -Syu --noconfirm pulseaudio 2>/dev/null
     rm -rf ~/.config/pulse 2>/dev/null
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
-    sudo -E pacman -Syu --noconfirm pipewire-pulse
     sudo -E pacman -Syu --noconfirm pipewire-libcamera
     sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins
     sudo rm -rf ~/.cache/bazel 2>/dev/null
