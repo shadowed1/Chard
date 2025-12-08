@@ -23,7 +23,7 @@ SOMMELIER_CMD=(
     cd ~/
     pipewire &
     sleep 0.2
-    pipewire-pulse &
+    pulseaudio &
     sleep 0.2
     exec bash
 '
