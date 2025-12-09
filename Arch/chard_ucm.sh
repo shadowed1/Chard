@@ -24,6 +24,6 @@ UCM1_ROOT="/usr/share/alsa/ucm"
 UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 
 if [[ -n "$UCM1_FOLDER" ]]; then
-    echo
     echo "${CYAN}$UCM1_FOLDER ${RESET}"
+    echo
 fi
