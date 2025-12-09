@@ -34,19 +34,20 @@
     fi
     
     UCM2_ROOT="${CHARD_ROOT:-/usr/local/chard}/usr/share/alsa/ucm2"
-    UCM2_FOLDER=$(find "$UCM2_ROOT" -type f -name "HiFi.conf" | while read -r f; do
+    UCM2_FOLDER=$(find "$UCM2_ROOT" -type f -name "HiFi.conf" | sort | while read -r f; do
         dir=$(dirname "$f")
         base=$(basename "$dir")
     
-        if [[ "$ALSA_CARD" == sof-* && "$base" == *"$ALSA_CARD_SHORT" ]]; then
+        # SOF devices: pick the first directory whose path contains sof-ALSA_CARD_SHORT
+        if [[ "$ALSA_CARD" == sof-* && "$dir" == *"/sof-$ALSA_CARD_SHORT"* ]]; then
             echo "$dir"
         fi
     
+        # Non-SOF devices: pick the directory whose basename matches exactly
         if [[ "$ALSA_CARD" != sof-* && "$base" == "$ALSA_CARD_SHORT" ]]; then
             echo "$dir"
         fi
     done | head -n1)
-    
     if [[ -n "$UCM2_FOLDER" ]]; then
         echo "${GREEN}Detected UCM2 folder: $UCM2_FOLDER${RESET}"
     else
