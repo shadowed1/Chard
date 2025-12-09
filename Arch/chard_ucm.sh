@@ -21,17 +21,15 @@ ALSA_CARD="${ALSA_CARD%:}"
 ALSA_CARD_SHORT="${ALSA_CARD#sof-}"
 echo
 echo "${GREEN}${BOLD}Chromebook Sound Info: ${RESET}"
-echo
-echo "${MAGENTA}$CHROME_CODENAME${RESET}"
-echo "${BLUE}$ALSA_CARD${RESET}"
-echo "${CYAN}$ALSA_CARD_SHORT${RESET}"
+echo "${MAGENTA}$CHROME_CODENAME${RESET} ${RED}-${RESET} ${BLUE}$ALSA_CARD${RESET} ${RED}-${RESET} ${CYAN}$ALSA_CARD_SHORT${RESET}"
+
 
 UCM1_ROOT="/usr/share/alsa/ucm"
 UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 
 if [[ -n "$UCM1_FOLDER" ]]; then
     echo
-    echo "${GREEN}$UCM1_FOLDER${RESET}"
+    echo "${GREEN}Exporting UCM data: $UCM1_FOLDER${RESET}"
 else
     echo "${RED}Could not find UCM1 folder${RESET}"
     exit 1
@@ -54,7 +52,7 @@ UCM2_FOLDER=$(find "$UCM2_ROOT" -type f -name "HiFi.conf" | while read -r f; do
 done | head -n1)
 
 if [[ -n "$UCM2_FOLDER" ]]; then
-    echo "${YELLOW}$UCM2_FOLDER ${RESET}"
+    echo "${YELLOW}To: $UCM2_FOLDER ${RESET}"
 else
     echo "${RED}Could not find UCM2 folder for card $ALSA_CARD_SHORT in $UCM2_ROOT ${RESET}"
     exit 1
@@ -79,7 +77,7 @@ if [[ "$ALSA_CARD" == sof-* ]] && ! grep -q 'Include.hdmi.File' "$UCM2_HIFI"; th
 fi
 
 echo
-echo "${CYAN}Generated: UCM2 HiFi.conf at $UCM2_HIFI ${RESET}"
+echo "${CYAN}Generating... $UCM2_HIFI ${RESET}"
 
 extract_pcm() {
     local device="$1"
@@ -126,9 +124,6 @@ echo
 echo ".nofail"
 } > "$PA_FILE"
 
-echo "${BLUE}Generated: $PA_FILE ${RESET}"
-
-echo "${MAGENTA}"
 sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
