@@ -34,6 +34,7 @@ if [[ -n "$UCM1_FOLDER" ]]; then
     echo "${GREEN}$UCM1_FOLDER${RESET}"
 else
     echo "${RED}Could not find UCM1 folder${RESET}"
+    exit 1
 fi
 
 UCM1_HIFI="$UCM1_FOLDER/HiFi.conf"
@@ -56,6 +57,7 @@ if [[ -n "$UCM2_FOLDER" ]]; then
     echo "${YELLOW}$UCM2_FOLDER ${RESET}"
 else
     echo "${RED}Could not find UCM2 folder for card $ALSA_CARD_SHORT in $UCM2_ROOT ${RESET}"
+    exit 1
 fi
 
 UCM2_HIFI="$UCM2_FOLDER/HiFi.conf"
