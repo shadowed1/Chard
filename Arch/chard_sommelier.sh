@@ -31,3 +31,4 @@ SOMMELIER_CMD=(
 '
 sudo setfacl -Rb /root 2>/dev/null
 killall -9 chardwire 2>/dev/null
+killall -9 pulseaudio 2>/dev/null
