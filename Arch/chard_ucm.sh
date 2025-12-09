@@ -17,34 +17,41 @@ fi
 
 ALSA_CARD=$(awk -F': ' '/sof-/ {n=split($2,a," "); print a[length(a)]; exit}' /proc/asound/cards)
 ALSA_CARD="${ALSA_CARD%:}"
-ALSA_CARD_SHORT="${ALSA_CARD#sof-}" 
+ALSA_CARD_SHORT="${ALSA_CARD#sof-}"
 
 echo
-echo "${MAGENTA}$CHROME_CODENAME${RESET} - ${BLUE}$ALSA_CARD${RESET} - ${CYAN}$ALSA_CARD_SHORT${RESET}"
+echo "${MAGENTA}Codename: $CHROME_CODENAME${RESET}"
+echo "${BLUE}ALSA card: $ALSA_CARD${RESET}"
+echo "${CYAN}ALSA card short: $ALSA_CARD_SHORT${RESET}"
 
 UCM1_ROOT="/usr/share/alsa/ucm"
-UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 
+UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 if [[ -n "$UCM1_FOLDER" ]]; then
-    echo "${GREEN}$UCM1_FOLDER${RESET}"
+    echo "${CYAN}UCM1 folder: $UCM1_FOLDER${RESET}"
+else
+    echo "${RED}Could not find UCM1 folder ${RESET}"
 fi
 
-UCM2_ROOT="${CHARD_ROOT}/usr/share/alsa/ucm2"
-UCM2_FOLDER=$(find "$UCM2_ROOT" -mindepth 2 -maxdepth 3 -type f -name "HiFi.conf" | while read -r f; do
+UCM2_ROOT="${CHARD_ROOT:-/usr/local/chard}/usr/share/alsa/ucm2"
+
+UCM2_FOLDER=$(find "$UCM2_ROOT" -type f -name "HiFi.conf" | while read -r f; do
     dir=$(dirname "$f")
     base=$(basename "$dir")
-    if [[ "$ALSA_CARD" == sof-* && "$base" == "sof-$ALSA_CARD_SHORT" ]]; then
+
+    if [[ "$ALSA_CARD" == sof-* && "$dir" == *"/sof-$ALSA_CARD_SHORT"* ]]; then
         echo "$dir"
         exit 0
     fi
-    if [[ "$ALSA_CARD" != sof-* && "$base" == *"$ALSA_CARD_SHORT"* ]]; then
+
+    if [[ "$base" == "$ALSA_CARD_SHORT" ]]; then
         echo "$dir"
         exit 0
     fi
 done | head -n1)
 
 if [[ -n "$UCM2_FOLDER" ]]; then
-    echo "${YELLOW}$UCM2_FOLDER${RESET}"
+    echo "${GREEN}Detected UCM2 folder: $UCM2_FOLDER${RESET}"
+else
+    echo "${RED}Could not find UCM2 folder for card $ALSA_CARD_SHORT in $UCM2_ROOT${RESET}"
 fi
-
-
