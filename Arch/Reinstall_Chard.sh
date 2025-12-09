@@ -726,7 +726,7 @@ fi
                                 umount -l /proc        2>/dev/null || true
                             '
 
-                            sudo cp /etc/asound.conf $CHARD_ROOT/etc
+sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
@@ -745,6 +745,7 @@ sudo sed -i \
     -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = yes/' \
     "$CHARD_ROOT/etc/pulse/daemon.conf"
 
+sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s)
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
   mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
