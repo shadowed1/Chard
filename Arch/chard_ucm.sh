@@ -19,7 +19,8 @@ fi
 ALSA_CARD=$(awk -F': ' '/sof-/ {n=split($2,a," "); print a[length(a)]; exit}' /proc/asound/cards)
 ALSA_CARD="${ALSA_CARD%:}"
 ALSA_CARD_SHORT="${ALSA_CARD#sof-}"
-
+echo
+echo "${GREEN}${BOLD}Chromebook Sound Info: ${RESET}"
 echo "${MAGENTA}$CHROME_CODENAME${RESET}"
 echo "${BLUE}$ALSA_CARD${RESET}"
 echo "${CYAN}$ALSA_CARD_SHORT${RESET}"
@@ -28,6 +29,7 @@ UCM1_ROOT="/usr/share/alsa/ucm"
 UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 
 if [[ -n "$UCM1_FOLDER" ]]; then
+    echo
     echo "${GREEN}$UCM1_FOLDER${RESET}"
 else
     echo "${RED}Could not find UCM1 folder${RESET}"
@@ -72,7 +74,7 @@ fi
 if [[ "$ALSA_CARD" == sof-* ]] && ! grep -q 'Include.hdmi.File' "$UCM2_HIFI"; then
     echo "Include.hdmi.File \"/codecs/hda/\${var:hdmi}.conf\"" | sudo tee -a "$UCM2_HIFI" > /dev/null
 fi
-
+echo
 echo "${CYAN}Generated: UCM2 HiFi.conf at $UCM2_HIFI ${RESET}"
 
 extract_pcm() {
@@ -122,8 +124,36 @@ echo ".nofail"
 
 echo "${BLUE}Generated: $PA_FILE ${RESET}"
 
+echo "${MAGENTA}"
+sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
+pcm.!default {
+        type cras
+}
+ctl.!default {
+        type cras
+}
+EOF
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
+load-module module-alsa-sink device=default sink_name=cras_sink
+set-default-sink cras_sink
+load-module module-suspend-on-idle
+EOF
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
+unload-module module-udev-detect
+unload-module module-alsa-card
+EOF
+
+sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s)
+sudo sed -i \
+    -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
+    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = yes/' \
+    "$CHARD_ROOT/etc/pulse/daemon.conf"
+
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
   mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
-
-echo "${BLUE}Added default.pa $PA_FILE ${RESET}"
+echo
+echo "${BLUE}Customized default.pa $PA_FILE ${RESET}"
+echo
