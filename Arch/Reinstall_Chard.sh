@@ -742,7 +742,7 @@ EOF
 sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s)
 sudo sed -i \
     -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
-    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = yes/' \
+    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
     "$CHARD_ROOT/etc/pulse/daemon.conf"
 
 sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s)
