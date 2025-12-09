@@ -19,31 +19,18 @@ SOMMELIER_CMD=(
     --xwayland-path=/usr/bin/Xwayland
 )
 
-if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-    "${SOMMELIER_CMD[@]}" -- bash -c '
-    sleep 0.1
-    export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-    [ -f ~/.bashrc ] && source ~/.bashrc
-    pipewire &
-    sleep 0.2
-    pulseaudio &
-    cd ~/
-    exec bash
-'
-else
    "${SOMMELIER_CMD[@]}" -- bash -c '
    sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
-    pipewire &
+    pipewire 2>/dev/null &
     sleep 0.2
-    pulseaudio &
+    pulseaudio 2>/dev/null &
     sleep 0.2
     chardwire 2>/dev/null &
     exec bash
 '
-fi
 
 sudo setfacl -Rb /root 2>/dev/null
 killall -9 chardwire 2>/dev/null
