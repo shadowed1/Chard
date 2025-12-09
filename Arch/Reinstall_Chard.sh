@@ -723,6 +723,29 @@ fi
                                 umount -l /sys         2>/dev/null || true
                                 umount -l /proc        2>/dev/null || true
                             '
+
+                            sudo cp /etc/asound.conf $CHARD_ROOT/etc
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
+load-module module-alsa-sink device=default sink_name=cras_sink
+set-default-sink cras_sink
+load-module module-suspend-on-idle
+EOF
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
+unload-module module-udev-detect
+unload-module module-alsa-card
+EOF
+
+sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s)
+sudo sed -i \
+    -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
+    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = yes/' \
+    "$CHARD_ROOT/etc/pulse/daemon.conf"
+
+grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
+( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
+  mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
                             
                             chard_unmount
                             ;;
