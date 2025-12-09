@@ -16,7 +16,7 @@ else
 fi
 
 ALSA_CARD=$(awk -F': ' '/sof-/ {n=split($2,a," "); print a[length(a)]; exit}' /proc/asound/cards)
-
+echo
 echo "${MAGENTA}$CHROME_CODENAME ${RESET}"
 echo "${BLUE}${ALSA_CARD}${RESET}"
 
@@ -24,5 +24,6 @@ UCM1_ROOT="/usr/share/alsa/ucm"
 UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 
 if [[ -n "$UCM1_FOLDER" ]]; then
+    echo
     echo "${CYAN}$UCM1_FOLDER ${RESET}"
 fi
