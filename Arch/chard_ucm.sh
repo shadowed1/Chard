@@ -54,7 +54,7 @@ done | head -n1)
 if [[ -n "$UCM2_FOLDER" ]]; then
     echo "${YELLOW}$UCM2_FOLDER ${RESET}"
 else
-    echo "${RED}Could not find UCM2 folder for card $ALSA_CARD_SHORT in $UCM2_ROOT${RESET}"
+    echo "${RED}Could not find UCM2 folder for card $ALSA_CARD_SHORT in $UCM2_ROOT ${RESET}"
 fi
 
 UCM2_HIFI="$UCM2_FOLDER/HiFi.conf"
@@ -74,6 +74,7 @@ fi
 if [[ "$ALSA_CARD" == sof-* ]] && ! grep -q 'Include.hdmi.File' "$UCM2_HIFI"; then
     echo "Include.hdmi.File \"/codecs/hda/\${var:hdmi}.conf\"" | sudo tee -a "$UCM2_HIFI" > /dev/null
 fi
+
 echo
 echo "${CYAN}Generated: UCM2 HiFi.conf at $UCM2_HIFI ${RESET}"
 
@@ -93,7 +94,7 @@ HEADSET_MIC_PCM=$(extract_pcm "Mic" "CapturePCM")
 HDMI_PCM=$(extract_pcm "HDMI" "PlaybackPCM")
 
 CARDNUM=$(aplay -l | awk -v card="$ALSA_CARD" '$0 ~ card {gsub(/[^0-9]/,"",$2); print $2; exit}')
-sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s)
+sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s)"
 PA_FILE="$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa"
 mkdir -p "$(dirname "$PA_FILE")"
 
@@ -125,14 +126,7 @@ echo ".nofail"
 echo "${BLUE}Generated: $PA_FILE ${RESET}"
 
 echo "${MAGENTA}"
-sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
-pcm.!default {
-        type cras
-}
-ctl.!default {
-        type cras
-}
-EOF
+sudo cp /etc/asound.conf $CHARD_ROOT/etc
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
@@ -154,6 +148,5 @@ sudo sed -i \
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
   mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
-echo
 echo "${BLUE}Customized default.pa $PA_FILE ${RESET}"
 echo
