@@ -541,9 +541,6 @@ fi
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
     sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
     sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null
-    rm -rf ~/.config/pulse 2>/dev/null
-    rm -rf ~/.pulse 2>/dev/null
-    rm -rf ~/.cache/pulse 2>/dev/null
     sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null
     sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
     sudo rm -rf ~/.cache/bazel 2>/dev/null
@@ -566,7 +563,6 @@ fi
         sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
         sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
         sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
-        rm -rf ~/.config/pulse ~/.pulse ~/.cache/pulse 2>/dev/null
         sudo -E pacman -S --noconfirm pulseaudio pipewire-libcamera alsa-lib alsa-utils alsa-plugins 2>/dev/null
         sudo rm -rf ~/.cache/bazel 2>/dev/null
 
