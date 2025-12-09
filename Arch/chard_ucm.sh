@@ -77,7 +77,7 @@ if [[ "$ALSA_CARD" == sof-* ]] && ! grep -q 'Include.hdmi.File' "$UCM2_HIFI"; th
 fi
 
 echo
-echo "${CYAN}Generating... $UCM2_HIFI ${RESET}"
+echo "${CYAN}Generating: $UCM2_HIFI ${RESET}"
 
 extract_pcm() {
     local device="$1"
@@ -147,5 +147,5 @@ sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
   mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
-echo "${BLUE}Customized default.pa $PA_FILE ${RESET}"
+echo "${BLUE}Customized default.pa: $PA_FILE ${RESET}"
 echo
