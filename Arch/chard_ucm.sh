@@ -93,7 +93,7 @@ HEADSET_MIC_PCM=$(extract_pcm "Mic" "CapturePCM")
 HDMI_PCM=$(extract_pcm "HDMI" "PlaybackPCM")
 
 CARDNUM=$(aplay -l | awk -v card="$ALSA_CARD" '$0 ~ card {gsub(/[^0-9]/,"",$2); print $2; exit}')
-
+sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s)
 PA_FILE="$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa"
 mkdir -p "$(dirname "$PA_FILE")"
 
