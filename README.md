@@ -324,6 +324,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.10: `Fixed Steam local files window from not expanding. Fixed Steam games having flickering lines bug when paired with multiple display + Freesync.` <br><br>
 - 0.11: `Significantly improved Pipewire support.` <br><br>
 - 0.12: `Downgrade Mesa for Intel iGPU's to fix Vulkan.` <br><br>
+- 0.13: `Created custom virtual pulseaudio implementation for simultaneous audio stream support. Added Pulseaudio support.` <br><br>
 
 <br>
 
