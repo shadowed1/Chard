@@ -33,7 +33,7 @@ apply_volume() {
 
                 if [ -n "$SINK" ]; then
                     pactl set-sink-volume "$SINK" "${volume}%" 2>/dev/null
-                    echo "${BLUE}pactl: ${RESET}${GREEN}$volume% on sink $SINK ${RESET}"
+                    echo "${BLUE}pactl: ${RESET}${MAGENTA}$volume% on sink $SINK ${RESET}"
                 else
                     echo "${RED}ERROR: No PulseAudio sink found.${RESET}"
                 fi
