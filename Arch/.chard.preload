@@ -11,7 +11,7 @@ LD_PRELOAD=""
 
 for lib in "${LD_PRELOAD_LIBS[@]}"; do
     [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
-done 2>/dev/null  # hide any unexpected errors
+done 2>/dev/null
 
 export LD_PRELOAD
 # <<< END CHARD_PRELOAD <<<
