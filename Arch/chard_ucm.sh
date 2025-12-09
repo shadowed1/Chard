@@ -23,7 +23,6 @@ echo
 echo "${GREEN}${BOLD}Chromebook Sound Info: ${RESET}"
 echo "${MAGENTA}$CHROME_CODENAME${RESET} ${RED}-${RESET} ${BLUE}$ALSA_CARD${RESET} ${RED}-${RESET} ${CYAN}$ALSA_CARD_SHORT${RESET}"
 
-
 UCM1_ROOT="/usr/share/alsa/ucm"
 UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 
