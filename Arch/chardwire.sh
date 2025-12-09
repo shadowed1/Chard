@@ -3,7 +3,6 @@
 VOLUME_FILE="$HOME/.chard_volume"
 LAST_VOLUME=""
 INTERVAL=5
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -23,7 +22,7 @@ apply_volume() {
             if command -v wpctl >/dev/null 2>&1; then
                 volume_decimal=$(echo "scale=2; $volume / 100" | bc)
                 wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal" 2>/dev/null
-                echo "Volume set via wpctl: $volume% ($volume_decimal)"
+                echo "${CYAN}wpctl: $volume% ($volume_decimal) ${RESET}"
             fi
 
             if command -v pactl >/dev/null 2>&1; then
@@ -34,19 +33,18 @@ apply_volume() {
 
                 if [ -n "$SINK" ]; then
                     pactl set-sink-volume "$SINK" "${volume}%" 2>/dev/null
-                    echo "Volume set via pactl: $volume% on sink $SINK"
+                    echo "${BLUE}pactl: $volume% on sink $SINK ${RESET}"
                 else
-                    echo "No PulseAudio sink found."
+                    echo "${RED}ERROR: No PulseAudio sink found.${RESET}"
                 fi
             fi
 
             if ! command -v wpctl >/dev/null 2>&1 && ! command -v pactl >/dev/null 2>&1; then
-                echo "ERROR: Neither wpctl nor pactl is available."
+                echo "${RED}ERROR: wpctl nor pactl is available. ${RESET}"
             fi
         fi
     fi
 }
-
 
 tail -n0 -F "$VOLUME_FILE" | while read -r line; do
     apply_volume
