@@ -540,12 +540,12 @@ fi
     cd \$HOME
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
     sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
-    sudo -E pacman -Syu --noconfirm pulseaudio 2>/dev/null
+    sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null
     rm -rf ~/.config/pulse 2>/dev/null
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
-    sudo -E pacman -Syu --noconfirm pipewire-libcamera 2>/dev/null
-    sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
+    sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null
+    sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
     sudo rm -rf ~/.cache/bazel 2>/dev/null
 
     cd ~/
@@ -567,7 +567,7 @@ fi
         sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
         sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
         rm -rf ~/.config/pulse ~/.pulse ~/.cache/pulse 2>/dev/null
-        sudo -E pacman -Syu --noconfirm pulseaudio pipewire-libcamera alsa-lib alsa-utils alsa-plugins 2>/dev/null
+        sudo -E pacman -S --noconfirm pulseaudio pipewire-libcamera alsa-lib alsa-utils alsa-plugins 2>/dev/null
         sudo rm -rf ~/.cache/bazel 2>/dev/null
 
         sudo curl -L \$BAZEL_URL -o /usr/bin/bazel65
@@ -592,7 +592,7 @@ fi
         BAZEL_URL=\"https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64\"
 
         sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
-        sudo -E pacman -Syu --noconfirm pulseaudio alsa-lib alsa-utils alsa-plugins 2>/dev/null
+        sudo -E pacman -S --noconfirm pulseaudio alsa-lib alsa-utils alsa-plugins 2>/dev/null
         sudo rm -rf ~/.cache/bazel 2>/dev/null
 
         sudo curl -L \$BAZEL_URL -o /usr/bin/bazel65
@@ -698,13 +698,13 @@ fi
                                     source \$HOME/.bashrc 2>/dev/null
                                     sudo chown -R 1000:1000 $HOME
                                     cd \$HOME
-                                    sudo -E pacman -Syu --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null
+                                    sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null
                                     sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers 2>/dev/null
                                     sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 2>/dev/null 
                                     sudo -E pacman -R --noconfirm vulkan-mesa-layers 2>/dev/null
                                     sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null
                                     sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null
-                                    sudo -E pacman -Syu --noconfirm vulkan-mesa-device-select 2>/dev/null    
+                                    sudo -E pacman -S --noconfirm vulkan-mesa-device-select 2>/dev/null    
                                     rm -rf ~/intel_vulkan 2>/dev/null
                                     rm -rf ~/intel_vulkan_271.zip 2>/dev/null
                                     curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
