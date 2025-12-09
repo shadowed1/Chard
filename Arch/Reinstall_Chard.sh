@@ -539,7 +539,6 @@ fi
     sudo chown -R 1000:1000 \$HOME
     cd \$HOME
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
-    sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
     sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null
     sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null
     sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
