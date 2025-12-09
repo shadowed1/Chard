@@ -21,6 +21,7 @@ ALSA_CARD="${ALSA_CARD%:}"
 ALSA_CARD_SHORT="${ALSA_CARD#sof-}"
 echo
 echo "${GREEN}${BOLD}Chromebook Sound Info: ${RESET}"
+echo
 echo "${MAGENTA}$CHROME_CODENAME${RESET}"
 echo "${BLUE}$ALSA_CARD${RESET}"
 echo "${CYAN}$ALSA_CARD_SHORT${RESET}"
@@ -126,7 +127,7 @@ echo ".nofail"
 echo "${BLUE}Generated: $PA_FILE ${RESET}"
 
 echo "${MAGENTA}"
-sudo cp /etc/asound.conf $CHARD_ROOT/etc
+sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
@@ -145,6 +146,7 @@ sudo sed -i \
     -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = yes/' \
     "$CHARD_ROOT/etc/pulse/daemon.conf"
 
+sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s)
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
   mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
