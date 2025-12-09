@@ -16,14 +16,27 @@ else
 fi
 
 ALSA_CARD=$(awk -F': ' '/sof-/ {n=split($2,a," "); print a[length(a)]; exit}' /proc/asound/cards)
+ALSA_CARD="${ALSA_CARD%:}"
+ALSA_CARD_SHORT="${ALSA_CARD#sof-}" 
+
 echo
-echo "${MAGENTA}$CHROME_CODENAME ${RESET}"
-echo "${BLUE}${ALSA_CARD}${RESET}"
+echo "${MAGENTA}Codename: $CHROME_CODENAME${RESET}"
+echo "${BLUE}ALSA card: $ALSA_CARD${RESET}"
+echo "${CYAN}ALSA card short: $ALSA_CARD_SHORT${RESET}"
+echo
 
 UCM1_ROOT="/usr/share/alsa/ucm"
 UCM1_FOLDER=$(find "$UCM1_ROOT" -maxdepth 1 -type d -name "${ALSA_CARD}*" | grep "$CHROME_CODENAME" | head -n1)
 
 if [[ -n "$UCM1_FOLDER" ]]; then
-    echo "${CYAN}$UCM1_FOLDER ${RESET}"
-    echo
+    echo "${CYAN}UCM1 folder: $UCM1_FOLDER${RESET}"
+fi
+
+UCM2_ROOT="${CHARD_ROOT:-/usr/local/chard}/usr/share/alsa/ucm2"
+UCM2_FOLDER=$(find "$UCM2_ROOT" -type d -name "$ALSA_CARD_SHORT" -print -quit)
+
+if [[ -n "$UCM2_FOLDER" ]]; then
+    echo "${GREEN}Detected UCM2 folder: $UCM2_FOLDER${RESET}"
+else
+    echo "${RED} Could not find UCM2 folder for $ALSA_CARD_SHORT in $UCM2_ROOT${RESET}"
 fi
