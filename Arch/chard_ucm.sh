@@ -111,6 +111,6 @@ sudo cp "$UCM2_HIFI" "$UCM2_HIFI.bak.$(date +%s)"
         echo "Include.hdmi.File \"/codecs/hda/\${var:hdmi}.conf\""
     fi
 
-} > "$UCM2_HIFI"
+} | sudo tee "$UCM2_HIFI" > /dev/null
 
 echo "${GREEN}Generated dynamic UCM2 HiFi.conf at $UCM2_HIFI ${RESET}"
