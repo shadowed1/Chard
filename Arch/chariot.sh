@@ -1433,6 +1433,7 @@ run_checkpoint 148 "pavucontrol" checkpoint_148
 
 checkpoint_149() {
    yay -S --noconfirm vscodium-bin 2>/dev/null
+   xdg-mime default thunar.desktop inode/directory
 }
 run_checkpoint 148 "VSCodium" checkpoint_149
 
