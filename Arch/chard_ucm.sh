@@ -54,10 +54,63 @@ else
     echo "${RED}Could not find UCM2 folder for card $ALSA_CARD_SHORT in $UCM2_ROOT${RESET}"
 fi
 
+UCM1_HIFI="$UCM1_FOLDER/HiFi.conf"
 UCM2_HIFI="$UCM2_FOLDER/HiFi.conf"
-BACKUP="$UCM2_HIFI.bak.$(date +%s)"
+sudo cp "$UCM2_HIFI" "$UCM2_HIFI.bak.$(date +%s)"
 
-if [[ -f "$UCM2_HIFI" ]]; then
-    cp "$UCM2_HIFI" "$BACKUP"
-    echo "Backed up existing UCM2 HiFi.conf to $BACKUP"
-fi
+{
+    echo "SectionVerb {"
+    echo "    EnableSequence ["
+    echo "        disdevall \"\""
+    echo "    ]"
+    echo "    Value.TQ \"HiFi\""
+    echo "}"
+    echo
+
+    awk -v CardId="${ALSA_CARD}" '
+    BEGIN { in_device=0; devname=""; friendly=""; seq="" }
+
+    /^SectionDevice/ {
+        in_device=1
+        devname=$2
+        gsub(/[".0]/,"",devname)
+        if (devname ~ /Speaker/i) friendly="Speaker"
+        else if (devname ~ /Headphone/i) friendly="Headphones"
+        else if (devname ~ /Headset/i) friendly="Headset"
+        else if (devname ~ /Mic/i) friendly="Mic"
+        else friendly=devname
+        print "SectionDevice.\""friendly"\" {"
+        next
+    }
+
+    in_device && /^\}/ {
+        in_device=0
+        print "}"
+        print ""
+        next
+    }
+
+    in_device {
+        gsub(/ 0$/," off")
+        gsub(/ 1$/," on")
+        gsub(/hw:[^,]+,/,"hw:${CardId},")
+        gsub(/JackDev/,"JackControl")
+        print
+    }
+
+    END {
+        if (CardId ~ /sofrt/) {
+            print "Macro ["
+            print "    { SplitPCM { Name \"dmic_stereo_in\" Direction Capture Format S32_LE Channels 2 HWChannels 4 HWChannelPos0 FL HWChannelPos1 FR HWChannelPos2 FL HWChannelPos3 FR } }"
+            print "]"
+        }
+    }
+    ' "$UCM1_HIFI"
+
+    if [[ "$ALSA_CARD" == sof-* ]]; then
+        echo "Include.hdmi.File \"/codecs/hda/\${var:hdmi}.conf\""
+    fi
+
+} > "$UCM2_HIFI"
+
+echo "${GREEN}Generated dynamic UCM2 HiFi.conf at $UCM2_HIFI ${RESET}"
