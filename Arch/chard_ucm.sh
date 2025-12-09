@@ -47,7 +47,6 @@
         fi
     done | head -n1)
     
-    
     if [[ -n "$UCM2_FOLDER" ]]; then
         echo "${GREEN}Detected UCM2 folder: $UCM2_FOLDER${RESET}"
     else
