@@ -8,7 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-sudo chown -R 1000:1000 ~/.config/pulse
+sudo chown -R 1000:1000 $CHARD_ROOT/$CHARD_HOME.config/pulse
 
 if [[ "$PS1" =~ @([^-]+)- ]]; then
     CHROME_CODENAME="${BASH_REMATCH[1]}"
