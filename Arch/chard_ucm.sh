@@ -53,3 +53,11 @@ if [[ -n "$UCM2_FOLDER" ]]; then
 else
     echo "${RED}Could not find UCM2 folder for card $ALSA_CARD_SHORT in $UCM2_ROOT${RESET}"
 fi
+
+UCM2_HIFI="$UCM2_FOLDER/HiFi.conf"
+BACKUP="$UCM2_HIFI.bak.$(date +%s)"
+
+if [[ -f "$UCM2_HIFI" ]]; then
+    cp "$UCM2_HIFI" "$BACKUP"
+    echo "Backed up existing UCM2 HiFi.conf to $BACKUP"
+fi
