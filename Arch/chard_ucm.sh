@@ -110,7 +110,7 @@ echo "load-module module-always-sink"
 echo "load-module module-suspend-on-idle"
 echo "load-module module-position-event-sounds"
 echo
-echo "### Load specific ALSA sinks/sources using the known SOF device"
+echo "### Load ALSA sinks using known SOF devices derived from UCM1"
 [[ -n "$SPEAKER_PCM" ]] && echo "load-module module-alsa-sink device=hw:${CARDNUM},${SPEAKER_PCM} name=Speaker channels=2 format=s16le tsched=no"
 [[ -n "$HEADPHONE_PCM" ]] && echo "load-module module-alsa-sink device=hw:${CARDNUM},${HEADPHONE_PCM} name=Headphones channels=2 format=s16le tsched=no"
 [[ -n "$INTERNAL_MIC_PCM" ]] && echo "load-module module-alsa-source device=hw:${CARDNUM},${INTERNAL_MIC_PCM} name=InternalMic channels=2 tsched=no"
