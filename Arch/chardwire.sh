@@ -22,7 +22,7 @@ apply_volume() {
             if command -v wpctl >/dev/null 2>&1; then
                 volume_decimal=$(echo "scale=2; $volume / 100" | bc)
                 wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal" 2>/dev/null
-                echo "${CYAN}wpctl: $volume% ($volume_decimal) ${RESET}"
+                echo "${CYAN}wpctl: ${RESET}${GREEN}$volume% ($volume_decimal) ${RESET}"
             fi
 
             if command -v pactl >/dev/null 2>&1; then
@@ -33,7 +33,7 @@ apply_volume() {
 
                 if [ -n "$SINK" ]; then
                     pactl set-sink-volume "$SINK" "${volume}%" 2>/dev/null
-                    echo "${BLUE}pactl: $volume% on sink $SINK ${RESET}"
+                    echo "${BLUE}pactl: ${RESET}${GREEN}$volume% on sink $SINK ${RESET}"
                 else
                     echo "${RED}ERROR: No PulseAudio sink found.${RESET}"
                 fi
