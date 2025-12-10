@@ -42,6 +42,8 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
     sleep 0.2
+    sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -151,6 +153,8 @@ chard_unmount() {
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sleep 0.2
