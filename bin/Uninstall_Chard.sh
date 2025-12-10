@@ -81,7 +81,8 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
 
             unset LD_PRELOAD
             
-        echo "${CYAN}[+] Uninstalled ${RESET}"
+        echo "${CYAN}[+] Uninstalled - Exiting in 10 seconds...${RESET}"
+        sleep 8
 else
         echo "${RED}[*] Cancelled.${RESET}"
 fi
