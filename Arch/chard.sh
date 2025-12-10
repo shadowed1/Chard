@@ -185,7 +185,7 @@ chard_uninstall() {
             echo "Uninstalling Chard..."
             sudo bash "$script"
         else
-            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
             sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
             $CHARD_ROOT/bin/Uninstall_Chard.sh
         fi
