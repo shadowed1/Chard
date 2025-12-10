@@ -162,6 +162,12 @@ detect_gpu_freq() {
                 echo
                 echo "${RESET}${GREEN}[*] Performing Quick Reinstall!"
 
+                if [[ -z "$CHARD_ROOT" || "$CHARD_ROOT" == "/" ]]; then
+                    echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty.${RESET}"
+                    sleep 4
+                    exit 1
+                fi
+
     chard_unmount() {        
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.2
