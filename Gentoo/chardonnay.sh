@@ -1,8 +1,8 @@
 #!/bin/bash
 SOMMELIER_CMD=(
     sommelier
-    --force-drm-device="/run/chrome/wayland-0"
-    --display="/dev/dri/renderD128"
+    --force-drm-device="/dev/dri/renderD128"
+    --display="/run/chrome/wayland-0"
     --noop-driver
     --stable-scaling
     --enable-xshape
