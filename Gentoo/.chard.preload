@@ -31,7 +31,12 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libXi.so.6"
     "$CHARD_ROOT/usr/lib64/libXmu.so.6"
     "$CHARD_ROOT/usr/lib64/libXt.so.6"
-)
+    "$CHARD_ROOT/usr/lib64/libsystemd.so.0"
+    "$CHARD_ROOT/usr/lib64/libSM.so.6"
+    "$CHARD_ROOT/usr/lib64/libSM.so.6.0.1"
+    "$CHARD_ROOT/usr/lib64/libICE.so.6"
+    "$CHARD_ROOT/usr/lib/gcc/x86_64-pc-linux-gnu/15/libstdc++.so.6"
+) 
 
 LD_PRELOAD=""
 
