@@ -158,8 +158,6 @@ chard_unmount() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
     sleep 0.2
-    sudo umount -l "$CHARD_ROOT/removable/media/" 2>/dev/null || true
-    sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -249,15 +247,8 @@ case "$cmd" in
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
-            sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind /home/chronos/user/MyFiles/Downloads "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+            sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-            sudo mountpoint -q "$CHARD_ROOT/removable/media" || sudo mount --bind /removable/media "$CHARD_ROOT/removable/media" 2>/dev/null
-            shopt -s nullglob
-            for d in "$CHARD_ROOT/media/removable"/*; do
-                [ -d "$d" ] || continue
-                sudo chown chronos:chronos-access "$d"
-            done
-            shopt -u nullglob
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
