@@ -1,11 +1,8 @@
 #!/bin/bash
-SOMMELIER_DISPLAY="/run/chrome/wayland-0"
-SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
-ARCH="$(uname -m)"
 SOMMELIER_CMD=(
     sommelier
-    --force-drm-device="$SOMMELIER_DRM_DEVICE"
-    --display="$SOMMELIER_DISPLAY"
+    --force-drm-device="/run/chrome/wayland-0"
+    --display="/dev/dri/renderD128"
     --noop-driver
     --stable-scaling
     --enable-xshape
@@ -21,21 +18,12 @@ SOMMELIER_CMD=(
 
    "${SOMMELIER_CMD[@]}" -- bash -c '
    sleep 0.1
-    export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-    [ -f ~/.bashrc ] && source ~/.bashrc
+    export DISPLAY=$(ls $CHARD_ROOT/tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     cd ~/
-    pipewire 2>/dev/null &
-    sleep 0.2
-    pulseaudio 2>/dev/null &
-    sleep 0.2
-    chardwire 2>/dev/null &
     exec bash
 '
 
-sudo setfacl -Rb /root 2>/dev/null
-killall -9 chardwire 2>/dev/null
-
 if [ -f /tmp/.pulseaudio_pid ]; then
-    kill "$(cat /tmp/.pulseaudio_pid)" 2>/dev/null
-    rm -f /tmp/.pulseaudio_pid
+    kill "$(cat $CHARD_ROOT/tmp/.pulseaudio_pid)" 2>/dev/null
+    rm -f $CHARD_ROOT/tmp/.pulseaudio_pid
 fi
