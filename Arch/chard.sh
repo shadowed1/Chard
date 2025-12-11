@@ -40,8 +40,6 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
     sleep 0.2
-    sudo umount -l "$CHARD_ROOT/removable/media/" 2>/dev/null || true
-    sleep 0.2
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
@@ -248,28 +246,33 @@ case "$cmd" in
         sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
         sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
+        
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind /home/chronos/user/MyFiles/Downloads "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-            sudo mountpoint -q "$CHARD_ROOT/media/removable" || sudo mount --bind /media/removable/ "$CHARD_ROOT/media/removable/" 2>/dev/null
-            sudo mount -o remount,rw,bind "$CHARD_ROOT/media/removable" 2>/dev/null
+            sudo mountpoint -q "$CHARD_ROOT/removable/media" || sudo mount --bind /removable/media "$CHARD_ROOT/removable/media" 2>/dev/null
+            shopt -s nullglob
             for d in "$CHARD_ROOT/media/removable"/*; do
                 [ -d "$d" ] || continue
                 sudo chown chronos:chronos-access "$d"
             done
+            shopt -u nullglob
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
+        
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+        
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
+        
         sudo chroot "$CHARD_ROOT" /bin/bash -c '
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
@@ -280,15 +283,19 @@ case "$cmd" in
             mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
             mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+        
             if [ -e /dev/zram0 ]; then
                 mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
                 mount --make-rslave /dev/zram0 2>/dev/null
             fi
+        
             chmod 1777 /tmp /var/tmp
+        
             [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
             [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
             [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
             [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+        
             CHARD_HOME=$(cat /.chard_home)
             HOME=$CHARD_HOME
             CHARD_USER=$(cat /.chard_user)
@@ -312,6 +319,7 @@ case "$cmd" in
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
                 "
+            
             setfacl -Rb /run/chrome/pulse 2>/dev/null
             setfacl -Rb /run/chrome 2>/dev/null
             killall -9 pipewire 2>/dev/null
