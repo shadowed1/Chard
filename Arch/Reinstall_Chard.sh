@@ -497,7 +497,6 @@ EOF
 echo
 fi
 
-
                 if [ -f "/home/chronos/user/.bashrc" ]; then
                     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
                     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
@@ -763,7 +762,7 @@ sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
   mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
-                            
+sudo mkdir -p /media
                             chard_unmount
                             ;;
                         *)
