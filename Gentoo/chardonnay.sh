@@ -3,6 +3,7 @@ SOMMELIER_CMD=(
     sommelier
     --force-drm-device="/dev/dri/renderD128"
     --display="/run/chrome/wayland-0"
+    --noop-driver
     --stable-scaling
     --enable-xshape
     --sd-notify=READY=1
