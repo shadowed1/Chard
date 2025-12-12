@@ -19,6 +19,8 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libGL.so.1"
     "$CHARD_ROOT/usr/lib64/libGLX.so.0"
     "$CHARD_ROOT/usr/lib64/libxkbfile.so.1"
+    "$CHARD_ROOT/usr/lib/gedit/libgedit-48.2.so"
+    "$CHARD_ROOT/usr/lib/libgedit-tepl-6.so.3"
 )
 
 LD_PRELOAD=""
@@ -29,3 +31,34 @@ done 2>/dev/null
 
 export LD_PRELOAD
 # <<< END CHARD_PRELOAD <<<
+
+    #"$CHARD_ROOT/usr/lib64/libgtk-3.so.0"
+    #"$CHARD_ROOT/usr/lib64/libgdk-3.so.0"
+    #"$CHARD_ROOT/usr/lib64/libgedit-gtksourceview-300.so.3"
+    #"$CHARD_ROOT/usr/lib/libgedit-amtk-5.so.0"
+    #"$CHARD_ROOT/usr/lib/libgedit-gfls-1.so.0"
+    #"$CHARD_ROOT/usr/lib64/libpeas-gtk-1.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libpeas-1.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libicuuc.so.78"
+    #"$CHARD_ROOT/usr/lib64/libicui18n.so.78"
+    #"$CHARD_ROOT/usr/lib64/libhandy-1.so.0"
+    #"$CHARD_ROOT/usr/lib64/libgdk_pixbuf-2.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libatk-1.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libXi.so.6"
+    #"$CHARD_ROOT/usr/lib64/libatk-bridge-2.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libcloudproviders.so.0"
+    #"$CHARD_ROOT/usr/lib64/libtinysparql-3.0.so.0"
+    #"$CHARD_ROOT/usr/lib64/libXfixes.so.3"
+    #"$CHARD_ROOT/usr/lib64/libXext.so.6"
+    #"$CHARD_ROOT/usr/lib64/libXcursor.so.1"
+    #"$CHARD_ROOT/usr/lib64/libXdamage.so.1"
+    #"$CHARD_ROOT/usr/lib64/libXcomposite.so.1"
+    #"$CHARD_ROOT/usr/lib64/libXrandr.so.2"
+    #"$CHARD_ROOT/usr/lib64/libXinerama.so.1"
+    #"$CHARD_ROOT/usr/lib64/libxml2.so.16"
+    #"$CHARD_ROOT/usr/lib64/libgirepository-1.0.so.1"
+    #"$CHARD_ROOT/usr/lib64/libicudata.so.78"
+    #"$CHARD_ROOT/usr/lib64/libglycin-2.so.0"
+    #"$CHARD_ROOT/usr/lib64/libatspi.so.0"
+    #"$CHARD_ROOT/usr/lib64/libXrender.so.1"
+    #"$CHARD_ROOT/usr/lib64/libffi.so.8"
