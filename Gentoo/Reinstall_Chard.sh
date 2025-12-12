@@ -725,6 +725,7 @@ set-default-source cras-source
 EOF
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
                 chard_unmount
+                $CHARD_ROOT/bin/chard_preload
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 echo
                 ;;
