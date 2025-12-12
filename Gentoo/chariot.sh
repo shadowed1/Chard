@@ -1415,6 +1415,7 @@ checkpoint_145() {
 run_checkpoint 145 "coreutils" checkpoint_145
 
 checkpoint_146() {
+     sudo -E emerge media-libs/libpulse
      sudo -E emerge media-sound/alsa-utils
      sudo -E emerge pavucontrol
      mv ~/.config/pulse/default.pa ~/.config/pulse/default.pa.bak 2>/dev/null
