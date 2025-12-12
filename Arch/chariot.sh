@@ -1137,10 +1137,10 @@ checkpoint_137() {
 }
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau
-        yay -S --noconfirm lib32-gtk2
-        sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
-        sudo -E pacman -Syu --noconfirm bubblewrap
+        sudo -E pacman -Syu --needed --noconfirm lib32-libvdpau 2>/dev/null
+        yay -S --noconfirm lib32-gtk2 2>/dev/null
+        sudo -E pacman -Syu --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null
+        sudo -E pacman -Syu --noconfirm bubblewrap 2>/dev/null
         cd ~/
         rm -rf bubblepatch 2>/dev/null
         git clone https://github.com/shadowed1/bubblepatch.git
@@ -1151,38 +1151,62 @@ checkpoint_137() {
         sudo ninja -C build install
         cd ~/
         rm -rf bubblepatch 2>/dev/null
-
-        detect_gpu_freq
-    GPU_VENDOR="$GPU_TYPE"
+        sudo -E pacman -Rns --noconfirm steam 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-vulkan-intel 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm vulkan-intel 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-vulkan-nouveau 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm vulkan-nouveau 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-vulkan-radeon 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm vulkan-radeon 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-vulkan-swrast 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm vulkan-swrast 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-vulkan-asahi 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm vulkan-asahi 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-vulkan-dzn 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm vulkan-dzn 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-vulkan-gfxstream 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm vulkan-gfxstream 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm lib32-nvidia-utils 2>/dev/null 
+        sudo -E pacman -Rns --noconfirm nvidia-utils 2>/dev/null 
+        sudo rm /usr/share/vulkan/implicit_layer.d/nvidia_layers.json 2>/dev/null 
+        sudo rm /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json 2>/dev/null 
+        sudo rm /usr/lib/libvulkan_intel.so 2>/dev/null 
+        sudo rm /usr/share/vulkan/icd.d/intel_hasvk_icd.x86_64.json 2>/dev/null 
+        sudo rm /usr/share/vulkan/icd.d/intel_icd.x86_64.json 2>/dev/null 
+        sudo rm /usr/share/vulkan/icd.d/intel_hasvk_icd.i686.json 2>/dev/null 
+        sudo rm /usr/share/vulkan/icd.d/intel_icd.i686.json 2>/dev/null 
+        sudo rm /usr/share/vulkan/icd.d/intel_hasvk_icd.i686.json 2>/dev/null 
         detect_gpu_freq
         GPU_VENDOR="$GPU_TYPE"
-        echo "[*] GPU vendor detected: $GPU_VENDOR"
-        case "$GPU_VENDOR" in
-            intel)
-                DRIVER="6"
-                ;;
-            amd)
-                DRIVER="8"
-                ;;
-            nvidia)
-                DRIVER="1"
-                ;;
-            mali|panfrost)
-                DRIVER="4"
-                ;;
-            adreno)
-                DRIVER="4"
-                ;;
-            asahi)
-                DRIVER="2"
-                ;;
-            mediatek|vivante)
-                DRIVER="4"
-                ;;
-            *)
-                DRIVER="9"
-                ;;
-        esac
+            detect_gpu_freq
+            GPU_VENDOR="$GPU_TYPE"
+            echo "[*] GPU vendor detected: $GPU_VENDOR"
+            case "$GPU_VENDOR" in
+                intel)
+                    DRIVER="6"
+                    ;;
+                amd)
+                    DRIVER="8"
+                    ;;
+                nvidia)
+                    DRIVER="1"
+                    ;;
+                mali|panfrost)
+                    DRIVER="4"
+                    ;;
+                adreno)
+                    DRIVER="4"
+                    ;;
+                asahi)
+                    DRIVER="2"
+                    ;;
+                mediatek|vivante)
+                    DRIVER="4"
+                    ;;
+                *)
+                    DRIVER="9"
+                    ;;
+            esac
     
         echo "[*] Selecting provider number: $DRIVER"
         printf "%s\n%s\ny\n" "$DRIVER" "$DRIVER" | sudo -E pacman -Syu steam
