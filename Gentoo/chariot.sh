@@ -99,13 +99,14 @@ echo "${RESET}"
                                                                        
 CHECKPOINT_FILE="/.chard_checkpoint"
 echo
-echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! Run:${RESET}${BLUE}${BOLD}"
+echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! ${RESET}"
+echo "${RESET}${GREEN}Run the command: ${BLUE}${BOLD}chariot${RESET}${YELLOW} in ChromeOS shell to resume..."
 echo
-echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
+echo "${RESET}${YELLOW}Example to resume from a specific checkpoint: ${RESET}${MAGENTA}${BOLD}chariot 137${RESET}"
+echo "${RESET}${RED}${BOLD}chariot reset${RESET}${RED} to reset to checkpoint 1.${RESET}${GREEN}"
 echo
-echo "${RESET}${BLUE}${BOLD}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
-echo
-sleep 5
+echo "Starting in 10 seconds... ${RESET}"
+sleep 8
 
 CHECKPOINT_OVERRIDE=""
 
