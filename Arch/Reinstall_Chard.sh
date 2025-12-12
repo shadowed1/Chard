@@ -605,6 +605,13 @@ sudo mkdir -p /media
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
 
+                CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+                if [ -f "$CHROMEOS_BASHRC" ]; then
+                    CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
+                    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
+                    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp
+                fi
+
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
                 source $CHARD_ROOT/.chardrc
