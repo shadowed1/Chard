@@ -1239,13 +1239,10 @@ run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
 sudo -E emerge app-office/libreoffice-bin
 
 checkpoint_134() {
-    USE=sound-server sudo -E emerge pipewire
-    echo "media-video/obs-studio pipewire" | sudo tee -a /etc/portage/package.use/obs
-    sudo -E emerge media-plugins/obs-pipewire-audio-capture
+    echo "media-video/obs-studio" | sudo tee -a /etc/portage/package.use/obs
     sudo -E emerge media-plugins/obs-vkcapture
     sudo -E emerge media-video/obs-studio
     rm -rf /var/tmp/portage/media-video/obs-studio-*
-    rm -rf /var/tmp/portage/media-plugins/obs-pipewire-audio-capture-*
     eclean-dist -d
 }
 run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_131
@@ -1370,7 +1367,7 @@ checkpoint_143() {
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
     cd ~/
-    sudo -E emerge pulseaudio-qt 2>/dev/null
+    sudo -E emerge media-sound/pulseaudio-ctl
     git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
     cd alsa-ucm-conf-cros
     sudo mkdir -p /usr/share/alsa
