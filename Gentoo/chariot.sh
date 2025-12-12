@@ -1411,6 +1411,12 @@ checkpoint_144() {
 }
 run_checkpoint 144 "xkbcomp" checkpoint_144
 
+checkpoint_145() {
+    sudo -E emerge coreutils
+    eclean-dist -d
+}
+run_checkpoint 144 "coreutils" checkpoint_145
+
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
 show_progress
