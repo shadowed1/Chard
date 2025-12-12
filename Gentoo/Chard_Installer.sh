@@ -2121,11 +2121,12 @@ CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
-    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp
+    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
 fi
 
 sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
-$CHARD_ROOT/etc/pulse/default.pa.d/
+sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
+sudo mkdir -p $CHARD_ROOT/etc/pulse/
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
@@ -2142,7 +2143,7 @@ sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.
 sudo sed -i \
     -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
     -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
-    "$CHARD_ROOT/etc/pulse/daemon.conf"
+    "$CHARD_ROOT/etc/pulse/daemon.conf" 2>/dev/null
 
 sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s) 2>/dev/null
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
