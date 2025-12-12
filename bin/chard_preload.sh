@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Chard LD_PRELOAD
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -46,4 +46,4 @@ for lib in "${SAFE_LIBS[@]}"; do
 done
 export LD_PRELOAD
 
-echo "${GREEN}Safe LD_PRELOAD generated with ${#SAFE_LIBS[@]} libraries ${RESET}"
+echo "${GREEN}CHARD_LD_PRELOAD generated ${RESET}${BOLD}${CYAN}${#SAFE_LIBS[@]}${RESET} ${GREEN}libraries ${RESET}"
