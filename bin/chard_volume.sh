@@ -42,21 +42,11 @@ get_volume() {
     echo "$volume"
 }
 
-muted() {
-    output=$(cras_test_client 2>/dev/null)
-    muted_line=$(echo "$output" | grep "User muted:")
-    
-    if echo "$muted_line" | grep -q "Muted"; then
-        echo "0"
-    else
-        get_volume
-    fi
-}
-
 update_volume() {
     volume=$(get_volume)
     hdmi=$(get_hdmi)
     bluetooth=$(get_bluetooth)
+    bluetooth=$(get_usb)
     
     if [ -n "$volume" ]; then
         tmp="$CHARD_ROOT/$CHARD_HOME/.chard_volume.tmp"
@@ -74,6 +64,12 @@ update_volume() {
         tmp_bluetooth="$CHARD_ROOT/$CHARD_HOME/.chard_bluetooth.tmp"
         echo "$bluetooth" > "$tmp_bluetooth"
         mv "$tmp_bluetooth" "$CHARD_ROOT/$CHARD_HOME/.chard_bluetooth"
+    fi
+
+    if [ -n "$usb" ]; then
+        tmp_usb="$CHARD_ROOT/$CHARD_HOME/.chard_usb.tmp"
+        echo "$usb" > "$tmp_usb"
+        mv "$tmp_usb" "$CHARD_ROOT/$CHARD_HOME/.chard_usb"
     fi
 }
 
