@@ -574,6 +574,10 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chardonnay.sh"         -o "$CHARD_ROOT/bin/chardonnay"
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_volume.sh"         -o "$CHARD_ROOT/bin/chard_volume"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardwire.sh"         -o "$CHARD_ROOT/bin/chardwire"
+sleep 0.2
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -589,6 +593,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
 sudo chmod +x "$CHARD_ROOT/bin/chardonnay"
+sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
+sudo chmod +x "$CHARD_ROOT/bin/chardwire"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
