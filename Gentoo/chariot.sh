@@ -1416,12 +1416,13 @@ run_checkpoint 145 "coreutils" checkpoint_145
 
 checkpoint_146() {
      sudo -E emerge media-libs/libpulse
+     sudo -E emerge media-sound/pulseaudio-daemon
      sudo -E emerge media-sound/alsa-utils
      sudo -E emerge pavucontrol
      mv ~/.config/pulse/default.pa ~/.config/pulse/default.pa.bak 2>/dev/null
      eclean-dist -d
 }
-run_checkpoint 146 "coreutils" checkpoint_146
+run_checkpoint 146 "pulseaudio" checkpoint_146
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
