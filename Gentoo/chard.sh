@@ -260,29 +260,6 @@ export PYTHONMULTIPROCESSING_START_METHOD=fork
         "$@"
 }
 
-chard_reinstall() {
-    if [ -z "$CHARD_ROOT" ]; then
-        echo "Error: CHARD_ROOT not found."
-        exit 1
-    fi
-
-    local script="$CHARD_ROOT/Reinstall_Chard.sh"
-
-    if [ -d "$CHARD_ROOT" ]; then
-        if [ -x "$script" ]; then
-            echo "Reinstalling Chard..."
-            sudo bash "$script"
-        else
-            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-            sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-            $CHARD_ROOT/bin/Reinstall_Chard.sh
-        fi
-    else
-        echo "${RED}Installation directory not found: $CHARD_ROOT ${RESET}"
-        exit 1
-    fi
-}
-
 chard_uninstall() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "Error: CHARD_ROOT not found."
@@ -329,9 +306,6 @@ case "$cmd" in
         echo "  SMRT or SMRT <1-100>            -- For compiling, auto allocate threads or specify in % how many threads you want to allocate."
         echo "${RESET}"
         echo
-        ;;
-    reinstall)
-        chard_reinstall
         ;;
     uninstall)
          chard_uninstall
