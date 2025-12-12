@@ -223,13 +223,6 @@ else
     fi
 fi
 
-if [[ -f "$CHECKPOINT_FILE" ]]; then
-    CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
-else
-    echo "0" | sudo tee "$CHECKPOINT_FILE" >/dev/null
-    CURRENT_CHECKPOINT=0
-fi
-
 trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Exiting${RESET}"; exit 1' SIGINT
 
 run_checkpoint() {
