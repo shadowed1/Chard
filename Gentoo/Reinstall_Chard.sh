@@ -319,6 +319,8 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chardonnay.sh"         -o "$CHARD_ROOT/bin/chardonnay"
                 sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"         -o "$CHARD_ROOT/bin/chard_preload"
+                sleep 0.2
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -333,6 +335,7 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
                 sudo chmod +x "$CHARD_ROOT/bin/chardonnay"
+                sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
