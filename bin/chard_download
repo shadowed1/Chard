@@ -16,7 +16,7 @@ echo "${CYAN}╔═════════════════════�
 echo "${CYAN}║                                            ║${RESET}${MAGENTA} ║                                            ║${RESET}"
 echo "${CYAN}║${BOLD}   Option 1 - Chard Arch:${RESET}${CYAN}                   ║${RESET}${MAGENTA} ║${BOLD}   Option 2 - Chard Gentoo:${RESET}${MAGENTA}                 ║${RESET}"           
 echo "${CYAN}║                                            ║${RESET}${MAGENTA} ║                                            ║${RESET}"           
-echo "${CYAN}║ - Installs 10x faster than Chard Gentoo.   ║${RESET}${MAGENTA} ║ - Export toolchain directly to ChromeOS.   ║${RESET}"          
+echo "${CYAN}║ - Installs 10x faster than Chard Gentoo.   ║${RESET}${MAGENTA} ║ - Export Sommelier directly to ChromeOS.   ║${RESET}"          
 echo "${CYAN}║ - Supports Steam, Heroic, and most games.  ║${RESET}${MAGENTA} ║ - Recommended for ChromeOS developing.     ║${RESET}"           
 echo "${CYAN}║ - Multilib support for x86_64.             ║${RESET}${MAGENTA} ║ - Optimized builds for applications.       ║${RESET}"
 echo "${CYAN}║                                            ║${RESET}${MAGENTA} ║                                            ║${RESET}"
