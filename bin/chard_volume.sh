@@ -22,6 +22,17 @@ get_bluetooth() {
     fi
 }
 
+get_usb() {
+    output=$(cras_test_client 2>/dev/null)
+    
+    usb_line=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "USB" | grep "yes" | head -n 1)
+    
+    if [ -n "$usb_line" ]; then
+        usb_name=$(echo "$usb_line" | sed -n 's/.*USB[[:space:]]*[0-9]*\*\?//p')
+        echo "$usb_name"
+    fi
+}
+
 get_volume() {
     output=$(cras_test_client 2>/dev/null)
     volume=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "yes" | grep -E "INTERNAL_SPEAKER|HEADPHONE|HDMI|BLUETOOTH" | awk '{print $3}')
