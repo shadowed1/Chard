@@ -717,15 +717,9 @@ EOF
             
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
-    if [ -d "/usr/share/fydeos_shell" ]; then
-        DEFAULT_BASHRC="$HOME/.bashrc"
-        BASHRC_PATH="$DEFAULT_BASHRC"
-        IS_CHROMEOS=0
-    else
         CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
         BASHRC_PATH="$CHROMEOS_BASHRC"
         IS_CHROMEOS=1
-    fi
 else
     DEFAULT_BASHRC="$HOME/.bashrc"
     BASHRC_PATH="$DEFAULT_BASHRC"
