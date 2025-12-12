@@ -37,6 +37,15 @@ get_volume() {
     echo "$volume"
 }
 
+is_muted() {
+    if cras_test_client 2>/dev/null | grep -q "User muted: Muted"; then
+        echo "1"
+    else
+        echo "0"
+    fi
+}
+
+
 update_volume() {
     volume=$(get_volume)
     hdmi=$(get_hdmi)
@@ -65,6 +74,12 @@ update_volume() {
         tmp_usb="$CHARD_ROOT/$CHARD_HOME/.chard_usb.tmp"
         echo "$usb" > "$tmp_usb"
         mv "$tmp_usb" "$CHARD_ROOT/$CHARD_HOME/.chard_usb"
+    fi
+
+    if [ -n "$muted" ]; then
+        tmp_muted="$CHARD_ROOT/$CHARD_HOME/.chard_muted.tmp"
+        echo "$muted" > "$tmp_muted"
+        mv "$tmp_muted" "$CHARD_ROOT/$CHARD_HOME/.chard_muted"
     fi
 }
 
