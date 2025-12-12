@@ -11,8 +11,6 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-
-CHARD_ROOT="/usr/local/chard"
 SAFE_PRELOAD_FILE="$CHARD_ROOT/.chard_safe_preload"
 sudo rm -f "$SAFE_PRELOAD_FILE"
 TEST_CMD="curl --version 2>/dev/null"
