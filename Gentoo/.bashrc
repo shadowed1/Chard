@@ -301,7 +301,7 @@ export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval "$(dbus-launch --sh-syntax --exit-with-session)"
+    eval "$(dbus-launch --sh-syntax )"
     export DBUS_SESSION_BUS_ADDRESS
     export DBUS_SESSION_BUS_PID
 fi
@@ -312,9 +312,6 @@ sudo tee "/.chard_dbus" >/dev/null <<EOF
 export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
-
-export DBUS_SESSION_BUS_ADDRESS="$CHARD_DBUS_ADDRESS"
-export DBUS_SESSION_BUS_PID
 
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
