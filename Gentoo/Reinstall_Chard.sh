@@ -908,7 +908,7 @@ sudo mkdir -p /media
                     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
                     sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
                 fi
-                source $CHARD_ROOT/.chardrc
+                source "$CHARD_ROOT/.chardrc"
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 echo
                 ;;
