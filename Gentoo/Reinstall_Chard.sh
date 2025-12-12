@@ -889,8 +889,6 @@ sudo mkdir -p /media
                 sleep 0.2
                 sudo setfacl -Rb /run/chrome 2>/dev/null
                 echo
-                echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
-                echo
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
