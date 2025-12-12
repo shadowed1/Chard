@@ -8,6 +8,16 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libmagic.so.1"
     "$CHARD_ROOT/usr/lib64/libseccomp.so.2"
     "$CHARD_ROOT/usr/lib64/libstdc++.so.6"
+    "$CHARD_ROOT/usr/lib64/libXfont2.so.2"
+    "$CHARD_ROOT/usr/lib64/libxcvt.so.0"
+    "$CHARD_ROOT/usr/lib64/libxshmfence.so.1"
+    "$CHARD_ROOT/usr/lib64/libfontenc.so.1"
+    "$CHARD_ROOT/usr/lib64/libei.so.1"
+    "$CHARD_ROOT/usr/lib64/liboeffis.so.1"
+    "$CHARD_ROOT/usr/lib64/libdecor-0.so.0"
+    "$CHARD_ROOT/usr/lib64/libsystemd.so.0"
+    "$CHARD_ROOT/usr/lib64/libGL.so.1"
+    "$CHARD_ROOT/usr/lib64/libGLX.so.0"
 )
 
 LD_PRELOAD=""
