@@ -1370,6 +1370,7 @@ checkpoint_143() {
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
     cd ~/
+    sudo -E emerge pulseaudio-qt 2>/dev/null
     git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
     cd alsa-ucm-conf-cros
     sudo mkdir -p /usr/share/alsa
