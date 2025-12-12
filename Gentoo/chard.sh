@@ -44,7 +44,7 @@ chard_unmount() {
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+        #sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
         sleep 0.2
