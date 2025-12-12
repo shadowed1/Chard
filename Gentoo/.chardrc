@@ -44,13 +44,13 @@ else
     IS_CHROMEOS=0
 fi
 
-[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
-[ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
+source "$CHARD_ROOT/.chard.env"
+source "$CHARD_ROOT/.chard.logic"
+source "$CHARD_ROOT/.chard_dbus"
 
 if [ "$IS_CHROMEOS" -eq 1 ]; then
-    [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
-    [ -f "$CHARD_ROOT/.chard_safe_preload" ] && source "$CHARD_ROOT/.chard_safe_preload"
-    [ -f "$CHARD_ROOT/.chard.dbus" ] && source "$CHARD_ROOT/.chard_dbus"
+    source "$CHARD_ROOT/.chard.preload"
+    source "$CHARD_ROOT/.chard_safe_preload"
 fi
 
 alias cr='chard root'
