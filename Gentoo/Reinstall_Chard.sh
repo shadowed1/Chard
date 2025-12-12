@@ -715,17 +715,67 @@ EOF
                 # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
                 "$CHARD_ROOT/bin/chard_sommelier"
             
-                PULSEHOME="$CHARD_ROOT/$CHARD_HOME/.config/pulse"
-                sudo mkdir -p "$PULSEHOME"
-                sudo tee "${PULSEHOME}/default.pa" > /dev/null <<'EOF'
-#!/usr/bin/pulseaudio -nF
-# Copyright (c) 2016 The crouton Authors. All rights reserved.
-.include /etc/pulse/default.pa
-load-module module-alsa-sink device=cras sink_name=cras-sink
-load-module module-alsa-source device=cras source_name=cras-source
-set-default-sink cras-sink
-set-default-source cras-source
+
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    if [ -d "/usr/share/fydeos_shell" ]; then
+        DEFAULT_BASHRC="$HOME/.bashrc"
+        BASHRC_PATH="$DEFAULT_BASHRC"
+        IS_CHROMEOS=0
+    else
+        CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+        BASHRC_PATH="$CHROMEOS_BASHRC"
+        IS_CHROMEOS=1
+    fi
+else
+    DEFAULT_BASHRC="$HOME/.bashrc"
+    BASHRC_PATH="$DEFAULT_BASHRC"
+    IS_CHROMEOS=0
+fi
+
+if [ "$IS_CHROMEOS" -eq 1 ]; then
+    sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
+pcm.!default {
+        type cras
+}
+ctl.!default {
+        type cras
+}
 EOF
+else
+sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
+pcm.!default {
+        type pipewire
+}
+ctl.!default {
+        type pipewire
+}
+EOF
+echo
+fi
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
+load-module module-alsa-sink device=default sink_name=cras_sink
+set-default-sink cras_sink
+load-module module-suspend-on-idle
+EOF
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
+unload-module module-udev-detect
+unload-module module-alsa-card
+EOF
+
+sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s) 2>/dev/null
+sudo sed -i \
+    -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
+    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
+    "$CHARD_ROOT/etc/pulse/daemon.conf"
+
+sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s) 2>/dev/null
+grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
+( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
+mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
+sudo mkdir -p /media
+
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
                 chard_unmount
 
