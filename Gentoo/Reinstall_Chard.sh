@@ -319,6 +319,11 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"         -o "$CHARD_ROOT/bin/chard_preload"
                 sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardwire.sh"         -o "$CHARD_ROOT/bin/chardwire"
+                sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_volume.sh"         -o "$CHARD_ROOT/bin/chard_volume"
+                sleep 0.2
+                
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -333,6 +338,9 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
                 sudo chmod +x "$CHARD_ROOT/bin/chardonnay"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
+                sudo chmod +x "$CHARD_ROOT/bin/chardwire"
+                sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
+
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
