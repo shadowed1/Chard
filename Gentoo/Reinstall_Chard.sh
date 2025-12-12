@@ -287,8 +287,6 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
                 sleep 0.2
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
-                sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
@@ -327,7 +325,6 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chariot"
                 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
-                sudo chmod +x "$CHARD_ROOT/bin/Reinstall_Chard.sh"
                 sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
