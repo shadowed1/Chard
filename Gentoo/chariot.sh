@@ -1170,7 +1170,7 @@ run_checkpoint 126 "sudo -E emerge firefox" checkpoint_126
 checkpoint_127() {
     sudo chown -R 1000:1000 ~/
     sudo -E emerge dev-util/vulkan-tools
-    sudo -E emerge app-eselect/eselect-repository dev-vcs/git
+    sudo -E emerge app-eselect/eselect-repository
     sudo -E eselect repository enable another-brave-overlay
     sudo -E emerge --sync another-brave-overlay
     sudo -E emerge www-client/brave-browser::another-brave-overlay
@@ -1356,10 +1356,9 @@ run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
 checkpoint_142() {
     sudo -E emerge gedit
-    sudo -E emerge dev-vcs/git
     eclean-dist -d
 }
-run_checkpoint 142 "sudo -E emerge gedit and git rebuilt" checkpoint_142
+run_checkpoint 142 "sudo -E emerge gedit" checkpoint_142
 
 checkpoint_143() {
     ARCH=$(uname -m)
