@@ -35,7 +35,7 @@ echo "   CC${RESET}${YELLOW}:::::::::::::::${RESET}${GREEN}CH${RESET}${YELLOW}::
 echo "  C${RESET}${YELLOW}:::::${RESET}${GREEN}CCCCCCCC${RESET}${YELLOW}::::${RESET}${GREEN}CHH${RESET}${YELLOW}::::::${RESET}${GREEN}H     H${RESET}${YELLOW}::::::${RESET}${GREEN}HH            A${RESET}${RED}::::::::::${RESET}${GREEN}A            RR${RESET}${YELLOW}:::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}RDDD${RESET}${YELLOW}:::::${RESET}${GREEN}DDDDD${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
 echo " C${RESET}${YELLOW}:::::${RESET}${GREEN}C       CCCCCC  H${RESET}${YELLOW}:::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::${RESET}${GREEN}H             A${RESET}${RED}::::::::::::${RESET}${GREEN}A             R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
 echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}:::::${RESET}${GREEN}H     H${RESET}${YELLOW}:::::${RESET}${GREEN}H            A${RESET}${RED}::::::::::::::${RESET}${GREEN}A            R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"
-echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}::::::${RESET}${GREEN}HHHHH${RESET}${YELLOW}::::::${RESET}${GREEN}H           A${RESET}${RED}::            ::${RESET}${GREEN}A           R${RESET}${YELLOW}::::${RESET}${GREEN}RRRRRR${RESET}${YELLOW}:::::${RESET}${GREEN}R   D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
+echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}::::::${RESET}${GREEN}HHHHH${RESET}${YELLOW}::::::${RESET}${GREEN}H     n      A${RESET}${RED}::            ::${RESET}${GREEN}A           R${RESET}${YELLOW}::::${RESET}${GREEN}RRRRRR${RESET}${YELLOW}:::::${RESET}${GREEN}R   D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"  
 echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}:::::::::::::::::${RESET}${GREEN}H          A${RESET}${RED}:::            :::${RESET}${GREEN}A          R${RESET}${YELLOW}:::::::::::::${RESET}${GREEN}RR    D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"
 echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}:::::::::::::::::${RESET}${GREEN}H         A${RESET}${RED}::::            ::::${RESET}${GREEN}A         R${RESET}${YELLOW}::::${RESET}${GREEN}RRRRRR${RESET}${YELLOW}:::::${RESET}${GREEN}R   D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"    
 echo "C${RESET}${YELLOW}:::::${RESET}${GREEN}C                H${RESET}${YELLOW}::::::${RESET}${GREEN}HHHHH${RESET}${YELLOW}::::::${RESET}${GREEN}H        A${RESET}${RED}:::::            :::::${RESET}${GREEN}A        R${RESET}${YELLOW}::::${RESET}${GREEN}R     R${RESET}${YELLOW}:::::${RESET}${GREEN}R  D${RESET}${YELLOW}:::::${RESET}${GREEN}D     D${RESET}${YELLOW}:::::${RESET}${GREEN}D"    
@@ -453,8 +453,6 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/cha
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"            -o "$CHARD_ROOT/bin/chard_preload" 2>/dev/null
 sleep 0.2
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chardonnay.sh"            -o "$CHARD_ROOT/bin/chardonnay" 2>/dev/null
-sleep 0.2
 
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -474,7 +472,6 @@ sudo chmod +x "$CHARD_ROOT/bin/chardwire"
 sudo chmod +x "$CHARD_ROOT/.chard.preload"
 sudo chmod +x "$CHARD_ROOT/bin/chard_ucm"
 sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
-sudo chmod +x "$CHARD_ROOT/bin/chardonnay"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
