@@ -196,7 +196,22 @@ echo "                  ####  ####                ##          ##"
 echo ""
 echo ""
 echo "${RESET}"
-                                                                                              
+
+CHECKPOINT_OVERRIDE=""
+
+if [[ "$1" =~ ^[0-9]+$ ]]; then
+    CHECKPOINT_OVERRIDE=$1
+    echo "${MAGENTA}Checkpoint override requested: $CHECKPOINT_OVERRIDE${RESET}"
+    CURRENT_CHECKPOINT=$((CHECKPOINT_OVERRIDE - 1))
+    echo "$CURRENT_CHECKPOINT" | sudo tee "$CHECKPOINT_FILE" >/dev/null
+else
+    if [[ -f "$CHECKPOINT_FILE" ]]; then
+        CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
+    else
+        CURRENT_CHECKPOINT=0
+        echo "$CURRENT_CHECKPOINT" | sudo tee "$CHECKPOINT_FILE" >/dev/null
+    fi
+fi
 
 CHECKPOINT_FILE="/.chard_checkpoint"
 echo
