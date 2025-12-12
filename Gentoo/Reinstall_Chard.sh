@@ -754,7 +754,8 @@ fi
 
 sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/daemon.conf"  -o "$CHARD_ROOT/etc/pulse/daemon.conf"
-
+sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
+sudo mkdir -p $CHARD_ROOT/etc/pulse/
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
