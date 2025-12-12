@@ -208,6 +208,9 @@
 - `chard cat` -- List Portage catalogues.
 - `chard help` -- Show help examples.
 - `chard chariot` or `chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
+- `chariot 144` -- Resume on checkpoint 144 and continue until Chariot finishes.
+- `chariot -s 90` -- Resume on checkpoint 90 and exit after finishing that specific checkpoint.
+- `chardonnay` -- Launch Sommelier in ChromeOS natively (WIP).
 - `chard version` -- Check for updates
 
 *Inside Chard Root*
@@ -218,8 +221,8 @@
 - Refresh a new shell after adjusting scaling.
 
 - Prepend `wx` to an app to try wayland and x11 if unsure.
-- `chard mount` to mount a USB device (ignores SSD and USB devices) for UNetBootin.
-- `chard unmount` or `exit` to unmount the device.
+- `chard_mount` to mount a USB device (ignores SSD and USB devices) for UNetBootin.
+- `chard_unmount` or `exit` to unmount the device.
 - Prepend `root` to an app that requires user namespace creation and it might work.
 - `exit` -- Leave Chard Root
 
