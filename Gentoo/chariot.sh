@@ -1362,6 +1362,21 @@ echo "Chard Root is Ready! ${RESET}"
 show_progress
 
 case "$1" in
-    reset) reset ;;
-    *) run_checkpoint ;;
+    reset)
+        reset
+        ;;
+    ''|*[!0-9]*)
+        if [[ -f "$CHECKPOINT_FILE" ]]; then
+            CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
+        else
+            echo "0" | sudo tee "$CHECKPOINT_FILE" >/dev/null
+            CURRENT_CHECKPOINT=0
+        fi
+        ;;
+    [0-9]*)
+        CHECKPOINT_OVERRIDE=$1
+        echo "${MAGENTA}Setting checkpoint to $CHECKPOINT_OVERRIDE ${RESET}"
+        echo "$CHECKPOINT_OVERRIDE" | sudo tee "$CHECKPOINT_FILE" >/dev/null
+        CURRENT_CHECKPOINT=$CHECKPOINT_OVERRIDE
+        ;;
 esac
