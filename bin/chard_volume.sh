@@ -42,6 +42,17 @@ get_volume() {
     echo "$volume"
 }
 
+muted() {
+    output=$(cras_test_client 2>/dev/null)
+    muted_line=$(echo "$output" | grep "User muted:")
+    
+    if echo "$muted_line" | grep -q "Muted"; then
+        echo "0"
+    else
+        get_volume
+    fi
+}
+
 update_volume() {
     volume=$(get_volume)
     hdmi=$(get_hdmi)
