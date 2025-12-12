@@ -306,6 +306,7 @@ case "$cmd" in
                 sudo chmod 770 /run/chrome/pulse
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
+                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 cd ~/
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
