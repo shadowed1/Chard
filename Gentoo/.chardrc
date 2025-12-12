@@ -48,7 +48,8 @@ fi
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
 if [ "$IS_CHROMEOS" -eq 1 ]; then
-    [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
+    [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard_safe_preload"
+    [ -f "$CHARD_ROOT/.chard.dbus" ] && source "$CHARD_ROOT/.chard_dbus"
 fi
 
 alias cr='chard root'
