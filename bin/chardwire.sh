@@ -49,7 +49,7 @@ apply_volume() {
         LAST_MUTED="$muted"
         if command -v wpctl >/dev/null 2>&1; then
             wpctl set-mute @DEFAULT_AUDIO_SINK@ "$muted" 2>/dev/null
-            echo "${CYAN}wpctl: ${RESET}$([ "$muted" = "1" ] && echo "${YELLOW}Muted${RESET}" || echo "${GREEN}Unmuted${RESET}")"
+            echo "${CYAN}Chardwire: ${RESET}$([ "$muted" = "1" ] && echo "${RED}Muted${RESET}" || echo "${YELLOW}Unmuted${RESET}")"
         fi
         if command -v pactl >/dev/null 2>&1; then
             SINK=$(pactl get-default-sink 2>/dev/null)
