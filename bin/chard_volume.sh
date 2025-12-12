@@ -33,7 +33,7 @@ get_usb() {
 
 get_volume() {
     output=$(cras_test_client 2>/dev/null)
-    volume=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "yes" | grep -E "INTERNAL_SPEAKER|HEADPHONE|HDMI|BLUETOOTH" | awk '{print $3}')
+    volume=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "yes" | grep -E "INTERNAL_SPEAKER|HEADPHONE|HDMI|BLUETOOTH|USB" | awk '{print $3}')
     echo "$volume"
 }
 
