@@ -44,9 +44,9 @@ else
     IS_CHROMEOS=0
 fi
 
-source "$CHARD_ROOT/.chard.env"
-source "$CHARD_ROOT/.chard.logic"
-source "$CHARD_ROOT/.chard_dbus"
+source "$CHARD_ROOT/.chard.env" 2>/dev/null
+source "$CHARD_ROOT/.chard.logic" 2>/dev/null
+source "$CHARD_ROOT/.chard_dbus" 2>/dev/null
 
 if [ "$IS_CHROMEOS" -eq 1 ]; then
     source "$CHARD_ROOT/.chard.preload"
