@@ -64,11 +64,11 @@ chard() {
     esac
 }
 
+alias cs='chard safe'
 alias cu='chard unmount'
 alias cr='chard root'
 alias smrt='SMRT'
 alias chariot='chard chariot'
-alias safe='chard safe'
 #alias emerge='emerge --root="$CHARD_ROOT" --sysroot="$CHARD_ROOT" --config-root="$CHARD_ROOT" --root-deps=rdeps'
 CR="$CHARD_ROOT"
 #CH="$CHARD_HOME"
