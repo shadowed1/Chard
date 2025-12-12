@@ -52,7 +52,7 @@ chard() {
     esac
 }
 
-alias safe='chard safe'
+alias cs='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
 alias cu='chard unmount'
