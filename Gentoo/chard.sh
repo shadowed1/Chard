@@ -337,6 +337,15 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
+        chard_volume > /dev/null 2>&1 &
+        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+        killall -9 pipewire 2>/dev/null
+        killall -9 pipewire-pulse 2>/dev/null
+        killall -9 pulseaudio 2>/dev/null
+        killall -9 steam 2>/dev/null
+        sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+        sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
         sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
         
@@ -349,6 +358,7 @@ case "$cmd" in
         fi
         
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+        sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
         
@@ -396,20 +406,36 @@ case "$cmd" in
                     fi
                 }
                 trap cleanup EXIT INT TERM
-                
-                
+                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+                killall -9 pipewire 2>/dev/null
+                killall -9 pipewire-pulse 2>/dev/null
+                killall -9 pulseaudio 2>/dev/null
+                sudo chown -R 1000:audio /dev/snd
+                sudo chown -R 1000:1000 /dev/snd/by-path
+                sudo mkdir -p /run/chrome/pulse
+                sudo chown 1000:1000 /run/chrome/pulse
+                sudo chmod 770 /run/chrome/pulse
+                sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
-                pipewire 2>/dev/null & 
-                pipewire-pulse 2>/dev/null &
-                pulseaudio 2>/dev/null &
-                PULSEAUDIO_PID=\"\$!\"
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
+            setfacl -Rb /run/chrome/pulse 2>/dev/null
+            setfacl -Rb /run/chrome 2>/dev/null
+            killall -9 pipewire 2>/dev/null
+            killall -9 pipewire-pulse 2>/dev/null
+            killall -9 pulseaudio 2>/dev/null
+            killall -9 chardwire 2>/dev/null
+            sudo chown -R root:audio /dev/snd 2>/dev/null
+            sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+            setfacl -Rb /root 2>/dev/null
             umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
+            umount -l /run/udev    2>/dev/null || true
+            umount -l /run/dbus    2>/dev/null || true
             umount -l /etc/ssl     2>/dev/null || true
             umount -l /dev/pts     2>/dev/null || true
             umount -l /dev/shm     2>/dev/null || true
@@ -417,7 +443,7 @@ case "$cmd" in
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         '
-        
+        killall -9 chard_volume 2>/dev/null
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -457,9 +483,16 @@ case "$cmd" in
         sudo setfacl -Rb /run/chrome 2>/dev/null
         echo
         echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
-        echo        killall -9 pipewire 2>/dev/null
+        sudo rm -f /run/chrome/pulse/native
+        sudo rm -f /run/chrome/pulse/*
+        sudo mkdir -p /run/chrome/pulse
+        sudo chown chronos:chronos /run/chrome/pulse
+        sudo chmod 770 /run/chrome/pulse
+        killall -9 cras_test_client 2>/dev/null
+        killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
+        killall -9 steam 2>/dev/null
         sudo pkill -f xfce4-session
         sudo pkill -f xfwm4
         sudo pkill -f xfce4-panel
