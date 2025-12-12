@@ -752,7 +752,7 @@ ctl.!default {
 EOF
 echo
 fi
-
+sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
 set-default-sink cras_sink
@@ -911,7 +911,7 @@ sudo mkdir -p /media
                 if [ -f "$CHROMEOS_BASHRC" ]; then
                     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
                     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
-                    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp
+                    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
                 fi
 
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
