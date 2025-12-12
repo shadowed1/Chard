@@ -10,16 +10,11 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 CHARD_ROOT="/usr/local/chard"
-TEST_CMD="/bin/true"
+TEST_CMD="curl --version 2>/dev/null"
 
 LD_PRELOAD_LIBS=()
 SAFE_LIBS=()
 BLACKLIST_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
-echo
-echo "${BOLD}${GREEN}Chard Preload can take several minutes to build. Press ctrl-c to cancel at anytime! ${RESET}"
-echo "${GREEN}Starting in 5 seconds... ${RESET}"
-echo
-sleep 5
 
 for lib in "$CHARD_ROOT/lib64"/*.so*; do
     [[ -f "$lib" ]] || continue
@@ -38,10 +33,10 @@ for lib in "${LD_PRELOAD_LIBS[@]}"; do
     LD_PRELOAD="$CANDIDATE" $TEST_CMD >/dev/null 2>/dev/null
     if [[ $? -eq 0 ]]; then
         SAFE_LIBS+=("$lib")
-        echo "${GREEN}Adding $lib${RESET}"
+        echo "${GREEN}Added $lib${RESET}"
         LD_PRELOAD="$CANDIDATE"
     else
-        echo "${YELLOW}Skipping $lib ${RESET}"
+        echo "${YELLOW}Skipping $lib (breaks command)${RESET}"
     fi
 done
 
@@ -51,4 +46,4 @@ for lib in "${SAFE_LIBS[@]}"; do
 done
 export LD_PRELOAD
 
-echo "${CYAN}Safe LD_PRELOAD generated with ${#SAFE_LIBS[@]} libraries! ${RESET}"
+echo "${GREEN}Safe LD_PRELOAD generated with ${#SAFE_LIBS[@]} libraries ${RESET}"
