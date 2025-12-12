@@ -126,16 +126,20 @@ export PULSE_SERVER=unix:/run/chrome/pulse/native
 fi
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval "$(dbus-launch --sh-syntax )"
+    eval "$(dbus-launch --sh-syntax --exit-with-session)"
     export DBUS_SESSION_BUS_ADDRESS
     export DBUS_SESSION_BUS_PID
 fi
 
-CHARD_DBUS_ADDRESS="$(echo "$DBUS_SESSION_BUS_ADDRESS" \
-    | sed "s|unix:path=/tmp/|unix:path=$CHARD_ROOT/tmp/|")"
+CHARD_DBUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS/unix:path=\/tmp\//unix:path=$CHARD_ROOT\/tmp\/}"
 
-echo "export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'" | sudo tee "/.chard_dbus" >/dev/null
-echo "export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'" | sudo tee -a "/.chard_dbus" >/dev/null
+sudo tee "/.chard_dbus" >/dev/null <<EOF
+export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
+export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
+EOF
+
+export DBUS_SESSION_BUS_ADDRESS="$CHARD_DBUS_ADDRESS"
+export DBUS_SESSION_BUS_PID
 
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
