@@ -1356,9 +1356,10 @@ run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
 checkpoint_142() {
     sudo -E emerge gedit
+    sudo -E emerge dev-vcs/git
     eclean-dist -d
 }
-run_checkpoint 142 "sudo -E emerge gedit" checkpoint_142
+run_checkpoint 142 "sudo -E emerge gedit and git rebuilt" checkpoint_142
 
 checkpoint_143() {
     ARCH=$(uname -m)
@@ -1379,26 +1380,41 @@ checkpoint_143() {
     sudo rm -rf ~/.cache/bazel 2>/dev/null
     if [[ "$ARCH" == "x86_64" ]]; then
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
+        echo "Downloading Bazel from: $BAZEL_URL"
+        sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
+        sudo chmod +x /usr/bin/bazel65
+        cd ~/
+        git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
+        cd adhd/
+        sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+        sleep 1
+        sudo mkdir -p /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib64/
+        sudo mkdir -p /etc/pipewire/pipewire.conf.d
+        cd ~/
+        rm -rf ~/adhd
     elif [[ "$ARCH" == "aarch64" ]]; then
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
+        echo "Downloading Bazel from: $BAZEL_URL"
+        sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
+        sudo chmod +x /usr/bin/bazel65
+        cd ~/
+        git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
+        cd adhd/
+        sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+        sleep 1
+        sudo mkdir -p /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib64/
+        sudo mkdir -p /etc/pipewire/pipewire.conf.d
+        cd ~/
+        rm -rf ~/adhd
     else
         echo "Unsupported architecture: $ARCH"
     fi
-    echo "Downloading Bazel from: $BAZEL_URL"
-    sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
-    sudo chmod +x /usr/bin/bazel65
-    cd ~/
-    git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
-    cd adhd/
-    sudo -E /usr/bin/bazel65 build //dist:alsa_lib
-    sleep 1
-    sudo mkdir -p /usr/lib64/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib64/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib64/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib64/
-    sudo mkdir -p /etc/pipewire/pipewire.conf.d
-    cd ~/
-    rm -rf ~/adhd
 }
 run_checkpoint 143 "xkbcomp" checkpoint_143
 
