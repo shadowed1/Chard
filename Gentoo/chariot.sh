@@ -1393,7 +1393,13 @@ checkpoint_143() {
     cd ~/
     rm -rf ~/adhd
 }
-run_checkpoint 143 "CRAS" checkpoint_142
+run_checkpoint 143 "xkbcomp" checkpoint_143
+
+checkpoint_144() {
+    sudo -E emerge xkbcomp
+    eclean-dist -d
+}
+run_checkpoint 144 "xkbcomp" checkpoint_144
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
