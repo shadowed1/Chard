@@ -130,6 +130,9 @@ if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     export DBUS_SESSION_BUS_PID
 fi
 
+echo "export DBUS_SESSION_BUS_ADDRESS='$DBUS_SESSION_BUS_ADDRESS'" | sudo tee "/.chard_dbus" >/dev/null
+echo "export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'" | sudo tee -a "/.chard_dbus" >/dev/null
+
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
     export LIBGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
