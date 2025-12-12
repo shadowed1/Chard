@@ -746,7 +746,9 @@ ctl.!default {
 EOF
 echo
 fi
+
 sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
+
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
 set-default-sink cras_sink
