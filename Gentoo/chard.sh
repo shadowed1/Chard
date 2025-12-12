@@ -337,14 +337,6 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
-        #sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
-        #sudo mount --bind "$CHARD_ROOT/$CHARD_HOME" "$CHARD_ROOT/$CHARD_HOME"
-        #sudo mount -o remount,exec,symfollow,suid "$CHARD_ROOT/$CHARD_HOME"
-        #sudo cp -a "$CHARD_ROOT/usr/bin/bwrap" "$CHARD_ROOT/$CHARD_HOME/" 2>/dev/null
-        #sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
-        #sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
-        #sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
-
         sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
         sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
         
@@ -437,10 +429,6 @@ case "$cmd" in
         sudo pkill -f xfce4-terminal
         sudo pkill -f xfce4-*
         sudo pkill -f Xorg
-
-        #sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap" 2>/dev/null || true
-        #sudo umount -l "$CHARD_ROOT/$CHARD_HOME" 2>/dev/null || true
-        #sudo umount -l "$CHARD_ROOT"
         ;;
     chariot)
         if [ -f "/home/chronos/user/.bashrc" ]; then
