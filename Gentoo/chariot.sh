@@ -1369,6 +1369,15 @@ checkpoint_143() {
     rm -rf ~/.config/pulse 2>/dev/null
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
+    cd ~/
+    git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
+    cd alsa-ucm-conf-cros
+    sudo mkdir -p /usr/share/alsa
+    sudo cp -r ucm2 /usr/share/alsa
+    sudo cp -r overrides /usr/share/alsa/ucm2/conf.d
+    cd ~/
+    rm -rf alsa-ucm-conf-cros
+    sleep 1
     sudo rm -rf ~/.cache/bazel 2>/dev/null
     if [[ "$ARCH" == "x86_64" ]]; then
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
