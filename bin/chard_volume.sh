@@ -2,7 +2,6 @@
 
 get_hdmi() {
     output=$(cras_test_client 2>/dev/null)
-    
     hdmi_line=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "HDMI" | grep "yes" | head -n 1)
     
     if [ -n "$hdmi_line" ]; then
@@ -13,7 +12,6 @@ get_hdmi() {
 
 get_bluetooth() {
     output=$(cras_test_client 2>/dev/null)
-    
     bluetooth_line=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "BLUETOOTH" | grep "yes" | head -n 1)
     
     if [ -n "$bluetooth_line" ]; then
@@ -24,12 +22,17 @@ get_bluetooth() {
 
 get_usb() {
     output=$(cras_test_client 2>/dev/null)
+    usb_node=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "USB" | grep "yes" | head -n 1)
     
-    usb_line=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "USB" | grep "yes" | head -n 1)
-    
-    if [ -n "$usb_line" ]; then
-        usb_name=$(echo "$usb_line" | sed -n 's/.*USB[[:space:]]*[0-9]*\*\?//p')
-        echo "$usb_name"
+    if [ -n "$usb_node" ]; then
+        device_id=$(echo "$usb_node" | awk '{print $2}' | cut -d':' -f1)
+        usb_name=$(echo "$output" | grep "Output Devices:" -A 50 | grep "^[[:space:]]*${device_id}[[:space:]]" | awk '{$1=$2=$3=""; print $0}' | sed 's/^[[:space:]]*//')
+        
+        if [ -n "$usb_name" ]; then
+            echo "$usb_name"
+        else
+            echo "(default)"
+        fi
     fi
 }
 
