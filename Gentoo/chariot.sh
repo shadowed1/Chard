@@ -273,9 +273,11 @@ checkpoint_10() {
 run_checkpoint 10 "sudo -E emerge net-misc/curl" checkpoint_10
 
 checkpoint_11() {
-    sudo -E emerge dev-vcs/git
+    USE="curl" sudo -E emerge dev-vcs/git
     rm -rf /var/tmp/portage/dev-vcs/git-*
     eclean-dist -d
+    GIT_CURL_VERBOSE=1 GIT_TRACE=1 git ls-remote https://github.com/torvalds/linux.git HEAD 2>&1 | head -50
+    GIT_EXEC_PATH=/usr/libexec/git-core
 }
 run_checkpoint 11 "sudo -E emerge dev-vcs/git" checkpoint_11
 
@@ -1381,6 +1383,7 @@ checkpoint_143() {
         echo "Downloading Bazel from: $BAZEL_URL"
         sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
         sudo chmod +x /usr/bin/bazel65
+        rm -rf ~/adhd
         cd ~/
         git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
         cd adhd/
