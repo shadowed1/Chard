@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Chariot
 
@@ -197,30 +196,48 @@ echo ""
 echo ""
 echo "${RESET}"
 
+echo
+echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! ${RESET}"
+echo "${RESET}${GREEN}Run the command: ${BLUE}${BOLD}chariot${RESET}${YELLOW} in ChromeOS shell to resume..."
+echo
+echo "${RESET}${BLUE}Example to resume from a specific checkpoint: ${RESET}${MAGENTA}${BOLD}chariot 137${RESET}"
+echo "${RESET}${RED}${BOLD}chariot reset${RESET}${RED} to reset to checkpoint 1.${RESET}${GREEN}"
+echo
+echo "Starting in 10 seconds... ${RESET}"
+sleep 8
+
 CHECKPOINT_FILE="/.chard_checkpoint"
-echo
-echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! Run:${RESET}${BLUE}${BOLD}"
-echo
-echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
-echo
-echo "${RESET}${BLUE}${BOLD}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
-echo
-sleep 5
+
+if [[ -z "$CHECKPOINT_FILE" || "${CHECKPOINT_FILE:0:1}" != "/" ]]; then
+    echo "${RED}FATAL: CHECKPOINT_FILE is not set correctly: '$CHECKPOINT_FILE'${RESET}"
+    exit 1
+fi
+
+echo "DEBUG: checkpoint file is '$CHECKPOINT_FILE'"
+
+if [[ ! -e "$CHECKPOINT_FILE" ]]; then
+    sudo bash -c "echo 0 > '$CHECKPOINT_FILE'" || { echo "${RED}Cannot create $CHECKPOINT_FILE${RESET}"; exit 1; }
+fi
+
+CURRENT_CHECKPOINT=$(sudo cat "$CHECKPOINT_FILE" 2>/dev/null || echo "0")
+if ! [[ "$CURRENT_CHECKPOINT" =~ ^[0-9]+$ ]]; then
+    CURRENT_CHECKPOINT=0
+fi
 
 CHECKPOINT_OVERRIDE=""
 
 if [[ "$1" =~ ^[0-9]+$ ]]; then
     CHECKPOINT_OVERRIDE=$1
     echo "${MAGENTA}Checkpoint override requested: $CHECKPOINT_OVERRIDE${RESET}"
+
     CURRENT_CHECKPOINT=$((CHECKPOINT_OVERRIDE - 1))
-    echo "$CURRENT_CHECKPOINT" | sudo tee "$CHECKPOINT_FILE" >/dev/null
-else
-    if [[ -f "$CHECKPOINT_FILE" ]]; then
-        CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
-    else
-        CURRENT_CHECKPOINT=0
-        echo "$CURRENT_CHECKPOINT" | sudo tee "$CHECKPOINT_FILE" >/dev/null
-    fi
+    sudo bash -c "printf '%s\n' '$CURRENT_CHECKPOINT' > '$CHECKPOINT_FILE'" \
+        || { echo "${RED}Failed to write $CHECKPOINT_FILE${RESET}"; exit 1; }
+fi
+
+CURRENT_CHECKPOINT=$(sudo cat "$CHECKPOINT_FILE" 2>/dev/null || echo "$CURRENT_CHECKPOINT")
+if ! [[ "$CURRENT_CHECKPOINT" =~ ^-?[0-9]+$ ]]; then
+    CURRENT_CHECKPOINT=0
 fi
 
 trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Exiting${RESET}"; exit 1' SIGINT
