@@ -123,9 +123,28 @@ if ! [[ "$CURRENT_CHECKPOINT" =~ ^[0-9]+$ ]]; then
     CURRENT_CHECKPOINT=0
 fi
 
+SINGLE_STEP=false
+REQUESTED_STEP=""
 CHECKPOINT_OVERRIDE=""
 
-if [[ "$1" =~ ^[0-9]+$ ]]; then
+if [[ "$1" == "-s" ]]; then
+    if [[ -z "$2" || ! "$2" =~ ^[0-9]+$ ]]; then
+        echo "${RED}-s requires a numeric checkpoint${RESET}"
+        exit 1
+    fi
+    SINGLE_STEP=true
+    REQUESTED_STEP="$2"
+    CHECKPOINT_OVERRIDE=$REQUESTED_STEP
+    echo "${BOLD}${MAGENTA}Single-step requested: $REQUESTED_STEP ${RESET}"
+
+    CURRENT_CHECKPOINT=$((CHECKPOINT_OVERRIDE - 1))
+    sudo bash -c "printf '%s\n' '$CURRENT_CHECKPOINT' > '$CHECKPOINT_FILE'" \
+        || { echo "${RED}Failed to write $CHECKPOINT_FILE${RESET}"; exit 1; }
+
+    shift 2
+fi
+
+if ! $SINGLE_STEP && [[ "$1" =~ ^[0-9]+$ ]]; then
     CHECKPOINT_OVERRIDE=$1
     echo "${BOLD}${MAGENTA}Checkpoint requested: $CHECKPOINT_OVERRIDE ${RESET}"
 
@@ -152,7 +171,7 @@ run_checkpoint() {
 
     if (( CURRENT_CHECKPOINT < step )); then
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step / 143 ($desc) Starting ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step / 150 ($desc) Starting ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}"
         echo
 
         "$@"
@@ -160,7 +179,7 @@ run_checkpoint() {
 
         if (( ret != 0 )); then
             echo
-            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step / 143 ($desc) DNF ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step / 150 ($desc) DNF ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
             echo
             return $ret
         fi
@@ -169,10 +188,16 @@ run_checkpoint() {
         sync
         CURRENT_CHECKPOINT=$step
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 143 ($desc) Finished ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 150 ($desc) Finished ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
         echo
+
+        if $SINGLE_STEP && (( step == REQUESTED_STEP )); then
+            echo "${GREEN}Single-step completed: exiting after checkpoint $step${RESET}"
+            exit 0
+        fi
+
     else
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 143 ($desc) Completed ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 150 ($desc) Completed ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
         echo
     fi
 }
@@ -1387,9 +1412,11 @@ case "$1" in
         fi
         ;;
     [0-9]*)
-        CHECKPOINT_OVERRIDE=$1
-        echo "${MAGENTA}Setting checkpoint to $CHECKPOINT_OVERRIDE ${RESET}"
-        echo "$CHECKPOINT_OVERRIDE" | sudo tee "$CHECKPOINT_FILE" >/dev/null
-        CURRENT_CHECKPOINT=$CHECKPOINT_OVERRIDE
+        if ! $SINGLE_STEP; then
+            CHECKPOINT_OVERRIDE=$1
+            echo "${MAGENTA}Setting checkpoint to $CHECKPOINT_OVERRIDE ${RESET}"
+            echo "$CHECKPOINT_OVERRIDE" | sudo tee "$CHECKPOINT_FILE" >/dev/null
+            CURRENT_CHECKPOINT=$CHECKPOINT_OVERRIDE
+        fi
         ;;
 esac
