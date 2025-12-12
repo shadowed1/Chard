@@ -857,7 +857,7 @@ EOF
                 sudo pkill -f xfce4-*
                 sudo pkill -f Xorg
                 
-                $CHARD_ROOT/bin/chard_preload
+                #$CHARD_ROOT/bin/chard_preload
 
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 echo
