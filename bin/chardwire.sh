@@ -59,13 +59,27 @@ apply_volume() {
     fi
 }
 
+FILES=(
+    "$HOME/.chard_volume"
+    "$HOME/.chard_hdmi"
+    "$HOME/.chard_bluetooth"
+    "$HOME/.chard_usb"
+    "$HOME/.chard_muted"
+)
+
 if command -v inotifywait >/dev/null 2>&1; then
     while true; do
-        inotifywait -q -e modify "$VOLUME_FILE" "$MUTED_FILE" 2>/dev/null
+        inotifywait -q -e modify "${FILES[@]}" 2>/dev/null
         apply_volume
     done &
 else
-    tail -n0 -F "$VOLUME_FILE" "$MUTED_FILE" | while read -r _; do
+    tail_args=()
+    for f in "${FILES[@]}"; do
+        [ -f "$f" ] || touch "$f"
+        tail_args+=("$f")
+    done
+
+    tail -n0 -F "${tail_args[@]}" | while read -r _; do
         apply_volume
         sleep 0.1
     done &
