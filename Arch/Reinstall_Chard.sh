@@ -577,15 +577,14 @@ sudo mkdir -p /media
                     USER_ID=1000
                 
                     sudo -u "$USER" bash -c "
-    source \$HOME/.bashrc 2>/dev/null
-    sudo chown -R 1000:1000 \$HOME
-    cd \$HOME
-    sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
-    sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
-    gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
-"
-
-                    
+                        source \$HOME/.bashrc 2>/dev/null
+                        sudo chown -R 1000:1000 \$HOME
+                        cd \$HOME
+                        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+                        sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
+                        gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
+                    "
+  
                     killall -9 pipewire 2>/dev/null
                     killall -9 pulseaudio 2>/dev/null
                     umount -l /dev/zram0   2>/dev/null || true
