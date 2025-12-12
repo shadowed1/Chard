@@ -29,17 +29,17 @@ for lib in "$CHARD_ROOT/lib64"/*.so*; do
     esac
 
     if ! file "$lib" | grep -q "ELF.*shared object"; then
-        echo "${YELLOW}Skipping $lib (not a shared object)${RESET}"
+        echo "${YELLOW}$lib ${RESET}" #Not shared object
         continue
     fi
 
     LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib" $TEST_CMD >/dev/null 2>/dev/null
     if [[ $? -eq 0 ]]; then
         LD_PRELOAD_LIBS+=("$lib")
-        echo "${GREEN}${BOLD}Safe library added: $lib${RESET}"
+        echo "${GREEN}${BOLD}$lib ${RESET}"
         CURRENT_LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib"
     else
-        echo "${MAGENTA}Skipping $lib ${RESET}"
+        echo "${MAGENTA}$lib ${RESET}" #Segfault
     fi
 done
 
