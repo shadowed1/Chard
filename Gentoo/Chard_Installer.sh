@@ -2120,7 +2120,41 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 
 chard_unmount
 $CHARD_ROOT/bin/chard_preload
-sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
+    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp
+fi
+
+sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
+load-module module-alsa-sink device=default sink_name=cras_sink
+set-default-sink cras_sink
+load-module module-suspend-on-idle
+EOF
+
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
+unload-module module-udev-detect
+unload-module module-alsa-card
+EOF
+
+sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s) 2>/dev/null
+sudo sed -i \
+    -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
+    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
+    "$CHARD_ROOT/etc/pulse/daemon.conf"
+
+sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s) 2>/dev/null
+grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
+( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
+mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
+
+echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
+if [[ "$(uname -m)" == "aarch64" ]]; then
+    echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
+fi
 show_progress
 sudo cp "$CHARD_ROOT/chardbuild.log" ~/
 echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
