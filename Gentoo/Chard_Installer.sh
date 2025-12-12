@@ -570,6 +570,10 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"         -o "$CHARD_ROOT/bin/chard_preload"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardonnay.sh"         -o "$CHARD_ROOT/bin/chardonnay"
+sleep 0.2
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -583,6 +587,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
 sudo chmod +x "$CHARD_ROOT/bin/wx"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
+sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
+sudo chmod +x "$CHARD_ROOT/bin/chardonnay"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
