@@ -50,8 +50,9 @@ update_volume() {
     volume=$(get_volume)
     hdmi=$(get_hdmi)
     bluetooth=$(get_bluetooth)
-    bluetooth=$(get_usb)
-    
+    usb=$(get_usb)
+    muted=$(is_muted)
+
     if [ -n "$volume" ]; then
         tmp="$CHARD_ROOT/$CHARD_HOME/.chard_volume.tmp"
         echo "$volume" > "$tmp"
