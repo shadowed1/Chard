@@ -11,10 +11,11 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+
 CHARD_ROOT="/usr/local/chard"
 SAFE_PRELOAD_FILE="$CHARD_ROOT/.chard_safe_preload"
-TEST_CMD="curl --version 2>/dev/null"
 sudo rm -f "$SAFE_PRELOAD_FILE"
+TEST_CMD="curl --version 2>/dev/null"
 CURRENT_LD_PRELOAD="$LD_PRELOAD"
 LD_PRELOAD_LIBS=()
 BLACKLIST_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
@@ -36,10 +37,12 @@ for lib in "$CHARD_ROOT/lib64"/*.so*; do
     LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib" $TEST_CMD >/dev/null 2>/dev/null
     if [[ $? -eq 0 ]]; then
         LD_PRELOAD_LIBS+=("$lib")
+        echo
         echo "${GREEN}${BOLD}$lib ${RESET}"
+        echo
         CURRENT_LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib"
     else
-        echo "${MAGENTA}$lib ${RESET}" #Segfault
+        echo "${RED}$lib ${RESET}" #Segfault
     fi
 done
 
