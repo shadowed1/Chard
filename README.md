@@ -325,6 +325,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.11: `Significantly improved Pipewire support.` <br><br>
 - 0.12: `Downgrade Mesa for Intel iGPU's to fix Vulkan.` <br><br>
 - 0.13: `Created custom virtual pulseaudio implementation for simultaneous audio stream support. Added Pulseaudio support.` <br><br>
+- 0.14: `Added chard_preload generation script. Added specific ways to run chariot checkpoints.` <br><br>
 
 <br>
 
