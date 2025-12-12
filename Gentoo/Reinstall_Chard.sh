@@ -61,7 +61,6 @@ trap cleanup_chroot EXIT INT TERM
         
         case "$choice" in
             1)
-                unset LD_PRELOAD
                 chard_unmount() {   
                     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
                     sleep 0.2
