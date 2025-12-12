@@ -1,5 +1,8 @@
 # <<< CHARD_PRELOAD <<<
-MANUAL_LD_PRELOAD_LIBS=(
+# ChromeOS Only. Does not support FydeOS.
+# Manual entries.
+
+LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
     "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
     "$CHARD_ROOT/usr/lib64/libb2.so.1"
@@ -7,6 +10,7 @@ MANUAL_LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libsystemd.so.0"
     "$CHARD_ROOT/usr/lib64/libassuan.so.9"
     "$CHARD_ROOT/usr/lib64/libffi.so.8"
+    "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
     "$CHARD_ROOT/usr/lib64/libperl.so.5.42"
     "$CHARD_ROOT/usr/lib64/libseccomp.so.2"
     "$CHARD_ROOT/usr/lib64/libmagic.so.1"
@@ -27,21 +31,18 @@ MANUAL_LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libXi.so.6"
     "$CHARD_ROOT/usr/lib64/libXmu.so.6"
     "$CHARD_ROOT/usr/lib64/libXt.so.6"
+    "$CHARD_ROOT/usr/lib64/libsystemd.so.0"
     "$CHARD_ROOT/usr/lib64/libSM.so.6"
     "$CHARD_ROOT/usr/lib64/libSM.so.6.0.1"
     "$CHARD_ROOT/usr/lib64/libICE.so.6"
     "$CHARD_ROOT/usr/lib/gcc/x86_64-pc-linux-gnu/15/libstdc++.so.6"
-)
+) 
 
-for lib in "${MANUAL_LD_PRELOAD_LIBS[@]}"; do
-    if [[ -f "$lib" ]]; then
-        case ":$LD_PRELOAD:" in
-            *":$lib:"*) ;;   # already in LD_PRELOAD → skip
-            *) LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib" ;;
-        esac
-    fi
-done
+LD_PRELOAD=""
+
+for lib in "${LD_PRELOAD_LIBS[@]}"; do
+    [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
+done 2>/dev/null
 
 export LD_PRELOAD
-
 # <<< END CHARD_PRELOAD <<<
