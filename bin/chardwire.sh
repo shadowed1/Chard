@@ -63,11 +63,9 @@ apply_volume() {
         fi
     fi
 
-    # Apply mute/unmute if state changed (apply even if volume didn't change)
     if [ "$muted" != "$LAST_MUTED" ]; then
         LAST_MUTED="$muted"
         if command -v wpctl >/dev/null 2>&1; then
-            # wpctl accepts 1/0 for set-mute
             wpctl set-mute @DEFAULT_AUDIO_SINK@ "$muted" 2>/dev/null || true
             if [ "$muted" = "1" ]; then
                 echo "${CYAN}wpctl:${RESET} ${YELLOW}Muted${RESET}"
