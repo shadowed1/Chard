@@ -99,13 +99,11 @@ echo "${RESET}"
                                                                        
 echo
 echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! ${RESET}"
-echo "${RESET}${GREEN}Run the command: ${BLUE}${BOLD}chariot${RESET}${YELLOW} in ChromeOS shell to resume..."
+echo "${RESET}${GREEN}Run: ${BLUE}${BOLD}chariot${RESET}${GREEN} in ChromeOS shell to resume..."
 echo
-echo "${RESET}${BLUE}Example to resume from a specific checkpoint: ${RESET}${MAGENTA}${BOLD}chariot 137${RESET}"
-echo "${RESET}${RED}${BOLD}chariot reset${RESET}${RED} to reset to checkpoint 1.${RESET}${GREEN}"
+echo "${RESET}${YELLOW}Example to resume from a specific checkpoint: ${RESET}${MAGENTA}${BOLD}chariot 137${RESET}"
+echo "${GREEN}Run: ${RESET}${BOLD}${RED}chariot reset ${RESET}${GREEN}to ${RESET}${RED}revert${GREEN} to checkpoint 1.${RESET}${GREEN}"
 echo
-echo "Starting in 10 seconds... ${RESET}"
-sleep 8
 
 CHECKPOINT_FILE="/.chard_checkpoint"
 
@@ -114,7 +112,7 @@ if [[ -z "$CHECKPOINT_FILE" || "${CHECKPOINT_FILE:0:1}" != "/" ]]; then
     exit 1
 fi
 
-echo "DEBUG: checkpoint file is '$CHECKPOINT_FILE'"
+echo "$CHECKPOINT_FILE"
 
 if [[ ! -e "$CHECKPOINT_FILE" ]]; then
     sudo bash -c "echo 0 > '$CHECKPOINT_FILE'" || { echo "${RED}Cannot create $CHECKPOINT_FILE${RESET}"; exit 1; }
@@ -129,7 +127,7 @@ CHECKPOINT_OVERRIDE=""
 
 if [[ "$1" =~ ^[0-9]+$ ]]; then
     CHECKPOINT_OVERRIDE=$1
-    echo "${MAGENTA}Checkpoint override requested: $CHECKPOINT_OVERRIDE${RESET}"
+    echo "${BOLD}${MAGENTA}Checkpoint requested: $CHECKPOINT_OVERRIDE ${RESET}"
 
     CURRENT_CHECKPOINT=$((CHECKPOINT_OVERRIDE - 1))
     sudo bash -c "printf '%s\n' '$CURRENT_CHECKPOINT' > '$CHECKPOINT_FILE'" \
@@ -140,6 +138,10 @@ CURRENT_CHECKPOINT=$(sudo cat "$CHECKPOINT_FILE" 2>/dev/null || echo "$CURRENT_C
 if ! [[ "$CURRENT_CHECKPOINT" =~ ^-?[0-9]+$ ]]; then
     CURRENT_CHECKPOINT=0
 fi
+
+echo
+echo "Starting in 10 seconds..."
+sleep 8
 
 trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Exiting${RESET}"; exit 1' SIGINT
 
