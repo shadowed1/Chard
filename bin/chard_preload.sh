@@ -15,9 +15,10 @@ TEST_CMD="/bin/true"
 LD_PRELOAD_LIBS=()
 SAFE_LIBS=()
 BLACKLIST_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libXext.*|libbsd\.so|libc\+\+\.so)"
-
+echo
 echo "${BOLD}${GREEN}Chard Preload can take several minutes to build. Press ctrl-c to cancel at anytime! ${RESET}"
 echo "${GREEN}Starting in 5 seconds... ${RESET}"
+echo
 sleep 5
 
 for lib in "$CHARD_ROOT/lib64"/*.so*; do
