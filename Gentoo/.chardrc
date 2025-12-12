@@ -64,6 +64,7 @@ chard() {
     esac
 }
 
+alias cu='chard unmount'
 alias cr='chard root'
 alias smrt='SMRT'
 alias chariot='chard chariot'
