@@ -274,6 +274,7 @@ run_checkpoint 10 "sudo -E emerge net-misc/curl" checkpoint_10
 
 checkpoint_11() {
     sudo -E emerge app-misc/ca-certificates
+    sudo update-ca-certificates
     USE="curl" sudo -E emerge dev-vcs/git
     rm -rf /var/tmp/portage/dev-vcs/git-*
     eclean-dist -d
