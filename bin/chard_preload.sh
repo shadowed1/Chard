@@ -61,4 +61,4 @@ done
     echo "# <<< END CHARD_SAFE_PRELOAD <<<"
 } | sudo tee "$SAFE_PRELOAD_FILE" >/dev/null
 
-echo "${CYAN}Chard LD_PRELOAD tested ${BOLD}${${#LD_PRELOAD_LIBS[@]} libraries! ${RESET}"
+    echo "${BOLD}${CYAN}Chard LD_PRELOAD generated with ${#LD_PRELOAD_LIBS[@]} libraries! ${RESET}"
