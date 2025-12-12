@@ -2113,7 +2113,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 '
 
 chard_unmount
-
+$CHARD_ROOT/bin/chard_preload
 show_progress
 sudo cp "$CHARD_ROOT/chardbuild.log" ~/
 echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
