@@ -53,6 +53,17 @@ if [ "$IS_CHROMEOS" -eq 1 ]; then
     [ -f "$CHARD_ROOT/.chard_dbus" ] && source "$CHARD_ROOT/.chard_dbus" 2>/dev/null
 fi
 
+chard() {
+    case "$1" in
+        reinstall)
+            bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
+            ;;
+        *)
+            "$CHARD_ROOT/bin/chard" "$@"
+            ;;
+    esac
+}
+
 alias cr='chard root'
 alias smrt='SMRT'
 alias chariot='chard chariot'
