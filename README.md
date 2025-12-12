@@ -202,7 +202,7 @@
 ### Commands (Some not listed) <br>
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
 - `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
-- `chard safe` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
+- `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
 - `chard reinstall` -- Option 1 for FAST reinstall. Option 2 is a FULL reinstall.
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard cat` -- List Portage catalogues.
@@ -211,7 +211,8 @@
 - `chariot 144` -- Resume on checkpoint 144 and continue until Chariot finishes.
 - `chariot -s 90` -- Resume on checkpoint 90 and exit after finishing that specific checkpoint.
 - `chardonnay` -- Launch Sommelier in ChromeOS natively (Gentoo only -- WIP).
-- `chard version` -- Check for updates
+- `chard version` -- Check for updates.
+- `chard unmount` or `cu` -- Force chard to unmount as if exiting (a kill command in a sense).
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
