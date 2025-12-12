@@ -210,7 +210,7 @@
 - `chard chariot` or `chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
 - `chariot 144` -- Resume on checkpoint 144 and continue until Chariot finishes.
 - `chariot -s 90` -- Resume on checkpoint 90 and exit after finishing that specific checkpoint.
-- `chardonnay` -- Launch Sommelier in ChromeOS natively (WIP).
+- `chardonnay` -- Launch Sommelier in ChromeOS natively (Gentoo only -- WIP).
 - `chard version` -- Check for updates
 
 *Inside Chard Root*
