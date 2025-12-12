@@ -96,6 +96,16 @@ echo "                  ####  ####                ##          ##"
 echo ""
 echo ""
 echo "${RESET}"
+                                                                       
+CHECKPOINT_FILE="/.chard_checkpoint"
+echo
+echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! Run:${RESET}${BLUE}${BOLD}"
+echo
+echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
+echo
+echo "${RESET}${BLUE}${BOLD}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
+echo
+sleep 5
 
 CHECKPOINT_OVERRIDE=""
 
@@ -111,23 +121,6 @@ else
         CURRENT_CHECKPOINT=0
         echo "$CURRENT_CHECKPOINT" | sudo tee "$CHECKPOINT_FILE" >/dev/null
     fi
-fi                                                                                            
-
-CHECKPOINT_FILE="/.chard_checkpoint"
-echo
-echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! Run:${RESET}${BLUE}${BOLD}"
-echo
-echo "chariot${RESET}${YELLOW} inside chard root to resume at anytime. Run:"
-echo
-echo "${RESET}${BLUE}${BOLD}chariot reset${RESET}${RED} to reset build progress.${RESET}${GREEN}"
-echo
-sleep 5
-
-if [[ -f "$CHECKPOINT_FILE" ]]; then
-    CURRENT_CHECKPOINT=$(cat "$CHECKPOINT_FILE")
-else
-    echo "0" | sudo tee "$CHECKPOINT_FILE" >/dev/null
-    CURRENT_CHECKPOINT=0
 fi
 
 trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Exiting${RESET}"; exit 1' SIGINT
