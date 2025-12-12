@@ -267,9 +267,6 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/cha
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"            -o "$CHARD_ROOT/bin/chard_preload" 2>/dev/null
 sleep 0.2
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardonnay.sh"            -o "$CHARD_ROOT/bin/chardonnay" 2>/dev/null
-sleep 0.2
-
 
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -291,7 +288,6 @@ sudo chmod +x "$CHARD_ROOT/bin/chardwire"
 sudo chmod +x "$CHARD_ROOT/.chard.preload"
 sudo chmod +x "$CHARD_ROOT/bin/chard_ucm"
 sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
-sudo chmod +x "$CHARD_ROOT/bin/chardonnay"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
