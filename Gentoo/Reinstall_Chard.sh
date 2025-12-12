@@ -857,7 +857,12 @@ EOF
                 sudo pkill -f xfce4-*
                 sudo pkill -f Xorg
                 
-                #$CHARD_ROOT/bin/chard_preload
+                CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+                if [ -f "$CHROMEOS_BASHRC" ]; then
+                    CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
+                    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
+                    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp
+                fi
 
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 echo
