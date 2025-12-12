@@ -1438,6 +1438,23 @@ checkpoint_146() {
 }
 run_checkpoint 146 "pulseaudio" checkpoint_146
 
+checkpoint_147() {
+     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+mkdir -p ~/.config/gtk-3.0
+tee ~/.config/gtk-3.0/settings.ini >/dev/null <<'EOF'
+[Settings]
+gtk-theme-name=Adwaita-dark
+gtk-application-prefer-dark-theme=1
+EOF
+mkdir -p ~/.config/gtk-4.0
+tee ~/.config/gtk-4.0/settings.ini >/dev/null <<'EOF'
+[Settings]
+gtk-theme-name=Adwaita-dark
+gtk-application-prefer-dark-theme=1
+EOF
+}
+run_checkpoint 147 "Dark Theme" checkpoint_147
+
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
 show_progress
