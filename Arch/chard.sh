@@ -172,7 +172,10 @@ esac
         "$@"
 }
 
-chard_unmount() {        
+chard_unmount() { 
+    echo
+    echo "${RESET}${YELLOW}Unmounting Chard... ${RESET}"
+    echo
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -264,7 +267,7 @@ chard_unmount() {
     sudo chown -R root:audio /dev/snd 2>/dev/null
     sudo chown -R root:root /dev/snd/by-path 2>/dev/null
     echo
-    echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+    echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
     echo
 }
 
