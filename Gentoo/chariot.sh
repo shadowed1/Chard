@@ -1365,12 +1365,19 @@ run_checkpoint 142 "sudo -E emerge gedit" checkpoint_142
 
 checkpoint_143() {
     ARCH=$(uname -m)
+    sudo -E emerge --unmerge pipewire 2>/dev/null
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
     rm -rf ~/.config/pulse 2>/dev/null
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
     cd ~/
-    sudo -E emerge media-sound/pulseaudio-ctl
+    #sudo -E emerge media-sound/pulseaudio-ctl
+    sudo -E emerge media-libs/libpulse
+    sudo -E emerge media-sound/pulseaudio-daemon
+    sudo -E emerge media-sound/alsa-utils
+    sudo -E emerge pavucontrol
+    mv ~/.config/pulse/default.pa ~/.config/pulse/default.pa.bak 2>/dev/null
+    eclean-dist -d
     git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
     cd alsa-ucm-conf-cros
     sudo mkdir -p /usr/share/alsa
