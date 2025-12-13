@@ -1419,6 +1419,12 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         HOME=\$CHARD_HOME
                         source \$HOME/.bashrc 2>/dev/null
                         source \$HOME/.smrt_env.sh
+
+                        groupdel alarm 2>/dev/null
+                        groupdel audio 2>/dev/null
+                        groupdel video 2>/dev/null
+                        groupdel input 2>/dev/null
+                        groupdel lp 2>/dev/null
                         
                         getent group 1000 >/dev/null   || groupadd -g 1000 chronos 2>/dev/null
                         getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
