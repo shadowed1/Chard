@@ -15,6 +15,50 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+cleanup_chroot() {
+    sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+        sleep 0.2
+        sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+        sleep 0.2
+        sudo setfacl -Rb /run/chrome 2>/dev/null
+}
+
+trap cleanup_chroot EXIT INT TERM
+
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -f "$CHARD_RC" ]; then
@@ -43,6 +87,8 @@ chard_unmount() {
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
+        sleep 0.2
+        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.2
@@ -318,6 +364,7 @@ case "$cmd" in
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
+        
         sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
@@ -351,6 +398,7 @@ case "$cmd" in
             mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
             mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
             mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
         
             if [ -e /dev/zram0 ]; then
@@ -445,6 +493,7 @@ case "$cmd" in
         fi
         
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+        sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
         
@@ -462,6 +511,7 @@ case "$cmd" in
             mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
             mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
             mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
         
             if [ -e /dev/zram0 ]; then
@@ -506,6 +556,7 @@ case "$cmd" in
         
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
+            umount -l /run/udev    2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
             umount -l /etc/ssl     2>/dev/null || true
             umount -l /dev/pts     2>/dev/null || true
@@ -527,6 +578,7 @@ case "$cmd" in
         fi
         
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+        sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
         
@@ -545,6 +597,7 @@ case "$cmd" in
             mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
             mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
             mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
         
             if [ -e /dev/zram0 ]; then
@@ -573,6 +626,7 @@ case "$cmd" in
             
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
+            umount -l /run/udev    2>/dev/null || true
             umount -l /run/dbus    2>/dev/null || true
             umount -l /etc/ssl     2>/dev/null || true
             umount -l /dev/pts     2>/dev/null || true
