@@ -1457,38 +1457,43 @@ checkpoint_139() {
     sleep 1
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
-        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
         sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
-    sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
-    sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
-    rm -rf ~/.config/pulse 2>/dev/null
-    rm -rf ~/.pulse 2>/dev/null
-    rm -rf ~/.cache/pulse 2>/dev/null
-    sudo -E pacman -Syu --noconfirm pulseaudio 2>/dev/null
-    sudo -E pacman -Syu --noconfirm pipewire-libcamera 2>/dev/null
-    sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
-    sudo rm -rf ~/.cache/bazel 2>/dev/null
-    echo "Downloading Bazel from: $BAZEL_URL"
-    sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
-    sudo chmod +x /usr/bin/bazel65
-    cd ~/
-    git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
-    cd adhd/
-    sudo -E /usr/bin/bazel65 build //dist:alsa_lib
-    sleep 1
-    sudo mkdir -p /usr/lib/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
-    sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
-    sudo mkdir -p /etc/pipewire/pipewire.conf.d
-    cd ~/
-    rm -rf ~/adhd
+        sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
+        sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
+        rm -rf ~/.config/pulse 2>/dev/null
+        rm -rf ~/.pulse 2>/dev/null
+        rm -rf ~/.cache/pulse 2>/dev/null
+        sudo -E pacman -Syu --noconfirm pulseaudio 2>/dev/null
+        sudo -E pacman -Syu --noconfirm pipewire-libcamera 2>/dev/null
+        sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
+        sudo rm -rf ~/.cache/bazel 2>/dev/null
+        rm -rf ~/adhd 2>/dev/null
+        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
+        echo "Downloading Bazel from: $BAZEL_URL"
+        sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
+        sudo chmod +x /usr/bin/bazel65
+        cd ~/
+        git clone https://chromium.googlesource.com/chromiumos/third_party/adhd
+        cd adhd/
+        sudo -E /usr/bin/bazel65 build //dist:alsa_lib
+        sleep 1
+        sudo mkdir -p /usr/lib64/alsa-lib/
+        sudo mkdir -p /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib64/
+        sudo mkdir -p /etc/pipewire/pipewire.conf.d
+        cd ~/
+        rm -rf ~/adhd 2>/dev/null
     elif [[ "$ARCH" == "aarch64" ]]; then
-        BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
         sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
         sudo -E pacman -Syu --noconfirm pulseaudio 2>/dev/null
         sudo -E pacman -Syu --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
         sudo rm -rf ~/.cache/bazel 2>/dev/null
+        rm -rf ~/adhd 2>/dev/null
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
         echo "Downloading Bazel from: $BAZEL_URL"
         sudo curl -L "$BAZEL_URL" -o /usr/bin/bazel65
@@ -1498,13 +1503,18 @@ checkpoint_139() {
         cd adhd/
         sudo -E /usr/bin/bazel65 build //dist:alsa_lib
         sleep 1
+        sudo mkdir -p /usr/lib64/alsa-lib/
+        sudo mkdir -p /usr/lib/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib64/alsa-lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib64/alsa-lib/
         sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_ctl_cras.so /usr/lib/alsa-lib/
         sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
         sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
+        sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib64/
         yay -S --noconfirm cros-container-guest-tools-git 2>/dev/null
         sudo mkdir -p /etc/pipewire/pipewire.conf.d
-    cd ~/
-    rm -rf ~/adhd
+        cd ~/
+        rm -rf ~/adhd
     else
         echo "Unsupported architecture: $ARCH"
     fi   
