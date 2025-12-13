@@ -668,10 +668,10 @@ EOF
                     USE_FLAGS+=" vaapi vdpau vulkan"
                     ;;
                 intel)
-                    USE_FLAGS+=" vulkan"
+                    USE_FLAGS+=" video_cards_intel vulkan"
                     ;;
                 mediatek)
-                    USE_FLAGS+=" virgl"
+                    USE_FLAGS+=" virgl vulkan"
             esac
 
             sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
