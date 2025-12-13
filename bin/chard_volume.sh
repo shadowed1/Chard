@@ -1,5 +1,4 @@
 #!/bin/bash
-
 get_hdmi() {
     output=$(cras_test_client 2>/dev/null)
     hdmi_line=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "HDMI" | grep "yes" | head -n 1)
@@ -9,7 +8,6 @@ get_hdmi() {
         echo "$hdmi_name"
     fi
 }
-
 get_bluetooth() {
     output=$(cras_test_client 2>/dev/null)
     bluetooth_line=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "BLUETOOTH" | grep "yes" | head -n 1)
@@ -19,7 +17,6 @@ get_bluetooth() {
         echo "$bluetooth_name"
     fi
 }
-
 get_usb() {
     output=$(cras_test_client 2>/dev/null)
     usb_node=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "USB" | grep "yes" | head -n 1)
@@ -33,13 +30,11 @@ get_usb() {
         fi
     fi
 }
-
 get_volume() {
     output=$(cras_test_client 2>/dev/null)
     volume=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "yes" | grep -E "INTERNAL_SPEAKER|HEADPHONE|HDMI|BLUETOOTH|USB" | awk '{print $3}')
     echo "$volume"
 }
-
 is_muted() {
     if cras_test_client 2>/dev/null | grep -q "User muted: Muted"; then
         echo "1"
@@ -47,48 +42,39 @@ is_muted() {
         echo "0"
     fi
 }
-
-
 update_volume() {
     volume=$(get_volume)
     hdmi=$(get_hdmi)
     bluetooth=$(get_bluetooth)
     usb=$(get_usb)
     muted=$(is_muted)
-
+    
     if [ -n "$volume" ]; then
-        tmp="$CHARD_ROOT/$CHARD_HOME/.chard_volume.tmp"
-        echo "$volume" > "$tmp"
-        mv "$tmp" "$CHARD_ROOT/$CHARD_HOME/.chard_volume"
+        echo "$volume" > "$CHARD_ROOT/$CHARD_HOME/.chard_volume"
     fi
+    
+    echo "" > "$CHARD_ROOT/$CHARD_HOME/.chard_hdmi"
+    echo "" > "$CHARD_ROOT/$CHARD_HOME/.chard_bluetooth"
+    echo "" > "$CHARD_ROOT/$CHARD_HOME/.chard_usb"
     
     if [ -n "$hdmi" ]; then
-        tmp_hdmi="$CHARD_ROOT/$CHARD_HOME/.chard_hdmi.tmp"
-        echo "$hdmi" > "$tmp_hdmi"
-        mv "$tmp_hdmi" "$CHARD_ROOT/$CHARD_HOME/.chard_hdmi"
+        echo "$hdmi" > "$CHARD_ROOT/$CHARD_HOME/.chard_hdmi"
+    elif [ -n "$bluetooth" ]; then
+        echo "$bluetooth" > "$CHARD_ROOT/$CHARD_HOME/.chard_bluetooth"
+    elif [ -n "$usb" ]; then
+        echo "$usb" > "$CHARD_ROOT/$CHARD_HOME/.chard_usb"
     fi
     
-    if [ -n "$bluetooth" ]; then
-        tmp_bluetooth="$CHARD_ROOT/$CHARD_HOME/.chard_bluetooth.tmp"
-        echo "$bluetooth" > "$tmp_bluetooth"
-        mv "$tmp_bluetooth" "$CHARD_ROOT/$CHARD_HOME/.chard_bluetooth"
-    fi
-
-    if [ -n "$usb" ]; then
-        tmp_usb="$CHARD_ROOT/$CHARD_HOME/.chard_usb.tmp"
-        echo "$usb" > "$tmp_usb"
-        mv "$tmp_usb" "$CHARD_ROOT/$CHARD_HOME/.chard_usb"
-    fi
-
     if [ -n "$muted" ]; then
-        tmp_muted="$CHARD_ROOT/$CHARD_HOME/.chard_muted.tmp"
-        echo "$muted" > "$tmp_muted"
-        mv "$tmp_muted" "$CHARD_ROOT/$CHARD_HOME/.chard_muted"
+        echo "$muted" > "$CHARD_ROOT/$CHARD_HOME/.chard_muted"
     fi
 }
 
-update_volume
+for file in .chard_volume .chard_hdmi .chard_bluetooth .chard_usb .chard_muted; do
+    [ ! -f "$CHARD_ROOT/$CHARD_HOME/$file" ] && touch "$CHARD_ROOT/$CHARD_HOME/$file"
+done
 
+update_volume
 dbus-monitor --system "type='signal',interface='org.chromium.cras.Control'" 2>/dev/null | \
 while read -r line; do
     if echo "$line" | grep -q "signal"; then
