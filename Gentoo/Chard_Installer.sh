@@ -150,49 +150,43 @@ echo
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 
 cleanup_chroot() {
-        echo "${RED}Unmounting Chard${RESET}"
-        sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-        sleep 0.2
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+    echo "${RED}Unmounting Chard${RESET}"
+    sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+    sleep 0.2
+    sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+    sleep 0.2
+    sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+    sleep 0.2
+    sudo setfacl -Rb /run/chrome 2>/dev/null
 }
-
-trap cleanup_chroot EXIT INT TERM
 
 existing_int_trap=$(trap -p INT | cut -d"'" -f2)
 existing_term_trap=$(trap -p TERM | cut -d"'" -f2)
@@ -202,45 +196,41 @@ trap 'cleanup_chroot; '"$existing_term_trap" TERM
 trap cleanup_chroot EXIT
 
 echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
-sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-        sleep 0.2
-        sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-        sleep 0.2
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+sleep 0.2
+sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+sleep 0.2
+sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+sleep 0.2
+sudo setfacl -Rb /run/chrome 2>/dev/null
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
@@ -251,8 +241,6 @@ sudo rm -rf "$CHARD_ROOT" 2>/dev/null
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.2
@@ -2153,6 +2141,7 @@ sudo mkdir -p $CHARD_ROOT/etc/pulse/
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink
 set-default-sink cras_sink
+load-module module-suspend-on-idle
 EOF
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
