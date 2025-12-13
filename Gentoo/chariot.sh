@@ -1464,8 +1464,10 @@ tee ~/.config/gtk-4.0/settings.ini >/dev/null <<'EOF'
 gtk-theme-name=Adwaita-dark
 gtk-application-prefer-dark-theme=1
 EOF
+sudo -E emerge strace
+eclean-dist -d
 }
-run_checkpoint 147 "Dark Theme" checkpoint_147
+run_checkpoint 147 "Dark Theme and strace" checkpoint_147
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
