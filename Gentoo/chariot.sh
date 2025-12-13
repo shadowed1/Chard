@@ -278,6 +278,9 @@ checkpoint_11() {
     USE="curl" sudo -E emerge dev-vcs/git
     rm -rf /var/tmp/portage/dev-vcs/git-*
     eclean-dist -d
+    [ -d /usr/libexec/git-core ] && \
+    [ ! -e /usr/lib/git-core ] && \
+    ln -s /usr/libexec/git-core /usr/lib/git-core
     GIT_CURL_VERBOSE=1 GIT_TRACE=1 git ls-remote https://github.com/torvalds/linux.git HEAD 2>&1 | head -50
     GIT_EXEC_PATH=/usr/libexec/git-core
 }
