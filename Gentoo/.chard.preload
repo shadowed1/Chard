@@ -1,3 +1,4 @@
+#!/bin/bash
 # <<< CHARD_PRELOAD <<<
 # ChromeOS Only. Does not support FydeOS.
 # Manual entries.
