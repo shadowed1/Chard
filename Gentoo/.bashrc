@@ -49,13 +49,6 @@ export XDG_RUNTIME_DIR=""
 
 all_perl_versions=()
 
-if command -v equery >/dev/null 2>&1; then
-    while read -r line; do
-        ver=$(echo "$line" | grep -oP 'dev-lang/perl-\K[0-9]+\.[0-9]+')
-        [[ -n "$ver" ]] && all_perl_versions+=("$ver")
-    done < <(timeout 3 equery list -p dev-lang/perl 2>/dev/null | grep 'dev-lang/perl-')
-fi
-
 if [[ ${#all_perl_versions[@]} -eq 0 ]]; then
     PERL_BASES=("$ROOT/usr/lib64/perl5" "$ROOT/usr/local/lib64/perl5" "$ROOT/usr/lib/perl5" "$ROOT/usr/lib64/perl5")
     for base in "${PERL_BASES[@]}"; do
@@ -93,13 +86,6 @@ fi
 
 PYEXEC_BASE="$ROOT/usr/lib/python-exec"
 all_python_versions=()
-
-if command -v equery >/dev/null 2>&1; then
-    while read -r line; do
-        ver=$(echo "$line" | grep -oP 'dev-lang/python-\K[0-9]+\.[0-9]+')
-        [[ -n "$ver" ]] && all_python_versions+=("$ver")
-    done < <(timeout 3 equery list -p dev-lang/python 2>/dev/null | grep 'dev-lang/python-')
-fi
 
 if (( ${#all_python_versions[@]} == 0 )); then
     mapfile -t all_python_dirs < <(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V)
@@ -143,13 +129,6 @@ fi
 
 all_gcc_versions=()
 
-if command -v equery >/dev/null 2>&1; then
-    while read -r line; do
-        ver=$(echo "$line" | grep -oP 'sys-devel/gcc-\K[0-9]+')
-        [[ -n "$ver" ]] && all_gcc_versions+=("$ver")
-    done < <(timeout 3 equery list -p sys-devel/gcc 2>/dev/null | grep 'sys-devel/gcc-')
-fi
-
 if [[ ${#all_gcc_versions[@]} -eq 0 && -d "$ROOT/usr/$CHOST/gcc-bin" ]]; then
     for dir in "$ROOT/usr/$CHOST/gcc-bin"/*; do
         [[ -d "$dir" ]] || continue
@@ -178,15 +157,7 @@ export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 LLVM_BASE="$ROOT/usr/lib/llvm"
 all_llvm_versions=()
 
-if command -v equery >/dev/null 2>&1; then
-    while read -r line; do
-        ver=$(echo "$line" | grep -oP 'llvm-core/llvm-\K[0-9]+\.[0-9]+')
-        [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
-    done < <(timeout 3 equery list -p llvm-core/llvm 2>/dev/null | grep 'llvm-core/llvm-')
-fi
-
 if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
-    echo "Equery not available or no versions found, scanning $LLVM_BASE..."
     for d in "$LLVM_BASE"/*/; do
         [[ -d "$d" ]] || continue
         ver=$(basename "$d" | grep -oP '^[0-9]+\.[0-9]+')
