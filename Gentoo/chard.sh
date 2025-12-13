@@ -208,7 +208,7 @@ chard_unmount() {
         sleep 0.2
         sudo setfacl -Rb /run/chrome 2>/dev/null
         echo
-        echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+        echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
         echo
 }
 
