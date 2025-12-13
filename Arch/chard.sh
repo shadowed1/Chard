@@ -102,6 +102,10 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.2
     sudo setfacl -Rb /run/chrome 2>/dev/null
+    echo
+    echo "${RESET}${GREEN}Chard safely unmounted! ${RESET}"
+    echo
+
 }
 
 trap cleanup_chroot EXIT INT TERM
@@ -266,8 +270,6 @@ chard_unmount() {
     sudo setfacl -Rb /run/chrome 2>/dev/null
     sudo chown -R root:audio /dev/snd 2>/dev/null
     sudo chown -R root:root /dev/snd/by-path 2>/dev/null
-    echo
-    echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
     echo
 }
 
