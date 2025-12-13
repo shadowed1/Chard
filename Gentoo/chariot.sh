@@ -1368,7 +1368,7 @@ run_checkpoint 142 "sudo -E emerge gedit" checkpoint_142
 
 checkpoint_143() {
     ARCH=$(uname -m)
-    #sudo -E emerge --unmerge pipewire 2>/dev/null
+    sudo -E emerge pipewire 2>/dev/null
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
     rm -rf ~/.config/pulse 2>/dev/null
     rm -rf ~/.pulse 2>/dev/null
