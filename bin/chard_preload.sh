@@ -16,12 +16,14 @@ sudo rm -f "$SAFE_PRELOAD_FILE"
 TEST_CMD="curl --version 2>/dev/null"
 CURRENT_LD_PRELOAD="$LD_PRELOAD"
 LD_PRELOAD_LIBS=()
-BLACKLIST_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
+BANNED_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
+EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so)"
+
 
 for lib in "$CHARD_ROOT/lib64"/*.so*; do
     [[ -f "$lib" ]] || continue
     libname=$(basename "$lib")
-    [[ "$libname" =~ $BLACKLIST_REGEX ]] && continue
+    [[ "$libname" =~ $BANNED_REGEX ]] && continue
 
     case ":$CURRENT_LD_PRELOAD:" in
         *":$lib:"*) continue ;;
