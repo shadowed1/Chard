@@ -227,7 +227,7 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
-HOME="/$CHARD_HOME"
+HOME="$CHARD_ROOT/$CHARD_HOME"
 USER="$CHARD_USER"
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
@@ -409,6 +409,8 @@ export NM="$CHARD_ROOT/usr/bin/gcc-nm"
 export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
 export STRIP="$CHARD_ROOT/usr/bin/strip"
 export LD="$CHARD_ROOT/usr/bin/ld"
+export MOZ_APP_LAUNCHER="$CHARD_ROOT/usr/bin/firefox-bin"export MOZ_APP_LAUNCHER="$CHARD_ROOT/usr/bin/firefox-bin"
+
 
 # <<< CHARD_MARCH_NATIVE >>>
 CFLAGS="-march=native -O2 -pipe "
@@ -445,7 +447,9 @@ LIBS_TO_ADD=(
     "$CHARD_ROOT/usr/lib64"
     "$CHARD_ROOT/lib64"
     "$CHARD_ROOT/usr/lib"
+    "$CHARD_ROOT/usr/lib64/gedit"
     "$CHARD_ROOT/lib"
+    "$CHARD_ROOT/usr/lib64/glib-2.0" 
     "$gcc_lib_path"
     "$LLVM_DIR/lib"
 )
@@ -507,6 +511,7 @@ fi
 
 export PATH="$PATH:$(unique_join "${PATHS_TO_ADD[@]}")"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$(unique_join "${LIBS_TO_ADD[@]}")"
+export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib64/gtk-3.0:$CHARD_ROOT/usr/lib/gtk-3.0:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$(unique_join "${PKG_TO_ADD[@]}")"export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
