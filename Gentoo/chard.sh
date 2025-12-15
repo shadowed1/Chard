@@ -442,6 +442,8 @@ PATHS_TO_ADD=(
     "$LLVM_DIR/bin"
     "$CHARD_ROOT/usr/local/bin"
     "$CHARD_ROOT/usr/bin"
+    "$CHARD_ROOT/opt/"
+    "$CHARD_ROOT/opt/firefox"
 )
 LIBS_TO_ADD=(
     "$CHARD_ROOT/usr/lib64"
