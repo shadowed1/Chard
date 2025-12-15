@@ -3,7 +3,7 @@
 # ChromeOS Only. Does not support FydeOS.
 # Manual entries.
 
-LD_PRELOAD_LIBS=(
+LD_PRELOAD_LIBS_STAGE1=(
     "$CHARD_ROOT/usr/lib64/libpython3.13.so.1.0"
     "$CHARD_ROOT/usr/lib64/libpython3.14.so.1.0"
     "$CHARD_ROOT/usr/lib64/libb2.so.1"
