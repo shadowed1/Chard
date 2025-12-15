@@ -240,6 +240,8 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
                 sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"         -o "$CHARD_ROOT/bin/rainbow"
+                sleep 0.2
                 
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
@@ -258,6 +260,7 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chardwire"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
+                sudo chmod +x "$CHARD_ROOT/bin/rainbow"
 
 
                 
