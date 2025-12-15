@@ -613,7 +613,7 @@ MESON_NATIVE_FILE="/meson-cross.ini"
 PYTHONMULTIPROCESSING_START_METHOD=fork
 EOF
 
-                echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE ${RESET}"
+                echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE "
     
                 if [[ -f /etc/lsb-release ]]; then
                     BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
