@@ -40,8 +40,7 @@ LD_PRELOAD_LIBS=(
 ) 
 
 LD_PRELOAD=""
-
-for lib in "${LD_PRELOAD_LIBS[@]}"; do
+for lib in "${LD_PRELOAD_LIBS_STAGE1[@]}"; do
     [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
 done 2>/dev/null
 
