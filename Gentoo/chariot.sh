@@ -720,7 +720,7 @@ checkpoint_68() {
 run_checkpoint 68 "sudo -E emerge gui-libs/xdg-desktop-portal-wlr" checkpoint_68
 
 checkpoint_69() {
-    sudo -E emerge media-libs/mesa
+    sudo -E emerge =media-libs/mesa-25.2.8
     rm -rf /var/tmp/portage/media-libs/mesa-*
     eclean-dist -d
 }
