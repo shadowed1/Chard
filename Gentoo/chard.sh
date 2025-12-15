@@ -264,9 +264,33 @@ if [[ ${#all_perl_versions[@]} -eq 0 ]]; then
 
             name=$(basename "$dir")
             ver=$(printf '%s\n' "$name" | sed -n 's/^\([0-9]\+\.[0-9]\+\).*$/\1/p')
+
             [[ -n "$ver" ]] && all_perl_versions+=("$ver")
         done
     done
+fi
+
+mapfile -t all_perl_versions < <(printf '%s\n' "${all_perl_versions[@]}" | sort -V | uniq)
+
+third_latest_perl=""
+if (( ${#all_perl_versions[@]} >= 3 )); then
+    third_latest_perl="${all_perl_versions[-3]}"
+elif (( ${#all_perl_versions[@]} > 0 )); then
+    third_latest_perl="${all_perl_versions[0]}"
+fi
+
+PERL5LIB=""
+if [[ -n "$third_latest_perl" ]]; then
+    PERL_BASES=("$CHARD_ROOT/usr/lib64/perl5" "$CHARD_ROOT/usr/local/lib64/perl5" "$CHARD_ROOT/usr/lib/perl5" "$CHARD_ROOT/usr/lib64/perl5")
+    for base in "${PERL_BASES[@]}"; do
+        for sub in "" "vendor_perl" "$CHOST" "vendor_perl/$CHOST"; do
+            dir="$base/$third_latest_perl/$sub"
+            if [[ -d "$dir" ]]; then
+                PERL5LIB="$dir${PERL5LIB:+:$PERL5LIB}"
+            fi
+        done
+    done
+    export PERL5LIB
 fi
 
 PYEXEC_BASE="$CHARD_ROOT/usr/lib/python-exec"
