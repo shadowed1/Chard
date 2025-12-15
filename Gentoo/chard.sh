@@ -409,7 +409,7 @@ export NM="$CHARD_ROOT/usr/bin/gcc-nm"
 export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
 export STRIP="$CHARD_ROOT/usr/bin/strip"
 export LD="$CHARD_ROOT/usr/bin/ld"
-export MOZ_APP_LAUNCHER="$CHARD_ROOT/usr/bin/firefox-bin"export MOZ_APP_LAUNCHER="$CHARD_ROOT/usr/bin/firefox-bin"
+export MOZ_APP_LAUNCHER="$CHARD_ROOT/usr/bin/firefox-bin"
 
 
 # <<< CHARD_MARCH_NATIVE >>>
@@ -452,7 +452,9 @@ LIBS_TO_ADD=(
     "$CHARD_ROOT/usr/lib"
     "$CHARD_ROOT/usr/lib64/gedit"
     "$CHARD_ROOT/lib"
-    "$CHARD_ROOT/usr/lib64/glib-2.0" 
+    "$CHARD_ROOT/usr/lib64/glib-2.0"
+    "$CHARD_ROOT/usr/lib64/gtk-3.0"
+    "$CHARD_ROOT/usr/lib/gtk-3.0" 
     "$gcc_lib_path"
     "$LLVM_DIR/lib"
     "$CHARD_ROOT/opt"
@@ -475,7 +477,6 @@ unique_join() {
     echo "${seen[*]}"
 }
 
-export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
 export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export PKG_CONFIG_PATH="$(unique_join "${PKG_TO_ADD[@]}")${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
@@ -492,19 +493,6 @@ export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
 
-if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval "$(dbus-launch --sh-syntax )"
-    export DBUS_SESSION_BUS_ADDRESS
-    export DBUS_SESSION_BUS_PID
-fi
-
-CHARD_DBUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS/unix:path=\/tmp\//unix:path=$CHARD_ROOT\/tmp\/}"
-
-sudo tee "$CHARD_ROOT/.chard_dbus" >/dev/null <<EOF
-export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
-export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
-EOF
-
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
     export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri"
@@ -515,8 +503,7 @@ elif [[ "$ARCH" == "aarch64" ]]; then
 fi
 
 export PATH="$PATH:$(unique_join "${PATHS_TO_ADD[@]}")"
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$(unique_join "${LIBS_TO_ADD[@]}")"
-export LD_LIBRARY_PATH="$CHARD_ROOT/usr/lib64/gtk-3.0:$CHARD_ROOT/usr/lib/gtk-3.0:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$(unique_join "${PKG_TO_ADD[@]}")"export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
@@ -531,6 +518,20 @@ if [[ -w "$MAKECONF" ]]; then
     echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
     echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
 fi
+
+
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    eval "$(dbus-launch --sh-syntax )"
+    export DBUS_SESSION_BUS_ADDRESS
+    export DBUS_SESSION_BUS_PID
+fi
+
+CHARD_DBUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS/unix:path=\/tmp\//unix:path=$CHARD_ROOT\/tmp\/}"
+
+sudo tee "$CHARD_ROOT/.chard_dbus" >/dev/null <<EOF
+export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
+export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
+EOF
 
     echo "[*] Running '$*' inside Chard environment..."
     env \
@@ -547,7 +548,7 @@ fi
         PYTHON_TARGETS="$PYTHON_TARGETS" \
         PYTHON_SINGLE_TARGET="$PYTHON_SINGLE_TARGET" \
         PYTHONPATH="$PYTHONPATH" \
-        HOME="$CHARD_HOME" \
+        HOME="$CHARD_ROOT/$CHARD_HOME" \
         "$@"
 }
 
