@@ -11,12 +11,10 @@ STAGE3_FILE="$CHARD_ROOT/.chard_stage3_preload"
 
 if [[ ! -f "$CHARD_ROOT/.chard.preload" ]]; then
     echo "${RED}${BOLD}ERROR: .chard.preload not found!${RESET}"
-    exit 1
 fi
 
-if [[ ! -f "$CHARD_ROOT/.chard_stage2" ]]; then
+if [[ ! -f "$CHARD_ROOT/.chard_stages_safe_preload" ]]; then
     echo "${RED}${BOLD}ERROR: .chard_safe_preload ${RESET}"
-    exit 1
 fi
 
 echo "${BOLD}${CYAN}Merging Stage 1 and Stage 2... ${RESET}"
