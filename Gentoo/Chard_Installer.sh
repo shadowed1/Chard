@@ -2267,7 +2267,8 @@ sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME
 grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
 mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
-
+sudo mkdir -p $CHARD_ROOT/usr/share/file/misc
+sudo ln -sf $CHARD_ROOT/usr/share/misc/magic.mgc $CHARD_ROOT/usr/share/file/misc/magic.mgc
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
 if [[ "$(uname -m)" == "aarch64" ]]; then
     echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
