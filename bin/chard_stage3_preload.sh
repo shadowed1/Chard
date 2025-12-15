@@ -72,4 +72,6 @@ echo "${BOLD}${GREEN} Stage 3 created with ${#LD_PRELOAD_LIBS_STAGE3[@]} total l
 echo "${BOLD}${CYAN}  Stage 1: ${#LD_PRELOAD_LIBS_STAGE1[@]} libraries ${RESET}"
 echo "${BOLD}${BLUE}  Stage 2: ${#LD_PRELOAD_LIBS_STAGE2[@]} libraries ${RESET}"
 echo "${BOLD}${MAGENTA}  Stage 3: ${#LD_PRELOAD_LIBS_STAGE3[@]} libraries ${RESET}"
+echo "${BOLD}${RED} Run: ${RESET}${BOLD}${GREEN}sudo rm $CHARD_ROOT/.chard_stage3_preload${RESET}${BOLD}${GREEN} to remove this LD_PRELOAD"
+echo "${BOLD}${CYAN} Use VT-2 and login as root to remove above file if having trouble with normal shell. ${RESET}
 echo
