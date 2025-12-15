@@ -13,7 +13,6 @@ sudo rm -f "$STAGE2_FILE"
 
 if [[ -z "$LD_PRELOAD" ]]; then
     echo "${RED}${BOLD}Stage 1 not loaded. Source .chard.preload first!${RESET}"
-    exit 1
 fi
 
 echo "${BOLD}${CYAN}Stage 1 loaded with $(echo "$LD_PRELOAD" | tr ':' '\n' | wc -l) libraries${RESET}"
