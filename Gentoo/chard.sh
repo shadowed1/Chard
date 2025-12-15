@@ -442,7 +442,7 @@ PATHS_TO_ADD=(
     "$LLVM_DIR/bin"
     "$CHARD_ROOT/usr/local/bin"
     "$CHARD_ROOT/usr/bin"
-    "$CHARD_ROOT/opt/"
+    "$CHARD_ROOT/opt"
     "$CHARD_ROOT/opt/firefox"
 )
 LIBS_TO_ADD=(
@@ -454,6 +454,8 @@ LIBS_TO_ADD=(
     "$CHARD_ROOT/usr/lib64/glib-2.0" 
     "$gcc_lib_path"
     "$LLVM_DIR/lib"
+    "$CHARD_ROOT/opt"
+    "$CHARD_ROOT/opt/firefox"
 )
 PKG_TO_ADD=(
     "$CHARD_ROOT/usr/lib/pkgconfig"
