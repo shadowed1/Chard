@@ -10,18 +10,18 @@ RESET=$(tput sgr0)
 STAGE3_FILE="$CHARD_ROOT/.chard_stage3_preload"
 
 if [[ ! -f "$CHARD_ROOT/.chard.preload" ]]; then
-    echo "${RED}${BOLD}ERROR: .chard.preload (Stage 1) not found!${RESET}"
+    echo "${RED}${BOLD}ERROR: .chard.preload not found!${RESET}"
     exit 1
 fi
 
 if [[ ! -f "$CHARD_ROOT/.chard_stage2" ]]; then
-    echo "${RED}${BOLD}ERROR: .chard_stage2 not found! Run 'chard_generate_stage2' first.${RESET}"
+    echo "${RED}${BOLD}ERROR: .chard_safe_preload ${RESET}"
     exit 1
 fi
 
 echo "${BOLD}${CYAN}Merging Stage 1 and Stage 2... ${RESET}"
 source "$CHARD_ROOT/.chard.preload"
-source "$CHARD_ROOT/.chard_stage2"
+source "$CHARD_ROOT/.chard_safe_preload"
 
 declare -A seen
 LD_PRELOAD_LIBS_STAGE3=()
@@ -39,7 +39,7 @@ for lib in "${LD_PRELOAD_LIBS_STAGE2[@]}"; do
         LD_PRELOAD_LIBS_STAGE3+=("$lib")
     fi
 done
-
+echo
 echo "${BOLD}${CYAN}Writing $STAGE3_FILE... ${RESET}"
 
 {
