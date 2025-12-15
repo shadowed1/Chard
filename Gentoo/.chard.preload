@@ -38,6 +38,15 @@ LD_PRELOAD_LIBS_STAGE1=(
     "$CHARD_ROOT/usr/lib64/libICE.so.6"
     "$CHARD_ROOT/usr/lib/gcc/x86_64-pc-linux-gnu/15/libstdc++.so.6"
     "$CHARD_ROOT/usr/lib64/libruby34.so.3.4"
+    "$CHARD_ROOT/usr/lib64/libruby33.so.3.3.10"
+    "$CHARD_ROOT/usr/lib64/libruby33.so.3.3"
+    "$CHARD_ROOT/usr/lib64/libruby32.so.3.2"
+    "$CHARD_ROOT/usr/lib64/libruby32.so"
+    "$CHARD_ROOT/usr/lib64/libruby34.so.3.4.7"
+    "$CHARD_ROOT/usr/lib64/libruby34.so.3.4"
+    "$CHARD_ROOT/usr/lib64/libruby34.so"
+    "$CHARD_ROOT/usr/lib64/libruby33.so"
+    "$CHARD_ROOT/usr/lib64/libruby32.so.3.2.9"
 ) 
 
 LD_PRELOAD=""
