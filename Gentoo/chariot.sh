@@ -1175,13 +1175,13 @@ run_checkpoint 126 "sudo -E emerge firefox" checkpoint_126
 
 checkpoint_127() {
     sudo chown -R 1000:1000 ~/
-    sudo -E emerge dev-util/vulkan-tools
-    sudo -E emerge dev-util/vulkan-headers media-libs/vulkan-layers dev-util/vulkan-utility-libraries
+    sudo -E emerge dev-util/vulkan-headers media-libs/vulkan-layers dev-util/vulkan-utility-libraries dev-util/vulkan-tools
     sudo -E emerge app-eselect/eselect-repository
     sudo -E eselect repository enable another-brave-overlay
     sudo -E emerge --sync another-brave-overlay
     sudo -E emerge www-client/brave-browser::another-brave-overlay
-    rm -rf /var/tmp/portage/dev-util/vulkan-tools-*
+    rm -rf /var/tmp/portage/dev-util/vulkan-*
+    rm -rf /var/tmp/portage/media-libs/vulkan-*
     rm -rf /var/tmp/portage/eselect-repository dev-vcs/git-*
     rm -rf /var/tmp/portage/www-client/brave-browser-*
     eclean-dist -d
