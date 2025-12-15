@@ -107,7 +107,7 @@ trap cleanup_chroot EXIT INT TERM
                 }
 
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
-
+                echo
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 DEFAULT_BASHRC="$HOME/.bashrc"
                 TARGET_FILE=""
@@ -191,7 +191,7 @@ trap cleanup_chroot EXIT INT TERM
                 fi
                 
                 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
-                
+                echo ""
                 echo "${BLUE}[*] Downloading Chard components..."
                 
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chardrc"            -o "$CHARD_ROOT/.chardrc"
@@ -320,8 +320,10 @@ trap cleanup_chroot EXIT INT TERM
                             echo "# <<< END CHARD ENV MARKER <<<"
                         } >> "$FILE"
                         echo "${BLUE}[+] Chard sourced to $FILE"
+                        echo
                     else
                         echo "${YELLOW}[!] Chard already sourced in $FILE"
+                        echo
                     fi
                 }
                 
