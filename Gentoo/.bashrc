@@ -352,6 +352,8 @@ export XCURSOR_THEME
 
 # Firefox
 alias firefox-bin='chard_firefox-bin'
+alias firefox='chard_firefox-bin'
+
 
 # Brave
 #export BRAVE_USE_SYSTEM_KEYRING=0
