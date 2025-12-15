@@ -8,9 +8,12 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
+echo "${BOLD}${RED}Warning - This script is not recommended to run and can cause issues, but is easily removable. Only run if you know what you are doing. ${RESET}"
+echo "${GREEN}CTRL-C to exit. Starts in 30 seconds! ${RESET}"
+sleep 30
 STAGE2_FILE="$CHARD_ROOT/.chard_safe_preload"
-sudo rm -f "$STAGE2_FILE"
+sudo rm -f "$CHARD_ROOT/.chard_stage3_preload" 2>/dev/null
+sudo rm -f "$STAGE2_FILE" 2>/dev/null
 
 if [[ -z "$LD_PRELOAD" ]]; then
     echo "${RED}${BOLD} .chard.preload not loaded.${RESET}"
