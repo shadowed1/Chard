@@ -612,7 +612,7 @@ PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
 PYTHONMULTIPROCESSING_START_METHOD=fork
 EOF
-
+                echo ""
                 echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE "
                 echo ""
     
