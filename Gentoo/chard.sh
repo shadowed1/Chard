@@ -430,6 +430,7 @@ LDFLAGS=""
 [[ -d "$CHARD_ROOT/usr/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/lib "
 [[ -d "$CHARD_ROOT/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/lib "
 [[ -d "$CHARD_ROOT/usr/local/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib "
+[[ -d "$CHARD_ROOT/opt" ]] && LDFLAGS+="-L$CHARD_ROOT/opt "
 export LDFLAGS
 export FCFLAGS
 export FFLAGS
