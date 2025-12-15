@@ -7,7 +7,7 @@ RED=$(tput setaf 1)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-STAGE3_FILE="$CHARD_ROOT/.chard_combo_preload"
+STAGE3_FILE="$CHARD_ROOT/.chard_stage3_preload"
 
 if [[ ! -f "$CHARD_ROOT/.chard.preload" ]]; then
     echo "${RED}${BOLD}ERROR: .chard.preload (Stage 1) not found!${RESET}"
