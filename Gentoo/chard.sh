@@ -235,7 +235,7 @@ if [[ "$CHARD_ROOT" != "/" ]]; then
 fi
 
 export ARCH
-export CHOST`1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1
+export CHOST                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1
 export CHARD_RC="$CHARD_ROOT/.chardrc"
 export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
