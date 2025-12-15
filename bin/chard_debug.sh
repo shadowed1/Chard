@@ -1,18 +1,5 @@
 # Chard Debug
 
-# <<< CHARD_ROOT_MARKER >>>
-CHARD_ROOT=""
-CHARD_HOME=""
-CHARD_USER=""
-# <<< END_CHARD_ROOT_MARKER >>>
-
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
-
-if [ -f "$HOME/.bashrc" ]; then
-    source "$HOME/.bashrc"
-fi
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
