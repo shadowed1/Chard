@@ -1,6 +1,4 @@
 #!/bin/bash
-# Chard Stage 2 Generator - Run manually to scan for safe libs
-# Usage: chard_generate_stage2
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -25,17 +23,27 @@ echo
 TEST_CMD="curl --version 2>/dev/null"
 CURRENT_LD_PRELOAD="$LD_PRELOAD"
 LD_PRELOAD_LIBS_STAGE2=()
+
 BANNED_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
 EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so)"
+
 for lib in "$CHARD_ROOT/lib64"/*.so*; do
     [[ -f "$lib" ]] || continue
     
     libname=$(basename "$lib")
-    [[ "$libname" =~ $BANNED_REGEX ]] && continue
+    if [[ "$libname" =~ $EXPLICIT_BANNED_REGEX ]]; then
+        echo "${RED}${BOLD}⊗ $lib${RESET} (explicitly banned)"
+        continue
+    fi
+    
+    if [[ "$libname" =~ $BANNED_REGEX ]]; then
+        echo "${RED}⊘ $lib${RESET} (banned pattern)"
+        continue
+    fi
     
     case ":$CURRENT_LD_PRELOAD:" in
         *":$lib:"*) 
-            echo "${BLUE}lib${RESET}"
+            echo "${BLUE}$lib ${RESET}"
             continue 
             ;;
     esac
@@ -49,10 +57,12 @@ for lib in "$CHARD_ROOT/lib64"/*.so*; do
     
     if [[ $? -eq 0 ]]; then
         LD_PRELOAD_LIBS_STAGE2+=("$lib")
-        echo "${GREEN}${BOLD}✓ $lib${RESET}"
+        echo
+        echo "${GREEN}${BOLD}$lib ${RESET}"
+        echo
         CURRENT_LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib"
     else
-        echo "${RED}$lib ${RESET}"
+        echo "${RED}✗ $lib${RESET} (causes crash)"
     fi
 done
 
@@ -61,7 +71,6 @@ echo "${BOLD}${CYAN}Writing $STAGE2_FILE...${RESET}"
 
 {
     echo "# <<< CHARD_STAGE2 <<<"
-    echo "# Auto-generated Stage 2 libraries"
     echo "# Generated: $(date)"
     echo
     echo "LD_PRELOAD_LIBS_STAGE2=("
@@ -73,5 +82,5 @@ echo "${BOLD}${CYAN}Writing $STAGE2_FILE...${RESET}"
 } | sudo tee "$STAGE2_FILE" >/dev/null
 
 echo
-echo "${BOLD}${GREEN}Stage 2 generated with ${#LD_PRELOAD_LIBS_STAGE2[@]} new libraries! ${RESET}"
-eho
+echo "${BOLD}${GREEN}Stage 2 generated with ${#LD_PRELOAD_LIBS_STAGE2[@]} new libraries!${RESET}"
+echo
