@@ -225,125 +225,171 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
+HOME="/$CHARD_HOME"
+USER="$CHARD_USER"
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+
+if [[ "$CHARD_ROOT" != "/" ]]; then
+    ROOT="${ROOT%/}"
+fi
+
+export ARCH
+export CHOST
 export CHARD_RC="$CHARD_ROOT/.chardrc"
-export PORTDIR="$CHARD_ROOT/usr/portage"
-export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
-export PKGDIR="$CHARD_ROOT/var/cache/packages"
-export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
 export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
 
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
-esac
+export PORTDIR="$CHARD_ROOT/usr/portage"
+export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
+export PKGDIR="$CHARD_ROOT/var/cache/packages"
+export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
 
-PERL_BASE="$CHARD_ROOT/usr/lib/perl5"
-PERL_LIB_DIRS=()
-PERL_BIN_DIRS=()
-PERL_LIBS=()
+# <<< CHARD_XDG_RUNTIME_DIR >>>
+export XDG_RUNTIME_DIR=""
+# <<< END CHARD_XDG_RUNTIME_DIR >>>
 
-if [[ -d "$PERL_BASE" ]]; then
-    mapfile -t all_perl_versions < <(ls -1 "$PERL_BASE" 2>/dev/null | grep -E '^[0-9]+\.[0-9]+$' | sort -V)
-else
-    all_perl_versions=()
+all_perl_versions=()
+
+if [[ ${#all_perl_versions[@]} -eq 0 ]]; then
+    PERL_BASES=("$CHARD_ROOT/usr/lib64/perl5" "$CHARD_ROOT/usr/local/lib64/perl5" "$CHARD_ROOT/usr/lib/perl5" "$CHARD_ROOT/usr/lib64/perl5")
+    for base in "${PERL_BASES[@]}"; do
+        [[ -d "$base" ]] || continue
+        for dir in "$base"/*; do
+            [[ -d "$dir" ]] || continue
+            ver=$(basename "$dir" | grep -oP '^[0-9]+\.[0-9]+')
+            [[ -n "$ver" ]] && all_perl_versions+=("$ver")
+        done
+    done
 fi
 
-for ver in "${all_perl_versions[@]}"; do
-    archlib="$PERL_BASE/$ver/$CHOST"
-    sitelib="$PERL_BASE/$ver/site_perl"
-    vendorlib="$PERL_BASE/$ver/vendor_perl"
+mapfile -t all_perl_versions < <(printf '%s\n' "${all_perl_versions[@]}" | sort -V | uniq)
 
-    PERL5LIB_PARTS=()
-    [[ -d "$archlib" ]] && PERL5LIB_PARTS+=("$archlib")
-    [[ -d "$sitelib" ]] && PERL5LIB_PARTS+=("$sitelib")
-    [[ -d "$vendorlib" ]] && PERL5LIB_PARTS+=("$vendorlib")
-    if [[ ${#PERL5LIB_PARTS[@]} -gt 0 ]]; then
-        PERL5LIB="$(IFS=:; echo "${PERL5LIB_PARTS[*]}")${PERL5LIB:+:$PERL5LIB}"
-    fi
-
-    CORE_LIB="$PERL_BASE/$ver/$CHOST/CORE"
-    [[ -d "$CORE_LIB" ]] && PERL_LIBS+=("$CORE_LIB")
-
-    BIN_DIR="$CHARD_ROOT/usr/bin"
-    [[ -d "$BIN_DIR" ]] && PERL_BIN_DIRS+=("$BIN_DIR")
-done
-
-export PERL5LIB="$PERL5LIB"
-export PERL6LIB="$PERL6LIB"
-
-if [[ ${#PERL_LIBS[@]} -gt 0 ]]; then
-    LD_LIBRARY_PATH="$(IFS=:; echo "${PERL_LIBS[*]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+third_latest_perl=""
+if (( ${#all_perl_versions[@]} >= 3 )); then
+    third_latest_perl="${all_perl_versions[-3]}"
+elif (( ${#all_perl_versions[@]} > 0 )); then
+    third_latest_perl="${all_perl_versions[0]}"
 fi
 
-if [[ ${#PERL_BIN_DIRS[@]} -gt 0 ]]; then
-    PATH="$(IFS=:; echo "${PERL_BIN_DIRS[*]}"):$PATH"
+PERL5LIB=""
+if [[ -n "$third_latest_perl" ]]; then
+    PERL_BASES=("$CHARD_ROOT/usr/lib64/perl5" "$CHARD_ROOT/usr/local/lib64/perl5" "$CHARD_ROOT/usr/lib/perl5" "$CHARD_ROOT/usr/lib64/perl5")
+    for base in "${PERL_BASES[@]}"; do
+        for sub in "" "vendor_perl" "$CHOST" "vendor_perl/$CHOST"; do
+            dir="$base/$third_latest_perl/$sub"
+            if [[ -d "$dir" ]]; then
+                PERL5LIB="$dir${PERL5LIB:+:$PERL5LIB}"
+            fi
+        done
+    done
+    export PERL5LIB
 fi
 
-gcc_version=$(gcc -dumpversion 2>/dev/null | cut -d. -f1)
-if [[ -n "$gcc_version" && -n "$CHOST" ]]; then
-    gcc_bin_path="$CHARD_ROOT/usr/$CHOST/gcc-bin/${gcc_version}"
-    gcc_lib_path="$CHARD_ROOT/usr/lib/gcc/$CHOST/$gcc_version"
-
-    if [[ -d "$gcc_bin_path" ]]; then
-        export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$gcc_bin_path"
-    else
-        export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-    fi
-
-    if [[ -d "$gcc_lib_path" ]]; then
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$gcc_lib_path:$gcc_bin_path"
-    else
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-    fi
-else
-    export PATH="$PYEXEC_DIR:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14"
-fi
-
-export PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/usr/lib64/pkgconfig:$CHARD_ROOT/usr/lib/pkgconfig:$CHARD_ROOT/usr/local/lib/pkgconfig:$CHARD_ROOT/usr/local/share/pkgconfig"
-export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
-export PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
-export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
-export CPPFLAGS="-I${CHARD_ROOT}usr/include"
 PYEXEC_BASE="$CHARD_ROOT/usr/lib/python-exec"
-PYTHON_EXEC_PREFIX="$CHARD_ROOT/usr"
-PYTHON_EXECUTABLES="$PYEXEC_BASE"
+all_python_versions=()
 
-all_python_dirs=($(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V))
-
-latest_python="${all_python_dirs[-1]}"
-
-if [[ ${#all_python_dirs[@]} -lt 2 ]]; then
-    second_latest_python="${all_python_dirs[-1]}"
-else
-    second_latest_python="${all_python_dirs[-2]}"
+if (( ${#all_python_versions[@]} == 0 )); then
+    mapfile -t all_python_dirs < <(ls -1 "$PYEXEC_BASE" 2>/dev/null | grep -E '^python[0-9]+\.[0-9]+$' | sort -V)
+    for d in "${all_python_dirs[@]}"; do
+        ver="${d#python}"
+        [[ -n "$ver" ]] && all_python_versions+=("$ver")
+    done
 fi
 
-latest_underscore="${latest_python#python}"
-latest_underscore="${latest_underscore//./_}"
-latest_dot="${latest_python#python}"
+mapfile -t all_python_versions < <(printf '%s\n' "${all_python_versions[@]}" | sort -V | uniq)
 
-second_underscore="${second_latest_python#python}"
-second_underscore="${second_underscore//./_}"
-second_dot="${second_latest_python#python}"
+latest_python=""
+third_latest_python=""
 
-export PYTHON_TARGETS="python${second_underscore} python${latest_underscore}"
-export PYTHON_SINGLE_TARGET="python${latest_underscore}"
-
-python_site_second="$CHARD_ROOT/usr/lib/python${second_dot}/site-packages"
-python_site_latest="$CHARD_ROOT/usr/lib/python${latest_dot}/site-packages"
-
-if [[ -n "$PYTHONPATH" ]]; then
-    export PYTHONPATH="${python_site_second}:${python_site_latest}:$(realpath -m $PYTHONPATH)"
-else
-    export PYTHONPATH="${python_site_second}:${python_site_latest}"
+if (( ${#all_python_versions[@]} > 0 )); then
+    latest_python="${all_python_versions[-1]}"
+fi
+if (( ${#all_python_versions[@]} >= 3 )); then
+    third_latest_python="${all_python_versions[-3]}"
+elif (( ${#all_python_versions[@]} > 0 )); then
+    third_latest_python="${all_python_versions[0]}"
 fi
 
-export PYEXEC_DIR="${PYEXEC_BASE}/${latest_python}"
+second_underscore="${third_latest_python//./_}"
+
+export PYTHON_TARGETS="python${second_underscore}"
+export PYTHON_SINGLE_TARGET="python${second_underscore}"
+
+python_site_third="$CHARD_ROOT/usr/lib/python${third_latest_python}/site-packages"
+python_site_latest="$CHARD_ROOT/usr/lib/python${latest_python}/site-packages"
+export PYTHONPATH="${python_site_third}:${python_site_latest}${PYTHONPATH:+:$(realpath -m "$PYTHONPATH")}"
+
+export PYEXEC_DIR="${PYEXEC_BASE}/python${third_latest_python}"
+export EPYTHON="python${third_latest_python}"
+export PYTHON="python${third_latest_python}"
+export PORTAGE_PYTHON="python${third_latest_python}"
+
+if command -v python3 >/dev/null && python3 --version 2>&1 | grep -q "$latest_python"; then
+    alias python3="$CHARD_ROOT/usr/bin/python${third_latest_python}"
+fi
+
+all_gcc_versions=()
+
+if [[ ${#all_gcc_versions[@]} -eq 0 && -d "$CHARD_ROOT/usr/$CHOST/gcc-bin" ]]; then
+    for dir in "$CHARD_ROOT/usr/$CHOST/gcc-bin"/*; do
+        [[ -d "$dir" ]] || continue
+        ver=$(basename "$dir")
+        [[ $ver =~ ^[0-9]+$ ]] && all_gcc_versions+=("$ver")
+    done
+fi
+
+mapfile -t all_gcc_versions < <(printf '%s\n' "${all_gcc_versions[@]}" | sort -V | uniq)
+
+third_latest_gcc=""
+if (( ${#all_gcc_versions[@]} >= 3 )); then
+    third_latest_gcc="${all_gcc_versions[-3]}"
+elif (( ${#all_gcc_versions[@]} > 0 )); then
+    third_latest_gcc="${all_gcc_versions[0]}"
+fi
+
+if [[ -n "$third_latest_gcc" && -n "$CHOST" ]]; then
+    gcc_bin_path="$CHARD_ROOT/usr/$CHOST/gcc-bin/${third_latest_gcc}"
+    gcc_lib_path="$CHARD_ROOT/usr/lib/gcc/$CHOST/${third_latest_gcc}"
+fi
+
+export PATH="$gcc_bin_path:$PATH"
+export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+LLVM_BASE="$CHARD_ROOT/usr/lib/llvm"
+all_llvm_versions=()
+
+if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
+    for d in "$LLVM_BASE"/*/; do
+        [[ -d "$d" ]] || continue
+        ver=$(basename "$d" | grep -oP '^[0-9]+\.[0-9]+')
+        [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
+    done
+fi
+
+mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V | uniq)
+
+latest_llvm=""
+third_latest_llvm=""
+
+if (( ${#all_llvm_versions[@]} > 0 )); then
+    latest_llvm="${all_llvm_versions[-1]}"
+fi
+if (( ${#all_llvm_versions[@]} >= 3 )); then
+    third_latest_llvm="${all_llvm_versions[-3]}"
+elif (( ${#all_llvm_versions[@]} > 0 )); then
+    third_latest_llvm="${all_llvm_versions[0]}"
+fi
+
+if [[ -n "$third_latest_llvm" ]]; then
+    LLVM_DIR="$LLVM_BASE/$third_latest_llvm"
+    export LLVM_DIR
+    export LLVM_VERSION="$third_latest_llvm"
+    [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
+    [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+fi
 
 export CC="$CHARD_ROOT/usr/bin/gcc"
 export CXX="$CHARD_ROOT/usr/bin/g++"
@@ -351,31 +397,127 @@ export AR="$CHARD_ROOT/usr/bin/ar"
 export NM="$CHARD_ROOT/usr/bin/gcc-nm"
 export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
 export STRIP="$CHARD_ROOT/usr/bin/strip"
-export XDG_DATA_DIRS="$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/share"
-export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
-export CFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CFLAGS"
-export CXXFLAGS="-O2 -pipe -I${CHARD_ROOT}usr/include -I${CHARD_ROOT}include $CXXFLAGS"
+export LD="$CHARD_ROOT/usr/bin/ld"
+
+# <<< CHARD_MARCH_NATIVE >>>
+CFLAGS="-march=native -O2 -pipe "
+[[ -d "$CHARD_ROOT/usr/include" ]] && CFLAGS+="-I$CHARD_ROOT/usr/include "
+[[ -d "$CHARD_ROOT/include" ]] && CFLAGS+="-I$CHARD_ROOT/include "
+export CFLAGS
+
+COMMON_FLAGS="-march=native -O2 -pipe"
+FCFLAGS="$COMMON_FLAGS"
+FFLAGS="$COMMON_FLAGS"
+
+CXXFLAGS="$CFLAGS"
+# <<< END CHARD_MARCH_NATIVE >>>
 
 LDFLAGS=""
-
-[[ -d "$CHARD_ROOT/usr/lib" ]]        && LDFLAGS+="-L$CHARD_ROOT/usr/lib "
-[[ -d "$CHARD_ROOT/lib" ]]            && LDFLAGS+="-L$CHARD_ROOT/lib "
-[[ -d "$CHARD_ROOT/usr/local/lib" ]]  && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib "
-
-
+[[ -d "$CHARD_ROOT/usr/lib64" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/lib64 "
+[[ -d "$CHARD_ROOT/lib64" ]] && LDFLAGS+="-L$CHARD_ROOT/lib64 "
+[[ -d "$CHARD_ROOT/usr/local/lib64" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib64 "
+[[ -d "$CHARD_ROOT/usr/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/lib "
+[[ -d "$CHARD_ROOT/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/lib "
+[[ -d "$CHARD_ROOT/usr/local/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib "
 export LDFLAGS
-export LD="$CHARD_ROOT/usr/bin/ld"
-export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal:$ACLOCAL_PATH"
-export M4PATH="$CHARD_ROOT/usr/share/m4:$M4PATH"
-export MANPATH="$CHARD_ROOT/usr/share/man:$CHARD_ROOT/usr/local/share/man:$MANPATH"
+export FCFLAGS
+export FFLAGS
+
+PATHS_TO_ADD=(
+    "$PYEXEC_DIR"
+    "$CHARD_ROOT/usr/bin"
+    "$CHARD_ROOT/bin"
+    "$gcc_bin_path"
+    "$LLVM_DIR/bin"
+    "$CHARD_ROOT/usr/local/bin"
+    "$CHARD_ROOT/usr/bin"
+)
+LIBS_TO_ADD=(
+    "$CHARD_ROOT/usr/lib64"
+    "$CHARD_ROOT/lib64"
+    "$CHARD_ROOT/usr/lib"
+    "$CHARD_ROOT/lib"
+    "$gcc_lib_path"
+    "$LLVM_DIR/lib"
+)
+PKG_TO_ADD=(
+    "$CHARD_ROOT/usr/lib/pkgconfig"
+    "$CHARD_ROOT/usr/lib64/pkgconfig"
+    "$CHARD_ROOT/usr/local/lib/pkgconfig"
+    "$CHARD_ROOT/usr/local/share/pkgconfig"
+    "$LLVM_DIR/lib/pkgconfig"
+)
+
+unique_join() {
+    local IFS=':'
+    local seen=()
+    for p in "$@"; do
+        [[ -n "$p" && -d "$p" && ! " ${seen[*]} " =~ " $p " ]] && seen+=("$p")
+    done
+    echo "${seen[*]}"
+}
+
+export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
+export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export PKG_CONFIG_PATH="$(unique_join "${PKG_TO_ADD[@]}")${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
+export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
+export CPPFLAGS="-I$CHARD_ROOT/usr/include"
+export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
+export M4PATH="$CHARD_ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
+export MANPATH="$CHARD_ROOT/usr/share/man:$CHARD_ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
+export XDG_DATA_DIRS="$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
 export DISPLAY=":0"
-export GDK_BACKEND="x11"
-export CLUTTER_BACKEND="x11"
-export PYTHONMULTIPROCESSING_START_METHOD=fork
+export GDK_BACKEND="wayland"
+export CLUTTER_BACKEND="wayland"
+export WAYLAND_DISPLAY=wayland-0
+export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
+export EGL_PLATFORM=wayland
+
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    eval "$(dbus-launch --sh-syntax )"
+    export DBUS_SESSION_BUS_ADDRESS
+    export DBUS_SESSION_BUS_PID
+fi
+
+CHARD_DBUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS/unix:path=\/tmp\//unix:path=$CHARD_ROOT\/tmp\/}"
+
+sudo tee "/.chard_dbus" >/dev/null <<EOF
+export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
+export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
+EOF
+
+ARCH=$(uname -m)
+if [[ "$ARCH" == "x86_64" ]]; then
+    export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri"
+    export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri"
+elif [[ "$ARCH" == "aarch64" ]]; then
+    export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib/dri"
+    export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib/dri"
+fi
+
+export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
+export LIBGL_ALWAYS_INDIRECT=0
+export QT_QPA_PLATFORM=wayland
+export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
+export SOMMELIER_GLAMOR=1
+export SOMMELIER_VERSION=0.20
+export PULSE_SERVER=unix:/run/chrome/pulse/native
+
+MAKECONF="$CHARD_ROOT/etc/portage/make.conf"
+if [[ -w "$MAKECONF" ]]; then
+    sed -i "/^PYTHON_TARGETS=/d" "$MAKECONF"
+    sed -i "/^PYTHON_SINGLE_TARGET=/d" "$MAKECONF"
+    echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
+    echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
+fi
+
+eselect python set "python${second_underscore}" 2>/dev/null || true
+eselect python set --python3 "python${second_underscore}" 2>/dev/null || true
 
     echo "[*] Running '$*' inside Chard environment..."
     env \
-        ROOT="$ROOT" \
+        ROOT="$CHARD_ROOT" \
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
