@@ -62,7 +62,7 @@ for lib in "$CHARD_ROOT/lib64"/*.so*; do
         echo
         CURRENT_LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib"
     else
-        echo "${RED}✗ $lib${RESET} (causes crash)"
+        echo "${RED}$lib ${RESET}"
     fi
 done
 
