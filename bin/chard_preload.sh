@@ -12,12 +12,12 @@ STAGE2_FILE="$CHARD_ROOT/.chard_safe_preload"
 sudo rm -f "$STAGE2_FILE"
 
 if [[ -z "$LD_PRELOAD" ]]; then
-    echo "${RED}${BOLD}ERROR: Stage 1 not loaded. Source .chard.preload first!${RESET}"
+    echo "${RED}${BOLD}Stage 1 not loaded. Source .chard.preload first!${RESET}"
     exit 1
 fi
 
 echo "${BOLD}${CYAN}Stage 1 loaded with $(echo "$LD_PRELOAD" | tr ':' '\n' | wc -l) libraries${RESET}"
-echo "${BOLD}${CYAN}Scanning for additional safe libraries...${RESET}"
+echo "${BOLD}${BLUE}Scanning for additional safe libraries...${RESET}"
 echo
 
 TEST_CMD="curl --version 2>/dev/null"
@@ -32,12 +32,12 @@ for lib in "$CHARD_ROOT/lib64"/*.so*; do
     
     libname=$(basename "$lib")
     if [[ "$libname" =~ $EXPLICIT_BANNED_REGEX ]]; then
-        echo "${RED}${BOLD}⊗ $lib${RESET} (explicitly banned)"
+        echo "${RED}${BOLD}$lib ${RESET}"
         continue
     fi
     
     if [[ "$libname" =~ $BANNED_REGEX ]]; then
-        echo "${RED}⊘ $lib${RESET} (banned pattern)"
+        echo "${RED}$lib ${RESET}"
         continue
     fi
     
@@ -82,5 +82,5 @@ echo "${BOLD}${CYAN}Writing $STAGE2_FILE...${RESET}"
 } | sudo tee "$STAGE2_FILE" >/dev/null
 
 echo
-echo "${BOLD}${GREEN}Stage 2 generated with ${#LD_PRELOAD_LIBS_STAGE2[@]} new libraries!${RESET}"
+echo "${BOLD}${GREEN}Stage 2 generated with ${#LD_PRELOAD_LIBS_STAGE2[@]} new libraries! ${RESET}"
 echo
