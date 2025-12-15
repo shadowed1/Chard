@@ -614,6 +614,7 @@ PYTHONMULTIPROCESSING_START_METHOD=fork
 EOF
 
                 echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE "
+                echo ""
     
                 if [[ -f /etc/lsb-release ]]; then
                     BOARD_NAME=$(grep '^CHROMEOS_RELEASE_BOARD=' /etc/lsb-release 2>/dev/null | cut -d= -f2)
