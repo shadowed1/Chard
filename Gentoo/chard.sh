@@ -235,7 +235,7 @@ if [[ "$CHARD_ROOT" != "/" ]]; then
 fi
 
 export ARCH
-export CHOST
+export CHOST`1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1
 export CHARD_RC="$CHARD_ROOT/.chardrc"
 export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
@@ -245,10 +245,7 @@ export PORTDIR="$CHARD_ROOT/usr/portage"
 export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
 export PKGDIR="$CHARD_ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
-
-# <<< CHARD_XDG_RUNTIME_DIR >>>
-export XDG_RUNTIME_DIR=""
-# <<< END CHARD_XDG_RUNTIME_DIR >>>
+export XDG_RUNTIME_DIR="/run/chrome/"
 
 all_perl_versions=()
 
@@ -346,9 +343,12 @@ LLVM_BASE="$CHARD_ROOT/usr/lib/llvm"
 all_llvm_versions=()
 
 if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
-    for d in "$LLVM_BASE"/*/; do
+    for d in "$LLVM_BASE"/*; do
         [[ -d "$d" ]] || continue
-        ver=$(basename "$d" | grep -oP '^[0-9]+\.[0-9]+')
+
+        name=$(basename "$d")
+        ver=$(printf '%s\n' "$name" | sed -n 's/^\([0-9]\+\.[0-9]\+\).*$/\1/p')
+
         [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
     done
 fi
@@ -389,11 +389,9 @@ CFLAGS="-march=native -O2 -pipe "
 [[ -d "$CHARD_ROOT/usr/include" ]] && CFLAGS+="-I$CHARD_ROOT/usr/include "
 [[ -d "$CHARD_ROOT/include" ]] && CFLAGS+="-I$CHARD_ROOT/include "
 export CFLAGS
-
 COMMON_FLAGS="-march=native -O2 -pipe"
 FCFLAGS="$COMMON_FLAGS"
 FFLAGS="$COMMON_FLAGS"
-
 CXXFLAGS="$CFLAGS"
 # <<< END CHARD_MARCH_NATIVE >>>
 
