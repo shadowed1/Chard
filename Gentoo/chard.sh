@@ -253,38 +253,23 @@ export XDG_RUNTIME_DIR=""
 all_perl_versions=()
 
 if [[ ${#all_perl_versions[@]} -eq 0 ]]; then
-    PERL_BASES=("$CHARD_ROOT/usr/lib64/perl5" "$CHARD_ROOT/usr/local/lib64/perl5" "$CHARD_ROOT/usr/lib/perl5" "$CHARD_ROOT/usr/lib64/perl5")
+    PERL_BASES=(
+        "$CHARD_ROOT/usr/lib64/perl5"
+        "$CHARD_ROOT/usr/local/lib64/perl5"
+        "$CHARD_ROOT/usr/lib/perl5"
+    )
+
     for base in "${PERL_BASES[@]}"; do
         [[ -d "$base" ]] || continue
+
         for dir in "$base"/*; do
             [[ -d "$dir" ]] || continue
-            ver=$(basename "$dir" | grep -oP '^[0-9]+\.[0-9]+')
+
+            name=$(basename "$dir")
+            ver=$(printf '%s\n' "$name" | sed -n 's/^\([0-9]\+\.[0-9]\+\).*$/\1/p')
             [[ -n "$ver" ]] && all_perl_versions+=("$ver")
         done
     done
-fi
-
-mapfile -t all_perl_versions < <(printf '%s\n' "${all_perl_versions[@]}" | sort -V | uniq)
-
-third_latest_perl=""
-if (( ${#all_perl_versions[@]} >= 3 )); then
-    third_latest_perl="${all_perl_versions[-3]}"
-elif (( ${#all_perl_versions[@]} > 0 )); then
-    third_latest_perl="${all_perl_versions[0]}"
-fi
-
-PERL5LIB=""
-if [[ -n "$third_latest_perl" ]]; then
-    PERL_BASES=("$CHARD_ROOT/usr/lib64/perl5" "$CHARD_ROOT/usr/local/lib64/perl5" "$CHARD_ROOT/usr/lib/perl5" "$CHARD_ROOT/usr/lib64/perl5")
-    for base in "${PERL_BASES[@]}"; do
-        for sub in "" "vendor_perl" "$CHOST" "vendor_perl/$CHOST"; do
-            dir="$base/$third_latest_perl/$sub"
-            if [[ -d "$dir" ]]; then
-                PERL5LIB="$dir${PERL5LIB:+:$PERL5LIB}"
-            fi
-        done
-    done
-    export PERL5LIB
 fi
 
 PYEXEC_BASE="$CHARD_ROOT/usr/lib/python-exec"
@@ -482,7 +467,7 @@ fi
 
 CHARD_DBUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS/unix:path=\/tmp\//unix:path=$CHARD_ROOT\/tmp\/}"
 
-sudo tee "/.chard_dbus" >/dev/null <<EOF
+sudo tee "$CHARD_ROOT/.chard_dbus" >/dev/null <<EOF
 export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
@@ -496,7 +481,7 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib/dri"
 fi
 
-export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
