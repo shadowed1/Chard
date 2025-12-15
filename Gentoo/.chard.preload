@@ -39,11 +39,11 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib/gcc/x86_64-pc-linux-gnu/15/libstdc++.so.6"
 ) 
 
-CHARD_LD_PRELOAD="${LD_PRELOAD}"
+LD_PRELOAD=""
 
-for lib in "${LD_PRELOAD_LIBS_MANUAL[@]}"; do
-    [[ -f "$lib" ]] && CHARD_LD_PRELOAD="${CHARD_LD_PRELOAD:+$CHARD_LD_PRELOAD:}$lib"
+for lib in "${LD_PRELOAD_LIBS[@]}"; do
+    [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
 done 2>/dev/null
 
-export CHARD_LD_PRELOAD
-# <<< END CHARD_PRELOAD <
+export LD_PRELOAD
+# <<< END CHARD_PRELOAD <<<
