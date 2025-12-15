@@ -13,24 +13,27 @@ STAGE2_FILE="$CHARD_ROOT/.chard_safe_preload"
 sudo rm -f "$STAGE2_FILE"
 
 if [[ -z "$LD_PRELOAD" ]]; then
-    echo "${RED}${BOLD}Stage 1 not loaded. Source .chard.preload first!${RESET}"
+    echo "${RED}${BOLD} .chard.preload not loaded.${RESET}"
+    sleep 5
+    exit 1
 fi
 
 echo "${BOLD}${CYAN}Stage 1 loaded with $(echo "$LD_PRELOAD" | tr ':' '\n' | wc -l) libraries${RESET}"
 echo "${BOLD}${BLUE}Scanning for additional safe libraries...${RESET}"
 echo
 
-TEST_CMD="curl --version 2>/dev/null"
+TEST_CMD="curl --version"
 CURRENT_LD_PRELOAD="$LD_PRELOAD"
 LD_PRELOAD_LIBS_STAGE2=()
 
 BANNED_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
-EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so)"
+EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so|libmemusage\.so|libpcprofile\.so)"
 
 for lib in "$CHARD_ROOT/lib64"/*.so*; do
     [[ -f "$lib" ]] || continue
     
     libname=$(basename "$lib")
+    
     if [[ "$libname" =~ $EXPLICIT_BANNED_REGEX ]]; then
         echo "${RED}${BOLD}$lib ${RESET}"
         continue
@@ -53,14 +56,19 @@ for lib in "$CHARD_ROOT/lib64"/*.so*; do
         continue
     fi
     
-    LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib" $TEST_CMD >/dev/null 2>&1
+    TEST_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib"
+    TEST_OUTPUT=$(LD_PRELOAD="$TEST_PRELOAD" $TEST_CMD 2>&1)
+    TEST_EXIT=$?
     
-    if [[ $? -eq 0 ]]; then
+    if echo "$TEST_OUTPUT" | grep -qE "(Memory usage summary|heap total|total calls|total memory)"; then
+        echo "${RED}${BOLD} $lib ${RESET}"
+        continue
+    fi
+    
+    if [[ $TEST_EXIT -eq 0 ]]; then
         LD_PRELOAD_LIBS_STAGE2+=("$lib")
-        echo
         echo "${GREEN}${BOLD}$lib ${RESET}"
-        echo
-        CURRENT_LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib"
+        CURRENT_LD_PRELOAD="$TEST_PRELOAD"
     else
         echo "${RED}$lib ${RESET}"
     fi
@@ -84,3 +92,5 @@ echo "${BOLD}${CYAN}Writing $STAGE2_FILE...${RESET}"
 echo
 echo "${BOLD}${GREEN}Stage 2 generated with ${#LD_PRELOAD_LIBS_STAGE2[@]} new libraries! ${RESET}"
 echo
+sleep 5
+$CHARD_ROOT/bin/chard_stage3_preload
