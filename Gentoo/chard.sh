@@ -479,8 +479,9 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib/dri"
 fi
 
-export LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
-export LIBGL_ALWAYS_INDIRECT=0
+export PATH="$PATH:$(unique_join "${PATHS_TO_ADD[@]}")"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$(unique_join "${LIBS_TO_ADD[@]}")"
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$(unique_join "${PKG_TO_ADD[@]}")"export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
