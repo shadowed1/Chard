@@ -159,68 +159,8 @@ trap cleanup_chroot EXIT INT TERM
                         source \$HOME/.bashrc 2>/dev/null
                         source \$HOME/.smrt_env.sh
 
-                        groupdel alarm 2>/dev/null
-                        groupdel audio 2>/dev/null
-                        groupdel video 2>/dev/null
-                        groupdel input 2>/dev/null
-                        groupdel lp 2>/dev/null
-                        
-                        getent group 1000 >/dev/null   || groupadd -g 1000 chronos 2>/dev/null
-                        getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
-                        getent group 602  >/dev/null   || groupadd -g 602 arc-bridge 2>/dev/null
-                        getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd 2>/dev/null
-                        getent group 604  >/dev/null   || groupadd -g 604 arc-sensor 2>/dev/null
-                        getent group 665357 >/dev/null || groupadd -g 665357 android-everybody 2>/dev/null
-                        getent group 18   >/dev/null   || groupadd -g 18 audio 2>/dev/null
-                        getent group 222  >/dev/null   || groupadd -g 222 input 2>/dev/null
-                        getent group 7    >/dev/null   || groupadd -g 7 lp 2>/dev/null
-                        getent group 27   >/dev/null   || groupadd -g 27 video 2>/dev/null
-                        getent group 423  >/dev/null   || groupadd -g 423 bluetooth-audio 2>/dev/null
-                        getent group 600  >/dev/null   || groupadd -g 600 cras 2>/dev/null
-                        getent group 85   >/dev/null   || groupadd -g 85 usb 2>/dev/null
-                        getent group 20162 >/dev/null  || groupadd -g 20162 traced-producer 2>/dev/null
-                        getent group 20164 >/dev/null  || groupadd -g 20164 traced-consumer 2>/dev/null
-                        getent group 1001 >/dev/null   || groupadd -g 1001 chronos-access 2>/dev/null
-                        getent group 240  >/dev/null   || groupadd -g 240 brltty 2>/dev/null
-                        getent group 20150 >/dev/null  || groupadd -g 20150 arcvm-boot-notification-server 2>/dev/null
-                        getent group 20189 >/dev/null  || groupadd -g 20189 arc-mojo-proxy 2>/dev/null
-                        getent group 20152 >/dev/null  || groupadd -g 20152 arc-host-clock 2>/dev/null
-                        getent group 608  >/dev/null   || groupadd -g 608 midis 2>/dev/null
-                        getent group 415  >/dev/null   || groupadd -g 415 suzy-q 2>/dev/null
-                        getent group 612  >/dev/null   || groupadd -g 612 ml-core 2>/dev/null
-                        getent group 311  >/dev/null   || groupadd -g 311 fuse-archivemount 2>/dev/null
-                        getent group 20137 >/dev/null  || groupadd -g 20137 crash 2>/dev/null
-                        getent group 419  >/dev/null   || groupadd -g 419 crash-access 2>/dev/null
-                        getent group 420  >/dev/null   || groupadd -g 420 crash-user-access 2>/dev/null
-                        getent group 304  >/dev/null   || groupadd -g 304 fuse-drivefs 2>/dev/null
-                        getent group 20215 >/dev/null  || groupadd -g 20215 regmond_senders 2>/dev/null
-                        getent group 603  >/dev/null   || groupadd -g 603 arc-camera 2>/dev/null
-                        getent group 20042 >/dev/null  || groupadd -g 20042 camera 2>/dev/null
-                        getent group 208  >/dev/null   || groupadd -g 208 pkcs11 2>/dev/null
-                        getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
-                        getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
-                        getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
-                        getent group portage >/dev/null || groupadd -g 250 portage 2>/dev/null
-                        getent group steam >/dev/null || groupadd -g 20001 steam 2>/dev/null
-                        getent group render >/dev/null || groupadd -g 989 render 2>/dev/null
-                        getent group 238 >/dev/null     || groupadd -g 238 hidraw 2>/dev/null
-                        getent group 213 >/dev/null     || groupadd -g 213 cros-disks 2>/dev/null
-                        getent group 222  >/dev/null    || groupadd -g 222 input 2>/dev/null
-
-
-
-
-                        if ! id \"\$CHARD_USER\" &>/dev/null; then
-                            useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
-                        fi
-
-                        usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,input,hidraw,cros-disks \$CHARD_USER
-                        
                         mkdir -p \"/\$CHARD_HOME\"
-                        chown \$USER:\$USER \"/\$CHARD_HOME\"
-        
-                        emerge --noreplace app-admin/sudo
-        
+                        chown \$USER:\$USER \"/\$CHARD_HOME\"        
                         mkdir -p /etc/sudoers.d
                         chown root:root /etc/sudoers.d
                         chmod 755 /etc/sudoers.d
@@ -254,40 +194,6 @@ trap cleanup_chroot EXIT INT TERM
                 echo "CHARD_HOME: $CHARD_ROOT/$CHARD_HOME"
                 echo "CHARD_USER: $CHARD_USER"
                 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
-                
-                sudo mkdir -p "$CHARD_ROOT/etc/portage" \
-                              "$CHARD_ROOT/etc/sandbox.d" \
-                              "$CHARD_ROOT/etc/ssl" \
-                              "$CHARD_ROOT/usr/bin" \
-                              "$CHARD_ROOT/usr/lib" \
-                              "$CHARD_ROOT/usr/lib64" \
-                              "$CHARD_ROOT/usr/include" \
-                              "$CHARD_ROOT/usr/share" \
-                              "$CHARD_ROOT/usr/local/bin" \
-                              "$CHARD_ROOT/usr/local/lib" \
-                              "$CHARD_ROOT/usr/local/include" \
-                              "$CHARD_ROOT/var/tmp/build" \
-                              "$CHARD_ROOT/var/cache/distfiles" \
-                              "$CHARD_ROOT/var/cache/packages" \
-                              "$CHARD_ROOT/var/log" \
-                              "$CHARD_ROOT/var/run" \
-                              "$CHARD_ROOT/dev/shm" \
-                              "$CHARD_ROOT/dev/pts" \
-                              "$CHARD_ROOT/proc" \
-                              "$CHARD_ROOT/sys" \
-                              "$CHARD_ROOT/tmp" \
-                              "$CHARD_ROOT/run" \
-                              "$CHARD_ROOT/$CHARD_HOME/.cargo" \
-                              "$CHARD_ROOT/$CHARD_HOME/.rustup" \
-                              "$CHARD_ROOT/$CHARD_HOME/.local/share" \
-                              "$CHARD_ROOT/$CHARD_HOME/Desktop" \
-                              "$CHARD_ROOT/mnt"
-                
-                sudo mkdir -p "$(dirname "$LOG_FILE")"
-                sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-                sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
-                sudo mkdir -p "$CHARD_ROOT/tmp/.X11-unix"
-                sudo chmod 1777 "$CHARD_ROOT/tmp/.X11-unix"
                 
                 echo "${BLUE}[*] Downloading Chard components..."
                 
@@ -335,6 +241,8 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.2
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_volume.sh"         -o "$CHARD_ROOT/bin/chard_volume"
                 sleep 0.2
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
+                sleep 0.2
                 
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
@@ -352,6 +260,8 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
                 sudo chmod +x "$CHARD_ROOT/bin/chardwire"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
+                sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
+
 
                 
                 for file in \
@@ -793,132 +703,6 @@ sudo mkdir -p /media
 
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
                 chard_unmount
-
-                sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
-                sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
-                
-                if [ -f "/home/chronos/user/.bashrc" ]; then
-                    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
-                    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-                    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
-                else
-                    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
-                fi
-                
-                sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
-                sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
-                sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
-                
-                if [ -f "/home/chronos/user/.bashrc" ]; then
-                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
-                else
-                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
-                fi
-                
-                sudo chroot "$CHARD_ROOT" /bin/bash -c '
-                
-                    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-                    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-                
-                    if [ -e /dev/zram0 ]; then
-                        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                        mount --make-rslave /dev/zram0 2>/dev/null
-                    fi
-                
-                    chmod 1777 /tmp /var/tmp
-                
-                    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-                    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-                    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-                    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-                
-                    CHARD_HOME=$(cat /.chard_home)
-                    HOME=$CHARD_HOME
-                    CHARD_USER=$(cat /.chard_user)
-                    USER=$CHARD_USER
-                    GROUP_ID=1000
-                    USER_ID=1000
-                
-                    sudo -u "$USER" bash -c "
-                        cleanup() {
-                            echo \"Logging out $USER\"
-                            if [ -n \"\$PULSEAUDIO_PID\" ]; then
-                                kill -9 \"\$PULSEAUDIO_PID\" 2>/dev/null
-                            fi
-                        }
-                        trap cleanup EXIT INT TERM
-                        
-                        
-                        [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
-                        [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
-                        pipewire 2>/dev/null & 
-                        pipewire-pulse 2>/dev/null &
-                        pulseaudio 2>/dev/null &
-                        PULSEAUDIO_PID=\"\$!\"
-                    "
-                    umount -l /tmp/usb_mount 2>/dev/null || true
-                    umount -l /dev/zram0   2>/dev/null || true
-                    umount -l /run/chrome  2>/dev/null || true
-                    umount -l /etc/ssl     2>/dev/null || true
-                    umount -l /dev/pts     2>/dev/null || true
-                    umount -l /dev/shm     2>/dev/null || true
-                    umount -l /dev         2>/dev/null || true
-                    umount -l /sys         2>/dev/null || true
-                    umount -l /proc        2>/dev/null || true
-                '
-                
-                sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-                sleep 0.2
-                sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-                sleep 0.2
-                sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-                sleep 0.2
-                sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-                sleep 0.2
-                sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-                sleep 0.2
-                sudo setfacl -Rb /run/chrome 2>/dev/null
-                echo
-                killall -9 pipewire 2>/dev/null
-                killall -9 pipewire-pulse 2>/dev/null
-                killall -9 pulseaudio 2>/dev/null
-                sudo pkill -f xfce4-session
-                sudo pkill -f xfwm4
-                sudo pkill -f xfce4-panel
-                sudo pkill -f xfdesktop
-                sudo pkill -f xfce4-terminal
-                sudo pkill -f xfce4-*
-                sudo pkill -f Xorg
                 
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 if [ -f "$CHROMEOS_BASHRC" ]; then
