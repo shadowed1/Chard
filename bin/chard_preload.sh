@@ -1,66 +1,80 @@
 #!/bin/bash
-# Chard automated safe LD_PRELOAD generator
-# MUST be run outside of Chard in Host OS shell!
+# Chard Stage 2 Generator - Run manually to scan for safe libs
+# Usage: chard_generate_stage2
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-SAFE_PRELOAD_FILE="$CHARD_ROOT/.chard_safe_preload"
-sudo rm -f "$SAFE_PRELOAD_FILE"
+STAGE2_FILE="$CHARD_ROOT/.chard_safe_preload"
+sudo rm -f "$STAGE2_FILE"
+
+# Checkpoint: Stage 1 must be loaded
+if [[ -z "$LD_PRELOAD" ]]; then
+    echo "${RED}${BOLD}ERROR: Stage 1 not loaded. Source .chard.preload first!${RESET}"
+    exit 1
+fi
+
+echo "${BOLD}${CYAN}Stage 1 loaded with $(echo "$LD_PRELOAD" | tr ':' '\n' | wc -l) libraries${RESET}"
+echo "${BOLD}${CYAN}Scanning for additional safe libraries...${RESET}"
+echo
+
 TEST_CMD="curl --version 2>/dev/null"
 CURRENT_LD_PRELOAD="$LD_PRELOAD"
-LD_PRELOAD_LIBS=()
-BANNED_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
-EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so)"
+LD_PRELOAD_LIBS_STAGE2=()
 
+BANNED_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
 
 for lib in "$CHARD_ROOT/lib64"/*.so*; do
     [[ -f "$lib" ]] || continue
+    
     libname=$(basename "$lib")
     [[ "$libname" =~ $BANNED_REGEX ]] && continue
-
+    
+    # Skip if already in Stage 1
     case ":$CURRENT_LD_PRELOAD:" in
-        *":$lib:"*) continue ;;
+        *":$lib:"*) 
+            echo "${BLUE}⊙ $lib${RESET} (already in Stage 1)"
+            continue 
+            ;;
     esac
-
+    
     if ! file "$lib" | grep -q "ELF.*shared object"; then
-        echo "${YELLOW}$lib ${RESET}" #Not shared object
+        echo "${YELLOW}⊘ $lib${RESET} (not shared object)"
         continue
     fi
-
-    LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib" $TEST_CMD >/dev/null 2>/dev/null
+    
+    LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib" $TEST_CMD >/dev/null 2>&1
+    
     if [[ $? -eq 0 ]]; then
-        LD_PRELOAD_LIBS+=("$lib")
-        echo
-        echo "${GREEN}${BOLD}$lib ${RESET}"
-        echo
+        LD_PRELOAD_LIBS_STAGE2+=("$lib")
+        echo "${GREEN}${BOLD}✓ $lib${RESET}"
         CURRENT_LD_PRELOAD="${CURRENT_LD_PRELOAD:+$CURRENT_LD_PRELOAD:}$lib"
     else
-        echo "${RED}$lib ${RESET}" #Segfault
+        echo "${RED}✗ $lib${RESET} (causes crash)"
     fi
 done
 
+echo
+echo "${BOLD}${CYAN}Writing $STAGE2_FILE...${RESET}"
+
 {
-    echo "# <<< CHARD_SAFE_PRELOAD <<<"
-    echo "# Auto-generated safe libraries. Appends to existing LD_PRELOAD."
-    echo "LD_PRELOAD_LIBS_SAFE=("
-    for lib in "${LD_PRELOAD_LIBS[@]}"; do
+    echo "# <<< CHARD_STAGE2 <<<"
+    echo "# Auto-generated Stage 2 libraries"
+    echo "# Generated: $(date)"
+    echo
+    echo "LD_PRELOAD_LIBS_STAGE2=("
+    for lib in "${LD_PRELOAD_LIBS_STAGE2[@]}"; do
         echo "    \"$lib\""
     done
     echo ")"
-    echo
-    echo "for lib in \"\${LD_PRELOAD_LIBS_SAFE[@]}\"; do"
-    echo "    [[ -f \"\$lib\" ]] && LD_PRELOAD=\"\${LD_PRELOAD:+\$LD_PRELOAD:}\$lib\""
-    echo "done 2>/dev/null"
-    echo
-    echo "export LD_PRELOAD"
-    echo "# <<< END CHARD_SAFE_PRELOAD <<<"
-} | sudo tee "$SAFE_PRELOAD_FILE" >/dev/null
+    echo "# <<< END CHARD_STAGE2 <<<"
+} | sudo tee "$STAGE2_FILE" >/dev/null
 
-    echo "${BOLD}${CYAN}Chard LD_PRELOAD generated with ${#LD_PRELOAD_LIBS[@]} libraries! ${RESET}"
+echo
+echo "${BOLD}${GREEN}✓ Stage 2 generated with ${#LD_PRELOAD_LIBS_STAGE2[@]} new libraries!${RESET}"
+echo "${BOLD}${CYAN}Run 'chard_merge_stages' to create Stage 3${RESET}"
