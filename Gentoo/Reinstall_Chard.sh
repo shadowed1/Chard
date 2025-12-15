@@ -421,7 +421,7 @@ EOF
                     umount -l /sys         2>/dev/null || true
                     umount -l /proc        2>/dev/null || true
                 "
-                
+                echo "${RESET} ${GREEN}"
                 detect_gpu_freq() {
                 GPU_FREQ_PATH=""
                 GPU_MAX_FREQ=""
