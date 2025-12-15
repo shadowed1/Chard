@@ -57,7 +57,7 @@ fi
 chard() {
     case "$1" in
         reinstall)
-            bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
+            bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/Reinstall_Chard.sh?$(date +%s)")
             ;;
         *)
             "$CHARD_ROOT/bin/chard" "$@"
