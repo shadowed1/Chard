@@ -218,6 +218,8 @@ chard_run() {
         return 1
     fi
 
+trap cleanup_chroot EXIT INT TERM
+
     ARCH=$(uname -m)
 case "$ARCH" in
     x86_64) CHOST=x86_64-pc-linux-gnu ;;
