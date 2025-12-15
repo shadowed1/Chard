@@ -13,7 +13,7 @@ if [[ ! -f "$CHARD_ROOT/.chard.preload" ]]; then
     echo "${RED}${BOLD}ERROR: .chard.preload not found!${RESET}"
 fi
 
-if [[ ! -f "$CHARD_ROOT/.chard_stages_safe_preload" ]]; then
+if [[ ! -f "$CHARD_ROOT/.chard_safe_preload" ]]; then
     echo "${RED}${BOLD}ERROR: .chard_safe_preload ${RESET}"
 fi
 
