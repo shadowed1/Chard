@@ -11,3 +11,5 @@ chronos   1156  0.0  0.0   6852  2604 pts/0    S+   06:23   0:00 grep --color=au
 
 Creating a wrapper for Xwayland allows me to pass Xwayland arguments with sommelier. This might be useful.
 exec /usr/bin/Xwayland +extension XFIXES +extension "Generic Event Extension" "$@"
+Borealis uses:
+/usr/bin/Xwayland -nolisten tcp -rootless -displayfd 30 -wm 31
