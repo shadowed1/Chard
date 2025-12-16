@@ -19,7 +19,7 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
                         sleep 4
                         exit 1
             fi
-            
+            unset LD_PRELOAD
         echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
         unset LD_PRELOAD
                 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
@@ -103,10 +103,10 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
         echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
         echo
             
-            
+            unset LD_PRELOAD
             echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
             sudo rm -rf "$CHARD_ROOT" 2>/dev/null
-            
+            unset LD_PRELOAD
             CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
             DEFAULT_BASHRC="$HOME/.bashrc"
             TARGET_FILE=""
@@ -127,6 +127,7 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
             
         echo "${CYAN}[+] Uninstalled - Exiting in 10 seconds...${RESET}"
         sleep 8
+        unset LD_PRELOAD
 else
         echo "${RED}[*] Cancelled.${RESET}"
 fi
