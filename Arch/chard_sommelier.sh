@@ -9,6 +9,8 @@ SOMMELIER_CMD=(
     --force-drm-device="$SOMMELIER_DRM_DEVICE"
     --display="$SOMMELIER_DISPLAY"
     --noop-driver
+    --fullscreen-mode=plain
+    --direct-scale
     --stable-scaling
     --enable-xshape
     --sd-notify=READY=1
@@ -21,6 +23,7 @@ SOMMELIER_CMD=(
     --enable-linux-dmabuf
     --xwayland-path=/usr/bin/Xwayland
     --vm-identifier=termina
+    --only-client-can-exit-fullscreen
 )
 
    "${SOMMELIER_CMD[@]}" -- bash -c '
