@@ -9,7 +9,7 @@
 
 <br>
 
-- For **ChromeOS, and most Linux Distros,** press `ctrl-alt-t`, open crosh, type in `shell` and paste:
+- For **ChromeOS, and most Linux Distros,** press `ctrl-alt-t`, open a crosh `shell` and paste:
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")</pre>
 
