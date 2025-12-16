@@ -9,7 +9,7 @@ chronos    377  1.6  0.7 463520 46840 ?        S<l  06:21   0:01 /usr/local/bin/
 chronos   1156  0.0  0.0   6852  2604 pts/0    S+   06:23   0:00 grep --color=auto sommelier
 [chronos@Chromebook ~]$ 
 
-Creating a wrapper for Xwayland allows me to pass Xwayland arguments with sommelier. This might be useful.
+# Creating a wrapper for Xwayland allows me to pass Xwayland arguments with sommelier. This might be useful.
 exec /usr/bin/Xwayland +extension XFIXES +extension "Generic Event Extension" "$@"
-Borealis uses:
+# Borealis uses:
 /usr/bin/Xwayland -nolisten tcp -rootless -displayfd 30 -wm 31
