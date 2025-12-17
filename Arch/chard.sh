@@ -274,6 +274,7 @@ chard_unmount() {
     sudo chown -R root:audio /dev/snd 2>/dev/null
     sudo chown -R root:root /dev/snd/by-path 2>/dev/null
     echo
+    echo "${YELLOW}Almost done... ${RESET}"
 }
 
 chard_uninstall() {
