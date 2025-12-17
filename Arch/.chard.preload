@@ -1,5 +1,5 @@
 # <<< CHARD_PRELOAD <<<
-# ChromeOS Only. Does not support FydeOS.
+# ChromeOS Only.
 # Manual entries.
 LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libunwind-ptrace.so.0"
