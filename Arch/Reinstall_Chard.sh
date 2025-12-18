@@ -11,90 +11,90 @@ RESET=$(tput sgr0)
 
 cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-    sleep 0.2
+    sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
 }
 
@@ -213,47 +213,47 @@ detect_gpu_freq() {
 
     chard_unmount() {        
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-        sleep 0.2
+        sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
         echo
         echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
@@ -263,55 +263,55 @@ detect_gpu_freq() {
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"           -o "$CHARD_ROOT/.chardrc" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.env"         -o "$CHARD_ROOT/.chard.env" 2>/dev/null
-sleep 0.2
+sleep 0.05
 #sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh" -o "$CHARD_ROOT/bin/Reinstall_Chard.sh" 2>/dev/null
-#sleep 0.2
+#sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard.sh"           -o "$CHARD_ROOT/bin/chard" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.bashrc"            -o "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version"       -o "$CHARD_ROOT/bin/chard_version" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"                 -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.rootrc"            -o "$CHARD_ROOT/bin/.rootrc" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chariot.sh"         -o "$CHARD_ROOT/bin/chariot" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_sommelier.sh" -o "$CHARD_ROOT/bin/chard_sommelier" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/wx"                  -o "$CHARD_ROOT/bin/wx" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/SMRT.sh"            -o "$CHARD_ROOT/bin/SMRT" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_unmount"       -o "$CHARD_ROOT/bin/chard_unmount" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chardsetup.sh"      -o "$CHARD_ROOT/bin/chardsetup" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/root.sh"            -o "$CHARD_ROOT/bin/root" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_volume.sh"            -o "$CHARD_ROOT/bin/chard_volume" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardwire.sh"            -o "$CHARD_ROOT/bin/chardwire" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.preload"            -o "$CHARD_ROOT/.chard.preload" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_ucm.sh"            -o "$CHARD_ROOT/bin/chard_ucm" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"            -o "$CHARD_ROOT/bin/chard_preload" 2>/dev/null
-sleep 0.2
+sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"            -o "$CHARD_ROOT/bin/rainbow" 2>/dev/null
-sleep 0.2
+sleep 0.05
 
 
 sudo mkdir -p "$CHARD_ROOT/run/udev"
