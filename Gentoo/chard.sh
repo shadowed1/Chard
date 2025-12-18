@@ -525,7 +525,8 @@ fi
 
 CHARD_DBUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS/unix:path=\/tmp\//unix:path=$CHARD_ROOT\/tmp\/}"
 
-sudo tee "$CHARD_ROOT/.chard_dbus" >/dev/null <<EOF
+sudo env -u LD_LIBRARY_PATH -u LD_PRELOAD \
+    tee "$CHARD_ROOT/.chard_dbus" >/dev/null <<EOF
 export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
