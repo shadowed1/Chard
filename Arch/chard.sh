@@ -16,7 +16,6 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 CLEANUP_ENABLED=0
 
-
 cleanup_chroot() {
     [[ "$CLEANUP_ENABLED" -eq 1 ]] || return 0
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
@@ -182,6 +181,7 @@ esac
 chard_unmount() { 
     echo
     echo "${RESET}${YELLOW}Unmounting Chard... ${RESET}"
+    echo
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -272,6 +272,8 @@ chard_unmount() {
     sudo setfacl -Rb /run/chrome 2>/dev/null
     sudo chown -R root:audio /dev/snd 2>/dev/null
     sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+    echo
+    echo "${YELLOW}Almost done... ${RESET}"
 }
 
 chard_uninstall() {
@@ -606,6 +608,7 @@ case "$cmd" in
         chard_unmount
         ;;
         version)
+        # Denny's version checker
         CLEANUP_ENABLED=0
         if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
             CURRENT_VER=$(cat "$CHARD_ROOT/bin/chard_version")
