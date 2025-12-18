@@ -501,7 +501,8 @@ fi
 
 export PATH="$PATH:$(unique_join "${PATHS_TO_ADD[@]}")"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$(unique_join "${PKG_TO_ADD[@]}")"export LIBGL_ALWAYS_INDIRECT=0
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$(unique_join "${PKG_TO_ADD[@]}")"
+export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
@@ -515,7 +516,6 @@ if [[ -w "$MAKECONF" ]]; then
     echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
     echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
 fi
-
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
@@ -546,31 +546,42 @@ else
     IS_CHROMEOS=0
 fi
 
+ORIGINAL_LD_PRELOAD="$LD_PRELOAD"
+
 if [ "$IS_CHROMEOS" -eq 1 ]; then
     unset LD_PRELOAD
     [ -f "$CHARD_ROOT/.chard_stage3_preload" ] && source "$CHARD_ROOT/.chard_stage3_preload"
 fi
 
-    echo "[*] Running '$*' inside Chard environment..."
-    env \
-        ROOT="$CHARD_ROOT" \
-        PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
-        PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
-        DISTDIR="$DISTDIR" \
-        PKGDIR="$PKGDIR" \
-        PATH="$PATH" \
-        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-        SANDBOX="$SANDBOX" \
-        FEATURES="$FEATURES" \
-        USE="$USE" \
-        PYTHON_TARGETS="$PYTHON_TARGETS" \
-        PYTHON_SINGLE_TARGET="$PYTHON_SINGLE_TARGET" \
-        PYTHONPATH="$PYTHONPATH" \
-        HOME="$CHARD_ROOT/$CHARD_HOME" \
-        "$@"
+echo "[*] Running '$*' inside Chard environment..."
+
+env \
+    ROOT="$CHARD_ROOT" \
+    PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
+    PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
+    DISTDIR="$DISTDIR" \
+    PKGDIR="$PKGDIR" \
+    PATH="$PATH" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    SANDBOX="$SANDBOX" \
+    FEATURES="$FEATURES" \
+    USE="$USE" \
+    PYTHON_TARGETS="$PYTHON_TARGETS" \
+    PYTHON_SINGLE_TARGET="$PYTHON_SINGLE_TARGET" \
+    PYTHONPATH="$PYTHONPATH" \
+    HOME="$CHARD_ROOT/$CHARD_HOME" \
+    "$@"
+
+COMMAND_EXIT_CODE=$?
+
 unset LD_PRELOAD
 [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
 
+if [ -n "$ORIGINAL_LD_PRELOAD" ]; then
+    export LD_PRELOAD="$ORIGINAL_LD_PRELOAD"
+fi
+
+return $COMMAND_EXIT_CODE
 }
 
 chard_uninstall() {
