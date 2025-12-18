@@ -34,9 +34,10 @@ LD_PRELOAD_LIBS_STAGE2=()
 BANNED_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
 EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so|libmemusage\.so|libpcprofile\.so)"
 
-for lib in "$CHARD_ROOT/lib64"/*.so*; do
-    [[ -f "$lib" ]] || continue
-    
+for lib in \
+    "$CHARD_ROOT/lib64"/*.so* \
+    "$CHARD_ROOT/usr/lib64"/*.so*; do
+
     libname=$(basename "$lib")
     
     if [[ "$libname" =~ $EXPLICIT_BANNED_REGEX ]]; then
