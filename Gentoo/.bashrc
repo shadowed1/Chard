@@ -284,14 +284,8 @@ export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
 
-ARCH=$(uname -m)
-if [[ "$ARCH" == "x86_64" ]]; then
-    export LIBGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
-    export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib64/dri"
-elif [[ "$ARCH" == "aarch64" ]]; then
-    export LIBGL_DRIVERS_PATH="$ROOT/usr/lib/dri"
-    export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib/dri"
-fi
+export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
+export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
 
 export LD_LIBRARY_PATH=/usr/lib64\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
