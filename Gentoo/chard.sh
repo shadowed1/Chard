@@ -547,11 +547,8 @@ else
 fi
 
 if [ "$IS_CHROMEOS" -eq 1 ]; then
-    if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
-        source "$CHARD_ROOT/.chard_stage3_preload" 2>/dev/null
-    else
-        source "$CHARD_ROOT/.chard.preload" 2>/dev/null
-    fi
+    unset LD_PRELOAD
+    [ -f "$CHARD_ROOT/.chard_stage3_preload" ] && source "$CHARD_ROOT/.chard_stage3_preload"
 fi
 
     echo "[*] Running '$*' inside Chard environment..."
