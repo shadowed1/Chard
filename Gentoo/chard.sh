@@ -568,6 +568,9 @@ fi
         PYTHONPATH="$PYTHONPATH" \
         HOME="$CHARD_ROOT/$CHARD_HOME" \
         "$@"
+unset LD_PRELOAD
+[ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
+
 }
 
 chard_uninstall() {
