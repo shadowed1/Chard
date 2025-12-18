@@ -9,6 +9,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 echo "${BOLD}${RED}Warning - This script is not recommended to run and can cause issues, but is easily removable. Only run if you know what you are doing. ${RESET}"
+echo "${BOLD}${RED} Run: ${RESET}${BOLD}${GREEN}sudo rm $CHARD_ROOT/.chard_stage3_preload${RESET}${BOLD}${RED} to remove this LD_PRELOAD"
 echo "${GREEN}CTRL-C to exit. Starts in 30 seconds! ${RESET}"
 echo
 sleep 30
