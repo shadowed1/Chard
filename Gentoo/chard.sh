@@ -221,11 +221,11 @@ chard_run() {
     fi
 
     ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64) CHOST=x86_64-pc-linux-gnu ;;
-    aarch64) CHOST=aarch64-unknown-linux-gnu ;;
-    *) echo "Unknown architecture: $ARCH"; exit 1 ;;
-esac
+        case "$ARCH" in
+            x86_64) CHOST=x86_64-pc-linux-gnu ;;
+            aarch64) CHOST=aarch64-unknown-linux-gnu ;;
+            *) echo "Unknown architecture: $ARCH"; exit 1 ;;
+        esac
 
 HOME="$CHARD_ROOT/$CHARD_HOME"
 USER="$CHARD_USER"
@@ -270,7 +270,6 @@ export CHARD_RC="$CHARD_ROOT/.chardrc"
 export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
 export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
 export PYTHONMULTIPROCESSING_START_METHOD=fork
-
 export PORTDIR="$CHARD_ROOT/usr/portage"
 export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
 export PKGDIR="$CHARD_ROOT/var/cache/packages"
@@ -438,7 +437,6 @@ export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
 export STRIP="$CHARD_ROOT/usr/bin/strip"
 export LD="$CHARD_ROOT/usr/bin/ld"
 export MOZ_APP_LAUNCHER="$CHARD_ROOT/usr/bin/firefox-bin"
-
 
 # <<< CHARD_MARCH_NATIVE >>>
 CFLAGS="-march=native -O2 -pipe "
