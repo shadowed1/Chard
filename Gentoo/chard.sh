@@ -444,8 +444,6 @@ PATHS_TO_ADD=(
     "$CHARD_ROOT/opt/firefox"
 )
 LIBS_TO_ADD=(
-    "$CHARD_ROOT/usr/lib64"
-    "$CHARD_ROOT/lib64"
     "$CHARD_ROOT/usr/lib"
     "$CHARD_ROOT/usr/lib64/gedit"
     "$CHARD_ROOT/lib"
