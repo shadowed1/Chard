@@ -109,7 +109,6 @@ trap cleanup_chroot EXIT INT TERM
                 }
                 chard_unmount
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
-                echo
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 DEFAULT_BASHRC="$HOME/.bashrc"
                 TARGET_FILE=""
