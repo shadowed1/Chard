@@ -2241,7 +2241,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 '
 
 chard_unmount
-#$CHARD_ROOT/bin/chard_preload
+$CHARD_ROOT/bin/chard_preload
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
