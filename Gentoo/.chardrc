@@ -45,13 +45,11 @@ else
     IS_CHROMEOS=0
 fi
 
-[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env" 2>/dev/null
-[ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic" 2>/dev/null
+[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
+[ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
 if [ "$IS_CHROMEOS" -eq 1 ]; then
-    if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
-        source "$CHARD_ROOT/.chard_stage3_preload" 2>/dev/null
-    fi
+    [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
 fi
 
 chard() {
