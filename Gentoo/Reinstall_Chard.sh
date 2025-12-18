@@ -161,13 +161,13 @@ trap cleanup_chroot EXIT INT TERM
                         source \$HOME/.smrt_env.sh
 
                         mkdir -p \"/\$CHARD_HOME\"
-                        chown \$USER:\$USER \"/\$CHARD_HOME\"        
+                        chown -R \$USER:\$USER \"/\$CHARD_HOME\" 2>/dev/null        
                         mkdir -p /etc/sudoers.d
-                        chown root:root /etc/sudoers.d
+                        chown root:root /etc/sudoers.d 2>/dev/null
                         chmod 755 /etc/sudoers.d
-                        chown root:root /etc/sudoers.d/\$USER
+                        chown root:root /etc/sudoers.d/\$USER 2>/dev/null
                         chmod 440 /etc/sudoers.d/\$USER
-                        chown root:root /usr/bin/sudo
+                        chown root:root /usr/bin/sudo 2>/dev/null
                         chmod 4755 /usr/bin/sudo
                         umount -l /dev/zram0   2>/dev/null || true
                         umount -l /run/chrome  2>/dev/null || true
@@ -360,7 +360,7 @@ source /usr/.chard_prompt.sh
 EOF
                 fi
 
-                sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
+                sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 2>/dev/null
 
                 sudo chroot $CHARD_ROOT /bin/bash -c "
 
@@ -391,12 +391,12 @@ EOF
                     HOME=\$CHARD_HOME
                     USER=\$CHARD_USER
                     source \$HOME/.bashrc 2>/dev/null
-                    chown -R portage:portage /var/db/pkg /var/lib/portage
+                    chown -R portage:portage /var/db/pkg /var/lib/portage 2>/dev/null
                     chmod -R 755 /var/db/pkg
                     chmod 644 /var/lib/portage/world
                     /bin/SMRT
                     source \$HOME/.smrt_env.sh
-                    sudo chown -R \$USER:\$USER \$HOME
+                    sudo chown -R \$USER:\$USER \$HOME 2>/dev/null
                     emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
                     BASHRC=\"\$HOME/.bashrc\" && \
@@ -704,7 +704,7 @@ grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/puls
 mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
 sudo mkdir -p /media
 
-                sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
+                sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc 2>/dev/null
                 chard_unmount
                 
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
