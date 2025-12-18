@@ -64,7 +64,7 @@ trap cleanup_chroot EXIT INT TERM
         case "$choice" in
             1)
                 chard_unmount() {
-                    echo "${YELLOW}Chard is unmounting... ${RESET"
+                    echo "${YELLOW}Chard is unmounting... ${RESET}"
                     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
                     sleep 0.1
                     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
