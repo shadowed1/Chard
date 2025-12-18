@@ -63,7 +63,8 @@ trap cleanup_chroot EXIT INT TERM
         
         case "$choice" in
             1)
-                chard_unmount() {   
+                chard_unmount() {
+                    echo "${YELLOW}Chard is unmounting... ${RESET"
                     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
                     sleep 0.2
                     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -105,7 +106,7 @@ trap cleanup_chroot EXIT INT TERM
                     echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
                     echo
                 }
-
+                chard_unmount
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
                 echo
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
