@@ -354,7 +354,6 @@ export XCURSOR_THEME
 alias firefox-bin='chard_firefox-bin'
 alias firefox='chard_firefox-bin'
 
-
 # Brave
 #export BRAVE_USE_SYSTEM_KEYRING=0
 alias brave='brave-browser-stable --force-dark-mode --enable-features=WebUIDarkMode'
