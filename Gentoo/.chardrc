@@ -7,6 +7,8 @@ CHARD_HOME=""
 CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
+unset LD_LIBRARY_PATH LD_PRELOAD
+
 case ":$PATH:" in
     *":$CHARD_ROOT/usr/bin:"*) ;;
     *) PATH="$PATH:$CHARD_ROOT/usr/bin" ;;
