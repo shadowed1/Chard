@@ -12,43 +12,43 @@ RESET=$(tput sgr0)
 
 cleanup_chroot() {
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-        sleep 0.1
+        sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
 }
 
@@ -67,41 +67,41 @@ trap cleanup_chroot EXIT INT TERM
                     echo
                     echo "${YELLOW}Chard is unmounting... ${RESET}"
                     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/run/chrome" 2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/etc/ssl"    2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/dev/pts"    2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/dev/shm"    2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/dev"        2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l -f "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
-                    sleep 0.1
+                    sleep 0.05
                     sudo setfacl -Rb /run/chrome 2>/dev/null
                     echo
                     echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
@@ -196,53 +196,53 @@ trap cleanup_chroot EXIT INT TERM
                 echo "${BLUE}[*] Downloading Chard components..."
                 
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chardrc"            -o "$CHARD_ROOT/.chardrc"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chard.env"          -o "$CHARD_ROOT/.chard.env"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard.sh"            -o "$CHARD_ROOT/bin/chard"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version"       -o "$CHARD_ROOT/$CHARD_HOME/chard_version"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/wx"                  -o "$CHARD_ROOT/bin/wx"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chardonnay.sh"         -o "$CHARD_ROOT/bin/chardonnay"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"         -o "$CHARD_ROOT/bin/chard_preload"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardwire.sh"         -o "$CHARD_ROOT/bin/chardwire"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_volume.sh"         -o "$CHARD_ROOT/bin/chard_volume"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
-                sleep 0.1
+                sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"         -o "$CHARD_ROOT/bin/rainbow"
-                sleep 0.1
+                sleep 0.05
                 
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
