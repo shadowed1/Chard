@@ -50,9 +50,7 @@ fi
 
 if [ "$IS_CHROMEOS" -eq 1 ]; then
     if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
-        source "$CHARD_ROOT/.chard_stage3_preload"
-    else
-        source "$CHARD_ROOT/.chard.preload"
+        source "$CHARD_ROOT/.chard_stage3_preload" 2>/dev/null
     fi
 fi
 
