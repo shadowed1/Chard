@@ -235,33 +235,6 @@ if [[ "$CHARD_ROOT" != "/" ]]; then
     ROOT="${ROOT%/}"
 fi
 
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    if [ -d "/usr/share/fydeos_shell" ]; then
-        DEFAULT_BASHRC="$HOME/.bashrc"
-        BASHRC_PATH="$DEFAULT_BASHRC"
-        IS_CHROMEOS=0
-    else
-        CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
-        BASHRC_PATH="$CHROMEOS_BASHRC"
-        IS_CHROMEOS=1
-    fi
-else
-    DEFAULT_BASHRC="$HOME/.bashrc"
-    BASHRC_PATH="$DEFAULT_BASHRC"
-    IS_CHROMEOS=0
-fi
-
-[ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env" 2>/dev/null
-[ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic" 2>/dev/null
-
-if [ "$IS_CHROMEOS" -eq 1 ]; then
-    if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
-        source "$CHARD_ROOT/.chard_stage3_preload" 2>/dev/null
-    else
-        source "$CHARD_ROOT/.chard.preload" 2>/dev/null
-    fi
-fi
-
 export ARCH
 export CHOST
 export CHARD_RC="$CHARD_ROOT/.chardrc"
@@ -556,6 +529,30 @@ sudo tee "$CHARD_ROOT/.chard_dbus" >/dev/null <<EOF
 export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
+
+if [ -f "/home/chronos/user/.bashrc" ]; then
+    if [ -d "/usr/share/fydeos_shell" ]; then
+        DEFAULT_BASHRC="$HOME/.bashrc"
+        BASHRC_PATH="$DEFAULT_BASHRC"
+        IS_CHROMEOS=0
+    else
+        CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+        BASHRC_PATH="$CHROMEOS_BASHRC"
+        IS_CHROMEOS=1
+    fi
+else
+    DEFAULT_BASHRC="$HOME/.bashrc"
+    BASHRC_PATH="$DEFAULT_BASHRC"
+    IS_CHROMEOS=0
+fi
+
+if [ "$IS_CHROMEOS" -eq 1 ]; then
+    if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
+        source "$CHARD_ROOT/.chard_stage3_preload" 2>/dev/null
+    else
+        source "$CHARD_ROOT/.chard.preload" 2>/dev/null
+    fi
+fi
 
     echo "[*] Running '$*' inside Chard environment..."
     env \
