@@ -259,7 +259,7 @@ detect_gpu_freq() {
         echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
         echo
 }
-
+chard unmount
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"           -o "$CHARD_ROOT/.chardrc" 2>/dev/null
