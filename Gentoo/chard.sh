@@ -169,7 +169,6 @@ chard_unmount() {
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
-        echo
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -209,7 +208,6 @@ chard_unmount() {
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
-        echo
         echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
         echo
 }
