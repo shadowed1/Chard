@@ -13,16 +13,6 @@ echo
 echo "${BOLD}${RED}Run: ${RESET}${BOLD}${GREEN}sudo rm $CHARD_ROOT/.chard_stage3_preload${RESET}${BOLD}${RED} to remove this LD_PRELOAD${RESET}"
 echo "${GREEN}CTRL-C to exit. Starts in 15 seconds! ${RESET}"
 echo
-echo
-echo "${BOLD}${CYAN}═══════════════════════════════════════${RESET}"
-echo "${BOLD}${CYAN}Legend:${RESET}"
-echo "  ${GREEN}Success $SUCCESS_COUNT${RESET}"
-echo "  ${BLUE}Already loaded $ALREADY_COUNT${RESET}"
-echo "  ${RED}Failed $FAILED_COUNT${RESET}"
-echo "  ${RED}Banned $BANNED_COUNT${RESET}"
-echo "  ${YELLOW}Not ELF $NOT_ELF_COUNT${RESET}"
-echo "${BOLD}${CYAN}═══════════════════════════════════════${RESET}"
-echo
 sleep 15
 
 STAGE2_FILE="$CHARD_ROOT/.chard_safe_preload"
@@ -54,10 +44,16 @@ EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so|libmemusage\.so|libpcprofile\.so
 
 SEARCH_DIRS=(
     "$CHARD_ROOT/lib64"
-    "$CHARD_ROOT/usr"
+    "$CHARD_ROOT/usr/lib64"
     "$CHARD_ROOT/lib"
-    "$CHARD_ROOT/opt"
-    "$CHARD_ROOT/var"
+    "$CHARD_ROOT/usr/lib"
+    "$CHARD_ROOT/usr/local/lib64"
+    "$CHARD_ROOT/usr/local/lib"
+    "$CHARD_ROOT/opt/lib64"
+    "$CHARD_ROOT/opt/lib"
+    "$CHARD_ROOT/usr/lib64/glib-2.0"
+    "$CHARD_ROOT/usr/lib64/gtk-3.0"
+    "$CHARD_ROOT/usr/lib/gtk-3.0"
 )
 
 echo "${BOLD}${GREEN}Discovering libraries...${RESET}"
