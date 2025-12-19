@@ -346,9 +346,12 @@ run_checkpoint 8 "sudo -E pacman -Syu --noconfirm curl" checkpoint_8
 checkpoint_9() {
     sudo -E pacman -Syu --noconfirm git
     cd ~/
+    rm -rf yay 2>/dev/null
     git clone https://aur.archlinux.org/yay.git
     cd yay
     yes | makepkg -si
+    cd ~/
+    rm -rf yay
 }
 run_checkpoint 9 "sudo -E pacman -Syu --noconfirm git + yay" checkpoint_9
 
