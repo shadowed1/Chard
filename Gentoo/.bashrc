@@ -210,30 +210,20 @@ CXXFLAGS="$CFLAGS"
 # <<< END CHARD_MARCH_NATIVE >>>
 
 LDFLAGS=""
-[[ -d "$ROOT/usr/lib64" ]] && LDFLAGS+="-L$ROOT/usr/lib64 "
-[[ -d "$ROOT/lib64" ]] && LDFLAGS+="-L$ROOT/lib64 "
-[[ -d "$ROOT/usr/local/lib64" ]] && LDFLAGS+="-L$ROOT/usr/local/lib64 "
-[[ -d "$ROOT/usr/lib" ]] && LDFLAGS+="-L$ROOT/usr/lib "
-[[ -d "$ROOT/lib" ]] && LDFLAGS+="-L$ROOT/lib "
 [[ -d "$ROOT/usr/local/lib" ]] && LDFLAGS+="-L$ROOT/usr/local/lib "
 export LDFLAGS
 export FCFLAGS
 export FFLAGS
 
 PATHS_TO_ADD=(
-    "$PYEXEC_DIR"
-    "$ROOT/usr/bin"
+    $PYEXEC_DIR"
     "$ROOT/bin"
+    "$ROOT/usr/bin"
     "$gcc_bin_path"
     "$LLVM_DIR/bin"
     "$ROOT/usr/local/bin"
-    "$ROOT/usr/bin"
 )
 LIBS_TO_ADD=(
-    "$ROOT/usr/lib64"
-    "$ROOT/lib64"
-    "$ROOT/usr/lib"
-    "$ROOT/lib"
     "$gcc_lib_path"
     "$LLVM_DIR/lib"
 )
