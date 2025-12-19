@@ -480,6 +480,8 @@ LIBS_TO_ADD=(
     "$LLVM_DIR/lib"
     "$CHARD_ROOT/opt"
     "$CHARD_ROOT/opt/firefox"
+    "$CHARD_ROOT/usr/lib64"
+    "$CHARD_ROOT/lib64"
 )
 PKG_TO_ADD=(
     "$CHARD_ROOT/usr/lib/pkgconfig"
