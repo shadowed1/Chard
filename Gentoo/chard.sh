@@ -247,6 +247,32 @@ export PKGDIR="$CHARD_ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
 export XDG_RUNTIME_DIR="/run/chrome/"
 
+export GTK_PATH="$CHARD_ROOT/usr/lib/gtk-3.0:$CHARD_ROOT/usr/lib64/gtk-3.0"
+export GTK_EXE_PREFIX="$CHARD_ROOT/usr"
+export GTK_DATA_PREFIX="$CHARD_ROOT/usr"
+export GDK_PIXBUF_MODULEDIR="$CHARD_ROOT/usr/lib64/gdk-pixbuf-2.0/2.10.0/loaders"
+export GDK_PIXBUF_MODULE_FILE="$CHARD_ROOT/usr/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+
+export FLATPAK_SYSTEM_DIR="$CHARD_ROOT/var/lib/flatpak"
+export FLATPAK_USER_DIR="$HOME/.local/share/flatpak"
+export FLATPAK_SYSTEM_HELPER="$CHARD_ROOT/usr/libexec/flatpak-system-helper"
+export TMPDIR="$CHARD_ROOT/tmp"
+export TMP="$CHARD_ROOT/tmp"
+export TEMP="$CHARD_ROOT/tmp"
+export FONTCONFIG_PATH="$CHARD_ROOT/etc/fonts"
+export FONTCONFIG_FILE="$CHARD_ROOT/etc/fonts/fonts.conf"
+export GIO_MODULE_DIR="$CHARD_ROOT/usr/lib64/gio/modules"
+export GSETTINGS_SCHEMA_DIR="$CHARD_ROOT/usr/share/glib-2.0/schemas"
+export GSETTINGS_BACKEND="memory"
+export XAUTHORITY="$CHARD_ROOT/tmp/.Xauthority"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export LIBRARY_PATH="$CHARD_ROOT/usr/lib64:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib64:$CHARD_ROOT/lib"
+export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
+export __GLX_VENDOR_LIBRARY_NAME=mesa
+export PORTAGE_CONFIGROOT="$CHARD_ROOT"
+export SYSROOT="$CHARD_ROOT"
+
 all_perl_versions=()
 
 if [[ ${#all_perl_versions[@]} -eq 0 ]]; then
@@ -528,6 +554,8 @@ sudo env -u LD_LIBRARY_PATH -u LD_PRELOAD \
 export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
+
+export DBUS_SYSTEM_BUS_ADDRESS="unix:path=$CHARD_ROOT/run/dbus/system_bus_socket"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
     if [ -d "/usr/share/fydeos_shell" ]; then
