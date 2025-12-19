@@ -1073,6 +1073,12 @@ case "$GPU_TYPE" in
         USE_FLAGS+=" virgl vulkan"
 esac
 
+ABI_X86_FLAGS=""
+
+if [[ "$ARCH" == "x86_64" ]]; then
+    ABI_X86_FLAGS='ABI_X86="64 32"'
+fi
+
 sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
 # Generated based on detected architecture ($ARCH) and GPU type ($GPU_TYPE)
@@ -1088,6 +1094,7 @@ PORTAGE_TMPDIR="/var/tmp"
 PORTDIR="/usr/portage"
 SANDBOX="/usr/bin/sandbox"
 CHOST="$CHOST"
+$ABI_X86_FLAGS
 CC="/usr/bin/gcc"
 CXX="/usr/bin/g++"
 AR="/usr/bin/gcc-ar"
