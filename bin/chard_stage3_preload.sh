@@ -1,4 +1,5 @@
 #!/bin/bash
+# CHARD STAGE3 PRELOAD
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -9,56 +10,69 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-PRELOAD_LIST="$CHARD_ROOT/.chard_stage3_preload"
-EXEC_WRAPPER="$CHARD_ROOT/bin/chard_exec"
+STAGE3_FILE="$CHARD_ROOT/.chard_stage3_preload"
 
-echo "${BOLD}${CYAN}Merging Stage 1 and Stage 2...${RESET}"
+if [[ ! -f "$CHARD_ROOT/.chard.preload" ]]; then
+    echo "${RED}${BOLD}ERROR: .chard.preload not found!${RESET}"
+fi
 
+if [[ ! -f "$CHARD_ROOT/.chard_safe_preload" ]]; then
+    echo "${RED}${BOLD}ERROR: .chard_safe_preload ${RESET}"
+fi
+
+echo "${BOLD}${CYAN}Merging Stage 1 and Stage 2... ${RESET}"
 source "$CHARD_ROOT/.chard.preload"
 source "$CHARD_ROOT/.chard_safe_preload"
 
 declare -A seen
 LD_PRELOAD_LIBS_STAGE3=()
 
-for lib in "${LD_PRELOAD_LIBS_STAGE1[@]}" "${LD_PRELOAD_LIBS_STAGE2[@]}"; do
-    if [[ -f "$lib" && -z "${seen[$lib]}" ]]; then
+for lib in "${LD_PRELOAD_LIBS_STAGE1[@]}"; do
+    if [[ -z "${seen[$lib]}" && -f "$lib" ]]; then
         seen[$lib]=1
         LD_PRELOAD_LIBS_STAGE3+=("$lib")
     fi
 done
 
-echo "${BOLD}${CYAN}Writing preload list...${RESET}"
+for lib in "${LD_PRELOAD_LIBS_STAGE2[@]}"; do
+    if [[ -z "${seen[$lib]}" && -f "$lib" ]]; then
+        seen[$lib]=1
+        LD_PRELOAD_LIBS_STAGE3+=("$lib")
+    fi
+done
+echo
+echo "${BOLD}${CYAN}Writing $STAGE3_FILE... ${RESET}"
 
 {
-    echo "# CHARD preload list"
+    echo "#!/bin/bash"
+    echo "# <<< CHARD_STAGE3 <<<"
+    echo "# Merged and deduplicated Stage 1 + Stage 2"
     echo "# Generated: $(date)"
+    echo "# Total libraries: ${#LD_PRELOAD_LIBS_STAGE3[@]}"
+    echo
+    echo "LD_PRELOAD_LIBS_STAGE3=("
     for lib in "${LD_PRELOAD_LIBS_STAGE3[@]}"; do
-        echo "$lib"
+        echo "    \"$lib\""
     done
-} | sudo tee "$PRELOAD_LIST" >/dev/null
+    echo ")"
+    echo
+    echo "LD_PRELOAD=\"\""
+    echo "for lib in \"\${LD_PRELOAD_LIBS_STAGE3[@]}\"; do"
+    echo "    [[ -f \"\$lib\" ]] && LD_PRELOAD=\"\${LD_PRELOAD:+\$LD_PRELOAD:}\$lib\""
+    echo "done 2>/dev/null"
+    echo
+    echo "export LD_PRELOAD"
+    echo "# <<< END CHARD_STAGE3 <<<"
+} | sudo tee "$STAGE3_FILE" >/dev/null
 
-sudo chmod 0644 "$PRELOAD_LIST"
-
-echo "${BOLD}${CYAN}Writing exec wrapper...${RESET}"
-
-sudo tee "$EXEC_WRAPPER" >/dev/null <<'EOF'
-#!/bin/bash
-PRELOAD_FILE="$CHARD_ROOT/.chard_stage3_preload"
-
-if [[ ! -f "$PRELOAD_FILE" ]]; then
-    exec "$@"
-fi
-
-LD_PRELOAD=$(paste -sd: "$PRELOAD_FILE")
-export LD_PRELOAD
-
-exec "$@"
-EOF
-
-sudo chmod +x "$EXEC_WRAPPER"
+sudo chmod +x "$STAGE3_FILE"
 
 echo
-echo "${BOLD}${GREEN}Stage 3 fixed successfully${RESET}"
-echo "${BOLD}${CYAN}Libraries: ${#LD_PRELOAD_LIBS_STAGE3[@]}${RESET}"
+echo "${BOLD}${GREEN} Stage 3 created with ${#LD_PRELOAD_LIBS_STAGE3[@]} total libraries! ${RESET}"
+echo "${BOLD}${CYAN}  Stage 1: ${#LD_PRELOAD_LIBS_STAGE1[@]} libraries ${RESET}"
+echo "${BOLD}${BLUE}  Stage 2: ${#LD_PRELOAD_LIBS_STAGE2[@]} libraries ${RESET}"
+echo "${BOLD}${MAGENTA}  Stage 3: ${#LD_PRELOAD_LIBS_STAGE3[@]} libraries ${RESET}"
 echo
-echo "${BOLD}${GREEN}Use:${RESET} chard_exec <program>"
+echo "${BOLD}${RED} Run: ${RESET}${BOLD}${GREEN}sudo rm $CHARD_ROOT/.chard_stage3_preload${RESET}${BOLD}${RED} to remove this LD_PRELOAD"
+echo "${BOLD}${RED} Use VT-2 and login as root to remove above file if having trouble with normal shell. ${RESET}"
+echo
