@@ -1603,16 +1603,16 @@ EOF
 }
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 
-checkpoint_144() {
-ARCH="$(uname -m)"
-if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-    echo "Skipping pamac install on ARM ($ARCH)"
-else
-    sudo -E pacman -R --noconfirm pamac-full 2>/dev/null
-    yay -S --noconfirm pamac 2>/dev/null
-fi
-}
-run_checkpoint 144 "pamac" checkpoint_144
+#checkpoint_144() {
+#ARCH="$(uname -m)"
+#if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+#    echo "Skipping pamac install on ARM ($ARCH)"
+#else
+#    sudo -E pacman -R --noconfirm pamac-full 2>/dev/null
+#    yay -S --noconfirm pamac 2>/dev/null
+#fi
+#}
+#run_checkpoint 144 "pamac" checkpoint_144
 
 checkpoint_145() {
 ARCH="$(uname -m)"
