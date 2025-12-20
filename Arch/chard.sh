@@ -439,7 +439,7 @@ case "$cmd" in
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 cd ~/
                 # Days xfce4-terminal
-                (sleep 3; GDK_BACKEND=x11 xfce4-terminal --disable-server --class=Xfce4-terminal --maximize --zoom=1.2)  &
+                QP_QPA_PLATFORM=xcb xfce4-terminal &
                 exec chard_sommelier
                 "
             
