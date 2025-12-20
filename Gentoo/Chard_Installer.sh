@@ -909,6 +909,16 @@ sync-uri = rsync://rsync.gentoo.org/gentoo-portage
 auto-sync = yes
 EOF
 
+if [[ "$ARCH" == "x86_64" ]]; then
+    PROFILE_PATH="default/linux/amd64/23.0/systemd"
+elif [[ "$ARCH" == "aarch64" ]]; then
+    PROFILE_PATH="default/linux/arm64/23.0/systemd"
+fi
+
+ln -snf "../../usr/portage/profiles/$PROFILE_PATH" "$CHARD_ROOT/etc/portage/make.profile"
+
+echo "Profile set to: $PROFILE_PATH"
+
 sudo tee "$CHARD_ROOT/etc/profile.d/display.sh" > /dev/null <<'EOF'
 export DISPLAY=:0
 EOF
