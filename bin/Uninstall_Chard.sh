@@ -22,6 +22,10 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
             unset LD_PRELOAD
         echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
         unset LD_PRELOAD
+                sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
+                sleep 0.05
+                sudo umount -l "$CHARD_ROOT/etc/resolv.conv"   2>/dev/null || true
+                sleep 0.05
                 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
                 sleep 0.2
                 sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
