@@ -109,7 +109,7 @@ done
 
 if command -v inotifywait >/dev/null 2>&1; then
     while true; do
-        inotifywait -qq -e modify,attrib "${FILES[@]}" 2>/dev/null
+        inotifywait -e modify,attrib "${FILES[@]}" >/dev/null 2>&1
         apply_volume
     done &
 else
