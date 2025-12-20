@@ -10,6 +10,10 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 cleanup_chroot() {
+    sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
+    sleep 0.05
+    sudo umount -l "$CHARD_ROOT/etc/resolv.conv"   2>/dev/null || true
+    sleep 0.05
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -211,7 +215,11 @@ detect_gpu_freq() {
                     exit 1
                 fi
 
-    chard_unmount() {        
+    chard_unmount() {    
+        sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
+        sleep 0.05
+        sudo umount -l "$CHARD_ROOT/etc/resolv.conv"   2>/dev/null || true
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
