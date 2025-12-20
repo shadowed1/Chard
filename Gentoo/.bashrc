@@ -236,7 +236,6 @@ LIBS_TO_ADD=(
     "$ROOT/lib"
     "$gcc_lib_path"
     "$LLVM_DIR/lib"
-    "$ROOT/opt/firefox"
 )
 PKG_TO_ADD=(
     "$ROOT/usr/lib/pkgconfig"
@@ -318,6 +317,14 @@ if [ -z "$XFCE_STARTED" ] && [ ! -f /tmp/.xfce_started ]; then
         nohup sudo -u $USER bash -c 'DISPLAY=:1 startxfce4 >/tmp/xfce4.log 2>&1 &' &
         touch /tmp/.xfce_started
     fi
+fi
+
+MAKECONF="$ROOT/etc/portage/make.conf"
+if [[ -w "$MAKECONF" ]]; then
+    sed -i "/^PYTHON_TARGETS=/d" "$MAKECONF"
+    sed -i "/^PYTHON_SINGLE_TARGET=/d" "$MAKECONF"
+    echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
+    echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
 fi
 
 eselect python set "python${second_underscore}" 2>/dev/null || true
