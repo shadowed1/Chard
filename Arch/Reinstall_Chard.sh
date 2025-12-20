@@ -632,7 +632,6 @@ sudo mkdir -p $CHARD_ROOT/media
                         source \$HOME/.bashrc 2>/dev/null
                         sudo chown -R 1000:1000 \$HOME
                         cd \$HOME
-                        yay -S --noconfirm inotify-tools 2>/dev/null
                         sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
                         sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
                         gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
