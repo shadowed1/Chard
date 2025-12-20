@@ -322,8 +322,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rain
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_garcon.sh"            -o "$CHARD_ROOT/bin/chard_garcon" 2>/dev/null
 sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf"            -o /etc/init/chard.conf 2>/dev/null
-sleep 0.05
+#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf"            -o /etc/init/chard.conf 2>/dev/null
+#sleep 0.05
 
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -346,7 +346,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_ucm"
 sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
 sudo chmod +x "$CHARD_ROOT/bin/rainbow"
 sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
-sudo chmod +x /etc/init/chard.conf
+#sudo chmod +x /etc/init/chard.conf
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
