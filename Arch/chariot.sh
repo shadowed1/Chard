@@ -1682,10 +1682,10 @@ checkpoint_151() {
 run_checkpoint 151 "winegui" checkpoint_151
 
 # Day's Garcon
-checkpoint_152() {
-    yay -S --noconfirm inotify-tools
-}
-run_checkpoint 152 "inotify-tools" checkpoint_152
+#checkpoint_152() {
+#    yay -S --noconfirm inotify-tools
+#}
+#run_checkpoint 152 "inotify-tools" checkpoint_152
 
 sudo chown -R 1000:1000 ~/
 sudo setfacl -Rb /run/chrome 2>/dev/null
