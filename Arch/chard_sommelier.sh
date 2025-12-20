@@ -26,8 +26,8 @@ SOMMELIER_CMD=(
     --only-client-can-exit-fullscreen
 )
 
-   "${SOMMELIER_CMD[@]}" -- bash -c '
-   sleep 0.1
+"${SOMMELIER_CMD[@]}" -- bash -c '
+    sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
@@ -35,13 +35,13 @@ SOMMELIER_CMD=(
     sleep 0.2
     pulseaudio 2>/dev/null &
     sleep 0.2
-    chardwire 2>/dev/null &
-    exec bash
+    chardwire &
+    sleep infinity
 '
+    # could we get away with exec bash under sleep ? NOT SURE! 
 
 sudo setfacl -Rb /root 2>/dev/null
 killall -9 chardwire 2>/dev/null
-
 if [ -f /tmp/.pulseaudio_pid ]; then
     kill "$(cat /tmp/.pulseaudio_pid)" 2>/dev/null
     rm -f /tmp/.pulseaudio_pid
