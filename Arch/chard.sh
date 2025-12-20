@@ -6,6 +6,15 @@ CHARD_HOME=""
 CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
+# Day's Garcon Implementation
+# <<< AUTO-DETECT DBUS KEYS (For Host Communication) >>>
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    CHROME_PID=$(pgrep -u chronos chrome | head -n1)
+    if [ -n "$CHROME_PID" ]; then
+        export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$CHROME_PID/environ | tr -d '\0' | sed 's/DBUS_SESSION_BUS_ADDRESS=//')
+    fi
+fi
+
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -326,15 +335,17 @@ case "$cmd" in
     uninstall)
          chard_uninstall
         ;;
-    root)
+    root|cr)
         CLEANUP_ENABLED=1
-        chard_volume > /dev/null 2>&1 &
+        
+        # Day's changes
+        sudo pkill -f "inotifywait.*MyFiles/chard" 2>/dev/null
+        sudo pkill -f "chard_garcon" 2>/dev/null
+        setsid chard_volume > /dev/null 2>&1
+        
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-        killall -9 pipewire 2>/dev/null
-        killall -9 pipewire-pulse 2>/dev/null
-        killall -9 pulseaudio 2>/dev/null
-        killall -9 steam 2>/dev/null
+        killall -9 pipewire pipewire-pulse pulseaudio steam 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
         sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
@@ -350,6 +361,10 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
+
+        echo "export DBUS_SESSION_BUS_ADDRESS='$DBUS_SESSION_BUS_ADDRESS'" | sudo tee "$CHARD_ROOT/tmp/chard_dbus_session" >/dev/null
+        sudo chmod 644 "$CHARD_ROOT/tmp/chard_dbus_session" 2>/dev/null
+        sudo nohup chroot "$CHARD_ROOT" /bin/bash -c "export DBUS_SESSION_BUS_ADDRESS='$DBUS_SESSION_BUS_ADDRESS'; /bin/chard_garcon" >/dev/null 2>&1 &c
         
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
@@ -361,8 +376,12 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
-        
-        sudo chroot "$CHARD_ROOT" /bin/bash -c '
+
+        sudo mount --bind /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
+        sudo mount --bind /etc/hosts "$CHARD_ROOT/etc/hosts" 2>/dev/null
+
+        # Day's env
+        sudo chroot "$CHARD_ROOT" env DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" /bin/bash -c '
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
             mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
@@ -391,22 +410,29 @@ case "$cmd" in
             USER=$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
+
+            # Days XDG_RUNTIME_DIR setup (enhancement from v2)
+            mkdir -p /tmp/chard_runtime
+            chown 1000:1000 /tmp/chard_runtime
+            chmod 700 /tmp/chard_runtime
+            
             sudo -u "$USER" bash -c "
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
-                sudo chown -R 1000:audio /dev/snd
-                sudo chown -R 1000:1000 /dev/snd/by-path
-                sudo mkdir -p /run/chrome/pulse
-                sudo chown 1000:1000 /run/chrome/pulse
-                sudo chmod 770 /run/chrome/pulse
+                sudo chown -R 1000:audio /dev/snd 2>/dev/null
+                sudo chown -R 1000:1000 /dev/snd/by-path 2>/dev/null
+                sudo mkdir -p /run/chrome/pulse 2>/dev/null
+                sudo chown 1000:1000 /run/chrome/pulse 2>/dev/null
+                sudo chmod 770 /run/chrome/pulse 2>/dev/null
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 cd ~/
-                xfce4-terminal 2>/dev/null &
+                # Days xfce4-terminal
+                (sleep 3; GDK_BACKEND=x11 xfce4-terminal --disable-server --class=Xfce4-terminal --maximize --zoom=1.2) 2>/dev/null &
                 exec chard_sommelier
                 "
             
@@ -443,13 +469,13 @@ case "$cmd" in
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
-        sudo pkill -f xfce4-session
-        sudo pkill -f xfwm4
-        sudo pkill -f xfce4-panel
-        sudo pkill -f xfdesktop
-        sudo pkill -f xfce4-terminal
-        sudo pkill -f xfce4-*
-        sudo pkill -f Xorg
+        sudo pkill -f xfce4-session 2>/dev/null
+        sudo pkill -f xfwm4 2>/dev/null
+        sudo pkill -f xfce4-panel 2>/dev/null
+        sudo pkill -f xfdesktop 2>/dev/null
+        sudo pkill -f xfce4-terminal 2>/dev/null
+        sudo pkill -f xfce4-* 2>/dev/null
+        sudo pkill -f Xorg 2>/dev/null
         ;;
     chariot)
         CLEANUP_ENABLED=1
@@ -607,7 +633,7 @@ case "$cmd" in
         
         chard_unmount
         ;;
-        version)
+    version)
         # Denny's version checker
         CLEANUP_ENABLED=0
         if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
