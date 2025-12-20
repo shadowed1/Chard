@@ -8,7 +8,7 @@ RESET=$(tput sgr0)
 if [[ -f /tmp/machine-info ]]; then
     DEVICE_NAME=$(grep '^customization_id=' /tmp/machine-info 2>/dev/null | cut -d= -f2 | tr -d '"')
 else
-    DEVICE_NAME="unknown"
+    DEVICE_NAME="rainbow"
 fi
 
 if [[ -f /sys/class/chromeos/cros_ec/version ]]; then
