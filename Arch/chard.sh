@@ -1,17 +1,9 @@
 #!/bin/bash
 
-# <<< AUTO-DETECT DBUS KEYS (For Host Communication) >>>
-if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    CHROME_PID=$(pgrep -u chronos chrome | head -n1)
-    if [ -n "$CHROME_PID" ]; then
-        export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$CHROME_PID/environ | tr -d '\0' | sed 's/DBUS_SESSION_BUS_ADDRESS=//')
-    fi
-fi
-
 # <<< CHARD_ROOT_MARKER >>>
-CHARD_ROOT="/usr/local/chard"
-CHARD_HOME="home/chronos"
-CHARD_USER="chronos"
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
 RED=$(tput setaf 1)
@@ -26,7 +18,6 @@ CLEANUP_ENABLED=0
 
 cleanup_chroot() {
     [[ "$CLEANUP_ENABLED" -eq 1 ]] || return 0
-
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -70,8 +61,6 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
-    
-    # <<< PROBABLY REDUNDANT XD >>>
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -118,6 +107,7 @@ cleanup_chroot() {
     echo
     echo "${RESET}${GREEN}Chard safely unmounted! ${RESET}"
     echo
+
 }
 
 trap cleanup_chroot EXIT INT TERM
@@ -155,7 +145,7 @@ chard_run() {
         echo "${GREEN}chard ${RESET}${RED}binary${YELLOW} --args${RESET}"
         return 1
     fi
-# <<< PROBABLY REDUNDANT AGAIN XD >>>
+
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)
@@ -336,25 +326,15 @@ case "$cmd" in
     uninstall)
          chard_uninstall
         ;;
-root|cr)
-#########################################################################################################
+    root)
         CLEANUP_ENABLED=1
-        
-        echo
-        echo "${GREEN}Starting Chard environment...${RESET}"
-        echo
-        
-        sudo pkill -f "inotifywait.*MyFiles/Downloads" 2>/dev/null
-        sudo pkill -f "chard_garcon" 2>/dev/null
-        
-        setsid chard_volume > /dev/null 2>&1 &
-        
-        echo "${CYAN}[1/6]${RESET} Cleaning up stale audio locks..."
+        chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-        killall -9 pipewire pipewire-pulse pulseaudio steam 2>/dev/null
-        
-        echo "${CYAN}[2/6]${RESET} Mounting root filesystem..."
+        killall -9 pipewire 2>/dev/null
+        killall -9 pipewire-pulse 2>/dev/null
+        killall -9 pulseaudio 2>/dev/null
+        killall -9 steam 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
         sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
@@ -363,7 +343,6 @@ root|cr)
         sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
         sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
         
-        echo "${CYAN}[3/6]${RESET} Binding user directories..."
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
@@ -371,14 +350,7 @@ root|cr)
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
-
-        echo "${CYAN}[4/6]${RESET} Starting Garcon bridge..."
         
-        echo "export DBUS_SESSION_BUS_ADDRESS='$DBUS_SESSION_BUS_ADDRESS'" | sudo tee "$CHARD_ROOT/tmp/chard_dbus_session" >/dev/null
-        sudo chmod 644 "$CHARD_ROOT/tmp/chard_dbus_session"
-        sudo nohup chroot "$CHARD_ROOT" /bin/bash -c "export DBUS_SESSION_BUS_ADDRESS='$DBUS_SESSION_BUS_ADDRESS'; /bin/chard_garcon" >/dev/null 2>&1 &c
-        
-        echo "${CYAN}[5/6]${RESET} Binding system devices..."
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
@@ -389,16 +361,8 @@ root|cr)
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
-
-        sudo mount --bind /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
-        sudo mount --bind /etc/hosts "$CHARD_ROOT/etc/hosts" 2>/dev/null
         
-        echo "${CYAN}[6/6]${RESET} Entering chroot..."
-        echo
-        echo "${GREEN}Launching Chard Root with GPU acceleration...${RESET}"
-        echo
-        
-        sudo chroot "$CHARD_ROOT" env DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" /bin/bash -c '
+        sudo chroot "$CHARD_ROOT" /bin/bash -c '
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
             mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
@@ -427,29 +391,22 @@ root|cr)
             USER=$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
-            
-            # XDG_RUNTIME_DIR setup (enhancement from v2)
-            mkdir -p /tmp/chard_runtime
-            chown 1000:1000 /tmp/chard_runtime
-            chmod 700 /tmp/chard_runtime
-            
             sudo -u "$USER" bash -c "
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
-                sudo chown -R 1000:audio /dev/snd 2>/dev/null
-                sudo chown -R 1000:1000 /dev/snd/by-path 2>/dev/null
+                sudo chown -R 1000:audio /dev/snd
+                sudo chown -R 1000:1000 /dev/snd/by-path
                 sudo mkdir -p /run/chrome/pulse
                 sudo chown 1000:1000 /run/chrome/pulse
                 sudo chmod 770 /run/chrome/pulse
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
-                export XDG_RUNTIME_DIR=\"/tmp/chard_runtime\"
                 cd ~/
-                (sleep 3; GDK_BACKEND=x11 xfce4-terminal --disable-server --class=Xfce4-terminal --maximize --zoom=1.2) 2>/dev/null &
+                xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
                 "
             
@@ -474,7 +431,6 @@ root|cr)
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         '
-        
         killall -9 chard_volume 2>/dev/null
         chard_unmount
         sudo rm -f /run/chrome/pulse/native
@@ -487,12 +443,13 @@ root|cr)
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
-        sudo pkill -f xfce4-session 2>/dev/null
-        sudo pkill -f xfwm4 2>/dev/null
-        sudo pkill -f xfce4-panel 2>/dev/null
-        sudo pkill -f xfdesktop 2>/dev/null
-        sudo pkill -f xfce4-terminal 2>/dev/null
-        sudo pkill -f Xorg 2>/dev/null
+        sudo pkill -f xfce4-session
+        sudo pkill -f xfwm4
+        sudo pkill -f xfce4-panel
+        sudo pkill -f xfdesktop
+        sudo pkill -f xfce4-terminal
+        sudo pkill -f xfce4-*
+        sudo pkill -f Xorg
         ;;
     chariot)
         CLEANUP_ENABLED=1
@@ -532,7 +489,6 @@ root|cr)
         
             if [ -e /dev/zram0 ]; then
                 mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                # FIX #4: Corrected syntax (removed duplicate argument)
                 mount --make-rslave /dev/zram0 2>/dev/null
             fi
         
@@ -549,6 +505,7 @@ root|cr)
             USER=$CHARD_USER
             GROUP_ID=1000
             USER_ID=1000
+        
             sudo -u "$USER" bash -c "
                 cleanup() {
                     echo \"Logging out $USER\"
@@ -618,7 +575,6 @@ root|cr)
         
             if [ -e /dev/zram0 ]; then
                 mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                # FIX #4: Corrected syntax (removed duplicate argument)
                 mount --make-rslave /dev/zram0 2>/dev/null
             fi
         
@@ -651,7 +607,7 @@ root|cr)
         
         chard_unmount
         ;;
-    version)
+        version)
         # Denny's version checker
         CLEANUP_ENABLED=0
         if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
