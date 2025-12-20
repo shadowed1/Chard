@@ -1,5 +1,4 @@
 #!/bin/bash
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -8,7 +7,6 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
 VOLUME_FILE="$HOME/.chard_volume"
 MUTED_FILE="$HOME/.chard_muted"
 HDMI_FILE="$HOME/.chard_hdmi"
@@ -18,6 +16,8 @@ LAST_VOLUME=""
 LAST_MUTED=""
 LAST_DEVICE=""
 INTERVAL=5
+
+# Thanks to Days for rewriting Chardwire with inotify support!
 
 get_active_device() {
     local device=""
@@ -39,9 +39,9 @@ get_active_device() {
     fi
     
     if [ -z "$device" ]; then
-        echo "Internal Speaker"
+        echo "${RESET}${CYAN}Internal Speaker${RESET}"
     else
-        echo "${device_type}: ${device}"
+        echo "${RESET}${CYAN}${device_type}: ${device}${RESET}"
     fi
 }
 
@@ -73,7 +73,7 @@ apply_volume() {
             [ -z "$SINK" ] && SINK=$(pactl list short sinks 2>/dev/null | awk 'NR==1 {print $1}')
             [ -n "$SINK" ] && pactl set-sink-volume "$SINK" "${effective_volume}%" 2>/dev/null
         fi
-        echo "${CYAN}${BOLD}${current_device}${RESET} ${GREEN}${effective_volume}%${RESET}"
+        echo "${CYAN}${current_device}${RESET}${GREEN} ${effective_volume}% ${RESET}"
     fi
     
     if [ "$muted" != "$LAST_MUTED" ]; then
@@ -86,12 +86,12 @@ apply_volume() {
             [ -z "$SINK" ] && SINK=$(pactl list short sinks 2>/dev/null | awk 'NR==1 {print $1}')
             [ -n "$SINK" ] && pactl set-sink-mute "$SINK" "$muted" 2>/dev/null
         fi
-        echo "${CYAN}${BOLD}${current_device}${RESET} $([ "$muted" = "1" ] && echo "${RED}Muted${RESET}" || echo "${YELLOW}Unmuted${RESET}")"
+        echo "${current_device} $([ "$muted" = "1" ] && echo "${RED}Muted${RESET}" || echo "${YELLOW}Unmuted${RESET}")"
     fi
     
     if [ "$current_device" != "$LAST_DEVICE" ]; then
         LAST_DEVICE="$current_device"
-        echo "${BLUE}Device switched to: ${CYAN}${BOLD}${current_device}${RESET}"
+        echo "${GREEN}Device switched to ${RESET}${CYAN}${current_device}"
     fi
 }
 
@@ -109,7 +109,7 @@ done
 
 if command -v inotifywait >/dev/null 2>&1; then
     while true; do
-        inotifywait -q -e modify,attrib "${FILES[@]}" 2>/dev/null
+        inotifywait -e modify,attrib "${FILES[@]}" >/dev/null 2>&1
         apply_volume
     done &
 else
@@ -121,7 +121,7 @@ fi
 
 while true; do
     if ! pactl info >/dev/null 2>&1; then
-        echo "${MAGENTA}$EPOCHSECONDS: PulseAudio killed by ChromeOS -- Chard is restarting Pulseaudio!${RESET}" >&2
+        echo "PulseAudio restarting..."
         pulseaudio 2>/dev/null &
     fi
     sleep "$INTERVAL"
