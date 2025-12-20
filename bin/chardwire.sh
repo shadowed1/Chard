@@ -107,17 +107,10 @@ for f in "${FILES[@]}"; do
     [ ! -f "$f" ] && touch "$f"
 done
 
-if command -v inotifywait >/dev/null 2>&1; then
-    while true; do
-        inotifywait -q -e modify,attrib "${FILES[@]}" 2>/dev/null
-        apply_volume
-    done &
-else
-    tail -n0 --follow=name --retry "${FILES[@]}" 2>/dev/null | while read -r _; do
-        apply_volume
-        sleep 0.1
-    done &
-fi
+tail -n0 --follow=name --retry "${FILES[@]}" 2>/dev/null | while read -r _; do
+    apply_volume
+    sleep 0.1
+done &
 
 while true; do
     if ! pactl info >/dev/null 2>&1; then
