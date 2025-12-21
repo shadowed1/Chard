@@ -91,6 +91,7 @@ LIBS_TO_ADD=(
     "$ROOT/usr/lib64"
     "$ROOT/lib64"
     "$ROOT/usr/lib"
+    "$ROOT/usr/lib32"
     "$ROOT/lib"
     "$LLVM_DIR/lib"
 )
