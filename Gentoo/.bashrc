@@ -243,13 +243,6 @@ LIBS_TO_ADD=(
     "$gcc_lib_path"
     "$LLVM_DIR/lib"
 )
-PKG_TO_ADD=(
-    "$ROOT/usr/lib/pkgconfig"
-    "$ROOT/usr/lib64/pkgconfig"
-    "$ROOT/usr/local/lib/pkgconfig"
-    "$ROOT/usr/local/share/pkgconfig"
-    "$LLVM_DIR/lib/pkgconfig"
-)
 
 unique_join() {
     local IFS=':'
@@ -262,7 +255,6 @@ unique_join() {
 
 export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
 export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export PKG_CONFIG_PATH="$(unique_join "${PKG_TO_ADD[@]}")${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 export MAGIC="$ROOT/usr/share/misc/magic.mgc"
 export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
 export CPPFLAGS="-I$ROOT/usr/include"
