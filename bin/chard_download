@@ -56,7 +56,7 @@ curl -L "$URL" -o ~/Chard_Installer || {
 echo "                      ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${BOLD}${MAGENTA}VT-2${RESET}${YELLOW}:${RESET}"
 echo
 echo
-echo "                                  ${GREEN}${BOLD}If on ChromeOS/FydeOS, run:${RESET}${GREEN}"
+echo "                                  ${GREEN}${BOLD}If on ChromeOS, run:${RESET}${GREEN}"
 echo "                  ╔═════════════════════════════════════════════════════╗" 
 echo "                   ${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
 echo "                   sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
