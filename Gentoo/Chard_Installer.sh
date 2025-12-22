@@ -1070,7 +1070,7 @@ case "$GPU_TYPE" in
         ;;
 esac
 
-USE_FLAGS="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt cube curl dbus dri dri3 dts encode exif egl flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit kms layers lcms libnotify libtirpc llvm mad minizip mng mp3 mp4 mpeg multilib ncurses nls ogg opengl openmp opus pam pango pcre pdf png postproc ppds proprietary-codecs pulseaudio qml qt5 qt6 readline sdl seccomp sound -sound-server spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis wayland wxwidgets x264 x265 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd vpx zstd -elogind"
+USE_FLAGS="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt cube curl dbus dri dri3 dts encode exif egl flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit kms layers lcms libnotify libtirpc llvm mad minizip mng mp3 mp4 mpeg ncurses nls ogg opengl openmp opus pam pango pcre pdf png postproc ppds proprietary-codecs pulseaudio qml qt5 qt6 readline sdl seccomp sound -sound-server spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis wayland wxwidgets x264 x265 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd vpx zstd -elogind"
 
 case "$GPU_TYPE" in
     amd|nvidia)
@@ -1108,9 +1108,7 @@ USE="$USE_FLAGS"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
 VIDEO_CARDS="$VIDEO_CARDS"
-PKG_CONFIG_PATH="/usr/lib/pkgconfig:/lib/pkgconfig:/usr/share/pkgconfig:/share/pkgconfig:\$PKG_CONFIG_PATH"
 PKG_CONFIG="/usr/bin/pkg-config"
-PORTAGE_PROFILE_DIR="/usr/local/etc/portage/make.profile"
 MESON_NATIVE_FILE="/meson-cross.ini"
 PYTHONMULTIPROCESSING_START_METHOD=fork
 EOF
