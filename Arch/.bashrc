@@ -230,4 +230,6 @@ case "$PROMPT_COMMAND" in
 esac
 # <<< END_CHARD_SMRT >>>
 
+alias ls='ls --color=auto'
+
 # <<< END CHARD .BASHRC >>>
