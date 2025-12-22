@@ -196,6 +196,7 @@ alias gvim='wx gvim'
 alias prismlauncher='chard_prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
+alias ls='ls --color=auto'
 #dbus-daemon --system --fork 2>/dev/null
 
 # Steam
