@@ -22,6 +22,12 @@ case "$ARCH" in
     *) echo "Unknown architecture: $ARCH"; exit 1 ;;
 esac
 
+ARCH="aarch64"
+sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc
+
+ARCH="arm64"
+sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc | head -5
+
 HOME="/$CHARD_HOME"
 USER="$CHARD_USER"
 export LANG=C.UTF-8
