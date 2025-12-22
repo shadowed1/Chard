@@ -746,7 +746,8 @@ case "$cmd" in
                 sudo chown -R 1000:audio /dev/snd
                 sudo chown -R 1000:1000 /dev/snd/by-path
                 sudo mkdir -p /run/chrome/pulse
-                sudo chown 1000:1000 /run/chrome/pulse
+                sudo chown 1000:1000 /run/chrome/pulse 2>/dev/null
+                sudo chown -R 1000:1000 /run/chrome/dconf 2>/dev/null
                 sudo chmod 770 /run/chrome/pulse
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
@@ -760,6 +761,7 @@ case "$cmd" in
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
             killall -9 chardwire 2>/dev/null
+            
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             setfacl -Rb /root 2>/dev/null
