@@ -42,7 +42,7 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.05
-        chard_unmount 2>/dev/null
+        $CHARD_ROOT/bin/chard_unmount 2>/dev/null
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
         sleep 0.05
@@ -686,7 +686,7 @@ case "$cmd" in
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
-            chard_mount 2>/dev/null
+            $CHARD_ROOT/bin/chard_mount 2>/dev/null
             sudo mountpoint -q "$CHARD_ROOT/tmp/usb_mount" || sudo mount --bind /tmp/usb_mount "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null
             sudo mount -o remount,rw,bind "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null
         else
