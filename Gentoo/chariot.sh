@@ -101,7 +101,8 @@ echo
 echo "${CYAN}${BOLD}Chariot is an install assistant for Chard which implements a checkpoint system to resume if interrupted! ${RESET}"
 echo "${RESET}${GREEN}Run: ${BLUE}${BOLD}chariot${RESET}${GREEN} in ChromeOS shell to resume..."
 echo
-echo "${RESET}${YELLOW}Example to resume from a specific checkpoint: ${RESET}${MAGENTA}${BOLD}chariot 137${RESET}"
+echo "${RESET}${YELLOW}Example to resume from a specific checkpoint: ${RESET}${YELLOW}${BOLD}chariot 137${RESET}"
+echo "${RESET}${YELLOW}Example to run a checkpoint and stop after: ${RESET}${YELLOW}${BOLD}chariot -s 73${RESET}"
 echo "${GREEN}Run: ${RESET}${BOLD}${RED}chariot reset ${RESET}${GREEN}to ${RESET}${RED}revert${GREEN} to checkpoint 1.${RESET}${GREEN}"
 echo
 
