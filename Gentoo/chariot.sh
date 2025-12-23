@@ -204,6 +204,10 @@ run_checkpoint() {
 
 checkpoint_1() {
     sudo chown -R 1000:1000 ~/
+    ARCH="aarch64"
+    sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc > /dev/null 2>&1
+    ARCH="arm64"
+    sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc > /dev/null 2>&1
     sudo -E emerge dev-build/make
     rm -rf /var/tmp/portage/dev-build/make-*
 }
