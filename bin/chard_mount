@@ -1,33 +1,32 @@
 #!/bin/bash
 
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
+: > "$STATE_FILE"
+
 USB_DEVICES=$(lsblk -dpno NAME,TRAN | awk '$2=="usb"{print $1}')
 
 if [ -z "$USB_DEVICES" ]; then
     echo "No USB drives detected."
+    exit 0
 fi
 
 echo "Detected USB drives:"
 echo "$USB_DEVICES"
 echo
 
-if [ "$(echo "$USB_DEVICES" | wc -l)" -gt 1 ]; then
-    echo "Multiple USB drives found. Enter the full device path to unmount (e.g. /dev/sdb):"
-    read -r USB_DEV
-else
-    USB_DEV="$USB_DEVICES"
-fi
-
-lsblk -lnpo NAME,MOUNTPOINT,FSTYPE "$USB_DEV" | awk '$2 != ""' > "$STATE_FILE"
+for DEV in $USB_DEVICES; do
+    lsblk -lnpo NAME,MOUNTPOINT "$DEV" | awk '$2 != ""' >> "$STATE_FILE"
+done
 
 if [ ! -s "$STATE_FILE" ]; then
-    echo "No mounted partitions found on $USB_DEV"
+    echo "No mounted USB partitions found."
+    exit 0
 fi
 
 echo "Saved mount state:"
 cat "$STATE_FILE"
 echo
 
-while read -r PART MP FS; do
+while read -r PART MP; do
     sudo umount -l "$PART" || echo "Failed to unmount $PART"
 done < "$STATE_FILE"
