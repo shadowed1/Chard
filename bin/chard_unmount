@@ -20,5 +20,3 @@ while read -r PART MP; do
 done < "$STATE_FILE"
 
 sudo rm -f "$STATE_FILE"
-
-echo "USB restored to original mount state."
