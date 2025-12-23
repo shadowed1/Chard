@@ -4,7 +4,6 @@ STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
 MOUNT_POINT="/tmp/usb_mount"
 
 if mountpoint -q "$MOUNT_POINT"; then
-    echo "Unmounting temporary mount $MOUNT_POINT..."
     sudo umount "$MOUNT_POINT" || echo "Failed to unmount $MOUNT_POINT"
 fi
 
@@ -14,9 +13,9 @@ fi
 
 echo "Restoring original USB mount state:"
 while read -r PART MP; do
-    echo "  Mounting $PART back to $MP"
+    echo "  Mounting $PART back to '$MP'"
     sudo mkdir -p "$MP"
     sudo mount "$PART" "$MP" || echo "Failed to remount $PART"
 done < "$STATE_FILE"
 
-sudo rm -f "$STATE_FILE"
+sudo rm -f "$STATE_FILE" 2>/dev/null
