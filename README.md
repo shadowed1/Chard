@@ -332,7 +332,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.14: `Greatly increased amount of commands able to run outside of chroot. Created chard_preload generation script. Added specific ways to run chariot checkpoints. Created Chardonnay script to run sommelier and Xwayland natively in ChromeOS. Added HDMI, 3.5mm, Bluetooth and mute toggle support for Chard Audio controls (chardwire). Added Steam GPU detection script.` <br><br>
 - 0.15: `Rolled back LD_PRELOAD changes and removed Chardonnay for Chard Arch. Avoids confusion and Gentoo will be far more capable here. Fixed stale audio download links.` <br><br>
 - 0.16: `Fixed slow unmount issues and minor issues` <br><br>
-- 0.17 : `Fixed eselect issue on Chard Gentoo. Fixed minor typos.` <br><br>
+- 0.17: `Fixed eselect issue on Chard Gentoo. Fixed minor typos.` <br><br>
 <br>
 
 ### Acknowledgements
