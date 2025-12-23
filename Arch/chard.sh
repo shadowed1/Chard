@@ -206,7 +206,7 @@ chard_unmount() {
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
     sleep 0.05
-    chard_unmount
+    chard_unmount 2>/dev/null
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
     sleep 0.05
@@ -400,12 +400,12 @@ case "$cmd" in
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
-                sudo chown -R 1000:audio /dev/snd
-                sudo chown -R 1000:1000 /dev/snd/by-path
-                sudo mkdir -p /run/chrome/pulse
-                sudo chown 1000:1000 /run/chrome/pulse
+                sudo chown -R 1000:audio /dev/snd 2>/dev/null
+                sudo chown -R 1000:1000 /dev/snd/by-path 2>/dev/null
+                sudo mkdir -p /run/chrome/pulse 2>/dev/null
+                sudo chown 1000:1000 /run/chrome/pulse 2>/dev/null
                 sudo chown -R 1000:1000 /run/chrome/dconf 2>/dev/null
-                sudo chmod 770 /run/chrome/pulse
+                sudo chmod 770 /run/chrome/pulse 2>/dev/null
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
@@ -437,24 +437,24 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         '
         killall -9 chard_volume 2>/dev/null
-        chard_unmount
-        sudo rm -f /run/chrome/pulse/native
-        sudo rm -f /run/chrome/pulse/*
-        sudo mkdir -p /run/chrome/pulse
+        chard_unmount 2>/dev/null
+        sudo rm -f /run/chrome/pulse/native 2>/dev/null
+        sudo rm -f /run/chrome/pulse/* 2>/dev/null
+        sudo mkdir -p /run/chrome/pulse 2>/dev/null
         sudo chown chronos:chronos /run/chrome/pulse
-        sudo chmod 770 /run/chrome/pulse
+        sudo chmod 770 /run/chrome/pulse 2>/dev/null
         killall -9 cras_test_client 2>/dev/null
         killall -9 pipewire 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
-        sudo pkill -f xfce4-session
-        sudo pkill -f xfwm4
-        sudo pkill -f xfce4-panel
-        sudo pkill -f xfdesktop
-        sudo pkill -f xfce4-terminal
-        sudo pkill -f xfce4-*
-        sudo pkill -f Xorg
+        sudo pkill -f xfce4-session 2>/dev/null
+        sudo pkill -f xfwm4 2>/dev/null
+        sudo pkill -f xfce4-panel 2>/dev/null
+        sudo pkill -f xfdesktop 2>/dev/null
+        sudo pkill -f xfce4-terminal 2>/dev/null
+        sudo pkill -f xfce4-* 2>/dev/null
+        sudo pkill -f Xorg 2>/dev/null
         ;;
     chariot)
         CLEANUP_ENABLED=1
