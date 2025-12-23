@@ -243,7 +243,6 @@ trap cleanup_chroot EXIT INT TERM
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"         -o "$CHARD_ROOT/bin/rainbow"
                 sleep 0.05
                 
-                
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -261,8 +260,6 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
                 sudo chmod +x "$CHARD_ROOT/bin/rainbow"
-
-
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
@@ -703,6 +700,8 @@ grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/puls
 mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
 sudo mkdir -p /media
 
+                sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external
+                sudo chown -R 1000:1000 $CHARD_ROOT/$CHARD_HOME/external
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc 2>/dev/null
                 chard_unmount
                 
