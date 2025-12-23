@@ -1,5 +1,6 @@
 #!/bin/bash
 USB_DEVICES=$(lsblk -dpno NAME,TRAN | awk '$2=="usb"{print $1}')
+
 if [ -z "$USB_DEVICES" ]; then
     echo "No USB drives detected."
     exit 1
@@ -9,20 +10,23 @@ echo "Detected USB drives:"
 echo "$USB_DEVICES"
 echo
 
-if [ $(echo "$USB_DEVICES" | wc -l) -gt 1 ]; then
-    echo "Multiple USB drives found. Please enter the full path of the device to use:"
-    read USB_DEV
+if [ "$(echo "$USB_DEVICES" | wc -l)" -gt 1 ]; then
+    echo "Multiple USB drives found. Enter the full device path to unmount (e.g. /dev/sdb):"
+    read -r USB_DEV
 else
-    USB_DEV=$USB_DEVICES
+    USB_DEV="$USB_DEVICES"
 fi
 
-MOUNT_POINT="/tmp/usb_mount"
-mkdir -p "$MOUNT_POINT"
+MOUNTED_PARTS=$(lsblk -lnpo NAME,MOUNTPOINT "$USB_DEV" | awk '$2 != "" {print $1}')
 
-PARTITION="${USB_DEV}1"
-echo "Mounting $PARTITION to $MOUNT_POINT..."
-sudo mount "$PARTITION" "$MOUNT_POINT"
-if [ $? -ne 0 ]; then
-    echo "Failed to mount $PARTITION"
-    exit 1
+if [ -z "$MOUNTED_PARTS" ]; then
+    echo "No mounted partitions found on $USB_DEV"
 fi
+
+echo "Unmounting partitions on $USB_DEV:"
+for part in $MOUNTED_PARTS; do
+    echo "  sudo umount -l $part"
+    sudo umount -l "$part" || {
+        echo "Failed to unmount $part"
+    }
+done
