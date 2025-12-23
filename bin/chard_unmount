@@ -5,9 +5,7 @@ MOUNT_POINT="/tmp/usb_mount"
 
 if mountpoint -q "$MOUNT_POINT"; then
     echo "Unmounting temporary mount $MOUNT_POINT..."
-    sudo umount "$MOUNT_POINT" || {
-        echo "Failed to unmount $MOUNT_POINT"
-    }
+    sudo umount "$MOUNT_POINT" || echo "Failed to unmount $MOUNT_POINT"
 fi
 
 if [ ! -f "$STATE_FILE" ]; then
@@ -15,13 +13,12 @@ if [ ! -f "$STATE_FILE" ]; then
 fi
 
 echo "Restoring original USB mount state:"
-while read -r PART MP FS; do
+while read -r PART MP; do
     echo "  Mounting $PART back to $MP"
     sudo mkdir -p "$MP"
-    sudo mount -t "$FS" "$PART" "$MP" || {
-        echo "Failed to remount $PART"
-    }
+    sudo mount "$PART" "$MP" || echo "Failed to remount $PART"
 done < "$STATE_FILE"
+
 sudo rm -f "$STATE_FILE"
 
 echo "USB restored to original mount state."
