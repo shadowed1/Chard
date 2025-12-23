@@ -1,6 +1,6 @@
 #!/bin/bash
 
-STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
+STATE_FILE="$CHARD_ROOT/usb_mount_state"
 MOUNT_POINT="/tmp/usb_mount"
 
 if mountpoint -q "$MOUNT_POINT"; then
