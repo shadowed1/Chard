@@ -7,7 +7,6 @@ USB_DEVICES=$(lsblk -dpno NAME,TRAN | awk '$2=="usb"{print $1}')
 
 if [ -z "$USB_DEVICES" ]; then
     echo "No USB drives detected."
-    exit 0
 fi
 
 echo "Detected USB drives:"
