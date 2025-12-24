@@ -775,8 +775,7 @@ grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/puls
 mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
 sudo mkdir -p /media
 
-                sudo mkdir -p $CHARD_ROOT/external 2>/dev/null
-                sudo chown -R chronos:chronos-access $CHARD_ROOT/external 2>/dev/null
+                
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc 2>/dev/null
                 chard_unmount
                 
@@ -785,6 +784,8 @@ sudo mkdir -p /media
                     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
                     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
                     sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
+                    sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
+                    sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
                 fi
                 source "$CHARD_ROOT/.chardrc"
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
