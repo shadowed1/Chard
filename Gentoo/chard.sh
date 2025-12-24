@@ -193,7 +193,7 @@ chard_unmount() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.05
-        sudo umount -l "$CHARD_ROOT/$CHARD_HOME/external" 2>/dev/null || true
+        $CHARD_ROOT/bin/chard_unmount
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.05
@@ -683,7 +683,8 @@ case "$cmd" in
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-            sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+            sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+            $CHARD_ROOT/bin/chard_mount 2>/dev/null
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
@@ -765,7 +766,6 @@ case "$cmd" in
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             setfacl -Rb /root 2>/dev/null
-            umount -l /tmp/usb_mount 2>/dev/null || true
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
             umount -l /run/udev    2>/dev/null || true
@@ -789,13 +789,13 @@ case "$cmd" in
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
-        sudo pkill -f xfce4-session
-        sudo pkill -f xfwm4
-        sudo pkill -f xfce4-panel
-        sudo pkill -f xfdesktop
-        sudo pkill -f xfce4-terminal
-        sudo pkill -f xfce4-*
-        sudo pkill -f Xorg
+        sudo pkill -f xfce4-session 2>/dev/null
+        sudo pkill -f xfwm4 2>/dev/null
+        sudo pkill -f xfce4-panel 2>/dev/null
+        sudo pkill -f xfdesktop 2>/dev/null
+        sudo pkill -f xfce4-terminal 2>/dev/null
+        sudo pkill -f xfce4-* 2>/dev/null
+        sudo pkill -f Xorg 2>/dev/null
         ;;
     chariot)
         CLEANUP_ENABLED=1
