@@ -244,8 +244,8 @@ LIBS_TO_ADD=(
     "$LLVM_DIR/lib"
 )
 PKG_TO_ADD=(
-    "$ROOT/usr/lib/pkgconfig"
     "$ROOT/usr/lib64/pkgconfig"
+    "$ROOT/usr/lib/pkgconfig"
     "$ROOT/usr/local/lib/pkgconfig"
     "$ROOT/usr/local/share/pkgconfig"
     "$LLVM_DIR/lib/pkgconfig"
