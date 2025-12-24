@@ -700,8 +700,8 @@ grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/puls
 mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
 sudo mkdir -p /media
 
-                sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external
-                sudo chown -R 1000:1000 $CHARD_ROOT/$CHARD_HOME/external
+                sudo mkdir -p $CHARD_ROOT/external 2>/dev/null
+                sudo chown -R chronos:chronos-access $CHARD_ROOT/external 2>/dev/null
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc 2>/dev/null
                 chard_unmount
                 
