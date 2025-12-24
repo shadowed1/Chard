@@ -21,6 +21,7 @@ if [ -z "$USB_DEVICES" ]; then
     exit 0
 fi
 
+echo
 echo "${GREEN}Detected External drives: ${BOLD}"
 echo "$USB_DEVICES"
 echo "${RESET}"
@@ -43,9 +44,6 @@ sudo mkdir -p "$MOUNT_POINT"
 while read -r PART MP; do
     BASENAME=$(basename "$PART")
     TARGET="$MOUNT_POINT/$BASENAME"
-
     sudo mkdir -p "$TARGET"
-    sudo mount --bind "$MP" "$TARGET" || \
-        echo "${RED}Failed to bind-mount $MP${RESET}"
-
+    sudo mount --bind "$MP" "$TARGET" 2>/dev/null
 done < "$STATE_FILE"
