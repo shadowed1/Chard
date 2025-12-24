@@ -10,7 +10,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
-MOUNT_POINT="/tmp/usb_mount"
+MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/external"
 
 if mountpoint -q "$MOUNT_POINT"; then
     sudo umount "$MOUNT_POINT" 2>/dev/null
