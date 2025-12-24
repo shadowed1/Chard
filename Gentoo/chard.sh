@@ -775,7 +775,7 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         '
         killall -9 chard_volume 2>/dev/null
-        $CHARD_ROOT/bin/chard_unmount 2>/dev/null 
+        chard_unmount
         sudo rm -f /run/chrome/pulse/native
         sudo rm -f /run/chrome/pulse/*
         sudo mkdir -p /run/chrome/pulse
