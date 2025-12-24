@@ -1632,9 +1632,9 @@ run_checkpoint 145 "Heroic" checkpoint_145
 
 checkpoint_146() {
     yay -S --noconfirm kvantum 2>/dev/null
-    sudo -E pacman -Syu --noconfirm dolphin 2>/dev/null
+    #sudo -E pacman -Syu --noconfirm dolphin 2>/dev/null
 }
-run_checkpoint 146 "dolphin" checkpoint_146
+run_checkpoint 146 "kvantum" checkpoint_146
 
 checkpoint_147() {
    sudo -E pacman -Syu --noconfirm pavucontrol 2>/dev/null
