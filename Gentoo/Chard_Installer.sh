@@ -135,7 +135,7 @@ fi
             ;;
     esac
     
-unset LD_PRELOAD
+#unset LD_PRELOAD
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
     
