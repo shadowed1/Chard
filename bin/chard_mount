@@ -13,23 +13,23 @@ fi
 
 echo "${GREEN}Detected USB drives: ${BOLD}"
 echo "$USB_DEVICES"
-echo "${RESET}"
+echo "${RESET}${MAGENTA}"
 
 for DEV in $USB_DEVICES; do
     lsblk -lnpo NAME,MOUNTPOINT "$DEV" | awk '$2 != ""' >> "$STATE_FILE"
 done
 
 if [ ! -s "$STATE_FILE" ]; then
-    echo "${RESET}${MAGENTA}No mounted USB partitions found. ${RESET}"
+    echo "${RESET}${MAGENTA}No mounted USB partitions found."
 fi
 
-echo "${CYAN}Saved:"
+echo "${RESET}${CYAN}Saved:"
 cat "$STATE_FILE"
 echo "${RESET}${BLUE}"
 
 while read -r PART MP; do
-    echo "Unmounting $PART from $MP"
-    sudo umount -l "$PART" || echo "Failed to unmount $PART"
+    echo "${RESET}${BLUE}Unmounting $PART from $MP"
+    sudo umount -l "$PART" 2>/dev/null
 done < "$STATE_FILE"
 
 sudo mkdir -p "$MOUNT_POINT"
@@ -38,6 +38,6 @@ while read -r PART MP; do
     BASENAME=$(basename "$PART")
     TARGET="$MOUNT_POINT/$BASENAME"
     sudo mkdir -p "$TARGET"
-    echo "to $TARGET ${RESET}"
-    sudo mount "$PART" "$TARGET" || echo "Failed to mount $PART to $TARGET"
+    echo "${RESET}${GREEN}To $TARGET ${RESET}"
+    sudo mount "$PART" "$TARGET" 2>/dev/null
 done < "$STATE_FILE"
