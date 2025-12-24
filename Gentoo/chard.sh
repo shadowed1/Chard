@@ -753,13 +753,13 @@ case "$cmd" in
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
+            /bin/error_color
             setfacl -Rb /run/chrome/pulse 2>/dev/null
             setfacl -Rb /run/chrome 2>/dev/null
             killall -9 pipewire 2>/dev/null
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
             killall -9 chardwire 2>/dev/null
-            sudo /bin/color_reset
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             setfacl -Rb /root 2>/dev/null
@@ -774,6 +774,7 @@ case "$cmd" in
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         '
+        $CHARD_ROOT/bin/color_reset
         killall -9 chard_volume 2>/dev/null
         $CHARD_ROOT/bin/chard_unmount 2>/dev/null 
         sudo rm -f /run/chrome/pulse/native
