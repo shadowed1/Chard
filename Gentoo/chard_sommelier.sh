@@ -39,7 +39,7 @@ SOMMELIER_CMD=(
     color_reset &
     exec bash
 '
-
+error_color
 sudo setfacl -Rb /root 2>/dev/null
 killall -9 chardwire 2>/dev/null
 
