@@ -20,7 +20,7 @@ for DEV in $USB_DEVICES; do
 done
 
 if [ ! -s "$STATE_FILE" ]; then
-    echo "No mounted USB partitions found."
+    echo "${RESET}${MAGENTA}No mounted USB partitions found. ${RESET}"
 fi
 
 echo "${CYAN}Saved:"
