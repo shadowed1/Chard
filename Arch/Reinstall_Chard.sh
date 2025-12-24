@@ -264,7 +264,7 @@ detect_gpu_freq() {
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
         echo
-        echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
+        echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
         echo
 }
 chard unmount
