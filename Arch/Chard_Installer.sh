@@ -337,8 +337,8 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
     echo "${RED}ChromeOS Version: $CHROME_MILESTONE"
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
-    sudo mkdir -p $CHARD_ROOT/external
-    sudo chown -R chronos:chronos-access $CHARD_ROOT/external
+    sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external
+    sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
 fi
