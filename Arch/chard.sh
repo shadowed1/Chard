@@ -430,7 +430,6 @@ case "$cmd" in
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         '
-        $CHARD_ROOT/bin/color_reset
         killall -9 chard_volume 2>/dev/null
         chard_unmount
         sudo rm -f /run/chrome/pulse/native 2>/dev/null
@@ -450,6 +449,7 @@ case "$cmd" in
         sudo pkill -f xfce4-terminal 2>/dev/null
         sudo pkill -f xfce4-* 2>/dev/null
         sudo pkill -f Xorg 2>/dev/null
+        $CHARD_ROOT/bin/color_reset
         ;;
     chariot)
         CLEANUP_ENABLED=1
