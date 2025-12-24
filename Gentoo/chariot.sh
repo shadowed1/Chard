@@ -690,6 +690,7 @@ checkpoint_63() {
 run_checkpoint 63 "sudo -E emerge x11-libs/libxkbcommon" checkpoint_63
 
 checkpoint_64() {
+    sudo -E emerge media-libs/harfbuzz
     sudo -E emerge gui-libs/gtk
     rm -rf /var/tmp/portage/gui-libs/gtk-*
     eclean-dist -d
