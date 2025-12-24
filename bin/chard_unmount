@@ -18,8 +18,9 @@ fi
 
 echo "${CYAN}Restoring:"
 while read -r PART MP; do
-    echo "${BOLD}  $PART to '$MP' ${RESET}"
+    echo "${BOLD}  $PART to '$MP' "
     sudo mkdir -p "$MP"
     sudo mount "$PART" "$MP" 2>/dev/null
 done < "$STATE_FILE"
+echo "${RESET}"
 sudo rm -f "$STATE_FILE" 2>/dev/null
