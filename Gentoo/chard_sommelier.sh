@@ -36,6 +36,7 @@ SOMMELIER_CMD=(
     pulseaudio 2>/dev/null &
     sleep 0.2
     chardwire 2>/dev/null &
+    color_reset &
     exec bash
 '
 
