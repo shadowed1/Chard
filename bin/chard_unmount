@@ -16,6 +16,7 @@ if mountpoint -q "$MOUNT_POINT"; then
     sudo umount "$MOUNT_POINT" 2>/dev/null
 fi
 
+echo
 echo "${CYAN}Restoring:"
 while read -r PART MP; do
     echo "${BOLD}  $PART to '$MP' "
