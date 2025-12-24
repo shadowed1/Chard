@@ -430,6 +430,7 @@ case "$cmd" in
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         '
+        $CHARD_ROOT/bin/error_color
         killall -9 chard_volume 2>/dev/null
         chard_unmount
         sudo rm -f /run/chrome/pulse/native 2>/dev/null
