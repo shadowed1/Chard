@@ -645,20 +645,20 @@ EOF
                     ;;
             esac
             
-            USE_FLAGS="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt cube curl dbus dri dri3 dts encode exif egl flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit kms lcms libnotify libtirpc llvm mad minizip mng mp3 mp4 mpeg multilib-strict ncurses nls ogg opengl openmp opus pam pango pcre pdf png postproc ppds proprietary-codecs pulseaudio qml qt5 qt6 readline sdl seccomp sound -sound-server spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis wayland wxwidgets x264 x265 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd vpx zstd -elogind"
-            
-            case "$GPU_TYPE" in
-                amd|nvidia)
-                    USE_FLAGS+=" vaapi vdpau vulkan"
-                    ;;
-                intel)
-                    USE_FLAGS+=" video_cards_intel vulkan"
-                    ;;
-                mediatek)
-                    USE_FLAGS+=" virgl vulkan"
-            esac
+                USE_FLAGS="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt cube curl dbus dri dri3 dts encode exif egl flac gdbm gif gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit kms layers lcms libnotify libtirpc llvm mad minizip mng multilib mp3 mp4 mpeg ncurses nls ogg opengl openmp opus pam pango pcre pdf png postproc ppds proprietary-codecs pulseaudio qml qt5 qt6 readline sdl seccomp sound -sound-server spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis wayland wxwidgets x264 x265 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd vpx zstd -elogind"
+                
+                case "$GPU_TYPE" in
+                    amd|nvidia)
+                        USE_FLAGS+=" vaapi vdpau vulkan"
+                        ;;
+                    intel)
+                        USE_FLAGS+=" video_cards_intel vulkan"
+                        ;;
+                    mediatek)
+                        USE_FLAGS+=" virgl vulkan"
+                esac
 
-            sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
+sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
 # Chard Portage make.conf
 # Generated based on detected architecture ($ARCH) and GPU type ($GPU_TYPE)
 COMMON_FLAGS="-march=native -O2 -pipe"
@@ -678,7 +678,7 @@ CXX="/usr/bin/g++"
 AR="/usr/bin/gcc-ar"
 RANLIB="/usr/bin/gcc-ranlib"
 STRIP="/usr/bin/strip"
-FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
+FEATURES="assume-digests binpkg-docompress binpkg-dostrip binpkg-logs config-protect-if-modified distlocks ebuild-locks fixlafiles merge-sync multilib-strict news parallel-fetch parallel-install pid-sandbox preserve-libs protect-owned strict unknown-features-warn unmerge-logs unmerge-orphans userfetch usersync xattr -sandbox -usersandbox"
 USE="$USE_FLAGS"
 PYTHON_TARGETS="python3_13"
 ACCEPT_KEYWORDS="$ACCEPT_KEYWORDS"
@@ -687,6 +687,7 @@ PKG_CONFIG="/usr/bin/pkg-config"
 MESON_NATIVE_FILE="/meson-cross.ini"
 PYTHONMULTIPROCESSING_START_METHOD=fork
 EOF
+
                 echo ""
                 echo "${RESET}${BLUE}make.conf generated successfully for $GPU_TYPE + $ARCH -> $MAKECONF_FILE "
                 echo ""
