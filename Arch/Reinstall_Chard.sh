@@ -267,7 +267,6 @@ detect_gpu_freq() {
         echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
         echo
 }
-unset LD_PRELOAD
 chard unmount
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
@@ -670,7 +669,6 @@ sudo mkdir -p $CHARD_ROOT/media
                     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
                     sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
                 fi
-                unset LD_PRELOAD
                 # Remove .chard.preload
                 # sudo rm $CHARD_ROOT/.chard.preload 2>/dev/null
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
