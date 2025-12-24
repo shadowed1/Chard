@@ -625,7 +625,7 @@ case "$cmd" in
                     read -rp "Would you like to 'reinstall' to get $LATEST_VER ? (Y/n): " choice
                     if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
                         echo "${CYAN}Reinstalling!${RESET}"
-                        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/Reinstall_Chard.sh?$(date +%s)")
+                        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
 
                     else
                         echo "${YELLOW}Skipping reinstall.${RESET}"
