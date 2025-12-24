@@ -30,11 +30,6 @@ for DEV in $USB_DEVICES; do
     lsblk -lnpo NAME,MOUNTPOINT "$DEV" | awk '$2 != ""' >> "$STATE_FILE"
 done
 
-if [ ! -s "$STATE_FILE" ]; then
-    echo "${YELLOW}No mounted USB partitions found.${RESET}"
-    exit 0
-fi
-
 echo "${RESET}${CYAN}Bind-Mounted to $CHARD_ROOT/external"
 echo "${RESET}${CYAN}${BOLD}"
 cat "$STATE_FILE"
