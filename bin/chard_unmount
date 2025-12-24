@@ -16,12 +16,15 @@ if mountpoint -q "$MOUNT_POINT"; then
     sudo umount "$MOUNT_POINT" 2>/dev/null
 fi
 
-echo
-echo "${CYAN}Restoring:"
-while read -r PART MP; do
-    echo "${BOLD}  $PART to '$MP' "
-    sudo mkdir -p "$MP"
-    sudo mount "$PART" "$MP" 2>/dev/null
-done < "$STATE_FILE"
-echo "${RESET}"
-sudo rm -f "$STATE_FILE" 2>/dev/null
+if [[ -f "$STATE_FILE" ]]; then
+    while read -r PART MP; do
+        echo ""
+        echo "${CYAN}Restoring: ${BOLD}"
+        echo "  $PART to '$MP'"
+        echo "${RESET}"
+        sudo mkdir -p "$MP" 2>/dev/null
+        sudo mount "$PART" "$MP" 2>/dev/null
+    done < "$STATE_FILE"
+    sudo rm -f "$STATE_FILE" 2>/dev/null
+fi
+
