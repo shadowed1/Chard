@@ -464,10 +464,10 @@ EOF
                     USER=\$CHARD_USER
                     source \$HOME/.bashrc 2>/dev/null
                     chown -R portage:portage /var/db/pkg /var/lib/portage 2>/dev/null
-                    chmod -R 755 /var/db/pkg
-                    chmod 644 /var/lib/portage/world
-                    /bin/SMRT
-                    source \$HOME/.smrt_env.sh
+                    chmod -R 755 /var/db/pkg 2>/dev/null
+                    chmod 644 /var/lib/portage/world 2>/dev/null
+                    /bin/SMRT 2>/dev/null
+                    source \$HOME/.smrt_env.sh 2>/dev/null
                     sudo chown -R \$USER:\$USER \$HOME 2>/dev/null
                     emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
