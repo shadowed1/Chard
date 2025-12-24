@@ -548,8 +548,8 @@ ctl.!default {
         type cras
 }
 EOF
-sudo mkdir -p $CHARD_ROOT/external
-sudo chown -R chronos:chronos-access $CHARD_ROOT/external
+sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
+sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
 else
 sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
 pcm.!default {
