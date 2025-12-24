@@ -751,6 +751,8 @@ TARGET_FILE=""
 if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
     sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+    sudo mkdir -p $CHARD_ROOT/external
+    sudo chown -R chronos:chronos-access $CHARD_ROOT/external
 else
     TARGET_FILE="$DEFAULT_BASHRC"
 fi
