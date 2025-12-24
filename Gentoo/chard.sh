@@ -83,6 +83,8 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.05
+        $CHARD_ROOT/bin/chard_unmount 2>/dev/null
+        sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -188,7 +190,7 @@ chard_unmount() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.05
-        $CHARD_ROOT/bin/chard_unmount
+        $CHARD_ROOT/bin/chard_unmount 2>/dev/null
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.05
@@ -773,7 +775,7 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         '
         killall -9 chard_volume 2>/dev/null
-        chard_unmount
+        $CHARD_ROOT/bin/chard_unmount 2>/dev/null 
         sudo rm -f /run/chrome/pulse/native
         sudo rm -f /run/chrome/pulse/*
         sudo mkdir -p /run/chrome/pulse
