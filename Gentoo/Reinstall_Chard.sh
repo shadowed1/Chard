@@ -35,8 +35,6 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.05
-        $CHARD_ROOT/bin/chard_unmount 2>/dev/null
-        sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -72,6 +70,8 @@ cleanup_chroot() {
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.05
+        $CHARD_ROOT/bin/chard_unmount 2>/dev/null
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.05
