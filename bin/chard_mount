@@ -17,7 +17,7 @@ MOUNT_POINT="$CHARD_ROOT/external"
 USB_DEVICES=$(lsblk -dpno NAME,TRAN | awk '$2=="usb"{print $1}')
 
 if [ -z "$USB_DEVICES" ]; then
-    echo "${RED}No USB drives detected.${RESET}"
+    echo "${YELLOW}No External drives detected.${RESET}"
     exit 0
 fi
 
