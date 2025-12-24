@@ -1,21 +1,15 @@
 #!/bin/bash
-
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
 MOUNT_POINT="/tmp/usb_mount"
 
 if mountpoint -q "$MOUNT_POINT"; then
-    sudo umount "$MOUNT_POINT" || echo "Failed to unmount $MOUNT_POINT"
+    sudo umount "$MOUNT_POINT" 2>/dev/null
 fi
 
-if [ ! -f "$STATE_FILE" ]; then
-    echo "No saved USB mount state found."
-fi
-
-echo "Restoring original USB mount state:"
+echo "${CYAN}Restoring:"
 while read -r PART MP; do
-    echo "  Mounting $PART back to '$MP'"
+    echo "${BOLD}  $PART to '$MP' ${RESET}"
     sudo mkdir -p "$MP"
-    sudo mount "$PART" "$MP" || echo "Failed to remount $PART"
+    sudo mount "$PART" "$MP" 2>/dev/null
 done < "$STATE_FILE"
-
 sudo rm -f "$STATE_FILE" 2>/dev/null
