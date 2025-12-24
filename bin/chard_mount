@@ -30,10 +30,10 @@ for DEV in $USB_DEVICES; do
     lsblk -lnpo NAME,MOUNTPOINT "$DEV" | awk '$2 != ""' >> "$STATE_FILE"
 done
 
-echo "${RESET}${CYAN}Bind-Mounted to $CHARD_ROOT/external"
-echo "${RESET}${MAGENTA}"
+echo "${RESET}${BLUE}Bind-Mounted to $CHARD_ROOT/external: ${BOLD}"
+echo ""
 cat "$STATE_FILE"
-echp
+echo "${RESET}"
 
 sudo mkdir -p "$MOUNT_POINT"
 
