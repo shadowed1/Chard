@@ -309,6 +309,10 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"         -o "$CHARD_ROOT/bin/rainbow"
                 sleep 0.05
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/error_color.sh"         -o "$CHARD_ROOT/bin/error_color"
+                sleep 0.05
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/color_reset.sh"         -o "$CHARD_ROOT/bin/color_reset"
+                sleep 0.05
                 
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -327,6 +331,8 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
                 sudo chmod +x "$CHARD_ROOT/bin/rainbow"
+                sudo chmod +x "$CHARD_ROOT/bin/error_color"
+                sudo chmod +x "$CHARD_ROOT/bin/color_reset"
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
