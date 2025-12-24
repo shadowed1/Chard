@@ -18,6 +18,7 @@ CLEANUP_ENABLED=0
 
 cleanup_chroot() {
     [[ "$CLEANUP_ENABLED" -eq 1 ]] || return 0
+    echo "${RESET}"
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
