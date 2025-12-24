@@ -16,6 +16,10 @@ MOUNT_POINT="$CHARD_ROOT/external"
 
 USB_DEVICES=$(lsblk -dpno NAME,TRAN | awk '$2=="usb"{print $1}')
 
+if ls /dev/nvme* >/dev/null 2>&1 && [ -b /dev/mmcblk0 ]; then
+    USB_DEVICES="$USB_DEVICES /dev/mmcblk0"
+fi
+
 if [ -z "$USB_DEVICES" ]; then
     echo "${YELLOW}No External drives detected.${RESET}"
     exit 0
