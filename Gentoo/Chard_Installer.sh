@@ -688,6 +688,10 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"         -o "$CHARD_ROOT/bin/rainbow"
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/error_color.sh"         -o "$CHARD_ROOT/bin/error_color"
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/color_reset.sh"         -o "$CHARD_ROOT/bin/color_reset"
+sleep 0.2
 
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -706,7 +710,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
 sudo chmod +x "$CHARD_ROOT/bin/chardwire"
 sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
 sudo chmod +x "$CHARD_ROOT/bin/rainbow"
-
+sudo chmod +x "$CHARD_ROOT/bin/error_color"
+sudo chmod +x "$CHARD_ROOT/bin/color_reset"
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
