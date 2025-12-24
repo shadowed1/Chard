@@ -50,9 +50,9 @@ fi
 [ -f "$CHARD_ROOT/.chard.env" ] && source "$CHARD_ROOT/.chard.env"
 [ -f "$CHARD_ROOT/.chard.logic" ] && source "$CHARD_ROOT/.chard.logic"
 
-if [ "$IS_CHROMEOS" -eq 1 ]; then
-    [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
-fi
+#if [ "$IS_CHROMEOS" -eq 1 ]; then
+#    [ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
+#fi
 
 chard() {
     case "$1" in
