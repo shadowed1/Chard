@@ -173,7 +173,7 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
     sleep 0.2
-    sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+    $CHARD_ROOT/bin/chard_unmount 2>/dev/null    
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
     sleep 0.2
@@ -261,7 +261,7 @@ sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
 sleep 0.2
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+$CHARD_ROOT/bin/chard_unmount 2>/dev/null
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
 sleep 0.2
