@@ -317,7 +317,8 @@ sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
 sudo setfacl -Rb /run/chrome 2>/dev/null
-echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
+echo "${RED}[*] Re
+moving $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
@@ -336,6 +337,8 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
     echo "${RED}ChromeOS Version: $CHROME_MILESTONE"
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
+    sudo mkdir -p $CHARD_ROOT/external
+    sudo chown -R chronos:chronos-access $CHARD_ROOT/external
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
 fi
