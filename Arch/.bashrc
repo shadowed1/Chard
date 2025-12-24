@@ -200,9 +200,7 @@ alias ls='ls --color=auto'
 #dbus-daemon --system --fork 2>/dev/null
 
 # Steam
-if [ "$CHROME_VER" -ge 140 ]; then
-    alias steam='/bin/chard_steam'
-fi
+alias steam='/bin/chard_steam'
 
 # Firefox
 alias firefox='/bin/chard_firefox'
