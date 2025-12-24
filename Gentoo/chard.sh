@@ -694,7 +694,7 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
-        
+        $CHARD_ROOT/bin/error_color
         sudo chroot "$CHARD_ROOT" /bin/bash -c '
         
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
