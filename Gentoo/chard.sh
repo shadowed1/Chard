@@ -757,7 +757,7 @@ case "$cmd" in
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
             killall -9 chardwire 2>/dev/null
-            
+            sudo /bin/color_reset
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             setfacl -Rb /root 2>/dev/null
