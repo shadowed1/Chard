@@ -31,7 +31,6 @@ for DEV in $USB_DEVICES; do
 done
 
 echo "${RESET}${BLUE}Bind-Mounted to $CHARD_ROOT/external: ${BOLD}"
-echo ""
 cat "$STATE_FILE"
 echo "${RESET}"
 
