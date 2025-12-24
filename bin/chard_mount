@@ -31,8 +31,9 @@ for DEV in $USB_DEVICES; do
 done
 
 echo "${RESET}${CYAN}Bind-Mounted to $CHARD_ROOT/external"
-echo "${RESET}${CYAN}${BOLD}"
+echo "${RESET}${MAGENTA}"
 cat "$STATE_FILE"
+echp
 
 sudo mkdir -p "$MOUNT_POINT"
 
