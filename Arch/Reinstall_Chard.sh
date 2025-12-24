@@ -267,6 +267,7 @@ detect_gpu_freq() {
         echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
         echo
 }
+unset LD_PRELOAD
 chard unmount
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
@@ -310,8 +311,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardwire.sh"            -o "$CHARD_ROOT/bin/chardwire" 2>/dev/null
 sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.preload"            -o "$CHARD_ROOT/.chard.preload" 2>/dev/null
-sleep 0.05
+#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.preload"            -o "$CHARD_ROOT/.chard.preload" 2>/dev/null
+#sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_ucm.sh"            -o "$CHARD_ROOT/bin/chard_ucm" 2>/dev/null
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"            -o "$CHARD_ROOT/bin/chard_preload" 2>/dev/null
@@ -345,7 +346,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
 sudo chmod +x "$CHARD_ROOT/bin/root"
 sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
 sudo chmod +x "$CHARD_ROOT/bin/chardwire"
-sudo chmod +x "$CHARD_ROOT/.chard.preload"
+#sudo chmod +x "$CHARD_ROOT/.chard.preload"
 sudo chmod +x "$CHARD_ROOT/bin/chard_ucm"
 sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
 sudo chmod +x "$CHARD_ROOT/bin/rainbow"
@@ -669,7 +670,9 @@ sudo mkdir -p $CHARD_ROOT/media
                     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
                     sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
                 fi
-
+                unset LD_PRELOAD
+                # Remove .chard.preload
+                sudo rm $CHARD_ROOT/.chard.preload 2>/dev/null
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
                 source $CHARD_ROOT/.chardrc
