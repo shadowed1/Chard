@@ -127,7 +127,6 @@ esac
 chard_unmount() { 
         echo
         echo "${RESET}${YELLOW}Chard unmounting... ${RESET}"
-        echo
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
