@@ -173,8 +173,6 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
     sleep 0.2
-    sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
-    sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
@@ -208,7 +206,7 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
     sleep 0.2
-    sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+    $CHARD_ROOT/bin/chard_unmount 2>/dev/null
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sleep 0.2
@@ -253,8 +251,6 @@ sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
 sleep 0.2
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
-sleep 0.2
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
@@ -288,7 +284,7 @@ sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
 sleep 0.2
-sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+$CHARD_ROOT/bin/chard_unmount 2>/dev/null
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sleep 0.2
@@ -328,8 +324,6 @@ sudo rm -rf "$CHARD_ROOT" 2>/dev/null
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.2
-        sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
-        sleep 0.2
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -365,8 +359,6 @@ sudo rm -rf "$CHARD_ROOT" 2>/dev/null
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
-        sleep 0.2
-        sudo umount -l "$CHARD_ROOT/tmp/usb_mount" 2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.2
