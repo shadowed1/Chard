@@ -358,7 +358,7 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
-        
+        $CHARD_ROOT/bin/error_color
         sudo chroot "$CHARD_ROOT" /bin/bash -c '
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
             mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
@@ -407,7 +407,7 @@ case "$cmd" in
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
                 "
-            
+            /bin/error_color
             setfacl -Rb /run/chrome/pulse 2>/dev/null
             setfacl -Rb /run/chrome 2>/dev/null
             killall -9 pipewire 2>/dev/null
@@ -430,6 +430,7 @@ case "$cmd" in
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
         '
+        $CHARD_ROOT/bin/color_reset
         killall -9 chard_volume 2>/dev/null
         chard_unmount
         sudo rm -f /run/chrome/pulse/native 2>/dev/null
