@@ -34,7 +34,7 @@ for DEV in $USB_DEVICES; do
     lsblk -lnpo NAME,MOUNTPOINT "$DEV" | awk '$2 != ""' >> "$STATE_FILE"
 done
 
-echo "${RESET}${BLUE}Bind-Mounted to $CHARD_ROOT/external: ${BOLD}"
+echo "${RESET}${BLUE}Bind-Mounted to $CHARD_ROOT/$CHARD_HOME/external: ${BOLD}"
 cat "$STATE_FILE"
 echo "${RESET}"
 
