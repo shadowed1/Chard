@@ -1212,15 +1212,15 @@ checkpoint_128() {
     sudo -E emerge app-arch/unzip 2>/dev/null
     sudo -E emerge app-arch/zip 2>/dev/null
     sudo -E emerge app-arch/xarchiver 2>/dev/null
-    rm -rf /var/tmp/portage/app-arch/p7zip-*
-    rm -rf /var/tmp/portage/app-arch/arj-*
-    rm -rf /var/tmp/portage/app-arch/lha-*
-    rm -rf /var/tmp/portage/app-arch/lzop-*
-    rm -rf /var/tmp/portage/app-arch/unrar-*
-    rm -rf /var/tmp/portage/app-arch/rar-*
-    rm -rf /var/tmp/portage/app-arch/unzip-*
-    rm -rf /var/tmp/portage/app-arch/zip-*
-    rm -rf /var/tmp/portage/app-arch/xarchiver-*
+    rm -rf /var/tmp/portage/app-arch/p7zip-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/arj-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/lha-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/lzop-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/unrar-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/rar-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/unzip-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/zip-* 2>/dev/null
+    rm -rf /var/tmp/portage/app-arch/xarchiver-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 128 "xarchiver" checkpoint_128
@@ -1233,10 +1233,10 @@ checkpoint_129() {
 run_checkpoint 129 "sudo -E emerge app-editors/vscodium" checkpoint_129
 
 checkpoint_130() {
-    sudo -E emerge games-util/gamemode
-    sudo -E emerge games-action/prismlauncher
-    rm -rf /var/tmp/portage/games-util/gamemode-*
-    rm -rf /var/tmp/portage/games-action/prismlauncher-*
+    sudo -E emerge games-util/gamemode 2>/dev/null
+    sudo -E emerge games-action/prismlauncher 2>/dev/null
+    rm -rf /var/tmp/portage/games-util/gamemode-* 2>/dev/null
+    rm -rf /var/tmp/portage/games-action/prismlauncher-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
