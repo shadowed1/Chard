@@ -367,8 +367,6 @@ alias seamonkey='GDK_BACKEND=x11 seamonkey'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
 alias gparted='sudo -E gparted'
-alias balena-etcher='sudo -E balena-etcher'
-
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
 dbus-daemon --system --fork 2>/dev/null
 
