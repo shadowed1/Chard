@@ -897,17 +897,6 @@ checkpoint_116() {
 run_checkpoint 116 "Build Sommelier" checkpoint_116
 
 checkpoint_117() {
-if [ ! -f "/.chard_chrome" ]; then
-    CHROME_VER=139
-else
-    CHROME_VER=$(cat /.chard_chrome)
-fi
-if [ "$CHROME_VER" -le 139 ]; then
-    sudo -E pacman -Syu --noconfirm flatpak
-    sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    sudo chown -R 1000:1000 ~/.local/share/flatpak
-else
     sudo -E pacman -Syu --noconfirm flatpak
     sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -934,7 +923,6 @@ sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 
 sudo chmod +x /bin/chard_flatpak
-fi
 }
 run_checkpoint 117 "sudo -E pacman -Syu --noconfirm flatpak" checkpoint_117
 
@@ -1271,6 +1259,20 @@ sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
         sudo chmod +x /bin/chard_steam
+      
+mkdir -p ~/.local/share/applications
+tee ~/.local/share/applications/steam-chard.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Name=Steam (Chard)
+Comment=Wrapper to allow Steam to run on ChromeOS
+Exec=chard_steam
+Icon=steam
+Type=Application
+Categories=Game;
+Terminal=false
+StartupNotify=true
+EOF
+
 elif [[ "$ARCH" == "aarch64" ]]; then
     sudo -E pacman -Syu --needed --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git bubblewrap
     cd ~/
