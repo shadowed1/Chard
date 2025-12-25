@@ -559,6 +559,7 @@ checkpoint_46() {
     PCT=$(( THREADS * 100 / TOTAL_CORES ))
     (( PCT > 100 )) && PCT=100
     SMRT "$PCT"
+    source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
     sudo -E emerge sys-auth/polkit
     rm -rf /var/tmp/portage/sys-auth/polkit-*
     eclean-dist -d
@@ -585,6 +586,7 @@ run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
 
 checkpoint_49() {
     SMRT 75
+    source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
     sudo -E emerge x11-base/xorg-drivers
     rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
     eclean-dist -d
