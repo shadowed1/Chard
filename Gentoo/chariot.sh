@@ -1203,7 +1203,15 @@ checkpoint_128() {
     echo "app-arch/lha lha" | sudo tee -a /etc/portage/package.license
     echo "app-arch/unrar unRAR" | sudo tee -a /etc/portage/package.license
     echo "app-arch/rar RAR" | sudo tee -a /etc/portage/package.license
-    sudo -E emerge app-arch/p7zip app-arch/arj app-arch/lha app-arch/lzop app-arch/unrar app-arch/rar app-arch/unzip app-arch/zip app-arch/xarchiver
+    sudo -E emerge app-arch/p7zip 2>/dev/null
+    sudo -E emerge app-arch/arj 2>/dev/null
+    sudo -E emerge app-arch/lha 2>/dev/null
+    sudo -E emerge app-arch/lzop 2>/dev/null
+    sudo -E emerge app-arch/unrar 2>/dev/null
+    sudo -E emerge app-arch/rar 2>/dev/null
+    sudo -E emerge app-arch/unzip 2>/dev/null
+    sudo -E emerge app-arch/zip 2>/dev/null
+    sudo -E emerge app-arch/xarchiver 2>/dev/null
     rm -rf /var/tmp/portage/app-arch/p7zip-*
     rm -rf /var/tmp/portage/app-arch/arj-*
     rm -rf /var/tmp/portage/app-arch/lha-*
