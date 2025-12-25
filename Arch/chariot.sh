@@ -1582,6 +1582,19 @@ source ~/.bashrc
 sudo -u $CHARD_USER /usr/bin/firefox
 EOF
 sudo chmod +x /bin/chard_firefox
+mkdir -p ~/.local/share/applications
+
+tee ~/.local/share/applications/firefox-chard.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Name=Firefox (Chard)
+Comment=Wrapper to run Firefox on ChromeOS
+Exec=chard_firefox %u
+Icon=firefox
+Type=Application
+Categories=Network;WebBrowser;
+Terminal=false
+StartupNotify=true
+EOF
 }
 run_checkpoint 142 "Firefox" checkpoint_142
 
