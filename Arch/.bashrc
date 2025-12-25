@@ -196,6 +196,9 @@ alias gvim='wx gvim'
 alias prismlauncher='chard_prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
+alias gparted='sudo -E gparted'
+alias balena-etcher='sudo -E balena-etcher'
+
 alias ls='ls --color=auto'
 #dbus-daemon --system --fork 2>/dev/null
 
