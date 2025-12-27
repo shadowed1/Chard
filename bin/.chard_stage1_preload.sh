@@ -4,8 +4,6 @@ RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
@@ -16,7 +14,9 @@ echo
 STAGE1_FILE="$CHARD_ROOT/.chard_stage1_preload"
 sudo rm -f "$STAGE1_FILE" 2>/dev/null
 
-TEST_CMD="curl --version"
+TEST_CMD_CURL="curl --version"
+TEST_CMD_COREUTILS="/usr/bin/coreutils --coreutils-prog=echo ''"
+
 LD_PRELOAD_LIBS_STAGE1=()
 
 BANNED_REGEX="^(libc\.so|libpthread\.so|libdl\.so|libm\.so|libstdc\+\+\.so|libgcc_s\.so|libGL.*|libX11.*|libxcb.*|libbsd\.so|libc\+\+\.so)"
@@ -46,32 +46,31 @@ for lib in \
     fi
 
     case ":$CURRENT_LD_PRELOAD:" in
-        *":$lib:"*)
-            echo "${BLUE}$lib${RESET}"
-            continue
-            ;;
+        *":$lib:"*) echo "${BLUE}$lib${RESET}" ; continue ;;
     esac
 
-    TEST_PRELOAD="$lib"
-    TEST_OUTPUT=$(LD_PRELOAD="$TEST_PRELOAD" $TEST_CMD 2>&1)
-    TEST_EXIT=$?
-    
-    if echo "$TEST_OUTPUT" | grep -qE "(Memory usage summary|heap total|total calls|total memory)"; then
-        echo "${RED}${BOLD}$lib${RESET}"
+    if ! head -c 4 "$lib" 2>/dev/null | grep -q $'\x7fELF'; then
+        echo "${YELLOW}x$lib${RESET}"
         continue
     fi
-    
-    if [[ $TEST_EXIT -eq 0 ]]; then
-        LD_PRELOAD_LIBS_STAGE1+=("$lib")
-        echo "${GREEN}${BOLD}$lib${RESET}"
-    else
+
+    if ! LD_PRELOAD="$lib" $TEST_CMD_CURL >/dev/null 2>&1; then
         echo "${RED}$lib${RESET}"
+        continue
     fi
+
+    if ! LD_PRELOAD="$lib" $TEST_CMD_COREUTILS >/dev/null 2>&1; then
+        echo "${RED}$lib${RESET}"
+        continue
+    fi
+
+    LD_PRELOAD_LIBS_STAGE1+=("$lib")
+    echo "${GREEN}${BOLD}OK (both tests): $lib${RESET}"
 
 done
 
 echo
-echo "${BOLD}${CYAN}Writing $STAGE1_FILE...${RESET}"
+echo "${BOLD}${CYAN}source $STAGE1_FILE${RESET}"
 
 {
     echo "# <<< CHARD_STAGE1 <<<"
