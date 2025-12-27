@@ -24,6 +24,7 @@ EXPLICIT_BANNED_REGEX="^(libgamemode(auto)?\.so|libmemusage\.so|libpcprofile\.so
 
 echo "${BOLD}${CYAN}Scanning libraries...${RESET}"
 echo
+sleep 5
 
 for lib in \
     "$CHARD_ROOT/lib64"/*.so* \
@@ -65,7 +66,7 @@ for lib in \
     fi
 
     LD_PRELOAD_LIBS_STAGE1+=("$lib")
-    echo "${GREEN}${BOLD}OK (both tests): $lib${RESET}"
+    echo "${GREEN}${BOLD}$lib${RESET}"
 
 done
 
