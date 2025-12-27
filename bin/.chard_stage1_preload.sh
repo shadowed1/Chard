@@ -10,7 +10,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 echo
-echo "${BOLD}${BLUE}CHARD Stage 1: curl-only LD_PRELOAD tester${RESET}"
+echo "${BOLD}${BLUE}Chard Stage 1 Preload${RESET}"
 echo
 
 STAGE1_FILE="$CHARD_ROOT/.chard_stage1_preload"
