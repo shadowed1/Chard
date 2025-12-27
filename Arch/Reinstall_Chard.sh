@@ -328,6 +328,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/erro
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/color_reset.sh"            -o "$CHARD_ROOT/bin/color_reset" 2>/dev/null
 sleep 0.05
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
+sleep 0.05
 
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
@@ -351,6 +353,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
 sudo chmod +x "$CHARD_ROOT/bin/rainbow"
 sudo chmod +x "$CHARD_ROOT/bin/color_reset"
 sudo chmod +x "$CHARD_ROOT/bin/error_color"
+sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
 
 #sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
 #sudo chmod +x /etc/init/chard.conf
