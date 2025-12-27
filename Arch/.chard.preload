@@ -4,10 +4,17 @@
 LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libunwind-ptrace.so.0"
     "$CHARD_ROOT/usr/lib64/libunwind-x86_64.so.8"
+    "$CHARD_ROOT/usr/lib/libunwind-aarch64.so.8"
     "$CHARD_ROOT/usr/lib64/libunwind.so.8"
     "$CHARD_ROOT/usr/lib64/libmagic.so.1"
     "$CHARD_ROOT/usr/lib64/libseccomp.so.2"
+    "$CHARD_ROOT/usr/lib/libunwind-ptrace.so.0"
+    "$CHARD_ROOT/usr/lib/libunwind-x86_.so.8"
+    "$CHARD_ROOT/usr/lib/libunwind.so.8"
+    "$CHARD_ROOT/usr/lib/libmagic.so.1"
+    "$CHARD_ROOT/usr/lib/libseccomp.so.2"
     #"$CHARD_ROOT/usr/lib64/libstdc++.so.6"
+    #"$CHARD_ROOT/usr/lib/libstdc++.so.6"
 )
 
 LD_PRELOAD=""
