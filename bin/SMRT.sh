@@ -109,8 +109,8 @@ export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$ALLOCATED_COUNT --load-avera
 # Aliases
 EOF
 
-parallel_build_tools=(make emerge ninja scons meson cmake gcc g++ cc ld)
-parallel_data_tools=(tar gzip bzip2 xz rsync pigz pxz pbzip2)
+parallel_build_tools=(make emerge ninja scons meson cmake)
+compiler_tools=(gcc g++ cc ld)
 
 for tool in "${parallel_build_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
@@ -118,7 +118,7 @@ for tool in "${parallel_build_tools[@]}"; do
     fi
 done
 
-for tool in "${parallel_data_tools[@]}"; do
+for tool in "${compiler_tools[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
         echo "alias $tool='${TASKSET} $tool'" >> "$SMRT_ENV_FILE"
     fi
