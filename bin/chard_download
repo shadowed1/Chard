@@ -58,7 +58,7 @@ echo
 echo
 echo "                                  ${GREEN}${BOLD}If on ChromeOS, run:${RESET}${GREEN}"
 echo "                  ╔═════════════════════════════════════════════════════╗" 
-echo "                   ${BOLD}sudo mv ~/Chard_Installer /usr/local/Chard_Installer"
+echo "                   ${BOLD}sudo mv ~/Chard_Installer /usr/local/"
 echo "                   sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
 echo "                  ╚═════════════════════════════════════════════════════╝"
 echo ""
