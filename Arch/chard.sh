@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # <<< CHARD_ROOT_MARKER >>>
-CHARD_ROOT=""
-CHARD_HOME=""
-CHARD_USER=""
+CHARD_ROOT="/usr/local/chard"
+CHARD_HOME="home/chronos"
+CHARD_USER="chronos"
 # <<< END_CHARD_ROOT_MARKER >>>
 
 RED=$(tput setaf 1)
@@ -158,9 +158,96 @@ case "$ARCH" in
         ;;
 esac
 
+export ARCH
+export CHOST
+export CHARD_RC="$CHARD_ROOT/.chardrc"
+export GIT_EXEC_PATH="$CHARD_ROOT/usr/lib/git-core"
+export PYTHONMULTIPROCESSING_START_METHOD=fork
+
+export CC="$CHARD_ROOT/usr/bin/gcc"
+export CXX="$CHARD_ROOT/usr/bin/g++"
+export AR="$CHARD_ROOT/usr/bin/ar"
+export NM="$CHARD_ROOT/usr/bin/gcc-nm"
+export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
+export STRIP="$CHARD_ROOT/usr/bin/strip"
+export LD="$CHARD_ROOT/usr/bin/ld"
+
+# <<< CHARD_MARCH_NATIVE >>>
+CFLAGS="-march=native -O2 -pipe "
+[[ -d "$CHARD_ROOT/usr/include" ]] && CFLAGS+="-I$CHARD_ROOT/usr/include "
+[[ -d "$CHARD_ROOT/include" ]] && CFLAGS+="-I$CHARD_ROOT/include "
+export CFLAGS
+
+COMMON_FLAGS="-march=native -O2 -pipe"
+FCFLAGS="$COMMON_FLAGS"
+FFLAGS="$COMMON_FLAGS"
+
+CXXFLAGS="$CFLAGS"
+# <<< END CHARD_MARCH_NATIVE >>>
+
+LDFLAGS=""
+[[ -d "$CHARD_ROOT/usr/lib64" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/lib64 "
+[[ -d "$CHARD_ROOT/lib64" ]] && LDFLAGS+="-L$CHARD_ROOT/lib64 "
+[[ -d "$CHARD_ROOT/usr/local/lib64" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib64 "
+[[ -d "$CHARD_ROOT/usr/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/lib "
+[[ -d "$CHARD_ROOT/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/lib "
+[[ -d "$CHARD_ROOT/usr/local/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib "
+
+export LDFLAGS
+export FCFLAGS
+export FFLAGS
+
+PATHS_TO_ADD=(
+    "$PYEXEC_DIR"
+    "$CHARD_ROOT/usr/bin"
+    "$CHARD_ROOT/bin"
+    "$CHARD_ROOT/usr/local/bin"
+    "$CHARD_ROOT/usr/bin"
+)
+LIBS_TO_ADD=(
+    #"$CHARD_ROOT/usr/lib64"
+    #"$CHARD_ROOT/lib64"
+    #"$CHARD_ROOT/usr/lib"
+    #"$CHARD_ROOT/usr/lib32"
+    #"$CHARD_ROOT/lib"
+    "$LLVM_DIR/lib"
+)
+
+
+unique_join() {
+    local IFS=':'
+    local seen=()
+    for p in "$@"; do
+        [[ -n "$p" && -d "$p" && ! " ${seen[*]} " =~ " $p " ]] && seen+=("$p")
+    done
+    echo "${seen[*]}"
+}
+
+#export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
+#export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export MAGIC="$CHARD_ROOT/usr/share/file/misc/magic.mgc"
+export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
+export CPPFLAGS="-I$CHARD_ROOT/usr/include"
+export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
+export M4PATH="$CHARD_ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
+export MANPATH="$CHARD_ROOT/usr/share/man:$CHARD_ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
+export XDG_DATA_DIRS="$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
+export DISPLAY=":0"
+export GDK_BACKEND="wayland"
+export CLUTTER_BACKEND="wayland"
+export WAYLAND_DISPLAY=wayland-0
+export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
+export EGL_PLATFORM=wayland
+
+	if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
+	    source "$CHARD_ROOT/.chard_stage3_preload"
+	else
+	    source "$CHARD_ROOT/.chard.preload"
+	fi
+
     echo "[*] Running '$*' inside Chard environment..."
     env \
-        ROOT="$ROOT" \
+	ROOT="$ROOT" \
         PORTAGE_CONFIGROOT="$PORTAGE_CONFIGROOT" \
         PORTAGE_TMPDIR="$PORTAGE_TMPDIR" \
         DISTDIR="$DISTDIR" \
