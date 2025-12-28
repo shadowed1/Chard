@@ -663,7 +663,7 @@ case "$cmd" in
          CLEANUP_ENABLED=1
          chard_uninstall
         ;;
-    root|cr)
+    root)
         CLEANUP_ENABLED=1
         chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
