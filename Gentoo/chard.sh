@@ -663,7 +663,7 @@ case "$cmd" in
          CLEANUP_ENABLED=1
          chard_uninstall
         ;;
-    root)
+    root|cr)
         CLEANUP_ENABLED=1
         chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
@@ -751,6 +751,7 @@ case "$cmd" in
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
+                cd ~/
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
             "
