@@ -222,6 +222,9 @@ alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
 # Gwenview
 alias gwenview='QT_QPA_PLATFORM=xcb gwenview'
 
+# Handbrake
+alias handbrake='ghb'
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
