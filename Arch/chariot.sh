@@ -967,7 +967,7 @@ checkpoint_123() {
 
     if detect_intel_gpu; then
         echo "[*] Installing intel-media-driver for Gen9+ Intel GPU"
-        sudo -E pacman -S --noconfirm libva-intel-driver intel-media-driver
+        sudo -E pacman -S --noconfirm libva-intel-driver intel-media-driver intel-media-sdk
     else
         echo "[*] Skipping Intel driver installation"
     fi
