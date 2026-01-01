@@ -216,7 +216,10 @@ alias brave='brave --force-dark-mode --enable-features=WebUIDarkMode'
 alias flatpak='/bin/chard_flatpak'
 
 # Dolphin
-alias dolphin='QT_QPA_PLATFORM=xcb dolphin --style=kvantum'
+alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
+
+# Gwenview
+alias gwenview='QT_QPA_PLATFORM=xcb gwenview'
 
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
