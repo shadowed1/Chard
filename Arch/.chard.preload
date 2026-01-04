@@ -15,6 +15,7 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib/libseccomp.so.2"
     #"$CHARD_ROOT/usr/lib64/libstdc++.so.6"
     #"$CHARD_ROOT/usr/lib/libstdc++.so.6"
+    "$CHARD_ROOT/usr/lib/libpython3.13.so.1.0"
 )
 
 LD_PRELOAD=""
