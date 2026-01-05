@@ -222,7 +222,7 @@ chard_run() {
             aarch64) CHOST=aarch64-unknown-linux-gnu ;;
             *) echo "Unknown architecture: $ARCH"; exit 1 ;;
         esac
-
+source $CHARD_ROOT/.chard.preload
 HOME="$CHARD_ROOT/$CHARD_HOME"
 USER="$CHARD_USER"
 
