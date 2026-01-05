@@ -225,6 +225,9 @@ alias gwenview='QT_QPA_PLATFORM=xcb gwenview'
 # Handbrake
 alias handbrake='ghb'
 
+# Powercontrol
+alias powercontrol-gui='sudo -E powercontrol-gui'
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
