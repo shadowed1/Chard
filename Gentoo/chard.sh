@@ -236,40 +236,53 @@ fi
 export ARCH
 export CHOST
 export CHARD_RC="$CHARD_ROOT/.chardrc"
-export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
-export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
-export PYTHONMULTIPROCESSING_START_METHOD=fork
 export PORTDIR="$CHARD_ROOT/usr/portage"
 export DISTDIR="$CHARD_ROOT/var/cache/distfiles"
 export PKGDIR="$CHARD_ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$CHARD_ROOT/var/tmp"
-export XDG_RUNTIME_DIR="/run/chrome/"
+export SANDBOX="$CHARD_ROOT/usr/bin/sandbox"
+export GIT_EXEC_PATH="$CHARD_ROOT/usr/libexec/git-core"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib:$CHARD_ROOT/usr/lib/gcc/$CHOST/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/lib/gcc/$CHOST/15:$CHARD_ROOT/usr/$CHOST/gcc-bin/15"
+export PKG_CONFIG_PATH="$CHARD_ROOT/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig"
+export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
+export PKG_CONFIG="$CHARD_ROOT/usr/bin/pkg-config"
+export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
+export CPPFLAGS="-I$CHARD_ROOT/usr/include"
+export LIBGL_ALWAYS_INDIRECT=0
+export QT_QPA_PLATFORM=wayland
+export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
+export SOMMELIER_GLAMOR=1
+export SOMMELIER_VERSION=0.20
+export PULSE_SERVER=unix:/run/chrome/pulse/native
+export DISPLAY=":0"
+export GDK_BACKEND="wayland"
+export CLUTTER_BACKEND="wayland"
+export WAYLAND_DISPLAY=wayland-0
+export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
+export EGL_PLATFORM=wayland
+export XDG_DATA_DIRS="/usr/share:$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/local/share:$CHARD_ROOT/usr/share/flatpak/exports/share:$CHARD_ROOT/var/lib/flatpak/exports/share:$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share"
+export EMERGE_DEFAULT_OPTS="--quiet-build=y --jobs=$(nproc)"
+export CFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include $CFLAGS"
+export CXXFLAGS="-O2 -pipe -I$CHARD_ROOT/usr/include -I$CHARD_ROOT/include $CXXFLAGS"
+export LDFLAGS="-L$CHARD_ROOT/usr/lib -L$CHARD_ROOT/lib $LDFLAGS"
+export CC="$CHARD_ROOT/usr/bin/gcc"
+export CXX="$CHARD_ROOT/usr/bin/g++"
+export AR="$CHARD_ROOT/usr/bin/ar"
+export NM="$CHARD_ROOT/usr/bin/gcc-nm"
+export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
+export STRIP="$CHARD_ROOT/usr/bin/strip"
+export LD="$CHARD_ROOT/usr/bin/ld"
 
-export GTK_PATH="$CHARD_ROOT/usr/lib/gtk-3.0:$CHARD_ROOT/usr/lib64/gtk-3.0"
-export GTK_EXE_PREFIX="$CHARD_ROOT/usr"
-export GTK_DATA_PREFIX="$CHARD_ROOT/usr"
-export GDK_PIXBUF_MODULEDIR="$CHARD_ROOT/usr/lib64/gdk-pixbuf-2.0/2.10.0/loaders"
-export GDK_PIXBUF_MODULE_FILE="$CHARD_ROOT/usr/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache"
-
-export FLATPAK_SYSTEM_DIR="$CHARD_ROOT/var/lib/flatpak"
-export FLATPAK_USER_DIR="$HOME/.local/share/flatpak"
-export FLATPAK_SYSTEM_HELPER="$CHARD_ROOT/usr/libexec/flatpak-system-helper"
-export TMPDIR="$CHARD_ROOT/tmp"
-export TMP="$CHARD_ROOT/tmp"
-export TEMP="$CHARD_ROOT/tmp"
-export FONTCONFIG_PATH="$CHARD_ROOT/etc/fonts"
-export FONTCONFIG_FILE="$CHARD_ROOT/etc/fonts/fonts.conf"
-export GIO_MODULE_DIR="$CHARD_ROOT/usr/lib64/gio/modules"
-export GSETTINGS_SCHEMA_DIR="$CHARD_ROOT/usr/share/glib-2.0/schemas"
-export GSETTINGS_BACKEND="memory"
-export XAUTHORITY="$CHARD_ROOT/tmp/.Xauthority"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_CONFIG_HOME="$HOME/.config"
-export LIBRARY_PATH="$CHARD_ROOT/usr/lib64:$CHARD_ROOT/usr/lib:$CHARD_ROOT/lib64:$CHARD_ROOT/lib"
-export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
-export __GLX_VENDOR_LIBRARY_NAME=mesa
-export PORTAGE_CONFIGROOT="$CHARD_ROOT"
-export SYSROOT="$CHARD_ROOT"
+# <<< CHARD_MARCH_NATIVE >>>
+CFLAGS="-march=native -O2 -pipe "
+[[ -d "$CHARD_ROOT/usr/include" ]] && CFLAGS+="-I$CHARD_ROOT/usr/include "
+[[ -d "$CHARD_ROOT/include" ]] && CFLAGS+="-I$CHARD_ROOT/include "
+export CFLAGS
+COMMON_FLAGS="-march=native -O2 -pipe"
+FCFLAGS="$COMMON_FLAGS"
+FFLAGS="$COMMON_FLAGS"
+CXXFLAGS="$CFLAGS"
+# <<< END CHARD_MARCH_NATIVE >>>
 
 all_perl_versions=()
 
@@ -355,7 +368,8 @@ export PYEXEC_DIR="${PYEXEC_BASE}/python${third_latest_python}"
 export EPYTHON="python${third_latest_python}"
 export PYTHON="python${third_latest_python}"
 export PORTAGE_PYTHON="python${third_latest_python}"
-
+export PYTHONHOME="$CHARD_ROOT/usr"
+export PYTHONPATH="$CHARD_ROOT/usr/lib/python${third_latest_python}"
 if command -v python3 >/dev/null && python3 --version 2>&1 | grep -q "$latest_python"; then
     alias python3="$CHARD_ROOT/usr/bin/python${third_latest_python}"
 fi
@@ -384,7 +398,6 @@ if [[ -n "$third_latest_gcc" && -n "$CHOST" ]]; then
     gcc_lib_path="$CHARD_ROOT/usr/lib/gcc/$CHOST/${third_latest_gcc}"
 fi
 
-export PATH="$gcc_bin_path:$PATH"
 export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 LLVM_BASE="$CHARD_ROOT/usr/lib/llvm"
@@ -419,7 +432,7 @@ if [[ -n "$third_latest_llvm" ]]; then
     LLVM_DIR="$LLVM_BASE/$third_latest_llvm"
     export LLVM_DIR
     export LLVM_VERSION="$third_latest_llvm"
-    [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
+    [[ -d "$LLVM_DIR/bin" ]]
     [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 fi
@@ -431,7 +444,6 @@ export NM="$CHARD_ROOT/usr/bin/gcc-nm"
 export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
 export STRIP="$CHARD_ROOT/usr/bin/strip"
 export LD="$CHARD_ROOT/usr/bin/ld"
-export MOZ_APP_LAUNCHER="$CHARD_ROOT/usr/bin/firefox-bin"
 
 # <<< CHARD_MARCH_NATIVE >>>
 CFLAGS="-march=native -O2 -pipe "
@@ -451,7 +463,6 @@ LDFLAGS=""
 [[ -d "$CHARD_ROOT/usr/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/lib "
 [[ -d "$CHARD_ROOT/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/lib "
 [[ -d "$CHARD_ROOT/usr/local/lib" ]] && LDFLAGS+="-L$CHARD_ROOT/usr/local/lib "
-[[ -d "$CHARD_ROOT/opt" ]] && LDFLAGS+="-L$CHARD_ROOT/opt "
 export LDFLAGS
 export FCFLAGS
 export FFLAGS
@@ -464,22 +475,14 @@ PATHS_TO_ADD=(
     "$LLVM_DIR/bin"
     "$CHARD_ROOT/usr/local/bin"
     "$CHARD_ROOT/usr/bin"
-    "$CHARD_ROOT/opt"
-    "$CHARD_ROOT/opt/firefox"
 )
 LIBS_TO_ADD=(
-    "$CHARD_ROOT/usr/lib"
-    "$CHARD_ROOT/usr/lib64/gedit"
-    "$CHARD_ROOT/lib"
-    "$CHARD_ROOT/usr/lib64/glib-2.0"
-    "$CHARD_ROOT/usr/lib64/gtk-3.0"
-    "$CHARD_ROOT/usr/lib/gtk-3.0" 
-    "$gcc_lib_path"
-    "$LLVM_DIR/lib"
-    "$CHARD_ROOT/opt"
-    "$CHARD_ROOT/opt/firefox"
     #"$CHARD_ROOT/usr/lib64"
     #"$CHARD_ROOT/lib64"
+    "$CHARD_ROOT/usr/lib"
+    "$CHARD_ROOT/lib"
+    "$gcc_lib_path"
+    "$LLVM_DIR/lib"
 )
 PKG_TO_ADD=(
     "$CHARD_ROOT/usr/lib/pkgconfig"
@@ -497,49 +500,14 @@ unique_join() {
     done
     echo "${seen[*]}"
 }
-
-export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export PKG_CONFIG_PATH="$(unique_join "${PKG_TO_ADD[@]}")${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-export MAGIC="$CHARD_ROOT/usr/share/misc/magic.mgc"
-export GIT_TEMPLATE_DIR="$CHARD_ROOT/usr/share/git-core/templates"
+export PATH="$LLVM_DIR/bin:$gcc_bin_path:$CHARD_ROOT/usr/lib/python-exec/python${third_latest_python}:$PATH:$CHARD_ROOT/usr/bin:$CHARD_ROOT/bin:$CHARD_ROOT/usr/$CHOST/gcc-bin/14:$CHARD_ROOT/usr/$CHOST/gcc-bin/15:$CHARD_ROOT/usr/local/bin:$(unique_join "${PATHS_TO_ADD[@]}")"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$(unique_join "${LIBS_TO_ADD[@]}")"
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$(unique_join "${PKG_TO_ADD[@]}")"
 export CPPFLAGS="-I$CHARD_ROOT/usr/include"
 export ACLOCAL_PATH="$CHARD_ROOT/usr/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
 export M4PATH="$CHARD_ROOT/usr/share/m4${M4PATH:+:$M4PATH}"
 export MANPATH="$CHARD_ROOT/usr/share/man:$CHARD_ROOT/usr/local/share/man${MANPATH:+:$MANPATH}"
 export XDG_DATA_DIRS="$CHARD_ROOT/usr/share:$CHARD_ROOT/usr/local/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
-export DISPLAY=":0"
-export GDK_BACKEND="wayland"
-export CLUTTER_BACKEND="wayland"
-export WAYLAND_DISPLAY=wayland-0
-export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
-export EGL_PLATFORM=wayland
-
-ARCH=$(uname -m)
-if [[ "$ARCH" == "x86_64" ]]; then
-    export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri"
-    export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri"
-elif [[ "$ARCH" == "aarch64" ]]; then
-    export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib/dri"
-    export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib/dri"
-fi
-
-export PATH="$PATH:$(unique_join "${PATHS_TO_ADD[@]}")"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$(unique_join "${PKG_TO_ADD[@]}")"
-export LIBGL_ALWAYS_INDIRECT=0
-export QT_QPA_PLATFORM=wayland
-export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
-export SOMMELIER_GLAMOR=1
-export SOMMELIER_VERSION=0.20
-export PULSE_SERVER=unix:/run/chrome/pulse/native
-
-MAKECONF="$CHARD_ROOT/etc/portage/make.conf"
-if [[ -w "$MAKECONF" ]]; then
-    sed -i "/^PYTHON_TARGETS=/d" "$MAKECONF"
-    sed -i "/^PYTHON_SINGLE_TARGET=/d" "$MAKECONF"
-    echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
-    echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
-fi
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
@@ -555,29 +523,18 @@ export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
 
-export DBUS_SYSTEM_BUS_ADDRESS="unix:path=$CHARD_ROOT/run/dbus/system_bus_socket"
 
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    if [ -d "/usr/share/fydeos_shell" ]; then
-        DEFAULT_BASHRC="$HOME/.bashrc"
-        BASHRC_PATH="$DEFAULT_BASHRC"
-        IS_CHROMEOS=0
-    else
-        CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
-        BASHRC_PATH="$CHROMEOS_BASHRC"
-        IS_CHROMEOS=1
-    fi
-else
-    DEFAULT_BASHRC="$HOME/.bashrc"
-    BASHRC_PATH="$DEFAULT_BASHRC"
-    IS_CHROMEOS=0
-fi
+export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
+export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
 
-ORIGINAL_LD_PRELOAD="$LD_PRELOAD"
+export LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 
-if [ "$IS_CHROMEOS" -eq 1 ]; then
-    unset LD_PRELOAD
-    [ -f "$CHARD_ROOT/.chard_stage3_preload" ] && source "$CHARD_ROOT/.chard_stage3_preload"
+MAKECONF="$CHARD_ROOT/etc/portage/make.conf"
+if [[ -w "$MAKECONF" ]]; then
+    sed -i "/^PYTHON_TARGETS=/d" "$MAKECONF"
+    sed -i "/^PYTHON_SINGLE_TARGET=/d" "$MAKECONF"
+    echo "PYTHON_TARGETS=\"python${second_underscore}\"" >> "$MAKECONF"
+    echo "PYTHON_SINGLE_TARGET=\"python${second_underscore}\"" >> "$MAKECONF"
 fi
 
 echo "[*] Running '$*' inside Chard environment..."
@@ -600,15 +557,8 @@ env \
     "$@"
 
 COMMAND_EXIT_CODE=$?
-
-unset LD_PRELOAD
-[ -f "$CHARD_ROOT/.chard.preload" ] && source "$CHARD_ROOT/.chard.preload"
-
-if [ -n "$ORIGINAL_LD_PRELOAD" ]; then
-    export LD_PRELOAD="$ORIGINAL_LD_PRELOAD"
-fi
-
 return $COMMAND_EXIT_CODE
+unset LD_PRELOAD
 }
 
 chard_uninstall() {
