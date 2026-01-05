@@ -38,6 +38,7 @@ SOMMELIER_CMD=(
     powercontrol-gui 2>/dev/null &
     sleep 0.2
     chardwire 2>/dev/null &
+    sleep 0.2
     color_reset &
     sleep 0.2
     exec bash
