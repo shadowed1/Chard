@@ -36,6 +36,8 @@ SOMMELIER_CMD=(
     pulseaudio 2>/dev/null &
     sleep 0.2
     chardwire 2>/dev/null &
+    sleep 0.2
+    powercontrol-gui 2>/dev/null &
     exec bash
 '
 error_color
