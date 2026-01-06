@@ -754,8 +754,9 @@ sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
 sudo mkdir -p $CHARD_ROOT/etc/pulse/
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
-load-module module-alsa-sink device=default sink_name=cras_sink
+load-module module-alsa-sink device=default sink_name=cras_sink control=none
 set-default-sink cras_sink
+load-module module-suspend-on-idle
 EOF
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
