@@ -21,6 +21,7 @@ if ls /dev/nvme* >/dev/null 2>&1 && [ -b /dev/mmcblk0 ]; then
 fi
 
 if [ -z "$USB_DEVICES" ]; then
+    echo
     echo "${YELLOW}No External drives detected.${RESET}"
     exit 0
 fi
