@@ -503,6 +503,7 @@ case "$cmd" in
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
             killall -9 chardwire 2>/dev/null
+			killall -9 powercontrol-gui 2>/dev/null
             sudo chown -R root:audio /dev/snd 2>/dev/null
             sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             sudo chown -R root:root /run/chrome/dconf 2>/dev/null
@@ -532,6 +533,7 @@ case "$cmd" in
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
+		killall -9 powercontrol-gui 2>/dev/null
         sudo pkill -f xfce4-session 2>/dev/null
         sudo pkill -f xfwm4 2>/dev/null
         sudo pkill -f xfce4-panel 2>/dev/null
@@ -539,6 +541,7 @@ case "$cmd" in
         sudo pkill -f xfce4-terminal 2>/dev/null
         sudo pkill -f xfce4-* 2>/dev/null
         sudo pkill -f Xorg 2>/dev/null
+		sudo pkill -f powercontrol-gui 2>/dev/null
         $CHARD_ROOT/bin/color_reset
         ;;
     chariot)
