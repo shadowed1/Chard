@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # <<< CHARD_ROOT_MARKER >>>
