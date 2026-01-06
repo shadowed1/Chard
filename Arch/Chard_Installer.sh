@@ -1917,7 +1917,8 @@ sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
 
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink control=none
-set-default-sink cras_sink
+load-module module-softvol-sink sink_name=linear_sink master=cras_sink
+set-default-sink linear_sink
 load-module module-suspend-on-idle
 EOF
 
