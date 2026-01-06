@@ -482,7 +482,6 @@ case "$cmd" in
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
 				sudo chmod +x /bin/powercontrol-gui 2>/dev/null
-				sudo chmod +x /bin/powercontrol-gui 2>/dev/null
                 sudo chown -R 1000:audio /dev/snd 2>/dev/null
                 sudo chown -R 1000:1000 /dev/snd/by-path 2>/dev/null
                 sudo mkdir -p /run/chrome/pulse 2>/dev/null
@@ -493,6 +492,7 @@ case "$cmd" in
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 cd ~/
+				sudo -E /bin/powercontrol-gui &
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
                 "
