@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # <<< CHARD_ROOT_MARKER >>>
-CHARD_ROOT="/usr/local/chard"
-CHARD_HOME="home/chronos"
-CHARD_USER="chronos"
+CHARD_ROOT=""
+CHARD_HOME=""
+CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
 RED=$(tput setaf 1)
