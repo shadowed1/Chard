@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # <<< CHARD_ROOT_MARKER >>>
@@ -492,8 +493,6 @@ case "$cmd" in
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
                 cd ~/
-				sudo -E /bin/powercontrol-gui 2>/dev/null &
-				sleep 0.5
                 xfce4-terminal 2>/dev/null &
                 exec chard_sommelier
                 "
