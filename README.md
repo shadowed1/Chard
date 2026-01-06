@@ -333,12 +333,13 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.15: `Rolled back LD_PRELOAD changes and removed Chardonnay for Chard Arch. Avoids confusion and Gentoo will be far more capable here. Fixed stale audio download links.` <br><br>
 - 0.16: `Fixed slow unmount issues and minor issues` <br><br>
 - 0.17: `Added external drive + SD card support. Fixed eselect issue on Chard Gentoo. Fixed minor typos.` <br><br>
+- 0.18: `Fixed pulseaudio being quieter with volume now being synced. Added ChromeOS_PowerControl GUI support. Fixed minor typos.` <br><br>
 <br>
 
 ### Acknowledgements
 - *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
-- *Terry Stormchaser* - Spending time testing Borealis alternatives, testing Chard, and providing ideas.
-- *DennyL* - Testing Chard and making suggestions.
+- *Terry Stormchaser* - Spending time testing Borealis alternatives, testing Chard + reporting bugs, and providing ideas.
+- *DennyL* - Testing Chard, reporting bugs, and making suggestions.
 - *Saragon* - Providing documentation and suggestions.
 - *Zhil* - Sending documentation for XFCE4 theme ideas.
 - *Sebanc* - Helping me move from Gentoo to Arch and enabling audio for Arch.
