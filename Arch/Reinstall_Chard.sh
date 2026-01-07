@@ -675,6 +675,12 @@ sudo mkdir -p $CHARD_ROOT/media
                 fi
                 # Remove .chard.preload
                 # sudo rm $CHARD_ROOT/.chard.preload 2>/dev/null
+                
+                if [ -x "/usr/local/bin/powercontrol" ]; then
+                    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+                    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+                fi
+                
                 echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
                 echo
                 source $CHARD_ROOT/.chardrc
