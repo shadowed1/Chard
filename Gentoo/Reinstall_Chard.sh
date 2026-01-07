@@ -789,6 +789,12 @@ sudo mkdir -p /media
                     sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
                     sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
                 fi
+
+                if [ -x "/usr/local/bin/powercontrol" ]; then
+                    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+                    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+                fi
+
                 source "$CHARD_ROOT/.chardrc"
                 echo "${GREEN}[*] Quick reinstall complete.${RESET}"
                 echo
