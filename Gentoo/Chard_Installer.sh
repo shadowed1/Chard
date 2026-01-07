@@ -2189,11 +2189,16 @@ sudo mkdir -p $CHARD_ROOT/etc/portage/env
 #glibc.conf
 #EOF
 
-if [[ "$(uname -m)" == "aarch64" ]]; then
-    sudo cp /usr/lib64/libmali.so "$CHARD_ROOT/usr/lib64/" 2>/dev/null
-    sudo cp /usr/lib64/libmali.so.0 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
-    sudo cp /usr/lib64/libmali.so.0.44.1 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
-    sudo cp /usr/share/vulkan/icd.d/mali_icd.json "$CHARD_ROOT/usr/share/vulkan/icd.d/" 2>/dev/null
+#if [[ "$(uname -m)" == "aarch64" ]]; then
+#    sudo cp /usr/lib64/libmali.so "$CHARD_ROOT/usr/lib64/" 2>/dev/null
+#    sudo cp /usr/lib64/libmali.so.0 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
+#    sudo cp /usr/lib64/libmali.so.0.44.1 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
+#    sudo cp /usr/share/vulkan/icd.d/mali_icd.json "$CHARD_ROOT/usr/share/vulkan/icd.d/" 2>/dev/null
+#fi
+
+if [ -x "/usr/local/bin/powercontrol" ]; then
+    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
 fi
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
