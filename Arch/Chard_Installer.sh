@@ -1820,8 +1820,13 @@ set-default-source cras-source
 EOF
     
 sudo chown -R 1000:1000 "${PULSEHOME}"
-sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc            
+sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc  
 
+if [ -x "/usr/local/bin/powercontrol" ]; then
+    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+fi
+                
 source "$CHARD_ROOT/.chardrc"
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
