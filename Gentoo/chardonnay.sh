@@ -17,7 +17,9 @@ SOMMELIER_CMD=(
 )
 
    "${SOMMELIER_CMD[@]}" -- bash -c '
-    source $CHARD_ROOT/.chardrc
+    source $CHARD_ROOT/.chardrc 2>/dev/null
+    source $CHARD_ROOT/.chard.preload 2>/dev/null
+    source $CHARD_ROOT/.chard_stage3_preload 2>/dev/null
     sleep 0.1
     cd ~/
     exec bash
