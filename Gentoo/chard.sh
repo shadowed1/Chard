@@ -526,7 +526,7 @@ EOF
 
 export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
 export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
-
+export GI_TYPELIB_PATH="$CHARD_ROOT/usr/lib/girepository-1.0:$CHARD_ROOT/usr/lib64/girepository-1.0"
 export LD_LIBRARY_PATH=$CHARD_ROOT/usr/lib\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}
 
 MAKECONF="$CHARD_ROOT/etc/portage/make.conf"
