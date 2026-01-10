@@ -918,7 +918,7 @@ xhost +SI:localuser:root
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
 
-sudo -i /usr/bin/env bash -c 'exec /usr/bin/flatpak "$@"' _ "$@"
+/usr/bin/flatpak "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 
