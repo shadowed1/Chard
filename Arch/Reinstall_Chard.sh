@@ -330,7 +330,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/colo
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
 sleep 0.05
-
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker"            -o "$CHARD_ROOT/bin/autoclicker" 2>/dev/null
+sleep 0.05
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -354,6 +355,7 @@ sudo chmod +x "$CHARD_ROOT/bin/rainbow"
 sudo chmod +x "$CHARD_ROOT/bin/color_reset"
 sudo chmod +x "$CHARD_ROOT/bin/error_color"
 sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
+sudo chmod +x "$CHARD_ROOT/bin/autoclicker"
 
 #sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
 #sudo chmod +x /etc/init/chard.conf
