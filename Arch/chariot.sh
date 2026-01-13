@@ -910,11 +910,15 @@ export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
 USER_ID=1000
 GROUP_ID=1000
-export STEAM_USER_HOME="$HOME/.local/share/Steam"
 
 source ~/.bashrc
 xhost +SI:localuser:root
-/usr/bin/flatpak "$@"
+
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:1000:rwx /run/chrome 2>/dev/null
+
+sudo -i /usr/bin/env bash -c 'exec /usr/bin/flatpak "$@"' _ "$@"
+sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 
 sudo chmod +x /bin/chard_flatpak
