@@ -9,8 +9,8 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-STATE_FILE="$CHARD_ROOT/tmp/adb_mount_state"
-MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/adb_devices"
+STATE_FILE="$CHARD_ROOT/tmp/mtp_mount_state"
+MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/mtp_devices"
 
 if mountpoint -q "$MOUNT_POINT"; then
     sudo umount "$MOUNT_POINT" 2>/dev/null
