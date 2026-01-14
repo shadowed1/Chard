@@ -334,9 +334,9 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker"            -o "$CHARD_ROOT/bin/autoclicker" 2>/dev/null
 sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_mount.sh"            -o "$CHARD_ROOT/bin/autoclicker" 2>/dev/null
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_mount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_mount" 2>/dev/null
 sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/autoclicker" 2>/dev/null
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_unmount" 2>/dev/null
 sleep 0.05
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
