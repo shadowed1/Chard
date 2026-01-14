@@ -31,15 +31,17 @@ SOMMELIER_CMD=(
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
     cd ~/
+    powercontrol-gui 2>/dev/null &
+    sleep 0.2
     pipewire 2>/dev/null &
     sleep 0.2
     pulseaudio 2>/dev/null &
     sleep 0.2
-    powercontrol-gui 2>/dev/null &
-    sleep 0.2
     chardwire 2>/dev/null &
     sleep 0.2
-    color_reset &
+    color_reset 2>/dev/null &
+    sleep 0.2
+    xfce4-terminal 2>/dev/null &
     sleep 0.2
     exec bash
 '
