@@ -291,6 +291,7 @@ chard_unmount() {
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
     sleep 0.05
     $CHARD_ROOT/bin/chard_unmount 2>/dev/null
+	$CHARD_ROOT/bin/chard_adb_unmount 2>/dev/null
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
     sleep 0.05
@@ -430,6 +431,7 @@ case "$cmd" in
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             $CHARD_ROOT/bin/chard_mount 2>/dev/null
+			$CHARD_ROOT/bin/chard_adb_mount 2>/dev/null
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
@@ -520,7 +522,8 @@ case "$cmd" in
         '
         $CHARD_ROOT/bin/error_color
         killall -9 chard_volume 2>/dev/null
-        chard_unmount
+        chard_unmount 2>/dev/null
+		chard_adb_unmount 2>/dev/null
         sudo rm -f /run/chrome/pulse/native 2>/dev/null
         sudo rm -f /run/chrome/pulse/* 2>/dev/null
         sudo mkdir -p /run/chrome/pulse 2>/dev/null
@@ -532,6 +535,7 @@ case "$cmd" in
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
 		killall -9 powercontrol-gui 2>/dev/null
+		killall -9 gedit 2>/dev/null
         sudo pkill -f xfce4-session 2>/dev/null
         sudo pkill -f xfwm4 2>/dev/null
         sudo pkill -f xfce4-panel 2>/dev/null
@@ -540,6 +544,7 @@ case "$cmd" in
         sudo pkill -f xfce4-* 2>/dev/null
         sudo pkill -f Xorg 2>/dev/null
 		sudo pkill -f powercontrol-gui 2>/dev/null
+		sudo pkill -f gedit 2>/dev/null
         $CHARD_ROOT/bin/color_reset
         ;;
     chariot)
