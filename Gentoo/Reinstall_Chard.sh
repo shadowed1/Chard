@@ -797,7 +797,9 @@ sudo mkdir -p /media
                     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
                     sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
                     sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
+                    sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
                     sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
+                    sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
                 fi
 
                 if [ -x "/usr/local/bin/powercontrol" ]; then
