@@ -207,6 +207,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
     sleep 0.2
     $CHARD_ROOT/bin/chard_unmount 2>/dev/null
+    $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sleep 0.2
