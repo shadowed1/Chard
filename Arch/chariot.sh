@@ -908,7 +908,7 @@ CHARD_USER=$(cat /.chard_user)
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:$USER
+xhost +SI:localuser:$CHARD_USER
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 source ~/.bashrc
