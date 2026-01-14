@@ -32,6 +32,7 @@ else
     default_choice=3
 fi
 
+echo "Default mirror will be auto-selected in 15 seconds."
 while true; do
     read -t 15 -rp "Enter a region number to enable its mirrors [default: $default_choice]: " choice
 
