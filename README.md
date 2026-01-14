@@ -334,7 +334,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.16: `Fixed slow unmount issues and minor issues` <br><br>
 - 0.17: `Added external drive + SD card support. Fixed eselect issue on Chard Gentoo. Fixed minor typos.` <br><br>
 - 0.18: `Fixed pulseaudio being quieter with volume now being synced. Added ChromeOS_PowerControl GUI support. Fixed minor typos.` <br><br>
-- 0.19: `Added autoclicker script. Can be run outside or inside chroot. Fixed powercontrol-gui launching in foreground.` <br>br>
+- 0.19: `Added autoclicker script. Can be run outside or inside chroot. Fixed powercontrol-gui launching in foreground. Improved chard_flatpak wrapper a bit.` <br>br>
 <br>
 
 ### Acknowledgements
