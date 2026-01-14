@@ -315,7 +315,8 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/color_reset.sh"         -o "$CHARD_ROOT/bin/color_reset"
                 sleep 0.05
-                
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker"            -o "$CHARD_ROOT/bin/autoclicker" 2>/dev/null
+                sleep 0.05
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -334,7 +335,8 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
                 sudo chmod +x "$CHARD_ROOT/bin/rainbow"
                 sudo chmod +x "$CHARD_ROOT/bin/error_color"
-                sudo chmod +x "$CHARD_ROOT/bin/color_reset"
+                sudo chmod +x "$CHARD_ROOT/bin/color_reset"\
+                sudo chmod +x "$CHARD_ROOT/bin/autoclicker"
                 
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
