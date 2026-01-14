@@ -13,6 +13,8 @@
 // ChromeOS Autoclicker by Wilds
 // ======================
 
+#define MAX_CPS 1000
+
 int fd_uinput = -1;
 
 void cleanup(int signum) {
@@ -27,6 +29,7 @@ void cleanup(int signum) {
 void emit_click(int fd) {
     struct input_event ev;
 
+    // Button down
     memset(&ev, 0, sizeof(ev));
     ev.type = EV_KEY;
     ev.code = BTN_LEFT;
@@ -36,9 +39,9 @@ void emit_click(int fd) {
     memset(&ev, 0, sizeof(ev));
     ev.type = EV_SYN;
     ev.code = SYN_REPORT;
-    ev.value = 0;
     write(fd, &ev, sizeof(ev));
 
+    // Button up
     memset(&ev, 0, sizeof(ev));
     ev.type = EV_KEY;
     ev.code = BTN_LEFT;
@@ -48,7 +51,6 @@ void emit_click(int fd) {
     memset(&ev, 0, sizeof(ev));
     ev.type = EV_SYN;
     ev.code = SYN_REPORT;
-    ev.value = 0;
     write(fd, &ev, sizeof(ev));
 }
 
@@ -65,6 +67,14 @@ int main(int argc, char *argv[]) {
     if (cps <= 0) {
         fprintf(stderr, "Invalid clicks per second: %s\n", argv[1]);
         return 1;
+    }
+
+    // ---- HARD CPS LIMIT ----
+    if (cps > MAX_CPS) {
+        fprintf(stderr,
+                "Warning: CPS %.2f exceeds maximum allowed (%d). Clamping.\n",
+                cps, MAX_CPS);
+        cps = MAX_CPS;
     }
 
     unsigned int delay_us = (unsigned int)(1000000.0 / cps);
@@ -95,9 +105,10 @@ int main(int argc, char *argv[]) {
         cleanup(0);
     }
 
-    fprintf(stderr, "ChromeOS_Autoclicker will start in 10 seconds! \n");
+    fprintf(stderr, "ChromeOS_Autoclicker will start in 10 seconds!\n");
     sleep(10);
-    fprintf(stderr, "Started - %.2f clicks/sec. Ctrl+C to exit.\n", cps);
+    fprintf(stderr, "Started - %.2f clicks/sec (max %d). Ctrl+C to exit.\n",
+            cps, MAX_CPS);
 
     while (1) {
         emit_click(fd_uinput);
