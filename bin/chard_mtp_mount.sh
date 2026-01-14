@@ -9,37 +9,37 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-STATE_FILE="$CHARD_ROOT/tmp/adb_mount_state"
-MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/adb_devices"
+STATE_FILE="$CHARD_ROOT/tmp/mtp_mount_state"
+MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/mtp_devices"
 
 : > "$STATE_FILE"
 
 if [ ! -d "/media/fuse/fusebox/" ]; then
     echo
-    echo "${YELLOW}/media/fuse/fusebox/ does not exist. No Android devices detected.${RESET}"
+    echo "${YELLOW}/media/fuse/fusebox/ does not exist. No MTP devices detected.${RESET}"
     exit 0
 fi
 
-ADB_DEVICES=$(ls -d /media/fuse/fusebox/mtp.* 2>/dev/null)
+mtp_DEVICES=$(ls -d /media/fuse/fusebox/mtp.* 2>/dev/null)
 
-if [ -z "$ADB_DEVICES" ]; then
+if [ -z "$mtp_DEVICES" ]; then
     echo
-    echo "${YELLOW}No Android MTP devices detected.${RESET}"
+    echo "${YELLOW}No MTP devices detected.${RESET}"
     exit 0
 fi
 
 echo
 echo "${GREEN}Detected Android MTP devices: ${BOLD}"
-for DEV in $ADB_DEVICES; do
+for DEV in $mtp_DEVICES; do
     echo "$DEV"
 done
 echo "${RESET}"
 
-for DEV in $ADB_DEVICES; do
+for DEV in $mtp_DEVICES; do
     echo "$DEV" >> "$STATE_FILE"
 done
 
-echo "${RESET}${BLUE}Bind-Mounted to $CHARD_ROOT/$CHARD_HOME/adb_devices: ${BOLD}"
+echo "${RESET}${BLUE}Bind-Mounted to $CHARD_ROOT/$CHARD_HOME/mtp_devices: ${BOLD}"
 cat "$STATE_FILE"
 echo "${RESET}"
 
