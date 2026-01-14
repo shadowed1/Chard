@@ -340,6 +340,7 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     echo "${RED}ChromeOS Version: $CHROME_MILESTONE"
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
     sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
+    sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
     sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
