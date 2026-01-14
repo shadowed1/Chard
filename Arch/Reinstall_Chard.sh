@@ -82,6 +82,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
     sleep 0.05
     $CHARD_ROOT/bin/chard_unmount 2>/dev/null
+    $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
     sleep 0.05
@@ -245,6 +246,7 @@ detect_gpu_freq() {
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.05
         $CHARD_ROOT/bin/chard_unmount 2>/dev/null
+        $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
         sleep 0.05
