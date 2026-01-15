@@ -482,18 +482,17 @@ sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
 
     sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
-export PATH=/usr/local/bubblepatch/bin:$PATH
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-USER_ID=1000
-GROUP_ID=1000
-export STEAM_USER_HOME="$HOME/.local/share/Steam"
-
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$CHARD_USER
+sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 source ~/.bashrc
-xhost +SI:localuser:root
-/usr/bin/flatpak "$@"
+sudo -u $CHARD_USER /usr/bin/flatpak "$@"
+sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_flatpak"
 
