@@ -1931,7 +1931,6 @@ EOF
                 CONFIG_MTK_CMDQ_MBOX=y
                 CONFIG_MTK_IOMMU=y
                 CONFIG_DRM_PANFROST=y
-                
                 ;;
             vivante)
                 CONFIG_DRM_MALI=n
@@ -2131,6 +2130,7 @@ export MESA_LOADER_DRIVER_OVERRIDE=virpipe
 export GALLIUM_DRIVER=virpipe
 export VTEST_SOCKET=/tmp/virgl.sock
 EOF
+    ;;
     *)
         DRIVER="llvmpipe"
         echo "export LIBGL_ALWAYS_SOFTWARE=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
