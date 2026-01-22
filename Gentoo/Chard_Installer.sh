@@ -1422,19 +1422,19 @@ case "$GPU_VENDOR" in
         ;;
     mali)
         IDENTIFIER="ARM Mali Graphics"
-        DRIVER="panfrost"
+        DRIVER="virpipe"
         ;;
     adreno)
         IDENTIFIER="Qualcomm Adreno Graphics"
-        DRIVER="freedreno"
+        DRIVER="virpipe"
         ;;
     mediatek)
         IDENTIFIER="MediaTek GPU"
-        DRIVER="panfrost"
+        DRIVER="virpipe"
         ;;
     vivante)
         IDENTIFIER="Vivante GPU"
-        DRIVER="etnaviv"
+        DRIVER="virpipe"
         ;;
     *)
         IDENTIFIER="Generic GPU"
