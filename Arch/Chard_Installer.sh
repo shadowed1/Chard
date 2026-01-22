@@ -319,8 +319,7 @@ sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
 sudo setfacl -Rb /run/chrome 2>/dev/null
-echo "${RED}[*] Re
-moving $CHARD_ROOT...${RESET}"
+echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
