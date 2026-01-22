@@ -1802,6 +1802,7 @@ export MESA_LOADER_DRIVER_OVERRIDE=virpipe
 export GALLIUM_DRIVER=virpipe
 export VTEST_SOCKET=/tmp/virgl.sock
 EOF
+    ;;
     *)
         DRIVER="llvmpipe"
         echo "export LIBGL_ALWAYS_SOFTWARE=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
