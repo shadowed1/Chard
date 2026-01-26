@@ -354,6 +354,8 @@ alias firefox-bin='chard_firefox-bin'
 alias firefox='chard_firefox-bin'
 alias torbrowser-launcher='/bin/chard_tor'
 alias thunderbird='/bin/chard_thunderbird'
+alias torbrowser-launcher-bin='/bin/chard_tor'
+alias thunderbird-bin='/bin/chard_thunderbird'
 # Brave
 #export BRAVE_USE_SYSTEM_KEYRING=0
 alias brave='brave-browser-stable --force-dark-mode --enable-features=WebUIDarkMode'
