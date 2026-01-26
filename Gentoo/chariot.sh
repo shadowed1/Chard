@@ -1365,6 +1365,32 @@ sudo -u $CHARD_USER /usr/bin/firefox-bin
 EOF
     sudo chmod +x /bin/chard_firefox-bin
 
+sudo tee /bin/chard_thunderbird >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$USER
+source ~/.bashrc
+sudo -u $CHARD_USER /usr/bin/thunderbird
+EOF
+sudo chmod +x /bin/chard_thunderbird
+
+sudo tee /bin/chard_tor >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$USER
+source ~/.bashrc
+sudo -u $CHARD_USER /usr/bin/tor-browser
+EOF
+sudo chmod +x /bin/chard_tor
+
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
 export PATH=/usr/local/bubblepatch/bin:$PATH
