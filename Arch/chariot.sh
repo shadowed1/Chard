@@ -1589,6 +1589,19 @@ sudo -u $CHARD_USER /usr/bin/torbrowser-launcher
 EOF
 sudo chmod +x /bin/chard_tor
 
+sudo tee /bin/chard_thunderbird >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$USER
+source ~/.bashrc
+sudo -u $CHARD_USER /usr/bin/thunderbird
+EOF
+sudo chmod +x /bin/chard_thunderbird
+
 mkdir -p ~/.local/share/applications
 
 tee ~/.local/share/applications/firefox-chard.desktop >/dev/null <<'EOF'
