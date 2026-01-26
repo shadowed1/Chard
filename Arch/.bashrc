@@ -207,6 +207,7 @@ alias steam='/bin/chard_steam'
 # Firefox
 alias firefox='/bin/chard_firefox'
 alias torbrowser-launcher='/bin/chard_tor'
+alias thunderbird='/bin/chard_thunderbird'
 #export MOZ_CUBEB_FORCE_PULSE=1
 
 # Brave
