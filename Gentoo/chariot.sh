@@ -1387,9 +1387,8 @@ USER=$CHARD_USER
 PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:$USER
 source ~/.bashrc
-sudo -u $CHARD_USER /usr/bin/tor-browser
+sudo -u $CHARD_USER /usr/bin/torbrowser-launcher
 EOF
-sudo chmod +x /bin/chard_tor
 
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
