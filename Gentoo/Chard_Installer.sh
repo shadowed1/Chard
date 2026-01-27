@@ -1422,19 +1422,19 @@ case "$GPU_VENDOR" in
         ;;
     mali)
         IDENTIFIER="ARM Mali Graphics"
-        DRIVER="virpipe"
+        DRIVER="panfrost"
         ;;
     adreno)
         IDENTIFIER="Qualcomm Adreno Graphics"
-        DRIVER="virpipe"
+        DRIVER="freedreno"
         ;;
     mediatek)
         IDENTIFIER="MediaTek GPU"
-        DRIVER="virpipe"
+        DRIVER="panfrost"
         ;;
     vivante)
         IDENTIFIER="Vivante GPU"
-        DRIVER="virpipe"
+        DRIVER="etnaviv"
         ;;
     *)
         IDENTIFIER="Generic GPU"
@@ -2082,6 +2082,12 @@ sudo tee "$WAYLAND_CONF_FILE" > /dev/null <<EOF
 # Wayland GPU environment setup for Chard
 EOF
 
+WAYLAND_CONF_FILE="$WAYLAND_CONF_DIR/wayland_gpu.sh"
+sudo tee "$WAYLAND_CONF_FILE" > /dev/null <<EOF
+#!/bin/sh
+# Wayland GPU environment setup for Chard
+EOF
+
 case "$GPU_TYPE" in
     intel)
         DRIVER="iris"
@@ -2096,41 +2102,26 @@ case "$GPU_TYPE" in
         echo "export MESA_LOADER_DRIVER_OVERRIDE='nouveau nvk'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     mali)
-        DRIVER="virpipe"
-        sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
-export DRIVER="virpipe"
-export MESA_LOADER_DRIVER_OVERRIDE=virpipe
-export GALLIUM_DRIVER=virpipe
-export VTEST_SOCKET=/tmp/virgl.sock
-EOF
+        DRIVER="panfrost"
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='panfrost lima'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
     adreno)
-        DRIVER="virpipe"
-        sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
-export DRIVER="virpipe"
-export MESA_LOADER_DRIVER_OVERRIDE=virpipe
-export GALLIUM_DRIVER=virpipe
-export VTEST_SOCKET=/tmp/virgl.sock
-EOF
+        DRIVER="freedreno"
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='freedreno'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
         ;;
    mediatek)
-        DRIVER="virpipe"
+        DRIVER="panfrost"
         sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
-export DRIVER="virpipe"
-export MESA_LOADER_DRIVER_OVERRIDE=virpipe
-export GALLIUM_DRIVER=virpipe
-export VTEST_SOCKET=/tmp/virgl.sock
+export DRIVER="panfrost"
+export MESA_LOADER_DRIVER_OVERRIDE=panfrost,lima
+export MALI_PLATFORM_CONFIG=/etc/mali_platform.conf
 EOF
     ;;
+
     vivante)
-        DRIVER="virpipe"
-        sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null <<'EOF'
-export DRIVER="virpipe"
-export MESA_LOADER_DRIVER_OVERRIDE=virpipe
-export GALLIUM_DRIVER=virpipe
-export VTEST_SOCKET=/tmp/virgl.sock
-EOF
-    ;;
+        DRIVER="etnaviv"
+        echo "export MESA_LOADER_DRIVER_OVERRIDE='etnaviv'" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
+        ;;
     *)
         DRIVER="llvmpipe"
         echo "export LIBGL_ALWAYS_SOFTWARE=1" | sudo tee -a "$WAYLAND_CONF_FILE" > /dev/null
