@@ -179,8 +179,8 @@ sudo pacman -S --needed base-devel git meson ninja pkg-config python
 
 sudo pacman -S libva libva-utils libdrm
 ```
-
+```
 sudo mv /usr/share/vulkan/explicit_layer.d/VkLayer_INTEL_nullhw.json /usr/share/vulkan/explicit_layer.d/VkLayer_INTEL_nullhw.json.disabled
 
 sudo mv /usr/share/vulkan/explicit_layer.d/VkLayer_MESA_vram_report_limit.json /usr/share/vulkan/explicit_layer.d/VkLayer_MESA_vram_report_limit.json.disabled
-
+```
