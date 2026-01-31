@@ -1683,20 +1683,7 @@ checkpoint_148() {
 run_checkpoint 148 "pavucontrol" checkpoint_148
 
 checkpoint_149() {
-URL="https://github.com/VSCodium/vscodium/releases/download/1.106.37943/VSCodium-linux-x64-1.106.37943.tar.gz"
-INSTALL_DIR="/usr/local/bin/vscodium"
-TARFILE="/tmp/vscodium.tar.gz"
-curl -L "$URL" -o "$TARFILE"
-sudo rm -rf "$INSTALL_DIR"
-sudo mkdir -p "$INSTALL_DIR"
-sudo tar -xzf "$TARFILE" -C "$INSTALL_DIR" --strip-components=1
-sudo find "$INSTALL_DIR" -type f -exec chmod +x {} \;
-if sudo test -f "$INSTALL_DIR/bin/codium"; then
-    echo "[+] Creating symlink /usr/local/bin/codium → codium binary"
-    sudo ln -sf "$INSTALL_DIR/bin/codium" /usr/local/bin/codium
-fi
-rm -f "$TARFILE"
-echo "Run with: codium"
+yay -S --noconfirm vscodium-bin
 }
 run_checkpoint 149 "VSCodium" checkpoint_149
 
