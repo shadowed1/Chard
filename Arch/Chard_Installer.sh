@@ -52,7 +52,7 @@ echo
 echo "${RESET}"
 echo ""
 echo "${RED}- Chard Arch can take ${BOLD}10 to 60 minutes${RESET}${RED} depending on your CPU and storage speed. Requires ~18 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
-echo "${RED}- Chard install location can be customized and will not affect ChromeOS system commands.${RESET}"
+echo "${RED}- Chard install location can be customized and will not affect ChromeOS system commands. Please be logged in as chronos if using VT-2${RESET}"
 echo
 echo "${YELLOW}- It is ${BOLD}semi-sandboxed within itself${RESET}${YELLOW}, but can rely on Host libraries.${RESET}"
 echo "${YELLOW}- Chard has ${BOLD}not${RESET}${YELLOW} been tested with Brunch Toolchain or Chromebrew - this project uses a standalone implementation. It does ${BOLD}NOT${RESET}${YELLOW} require dev_install.${RESET}"
