@@ -20,6 +20,7 @@ RESET=$(tput sgr0)
 touch ~/chariot.log
 LOG_FILE=~/chariot.log
 exec > >( tee -a "$LOG_FILE") 2>&1
+FREE_SPACE=$(cat /.chard_free_space)
 
 format_time() {
     local total_seconds=$1
