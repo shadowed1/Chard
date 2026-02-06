@@ -1692,17 +1692,17 @@ checkpoint_150() {
 }
 run_checkpoint 150 "LibreOffice" checkpoint_150
 
-checkpoint_151() {
-    ARCH=$(uname -m)
-        if [[ "$ARCH" == "x86_64" ]]; then
-            yay -S --noconfirm winegui
-        elif [[ "$ARCH" == "aarch64" ]]; then
-            echo "Unsupported architecture: $ARCH"
-        else
-            echo "Unsupported architecture: $ARCH"
-        fi   
-}
-run_checkpoint 151 "winegui" checkpoint_151
+#checkpoint_151() {
+#    ARCH=$(uname -m)
+#        if [[ "$ARCH" == "x86_64" ]]; then
+#            yay -S --noconfirm winegui
+#        elif [[ "$ARCH" == "aarch64" ]]; then
+#            echo "Unsupported architecture: $ARCH"
+#        else
+#            echo "Unsupported architecture: $ARCH"
+#        fi   
+#}
+#run_checkpoint 151 "winegui" checkpoint_151
 
 # Day's Garcon
 checkpoint_152() {
