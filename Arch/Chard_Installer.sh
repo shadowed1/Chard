@@ -345,7 +345,12 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
 elif [ -f "$DEFAULT_BASHRC" ]; then
     TARGET_FILE="$DEFAULT_BASHRC"
 fi
-        
+
+TARGET_FILE="$CHARD_ROOT/.chard_free_space"
+STATEFUL_FREE_G=$(df -h /mnt/stateful_partition | awk 'NR==2 {print $4}' | sed 's/G//')
+echo "${RED}Free space available: ${BOLD}${STATEFUL_FREE_G} GB ${RESET}"
+echo "$STATEFUL_FREE_G" | sudo tee "$TARGET_FILE" > /dev/null
+
 if [ -n "$TARGET_FILE" ]; then
     sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
 else
