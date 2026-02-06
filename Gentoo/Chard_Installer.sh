@@ -842,6 +842,11 @@ for pkg in "${PACKAGES[@]}"; do
     esac
 done
 
+TARGET_FILE="$CHARD_ROOT/.chard_free_space"
+STATEFUL_FREE_G=$(df -h /mnt/stateful_partition | awk 'NR==2 {print $4}' | sed 's/G//')
+echo "${RED}Free space available: ${BOLD}${STATEFUL_FREE_G} GB ${RESET}"
+echo "$STATEFUL_FREE_G" | sudo tee "$TARGET_FILE" > /dev/null
+
 sudo tee "$CHARD_ROOT/bin/emerge" > /dev/null <<'EOF'
 #!/usr/bin/env python3
 import os
