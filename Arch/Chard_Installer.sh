@@ -383,7 +383,7 @@ echo "CHARD_USER: $CHARD_USER"
 
 FREE_SPACE_FILE="$CHARD_ROOT/.chard_free_space"
 STATEFUL_FREE_G=$(df -h /mnt/stateful_partition | awk 'NR==2 {print $4}' | sed 's/G//')
-echo "${RED}Free space available: ${BOLD}${STATEFUL_FREE_G} GB ${RESET}"
+echo "${GREEN}Free space available: ${BOLD}${STATEFUL_FREE_G} GB ${RESET}"
 echo "$STATEFUL_FREE_G" | sudo tee "$FREE_SPACE_FILE" > /dev/null
 
 ARCH=$(uname -m)
