@@ -19,7 +19,7 @@ RESET=$(tput sgr0)
 
 ARCH=$(uname -m)
 CHROME_VER=$(cat /.chard_chrome)
-
+FREE_SPACE=$(cat /.chard_free_space)
 touch ~/chariot.log
 LOG_FILE=~/chariot.log
 exec > >( tee -a "$LOG_FILE") 2>&1
