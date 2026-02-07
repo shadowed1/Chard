@@ -775,11 +775,11 @@ chard_unmount
 KERNEL_INDEX=$(curl -fsSL https://cdn.kernel.org/pub/linux/kernel/v6.x/ \
     | grep -o 'href="linux-[0-9]\+\.[0-9]\+\.[0-9]\+\.tar\.xz"' \
     | sed 's/href="linux-\(.*\)\.tar\.xz"/\1/' )
-
 KERNEL_VER=$(echo "$KERNEL_INDEX" | sort -V | tail -n2 | head -n1)
 KERNEL_TAR="linux-$KERNEL_VER.tar.xz"
 KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
 KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
+echo "$KERNEL_VER" | sudo tee $CHARD_ROOT/.chard_kernel >/dev/null
 
 echo "Fetching kernel version: $KERNEL_VER"
 echo "URL: $KERNEL_URL"
