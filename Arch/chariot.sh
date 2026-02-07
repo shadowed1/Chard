@@ -994,10 +994,10 @@ checkpoint_126() {
 }
 run_checkpoint 126 "sudo -E pacman -S --noconfirm xarchiver + archivers" checkpoint_126
 
-checkpoint_127() {
-    sudo -E pacman -S --noconfirm gimp
-}
-run_checkpoint 127 "sudo -E pacman -S --noconfirm gimp" checkpoint_127
+#checkpoint_127() {
+#    sudo -E pacman -S --noconfirm gimp
+#}
+#run_checkpoint 127 "sudo -E pacman -S --noconfirm gimp" checkpoint_127
 
 checkpoint_128() {
     cd /usr/share/X11/xkb/symbols
@@ -1011,15 +1011,15 @@ run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 #}
 #run_checkpoint 129 "sudo -E pacman -S --noconfirm libreoffice" checkpoint_129
 
-checkpoint_130() {
-    if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -S --noconfirm obs-studio
-        yay -S --noconfirm obs-vkcapture
-    else
-        echo "Skipping OBS on $ARCH"
-    fi
-}
-run_checkpoint 130 "sudo -E pacman -S --noconfirm obs-studio" checkpoint_130
+#checkpoint_130() {
+#    if [[ "$ARCH" == "x86_64" ]]; then
+#        sudo -E pacman -S --noconfirm obs-studio
+#        yay -S --noconfirm obs-vkcapture
+#    else
+#        echo "Skipping OBS on $ARCH"
+#    fi
+#}
+#run_checkpoint 130 "sudo -E pacman -S --noconfirm obs-studio" checkpoint_130
 
 checkpoint_131() {
     sudo -E pacman -S --noconfirm ruby
@@ -1682,10 +1682,10 @@ checkpoint_148() {
 }
 run_checkpoint 148 "pavucontrol" checkpoint_148
 
-checkpoint_149() {
-yay -S --noconfirm vscodium-bin
-}
-run_checkpoint 149 "VSCodium" checkpoint_149
+#checkpoint_149() {
+#yay -S --noconfirm vscodium-bin
+#}
+#run_checkpoint 149 "VSCodium" checkpoint_149
 
 checkpoint_150() {
    yay -S --noconfirm libreoffice 2>/dev/null
