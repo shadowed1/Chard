@@ -492,7 +492,10 @@ sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 source /$CHARD_HOME/.bashrc
 DBUS_ADDR="$(grep "export DBUS_SESSION_BUS_ADDRESS=" /.chard_dbus | cut -d"'" -f2)"
 DBUS_PID="$(grep "export DBUS_SESSION_BUS_PID=" /.chard_dbus | cut -d"'" -f2)"
-BUBBLEPATH="/usr/local/bubblepatch/bin:$PATH"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+LWJGL_TMPDIR="/$CHARD_HOME/.local/tmp"
+mkdir -p "$LWJGL_TMPDIR"
+chown $CHARD_USER:$CHARD_USER "$LWJGL_TMPDIR"
 sudo -u $CHARD_USER \
   env HOME=/$CHARD_HOME \
       PULSE_SERVER=unix:/run/chrome/pulse/native \
@@ -501,12 +504,16 @@ sudo -u $CHARD_USER \
       XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/usr/local/chard/run/chrome}" \
       DBUS_SESSION_BUS_ADDRESS="$DBUS_ADDR" \
       DBUS_SESSION_BUS_PID="$DBUS_PID" \
-      PATH="$BUBBLEPATH" \
+      PATH="$WRAPPED_PATH" \
       LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+      LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+      LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+      LIBGL_ALWAYS_INDIRECT=0 \
+      GDK_BACKEND="wayland" \
+      EGL_PLATFORM=wayland \
       GDK_SCALE="${GDK_SCALE:-1.25}" \
-      QT_SCALE_FACTOR="${QT_SCALE_FACTOR:-1.25}" \
+      XDG_DATA_DIRS="$XDG_DATA_DIRS" \
   /usr/bin/flatpak "$@"
-
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 
