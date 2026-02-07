@@ -480,20 +480,36 @@ fi
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc   
 
-    sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_flatpak" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
-PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:$CHARD_USER
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-source ~/.bashrc
-sudo -u $CHARD_USER /usr/bin/flatpak "$@"
+source /$CHARD_HOME/.bashrc
+DBUS_ADDR="$(grep "export DBUS_SESSION_BUS_ADDRESS=" /.chard_dbus | cut -d"'" -f2)"
+DBUS_PID="$(grep "export DBUS_SESSION_BUS_PID=" /.chard_dbus | cut -d"'" -f2)"
+BUBBLEPATH="/usr/local/bubblepatch/bin:$PATH"
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      DISPLAY="${DISPLAY:-:0}" \
+      WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
+      XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/usr/local/chard/run/chrome}" \
+      DBUS_SESSION_BUS_ADDRESS="$DBUS_ADDR" \
+      DBUS_SESSION_BUS_PID="$DBUS_PID" \
+      PATH="$BUBBLEPATH" \
+      LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+      GDK_SCALE="${GDK_SCALE:-1.25}" \
+      QT_SCALE_FACTOR="${QT_SCALE_FACTOR:-1.25}" \
+  /usr/bin/flatpak "$@"
+
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
+
 sudo chmod +x "$CHARD_ROOT/bin/chard_flatpak"
 
 sudo tee "$CHARD_ROOT/bin/chard_steam" >/dev/null <<'EOF'
@@ -526,7 +542,7 @@ export ALSOFT_DRIVERS=alsa
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_prismlauncher"
 
-sudo tee $CHARD_ROOT/bin/chard_firefox >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_firefox" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -544,9 +560,9 @@ sudo -u $CHARD_USER \
       DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
   /usr/bin/firefox "$@"
 EOF
-sudo chmod +x $CHARD_ROOT/bin/chard_firefox
+sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
-sudo tee $CHARD_ROOT/bin/chard_tor >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_tor" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -565,9 +581,9 @@ sudo -u $CHARD_USER \
   /usr/bin/torbrowser-launcher "$@"
 EOF
 
-sudo chmod +x $CHARD_ROOT/bin/chard_tor
+sudo chmod +x "$CHARD_ROOT/bin/chard_tor"
 
-sudo tee $CHARD_ROOT/bin/chard_thunderbird >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_thunderbird" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -586,7 +602,7 @@ sudo -u $CHARD_USER \
   /usr/bin/thunderbird "$@"
 EOF
 
-sudo chmod +x $CHARD_ROOT/bin/chard_thunderbird
+sudo chmod +x "$CHARD_ROOT/bin/chard_thunderbird"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
         CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
