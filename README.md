@@ -329,6 +329,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.17: `Added external drive + SD card support. Fixed eselect issue on Chard Gentoo. Fixed minor typos.` <br><br>
 - 0.18: `Added ChromeOS_PowerControl GUI support. Fixed minor typos.` <br><br>
 - 0.19: `Added autoclicker script. Can be run outside or inside chroot. Fixed powercontrol-gui launching in foreground. Improved chard_flatpak wrapper. Fixed linux_api_headers error on Arch when upgrading. ` <br><br>
+0.20: `Fixed Firefox audio. Improved Flatpak support.` <br><br>
 <br>
 
 ### Acknowledgements
