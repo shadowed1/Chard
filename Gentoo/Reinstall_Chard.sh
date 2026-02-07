@@ -787,6 +787,69 @@ grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/puls
 mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
 sudo mkdir -p /media
 
+sudo tee $CHARD_ROOT/bin/chard_firefox >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$USER
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      MOZ_CUBEB_FORCE_PULSE=1 \
+      DISPLAY=:0 \
+      WAYLAND_DISPLAY=wayland-0 \
+      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
+  /usr/bin/firefox-bin "$@"
+EOF
+
+sudo chmod +x $CHARD_ROOT/bin/chard_firefox
+
+sudo tee $CHARD_ROOT/bin/chard_thunderbird >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$USER
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      MOZ_CUBEB_FORCE_PULSE=1 \
+      DISPLAY=:0 \
+      WAYLAND_DISPLAY=wayland-0 \
+      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
+  /usr/bin/thunderbird "$@"
+EOF
+
+sudo chmod +x $CHARD_ROOT/bin/chard_thunderbird
+
+sudo tee $CHARD_ROOT/bin/chard_tor >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$USER
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      MOZ_CUBEB_FORCE_PULSE=1 \
+      DISPLAY=:0 \
+      WAYLAND_DISPLAY=wayland-0 \
+      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
+  /usr/bin/torbrowser-launcher "$@"
+EOF
+
+sudo chmod +x $CHARD_ROOT/bin/chard_tor
+
                 
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc 2>/dev/null
                 chard_unmount
