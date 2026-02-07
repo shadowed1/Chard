@@ -901,18 +901,33 @@ checkpoint_117() {
     sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     sudo chown -R 1000:1000 ~/.local/share/flatpak
-    sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
+sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
-PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:$CHARD_USER
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-source ~/.bashrc
-sudo -u $CHARD_USER /usr/bin/flatpak "$@"
+source /$CHARD_HOME/.bashrc
+DBUS_ADDR="$(grep "export DBUS_SESSION_BUS_ADDRESS=" /.chard_dbus | cut -d"'" -f2)"
+DBUS_PID="$(grep "export DBUS_SESSION_BUS_PID=" /.chard_dbus | cut -d"'" -f2)"
+BUBBLEPATH="/usr/local/bubblepatch/bin:$PATH"
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      DISPLAY="${DISPLAY:-:0}" \
+      WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
+      XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/usr/local/chard/run/chrome}" \
+      DBUS_SESSION_BUS_ADDRESS="$DBUS_ADDR" \
+      DBUS_SESSION_BUS_PID="$DBUS_PID" \
+      PATH="$BUBBLEPATH" \
+      LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+      GDK_SCALE="${GDK_SCALE:-1.25}" \
+      QT_SCALE_FACTOR="${QT_SCALE_FACTOR:-1.25}" \
+  /usr/bin/flatpak "$@"
+
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 
