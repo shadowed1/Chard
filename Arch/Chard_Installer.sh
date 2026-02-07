@@ -1860,6 +1860,39 @@ fi
                 
 source "$CHARD_ROOT/.chardrc"
 
+sudo tee $CHARD_ROOT/usr/local/bubblepatch/bin/uname >/dev/null <<'EOF'
+#!/bin/bash
+
+if [ -f /.chard_kernel ]; then
+    FAKE_KERNEL=$(cat /.chard_kernel)
+else
+    FAKE_KERNEL=$(ls -1 /usr/src/ 2>/dev/null | grep '^linux-[0-9]' | sed 's/^linux-//' | sort -V | tail -n1)
+fi
+
+if [ -z "$FAKE_KERNEL" ]; then
+    exec /bin/uname "$@"
+fi
+
+case "$1" in
+    -r|--kernel-release)
+        echo "$FAKE_KERNEL"
+        ;;
+    -a|--all)
+        REAL_OUTPUT=$(/bin/uname -a)
+        REAL_KERNEL=$(/bin/uname -r)
+        echo "$REAL_OUTPUT" | sed "s/$REAL_KERNEL/$FAKE_KERNEL/"
+        ;;
+    -v|--kernel-version)
+        echo "#1 SMP PREEMPT_DYNAMIC $(date +'%a %b %d %H:%M:%S UTC %Y')"
+        ;;
+    *)
+        /bin/uname "$@"
+        ;;
+esac
+EOF
+
+sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
+
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
