@@ -938,9 +938,6 @@ sudo -u $CHARD_USER \
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 
-sudo setfacl -Rb /run/chrome 2>/dev/null
-EOF
-
 sudo chmod +x /bin/chard_flatpak
 }
 run_checkpoint 117 "sudo -E pacman -S --noconfirm flatpak" checkpoint_117
