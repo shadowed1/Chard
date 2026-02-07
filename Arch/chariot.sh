@@ -1687,10 +1687,10 @@ run_checkpoint 148 "pavucontrol" checkpoint_148
 #}
 #run_checkpoint 149 "VSCodium" checkpoint_149
 
-checkpoint_150() {
-   yay -S --noconfirm libreoffice 2>/dev/null
-}
-run_checkpoint 150 "LibreOffice" checkpoint_150
+#checkpoint_150() {
+#   yay -S --noconfirm libreoffice 2>/dev/null
+#}
+#run_checkpoint 150 "LibreOffice" checkpoint_150
 
 #checkpoint_151() {
 #    ARCH=$(uname -m)
