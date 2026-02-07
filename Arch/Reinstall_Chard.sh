@@ -526,7 +526,7 @@ export ALSOFT_DRIVERS=alsa
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_prismlauncher"
 
-sudo tee /bin/chard_firefox >/dev/null <<'EOF'
+sudo tee $CHARD_ROOT/bin/chard_firefox >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -544,9 +544,9 @@ sudo -u $CHARD_USER \
       DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
   /usr/bin/firefox "$@"
 EOF
-sudo chmod +x /bin/chard_firefox
+sudo chmod +x $CHARD_ROOT/bin/chard_firefox
 
-sudo tee /bin/chard_tor >/dev/null <<'EOF'
+sudo tee $CHARD_ROOT/bin/chard_tor >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -565,9 +565,9 @@ sudo -u $CHARD_USER \
   /usr/bin/torbrowser-launcher "$@"
 EOF
 
-sudo chmod +x /bin/chard_tor
+sudo chmod +x $CHARD_ROOT/bin/chard_tor
 
-sudo tee /bin/chard_thunderbird >/dev/null <<'EOF'
+sudo tee $CHARD_ROOT/bin/chard_thunderbird >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -586,7 +586,7 @@ sudo -u $CHARD_USER \
   /usr/bin/thunderbird "$@"
 EOF
 
-sudo chmod +x /bin/chard_thunderbird
+sudo chmod +x $CHARD_ROOT/bin/chard_thunderbird
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
         CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
