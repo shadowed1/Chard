@@ -1353,18 +1353,26 @@ checkpoint_141() {
     cd ~/
     rm -rf bubblepatch 2>/dev/null
 
-    sudo tee /bin/chard_firefox-bin >/dev/null <<'EOF'
+sudo tee /bin/chard_firefox >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:root
-source ~/.bashrc
-sudo -u $CHARD_USER /usr/bin/firefox-bin
+xhost +SI:localuser:$USER
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      MOZ_CUBEB_FORCE_PULSE=1 \
+      DISPLAY=:0 \
+      WAYLAND_DISPLAY=wayland-0 \
+      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
+  /usr/bin/firefox-bin "$@"
 EOF
-    sudo chmod +x /bin/chard_firefox-bin
+
+sudo chmod +x /bin/chard_firefox
 
 sudo tee /bin/chard_thunderbird >/dev/null <<'EOF'
 #!/bin/bash
@@ -1374,9 +1382,17 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:$USER
-source ~/.bashrc
-sudo -u $CHARD_USER /usr/bin/thunderbird
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      MOZ_CUBEB_FORCE_PULSE=1 \
+      DISPLAY=:0 \
+      WAYLAND_DISPLAY=wayland-0 \
+      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
+  /usr/bin/thunderbird "$@"
 EOF
+
 sudo chmod +x /bin/chard_thunderbird
 
 sudo tee /bin/chard_tor >/dev/null <<'EOF'
@@ -1387,9 +1403,18 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:$USER
-source ~/.bashrc
-sudo -u $CHARD_USER /usr/bin/torbrowser-launcher
+sudo -u $CHARD_USER \
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      MOZ_CUBEB_FORCE_PULSE=1 \
+      DISPLAY=:0 \
+      WAYLAND_DISPLAY=wayland-0 \
+      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
+  /usr/bin/torbrowser-launcher "$@"
 EOF
+
+sudo chmod +x /bin/chard_tor
 
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
