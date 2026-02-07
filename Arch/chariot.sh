@@ -1727,6 +1727,7 @@ run_checkpoint 155 "linux-api-header fix" checkpoint_155
 
 checkpoint_156() {
     printf "y\nn\n" | sudo pacman -Scc
+    printf "y\nn\ny\nn\n" | yay -Sc
 }
 run_checkpoint 156 "Clear Cache" checkpoint_156
 
