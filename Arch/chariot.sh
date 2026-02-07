@@ -922,7 +922,7 @@ sudo -u $CHARD_USER \
       PULSE_SERVER=unix:/run/chrome/pulse/native \
       DISPLAY="${DISPLAY:-:0}" \
       WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
-      XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/usr/local/chard/run/chrome}" \
+      XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/chrome}" \
       DBUS_SESSION_BUS_ADDRESS="$DBUS_ADDR" \
       DBUS_SESSION_BUS_PID="$DBUS_PID" \
       PATH="$WRAPPED_PATH" \
