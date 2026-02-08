@@ -772,7 +772,7 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                         sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
                         sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
                         gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
-                        sudo flatpak remote-delete flathub 2>dev/null
+                        sudo flatpak remote-delete flathub 2>/dev/null
                     "
   
                     killall -9 pipewire 2>/dev/null
