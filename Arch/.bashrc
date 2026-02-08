@@ -106,7 +106,8 @@ unique_join() {
     echo "${seen[*]}"
 }
 
-export PATH=/usr/local/bubblepatch/bin:"$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
+export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export MAGIC="$ROOT/usr/share/file/misc/magic.mgc"
 export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
 export CPPFLAGS="-I$ROOT/usr/include"
