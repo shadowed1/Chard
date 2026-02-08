@@ -593,7 +593,7 @@ sudo -u $CHARD_USER \
       MOZ_CUBEB_FORCE_PULSE=1 \
       DISPLAY=:0 \
       WAYLAND_DISPLAY=wayland-0 \
-      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      XDG_RUNTIME_DIR=/run/chrome \
       DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
   /usr/bin/torbrowser-launcher "$@"
 EOF
@@ -614,7 +614,7 @@ sudo -u $CHARD_USER \
       MOZ_CUBEB_FORCE_PULSE=1 \
       DISPLAY=:0 \
       WAYLAND_DISPLAY=wayland-0 \
-      XDG_RUNTIME_DIR=/usr/local/chard/run/chrome \
+      XDG_RUNTIME_DIR=/run/chrome \
       DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
   /usr/bin/thunderbird "$@"
 EOF
