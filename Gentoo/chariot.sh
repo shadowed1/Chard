@@ -1085,7 +1085,7 @@ run_checkpoint 117 "Build Sommelier" checkpoint_117
 
 checkpoint_118() {
     sudo -E emerge sys-apps/flatpak
-    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    #flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     chown -R 1000:1000 ~/.local/share/flatpak
