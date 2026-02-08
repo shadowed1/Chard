@@ -479,6 +479,7 @@ EOF
                     /bin/SMRT 2>/dev/null
                     source \$HOME/.smrt_env.sh 2>/dev/null
                     sudo chown -R \$USER:\$USER \$HOME 2>/dev/null
+                    sudo flatpak remote-delete flathub 2>dev/null
                     emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
                     BASHRC=\"\$HOME/.bashrc\" && \
