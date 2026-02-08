@@ -54,9 +54,15 @@
 *Minecraft Java + Prism Launcher:*
 <p align="center">
   <img src="https://i.imgur.com/MplsaH4.jpeg" alt="logo" width="1000" />
-</p>  
+</p>
+To launch PrismLauncher:
 
+*flatpak override --user --nosocket=wayland org.prismlauncher.PrismLauncher* <br>
+*flatpak run org.prismlauncher.PrismLauncher* <br>
+Add to Java settings in launcher:
+*-Djava.io.tmpdir=/home/chronos/.local/tmp*
 <br>
+
 
 *Brave, Codium, Thunar, VLC, xfce4:*
 <p align="center">
