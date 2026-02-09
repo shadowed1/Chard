@@ -17,4 +17,6 @@ echo "$now" > "$STAMP_FILE"
     echo "[chard_refresh] Updating sync databases..."
     sudo -E pacman -Sy
     sudo -E pacman -Fy
+    printf "y\nn\n" | sudo pacman -Scc
+    printf "y\nn\ny\nn\n" | yay -Sc
 ) >/dev/null 2>&1 &
