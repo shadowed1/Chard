@@ -323,6 +323,8 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_unmount" 2>/dev/null
                 sleep 0.05
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c"            -o "$CHARD_ROOT/tmp/virtm.c" 2>/dev/null
+                sleep 0.05
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -480,6 +482,8 @@ EOF
                     source \$HOME/.smrt_env.sh 2>/dev/null
                     sudo chown -R \$USER:\$USER \$HOME 2>/dev/null
                     sudo flatpak remote-delete flathub 2>dev/null
+                    sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm
+                    sudo chmod +x /bin/virtm 2>/dev/null
                     emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
                     BASHRC=\"\$HOME/.bashrc\" && \
