@@ -332,7 +332,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/colo
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
 sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker"            -o "$CHARD_ROOT/bin/autoclicker" 2>/dev/null
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker.c"            -o "$CHARD_ROOT/tmp/autoclicker.c" 2>/dev/null
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_mount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_mount" 2>/dev/null
 sleep 0.05
@@ -365,7 +365,6 @@ sudo chmod +x "$CHARD_ROOT/bin/rainbow"
 sudo chmod +x "$CHARD_ROOT/bin/color_reset"
 sudo chmod +x "$CHARD_ROOT/bin/error_color"
 sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
-sudo chmod +x "$CHARD_ROOT/bin/autoclicker"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_refresh"
@@ -775,8 +774,10 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                         sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
                         gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
                         sudo flatpak remote-delete flathub -y 2>/dev/null
-                        sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm
+                        sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
                         sudo chmod +x /bin/virtm 2>/dev/null
+                        sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
+                        sudo chmod +x /bin/autoclicker 2>/dev/null
                     "
   
                     killall -9 pipewire 2>/dev/null
