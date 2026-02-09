@@ -774,6 +774,8 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                         sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
                         gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
                         sudo flatpak remote-delete flathub -y 2>/dev/null
+                        sudo -E pacman -Sy
+                        sudo -E pacman -Fy
                         sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
                         sudo chmod +x /bin/virtm 2>/dev/null
                         sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
