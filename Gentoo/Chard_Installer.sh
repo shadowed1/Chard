@@ -8,7 +8,6 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
 START_TIME=$(date +%s)
 MAX_RETRIES=10
 RETRY_DELAY=30
@@ -628,8 +627,7 @@ sudo rm -f \
 sudo mkdir -p $CHARD_ROOT/run/user/1000
 sudo cp /run/user/1000/.Xauthority $CHARD_ROOT/run/user/1000/.Xauthority 2>/dev/null
 sudo cp /run/user/1000/.mutter-Xwaylandauth.ID0RE3 $CHARD_ROOT/run/user/1000/.mutter-Xwaylandauth.ID0RE3 2>/dev/null
-
-sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
+sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64" "$CHARD_ROOT/tmp"
 
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chardrc"            -o "$CHARD_ROOT/.chardrc"
@@ -690,7 +688,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_unmount" 2>/dev/null
 sleep 0.2
-
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c"            -o "$CHARD_ROOT/tmp/virtm.c" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
