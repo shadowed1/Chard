@@ -564,7 +564,7 @@ export ALSOFT_DRIVERS=alsa
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_prismlauncher"
 
-sudo tee /bin/chard_firefox >/dev/null <<'EOF'
+sudo tee "$CHARD_ROOT/bin/chard_firefox" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -579,7 +579,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
 ' bash "$@"
 EOF
 
-sudo chmod +x /bin/chard_firefox
+sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
 sudo tee "$CHARD_ROOT/bin/chard_tor" >/dev/null <<'EOF'
 #!/bin/bash
