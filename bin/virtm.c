@@ -388,7 +388,7 @@ int main(int argc, char *argv[]) {
     signal(SIGTERM, cleanup);
     
     DBG("═══════════════════════════════════════════\n");
-    DBG("VIRTM - Virtual Touchscreen Driver\n");
+    DBG("VIRTM - Virtual Touchscreen Mouse\n");
     DBG("Sensitivity: %.2f | Accel: %.2f | Friction: %.2f\n", sensitivity, accel, friction);
     DBG("═══════════════════════════════════════════\n\n");
     
