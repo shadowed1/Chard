@@ -826,6 +826,8 @@ xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   export PULSE_SERVER=unix:/run/chrome/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/thunderbird "$@"
 ' bash "$@""
 EOF
@@ -843,12 +845,13 @@ xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   export PULSE_SERVER=unix:/run/chrome/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/torbrowser-launcher "$@"
 ' bash "$@""
 EOF
 
 sudo chmod +x $CHARD_ROOT/bin/chard_tor
-
                 
                 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc 2>/dev/null
                 chard_unmount
