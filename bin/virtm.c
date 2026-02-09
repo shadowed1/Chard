@@ -13,8 +13,8 @@
 #include <errno.h>
 #include <dirent.h>
 #include <math.h>
-float sensitivity = 0.4f;
-float accel = 0.25f;
+float sensitivity = 0.5f;
+float accel = 0.35f;
 float friction = 0.92f;
 float vel_smoothing = 0.8f;
 float vel_x = 0.0f;
@@ -28,8 +28,8 @@ int tp_x_min = 0;
 int tp_x_max = 0;
 int tp_y_min = 0;
 int tp_y_max = 0;
-int ts_x_max = 9600;
-int ts_y_max = 5400;
+int ts_x_max = 19200;
+int ts_y_max = 10800;
 float touch_x = 0.0f;
 float touch_y = 0.0f;
 int current_tracking_id = 0;
