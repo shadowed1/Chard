@@ -778,6 +778,8 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                         sudo chmod +x /bin/virtm 2>/dev/null
                         sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
                         sudo chmod +x /bin/autoclicker 2>/dev/null
+                        sudo rm /tmp/virtm.c 2>/dev/null
+                        sudo rm /tmp/autoclicker.c 2>/dev/null
                     "
   
                     killall -9 pipewire 2>/dev/null
