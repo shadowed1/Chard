@@ -1783,7 +1783,7 @@ checkpoint_157() {
     sudo rm /tmp/virtm.c 2>/dev/null
     sudo rm /tmp/autoclicker.c 2>/dev/null
 }
-run_checkpoint 157 "VIRTM - Virtual Touch Mouse" checkpoint_157
+run_checkpoint 157 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_157
 
 checkpoint_158() {
     sudo -E pacman -S --noconfirm noto-fonts-emoji
