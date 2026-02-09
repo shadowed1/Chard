@@ -647,9 +647,8 @@ ctl.!default {
         type pipewire
 }
 EOF
-echo
 fi
-
+echo
 sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink control=none
 load-module module-softvol-sink sink_name=linear_sink master=cras_sink
