@@ -338,6 +338,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_unmount" 2>/dev/null
 sleep 0.05
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c"            -o "$CHARD_ROOT/tmp/virtm.c" 2>/dev/null
+sleep 0.05
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -773,6 +775,8 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                         sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
                         gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
                         sudo flatpak remote-delete flathub -y 2>/dev/null
+                        sudo gcc /tmp/virtm.c /bin/virtm -lm 2>/dev/null
+                        sudo chmod +x /bin/virtm 2>/dev/null
                     "
   
                     killall -9 pipewire 2>/dev/null
