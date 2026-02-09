@@ -14,10 +14,10 @@
 #include <dirent.h>
 #include <math.h>
 
-float sensitivity = 0.4f;
+float sensitivity = 0.2f;
 float accel = 0.25f;
 float friction = 0.92f;
-float vel_smoothing = 0.8f;
+float vel_smoothing = 0.9f;
 
 float vel_x = 0.0f;
 float vel_y = 0.0f;
