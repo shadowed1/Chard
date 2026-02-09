@@ -69,7 +69,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // ---- HARD CPS LIMIT ----
     if (cps > MAX_CPS) {
         fprintf(stderr,
                 "Warning: CPS %.2f exceeds maximum allowed (%d). Clamping.\n",
