@@ -490,7 +490,7 @@ sudo rm -f \
 sudo mkdir -p $CHARD_ROOT/run/user/1000
 sudo cp /run/user/1000/.Xauthority $CHARD_ROOT/run/user/1000/.Xauthority 2>/dev/null
 sudo cp /run/user/1000/.mutter-Xwaylandauth.ID0RE3 $CHARD_ROOT/run/user/1000/.mutter-Xwaylandauth.ID0RE3 2>/dev/null
-
+sudo mkdir -p "$CHARD_ROOT/tmp"
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64"
 
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
@@ -559,6 +559,8 @@ sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_mount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_mount" 2>/dev/null
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_unmount" 2>/dev/null
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c"            -o "$CHARD_ROOT/tmp/virtm.c" 2>/dev/null
 sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -922,7 +924,6 @@ sudo mkdir -p "$CHARD_ROOT/run/user/1000"
 sudo chmod 700 "$CHARD_ROOT/run/user/1000"
 sudo mkdir -p "$CHARD_ROOT/dev/dri"
 sudo mkdir -p "$CHARD_ROOT/dev/input"
-sudo mkdir -p "$CHARD_ROOT/tmp"
 
 for pkg in "${PACKAGES[@]}"; do
     IFS="|" read -r NAME VERSION EXT URL DIR BUILDSYS <<< "$pkg"
