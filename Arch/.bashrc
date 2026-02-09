@@ -232,6 +232,8 @@ alias powercontrol-gui='sudo -E powercontrol-gui'
 # virtm
 alias virtm='sudo -E virtm'
 
+command -v chard_refresh >/dev/null && chard_refresh
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
