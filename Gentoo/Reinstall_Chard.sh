@@ -445,7 +445,7 @@ EOF
                 fi
 
                 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 2>/dev/null
-
+                sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
                 sudo chroot $CHARD_ROOT /bin/bash -c "
 
                     mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
