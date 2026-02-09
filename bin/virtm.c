@@ -13,33 +13,25 @@
 #include <errno.h>
 #include <dirent.h>
 #include <math.h>
-
-float sensitivity = 0.2f;
+float sensitivity = 0.4f;
 float accel = 0.25f;
 float friction = 0.92f;
-float vel_smoothing = 0.9f;
-
+float vel_smoothing = 0.8f;
 float vel_x = 0.0f;
 float vel_y = 0.0f;
-
 int finger_down = 0;
 int last_mt_x = -1;
 int last_mt_y = -1;
-
 int fd_trackpad = -1;
 int fd_uinput = -1;
-
 int tp_x_min = 0;
 int tp_x_max = 0;
 int tp_y_min = 0;
 int tp_y_max = 0;
-
 int ts_x_max = 9600;
 int ts_y_max = 5400;
-
-int touch_x = 0;
-int touch_y = 0;
-
+float touch_x = 0.0f;
+float touch_y = 0.0f;
 int current_tracking_id = 0;
 int touch_active = 0;
 
@@ -160,12 +152,10 @@ char* find_trackpad_device() {
     
     while ((entry = readdir(dir)) != NULL) {
         if (strncmp(entry->d_name, "event", 5) != 0) continue;
-        
         snprintf(device_path, sizeof(device_path), "/dev/input/%s", entry->d_name);
         snprintf(cmd, sizeof(cmd), "udevadm info --query=property --name=%s 2>/dev/null", device_path);
         fp = popen(cmd, "r");
         if (!fp) continue;
-        
         int is_touchpad = 0;
         while (fgets(line, sizeof(line), fp)) {
             if (strstr(line, "ID_INPUT_TOUCHPAD=1")) {
@@ -301,7 +291,7 @@ int create_virtual_touchscreen() {
     ioctl(fd_uinput, UI_SET_ABSBIT, ABS_MT_TRACKING_ID);
     
     struct uinput_setup usetup = {0};
-    snprintf(usetup.name, UINPUT_MAX_NAME_SIZE, "Virtual Goodix Touchscreen");
+    snprintf(usetup.name, UINPUT_MAX_NAME_SIZE, "Virtual Touchscreen Mouse");
     usetup.id.bustype = BUS_I2C;
     usetup.id.vendor  = 0x27C6;
     usetup.id.product = 0x0E37;
@@ -378,7 +368,7 @@ int create_virtual_touchscreen() {
     }
     
     DBG("═══════════════════════════════════════════\n");
-    DBG("VIRTUAL TOUCHSCREEN CREATED\n");
+    DBG("VIRTUAL TOUCHSCREEN MOUSE CREATED\n");
     DBG("  Range: %d x %d\n", ts_x_max, ts_y_max);
     DBG("═══════════════════════════════════════════\n");
     
@@ -398,9 +388,10 @@ int main(int argc, char *argv[]) {
     signal(SIGTERM, cleanup);
     
     DBG("═══════════════════════════════════════════\n");
-    DBG("VIRTM - Virtual Touchscreen Mouse\n");
+    DBG("VIRTM - Virtual Touchscreen Driver\n");
     DBG("Sensitivity: %.2f | Accel: %.2f | Friction: %.2f\n", sensitivity, accel, friction);
     DBG("═══════════════════════════════════════════\n\n");
+    
     if (!touchscreen_device) {
         touchscreen_device = find_touchscreen_device();
     }
@@ -442,8 +433,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
-    touch_x = ts_x_max / 2;
-    touch_y = ts_y_max / 2;
+    touch_x = ts_x_max / 2.0f;
+    touch_y = ts_y_max / 2.0f;
     
     DBG("═══════════════════════════════════════════\n");
     DBG("Ctrl+C to exit.\n");
@@ -491,24 +482,23 @@ int main(int argc, char *argv[]) {
                 vel_y *= friction;
             }
             
-            int dx = (int)(vel_x * sensitivity);
-            int dy = (int)(vel_y * sensitivity);
+            float dx = vel_x * sensitivity;
+            float dy = vel_y * sensitivity;
             
-            if (dx || dy) {
+            if (dx != 0.0f || dy != 0.0f) {
                 touch_x += dx;
                 touch_y += dy;
-                
                 if (touch_x < 0) touch_x += ts_x_max;
                 if (touch_x > ts_x_max) touch_x -= ts_x_max;
                 if (touch_y < 0) touch_y += ts_y_max;
                 if (touch_y > ts_y_max) touch_y -= ts_y_max;
                 
-                DBG("Move: vel=(%.2f,%.2f) pos=(%d,%d)\n", vel_x, vel_y, touch_x, touch_y);
+                DBG("Move: vel=(%.2f,%.2f) pos=(%.2f,%.2f)\n", vel_x, vel_y, touch_x, touch_y);
             }
             
-            send_touch_position(touch_x, touch_y, finger_down);
-            if (fabs(vel_x) < 0.1f) vel_x = 0.0f;
-            if (fabs(vel_y) < 0.1f) vel_y = 0.0f;
+            send_touch_position((int)(touch_x + 0.5f), (int)(touch_y + 0.5f), finger_down);
+            if (fabs(vel_x) < 0.01f) vel_x = 0.0f;
+            if (fabs(vel_y) < 0.01f) vel_y = 0.0f;
         }
     }
     
