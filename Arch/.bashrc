@@ -229,6 +229,9 @@ alias handbrake='ghb'
 # Powercontrol
 alias powercontrol-gui='sudo -E powercontrol-gui'
 
+# virtm
+alias virtm='sudo -E virtm'
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
