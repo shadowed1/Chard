@@ -1531,7 +1531,7 @@ run_checkpoint 141 "Prism Launcher" checkpoint_141
 checkpoint_142() {
 sudo -E pacman -S --noconfirm firefox
 
-sudo tee /bin/chard_firefox >/dev/null <<'EOF'
+sudo tee "/bin/chard_firefox" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
@@ -1546,47 +1546,41 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
 ' bash "$@"
 EOF
 
-sudo chmod +x /bin/chard_firefox
+sudo chmod +x "/bin/chard_firefox"
 
-sudo tee /bin/chard_tor >/dev/null <<'EOF'
+sudo tee "/bin/chard_tor" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
-PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:$USER
-sudo -u $CHARD_USER \
-  env HOME=/$CHARD_HOME \
-      PULSE_SERVER=unix:/run/chrome/pulse/native \
-      MOZ_CUBEB_FORCE_PULSE=1 \
-      DISPLAY=:0 \
-      WAYLAND_DISPLAY=wayland-0 \
-      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
-  /usr/bin/torbrowser-launcher "$@"
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  export PULSE_SERVER=unix:/run/chrome/pulse/native
+  export MOZ_CUBEB_FORCE_PULSE=1
+  exec /usr/bin/torbrowser-launcher "$@"
+' bash "$@"
 EOF
 
-sudo chmod +x /bin/chard_tor
+sudo chmod +x "/bin/chard_tor"
 
-sudo tee /bin/chard_thunderbird >/dev/null <<'EOF'
+sudo tee "/bin/chard_thunderbird" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
-PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:$USER
-sudo -u $CHARD_USER \
-  env HOME=/$CHARD_HOME \
-      PULSE_SERVER=unix:/run/chrome/pulse/native \
-      MOZ_CUBEB_FORCE_PULSE=1 \
-      DISPLAY=:0 \
-      WAYLAND_DISPLAY=wayland-0 \
-      DBUS_SESSION_BUS_ADDRESS="$(cat /.chard_dbus | grep DBUS_SESSION_BUS_ADDRESS | cut -d"'" -f2)" \
-  /usr/bin/thunderbird "$@"
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  export PULSE_SERVER=unix:/run/chrome/pulse/native
+  export MOZ_CUBEB_FORCE_PULSE=1
+  exec /usr/bin/thunderbird "$@"
+' bash "$@"
 EOF
 
-sudo chmod +x /bin/chard_thunderbird
+sudo chmod +x "/bin/chard_thunderbird"
 
 mkdir -p ~/.local/share/applications
 
