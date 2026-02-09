@@ -1542,6 +1542,8 @@ xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   export PULSE_SERVER=unix:/run/chrome/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/firefox "$@"
 ' bash "$@"
 EOF
@@ -1559,6 +1561,8 @@ xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   export PULSE_SERVER=unix:/run/chrome/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/torbrowser-launcher "$@"
 ' bash "$@"
 EOF
@@ -1576,6 +1580,8 @@ xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   export PULSE_SERVER=unix:/run/chrome/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/thunderbird "$@"
 ' bash "$@"
 EOF
