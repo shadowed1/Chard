@@ -338,7 +338,8 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.18: `Added ChromeOS_PowerControl GUI support. Fixed minor typos.` <br><br>
 - 0.19: `Added autoclicker script. Can be run outside or inside chroot. Fixed powercontrol-gui launching in foreground. Improved chard_flatpak wrapper. Fixed linux_api_headers error on Arch when upgrading. ` <br><br>
 - 0.20: `Enabled Firefox audio. Significantly improved Flatpak support; including Sober support! Added uname spoofer, prerequisites for Chard Lite, removed bloatware from chariot, and added cleanup commands for Chard Arch post-install.` <br><br>
-- 0.21: `Added virtm. This enables virtual touchscreen mouse; enabling chromebooks with touchscreens to use emulated mouse capture. Run virtm prior to launching app.`
+- 0.21: `Added virtm. This enables virtual touchscreen mouse; enabling chromebooks with touchscreens to use emulated mouse capture. Run virtm prior to launching app.` <br><br>
+- 0.22: `Further improved Firefox support to enable GPU accleration with audio support. Added resolv.conf copy during reinstall. Added cleanup script for Chard Arch. Added pacman update support for chariot.` <br><br>
 <br>
 
 ### Acknowledgements
