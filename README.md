@@ -132,7 +132,8 @@ Add to Java settings in launcher:
 <br>
 
 - Can run certain apps directly from Chard in the Host OS (testing ChromeOS only).
-- Extremely resource light; RAM usage is below 100MB footprint. 
+- Extremely resource light; RAM usage is below 100MB footprint.
+- Implements experimental `virtm` script, supporting mouse capture support! 
 
 <br>
 
@@ -218,10 +219,12 @@ Add to Java settings in launcher:
 - `chariot -s 90` -- Resume on checkpoint 90 and exit after finishing that specific checkpoint.
 - `chardonnay` -- Launch Sommelier in ChromeOS natively (Gentoo only -- WIP).
 - `chard version` -- Check for updates.
-- `chard unmount` or `cu` -- Force chard to unmount as if exiting (a kill command in a sense).
+- `chard unmount` or `cu` -- Force chard to unmount as if exiting (a kill command in a sense)
+- `rainbow` -- Enable a rainbow shell
 
 *Inside Chard Root*
 - `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
+- `virtm` Start mouse capture/lock script. Requires touchscreen.
 - `chard_scale display 2` -- Set display scaling to 2x scaling
 - `chard_scale cursor 64` -- Set cursor to 64px.
 
@@ -293,7 +296,6 @@ sudo qemu-system-x86_64 \
 
 <br>
 
-- Mouse Capture/Lock in Games (spinning around with a mouse) is not working.
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
 
 <br>
