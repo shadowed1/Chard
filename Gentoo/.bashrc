@@ -373,6 +373,9 @@ alias gparted='sudo -E gparted'
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
 dbus-daemon --system --fork 2>/dev/null
 
+# virtm
+alias virtm='sudo -E virtm'
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
