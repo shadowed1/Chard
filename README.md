@@ -133,7 +133,7 @@ Add to Java settings in launcher:
 
 - Can run certain apps directly from Chard in the Host OS (testing ChromeOS only).
 - Extremely resource light; RAM usage is below 100MB footprint.
-- Implements experimental `virtm` script, supporting mouse capture support! 
+- Implements `virtm`, a program enabling mouse capture support!
 
 <br>
 
