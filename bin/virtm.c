@@ -10,25 +10,33 @@
 #include <errno.h>
 #include <dirent.h>
 #include <math.h>
+
 float sensitivity = 0.4f;
 float accel = 0.25f;
 float friction = 0.92f;
 float vel_smoothing = 0.8f;
+
 float vel_x = 0.0f;
 float vel_y = 0.0f;
+
 int finger_down = 0;
 int last_mt_x = -1;
 int last_mt_y = -1;
+
 int fd_trackpad = -1;
 int fd_uinput = -1;
+
 int tp_x_min = 0;
 int tp_x_max = 0;
 int tp_y_min = 0;
 int tp_y_max = 0;
+
 int ts_x_max = 9600;
 int ts_y_max = 5400;
+
 int touch_x = 0;
 int touch_y = 0;
+
 int current_tracking_id = 0;
 int touch_active = 0;
 
@@ -77,6 +85,59 @@ int detect_touchscreen_range(const char *ts_device) {
     return 0;
 }
 
+char* find_touchscreen_device() {
+    DIR *dir = opendir("/dev/input");
+    if (!dir) {
+        perror("Cannot open /dev/input");
+        return NULL;
+    }
+    
+    struct dirent *entry;
+    static char device_path[256];
+    char cmd[512];
+    FILE *fp;
+    char line[256];
+    
+    DBG("═══════════════════════════════════════════\n");
+    DBG("Scanning for touchscreen device (udevadm)...\n");
+    DBG("═══════════════════════════════════════════\n");
+    
+    while ((entry = readdir(dir)) != NULL) {
+        if (strncmp(entry->d_name, "event", 5) != 0) continue;
+        
+        snprintf(device_path, sizeof(device_path), "/dev/input/%s", entry->d_name);
+        snprintf(cmd, sizeof(cmd), "udevadm info --query=property --name=%s 2>/dev/null", device_path);
+        fp = popen(cmd, "r");
+        if (!fp) continue;
+        
+        int is_touchscreen = 0;
+        while (fgets(line, sizeof(line), fp)) {
+            if (strstr(line, "ID_INPUT_TOUCHSCREEN=1")) {
+                is_touchscreen = 1;
+                break;
+            }
+        }
+        pclose(fp);
+        
+        if (is_touchscreen) {
+            char name[256] = "Unknown";
+            int fd = open(device_path, O_RDONLY);
+            if (fd >= 0) {
+                ioctl(fd, EVIOCGNAME(sizeof(name)), name);
+                close(fd);
+            }
+            
+            DBG("\nFOUND TOUCHSCREEN: %s (%s)\n", device_path, name);
+            closedir(dir);
+            return strdup(device_path);
+        }
+    }
+    
+    closedir(dir);
+    DBG("\nNo touchscreen found\n");
+    return NULL;
+}
+
 char* find_trackpad_device() {
     DIR *dir = opendir("/dev/input");
     if (!dir) {
@@ -86,49 +147,47 @@ char* find_trackpad_device() {
     
     struct dirent *entry;
     static char device_path[256];
-    char name[256];
+    char cmd[512];
+    FILE *fp;
+    char line[256];
     
     DBG("═══════════════════════════════════════════\n");
-    DBG("Scanning for trackpad device...\n");
+    DBG("Scanning for trackpad device (udevadm)...\n");
     DBG("═══════════════════════════════════════════\n");
     
     while ((entry = readdir(dir)) != NULL) {
         if (strncmp(entry->d_name, "event", 5) != 0) continue;
         
         snprintf(device_path, sizeof(device_path), "/dev/input/%s", entry->d_name);
-        int fd = open(device_path, O_RDONLY);
-        if (fd < 0) continue;
+        snprintf(cmd, sizeof(cmd), "udevadm info --query=property --name=%s 2>/dev/null", device_path);
+        fp = popen(cmd, "r");
+        if (!fp) continue;
         
-        if (ioctl(fd, EVIOCGNAME(sizeof(name)), name) < 0) {
-            close(fd);
-            continue;
+        int is_touchpad = 0;
+        while (fgets(line, sizeof(line), fp)) {
+            if (strstr(line, "ID_INPUT_TOUCHPAD=1")) {
+                is_touchpad = 1;
+                break;
+            }
         }
+        pclose(fp);
         
-        DBG("  %s: %s\n", device_path, name);
-        
-        unsigned long evbits[EV_MAX/sizeof(long) + 1] = {0};
-        unsigned long absbits[ABS_MAX/sizeof(long) + 1] = {0};
-        
-        ioctl(fd, EVIOCGBIT(0, sizeof(evbits)), evbits);
-        ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absbits)), absbits);
-        
-        int has_mt_x = (absbits[ABS_MT_POSITION_X/sizeof(long)] >> (ABS_MT_POSITION_X % (sizeof(long)*8))) & 1;
-        int has_mt_y = (absbits[ABS_MT_POSITION_Y/sizeof(long)] >> (ABS_MT_POSITION_Y % (sizeof(long)*8))) & 1;
-        
-        if ((strcasestr(name, "touchpad") || strcasestr(name, "trackpad") || 
-             strcasestr(name, "synaptics") || strcasestr(name, "elan")) &&
-            has_mt_x && has_mt_y) {
+        if (is_touchpad) {
+            char name[256] = "Unknown";
+            int fd = open(device_path, O_RDONLY);
+            if (fd >= 0) {
+                ioctl(fd, EVIOCGNAME(sizeof(name)), name);
+                close(fd);
+            }
+            
             DBG("\nFOUND TRACKPAD: %s (%s)\n", device_path, name);
-            close(fd);
             closedir(dir);
             return strdup(device_path);
         }
-        
-        close(fd);
     }
     
     closedir(dir);
-    DBG("\nNo trackpad found!\n");
+    DBG("\nNo trackpad found\n");
     return NULL;
 }
 
@@ -325,8 +384,7 @@ int create_virtual_touchscreen() {
 
 int main(int argc, char *argv[]) {
     char *trackpad_device = NULL;
-    char *touchscreen_device = "/dev/input/event5";
-    
+    char *touchscreen_device = NULL;
     if (argc > 1) trackpad_device = argv[1];
     if (argc > 2) touchscreen_device = argv[2];
     if (argc > 3) sensitivity = atof(argv[3]);
@@ -337,21 +395,21 @@ int main(int argc, char *argv[]) {
     signal(SIGTERM, cleanup);
     
     DBG("═══════════════════════════════════════════\n");
-    DBG("VIRTM - Virtual Touchscreen Driver\n");
+    DBG("VIRTM - Virtual Touchscreen Mouse\n");
     DBG("Sensitivity: %.2f | Accel: %.2f | Friction: %.2f\n", sensitivity, accel, friction);
     DBG("═══════════════════════════════════════════\n\n");
+    if (!touchscreen_device) {
+        touchscreen_device = find_touchscreen_device();
+    }
     
     detect_touchscreen_range(touchscreen_device);
-    
     if (!trackpad_device) {
         trackpad_device = find_trackpad_device();
         if (!trackpad_device) {
             DBG("\nUsage: %s [trackpad] [touchscreen] [sensitivity] [accel] [friction]\n", argv[0]);
-            DBG("Example: %s /dev/input/event4 /dev/input/event5 0.8 0.25 0.92\n", argv[0]);
-            DBG("\nDefaults: sensitivity=0.8, accel=0.25, friction=0.92\n");
-            DBG("  sensitivity: movement speed (lower = slower)\n");
-            DBG("  accel: acceleration factor (lower = smoother)\n");
-            DBG("  friction: resistance when finger up (higher = more damping)\n");
+            DBG("Example: %s /dev/input/event4 /dev/input/event5 0.4 0.25 0.92\n", argv[0]);
+            DBG("Or just: sudo %s (auto-detect everything)\n", argv[0]);
+            DBG("\nDefaults: sensitivity=0.4, accel=0.25, friction=0.92\n");
             return 1;
         }
     }
