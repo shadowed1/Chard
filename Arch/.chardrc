@@ -56,6 +56,7 @@ alias cs='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
 alias cu='chard unmount'
+alias virtm='sudo -E $CHARD_ROOT/bin/virtm'
 CR="$CHARD_ROOT"
 
 # <<< END CHARD_ENV <<<
