@@ -317,7 +317,7 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/color_reset.sh"         -o "$CHARD_ROOT/bin/color_reset"
                 sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker"            -o "$CHARD_ROOT/bin/autoclicker" 2>/dev/null
+                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker.c"            -o "$CHARD_ROOT/tmp/autoclicker.c" 2>/dev/null
                 sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_mount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_mount" 2>/dev/null
                 sleep 0.05
@@ -482,7 +482,9 @@ EOF
                     source \$HOME/.smrt_env.sh 2>/dev/null
                     sudo chown -R \$USER:\$USER \$HOME 2>/dev/null
                     sudo flatpak remote-delete flathub 2>dev/null
-                    sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm
+                    sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
+                    sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
+                    sudo chmod +x /bin/autoclicker 2>/dev/null
                     sudo chmod +x /bin/virtm 2>/dev/null
                     emerge --noreplace app-misc/resolve-march-native && \
                     MARCH_FLAGS=\$(resolve-march-native | sed 's/+crc//g; s/+crypto//g') && \
