@@ -229,7 +229,7 @@ trap cleanup_chroot EXIT INT TERM
                         USER=\$CHARD_USER
                         HOME=\$CHARD_HOME
                         source \$HOME/.bashrc 2>/dev/null
-                        source \$HOME/.smrt_env.sh
+                        source \$HOME/.smrt_env.sh 2>/dev/null
 
                         mkdir -p \"/\$CHARD_HOME\"
                         chown -R \$USER:\$USER \"/\$CHARD_HOME\" 2>/dev/null        
@@ -481,7 +481,7 @@ EOF
                     /bin/SMRT 2>/dev/null
                     source \$HOME/.smrt_env.sh 2>/dev/null
                     sudo chown -R \$USER:\$USER \$HOME 2>/dev/null
-                    sudo flatpak remote-delete flathub 2>dev/null
+                    sudo flatpak remote-delete flathub -y 2>dev/null
                     sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
                     sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
                     sudo chmod +x /bin/autoclicker 2>/dev/null
