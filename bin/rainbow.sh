@@ -64,5 +64,6 @@ colorize() {
 }
 
 script -qfc \
-"export PS1=\"\$ORIGINAL_PS1\"; exec bash --norc -i" \
+"source ~/.bashrc 2>/dev/null; export PS1=\"\$ORIGINAL_PS1\"; exec bash --norc -i" \
 /dev/null | colorize
+
