@@ -1777,7 +1777,11 @@ run_checkpoint 156 "Clear Cache" checkpoint_156
 
 checkpoint_157() {
     sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
+    sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
+    sudo chmod +x /bin/autoclicker
     sudo chmod +x /bin/virtm 2>/dev/null
+    sudo rm /tmp/virtm.c 2>/dev/null
+    sudo rm /tmp/autoclicker.c 2>/dev/null
 }
 run_checkpoint 157 "VIRTM - Virtual Touch Mouse" checkpoint_157
 
