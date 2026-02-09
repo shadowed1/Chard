@@ -446,7 +446,7 @@ int main(int argc, char *argv[]) {
     touch_y = ts_y_max / 2;
     
     DBG("═══════════════════════════════════════════\n");
-    DBG("READY! Press Ctrl+C to exit.\n");
+    DBG("Ctrl+C to exit.\n");
     DBG("═══════════════════════════════════════════\n\n");
     
     struct input_event ev;
@@ -507,7 +507,6 @@ int main(int argc, char *argv[]) {
             }
             
             send_touch_position(touch_x, touch_y, finger_down);
-            
             if (fabs(vel_x) < 0.1f) vel_x = 0.0f;
             if (fabs(vel_y) < 0.1f) vel_y = 0.0f;
         }
