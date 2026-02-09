@@ -270,6 +270,7 @@ detect_gpu_freq() {
         echo
 }
 chard unmount
+sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"           -o "$CHARD_ROOT/.chardrc" 2>/dev/null
