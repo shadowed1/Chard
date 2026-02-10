@@ -239,7 +239,7 @@ trap 'cleanup_chroot; '"$existing_int_trap" INT
 trap 'cleanup_chroot; '"$existing_term_trap" TERM
 trap cleanup_chroot EXIT
 
-echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
+echo "${RESET}${YELLOW}[*] Unmounting active bind mounts...${RESET}"
 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
