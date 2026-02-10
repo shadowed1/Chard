@@ -109,7 +109,6 @@ else
 fi
 pacman-key --refresh-keys --keyserver --allow-weak-key-signatures hkps://keyserver.ubuntu.com 2>/dev/null
 pacman -Syu --noconfirm
-pacman -Fy  --noconfirm
 pacman -Syu --noconfirm make
 pacman -Syu --noconfirm gcc
 pacman -Syu --noconfirm rsync
