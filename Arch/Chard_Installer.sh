@@ -1302,9 +1302,8 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         
                         CHARD_USER=\$(cat /.chard_user)
                         CHARD_HOME=\$(cat /.chard_home)
-                        [[ \"\$CHARD_HOME\" != /* ]] && CHARD_HOME=\"/\$CHARD_HOME\"
                         USER=\$CHARD_USER
-                        HOME=\$CHARD_HOME
+                        HOME=/\$CHARD_HOME
                         source \$HOME/.bashrc 2>/dev/null
                         
                         userdel -r alarm 2>/dev/null
@@ -1365,7 +1364,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         fi
                         
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
-                            useradd -u 1000 -g 1000 -d \"\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
+                            useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
 
                         usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,lp,input,hidraw,cros-disks \$CHARD_USER
