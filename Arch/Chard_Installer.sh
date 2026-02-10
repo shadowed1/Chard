@@ -1304,16 +1304,22 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         CHARD_HOME=\$(cat /.chard_home)
                         USER=\$CHARD_USER
                         HOME=/\$CHARD_HOME
-                        source \$HOME/.bashrc 2>/dev/null
                         
-                        userdel -r alarm 2>/dev/null
-                        groupdel alarm 2>/dev/null
-                        groupdel audio 2>/dev/null
-                        groupdel video 2>/dev/null
-                        groupdel input 2>/dev/null
-                        groupdel lp 2>/dev/null
+                        pkill -u alarm 2>/dev/null || true
                         
-                        getent group 1000 >/dev/null    || groupadd -g 1000 chronos 2>/dev/null
+                        if id -u 1000 &>/dev/null; then
+                            EXISTING_USER=$(id -un 1000)
+                            userdel -r "$EXISTING_USER"
+                        fi
+                        
+                        if getent group 1000 &>/dev/null; then
+                            EXISTING_GROUP=$(getent group 1000 | cut -d: -f1)
+                            groupdel "$EXISTING_GROUP"
+                        fi
+                        
+                        userdel -r alarm
+                        groupdel alarm
+                        getent group 1000 >/dev/null    || groupadd -g 1000 chronos
                         getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
                         getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
                         getent group 20205 >/dev/null   || groupadd -g 20205 arc-keymintd 2>/dev/null
