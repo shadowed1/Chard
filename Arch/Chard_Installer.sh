@@ -1302,6 +1302,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         
                         CHARD_USER=\$(cat /.chard_user)
                         CHARD_HOME=\$(cat /.chard_home)
+                        [[ \"\$CHARD_HOME\" != /* ]] && CHARD_HOME=\"/\$CHARD_HOME\"
                         USER=\$CHARD_USER
                         HOME=\$CHARD_HOME
                         source \$HOME/.bashrc 2>/dev/null
