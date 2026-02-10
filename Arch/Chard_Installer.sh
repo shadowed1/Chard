@@ -1388,7 +1388,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                     
 chard_unmount 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
-echo "Passwordless sudo configured for $CHARD_USER"
+echo "${MAGENTA}Passwordless sudo configured for $CHARD_USER ${RESET}"
 ARCH=$(uname -m)
 
 detect_gpu_freq() {
