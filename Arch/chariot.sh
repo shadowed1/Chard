@@ -272,50 +272,98 @@ run_checkpoint() {
     fi
 }
 
+refresh_mirrors() {
+    echo "${CYAN}Attempting to refresh mirror list...${RESET}"
+    sudo -E pacman -Syy --noconfirm 2>&1 | tee -a "$LOG_FILE"
+    
+    if command -v reflector &> /dev/null; then
+        echo "${CYAN}Running reflector to find fastest mirrors...${RESET}"
+        sudo -E reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist 2>&1 | tee -a "$LOG_FILE"
+        sudo -E pacman -Syy --noconfirm 2>&1 | tee -a "$LOG_FILE"
+    fi
+}
+
+retry_pacman() {
+    local max_retries=10
+    local retry_count=0
+    local wait_time=5
+    local cmd="$@"
+    
+    while [ $retry_count -lt $max_retries ]; do
+        echo "${CYAN}Attempt $((retry_count + 1)) / $max_retries: Running pacman...${RESET}"
+        
+        if eval "$cmd"; then
+            echo "${GREEN}Package operation succeeded${RESET}"
+            return 0
+        else
+            retry_count=$((retry_count + 1))
+            
+            if [ $retry_count -lt $max_retries ]; then
+                echo "${YELLOW}Attempt $retry_count failed. Waiting ${wait_time}s before retry...${RESET}"
+                sleep $wait_time
+                
+                wait_time=$((wait_time * 2))
+                if [ $wait_time -gt 60 ]; then
+                    wait_time=60
+                fi
+                
+                echo "${CYAN}Refreshing package database...${RESET}"
+                sudo -E pacman -Syy --noconfirm 2>/dev/null || true
+                sudo -E pacman -Fy --noconfirm 2>/dev/null
+            else
+                echo "${RED}$max_retries attempts failed. Skipping this package.${RESET}"
+                return 1
+            fi
+        fi
+    done
+    
+    return 1
+}
+
 checkpoint_1() {
     sudo chown -R 1000:1000 ~/
 }
 run_checkpoint 1 "sudo chown -R 1000:1000 ~/" checkpoint_1
 
 checkpoint_2() {
-    sudo -E pacman -S --noconfirm cmake
+    retry_pacman "sudo -E pacman -S --noconfirm cmake"
 }
 run_checkpoint 2 "sudo -E pacman -S --noconfirm cmake" checkpoint_2
 
 checkpoint_3() {
-    sudo -E pacman -S --noconfirm gmp
+    retry_pacman "sudo -E pacman -S --noconfirm gmp"
 }
 run_checkpoint 3 "sudo -E pacman -S --noconfirm gmp" checkpoint_3
 
 checkpoint_4() {
-    sudo -E pacman -S --noconfirm mpfr
+    retry_pacman "sudo -E pacman -S --noconfirm mpfr"
 }
 run_checkpoint 4 "sudo -E pacman -S --noconfirm mpfr" checkpoint_4
 
 checkpoint_5() {
-    sudo -E pacman -S --noconfirm binutils
+    retry_pacman "sudo -E pacman -S --noconfirm binutils"
 }
 run_checkpoint 5 "sudo -E pacman -S --noconfirm binutils" checkpoint_5
 
 checkpoint_6() {
-    sudo -E pacman -S --noconfirm diffutils
-    sudo -E pacman -S --noconfirm nano
+    retry_pacman "sudo -E pacman -S --noconfirm diffutils nano"
 }
 run_checkpoint 6 "sudo -E pacman -S --noconfirm diffutils and nano" checkpoint_6
 
 checkpoint_7() {
-    sudo -E pacman -S --noconfirm openssl
+    retry_pacman "sudo -E pacman -S --noconfirm openssl"
 }
 run_checkpoint 7 "sudo -E pacman -S --noconfirm openssl" checkpoint_7
 
 checkpoint_8() {
-    sudo -E pacman -S --noconfirm curl ca-certificates
-
+    retry_pacman "sudo -E pacman -S --noconfirm curl ca-certificates"
+    retry_pacman "sudo -E pacman -S --noconfirm reflector"
+    refresh_mirrors
 }
 run_checkpoint 8 "sudo -E pacman -S --noconfirm curl" checkpoint_8
 
 checkpoint_9() {
-    sudo -E pacman -S --noconfirm git
+    retry_pacman "sudo -E pacman -S --noconfirm git"
     cd ~/
     rm -rf yay 2>/dev/null
     git clone https://aur.archlinux.org/yay.git
@@ -327,47 +375,47 @@ checkpoint_9() {
 run_checkpoint 9 "sudo -E pacman -S --noconfirm git + yay" checkpoint_9
 
 checkpoint_10() {
-    sudo -E pacman -S --noconfirm coreutils
+    retry_pacman "sudo -E pacman -S --noconfirm coreutils"
 }
 run_checkpoint 10 "sudo -E pacman -S --noconfirm coreutils" checkpoint_10
 
 checkpoint_11() {
-    sudo -E pacman -S --noconfirm fastfetch
+    retry_pacman "sudo -E pacman -S --noconfirm fastfetch"
 }
-run_checkpoint 11 "sudo -E pacman -S --noconfirm fastfetch" checkpoint_11
+run_checkpoint 12 "sudo -E pacman -S --noconfirm fastfetch" checkpoint_12
 
 checkpoint_12() {
-    sudo -E pacman -S --noconfirm perl
+    retry_pacman "sudo -E pacman -S --noconfirm perl"
 }
 run_checkpoint 12 "sudo -E pacman -S --noconfirm perl" checkpoint_12
 
 checkpoint_13() {
-    sudo -E pacman -S --noconfirm perl-capture-tiny
+    retry_pacman "sudo -E pacman -S --noconfirm perl-capture-tiny"
 }
 run_checkpoint 13 "sudo -E pacman -S --noconfirm perl-capture-tiny" checkpoint_13
 
-checkpoint_14() {
-    sudo -E pacman -S --noconfirm perl-try-tiny
+checkpoint_14 {
+    retry_pacman "sudo -E pacman -S --noconfirm perl-try-tiny"
 }
 run_checkpoint 14 "sudo -E pacman -S --noconfirm perl-try-tiny" checkpoint_14
 
 checkpoint_15() {
-    sudo -E pacman -S --noconfirm perl-config-autoconf
+    retry_pacman "sudo -E pacman -S --noconfirm perl-config-autoconf"
 }
 run_checkpoint 15 "sudo -E pacman -S --noconfirm perl-config-autoconf" checkpoint_15
 
 checkpoint_16() {
-    sudo -E pacman -S --noconfirm perl-test-fatal
+    retry_pacman "sudo -E pacman -S --noconfirm perl-test-fatal"
 }
 run_checkpoint 16 "sudo -E pacman -S --noconfirm perl-test-fatal" checkpoint_16
 
 checkpoint_17() {
-    sudo -E pacman -S --noconfirm findutils
+    retry_pacman "sudo -E pacman -S --noconfirm findutils"
 }
 run_checkpoint 17 "sudo -E pacman -S --noconfirm findutils" checkpoint_17
 
 checkpoint_18() {
-    sudo -E pacman -S --noconfirm elfutils
+    retry_pacman "sudo -E pacman -S --noconfirm elfutils"
 }
 run_checkpoint 18 "sudo -E pacman -S elfutils" checkpoint_18
 
@@ -397,112 +445,108 @@ checkpoint_19() {
 }
 run_checkpoint 19 "build and install kernel + modules" checkpoint_19
 
-
 checkpoint_20() {
-    sudo -E pacman -S --noconfirm python python3 python-jinja
+    retry_pacman "sudo -E pacman -S --noconfirm python python3 python-jinja"
 }
 run_checkpoint 20 "sudo -E pacman -S python" checkpoint_20
 
-
 checkpoint_21() {
-    sudo -E pacman -S --noconfirm meson
+    retry_pacman "sudo -E pacman -S --noconfirm meson"
 }
 run_checkpoint 21 "sudo -E pacman -S meson" checkpoint_21
 
 checkpoint_22() {
-    sudo -E pacman -S --noconfirm libwebp
-    sudo -E pacman -S --noconfirm python-pillow
+    retry_pacman "sudo -E pacman -S --noconfirm libwebp python-pillow"
 }
 run_checkpoint 22 "sudo -E pacman -S libwebp python-pillow" checkpoint_22
 
 checkpoint_23() {
-    sudo -E pacman -S --noconfirm harfbuzz
+    retry_pacman "sudo -E pacman -S --noconfirm harfbuzz"
 }
 run_checkpoint 23 "sudo -E pacman -S harfbuzz" checkpoint_23
 
 checkpoint_24() {
-    sudo -E pacman -S --noconfirm glib2
+    retry_pacman "sudo -E pacman -S --noconfirm glib2"
 }
 run_checkpoint 24 "sudo -E pacman -S glib2" checkpoint_24
 
 checkpoint_25() {
-    sudo -E pacman -S --noconfirm pkgconf
+    retry_pacman "sudo -E pacman -S --noconfirm pkgconf"
 }
 run_checkpoint 25 "sudo -E pacman -S pkgconf" checkpoint_25
 
 checkpoint_26() {
-    yay -S --noconfirm gtest
+    retry_pacman "yay -S --noconfirm gtest"
 }
-run_checkpoint 26 "yay-S gtest" checkpoint_26
+run_checkpoint 26 "yay -S gtest" checkpoint_26
 
 checkpoint_28() {
-    sudo -E pacman -S --noconfirm re2c
+    retry_pacman "sudo -E pacman -S --noconfirm re2c"
 }
 run_checkpoint 28 "sudo -E pacman -S re2c" checkpoint_28
 
 checkpoint_29() {
-    sudo -E pacman -S --noconfirm ninja
+    retry_pacman "sudo -E pacman -S --noconfirm ninja"
 }
 run_checkpoint 29 "sudo -E pacman -S ninja" checkpoint_29
 
 checkpoint_30() {
-    sudo -E pacman -S --noconfirm docbook2x
+    retry_pacman "sudo -E pacman -S --noconfirm docbook2x"
 }
 run_checkpoint 30 "sudo -E pacman -S docbook2x" checkpoint_30
 
 checkpoint_31() {
-    sudo -E pacman -S --noconfirm docbook-xml docbook-xsl docbook-utils
+    retry_pacman "sudo -E pacman -S --noconfirm docbook-xml docbook-xsl docbook-utils"
 }
 run_checkpoint 31 "sudo -E pacman -S build-docbook-catalog" checkpoint_31
 
 checkpoint_32() {
-    sudo -E pacman -S --noconfirm gtk-doc
+    retry_pacman "sudo -E pacman -S --noconfirm gtk-doc"
 }
 run_checkpoint 32 "sudo -E pacman -S gtk-doc" checkpoint_32
 
 checkpoint_33() {
-    sudo -E pacman -S --noconfirm zlib
+    retry_pacman "sudo -E pacman -S --noconfirm zlib"
 }
 run_checkpoint 33 "sudo -E pacman -S zlib" checkpoint_33
 
 checkpoint_34() {
-    sudo -E pacman -S --noconfirm libunistring
+    retry_pacman "sudo -E pacman -S --noconfirm libunistring"
 }
 run_checkpoint 34 "sudo -E pacman -S libunistring" checkpoint_34
 
 checkpoint_35() {
-    sudo -E pacman -S --noconfirm file
+    retry_pacman "sudo -E pacman -S --noconfirm file"
 }
 run_checkpoint 35 "sudo -E pacman -S file" checkpoint_35
 
 checkpoint_36() {
-    sudo -E pacman -S --noconfirm extra-cmake-modules
+    retry_pacman "sudo -E pacman -S --noconfirm extra-cmake-modules"
 }
 run_checkpoint 36 "sudo -E pacman -S extra-cmake-modules" checkpoint_36
 
 checkpoint_37() {
-    sudo -E pacman -S --noconfirm perl-file-libmagic
+    retry_pacman "sudo -E pacman -S --noconfirm perl-file-libmagic"
 }
 run_checkpoint 37 "sudo -E pacman -S perl-file-libmagic" checkpoint_37
 
 checkpoint_38() {
-    sudo -E pacman -S --noconfirm libpsl
+    retry_pacman "sudo -E pacman -S --noconfirm libpsl"
 }
 run_checkpoint 38 "sudo -E pacman -S libpsl" checkpoint_38
 
 checkpoint_39() {
-    sudo -E pacman -S --noconfirm expat
+    retry_pacman "sudo -E pacman -S --noconfirm expat"
 }
 run_checkpoint 39 "sudo -E pacman -S expat" checkpoint_39
 
 checkpoint_40() {
-    sudo -E pacman -S --noconfirm duktape
+    retry_pacman "sudo -E pacman -S --noconfirm duktape"
 }
 run_checkpoint 40 "sudo -E pacman -S duktape" checkpoint_40
 
 checkpoint_41() {
-    sudo -E pacman -S --noconfirm brotli
-    
+    retry_pacman "sudo -E pacman -S --noconfirm brotli"
 }
 run_checkpoint 41 "sudo -E pacman -S brotli" checkpoint_41
 
@@ -512,173 +556,173 @@ checkpoint_42() {
 run_checkpoint 42 "install rustup" checkpoint_42
 
 checkpoint_43() {
-    sudo -E pacman -S --noconfirm gc
+    retry_pacman "sudo -E pacman -S --noconfirm gc"
 }
 run_checkpoint 43 "sudo -E pacman -S boehm-gc" checkpoint_43
 
 checkpoint_44() {
-    sudo -E pacman -S --noconfirm polkit
+    retry_pacman "sudo -E pacman -S --noconfirm polkit"
 }
 run_checkpoint 44 "sudo -E pacman -S polkit" checkpoint_44
 
 checkpoint_45() {
-    sudo -E pacman -S --noconfirm bubblewrap
+    retry_pacman "sudo -E pacman -S --noconfirm bubblewrap"
 }
 run_checkpoint 45 "sudo -E pacman -S bubblewrap" checkpoint_45
 
 checkpoint_46() {
-    sudo -E pacman -S --noconfirm libclc
+    retry_pacman "sudo -E pacman -S --noconfirm libclc"
 }
 run_checkpoint 46 "sudo -E pacman -S libclc" checkpoint_46
 
 checkpoint_47() {
-    sudo -E pacman -S --noconfirm xorg-drivers
+    retry_pacman "sudo -E pacman -S --noconfirm xorg-drivers"
 }
 run_checkpoint 47 "sudo -E pacman -S xorg-drivers" checkpoint_47
 
 checkpoint_48() {
-    sudo -E pacman -S --noconfirm xorg-server
+    retry_pacman "sudo -E pacman -S --noconfirm xorg-server"
 }
 run_checkpoint 48 "sudo -E pacman -S xorg-server" checkpoint_48
 
 checkpoint_49() {
-    sudo -E pacman -S --noconfirm xorg-apps
+    retry_pacman "sudo -E pacman -S --noconfirm xorg-apps"
 }
 run_checkpoint 49 "sudo -E pacman -S xorg-apps" checkpoint_49
 
 checkpoint_50() {
-    sudo -E pacman -S --noconfirm libx11
+    retry_pacman "sudo -E pacman -S --noconfirm libx11"
 }
 run_checkpoint 50 "sudo -E pacman -S libx11" checkpoint_50
 
 checkpoint_51() {
-    sudo -E pacman -S --noconfirm libxft
+    retry_pacman "sudo -E pacman -S --noconfirm libxft"
 }
 run_checkpoint 51 "sudo -E pacman -S libxft" checkpoint_51
 
 checkpoint_52() {
-    sudo -E pacman -S --noconfirm libxrender
+    retry_pacman "sudo -E pacman -S --noconfirm libxrender"
 }
 run_checkpoint 52 "sudo -E pacman -S libxrender" checkpoint_52
 
 checkpoint_53() {
-    sudo -E pacman -S --noconfirm libxrandr
+    retry_pacman "sudo -E pacman -S --noconfirm libxrandr"
 }
 run_checkpoint 53 "sudo -E pacman -S libxrandr" checkpoint_53
 
 checkpoint_54() {
-    sudo -E pacman -S --noconfirm libxcursor
+    retry_pacman "sudo -E pacman -S --noconfirm libxcursor"
 }
 run_checkpoint 54 "sudo -E pacman -S libxcursor" checkpoint_54
 
 checkpoint_55() {
-    sudo -E pacman -S --noconfirm libxi
+    retry_pacman "sudo -E pacman -S --noconfirm libxi"
 }
 run_checkpoint 55 "sudo -E pacman -S libxi" checkpoint_55
 
 checkpoint_56() {
-    sudo -E pacman -S --noconfirm libxinerama
+    retry_pacman "sudo -E pacman -S --noconfirm libxinerama"
 }
 run_checkpoint 56 "sudo -E pacman -S libxinerama" checkpoint_56
 
 checkpoint_57() {
-    sudo -E pacman -S --noconfirm pango
+    retry_pacman "sudo -E pacman -S --noconfirm pango"
 }
 run_checkpoint 57 "sudo -E pacman -S pango" checkpoint_57
 
 checkpoint_58() {
-    sudo -E pacman -S --noconfirm wayland
+    retry_pacman "sudo -E pacman -S --noconfirm wayland"
 }
 run_checkpoint 58 "sudo -E pacman -S wayland" checkpoint_58
 
 checkpoint_63() {
-    sudo -E pacman -S --noconfirm wayland-protocols
+    retry_pacman "sudo -E pacman -S --noconfirm wayland-protocols"
 }
 run_checkpoint 63 "pacman -S --noconfirm wayland-protocols" checkpoint_63
 
 checkpoint_64() {
-    sudo -E pacman -S --noconfirm xorg-xwayland
+    retry_pacman "sudo -E pacman -S --noconfirm xorg-xwayland"
 }
 run_checkpoint 64 "pacman -S --noconfirm xorg-xwayland" checkpoint_64
 
 checkpoint_65() {
-    sudo -E pacman -S --noconfirm libxkbcommon
+    retry_pacman "sudo -E pacman -S --noconfirm libxkbcommon"
 }
 run_checkpoint 65 "pacman -S --noconfirm libxkbcommon" checkpoint_65
 
 checkpoint_66() {
-    sudo -E pacman -S --noconfirm gtk4 gtk3
+    retry_pacman "sudo -E pacman -S --noconfirm gtk4 gtk3"
 }
 run_checkpoint 66 "pacman -S --noconfirm gtk4 gtk3" checkpoint_66
 
 checkpoint_67() {
-    sudo -E pacman -S --noconfirm libxfce4util
+    retry_pacman "sudo -E pacman -S --noconfirm libxfce4util"
 }
 run_checkpoint 67 "pacman -S --noconfirm libxfce4util" checkpoint_67
 
 checkpoint_68() {
-    sudo -E pacman -S --noconfirm xfconf
+    retry_pacman "sudo -E pacman -S --noconfirm xfconf"
 }
 run_checkpoint 68 "pacman -S --noconfirm xfconf" checkpoint_68
 
 checkpoint_69() {
-    sudo -E pacman -S --noconfirm xdg-desktop-portal
+    retry_pacman "sudo -E pacman -S --noconfirm xdg-desktop-portal"
 }
 run_checkpoint 69 "pacman -S --noconfirm xdg-desktop-portal" checkpoint_69
 
 checkpoint_70() {
-    sudo -E pacman -S --noconfirm xdg-desktop-portal-wlr
+    retry_pacman "sudo -E pacman -S --noconfirm xdg-desktop-portal-wlr"
 }
 run_checkpoint 70 "pacman -S --noconfirm xdg-desktop-portal-wlr" checkpoint_70
 
 checkpoint_71() {
-    sudo -E pacman -S --noconfirm mesa
+    retry_pacman "sudo -E pacman -S --noconfirm mesa"
 }
 run_checkpoint 71 "pacman -S --noconfirm mesa" checkpoint_71
 
 checkpoint_72() {
-    sudo -E pacman -S --noconfirm mesa-demos
+    retry_pacman "sudo -E pacman -S --noconfirm mesa-demos"
 }
 run_checkpoint 72 "pacman -S --noconfirm mesa-demos" checkpoint_72
 
 checkpoint_73() {
-    sudo -E pacman -S --noconfirm qt6-tools
+    retry_pacman "sudo -E pacman -S --noconfirm qt6-tools"
 }
 run_checkpoint 73 "pacman -S --noconfirm qt6-tools" checkpoint_73
 
 checkpoint_74() {
-    sudo -E pacman -S --noconfirm qt6-base
+    retry_pacman "sudo -E pacman -S --noconfirm qt6-base"
 }
 run_checkpoint 74 "pacman -S --noconfirm qt6-base" checkpoint_74
 
 checkpoint_75() {
-    sudo -E pacman -S --noconfirm qt6-wayland
+    retry_pacman "sudo -E pacman -S --noconfirm qt6-wayland"
 }
 run_checkpoint 75 "pacman -S --noconfirm qt6-wayland" checkpoint_75
 
 checkpoint_76() {
-    sudo -E pacman -S --noconfirm qt6-5compat
+    retry_pacman "sudo -E pacman -S --noconfirm qt6-5compat"
 }
 run_checkpoint 76 "pacman -S --noconfirm qt6-5compat" checkpoint_76
 
 checkpoint_77() {
-    sudo -E pacman -S --noconfirm cmake
+    retry_pacman "sudo -E pacman -S --noconfirm cmake"
 }
 run_checkpoint 77 "pacman -S --noconfirm cmake" checkpoint_77
 
 checkpoint_79() {
-    sudo -E pacman -S --noconfirm dbus
+    retry_pacman "sudo -E pacman -S --noconfirm dbus"
 }
 run_checkpoint 79 "pacman -S --noconfirm dbus" checkpoint_79
 
 checkpoint_80() {
-    sudo -E pacman -S --noconfirm at-spi2-core
+    retry_pacman "sudo -E pacman -S --noconfirm at-spi2-core"
 }
 run_checkpoint 80 "pacman -S --noconfirm at-spi2-core" checkpoint_80
 
 checkpoint_81() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -S --noconfirm at-spi2-atk
+        retry_pacman "sudo -E pacman -S --noconfirm at-spi2-atk"
     else
         echo "Skipping at-spi2-atk upgrade on $ARCH"
     fi
@@ -686,18 +730,18 @@ checkpoint_81() {
 run_checkpoint 81 "pacman -S --noconfirm at-spi2-atk" checkpoint_81
 
 checkpoint_82() {
-    sudo -E pacman -S --noconfirm fontconfig
+    retry_pacman "sudo -E pacman -S --noconfirm fontconfig"
 }
 run_checkpoint 82 "pacman -S --noconfirm fontconfig" checkpoint_82
 
 checkpoint_83() {
-    sudo -E pacman -S --noconfirm ttf-dejavu
+    retry_pacman "sudo -E pacman -S --noconfirm ttf-dejavu"
 }
 run_checkpoint 83 "pacman -S --noconfirm ttf-dejavu" checkpoint_83
 
 checkpoint_84() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        yay -S --noconfirm gtk-engines
+        retry_pacman "yay -S --noconfirm gtk-engines"
     else
         echo "Skipping gtk-engines on $ARCH"
     fi
@@ -705,83 +749,83 @@ checkpoint_84() {
 run_checkpoint 84 "yay -S --noconfirm gtk-engines" checkpoint_84
 
 checkpoint_86() {
-    sudo -E pacman -S --noconfirm python python-pip
+    retry_pacman "sudo -E pacman -S --noconfirm python python-pip"
 }
 run_checkpoint 86 "pacman -S --noconfirm python python-pip" checkpoint_86
 
 checkpoint_87() {
-    sudo -E pacman -S --noconfirm libnotify
+    retry_pacman "sudo -E pacman -S --noconfirm libnotify"
 }
 run_checkpoint 87 "pacman -S --noconfirm libnotify" checkpoint_87
 
 checkpoint_88() {
-    sudo -E pacman -S --noconfirm libdbusmenu-gtk3
+    retry_pacman "sudo -E pacman -S --noconfirm libdbusmenu-gtk3"
 }
 run_checkpoint 88 "pacman -S --noconfirm libdbusmenu-gtk3" checkpoint_88
 
 checkpoint_89() {
-    sudo -E pacman -S --noconfirm libsm
+    retry_pacman "sudo -E pacman -S --noconfirm libsm"
 }
 run_checkpoint 89 "pacman -S --noconfirm libsm" checkpoint_89
 
 checkpoint_90() {
-    sudo -E pacman -S --noconfirm libice
+    retry_pacman "sudo -E pacman -S --noconfirm libice"
 }
 run_checkpoint 90 "pacman -S --noconfirm libice" checkpoint_90
 
 checkpoint_91() {
-    sudo -E pacman -S --noconfirm libwnck3
+    retry_pacman "sudo -E pacman -S --noconfirm libwnck3"
 }
 run_checkpoint 91 "pacman -S --noconfirm libwnck3" checkpoint_91
 
 checkpoint_92() {
-    sudo pacman -S --noconfirm --overwrite '*' cmake
+    retry_pacman "sudo -E pacman -S --noconfirm --overwrite '*' cmake"
 }
 run_checkpoint 92 "pacman -S --noconfirm cmake" checkpoint_92
 
 checkpoint_94() {
-    sudo -E pacman -S --noconfirm exo
+    retry_pacman "sudo -E pacman -S --noconfirm exo"
 }
 run_checkpoint 94 "pacman -S --noconfirm exo" checkpoint_94
 
 checkpoint_95() {
-    sudo -E pacman -S --noconfirm tar
+    retry_pacman "sudo -E pacman -S --noconfirm tar"
 }
 run_checkpoint 95 "pacman -S --noconfirm tar" checkpoint_95
 
 checkpoint_96() {
-    sudo -E pacman -S --noconfirm xz
+    retry_pacman "sudo -E pacman -S --noconfirm xz"
 }
 run_checkpoint 96 "pacman -S --noconfirm xz" checkpoint_96
 
 checkpoint_97() {
-    sudo -E pacman -S --noconfirm gnutls
+    retry_pacman "sudo -E pacman -S --noconfirm gnutls"
 }
 run_checkpoint 97 "pacman -S --noconfirm gnutls" checkpoint_97
 
 checkpoint_98() {
-    sudo -E pacman -S --noconfirm glib-networking
+    retry_pacman "sudo -E pacman -S --noconfirm glib-networking"
 }
 run_checkpoint 98 "pacman -S --noconfirm glib-networking" checkpoint_98
 
 checkpoint_99() {
-    sudo -E pacman -S --noconfirm libseccomp
+    retry_pacman "sudo -E pacman -S --noconfirm libseccomp"
 }
 run_checkpoint 99 "sudo -E pacman -S --noconfirm libseccomp" checkpoint_99
 
 checkpoint_100() {
-    sudo -E pacman -S --noconfirm appstream-glib
+    retry_pacman "sudo -E pacman -S --noconfirm appstream-glib"
 }
 run_checkpoint 100 "sudo -E pacman -S --noconfirm appstream-glib" checkpoint_100
 
 checkpoint_101() {
-    sudo -E pacman -S --noconfirm gpgme
+    retry_pacman "sudo -E pacman -S --noconfirm gpgme"
 }
 run_checkpoint 101 "sudo -E pacman -S --noconfirm gpgme" checkpoint_101
 
 checkpoint_102() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -S --noconfirm ostree
+        retry_pacman "sudo -E pacman -S --noconfirm ostree"
     else
         echo "Skipping ostree on $ARCH"
     fi
@@ -789,67 +833,67 @@ checkpoint_102() {
 run_checkpoint 102 "sudo -E pacman -S --noconfirm ostree" checkpoint_102
 
 checkpoint_103() {
-    sudo -E pacman -S --noconfirm xdg-dbus-proxy
+    retry_pacman "sudo -E pacman -S --noconfirm xdg-dbus-proxy"
 }
 run_checkpoint 103 "sudo -E pacman -S --noconfirm xdg-dbus-proxy" checkpoint_103
 
 checkpoint_104() {
-    sudo -E pacman -S --noconfirm gdk-pixbuf2
+    retry_pacman "sudo -E pacman -S --noconfirm gdk-pixbuf2"
 }
 run_checkpoint 104 "sudo -E pacman -S --noconfirm gdk-pixbuf2" checkpoint_104
 
 checkpoint_105() {
-    sudo -E pacman -S --noconfirm fuse3
+    retry_pacman "sudo -E pacman -S --noconfirm fuse3"
 }
 run_checkpoint 105 "sudo -E pacman -S --noconfirm fuse3" checkpoint_105
 
 checkpoint_106() {
-    sudo -E pacman -S --noconfirm python-gobject
+    retry_pacman "sudo -E pacman -S --noconfirm python-gobject"
 }
 run_checkpoint 106 "sudo -E pacman -S --noconfirm python-gobject" checkpoint_106
 
 checkpoint_107() {
-    sudo -E pacman -S --noconfirm dconf
+    retry_pacman "sudo -E pacman -S --noconfirm dconf"
 }
 run_checkpoint 107 "sudo -E pacman -S --noconfirm dconf" checkpoint_107
 
 checkpoint_108() {
-    sudo -E pacman -S --noconfirm xdg-utils
+    retry_pacman "sudo -E pacman -S --noconfirm xdg-utils"
 }
 run_checkpoint 108 "sudo -E pacman -S --noconfirm xdg-utils" checkpoint_108
 
 checkpoint_109() {
-    sudo -E pacman -S --noconfirm xorg-xinit
+    retry_pacman "sudo -E pacman -S --noconfirm xorg-xinit"
 }
 run_checkpoint 109 "sudo -E pacman -S --noconfirm xinit" checkpoint_109
 
 checkpoint_110() {
-    sudo -E pacman -S --noconfirm xterm
+    retry_pacman "sudo -E pacman -S --noconfirm xterm"
 }
 run_checkpoint 110 "sudo -E pacman -S --noconfirm xterm" checkpoint_110
 
 checkpoint_111() {
-    sudo -E pacman -S --noconfirm xorg-twm
+    retry_pacman "sudo -E pacman -S --noconfirm xorg-twm"
 }
 run_checkpoint 111 "sudo -E pacman -S --noconfirm twm" checkpoint_111
 
 checkpoint_112() {
-    sudo -E pacman -S --noconfirm python-pillow fastfetch
+    retry_pacman "sudo -E pacman -S --noconfirm python-pillow fastfetch"
 }
 run_checkpoint 112 "sudo -E pacman -S --noconfirm python-pillow fastfetch" checkpoint_112
 
 checkpoint_113() {
-    sudo -E pacman -S --noconfirm chafa
+    retry_pacman "sudo -E pacman -S --noconfirm chafa"
 }
 run_checkpoint 113 "sudo -E pacman -S --noconfirm chafa" checkpoint_113
 
 checkpoint_114() {
-    sudo -E pacman -S --noconfirm doxygen
+    retry_pacman "sudo -E pacman -S --noconfirm doxygen"
 }
 run_checkpoint 114 "sudo -E pacman -S --noconfirm doxygen" checkpoint_114
 
 checkpoint_115() {
-    sudo -E pacman -S --noconfirm libclc egl-gbm
+    retry_pacman "sudo -E pacman -S --noconfirm libclc egl-gbm"
 }
 run_checkpoint 115 "sudo -E pacman -S --noconfirm libclc egl-gbm" checkpoint_115
 
@@ -867,7 +911,7 @@ checkpoint_116() {
 run_checkpoint 116 "Build Sommelier" checkpoint_116
 
 checkpoint_117() {
-    sudo -E pacman -S --noconfirm flatpak
+    retry_pacman "sudo -E pacman -S --noconfirm flatpak"
     #sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     sudo chown -R 1000:1000 ~/.local/share/flatpak
@@ -913,27 +957,27 @@ sudo chmod +x /bin/chard_flatpak
 run_checkpoint 117 "sudo -E pacman -S --noconfirm flatpak" checkpoint_117
 
 checkpoint_118() {
-    sudo -E pacman -S --noconfirm thunar
+    retry_pacman "sudo -E pacman -S --noconfirm thunar"
 }
 run_checkpoint 118 "sudo -E pacman -S --noconfirm thunar" checkpoint_118
 
 checkpoint_119() {
-    sudo -E pacman -S --noconfirm gvfs
+    retry_pacman "sudo -E pacman -S --noconfirm gvfs"
 }
 run_checkpoint 119 "sudo -E pacman -S --noconfirm gvfs" checkpoint_119
 
 checkpoint_120() {
-    sudo -E pacman -S --noconfirm xfce4
+    retry_pacman "sudo -E pacman -S --noconfirm xfce4"
 }
 run_checkpoint 120 "sudo -E pacman -S --noconfirm xfce4" checkpoint_120
 
 checkpoint_121() { 
-    sudo -E pacman -S --noconfirm pulseaudio
+    retry_pacman "sudo -E pacman -S --noconfirm pulseaudio"
 }
 run_checkpoint 121 "pulse audio" checkpoint_121
 
 checkpoint_122() {
-    sudo -E pacman -S --noconfirm libva
+    retry_pacman "sudo -E pacman -S --noconfirm libva"
 }
 run_checkpoint 122 "sudo -E pacman -S --noconfirm libva" checkpoint_122
 
@@ -953,7 +997,7 @@ checkpoint_123() {
 
     if detect_intel_gpu; then
         echo "[*] Installing intel-media-driver for Gen9+ Intel GPU"
-        sudo -E pacman -S --noconfirm libva-intel-driver intel-media-driver intel-media-sdk
+        retry_pacman "sudo -E pacman -S --noconfirm libva-intel-driver intel-media-driver intel-media-sdk"
     else
         echo "[*] Skipping Intel driver installation"
     fi
@@ -961,31 +1005,30 @@ checkpoint_123() {
 run_checkpoint 123 "sudo -E pacman -S --noconfirm intel-media-driver" checkpoint_123
 
 checkpoint_124() {
-    sudo -E pacman -S --noconfirm ffmpeg
-    sudo -E pacman -S --noconfirm gst-plugins-base
-    sudo -E pacman -S --noconfirm gst-plugins-good
-    sudo -E pacman -S --noconfirm gst-plugins-bad
-    sudo -E pacman -S --noconfirm gst-plugins-ugly
+    retry_pacman "sudo -E pacman -S --noconfirm ffmpeg"
+    retry_pacman "sudo -E pacman -S --noconfirm gst-plugins-base"
+    retry_pacman "sudo -E pacman -S --noconfirm gst-plugins-good"
+    retry_pacman "sudo -E pacman -S --noconfirm gst-plugins-bad"
+    retry_pacman "sudo -E pacman -S --noconfirm gst-plugins-ugly"
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -S --noconfirm lib32-gst-plugins-base
-        sudo -E pacman -S --noconfirm lib32-gst-plugins-good
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-gst-plugins-base"
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-gst-plugins-good"
     else
         echo "Skipping lib32-gst on $ARCH"
     fi
-    sudo -E pacman -S --noconfirm libao yt-dlp opus ffmpeg vlc
+    retry_pacman "sudo -E pacman -S --noconfirm libao yt-dlp opus vlc"
 }
 run_checkpoint 124 "sudo -E pacman -S --noconfirm yt-dlp + vlc" checkpoint_124
 
 checkpoint_125() {
-    sudo -E pacman -S --noconfirm vulkan-tools
+    retry_pacman "sudo -E pacman -S --noconfirm vulkan-tools"
 }
 run_checkpoint 125 "sudo -E pacman -S --noconfirm vulkan-tools" checkpoint_125
 
 checkpoint_126() {
-    sudo -E pacman -S --noconfirm p7zip arj lha lzop unrar unzip zip xarchiver
+    retry_pacman "sudo -E pacman -S --noconfirm p7zip arj lha lzop unrar unzip zip xarchiver"
 }
 run_checkpoint 126 "sudo -E pacman -S --noconfirm xarchiver + archivers" checkpoint_126
-
 #checkpoint_127() {
 #    sudo -E pacman -S --noconfirm gimp
 #}
@@ -1014,38 +1057,33 @@ run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 #run_checkpoint 130 "sudo -E pacman -S --noconfirm obs-studio" checkpoint_130
 
 checkpoint_131() {
-    sudo -E pacman -S --noconfirm ruby
+    retry_pacman "sudo -E pacman -S --noconfirm ruby"
 }
 run_checkpoint 131 "sudo -E pacman -S --noconfirm ruby" checkpoint_131
 
 checkpoint_132() {
-    sudo -E pacman -S --noconfirm gparted
-    sudo -E pacman -S --noconfirm exfatprogs
-    sudo -E pacman -S --noconfirm dosfstools
-    sudo -E pacman -S --noconfirm ntfs-3g 
-    sudo -E pacman -S --noconfirm mtools
+    retry_pacman "sudo -E pacman -S --noconfirm gparted"
+    retry_pacman "sudo -E pacman -S --noconfirm exfatprogs"
+    retry_pacman "sudo -E pacman -S --noconfirm dosfstools"
+    retry_pacman "sudo -E pacman -S --noconfirm ntfs-3g"
+    retry_pacman "sudo -E pacman -S --noconfirm mtools"
 }
 run_checkpoint 132 "sudo -E pacman -S --noconfirm gparted" checkpoint_132
 
-#checkpoint_133() {
-#    yay -S --noconfirm balena-etcher
-#}
-#run_checkpoint 133 "balena-etcher" checkpoint_133
-
 checkpoint_134() {
-    sudo -E pacman -S --noconfirm qemu-desktop
+    retry_pacman "sudo -E pacman -S --noconfirm qemu-desktop"
 }
 run_checkpoint 134 "sudo -E pacman -S --noconfirm qemu" checkpoint_134
 
 checkpoint_135() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -S --noconfirm lib32-libxtst
-        sudo -E pacman -S --noconfirm lib32-libxrandr
-        sudo -E pacman -S --noconfirm lib32-libxrender
-        sudo -E pacman -S --noconfirm lib32-libxi
-        sudo -E pacman -S --noconfirm lib32-gdk-pixbuf2
-        sudo -E pacman -S --noconfirm lib32-pulseaudio
-        yay -S --noconfirm lib32-gtk2
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-libxtst"
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-libxrandr"
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-libxrender"
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-libxi"
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-gdk-pixbuf2"
+        retry_pacman "sudo -E pacman -S --noconfirm lib32-pulseaudio"
+        retry_pacman "yay -S --noconfirm lib32-gtk2"
     else
         echo "Skipping lib32 audio on $ARCH"
     fi
@@ -1123,10 +1161,10 @@ checkpoint_137() {
 }
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
-        sudo -E pacman -S --needed --noconfirm lib32-libvdpau 2>/dev/null
-        yay -S --noconfirm lib32-gtk2 2>/dev/null
-        sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null
-        sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null
+        retry_pacman "sudo -E pacman -S --needed --noconfirm lib32-libvdpau 2>/dev/null"
+        retry_pacman "yay -S --noconfirm lib32-gtk2 2>/dev/null"
+        retry_pacman "sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null"
+        retry_pacman "sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null"
         cd ~/
         rm -rf bubblepatch 2>/dev/null
         git clone https://github.com/shadowed1/bubblepatch.git
@@ -1349,13 +1387,13 @@ GPU_VENDOR="$GPU_TYPE"
     case "$GPU_TYPE" in
         intel)
             echo "[+] Installing Intel Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null
-            sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers
-            sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 
-            sudo -E pacman -R --noconfirm vulkan-mesa-layers
-            sudo -E pacman -R --noconfirm lib32-vulkan-intel
-            sudo -E pacman -R --noconfirm vulkan-intel
-            sudo -E pacman -S --noconfirm vulkan-mesa-device-select    
+            retry_pacman "sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null"
+            retry_pacman "sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers"
+            retry_pacman "sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers" 
+            retry_pacman "sudo -E pacman -R --noconfirm vulkan-mesa-layers"
+            retry_pacman "sudo -E pacman -R --noconfirm lib32-vulkan-intel"
+            retry_pacman "sudo -E pacman -R --noconfirm vulkan-intel"
+            retry_pacman "sudo -E pacman -S --noconfirm vulkan-mesa-device-select"    
             rm -rf ~/intel_vulkan 2>/dev/null
             rm -rf ~/intel_vulkan_271.zip 2>/dev/null
             curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
@@ -1367,7 +1405,7 @@ GPU_VENDOR="$GPU_TYPE"
             ;;
         amd)
             echo "[+] Installing AMD Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null"
             ;;
 
         nvidia)
@@ -1378,22 +1416,22 @@ GPU_VENDOR="$GPU_TYPE"
             else
                 DRIVER="nvidia"
             fi
-            sudo -E pacman -S --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null"
             ;;
 
         mali|panfrost|mediatek|vivante|asahi)
             echo "[+] Installing Mesa ARM Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa mesa-utils 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa mesa-utils 2>/dev/null"
             ;;
 
         adreno)
             echo "[+] Installing Adreno Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa mesa-utils  2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa mesa-utils  2>/dev/null"
             ;;
 
         *)
             echo "[!] Unknown GPU type. Installing generic Vulkan support..."
-            sudo -E pacman -S --noconfirm mesa vulkan-icd-loaderc mesa-utils 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa vulkan-icd-loaderc mesa-utils 2>/dev/null"
             ;;
     esac
 }
@@ -1426,9 +1464,9 @@ checkpoint_139() {
         rm -rf ~/.config/pulse 2>/dev/null
         rm -rf ~/.pulse 2>/dev/null
         rm -rf ~/.cache/pulse 2>/dev/null
-        sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null
-        sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null
-        sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
+        retry_pacman "sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null"
+        retry_pacman "sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null"
+        retry_pacman "sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null"
         sudo rm -rf ~/.cache/bazel 2>/dev/null
         rm -rf ~/adhd 2>/dev/null
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
@@ -1474,7 +1512,7 @@ checkpoint_139() {
         sudo cp ~/adhd/bazel-bin/cras/src/alsa_plugin/libasound_module_pcm_cras.so /usr/lib/alsa-lib/
         sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib/
         sudo cp ~/adhd/bazel-bin/cras/src/libcras/libcras.so /usr/lib64/
-        yay -S --noconfirm cros-container-guest-tools-git 2>/dev/null
+        retry_pacman "yay -S --noconfirm cros-container-guest-tools-git 2>/dev/null"
         sudo mkdir -p /etc/pipewire/pipewire.conf.d
         cd ~/
         rm -rf ~/adhd
@@ -1497,7 +1535,7 @@ checkpoint_140() {
     if [ -e "$file" ]; then
         sudo mv "$file" "$file.disabled" 2>/dev/null
     fi
-    sudo pacman -Rdd --noconfirm xfce4-notifyd xfce4-power-manager
+    retry_pacman "sudo pacman -Rdd --noconfirm xfce4-notifyd xfce4-power-manager"
     PANEL_CFG="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml"
     if [[ -f "$PANEL_CFG" ]]; then
         sed -i 's/<property name="position-locked" type="bool" value="true"\/>/<property name="position-locked" type="bool" value="false"\/>/' "$PANEL_CFG"
@@ -1506,9 +1544,9 @@ checkpoint_140() {
 run_checkpoint 140 "Fix machine-id" checkpoint_140
 
 checkpoint_141() {
-yay -S --noconfirm prismlauncher
-sudo -E pacman -S --noconfirm gamemode
-sudo pacman -S --noconfirm flite
+retry_pacman "yay -S --noconfirm prismlauncher"
+retry_pacman "sudo -E pacman -S --noconfirm gamemode"
+retry_pacman "sudo -E pacman -S --noconfirm flite"
 sudo tee /bin/chard_prismlauncher >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
@@ -1526,7 +1564,7 @@ sudo chmod +x /bin/chard_prismlauncher
 run_checkpoint 141 "Prism Launcher" checkpoint_141
 
 checkpoint_142() {
-sudo -E pacman -S --noconfirm firefox
+retry_pacman "sudo -E pacman -S --noconfirm firefox"
 
 sudo tee "/bin/chard_firefox" >/dev/null <<'EOF'
 #!/bin/bash
@@ -1608,7 +1646,7 @@ if [[ -f "$XA" ]]; then
     rm "$XA"
 fi
 touch ~/.Xauthority 2>/dev/null
-sudo -E pacman -S --noconfirm gedit 2>/dev/null
+retry_pacman "sudo -E pacman -S --noconfirm gedit 2>/dev/null"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 mkdir -p ~/.config/gtk-3.0
 tee ~/.config/gtk-3.0/settings.ini >/dev/null <<'EOF'
@@ -1641,7 +1679,7 @@ ARCH="$(uname -m)"
 if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
     echo "Skipping Heroic install on ARM ($ARCH)"
 else
-    yay -S --noconfirm heroic-games-launcher-bin 2>/dev/null
+    retry_pacman "yay -S --noconfirm heroic-games-launcher-bin 2>/dev/null"
     sudo chown root:root /opt/Heroic/chrome-sandbox
     sudo chmod 4755 /opt/Heroic/chrome-sandbox
 fi
@@ -1649,19 +1687,19 @@ fi
 run_checkpoint 145 "Heroic" checkpoint_145
 
 checkpoint_146() {
-    yay -S --noconfirm kvantum 2>/dev/null
+    retry_pacman "yay -S --noconfirm kvantum 2>/dev/null"
     #sudo -E pacman -S --noconfirm dolphin 2>/dev/null
 }
 run_checkpoint 146 "kvantum" checkpoint_146
 
 checkpoint_147() {
-   sudo -E pacman -S --noconfirm pavucontrol 2>/dev/null
+   retry_pacman "sudo -E pacman -S --noconfirm pavucontrol 2>/dev/null"
    gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key "dummy-kde-wallet" default default never
 }
 run_checkpoint 147 "pavucontrol" checkpoint_147
 
 checkpoint_148() {
-   sudo -E pacman -S --noconfirm strace 2>/dev/null
+   retry_pacman "sudo -E pacman -S --noconfirm strace 2>/dev/null"
 }
 run_checkpoint 148 "pavucontrol" checkpoint_148
 
@@ -1689,22 +1727,22 @@ run_checkpoint 148 "pavucontrol" checkpoint_148
 
 # Day's Garcon
 checkpoint_152() {
-    yay -S --noconfirm inotify-tools
+    retry_pacman "yay -S --noconfirm inotify-tools"
 }
 run_checkpoint 152 "inotify-tools" checkpoint_152
 
 checkpoint_153() {
-    sudo -E pacman -S --noconfirm gwenview
+    retry_pacman "sudo -E pacman -S --noconfirm gwenview"
 }
 run_checkpoint 153 "gwenview" checkpoint_153
 
 checkpoint_154() {
-    sudo -E pacman -S --noconfirm handbrake
+    retry_pacman "sudo -E pacman -S --noconfirm handbrake"
 }
 run_checkpoint 154 "handbrake" checkpoint_154
 
 checkpoint_155() {
-    sudo pacman -S  --noconfirm --overwrite "/usr/include/*" linux-api-headers
+    retry_pacman "sudo pacman -S  --noconfirm --overwrite "/usr/include/*" linux-api-headers"
 }
 run_checkpoint 155 "linux-api-header fix" checkpoint_155
 
@@ -1725,7 +1763,7 @@ checkpoint_157() {
 run_checkpoint 157 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_157
 
 checkpoint_158() {
-    sudo -E pacman -S --noconfirm noto-fonts-emoji
+    retry_pacman "sudo -E pacman -S --noconfirm noto-fonts-emoji"
     fc-cache -f 2>/dev/null
 }
 run_checkpoint 158 "Emoji Support" checkpoint_157
