@@ -210,6 +210,7 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
 
             unset LD_PRELOAD
             sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null # Repeat
+            [ -z "$(ls -A "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null)" ] && sudo rm -rf "$CHARD_ROOT" 2>/dev/null
         echo "${CYAN}[+] Uninstalled - Exiting in 10 seconds...${RESET}"
         sleep 8
         unset LD_PRELOAD
