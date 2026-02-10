@@ -1067,8 +1067,9 @@ checkpoint_132() {
     retry_pacman "sudo -E pacman -S --noconfirm dosfstools"
     retry_pacman "sudo -E pacman -S --noconfirm ntfs-3g"
     retry_pacman "sudo -E pacman -S --noconfirm mtools"
+    retry_pacman "yay -S --noconfirm balena-etcher"
 }
-run_checkpoint 132 "sudo -E pacman -S --noconfirm gparted" checkpoint_132
+run_checkpoint 132 "sudo -E pacman -S --noconfirm gparted and balena etcher" checkpoint_132
 
 checkpoint_134() {
     retry_pacman "sudo -E pacman -S --noconfirm qemu-desktop"
