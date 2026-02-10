@@ -322,9 +322,11 @@ sudo setfacl -Rb /run/chrome 2>/dev/null
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 sudo rm -rf "$CHARD_ROOT" 2>/dev/null
-sleep 5
+sleep 2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
+sudo rm -rf "$CHARD_ROOT" 2>/dev/null # Repeat
+sleep 2
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo mkdir -p "$CHARD_ROOT/tmp"
