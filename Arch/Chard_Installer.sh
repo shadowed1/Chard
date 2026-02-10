@@ -1305,19 +1305,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         USER=\$CHARD_USER
                         HOME=/\$CHARD_HOME
                         source \$HOME/.bashrc 2>/dev/null
-                        export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-                        #pkill -u alarm 2>/dev/null || true
-                        
-                        if id -u 1000 &>/dev/null; then
-                            EXISTING_USER=$(id -un 1000)
-                            userdel -f "$EXISTING_USER"
-                        fi
-                        
-                        if /usr/sbin/getent group 1000 2>/dev/null; then
-                            EXISTING_GROUP=$(/usr/sbin/getent group 1000 | cut -d: -f1)
-                            groupdel -f "$EXISTING_GROUP"
-                        fi
-                        
+                        export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin                
                         userdel -f alarm 2>/dev/null
                         groupdel -f alarm 2>/dev/null
                         /usr/sbin/getent group 1000 >/dev/null    || groupadd -g 1000 chronos 2>/dev/null
