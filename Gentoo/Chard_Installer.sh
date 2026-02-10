@@ -299,7 +299,10 @@ sleep 0.2
 sudo setfacl -Rb /run/chrome 2>/dev/null
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
-sudo rm -rf "$CHARD_ROOT" 2>/dev/null
+
+sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null
+sleep 0.2
+[ -z "$(ls -A "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null)" ] && sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
  chard_unmount() {        
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
@@ -377,6 +380,11 @@ sudo rm -rf "$CHARD_ROOT" 2>/dev/null
         echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
         echo
 }
+
+chard_unmount
+sleep 1
+sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null
+[ -z "$(ls -A "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null)" ] && sudo rm -rf "$CHARD_ROOT" 2>/dev/null
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
