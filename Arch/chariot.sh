@@ -1739,7 +1739,7 @@ checkpoint_154() {
 run_checkpoint 154 "handbrake" checkpoint_154
 
 checkpoint_155() {
-    retry_pacman "sudo pacman -S  --noconfirm --overwrite "/usr/include/*" linux-api-headers"
+    sudo -E pacman -S  --noconfirm --overwrite "/usr/include/*" linux-api-headers
 }
 run_checkpoint 155 "linux-api-header fix" checkpoint_155
 
