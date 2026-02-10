@@ -1866,7 +1866,7 @@ if [ -x "/usr/local/bin/powercontrol" ]; then
 fi
                 
 source "$CHARD_ROOT/.chardrc"
-
+sudo mkdir -p $CHARD_ROOT/usr/local/bubblepatch/bin 2>/dev/null
 sudo tee $CHARD_ROOT/usr/local/bubblepatch/bin/uname >/dev/null <<'EOF'
 #!/bin/bash
 
