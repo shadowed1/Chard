@@ -296,7 +296,7 @@ retry_pacman() {
     local cmd="$@"
     
     while [ $retry_count -lt $max_retries ]; do
-        echo "${CYAN}Attempt $((retry_count + 1)) / $max_retries: Running pacman...${RESET}"
+        echo "${CYAN}Attempt $((retry_count + 1)) / $max_retries: ${RESET}"
         
         if eval "$cmd"; then
             echo "${GREEN}Package operation succeeded${RESET}"
