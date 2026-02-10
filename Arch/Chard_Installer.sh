@@ -1304,7 +1304,8 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         CHARD_HOME=\$(cat /.chard_home)
                         USER=\$CHARD_USER
                         HOME=/\$CHARD_HOME
-                        
+                        source \$HOME/.bashrc 2>/dev/null
+                        export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
                         pkill -u alarm 2>/dev/null || true
                         
                         if id -u 1000 &>/dev/null; then
@@ -1317,9 +1318,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                             groupdel -f "$EXISTING_GROUP"
                         fi
                         
-                        userdel -f alarm
-                        groupdel -f alarm
-                        getent group 1000 >/dev/null    || groupadd -g 1000 chronos
+                        userdel -f alarm 2>/dev/null
+                        groupdel -f alarm 2>/dev/null
+                        getent group 1000 >/dev/null    || groupadd -g 1000 chronos 2>/dev/null
                         getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
                         getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
                         getent group 20205 >/dev/null   || groupadd -g 20205 arc-keymintd 2>/dev/null
