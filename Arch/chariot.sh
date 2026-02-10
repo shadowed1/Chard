@@ -1441,13 +1441,13 @@ GPU_VENDOR="$GPU_TYPE"
     case "$GPU_TYPE" in
         intel)
             echo "[+] Installing Intel Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null
-            sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers 2>/dev/null
-            sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 2>/dev/null 
-            sudo -E pacman -R --noconfirm vulkan-mesa-layers 2>/dev/null
-            sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null
-            sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null
-            sudo -E pacman -S --noconfirm vulkan-mesa-device-select   
+            retry_pacman "sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null"
+            retry_pacman "sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers 2>/dev/null"
+            retry_pacman "sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 2>/dev/null"
+            retry_pacman "sudo -E pacman -R --noconfirm vulkan-mesa-layers 2>/dev/null"
+            retry_pacman "sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null"
+            retry_pacman "sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null"
+            sudo -E pacman -S --noconfirm vulkan-mesa-device-select 2>/dev/null
             rm -rf ~/intel_vulkan 2>/dev/null
             rm -rf ~/intel_vulkan_271.zip 2>/dev/null
             curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
@@ -1459,7 +1459,7 @@ GPU_VENDOR="$GPU_TYPE"
             ;;
         amd)
             echo "[+] Installing AMD Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null"
             ;;
 
         nvidia)
@@ -1470,22 +1470,22 @@ GPU_VENDOR="$GPU_TYPE"
             else
                 DRIVER="nvidia"
             fi
-            sudo -E pacman -S --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null"
             ;;
 
         mali|panfrost|mediatek|vivante|asahi)
             echo "[+] Installing Mesa ARM Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa mesa-utils 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa mesa-utils 2>/dev/null"
             ;;
 
         adreno)
             echo "[+] Installing Adreno Vulkan drivers..."
-            sudo -E pacman -S --noconfirm mesa mesa-utils  2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa mesa-utils  2>/dev/null"
             ;;
 
         *)
             echo "[!] Unknown GPU type. Installing generic Vulkan support..."
-            sudo -E pacman -S --noconfirm mesa vulkan-icd-loaderc mesa-utils 2>/dev/null
+            retry_pacman "sudo -E pacman -S --noconfirm mesa vulkan-icd-loaderc mesa-utils 2>/dev/null"
             ;;
     esac
 }
@@ -1494,12 +1494,12 @@ run_checkpoint 138 "vulkan" checkpoint_138
 checkpoint_139() {
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
     sudo -E pacman -R --noconfirm cros-container-guest-tools-git 2>/dev/null
-    sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null
+    retry_pacman "sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null"
     rm -rf ~/.config/pulse 2>/dev/null
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
-    sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null
-    sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
+    retry_pacman "sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null"
+    retry_pacman "sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null"
     sudo rm -rf ~/.cache/bazel 2>/dev/null
     cd ~/
     git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
@@ -1545,8 +1545,8 @@ checkpoint_139() {
         rm -rf ~/adhd 2>/dev/null
     elif [[ "$ARCH" == "aarch64" ]]; then
         sudo -E pacman -R --noconfirm pipewire-pulse 2>/dev/null
-        sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null
-        sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null
+        retry_pacman "sudo -E pacman -S --noconfirm pulseaudio 2>/dev/null"
+        retry_pacman "sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null"
         sudo rm -rf ~/.cache/bazel 2>/dev/null
         rm -rf ~/adhd 2>/dev/null
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-arm64"
