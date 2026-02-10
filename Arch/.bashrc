@@ -96,7 +96,6 @@ LIBS_TO_ADD=(
     "$LLVM_DIR/lib"
 )
 
-
 unique_join() {
     local IFS=':'
     local seen=()
@@ -121,6 +120,7 @@ export CLUTTER_BACKEND="wayland"
 export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
+
 ARCH="$(uname -m)"
 if [ "$ARCH" = "x86_64" ]; then
 export PULSE_SERVER=unix:/run/chrome/pulse/native
@@ -161,7 +161,6 @@ obs() {
     export OBS_GAMECAPTURE=1
     /usr/bin/obs "$@" &
 }
-
 
 # Chard Scale
 : "${CHARD_SCALE:=1.25}"
