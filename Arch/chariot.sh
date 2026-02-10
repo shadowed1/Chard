@@ -1062,7 +1062,8 @@ checkpoint_132() {
     retry_pacman "sudo -E pacman -S --noconfirm dosfstools"
     retry_pacman "sudo -E pacman -S --noconfirm ntfs-3g"
     retry_pacman "sudo -E pacman -S --noconfirm mtools"
-    retry_pacman "yay -S --noconfirm balena-etcher"
+    #retry_pacman "yay -S --noconfirm balena-etcher"
+    retry_pacman "yay -S --noconfirm isoimagewriter"
 }
 run_checkpoint 132 "sudo -E pacman -S --noconfirm gparted and balena etcher" checkpoint_132
 
