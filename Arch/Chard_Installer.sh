@@ -340,7 +340,7 @@ TARGET_FILE=""
 if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
-    echo "${RED}ChromeOS Version: $CHROME_MILESTONE"
+    echo "${RED}ChromeOS Version: ${BOLD}$CHROME_MILESTONE ${RESET}${RED}"
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
     sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
     sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
@@ -382,8 +382,8 @@ sudo tee "$CHARD_ROOT/.chard_user" >/dev/null <<EOF
 $CHARD_USER
 EOF
 
-echo "CHARD_HOME: $CHARD_ROOT/$CHARD_HOME"
-echo "CHARD_USER: $CHARD_USER"
+echo "CHARD_HOME: ${BOLD}$CHARD_ROOT/$CHARD_HOME ${RESET}${RED}"
+echo "CHARD_USER: ${BOLD}$CHARD_USER ${RESET}${RED}"
 
 FREE_SPACE_FILE="$CHARD_ROOT/.chard_free_space"
 STATEFUL_FREE_G=$(df -h /mnt/stateful_partition | awk 'NR==2 {print $4}' | sed 's/G//')
