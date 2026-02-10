@@ -1,4 +1,4 @@
-#!/bin/bash
+f#!/bin/bash
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -321,11 +321,11 @@ sleep 0.2
 sudo setfacl -Rb /run/chrome 2>/dev/null
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
-sudo rm -rf "$CHARD_ROOT" 2>/dev/null
+sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null
 sleep 2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
-sudo rm -rf "$CHARD_ROOT" 2>/dev/null # Repeat
+sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null # repeat
 sleep 2
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 sudo mkdir -p "$CHARD_ROOT/run/udev"
