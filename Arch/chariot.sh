@@ -56,7 +56,6 @@ detect_gpu_freq() {
     GPU_TYPE="unknown"
     
     # Intel Xe
-    # This might be culprit
     if [ -f /sys/class/drm/card0/gt_max_freq_mhz ]; then
         GPU_TYPE="intel"
         GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
