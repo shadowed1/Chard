@@ -288,7 +288,6 @@ cleanup_arch() {
     printf "y\nn\ny\nn\n" | yay -Sc
 }
 
-run_checkpoint 156 "Clear Cache" checkpoint_156
 retry_pacman() {
     local max_retries=10
     local retry_count=0
