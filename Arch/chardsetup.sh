@@ -118,3 +118,4 @@ pacman -Syu --noconfirm flex
 pacman -Syu --noconfirm bison
 pacman -Syu --noconfirm bc
 pacman -Syu --noconfirm sudo
+pacman -Fy --noconfirm
