@@ -109,8 +109,89 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
             
             unset LD_PRELOAD
             echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
-            sudo rm -rf "$CHARD_ROOT" 2>/dev/null
+            sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null
             unset LD_PRELOAD
+            sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
+                sleep 0.05
+                sudo umount -l "$CHARD_ROOT/etc/resolv.conv"   2>/dev/null || true
+                sleep 0.05
+                sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/tmp/usb_mount"                      2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+                sleep 0.2
+                sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/dri"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/chrome"                         2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/dbus"                           2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/etc/ssl"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/pts"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev/shm"                            2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/dev"                                2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+                sleep 0.2
+                $CHARD_ROOT/bin/chard_unmount
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/tmp/" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT/run/" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l -f "$CHARD_ROOT/$CHARD_HOME/bwrap"               2>/dev/null || true
+                sleep 0.2
+                sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
+                sleep 0.2
+                sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
+                sleep 1
+                sudo setfacl -Rb /run/chrome 2>/dev/null
             CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
             DEFAULT_BASHRC="$HOME/.bashrc"
             TARGET_FILE=""
@@ -128,7 +209,7 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
             fi
 
             unset LD_PRELOAD
-            
+            sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null # Repeat
         echo "${CYAN}[+] Uninstalled - Exiting in 10 seconds...${RESET}"
         sleep 8
         unset LD_PRELOAD
