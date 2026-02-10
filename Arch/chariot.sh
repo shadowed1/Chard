@@ -399,7 +399,7 @@ checkpoint_13() {
 }
 run_checkpoint 13 "sudo -E pacman -S --noconfirm perl-capture-tiny" checkpoint_13
 
-checkpoint_14 {
+checkpoint_14() {
     retry_pacman "sudo -E pacman -S --noconfirm perl-try-tiny"
 }
 run_checkpoint 14 "sudo -E pacman -S --noconfirm perl-try-tiny" checkpoint_14
