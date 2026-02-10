@@ -1747,7 +1747,7 @@ run_checkpoint 155 "linux-api-header fix" checkpoint_155
 #    printf "y\nn\n" | sudo pacman -Scc
 #    printf "y\nn\ny\nn\n" | yay -Sc
 #}
-run_checkpoint 156 "Clear Cache" checkpoint_156
+#run_checkpoint 156 "Clear Cache" checkpoint_156
 
 checkpoint_157() {
     sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
