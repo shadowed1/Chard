@@ -63,7 +63,7 @@ echo
 echo "${CYAN}${BOLD}- Chard README: ${RESET}"
 echo "${BLUE}- https://github.com/shadowed1/Chard/blob/main/README.md ${RESET}"
 echo "${MAGENTA}${BOLD}"
-echo "- Requires Developer Mode for ChromeOS users."
+echo "Please disable sleep during the install - Requires Developer Mode for ChromeOS users."
 echo "${RESET}"
 
 
