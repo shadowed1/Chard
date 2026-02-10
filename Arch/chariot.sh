@@ -46,14 +46,6 @@ show_progress() {
     echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
 }
 
-reset() {
-    rm /.chard_checkpoint
-    echo
-    echo "${RED}Chariot Progress Reset! ${RESET}"
-    echo
-    exit 0
-}
-
 if [[ "$1" == "reset" ]]; then
     reset
 fi
@@ -177,10 +169,15 @@ echo "${GREEN}Run: ${RESET}${BOLD}${RED}chariot reset ${RESET}${GREEN}to ${RESET
 echo
 
 CHECKPOINT_FILE="/.chard_checkpoint"
+CHECKPOINT_LOG="${CHECKPOINT_FILE}.log"
 
 if [[ -z "$CHECKPOINT_FILE" || "${CHECKPOINT_FILE:0:1}" != "/" ]]; then
     echo "${RED}FATAL: CHECKPOINT_FILE is not set correctly: '$CHECKPOINT_FILE'${RESET}"
-    exit 1
+    echo "${YELLOW}Removing and recreating checkpoint files...${RESET}"
+    sudo rm -f "$CHECKPOINT_FILE" 2>/dev/null
+    sudo rm -f "$CHECKPOINT_LOG" 2>/dev/null
+    CHECKPOINT_FILE="/.chard_checkpoint"
+    CHECKPOINT_LOG="${CHECKPOINT_FILE}.log"
 fi
 
 echo "$CHECKPOINT_FILE"
@@ -189,14 +186,28 @@ if [[ ! -e "$CHECKPOINT_FILE" ]]; then
     sudo bash -c "echo 0 > '$CHECKPOINT_FILE'" || { echo "${RED}Cannot create $CHECKPOINT_FILE${RESET}"; exit 1; }
 fi
 
+if [[ ! -e "$CHECKPOINT_LOG" ]]; then
+    sudo touch "$CHECKPOINT_LOG" || { echo "${RED}Cannot create $CHECKPOINT_LOG${RESET}"; exit 1; }
+fi
+
 CURRENT_CHECKPOINT=$(sudo cat "$CHECKPOINT_FILE" 2>/dev/null || echo "0")
 if ! [[ "$CURRENT_CHECKPOINT" =~ ^[0-9]+$ ]]; then
+    echo "${YELLOW}Invalid checkpoint value detected. Resetting to 0...${RESET}"
     CURRENT_CHECKPOINT=0
+    sudo bash -c "echo 0 > '$CHECKPOINT_FILE'"
+    sudo bash -c "> '$CHECKPOINT_LOG'"
 fi
 
 SINGLE_STEP=false
 REQUESTED_STEP=""
 CHECKPOINT_OVERRIDE=""
+REPAIR_MODE=false
+
+if [[ "$1" == "repair" ]]; then
+    REPAIR_MODE=true
+    echo "${BOLD}${MAGENTA}Repair mode: Re-running failed checkpoints${RESET}"
+    shift
+fi
 
 if [[ "$1" == "-s" ]]; then
     if [[ -z "$2" || ! "$2" =~ ^[0-9]+$ ]]; then
@@ -234,16 +245,47 @@ echo "Starting in 10 seconds..."
 sleep 8
 trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Exiting${RESET}"; exit 1' SIGINT
 
+checkpoint_was_successful() {
+    local step=$1
+    sudo grep -q "^${step} - success$" "$CHECKPOINT_LOG" 2>/dev/null
+    return $?
+}
+
+checkpoint_failed() {
+    local step=$1
+    sudo grep -q "^${step} - did not finish$" "$CHECKPOINT_LOG" 2>/dev/null
+    return $?
+}
+
+log_checkpoint() {
+    local step=$1
+    local status=$2
+    
+    sudo sed -i "/^${step} - /d" "$CHECKPOINT_LOG"
+    echo "${step} - ${status}" | sudo tee -a "$CHECKPOINT_LOG" >/dev/null
+}
+
 run_checkpoint() {
     local step=$1
     local desc=$2
     shift 2
 
+    if $REPAIR_MODE; then
+        if checkpoint_was_successful "$step"; then
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 157 ($desc) Previously Succeeded - Skipping ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+            echo
+            return 0
+        elif ! checkpoint_failed "$step"; then
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 157 ($desc) Not Previously Run - Skipping ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+            echo
+            return 0
+        fi
+    fi
+
     if (( CURRENT_CHECKPOINT < step )); then
         echo
         echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step / 157 ($desc) Starting ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}"
         echo
-
         "$@"
         local ret=$?
 
@@ -251,10 +293,12 @@ run_checkpoint() {
             echo
             echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step / 157 ($desc) DNF ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
             echo
+            log_checkpoint "$step" "did not finish"
             return $ret
         fi
 
         echo "$step" | sudo tee "$CHECKPOINT_FILE" >/dev/null
+        log_checkpoint "$step" "success"
         sync
         CURRENT_CHECKPOINT=$step
         echo
@@ -267,9 +311,20 @@ run_checkpoint() {
         fi
 
     else
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 157 ($desc) Completed ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+        if checkpoint_was_successful "$step"; then
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 157 ($desc) Previously Completed ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+        else
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 157 ($desc) Skipping ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+        fi
         echo
     fi
+}
+
+reset() {
+    echo "${YELLOW}Resetting checkpoint system...${RESET}"
+    echo "0" | sudo tee "$CHECKPOINT_FILE" >/dev/null
+    sudo bash -c "> '$CHECKPOINT_LOG'"
+    echo "${GREEN}Checkpoint system reset${RESET}"
 }
 
 cleanup_arch() {
@@ -304,7 +359,7 @@ retry_pacman() {
                 fi
                 
                 echo "${CYAN}Refreshing package database...${RESET}"
-                sudo -E pacman -Syy --noconfirm 2>/dev/null || true
+                sudo -E pacman -Syy --noconfirm 2>/dev/null
                 sudo -E pacman -Fy --noconfirm 2>/dev/null
             else
                 echo "${RED}$max_retries attempts failed. Skipping this package.${RESET}"
