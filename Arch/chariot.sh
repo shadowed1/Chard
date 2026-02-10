@@ -473,20 +473,23 @@ checkpoint_19() {
         if [ "$(uname -m)" = "aarch64" ]; then
             export ARCH=arm64
         fi
-
+        
+        NPROC=$(nproc)
+        if [ "$NPROC" -gt 1 ]; then
+            JOBS=$((NPROC - 1))
+        else
+            JOBS=1
+        fi
+        
         cd /usr/src/linux
-
         scripts/kconfig/merge_config.sh -m .config enable_features.cfg
         make olddefconfig
-
-        make -j"$(nproc)" tools/objtool
-        make -j"$(nproc)"
-
+        make -j"$JOBS" tools/objtool
+        make -j"$JOBS"
         make modules_install
         make INSTALL_PATH=/boot install
-
         make headers_install INSTALL_HDR_PATH=/usr/include/linux-headers-"$(uname -r)"
-
+        
         if [ "$(uname -m)" = "aarch64" ]; then
             export ARCH=aarch64
         fi
