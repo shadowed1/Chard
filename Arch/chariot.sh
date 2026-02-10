@@ -272,17 +272,6 @@ run_checkpoint() {
     fi
 }
 
-refresh_mirrors() {
-    echo "${CYAN}Attempting to refresh mirror list...${RESET}"
-    sudo -E pacman -Syy --noconfirm 2>&1 | tee -a "$LOG_FILE"
-    
-    if command -v reflector &> /dev/null; then
-        echo "${CYAN}Running reflector to find fastest mirrors...${RESET}"
-        sudo -E reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist 2>&1 | tee -a "$LOG_FILE"
-        sudo -E pacman -Syy --noconfirm 2>&1 | tee -a "$LOG_FILE"
-    fi
-}
-
 cleanup_arch() {
     printf "y\nn\n" | sudo pacman -Scc
     printf "y\nn\ny\nn\n" | yay -Sc
@@ -364,8 +353,7 @@ run_checkpoint 7 "sudo -E pacman -S --noconfirm openssl" checkpoint_7
 
 checkpoint_8() {
     retry_pacman "sudo -E pacman -S --noconfirm curl ca-certificates"
-    retry_pacman "sudo -E pacman -S --noconfirm reflector"
-    refresh_mirrors
+    # retry_pacman "sudo -E pacman -S --noconfirm reflector"
 }
 run_checkpoint 8 "sudo -E pacman -S --noconfirm curl" checkpoint_8
 
