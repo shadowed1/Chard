@@ -1309,16 +1309,16 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         
                         if id -u 1000 &>/dev/null; then
                             EXISTING_USER=$(id -un 1000)
-                            userdel -r "$EXISTING_USER"
+                            userdel -f "$EXISTING_USER"
                         fi
                         
                         if getent group 1000 &>/dev/null; then
                             EXISTING_GROUP=$(getent group 1000 | cut -d: -f1)
-                            groupdel "$EXISTING_GROUP"
+                            groupdel -f "$EXISTING_GROUP"
                         fi
                         
-                        userdel -r alarm
-                        groupdel alarm
+                        userdel -f alarm
+                        groupdel -f alarm
                         getent group 1000 >/dev/null    || groupadd -g 1000 chronos
                         getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
                         getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
