@@ -387,7 +387,7 @@ run_checkpoint 10 "sudo -E pacman -S --noconfirm coreutils" checkpoint_10
 checkpoint_11() {
     retry_pacman "sudo -E pacman -S --noconfirm fastfetch"
 }
-run_checkpoint 12 "sudo -E pacman -S --noconfirm fastfetch" checkpoint_12
+run_checkpoint 11 "sudo -E pacman -S --noconfirm fastfetch" checkpoint_11
 
 checkpoint_12() {
     retry_pacman "sudo -E pacman -S --noconfirm perl"
