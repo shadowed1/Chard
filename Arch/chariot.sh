@@ -234,9 +234,6 @@ echo "Starting in 10 seconds..."
 sleep 8
 trap 'echo; echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}Exiting${RESET}"; exit 1' SIGINT
 
-sudo -E pacman -Sy
-sudo -E pacman -Fy
-
 run_checkpoint() {
     local step=$1
     local desc=$2
