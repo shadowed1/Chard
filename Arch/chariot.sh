@@ -283,6 +283,12 @@ refresh_mirrors() {
     fi
 }
 
+cleanup_arch() {
+    printf "y\nn\n" | sudo pacman -Scc
+    printf "y\nn\ny\nn\n" | yay -Sc
+}
+
+run_checkpoint 156 "Clear Cache" checkpoint_156
 retry_pacman() {
     local max_retries=10
     local retry_count=0
@@ -1747,10 +1753,10 @@ checkpoint_155() {
 }
 run_checkpoint 155 "linux-api-header fix" checkpoint_155
 
-checkpoint_156() {
-    printf "y\nn\n" | sudo pacman -Scc
-    printf "y\nn\ny\nn\n" | yay -Sc
-}
+#checkpoint_156() {
+#    printf "y\nn\n" | sudo pacman -Scc
+#    printf "y\nn\ny\nn\n" | yay -Sc
+#}
 run_checkpoint 156 "Clear Cache" checkpoint_156
 
 checkpoint_157() {
@@ -1769,7 +1775,7 @@ checkpoint_158() {
 }
 run_checkpoint 158 "Emoji Support" checkpoint_157
 
-
+cleanup_arch
 
 sudo chown -R 1000:1000 ~/
 sudo setfacl -Rb /run/chrome 2>/dev/null
