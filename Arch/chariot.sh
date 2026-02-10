@@ -1447,7 +1447,7 @@ GPU_VENDOR="$GPU_TYPE"
             sudo -E pacman -R --noconfirm vulkan-mesa-layers 2>/dev/null
             sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null
             sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null
-            retry_pacman "sudo -E pacman -S --noconfirm vulkan-mesa-device-select"    
+            sudo -E pacman -S --noconfirm vulkan-mesa-device-select   
             rm -rf ~/intel_vulkan 2>/dev/null
             rm -rf ~/intel_vulkan_271.zip 2>/dev/null
             curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
@@ -1459,7 +1459,7 @@ GPU_VENDOR="$GPU_TYPE"
             ;;
         amd)
             echo "[+] Installing AMD Vulkan drivers..."
-            retry_pacman "sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null"
+            sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null
             ;;
 
         nvidia)
@@ -1470,22 +1470,22 @@ GPU_VENDOR="$GPU_TYPE"
             else
                 DRIVER="nvidia"
             fi
-            retry_pacman "sudo -E pacman -S --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null"
+            sudo -E pacman -S --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null
             ;;
 
         mali|panfrost|mediatek|vivante|asahi)
             echo "[+] Installing Mesa ARM Vulkan drivers..."
-            retry_pacman "sudo -E pacman -S --noconfirm mesa mesa-utils 2>/dev/null"
+            sudo -E pacman -S --noconfirm mesa mesa-utils 2>/dev/null
             ;;
 
         adreno)
             echo "[+] Installing Adreno Vulkan drivers..."
-            retry_pacman "sudo -E pacman -S --noconfirm mesa mesa-utils  2>/dev/null"
+            sudo -E pacman -S --noconfirm mesa mesa-utils  2>/dev/null
             ;;
 
         *)
             echo "[!] Unknown GPU type. Installing generic Vulkan support..."
-            retry_pacman "sudo -E pacman -S --noconfirm mesa vulkan-icd-loaderc mesa-utils 2>/dev/null"
+            sudo -E pacman -S --noconfirm mesa vulkan-icd-loaderc mesa-utils 2>/dev/null
             ;;
     esac
 }
