@@ -310,8 +310,8 @@ chard_unmount() {
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
-    sudo chown -R root:audio /dev/snd 2>/dev/null
-    sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+    #sudo chown -R root:audio /dev/snd 2>/dev/null
+    #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -355,8 +355,8 @@ chard_unmount() {
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
-    sudo chown -R root:audio /dev/snd 2>/dev/null
-    sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+    #sudo chown -R root:audio /dev/snd 2>/dev/null
+    #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
 }
 
 chard_uninstall() {
