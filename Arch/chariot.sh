@@ -1820,7 +1820,7 @@ checkpoint_158() {
     retry_pacman "yay -S --noconfirm unicode-emoji"
     fc-cache -f 2>/dev/null
 }
-run_checkpoint 158 "Emoji Support" checkpoint_157
+run_checkpoint 158 "Emoji Support" checkpoint_158
 
 cleanup_arch
 
