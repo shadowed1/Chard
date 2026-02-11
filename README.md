@@ -237,6 +237,7 @@
 - After installer finishes, open a new ChromeOS shell via crosh shell to continue.
 - Type in `cr` or `chard_root` to enter Chard Chroot with Sommelier support.
 - When running sudo, use `sudo -E` instead.
+- `flatpak override --user --nosocket=wayland app.Appname` Might be needed for flatpak.
 - When running GParted, make sure to unmount the device in ChromeOS first; otherwise you will need to re-run GParted command.
 - `startxfce4` launches a taskbar + app drawer. Right click -> panel -> panel preferences -> uncheck lock and click dots on the sides to drag around.
 - Create a launcher in items which then allows for custom app shortcuts.
