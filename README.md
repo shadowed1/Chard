@@ -334,7 +334,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.20: `Enabled Firefox audio. Significantly improved Flatpak support; including Sober support! Added uname spoofer, prerequisites for Chard Lite, removed bloatware from chariot, and added cleanup commands for Chard Arch post-install.` <br><br>
 - 0.21: `Added virtm. This enables virtual touchscreen mouse; enabling chromebooks with touchscreens to use emulated mouse capture. Run virtm prior to launching app.` <br><br>
 - 0.22: `Further improved Firefox support to enable GPU accleration with audio support. Added resolv.conf copy during reinstall - Thanks to DennyL for reporting. Added cleanup script for Chard Arch. Added pacman update cleaner and improved GPU detection script for chariot` <br><br>
-- 0.23: `Implemented Arch Linux package retry script for chariot. Fixed flatpak wrapper that causes /var/lib error. Fixed Arch Linux user id error for ARM64. Added safety guardrails to installer when removing Chard. Fixed audio loss issue on Arch for ARM64.` <br><br>
+- 0.23: `Implemented Arch Linux package retry script for chariot. Fixed flatpak wrapper that causes /var/lib error. Fixed Arch Linux user id error for ARM64. Added safety guardrails to installer when removing Chard. Fixed audio loss issue on Arch for ARM64. on ChromeOS 144.` <br><br>
 <br>
 
 ### Acknowledgements
