@@ -1791,7 +1791,11 @@ checkpoint_153() {
 run_checkpoint 153 "gwenview" checkpoint_153
 
 checkpoint_154() {
-    retry_pacman "sudo -E pacman -S --noconfirm handbrake"
+     if [[ "$ARCH" == "x86_64" ]]; then
+         retry_pacman "sudo -E pacman -S --noconfirm handbrake"
+    else
+        echo "Skipping Handbrake on $ARCH"
+    fi
 }
 run_checkpoint 154 "handbrake" checkpoint_154
 
