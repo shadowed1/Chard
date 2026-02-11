@@ -19,11 +19,14 @@
 
 <br>
 
+### Chard (*Chrome-Arch Development*) is a chroot (change root) that is Arch or Gentoo Linux.
+Safely lives inside an existing ChromeOS or Linux install without prepending its paths to the system.
+
 - Automated install will build everything needed with full hardware detection.
 - Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
-- Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS.
-- Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture emulation 
-- *Chard is in early development. Bug reports, suggestions, and ideas are greatly appreciated.*
+- Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS + pulse virtualization.
+- Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture emulation for first person games.  
+- *Chard is in development. Bug reports, suggestions, and ideas are greatly appreciated.*
   
 <br>
 
@@ -153,7 +156,7 @@
 
 <br>
 
-- *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 20-60 minutes.*
+- *Chromebooks with 8GB of RAM and 8+ threads can build Chard in 20-60 minutes. Gentoo install takes longer.*
 - *Lower end Chromebooks (2-4 thread Intel, Mediatek 500 series, and older) can expect much longer install times.*
 
 <br>
