@@ -775,6 +775,8 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                         sudo -E pacman -Sy
                         echo
                         sudo -E pacman -Fy
+                        echo
+                        flatpak --user update --appstream
                         sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
                         sudo chmod +x /bin/virtm 2>/dev/null
                         sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
