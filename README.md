@@ -205,30 +205,33 @@
 - `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
 - `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
 - `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
-- `chard reinstall` -- Option 1 for FAST reinstall. Option 2 is a FULL reinstall.
+
+
+*In ChromeOS:* 
+- `autoclicker <clicks-per-second>` -- Run an autoclicker script in ChromeOS!
+- `virtm` Start mouse capture/lock script. Allows spinning around, Ctrl - C to exit. 
+- `chard reinstall` -- Option 1 for fast reinstall (does not remove). Option 2 is a full reinstall (removes Chard).
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
-- `chard cat` -- List Portage catalogues.
 - `chard help` -- Show help examples.
 - `chard chariot` or `chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
-- `chariot 144` -- Resume on checkpoint 144 and continue until Chariot finishes.
-- `chariot -s 90` -- Resume on checkpoint 90 and exit after finishing that specific checkpoint.
 - `chardonnay` -- Launch Sommelier in ChromeOS natively (Gentoo only -- WIP).
 - `chard version` -- Check for updates.
-- `chard unmount` or `cu` -- Force chard to unmount as if exiting (a kill command in a sense)
-- `rainbow` -- Enable a rainbow shell
+- `chard unmount` or `cu` -- Force chard to unmount as if exiting (force kill).
+- `rainbow` -- Enable a rainbow shell in ChromeOS. (Fun extra)
+
+<br>
 
 *Inside Chard Root*
-- `SMRT` or `SMRT <1-100>` -- For compiling, auto allocate threads or specify in % how many threads you want to allocate
-- `virtm` Start mouse capture/lock script. Requires touchscreen.
-- `chard_scale display 2` -- Set display scaling to 2x scaling
+- `SMRT` or `SMRT <1-100>` -- For compiling - auto allocate threads or specify in % how many threads you want to allocate.
+- `chard_scale display 1.5` -- Set display scaling to 1.5X scaling.
 - `chard_scale cursor 64` -- Set cursor to 64px.
-
 - Refresh a new shell after adjusting scaling.
-
 - Prepend `wx` to an app to try wayland and x11 if unsure.
 - `chard_mount` to mount a USB device (ignores SSD and USB devices) for UNetBootin.
 - `chard_unmount` or `exit` to unmount the device.
 - Prepend `root` to an app that requires user namespace creation and it might work.
+- `chariot 144` -- Resume on checkpoint 144 and continue until Chariot finishes.
+- `chariot -s 90` -- Resume on checkpoint 90 and exit after finishing that specific checkpoint.
 - `exit` -- Leave Chard Root
 - `flatpak override --user --nosocket=wayland org.app.Appname` -- Example for Flatpak troubleshooting
 
@@ -294,6 +297,7 @@ sudo qemu-system-x86_64 \
 <br>
 
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
+- Mediatek GPU support is currently being worked on (hard!) - ARM64 is software rendering only for now.
 
 <br>
 
@@ -302,13 +306,13 @@ sudo qemu-system-x86_64 \
 
 <br>
 
-- Display Scaling support is still in the beginning stages of implementation.
-- Mediatek GPU support is currently being worked on (hard!)
+- Exiting Chard closes all running apps inside Chard, so please save your work before exiting!
+- When using OBS game capture, it is recommended (and required if using chard arch) to run everything in one shell. So run `obs & prismlauncher` for example. OBS is a difficult app to fully implement.
 
 <br>
 
-- Exiting Chard Root session while others are active is not supported. Exit them all at once!
-- When using OBS game capture, it is recommended (and required if using chard arch) to run everything in one shell. So run `obs & prismlauncher` for example.
+- LXC and VM support is not fully implemented.
+- Apps using Pulse Audio uses a different volume curve than apps using ALSA. 
 
 <br>
 
