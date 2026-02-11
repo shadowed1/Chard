@@ -1811,9 +1811,11 @@ run_checkpoint 155 "linux-api-header fix" checkpoint_155
 #run_checkpoint 156 "Clear Cache" checkpoint_156
 
 checkpoint_157() {
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c" -o "/tmp/virtm.c"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker.c" -o "/tmp/autoclicker.c"
     sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
     sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
-    sudo chmod +x /bin/autoclicker
+    sudo chmod +x /bin/autoclicker 2>/dev/null
     sudo chmod +x /bin/virtm 2>/dev/null
     sudo rm /tmp/virtm.c 2>/dev/null
     sudo rm /tmp/autoclicker.c 2>/dev/null
