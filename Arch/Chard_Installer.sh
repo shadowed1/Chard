@@ -791,8 +791,8 @@ KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
 KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
 echo "$KERNEL_VER" | sudo tee $CHARD_ROOT/.chard_kernel >/dev/null
 
-echo "Fetching kernel version: $KERNEL_VER"
-echo "URL: $KERNEL_URL"
+echo "${GREEN}Fetching kernel version: ${BOLD}$KERNEL_VER ${RESET}${GREEN}"
+echo "URL: ${BOLD}$KERNEL_URL ${RESET}${GREEN}"
 
 sudo mkdir -p "$BUILD_DIR"
 
@@ -806,9 +806,10 @@ fi
 sudo rm -rf "$KERNEL_BUILD"
 sudo tar -xf "$BUILD_DIR/$KERNEL_TAR" -C "$BUILD_DIR" \
     --checkpoint=.500 --checkpoint-action=echo="   extracted %u files"
-
-echo "${RESET}${CYAN}[+] Installing Linux headers into Chard Root..."
-
+    
+echo
+echo "${RESET}${CYAN}${BOLD}[+] Installing Linux headers into Chard Root... ${RESET}${CYAN}"
+echo
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
     sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
