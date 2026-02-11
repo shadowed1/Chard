@@ -42,7 +42,7 @@ set_display_scaling() {
         update_env_file "QT_AUTO_SCREEN_SCALE_FACTOR" "1"
         update_env_file "ELECTRON_FORCE_DEVICE_SCALE_FACTOR" "$ELECTRON_FORCE_DEVICE_SCALE_FACTOR"
         update_env_file "_JAVA_OPTIONS" "$_JAVA_OPTIONS"
-
+        source "$HOME/.bashrc" 2>/dev/null
         echo "${GREEN}Display scaling set to $CHARD_SCALE .${RESET}" >&2
     else
         echo "${RED}Error: DISPLAY_SCALING must be a number between 0.25 and 4.0${RESET}" >&2
