@@ -484,8 +484,8 @@ case "$cmd" in
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
 				sudo chmod +x /bin/powercontrol-gui 2>/dev/null
-                sudo chown -R 1000:audio /dev/snd 2>/dev/null
-                sudo chown -R 1000:1000 /dev/snd/by-path 2>/dev/null
+                #sudo chown -R 1000:audio /dev/snd 2>/dev/null
+                #sudo chown -R 1000:1000 /dev/snd/by-path 2>/dev/null
                 sudo mkdir -p /run/chrome/pulse 2>/dev/null
                 sudo chown 1000:1000 /run/chrome/pulse 2>/dev/null
                 sudo chown -R 1000:1000 /run/chrome/dconf 2>/dev/null
@@ -652,12 +652,6 @@ case "$cmd" in
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
-                
-        if [ -f "/home/chronos/user/.bashrc" ]; then
-            sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
-        else
-            sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
-        fi
         
         sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
