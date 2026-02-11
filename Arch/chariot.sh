@@ -1442,11 +1442,11 @@ GPU_VENDOR="$GPU_TYPE"
         intel)
             echo "[+] Installing Intel Vulkan drivers..."
             retry_pacman "sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel mesa-utils 2>/dev/null"
-            retry_pacman "sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers 2>/dev/null"
-            retry_pacman "sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 2>/dev/null"
-            retry_pacman "sudo -E pacman -R --noconfirm vulkan-mesa-layers 2>/dev/null"
-            retry_pacman "sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null"
-            retry_pacman "sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null"
+            sudo -E pacman -R --noconfirm lib32-vulkan-mesa-implicit-layers 2>/dev/null
+            sudo -E pacman -R --noconfirm vulkan-mesa-implicit-layers 2>/dev/null
+            sudo -E pacman -R --noconfirm vulkan-mesa-layers 2>/dev/null
+            sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null
+            sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null
             sudo -E pacman -S --noconfirm vulkan-mesa-device-select 2>/dev/null
             rm -rf ~/intel_vulkan 2>/dev/null
             rm -rf ~/intel_vulkan_271.zip 2>/dev/null
