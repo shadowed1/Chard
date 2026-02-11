@@ -19,9 +19,10 @@
 
 <br>
 
-- Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
-- This is either an Arch or Gentoo Stage3 chroot that builds an independent Linux environment in a semi-sandboxed environment.
 - Automated install will build everything needed with full hardware detection.
+- Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
+- Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS.
+- Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture emulation 
 - *Chard is in early development. Bug reports, suggestions, and ideas are greatly appreciated.*
   
 <br>
@@ -229,6 +230,7 @@
 - `chard_unmount` or `exit` to unmount the device.
 - Prepend `root` to an app that requires user namespace creation and it might work.
 - `exit` -- Leave Chard Root
+- `flatpak override --user --nosocket=wayland org.app.Appname` -- Example for Flatpak troubleshooting
 
 <br>
 
