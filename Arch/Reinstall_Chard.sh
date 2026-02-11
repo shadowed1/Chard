@@ -527,7 +527,7 @@ sudo -u $CHARD_USER \
       EGL_PLATFORM=wayland \
       GDK_SCALE="${GDK_SCALE:-1.25}" \
       XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-  /usr/bin/flatpak "$@"
+  /usr/bin/flatpak --user "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
     sudo chmod +x "$CHARD_ROOT/bin/chard_flatpak"
