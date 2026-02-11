@@ -196,6 +196,7 @@ alias prismlauncher='chard_prismlauncher'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
 alias gparted='sudo -E gparted'
+alias isoimagewriter='QT_QPA_PLATFORM=xcb isoimagewriter'
 
 alias ls='ls --color=auto'
 #dbus-daemon --system --fork 2>/dev/null
