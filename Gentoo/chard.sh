@@ -58,8 +58,8 @@ cleanup_chroot() {
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
-        sudo chown -R root:audio /dev/snd 2>/dev/null
-        sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+        #sudo chown -R root:audio /dev/snd 2>/dev/null
+        #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -100,8 +100,8 @@ cleanup_chroot() {
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
-        sudo chown -R root:audio /dev/snd 2>/dev/null
-        sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+        #sudo chown -R root:audio /dev/snd 2>/dev/null
+        #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
 }
 
 trap cleanup_chroot EXIT INT TERM
@@ -695,8 +695,8 @@ case "$cmd" in
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
-                sudo chown -R 1000:audio /dev/snd
-                sudo chown -R 1000:1000 /dev/snd/by-path
+                #sudo chown -R 1000:audio /dev/snd
+                #sudo chown -R 1000:1000 /dev/snd/by-path
                 sudo mkdir -p /run/chrome/pulse
                 sudo chown 1000:1000 /run/chrome/pulse 2>/dev/null
                 sudo chown -R 1000:1000 /run/chrome/dconf 2>/dev/null
@@ -715,8 +715,8 @@ case "$cmd" in
             killall -9 pulseaudio 2>/dev/null
             killall -9 chardwire 2>/dev/null
             killall -9 powercontrol-gui 2>/dev/null
-            sudo chown -R root:audio /dev/snd 2>/dev/null
-            sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+            #sudo chown -R root:audio /dev/snd 2>/dev/null
+            #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             setfacl -Rb /root 2>/dev/null
             umount -l /dev/zram0   2>/dev/null || true
             umount -l /run/chrome  2>/dev/null || true
