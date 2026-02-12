@@ -234,6 +234,8 @@ alias virtm='sudo -E virtm'
 
 command -v chard_refresh >/dev/null && chard_refresh
 
+export EDITOR=gedit
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
