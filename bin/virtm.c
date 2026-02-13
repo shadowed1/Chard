@@ -411,7 +411,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
-    DBG("Trackpad grabbed: %s\n\n", trackpad_device);
+  //  DBG("Trackpad grabbed: %s\n\n", trackpad_device);
     
     if (create_virtual_touchscreen() < 0) {
         ioctl(fd_trackpad, EVIOCGRAB, 0);
@@ -422,8 +422,9 @@ int main(int argc, char *argv[]) {
     touch_x = ts_x_max / 2.0f;
     touch_y = ts_y_max / 2.0f;
     
+    DBG("\n");
     DBG("Ctrl+C to exit.\n");
-    
+    DBG("\n");
     struct input_event ev;
     
     while (1) {
