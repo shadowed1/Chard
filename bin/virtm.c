@@ -72,7 +72,7 @@ int detect_touchscreen_range(const char *ts_device) {
     DBG("TOUCHSCREEN RANGE DETECTED:\n");
     DBG("  X: 0 to %d\n", ts_x_max);
     DBG("  Y: 0 to %d\n", ts_y_max);
-    
+    DBG("\n");
     return 0;
 }
 
@@ -117,6 +117,7 @@ char* find_touchscreen_device() {
             }
             
             DBG("\nFOUND TOUCHSCREEN: %s (%s)\n", device_path, name);
+            DBG("\n");
             closedir(dir);
             return strdup(device_path);
         }
@@ -166,6 +167,7 @@ char* find_trackpad_device() {
             }
             
             DBG("\nFOUND TRACKPAD: %s (%s)\n", device_path, name);
+            DBG("\n");
             closedir(dir);
             return strdup(device_path);
         }
@@ -237,7 +239,7 @@ void send_touch_position(int x, int y, int touching) {
         send_syn();
         
         touch_active = 1;
-        DBG("TOUCH DOWN at (%d, %d)\n", x, y);
+       // DBG("TOUCH DOWN at (%d, %d)\n", x, y);
         
     } else if (touching && was_touching) {
         send_event(EV_ABS, ABS_MT_POSITION_X, x);
@@ -253,7 +255,7 @@ void send_touch_position(int x, int y, int touching) {
         send_syn();
         
         touch_active = 0;
-        DBG("TOUCH UP\n");
+        //DBG("TOUCH UP\n");
     }
     
     was_touching = touching;
@@ -357,6 +359,7 @@ int create_virtual_touchscreen() {
         return -1;
     }
     
+    DBG("\n");
     DBG("VIRTUAL TOUCHSCREEN MOUSE CREATED\n");
     DBG("  Range: %d x %d\n", ts_x_max, ts_y_max);
     
