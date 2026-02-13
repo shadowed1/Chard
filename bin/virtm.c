@@ -38,9 +38,7 @@ int touch_active = 0;
 #define DBG(...) do { fprintf(stderr, __VA_ARGS__); fflush(stderr); } while (0)
 
 void cleanup(int signum) {
-    DBG("\n═══════════════════════════════════════════\n");
     DBG("CLEANUP: releasing devices\n");
-    DBG("═══════════════════════════════════════════\n");
     if (fd_trackpad >= 0) {
         ioctl(fd_trackpad, EVIOCGRAB, 0);
         close(fd_trackpad);
@@ -71,11 +69,9 @@ int detect_touchscreen_range(const char *ts_device) {
     
     close(fd);
     
-    DBG("═══════════════════════════════════════════\n");
     DBG("TOUCHSCREEN RANGE DETECTED:\n");
     DBG("  X: 0 to %d\n", ts_x_max);
     DBG("  Y: 0 to %d\n", ts_y_max);
-    DBG("═══════════════════════════════════════════\n");
     
     return 0;
 }
@@ -93,9 +89,7 @@ char* find_touchscreen_device() {
     FILE *fp;
     char line[256];
     
-    DBG("═══════════════════════════════════════════\n");
-    DBG("Scanning for touchscreen device (udevadm)...\n");
-    DBG("═══════════════════════════════════════════\n");
+    DBG("Scanning for touchscreen device... \n");
     
     while ((entry = readdir(dir)) != NULL) {
         if (strncmp(entry->d_name, "event", 5) != 0) continue;
@@ -146,9 +140,7 @@ char* find_trackpad_device() {
     FILE *fp;
     char line[256];
     
-    DBG("═══════════════════════════════════════════\n");
-    DBG("Scanning for trackpad device (udevadm)...\n");
-    DBG("═══════════════════════════════════════════\n");
+    DBG("Scanning for trackpad device...\n");
     
     while ((entry = readdir(dir)) != NULL) {
         if (strncmp(entry->d_name, "event", 5) != 0) continue;
@@ -202,11 +194,9 @@ int detect_trackpad_bounds(int fd) {
     tp_y_min = abs_y.minimum;
     tp_y_max = abs_y.maximum;
     
-    DBG("═══════════════════════════════════════════\n");
     DBG("TRACKPAD BOUNDS:\n");
     DBG("  X: %d to %d\n", tp_x_min, tp_x_max);
     DBG("  Y: %d to %d\n", tp_y_min, tp_y_max);
-    DBG("═══════════════════════════════════════════\n");
     
     return 0;
 }
@@ -272,7 +262,7 @@ void send_touch_position(int x, int y, int touching) {
 int create_virtual_touchscreen() {
     fd_uinput = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
     if (fd_uinput < 0) {
-        perror("Failed to open /dev/uinput");
+        perror("Failed to open /dev/uinput, run in ChromeOS directly with sudo.");
         return -1;
     }
     
@@ -367,10 +357,8 @@ int create_virtual_touchscreen() {
         return -1;
     }
     
-    DBG("═══════════════════════════════════════════\n");
     DBG("VIRTUAL TOUCHSCREEN MOUSE CREATED\n");
     DBG("  Range: %d x %d\n", ts_x_max, ts_y_max);
-    DBG("═══════════════════════════════════════════\n");
     
     return 0;
 }
@@ -386,11 +374,9 @@ int main(int argc, char *argv[]) {
     
     signal(SIGINT, cleanup);
     signal(SIGTERM, cleanup);
-    
-    DBG("═══════════════════════════════════════════\n");
+
     DBG("VIRTM - Virtual Touchscreen Mouse\n");
     DBG("Sensitivity: %.2f | Accel: %.2f | Friction: %.2f\n", sensitivity, accel, friction);
-    DBG("═══════════════════════════════════════════\n\n");
     
     if (!touchscreen_device) {
         touchscreen_device = find_touchscreen_device();
@@ -402,7 +388,7 @@ int main(int argc, char *argv[]) {
         if (!trackpad_device) {
             DBG("\nUsage: %s [trackpad] [touchscreen] [sensitivity] [accel] [friction]\n", argv[0]);
             DBG("Example: %s /dev/input/event4 /dev/input/event5 0.4 0.25 0.92\n", argv[0]);
-            DBG("Or just: sudo %s (auto-detect everything)\n", argv[0]);
+            DBG("Run in Chard with sudo %s \n", argv[0]);
             DBG("\nDefaults: sensitivity=0.4, accel=0.25, friction=0.92\n");
             return 1;
         }
@@ -436,9 +422,7 @@ int main(int argc, char *argv[]) {
     touch_x = ts_x_max / 2.0f;
     touch_y = ts_y_max / 2.0f;
     
-    DBG("═══════════════════════════════════════════\n");
     DBG("Ctrl+C to exit.\n");
-    DBG("═══════════════════════════════════════════\n\n");
     
     struct input_event ev;
     
