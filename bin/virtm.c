@@ -435,10 +435,10 @@ int main(int argc, char *argv[]) {
                 finger_down = 0;
                 last_mt_x = -1;
                 last_mt_y = -1;
-                DBG("FINGER UP\n");
+               // DBG("FINGER UP\n");
             } else {
                 finger_down = 1;
-                DBG("FINGER DOWN (id=%d)\n", ev.value);
+               // DBG("FINGER DOWN (id=%d)\n", ev.value);
             }
         }
         
@@ -477,7 +477,7 @@ int main(int argc, char *argv[]) {
                 if (touch_y < 0) touch_y += ts_y_max;
                 if (touch_y > ts_y_max) touch_y -= ts_y_max;
                 
-                DBG("vel=(%.2f,%.2f) pos=(%.2f,%.2f)\n", vel_x, vel_y, touch_x, touch_y);
+                // DBG("vel=(%.2f,%.2f) pos=(%.2f,%.2f)\n", vel_x, vel_y, touch_x, touch_y);
             }
             
             send_touch_position((int)(touch_x + 0.5f), (int)(touch_y + 0.5f), finger_down);
