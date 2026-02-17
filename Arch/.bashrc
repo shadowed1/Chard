@@ -232,6 +232,9 @@ alias powercontrol-gui='sudo -E powercontrol-gui'
 # virtm
 alias virtm='sudo -E virtm'
 
+# KDE Plasma
+alias plasmashell='/bin/chard_plasma'
+
 command -v chard_refresh >/dev/null && chard_refresh
 
 export EDITOR=gedit
