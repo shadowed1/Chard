@@ -530,7 +530,6 @@ sudo -u $CHARD_USER \
   /usr/bin/flatpak --user "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
-    sudo chmod +x "$CHARD_ROOT/bin/chard_flatpak"
 
 sudo chmod +x "$CHARD_ROOT/bin/chard_flatpak"
 
@@ -620,6 +619,44 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
 EOF
 
 sudo chmod +x "$CHARD_ROOT/bin/chard_thunderbird"
+
+sudo tee "$CHARD_ROOT/bin/chard_plasma" >/dev/null <<'EOF'
+#!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export QT_QPA_PLATFORM=xcb
+RUNTIME_DIR="/run/chrome"
+xhost +SI:localuser:$USER
+ORIG_MODE=$(stat -c '%a' "$RUNTIME_DIR")
+ORIG_OWNER=$(stat -c '%u:%g' "$RUNTIME_DIR")
+sudo chown "$USER:$USER" "$RUNTIME_DIR"
+sudo chmod 700 "$RUNTIME_DIR"
+export XDG_RUNTIME_DIR="$RUNTIME_DIR"
+
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    eval $(dbus-launch --sh-syntax --exit-with-session)
+fi
+
+SCREEN_RES=$(xdpyinfo | awk '/dimensions/{print $2}' | head -n1)
+SCREEN_W=$(echo $SCREEN_RES | cut -dx -f1)
+SCREEN_H=$(echo $SCREEN_RES | cut -dx -f2)
+kwin_wayland --x11-display "$DISPLAY" --width "$SCREEN_W" --height "$SCREEN_H" &
+KWIN_PID=$!
+sleep 2
+WAYLAND_SOCKET=$(ls "$RUNTIME_DIR"/wayland-* 2>/dev/null | grep -v '\.lock' | sort | tail -n1)
+export WAYLAND_DISPLAY=$(basename "$WAYLAND_SOCKET")
+plasmashell &
+PLASMA_PID=$!
+wait $PLASMA_PID
+kill $KWIN_PID 2>/dev/null
+sudo chown "$ORIG_OWNER" "$RUNTIME_DIR"
+sudo chmod "$ORIG_MODE" "$RUNTIME_DIR"
+EOF
+
+sudo chmod +x "$CHARD_ROOT/bin/chard_plasma"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
         CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
