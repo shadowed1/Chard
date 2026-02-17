@@ -418,6 +418,8 @@ case "$cmd" in
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
+		killall -9 plasmashell 2>/dev/null
+		killall -9 obs 2>/dev/null
 		sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
