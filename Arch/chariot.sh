@@ -1106,9 +1106,9 @@ checkpoint_124() {
     else
         echo "Skipping lib32-gst on $ARCH"
     fi
-    retry_pacman "sudo -E pacman -S --noconfirm libao yt-dlp opus vlc"
+    retry_pacman "sudo -E pacman -S --noconfirm libao yt-dlp opus vlc audacity"
 }
-run_checkpoint 124 "sudo -E pacman -S --noconfirm yt-dlp + vlc" checkpoint_124
+run_checkpoint 124 "sudo -E pacman -S --noconfirm yt-dlp + vlc + audacity" checkpoint_124
 
 checkpoint_125() {
     retry_pacman "sudo -E pacman -S --noconfirm vulkan-tools"
