@@ -197,6 +197,7 @@ alias cs='chard_sommelier'
 alias smrt='SMRT'
 alias gparted='sudo -E gparted'
 alias isoimagewriter='QT_QPA_PLATFORM=xcb isoimagewriter'
+alias kdenlive='QT_QPA_PLATFORM=xcb kdenlive'
 
 alias ls='ls --color=auto'
 #dbus-daemon --system --fork 2>/dev/null
