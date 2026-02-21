@@ -287,18 +287,6 @@ sudo qemu-system-x86_64 \
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
-*To Fix Steam Window not rendering:*
-
-<p align="left">
-  <img src="https://i.imgur.com/DuDosO8.png" alt="logo" width="500" />
-</p>
-
-<p align="left">
-  <img src="https://i.imgur.com/Hm2R0Es.png" alt="logo" width="500" />
-</p>
-
-<br>
-
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
 - Mediatek GPU support is currently being worked on (hard!) - ARM64 is software rendering only for now.
 
@@ -310,12 +298,14 @@ sudo qemu-system-x86_64 \
 <br>
 
 - Exiting Chard closes all running apps inside Chard, so please save your work before exiting!
+
+- Microphone support needs to be re-done. 
 - When using OBS game capture, it is recommended (and required if using chard arch) to run everything in one shell. So run `obs & prismlauncher` for example. OBS is a difficult app to fully implement.
 
 <br>
 
 - LXC and VM support is not fully implemented.
-- Apps using Pulse Audio uses a different volume curve than apps using ALSA. 
+- Apps using Pulse Audio uses a different volume curve than apps using ALSA.
 
 <br>
 
