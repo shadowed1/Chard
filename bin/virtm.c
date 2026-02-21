@@ -444,14 +444,14 @@ int main(int argc, char *argv[]) {
             close(fd_input);
             return 1;
         }
-        DBG("Trackpad grabbed (will not move ChromeOS cursor).\n");
+        DBG("Trackpad grabbed.\n");
     } else {
         if (ioctl(fd_input, EVIOCGRAB, 1) < 0) {
             perror("EVIOCGRAB failed on mouse");
             close(fd_input);
             return 1;
         }
-        DBG("USB mouse grabbed (trackpad is FREE for normal use).\n");
+        DBG("USB mouse grabbed (trackpad can be used normally!).\n");
     }
 
     if (create_virtual_touchscreen() < 0) {
