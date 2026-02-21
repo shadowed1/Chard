@@ -199,7 +199,7 @@ detect_gpu_freq() {
 }
 
  echo "${RESET}${GREEN}"
-        echo "[1] Quick Reinstall (Update Chard)"
+        echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard!)"
         echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
         echo "${RESET}${RED}[q] Cancel"
         echo "${RESET}${GREEN}"
