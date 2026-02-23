@@ -316,13 +316,6 @@ obs() {
     /usr/bin/obs "$@" &
 }
 
-chard_sort() {
-    pacman -Qi | awk '
-    /^Name/ {name=$3}
-    /^Installed Size/ {print name, $4 $5}
-    ' | sort -h -k2
-}
-
 if [ -z "$XFCE_STARTED" ] && [ ! -f /tmp/.xfce_started ]; then
     export XFCE_STARTED=1
     if ! pgrep -x "startxfce4" >/dev/null 2>&1; then
