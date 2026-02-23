@@ -1334,49 +1334,20 @@ checkpoint_137() {
 
         sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
-
-xhost +SI:localuser:$CHARD_USER >/dev/null 2>&1
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export QT_QPA_PLATFORM=xcb
+STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
+xhost +SI:localuser:$USER
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-
-source /$CHARD_HOME/.bashrc
-
-DBUS_ADDR="$(grep "export DBUS_SESSION_BUS_ADDRESS=" /.chard_dbus | cut -d"'" -f2)"
-DBUS_PID="$(grep "export DBUS_SESSION_BUS_PID=" /.chard_dbus | cut -d"'" -f2)"
-
-sudo -u $CHARD_USER \
-  env HOME=/$CHARD_HOME \
-      USER=$CHARD_USER \
-      DISPLAY="${DISPLAY:-:0}" \
-      WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
-      XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/chrome}" \
-      DBUS_SESSION_BUS_ADDRESS="$DBUS_ADDR" \
-      DBUS_SESSION_BUS_PID="$DBUS_PID" \
-      PATH="/usr/local/bubblepatch/bin:$PATH" \
-      LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-      LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-      LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-      LIBGL_ALWAYS_INDIRECT=0 \
-      EGL_PLATFORM=wayland \
-      GDK_BACKEND="wayland" \
-      GDK_SCALE="${GDK_SCALE:-1.25}" \
-      QT_SCALE_FACTOR="${QT_SCALE_FACTOR:-1.25}" \
-      QT_QPA_PLATFORM=wayland \
-      XCURSOR_THEME="${XCURSOR_THEME:-Adwaita}" \
-      XCURSOR_SIZE="${XCURSOR_SIZE:-32}" \
-      XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-      SOMMELIER_DRM_DEVICE=/dev/dri/renderD128 \
-      SOMMELIER_GLAMOR=1 \
-      SOMMELIER_VERSION=0.20 \
-      /usr/bin/steam -no-cef-sandbox -cef-disable-gpu-compositing "$@"
-
+/usr/bin/steam -no-cef-sandbox -cef-disable-gpu-compositing "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
-sudo chmod +x /bin/chard_steam
+        sudo chmod +x /bin/chard_steam
       
 mkdir -p ~/.local/share/applications
 tee ~/.local/share/applications/steam-chard.desktop >/dev/null <<'EOF'
