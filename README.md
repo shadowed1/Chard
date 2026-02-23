@@ -336,6 +336,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.22: `Further improved Firefox support to enable GPU accleration with audio support. Added resolv.conf copy during reinstall - Thanks to DennyL for reporting. Added cleanup script for Chard Arch. Added pacman update cleaner and improved GPU detection script for chariot` <br><br>
 - 0.23: `Implemented Arch Linux package retry script for chariot. Fixed flatpak wrapper that causes /var/lib error. Fixed Arch Linux user id error for ARM64. Added safety guardrails to installer when removing Chard. Fixed audio loss issue on Arch for ARM64 on ChromeOS 144.` <br><br>
 - 0.24: `Updated virtm to support USB mice, and prioritize them over touchpad. This enables touchpad to function normally, while a USB mouse becomes a virtual touchscreen to enable spinning around in 3D environments. Fixed dbus address error. Fixed Steam black screen on first time log in with GPU acceleration enabled for web views.` <br<br>
+- 0.25: `Added support for ChromeOS 104. Added chard_sort command for Arch to sort packages by size.` <br><br>
 <br>
 
 ### Acknowledgements
