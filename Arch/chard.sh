@@ -411,6 +411,15 @@ case "$cmd" in
         ;;
     root)
         CLEANUP_ENABLED=1
+		VERSION_FILE="$CHARD_ROOT/.chard_chrome"
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
+		
+		    if [ "$CHROMEOS_VERSION" -lt 104 ]; then
+		        sudo chown chronos:video /dev/dri/card0
+		        sudo chown chronos:video /dev/dri/renderD128
+		    fi
+		fi
         chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
@@ -548,6 +557,14 @@ case "$cmd" in
 		sudo pkill -f powercontrol-gui 2>/dev/null
 		sudo pkill -f gedit 2>/dev/null
         $CHARD_ROOT/bin/color_reset
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
+		
+		    if [ "$CHROMEOS_VERSION" -lt 104 ]; then
+		        sudo chown root:video /dev/dri/card0
+		        sudo chown root:video /dev/dri/renderD128
+		    fi
+		fi
         ;;
     chariot)
         CLEANUP_ENABLED=1
