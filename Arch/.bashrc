@@ -162,6 +162,13 @@ obs() {
     /usr/bin/obs "$@" &
 }
 
+chard_sort() {
+    pacman -Qi | awk '
+    /^Name/ {name=$3}
+    /^Installed Size/ {print name, $4 $5}
+    ' | sort -h -k2
+}
+
 # Chard Scale
 : "${CHARD_SCALE:=1.25}"
 : "${XCURSOR_SIZE:=32}"
