@@ -415,7 +415,7 @@ case "$cmd" in
 		if [ -s "$VERSION_FILE" ]; then
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
 		
-		    if [ "$CHROMEOS_VERSION" -lt 104 ]; then
+		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
 		        sudo chown chronos:video /dev/dri/card0
 		        sudo chown chronos:video /dev/dri/renderD128
 		    fi
@@ -560,7 +560,7 @@ case "$cmd" in
 		if [ -s "$VERSION_FILE" ]; then
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
 		
-		    if [ "$CHROMEOS_VERSION" -lt 104 ]; then
+		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
 		        sudo chown root:video /dev/dri/card0
 		        sudo chown root:video /dev/dri/renderD128
 		    fi
