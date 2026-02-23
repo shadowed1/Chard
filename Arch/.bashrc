@@ -127,15 +127,22 @@ export PULSE_SERVER=unix:/run/chrome/pulse/native
 fi
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval "$(dbus-launch --sh-syntax )"
+    eval "$(dbus-launch --sh-syntax)"
     export DBUS_SESSION_BUS_ADDRESS
     export DBUS_SESSION_BUS_PID
 fi
 
-CHARD_DBUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS/unix:path=\/tmp\//unix:path=$CHARD_ROOT\/tmp\/}"
+case "$DBUS_SESSION_BUS_ADDRESS" in
+    unix:path=$CHARD_ROOT/*)
+        STRIPPED_DBUS_ADDRESS="unix:path=${DBUS_SESSION_BUS_ADDRESS#unix:path=$CHARD_ROOT}"
+        ;;
+    *)
+        STRIPPED_DBUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS"
+        ;;
+esac
 
 sudo tee "/.chard_dbus" >/dev/null <<EOF
-export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
+export DBUS_SESSION_BUS_ADDRESS='$STRIPPED_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
 
