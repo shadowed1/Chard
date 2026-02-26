@@ -162,17 +162,14 @@ export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 LLVM_BASE="$ROOT/usr/lib/llvm"
 all_llvm_versions=()
 
-# Scan LLVM directories
-if [[ -d "$LLVM_BASE" ]]; then
+if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
     for d in "$LLVM_BASE"/*/; do
         [[ -d "$d" ]] || continue
-        # Match versions like 20, 20.1, 21.0, 21.1 etc.
-        ver=$(basename "$d" | grep -oP '^[0-9]+(\.[0-9]+)?')
+        ver=$(basename "$d" | grep -oP '^[0-9]+\.[0-9]+')
         [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
     done
 fi
 
-# Sort and deduplicate
 mapfile -t all_llvm_versions < <(printf '%s\n' "${all_llvm_versions[@]}" | sort -V | uniq)
 
 latest_llvm=""
@@ -192,15 +189,8 @@ if [[ -n "$third_latest_llvm" ]]; then
     export LLVM_DIR
     export LLVM_VERSION="$third_latest_llvm"
     [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
-    LLVM_LIB_DIR=""
-    if [[ -d "$LLVM_DIR/lib64" ]]; then
-        LLVM_LIB_DIR="$LLVM_DIR/lib64"
-    elif [[ -d "$LLVM_DIR/lib" ]]; then
-        LLVM_LIB_DIR="$LLVM_DIR/lib"
-    fi
-    [[ -n "$LLVM_LIB_DIR" ]] && export LD_LIBRARY_PATH="$LLVM_LIB_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-    [[ -n "$LLVM_LIB_DIR" && -d "$LLVM_LIB_DIR/pkgconfig" ]] && \
-    export PKG_CONFIG_PATH="$LLVM_LIB_DIR/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 fi
 
 export CC="$ROOT/usr/bin/gcc"
