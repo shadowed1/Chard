@@ -204,6 +204,7 @@ alias ksp='LC_ALL=C ./KSP_x86_64'
 
 # xcb
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
+alias kiwix-desktop='QT_QPA_PLATFORM=xcb kiwix-desktop'
 alias seamonkey='GDK_BACKEND=x11 seamonkey'
 alias gvim='wx gvim'
 alias prismlauncher='chard_prismlauncher'
