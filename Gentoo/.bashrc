@@ -161,11 +161,10 @@ export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 LLVM_BASE="$ROOT/usr/lib/llvm"
 all_llvm_versions=()
-
-if [[ ${#all_llvm_versions[@]} -eq 0 ]] && [[ -d "$LLVM_BASE" ]]; then
+if [[ -d "$LLVM_BASE" ]]; then
     for d in "$LLVM_BASE"/*/; do
         [[ -d "$d" ]] || continue
-        ver=$(basename "$d" | grep -oP '^[0-9]+\.[0-9]+')
+        ver=$(basename "$d" | grep -oP '^[0-9]+(\.[0-9]+)?')
         [[ -n "$ver" ]] && all_llvm_versions+=("$ver")
     done
 fi
@@ -184,13 +183,18 @@ elif (( ${#all_llvm_versions[@]} > 0 )); then
     third_latest_llvm="${all_llvm_versions[0]}"
 fi
 
+LLVM_DIR=""
+LLVM_LIB_DIR=""
+
 if [[ -n "$third_latest_llvm" ]]; then
     LLVM_DIR="$LLVM_BASE/$third_latest_llvm"
     export LLVM_DIR
     export LLVM_VERSION="$third_latest_llvm"
-    [[ -d "$LLVM_DIR/bin" ]] && export PATH="$LLVM_DIR/bin:$PATH"
-    [[ -d "$LLVM_DIR/lib" ]] && export LD_LIBRARY_PATH="$LLVM_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-    [[ -d "$LLVM_DIR/lib/pkgconfig" ]] && export PKG_CONFIG_PATH="$LLVM_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    if [[ -d "$LLVM_DIR/lib64" ]]; then
+        LLVM_LIB_DIR="$LLVM_DIR/lib64"
+    elif [[ -d "$LLVM_DIR/lib" ]]; then
+        LLVM_LIB_DIR="$LLVM_DIR/lib"
+    fi
 fi
 
 export CC="$ROOT/usr/bin/gcc"
@@ -240,14 +244,14 @@ LIBS_TO_ADD=(
     "$ROOT/usr/lib"
     "$ROOT/lib"
     "$gcc_lib_path"
-    "$LLVM_DIR/lib"
+    "$LLVM_LIB_DIR"
 )
 PKG_TO_ADD=(
     "$ROOT/usr/lib64/pkgconfig"
     "$ROOT/usr/lib/pkgconfig"
     "$ROOT/usr/local/lib/pkgconfig"
     "$ROOT/usr/local/share/pkgconfig"
-    "$LLVM_DIR/lib/pkgconfig"
+    "$LLVM_LIB_DIR/pkgconfig"
 )
 
 unique_join() {
