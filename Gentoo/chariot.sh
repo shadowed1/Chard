@@ -578,9 +578,11 @@ checkpoint_48() {
     sudo -E emerge -v =llvm-core/libclc-20*
     sudo -E emerge llvm-runtimes/libcxx
     sudo -E emerge llvm-runtimes/libcxxabi
+    sudo -E emerge dev-util/spirv-llvm-translator
     rm -rf /var/tmp/portage/llvm-core/libclc-*
     rm -rf /var/tmp/portage/llvm-runtimes/libcxx-*
     rm -rf /var/tmp/portage/llvm-runtimes/libcxxabi-*
+    rm -rf /var/tmp/portage/dev-util/spirv-llvm-translator-*
     eclean-dist -d
 }
 run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
@@ -729,6 +731,7 @@ checkpoint_68() {
 run_checkpoint 68 "sudo -E emerge gui-libs/xdg-desktop-portal-wlr" checkpoint_68
 
 checkpoint_69() {
+    
     sudo -E emerge =media-libs/mesa-25.2.8
     rm -rf /var/tmp/portage/media-libs/mesa-*
     eclean-dist -d
