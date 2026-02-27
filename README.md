@@ -25,10 +25,10 @@
 Running the installer requires VT-2 logged in as chronos, or enabling sudo in the chromeOS shell. <br>
 
 Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD: <br>
-`https://github.com/shadowed1/sudoCrosh` <br>
+https://github.com/shadowed1/sudoCrosh <br>
 
 Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO: <br>
-`https://github.com/shadowed1/Sucrose` <br>
+https://github.com/shadowed1/Sucrose <br>
 
 ## About Chard (*Chrome-Arch Development*):
 
@@ -123,7 +123,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 
 <br>
 
-- Intelligent CPU task scheduler for building packages.
+- Semi-intelligent CPU task scheduler for building packages.
 - ChromeOS' Downloads folder is shared when entering Chard Root, allowing for fast file sharing. 
 
 <br>
@@ -145,7 +145,9 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 
 - Can run certain apps directly from Chard in the Host OS (testing ChromeOS only).
 - Extremely resource light; RAM usage is below 100MB footprint.
-- Implements `virtm`, a program enabling mouse capture support!
+
+- Supports mounting external drives and Android devices. Connect prior to entering Chard. 
+- Implements `virtm`, a program emulating mouse capture support; bypassing exo security delegate. 
 
 <br>
 
@@ -154,8 +156,6 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 <br>
 
 - **Please do not install without a USB recovery as this is under rapid development, mistakes happen, and bugs will exist!**
-- Enabling sudo in crosh natively will allow for fast app launches:
-  <pre>https://github.com/shadowed1/sudoCrosh/blob/main/README.md</pre>
 
 <br>
 
