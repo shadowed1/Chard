@@ -9,7 +9,7 @@
 <br>
 
 
-### How to Install:
+# How to Install:
 
 <br>
 
@@ -30,11 +30,9 @@ Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD: <br>
 Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO: <br>
 `https://github.com/shadowed1/Sucrose` <br>
 
-### About Chard (*Chrome-Arch Development*):
+## About Chard (*Chrome-Arch Development*):
 
-<br>
-
-### Chard (*Chrome-Arch Development*) is a chroot (change root) that is Arch or Gentoo Linux.
+### Chard is a chroot (change root) that is Arch or Gentoo Linux.
 Safely lives inside an existing ChromeOS or Linux install without prepending its paths to the system.
 
 - Automated install will build everything needed with full hardware detection.
@@ -42,6 +40,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS + pulse virtualization.
 - Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture emulation for first person games.  
 - *Chard is in development. Bug reports, suggestions, and ideas are greatly appreciated.*
+- Can be safely uninstalled at anytime without altering our ChromeOS install! 
   
 <br>
 
