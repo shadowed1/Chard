@@ -2,6 +2,10 @@
   <img src="https://i.imgur.com/h12e32A.png" alt="logo" width="5000" />
 </p>  
 
+<p align="center">
+  <img src="https://i.imgur.com/OcNXgOX.png" alt="logo" width="5000" />
+</p>  
+
 <br>
 
 
@@ -9,11 +13,22 @@
 
 <br>
 
-- For **ChromeOS, and most Linux Distros,** press `ctrl-alt-t`, open a crosh `shell` and paste:
+- For **ChromeOS, and most Linux Distros,** press `ctrl-alt-t`, open a crosh `shell` and copy paste:
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")</pre>
 
 <br>
+
+ - Option 1 is Chard Arch, which supports Steam, Heroic, Flatpak, and is the recommended option for most users. <br>
+- Option 2 is Chard Gentoo, tailored for ChromeOS development. This enables running Gentoo binaries + toolchain in ChromeOS outside of chroot. <br>
+
+Running the installer requires VT-2 logged in as chronos, or enabling sudo in the chromeOS shell. <br>
+
+Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD: <br>
+`https://github.com/shadowed1/sudoCrosh` <br>
+
+Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO: <br>
+`https://github.com/shadowed1/Sucrose` <br>
 
 ### About Chard (*Chrome-Arch Development*):
 
@@ -307,6 +322,7 @@ sudo qemu-system-x86_64 \
 - LXC and VM support is not fully implemented.
 - Apps using Pulse Audio uses a different volume curve than apps using ALSA.
 
+- Sucrose users can launch Chard with `sudo chard root`. Sucrose users should uninstall Chard with VT-2.  
 <br>
 
 ### Changelog:
