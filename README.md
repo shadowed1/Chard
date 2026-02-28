@@ -39,8 +39,8 @@ https://github.com/shadowed1/Sucrose <br>
 ### Chard is a chroot (change root) that is Arch or Gentoo Linux.
 Safely lives inside an existing ChromeOS or Linux install without prepending its paths to the system.
 
-- Automated install will build everything needed with full hardware detection.
-- Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!
+- Automated rolling-release installer will build everything needed with full hardware detection.
+- Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!*
 - Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS + pulse virtualization.
 - Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture emulation for first person games.  
 - *Chard is in development. Bug reports, suggestions, and ideas are greatly appreciated.*
@@ -306,7 +306,7 @@ sudo qemu-system-x86_64 \
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
-- Mediatek GPU support is currently being worked on (hard!) - ARM64 is software rendering only for now.
+- *Mediatek GPU support is currently being worked on (hard!) - ARM64 is software rendering only for now.
 
 <br>
 
