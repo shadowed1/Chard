@@ -547,6 +547,7 @@ run_checkpoint 44 "install rustup" checkpoint_44
 checkpoint_45() {
     sudo -E emerge -j$(nproc) dev-libs/boehm-gc
     rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
+    sudo emerge --update --deep --newuse @world
     eclean-dist -d
 }
 run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
@@ -1180,7 +1181,6 @@ checkpoint_125() {
 run_checkpoint 125 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_125
 
 checkpoint_126() {
-    sudo emerge --update --deep --newuse @world
     echo "media-plugins/alsa-plugins pulseaudio" | sudo tee -a /etc/portage/package.use/firefox-bin
     sudo -E emerge --autounmask-write firefox-bin
     sudo -E emerge firefox-bin
