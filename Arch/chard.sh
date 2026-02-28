@@ -416,8 +416,8 @@ case "$cmd" in
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
 		
 		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
-		        sudo chown chronos:video /dev/dri/card0
-		        sudo chown chronos:video /dev/dri/renderD128
+		        sudo chown -E $USER:video /dev/dri/card0
+		        sudo chown -E $USER:video /dev/dri/renderD128
 		    fi
 		fi
         chard_volume > /dev/null 2>&1 &
@@ -538,7 +538,7 @@ case "$cmd" in
         sudo rm -f /run/chrome/pulse/native 2>/dev/null
         sudo rm -f /run/chrome/pulse/* 2>/dev/null
         sudo mkdir -p /run/chrome/pulse 2>/dev/null
-        sudo chown chronos:chronos /run/chrome/pulse
+        sudo chown chronos:chronos /run/chrome/pulse 2>/dev/null
         sudo chmod 770 /run/chrome/pulse 2>/dev/null
         killall -9 cras_test_client 2>/dev/null
         killall -9 pipewire 2>/dev/null
