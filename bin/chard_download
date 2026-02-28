@@ -53,7 +53,8 @@ curl -L "$URL" -o ~/Chard_Installer || {
     exit 1
 }
 
-echo "        ${YELLOW}Run (copy paste) the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${MAGENTA}VT-2 logged in as ${BOLD}chronos${RESET}${YELLOW}:${RESET}"
+echo "          ${RED}For ChromeOS users - CTRL-ALT-BACK exits VT-2 and CTRL-ALT-REFRESH enters VT-2! ${RESET}"
+echo "            ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${MAGENTA}VT-2 logged in as ${BOLD}chronos${RESET}${YELLOW}:${RESET}"
 echo
 echo
 echo "                                  ${GREEN}${BOLD}If on ChromeOS, run these 3 commands:${RESET}${GREEN}"
