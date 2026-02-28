@@ -576,7 +576,7 @@ checkpoint_47() {
 run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
 # Fix for long term
 checkpoint_48() {
-    sudo -E emerge -v =llvm-core/libclc-20*
+    sudo -E emerge llvm-core/libclc
     sudo -E emerge llvm-runtimes/libcxx
     sudo -E emerge llvm-runtimes/libcxxabi
     sudo -E emerge dev-util/spirv-llvm-translator
@@ -584,6 +584,7 @@ checkpoint_48() {
     rm -rf /var/tmp/portage/llvm-runtimes/libcxx-*
     rm -rf /var/tmp/portage/llvm-runtimes/libcxxabi-*
     rm -rf /var/tmp/portage/dev-util/spirv-llvm-translator-*
+    sudo emerge --update --deep --newuse @world
     eclean-dist -d
 }
 run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
@@ -1069,9 +1070,10 @@ checkpoint_115() {
 run_checkpoint 115 "sudo -E emerge app-text/doxygen" checkpoint_115
 
 checkpoint_116() {
-    sudo -E emerge -1 =llvm-core/libclc-20*
+    sudo -E emerge llvm-core/libclc
     sudo -E emerge gui-libs/egl-gbm
     rm -rf /var/tmp/portage/gui-libs/egl-gbm-*
+    sudo emerge --update --deep --newuse @world
     eclean-dist -d
 }
 run_checkpoint 116 "sudo -E emerge gui-libs/egl-gbm" checkpoint_116
