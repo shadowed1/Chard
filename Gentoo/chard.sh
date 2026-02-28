@@ -736,7 +736,7 @@ case "$cmd" in
         sudo rm -f /run/chrome/pulse/native
         sudo rm -f /run/chrome/pulse/*
         sudo mkdir -p /run/chrome/pulse
-        sudo chown chronos:chronos /run/chrome/pulse
+        sudo -E chown $USER:$USER /run/chrome/pulse
         sudo chmod 770 /run/chrome/pulse
         killall -9 cras_test_client 2>/dev/null
         killall -9 pipewire 2>/dev/null
