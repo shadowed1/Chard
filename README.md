@@ -22,7 +22,7 @@
  - Option 1 is Chard Arch, which supports Steam, Heroic, Flatpak, and is the recommended option for most users. <br>
 - Option 2 is Chard Gentoo, tailored for ChromeOS development. This enables running Gentoo binaries + toolchain in ChromeOS outside of chroot. <br>
 
-After choosing it downloads the installer, running the installer requires VT-2 logged in as chronos, or enabling sudo in the chromeOS shell. <br>
+After choosing, it downloads the installer. Running the installer requires VT-2 logged in as chronos, or enabling sudo in the chromeOS shell. <br>
 
 https://www.chromium.org/chromium-os/developer-library/guides/device/developer-mode/
 
