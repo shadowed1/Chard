@@ -56,12 +56,13 @@ curl -L "$URL" -o ~/Chard_Installer || {
 echo "        ${YELLOW}Run (copy paste) the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${MAGENTA}VT-2 logged in as ${BOLD}chronos${RESET}${YELLOW}:${RESET}"
 echo
 echo
-echo "                                  ${GREEN}${BOLD}If on ChromeOS, run:${RESET}${GREEN}"
+echo "                                  ${GREEN}${BOLD}If on ChromeOS, run these 3 commands:${RESET}${GREEN}"
 echo
-echo "${BOLD}sudo mv ~/Chard_Installer /usr/local"
+echo "${BOLD}cd"
+echo "sudo mv Chard_Installer /usr/local"
 echo "sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
 echo ""
-echo "                                  ${CYAN}${BOLD}If on anything else, run:${RESET}${CYAN}"
+echo "                                  ${CYAN}${BOLD}If on anything else, copy paste:${RESET}${CYAN}"
 echo
 echo "${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}${CYAN}"
 echo
