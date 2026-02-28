@@ -1195,6 +1195,8 @@ checkpoint_127() {
     sudo -E eselect repository enable another-brave-overlay
     sudo -E emerge --sync another-brave-overlay
     sudo -E emerge www-client/brave-browser::another-brave-overlay
+    sudo chown root:root /opt/brave.com/brave/chrome-sandbox 2>/dev/null
+    sudo chmod 4755 /opt/brave.com/brave/chrome-sandbox 2>/dev/null
     rm -rf /var/tmp/portage/dev-util/vulkan-*
     rm -rf /var/tmp/portage/media-libs/vulkan-*
     rm -rf /var/tmp/portage/eselect-repository dev-vcs/git-*
