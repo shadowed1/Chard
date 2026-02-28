@@ -1180,6 +1180,7 @@ checkpoint_125() {
 run_checkpoint 125 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_125
 
 checkpoint_126() {
+    sudo emerge --update --deep --newuse @world
     echo "media-plugins/alsa-plugins pulseaudio" | sudo tee -a /etc/portage/package.use/firefox-bin
     sudo -E emerge --autounmask-write firefox-bin
     sudo -E emerge firefox-bin
