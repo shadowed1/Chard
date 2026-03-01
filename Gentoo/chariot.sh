@@ -545,9 +545,11 @@ checkpoint_44() {
 run_checkpoint 44 "install rustup" checkpoint_44
 
 checkpoint_45() {
-    sudo -E emerge -j$(nproc) dev-libs/boehm-gc
+    sudo -E emerge mesa-clc
+    sudo -E emerge dev-libs/boehm-gc
     rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
-    sudo emerge --update --deep --newuse @world
+    sudo emerge --update --deep --newuse --autounmask-write @world
+    sudo etc-update
     eclean-dist -d
 }
 run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
