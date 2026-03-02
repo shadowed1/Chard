@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Colors
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -18,7 +18,6 @@ cancel_chroot() {
 }
 
 trap cancel_chroot INT TERM
-
 echo "${RESET}${GREEN}"
 echo
 echo
@@ -64,7 +63,6 @@ echo "${MAGENTA}${BOLD}"
 echo "- Requires Developer Mode for ChromeOS users."
 echo "${RESET}"
 
-
 format_time() {
     local total_seconds=$1
     local hours=$((total_seconds / 3600))
@@ -80,6 +78,7 @@ format_time() {
     fi
 }
 
+# Used as a rough CPU benchmark
 show_progress() {
     local current_time=$(date +%s)
     local elapsed=$((current_time - START_TIME))
@@ -102,8 +101,10 @@ case "$response" in
 esac
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
-
-if [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
+if [ -n "$CHARD_ROOT" ]; then
+    CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
+    echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
+elif [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$DEFAULT_CHARD_ROOT/.install_path")
     echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
 else
@@ -133,11 +134,10 @@ fi
             exit 1
             ;;
     esac
-    
+
 #unset LD_PRELOAD
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
-    
 CHARD_ROOT="${CHARD_ROOT%/}"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
