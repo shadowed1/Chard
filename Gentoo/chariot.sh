@@ -545,10 +545,12 @@ checkpoint_44() {
 run_checkpoint 44 "install rustup" checkpoint_44
 
 checkpoint_45() {
-    sudo -E emerge mesa-clc
-    sudo -E emerge dev-libs/boehm-gc
-    rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
+    echo ">=app-text/xmlto-0.0.28-r11 text" | sudo tee -a /etc/portage/package.use/xmlto
     echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
+    echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
+    sudo -E emerge dev-libs/boehm-gc
+    #sudo -E emerge mesa-clc
+    rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
     sudo emerge --update --deep --newuse --autounmask-write @world
     eclean-dist -d
 }
