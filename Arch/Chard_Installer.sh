@@ -104,8 +104,10 @@ case "$response" in
 esac
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
-
-if [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
+if [ -n "$CHARD_ROOT" ]; then
+    CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
+    echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
+elif [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$DEFAULT_CHARD_ROOT/.install_path")
     echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
 else
