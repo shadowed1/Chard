@@ -1150,8 +1150,8 @@ EOF
 
 sudo tee "$CHARD_ROOT/usr/share/sandbox/sandbox.bashrc" > /dev/null <<'EOF'
 export HOME="/$CHARD_HOME/"
-export USER="chronos"
-export LOGNAME="chronos"
+export USER="$CHARD_USER"
+export LOGNAME="$CHARD_USER"
 export PATH=/usr/bin:/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH
 EOF
 
@@ -1570,7 +1570,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         groupdel input 2>/dev/null
                         groupdel lp 2>/dev/null
                         
-                        getent group 1000 >/dev/null   || groupadd -g 1000 chronos 2>/dev/null
+                        getent group 1000 >/dev/null || groupadd -g 1000 \$CHARD_USER 2>/dev/null
                         getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
                         getent group 602  >/dev/null   || groupadd -g 602 arc-bridge 2>/dev/null
                         getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd 2>/dev/null
@@ -1618,7 +1618,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
 
-                        usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,input,hidraw,cros-disks \$CHARD_USER
+                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,input,hidraw,cros-disks \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
                         chown \$USER:\$USER \"/\$CHARD_HOME\"
