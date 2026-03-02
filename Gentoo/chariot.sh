@@ -548,8 +548,8 @@ checkpoint_45() {
     sudo -E emerge mesa-clc
     sudo -E emerge dev-libs/boehm-gc
     rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
+    echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
     sudo emerge --update --deep --newuse --autounmask-write @world
-    sudo etc-update
     eclean-dist -d
 }
 run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
