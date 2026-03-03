@@ -2234,6 +2234,33 @@ if [ -x "/usr/local/bin/powercontrol" ]; then
     sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
 fi
 
+CHRONOS_RC="$CHARD_ROOT/$CHARD_HOME/.${CHARD_USER}rc"
+
+if [[ ! -f "$CHRONOS_RC" ]]; then
+    sudo tee "$CHRONOS_RC" >/dev/null <<'EOF'
+# /etc/skel/.bashrc
+#
+# This file is sourced by all *interactive* bash shells on startup,
+# including some apparently interactive shells such as scp and rcp
+# that can't tolerate any output.  So make sure this doesn't display
+# anything or bad things will happen !
+
+# Test for an interactive shell.  There is no need to set anything
+# past this point for scp and rcp, and it's important to refrain from
+# outputting anything in those cases.
+if [[ $- != *i* ]] ; then
+        # Shell is non-interactive.  Be done now!
+        return
+fi
+
+# Put your fun stuff here.
+EOF
+    sudo chown "$CHARD_USER:$CHARD_USER" "$CHRONOS_RC"
+    echo "${GREEN}Created $CHRONOS_RC - Add your .bashrc entries here! ${RESET}"
+else
+    echo "${CYAN}Skipping $CHRONOS_RC - Already exists."
+fi
+
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
     mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
     mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
