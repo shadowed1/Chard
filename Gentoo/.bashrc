@@ -197,6 +197,15 @@ if [[ -n "$third_latest_llvm" ]]; then
     fi
 fi
 
+LLVM_LATEST_LIB_DIR=""
+if [[ -n "$latest_llvm" && "$latest_llvm" != "$third_latest_llvm" ]]; then
+    if [[ -d "$LLVM_BASE/$latest_llvm/lib64" ]]; then
+        LLVM_LATEST_LIB_DIR="$LLVM_BASE/$latest_llvm/lib64"
+    elif [[ -d "$LLVM_BASE/$latest_llvm/lib" ]]; then
+        LLVM_LATEST_LIB_DIR="$LLVM_BASE/$latest_llvm/lib"
+    fi
+fi
+
 export CC="$ROOT/usr/bin/gcc"
 export CXX="$ROOT/usr/bin/g++"
 export AR="$ROOT/usr/bin/ar"
@@ -229,9 +238,9 @@ PATHS_TO_ADD=(
     "$ROOT/usr/bin"
     "$ROOT/bin"
     "$gcc_bin_path"
+    "$LLVM_BASE/$latest_llvm/bin"
     "$LLVM_DIR/bin"
     "$ROOT/usr/local/bin"
-    "$ROOT/usr/bin"
 )
 LIBS_TO_ADD=(
     "$ROOT/usr/lib64"
@@ -239,6 +248,7 @@ LIBS_TO_ADD=(
     "$ROOT/usr/lib"
     "$ROOT/lib"
     "$gcc_lib_path"
+    "$LLVM_LATEST_LIB_DIR"
     "$LLVM_LIB_DIR"
 )
 PKG_TO_ADD=(
@@ -246,6 +256,7 @@ PKG_TO_ADD=(
     "$ROOT/usr/lib/pkgconfig"
     "$ROOT/usr/local/lib/pkgconfig"
     "$ROOT/usr/local/share/pkgconfig"
+    "$LLVM_LATEST_LIB_DIR/pkgconfig"
     "$LLVM_LIB_DIR/pkgconfig"
 )
 
