@@ -49,7 +49,7 @@ export PKGDIR="$ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$ROOT/var/tmp"
 
 # <<< CHARD_XDG_RUNTIME_DIR >>>
-export XDG_RUNTIME_DIR=""
+export XDG_RUNTIME_DIR="$ROOT/run/chrome"
 # <<< END CHARD_XDG_RUNTIME_DIR >>>
 
 all_perl_versions=()
@@ -156,8 +156,8 @@ if [[ -n "$third_latest_gcc" && -n "$CHOST" ]]; then
     gcc_lib_path="$ROOT/usr/lib/gcc/$CHOST/${third_latest_gcc}"
 fi
 
-export PATH="$gcc_bin_path:$PATH"
-export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+#export PATH="$gcc_bin_path:$PATH"
+#export LD_LIBRARY_PATH="$gcc_lib_path${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 LLVM_BASE="$ROOT/usr/lib/llvm"
 all_llvm_versions=()
@@ -206,15 +206,10 @@ export STRIP="$ROOT/usr/bin/strip"
 export LD="$ROOT/usr/bin/ld"
 
 # <<< CHARD_MARCH_NATIVE >>>
-CFLAGS="-march=native -O2 -pipe "
-[[ -d "$ROOT/usr/include" ]] && CFLAGS+="-I$ROOT/usr/include "
-[[ -d "$ROOT/include" ]] && CFLAGS+="-I$ROOT/include "
-export CFLAGS
-
-COMMON_FLAGS="-march=native -O2 -pipe"
+CFLAGS="-march=tigerlake -mabm -mno-kl -mno-sgx -mno-widekl -mshstk --param=l1-cache-line-size=64 --param=l1-cache-size=48 --param=l2-cache-size=6144 -O2 -pipe"
+COMMON_FLAGS="-march=tigerlake -mabm -mno-kl -mno-sgx -mno-widekl -mshstk --param=l1-cache-line-size=64 --param=l1-cache-size=48 --param=l2-cache-size=6144 -O2 -pipe"
 FCFLAGS="$COMMON_FLAGS"
 FFLAGS="$COMMON_FLAGS"
-
 CXXFLAGS="$CFLAGS"
 # <<< END CHARD_MARCH_NATIVE >>>
 
@@ -255,17 +250,25 @@ PKG_TO_ADD=(
 )
 
 unique_join() {
-    local IFS=':'
     local seen=()
-    for p in "$@"; do
-        [[ -n "$p" && -d "$p" && ! " ${seen[*]} " =~ " $p " ]] && seen+=("$p")
+    local result=()
+    local p part
+    for arg in "$@"; do
+        while IFS= read -r -d ':' part || [[ -n "$part" ]]; do
+            p="${part%/}"
+            [[ -z "$p" || ! -d "$p" ]] && continue
+            local found=0
+            for s in "${seen[@]}"; do [[ "$s" == "$p" ]] && found=1 && break; done
+            (( found )) || { seen+=("$p"); result+=("$p"); }
+        done < <(printf '%s:' "$arg")
     done
-    echo "${seen[*]}"
+    local IFS=':'
+    echo "${result[*]}"
 }
 
-export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
-export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export PKG_CONFIG_PATH="$(unique_join "${PKG_TO_ADD[@]}")${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+export PATH="$(unique_join "${PATHS_TO_ADD[@]}" "$PATH")"
+export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}" "$LD_LIBRARY_PATH")"
+export PKG_CONFIG_PATH="$(unique_join "${PKG_TO_ADD[@]}" "$PKG_CONFIG_PATH")"
 export MAGIC="$ROOT/usr/share/misc/magic.mgc"
 export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
 export CPPFLAGS="-I$ROOT/usr/include"
@@ -296,7 +299,7 @@ EOF
 export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
 export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
 
-export LD_LIBRARY_PATH=/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+#export LD_LIBRARY_PATH=/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
