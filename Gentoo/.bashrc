@@ -368,8 +368,8 @@ export XCURSOR_SIZE
 export XCURSOR_THEME
 
 # Firefox
-alias firefox-bin='chard_firefox-bin'
-alias firefox='chard_firefox-bin'
+alias firefox-bin='chard_firefox'
+alias firefox='chard_firefox'
 alias torbrowser-launcher='/bin/chard_tor'
 alias thunderbird='/bin/chard_thunderbird'
 alias torbrowser-launcher-bin='/bin/chard_tor'
