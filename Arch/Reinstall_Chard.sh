@@ -846,6 +846,33 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                     sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
                     sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
                 fi
+
+                CHRONOS_RC="$CHARD_ROOT/$CHARD_HOME/.${CHARD_USER}rc"
+
+                if [[ ! -f "$CHRONOS_RC" ]]; then
+                    sudo tee "$CHRONOS_RC" >/dev/null <<'EOF'
+# /etc/skel/.bashrc
+#
+# This file is sourced by all *interactive* bash shells on startup,
+# including some apparently interactive shells such as scp and rcp
+# that can't tolerate any output.  So make sure this doesn't display
+# anything or bad things will happen !
+
+# Test for an interactive shell.  There is no need to set anything
+# past this point for scp and rcp, and it's important to refrain from
+# outputting anything in those cases.
+if [[ $- != *i* ]] ; then
+        # Shell is non-interactive.  Be done now!
+        return
+fi
+
+# Put your fun stuff here.
+EOF
+                    sudo chown "$CHARD_USER:$CHARD_USER" "$CHRONOS_RC"
+                    echo "${GREEN}Created $CHRONOS_RC - Add your .bashrc entries here! ${RESET}"
+                else
+                    echo "${CYAN}Skipping $CHRONOS_RC - Already exists."
+                fi
                 
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
