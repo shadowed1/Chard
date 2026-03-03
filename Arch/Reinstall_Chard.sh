@@ -873,7 +873,7 @@ EOF
                 else
                     echo "${CYAN}Skipping $CHRONOS_RC - Already exists."
                 fi
-                
+                echo
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 source $CHARD_ROOT/.chardrc
