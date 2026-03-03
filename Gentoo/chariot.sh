@@ -1185,6 +1185,7 @@ run_checkpoint 125 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoi
 
 checkpoint_126() {
     echo "media-plugins/alsa-plugins pulseaudio" | sudo tee -a /etc/portage/package.use/firefox-bin
+    echo "media-libs/libsdl2 gles2" | sudo tee -a /etc/portage/package.use/libsdl2
     sudo -E emerge --autounmask-write firefox-bin
     sudo -E emerge firefox-bin
     rm -rf /var/tmp/portage/www-client/firefox-bin-*
