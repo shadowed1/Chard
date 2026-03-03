@@ -396,7 +396,7 @@ alias virtm='sudo -E virtm'
 
 export EDITOR=gedit
 export FILEMANAGER=thunar
-
+xdg-mime default thunar.desktop inode/directory 2>/dev/null
 source "$HOME/.${USER}rc"
 
 # <<< CHARD_SMRT >>>
