@@ -394,6 +394,8 @@ dbus-daemon --system --fork 2>/dev/null
 # virtm
 alias virtm='sudo -E virtm'
 
+source "$HOME/.${USER}rc"
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
