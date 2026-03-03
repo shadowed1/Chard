@@ -1164,7 +1164,7 @@ checkpoint_124() {
     else
         echo "Skipping lib32-gst on $ARCH"
     fi
-    retry_pacman "sudo -E pacman -S --noconfirm libao yt-dlp opus vlc audacity"
+    retry_pacman "sudo -E pacman -S --noconfirm libao yt-dlp opus vlc audacity vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265"
     retry_pacman "yay -S --noconfirm kdenlive 2>/dev/null"
 
 }
@@ -1579,6 +1579,7 @@ GPU_VENDOR="$GPU_TYPE"
             sudo -E pacman -R --noconfirm lib32-vulkan-intel 2>/dev/null
             sudo -E pacman -R --noconfirm vulkan-intel 2>/dev/null
             sudo -E pacman -S --noconfirm vulkan-mesa-device-select 2>/dev/null
+            sudo -E pacman -S --noconfirm vlc-plugin-quicksync 2>/dev/null
             rm -rf ~/intel_vulkan 2>/dev/null
             rm -rf ~/intel_vulkan_271.zip 2>/dev/null
             curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
