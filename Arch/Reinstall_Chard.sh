@@ -847,7 +847,7 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                     sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
                 fi
                 
-                echo "${MAGENTA}[*] Quick Reinstall complete.${RESET}"
+                echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 source $CHARD_ROOT/.chardrc
                 ;;
