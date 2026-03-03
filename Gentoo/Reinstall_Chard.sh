@@ -898,9 +898,9 @@ EOF
                 else
                     echo "${CYAN}Skipping $CHRONOS_RC - Already exists."
                 fi
-
+                echo
                 source "$CHARD_ROOT/.chardrc"
-                echo "${GREEN}[*] Quick reinstall complete.${RESET}"
+                echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
                 echo
                 ;;
             2)
