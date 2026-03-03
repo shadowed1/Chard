@@ -49,7 +49,7 @@ export PKGDIR="$ROOT/var/cache/packages"
 export PORTAGE_TMPDIR="$ROOT/var/tmp"
 
 # <<< CHARD_XDG_RUNTIME_DIR >>>
-export XDG_RUNTIME_DIR="$ROOT/run/chrome"
+export XDG_RUNTIME_DIR=""
 # <<< END CHARD_XDG_RUNTIME_DIR >>>
 
 all_perl_versions=()
