@@ -80,12 +80,21 @@ export LDFLAGS
 export FCFLAGS
 export FFLAGS
 
+OPT_BINS=()
+for d in "$ROOT/opt"/*/bin; do
+    [[ -d "$d" ]] && OPT_BINS+=("$d")
+done
+
 PATHS_TO_ADD=(
-    "$PYEXEC_DIR"
     "$ROOT/usr/bin"
+    "$ROOT/usr/sbin"
     "$ROOT/bin"
+    "$ROOT/sbin"
     "$ROOT/usr/local/bin"
-    "$ROOT/usr/bin"
+    "$ROOT/usr/local/sbin"
+    "$HOME/.local/bin"
+    "$HOME/.cargo/bin"
+    "${OPT_BINS[@]}"
 )
 LIBS_TO_ADD=(
     "$ROOT/usr/lib64"
@@ -97,16 +106,24 @@ LIBS_TO_ADD=(
 )
 
 unique_join() {
-    local IFS=':'
     local seen=()
-    for p in "$@"; do
-        [[ -n "$p" && -d "$p" && ! " ${seen[*]} " =~ " $p " ]] && seen+=("$p")
+    local result=()
+    local p part
+    for arg in "$@"; do
+        while IFS= read -r -d ':' part || [[ -n "$part" ]]; do
+            p="${part%/}"
+            [[ -z "$p" || ! -d "$p" ]] && continue
+            local found=0
+            for s in "${seen[@]}"; do [[ "$s" == "$p" ]] && found=1 && break; done
+            (( found )) || { seen+=("$p"); result+=("$p"); }
+        done < <(printf '%s:' "$arg")
     done
-    echo "${seen[*]}"
+    local IFS=':'
+    echo "${result[*]}"
 }
 
-export PATH="$(unique_join "${PATHS_TO_ADD[@]}"):$PATH"
-export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export PATH="$(unique_join "${PATHS_TO_ADD[@]}" "$PATH")"
+export LD_LIBRARY_PATH="$(unique_join "${LIBS_TO_ADD[@]}" "$LD_LIBRARY_PATH")"
 export MAGIC="$ROOT/usr/share/file/misc/magic.mgc"
 export GIT_TEMPLATE_DIR="$ROOT/usr/share/git-core/templates"
 export CPPFLAGS="-I$ROOT/usr/include"
@@ -155,7 +172,7 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     export LIBEGL_DRIVERS_PATH="$ROOT/usr/lib/dri"
 fi
 
-export LD_LIBRARY_PATH=/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+#export LD_LIBRARY_PATH=/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
 export QT_QPA_PLATFORM=wayland
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
@@ -254,7 +271,8 @@ alias plasmashell='/bin/chard_plasma'
 command -v chard_refresh >/dev/null && chard_refresh
 
 export EDITOR=gedit
-
+export FILEMANAGER=thunar
+source "$HOME/.${USER}rc"
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
