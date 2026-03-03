@@ -394,6 +394,9 @@ dbus-daemon --system --fork 2>/dev/null
 # virtm
 alias virtm='sudo -E virtm'
 
+export EDITOR=gedit
+export FILEMANAGER=thunar
+
 source "$HOME/.${USER}rc"
 
 # <<< CHARD_SMRT >>>
