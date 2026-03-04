@@ -393,7 +393,7 @@ dbus-daemon --system --fork 2>/dev/null
 
 # virtm
 alias virtm='sudo -E virtm'
-
+alias autoclicker='sudo -E autoclicker'
 export EDITOR=gedit
 export FILEMANAGER=thunar
 xdg-mime default thunar.desktop inode/directory 2>/dev/null
