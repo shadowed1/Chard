@@ -1632,7 +1632,6 @@ checkpoint_139() {
     rm -rf ~/.cache/pulse 2>/dev/null
     retry_pacman "sudo -E pacman -S --noconfirm pipewire-libcamera 2>/dev/null"
     retry_pacman "sudo -E pacman -S --noconfirm alsa-lib alsa-utils alsa-plugins 2>/dev/null"
-    sudo rm -rf ~/.cache/bazel 2>/dev/null
     cd ~/
     git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
     cd alsa-ucm-conf-cros
@@ -1704,7 +1703,8 @@ checkpoint_139() {
         rm -rf ~/adhd
     else
         echo "Unsupported architecture: $ARCH"
-    fi   
+    fi
+    sudo rm -rf $HOME/.cache/bazel/* 2>/dev/null
 }
 run_checkpoint 139 "Pipewire + Alsa UCM" checkpoint_139
 
