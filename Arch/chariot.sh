@@ -1704,7 +1704,7 @@ checkpoint_139() {
     else
         echo "Unsupported architecture: $ARCH"
     fi
-    sudo rm -rf $HOME/.cache/bazel/* 2>/dev/null
+    sudo rm -rf ~/.cache/bazel 2>/dev/null
 }
 run_checkpoint 139 "Pipewire + Alsa UCM" checkpoint_139
 
