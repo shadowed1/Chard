@@ -1488,7 +1488,7 @@ checkpoint_143() {
     cd ~/
     rm -rf alsa-ucm-conf-cros
     sleep 1
-    sudo rm -rf ~/.cache/bazel 2>/dev/null
+    sudo rm -rf $HOME/.cache/bazel/* 2>/dev/null
     if [[ "$ARCH" == "x86_64" ]]; then
         BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64"
         echo "Downloading Bazel from: $BAZEL_URL"
