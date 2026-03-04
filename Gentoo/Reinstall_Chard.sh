@@ -810,7 +810,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/firefox-bin "$@"
-' bash "$@""
+' bash "$@"
 EOF
 
 sudo chmod +x $CHARD_ROOT/bin/chard_firefox
@@ -829,7 +829,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/thunderbird "$@"
-' bash "$@""
+' bash "$@"
 EOF
 
 sudo chmod +x $CHARD_ROOT/bin/chard_thunderbird
@@ -848,7 +848,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/torbrowser-launcher "$@"
-' bash "$@""
+' bash "$@"
 EOF
 
 sudo chmod +x $CHARD_ROOT/bin/chard_tor
