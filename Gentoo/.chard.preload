@@ -40,6 +40,7 @@ LD_PRELOAD_LIBS_STAGE1=(
     "$CHARD_ROOT/usr/lib/gcc/aarch64-unknown-linux-gnu/15/libstdc++.so.6"
     "$CHARD_ROOT/usr/lib/gcc/aarch64-unknown-linux-gnu/15/libgomp.so.1"
     "$CHARD_ROOT/usr/lib64/libruby34.so.3.4"
+    "$CHARD_ROOT/usr/lib64/libruby40.so.4.0"
     "$CHARD_ROOT/usr/lib64/libyyjson.so.0"
 ) 
 
