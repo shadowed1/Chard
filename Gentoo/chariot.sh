@@ -1414,7 +1414,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
   exec /usr/bin/torbrowser-launcher "$@"
-' bash "$@""
+' bash "$@"
 EOF
 
 sudo chmod +x /bin/chard_tor
