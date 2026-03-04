@@ -1527,6 +1527,7 @@ checkpoint_143() {
     else
         echo "Unsupported architecture: $ARCH"
     fi
+    sudo rm -rf "$HOME/.cache/bazel/*"
 }
 run_checkpoint 143 "xkbcomp" checkpoint_143
 
@@ -1579,6 +1580,9 @@ checkpoint_148() {
     rm -rf /var/tmp/portage/x11-base/xwayland-*
     eclean-dist -d
     sudo etc-update --automode -5
+    sudo rm -rf /var/tmp/portage/*
+    sudo rm -rf /var/tmp/build/*
+    sudo rm -rf /var/cache/distfiles/*
 }
 run_checkpoint 148 "sudo emerge xfce4-terminal" checkpoint_148
 
