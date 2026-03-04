@@ -1575,7 +1575,9 @@ checkpoint_147() {
 run_checkpoint 147 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_147
 
 checkpoint_148() {
-    sudo emerge xfce4-terminal
+    sudo -E emerge xfce4-terminal
+    sudo -E emerge x11-base/xwayland
+    rm -rf /var/tmp/portage/x11-base/xwayland-*
     eclean-dist -d
 }
 run_checkpoint 148 "sudo emerge xfce4-terminal" checkpoint_148
