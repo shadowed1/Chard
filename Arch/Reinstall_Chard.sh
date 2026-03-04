@@ -873,6 +873,7 @@ EOF
                 else
                     echo "${CYAN}Skipping $CHRONOS_RC - Already exists."
                 fi
+                sudo rm -rf $CHARD_ROOT/$CHARD_HOME/.cache/bazel/* 2>/dev/null
                 echo
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
