@@ -1,6 +1,5 @@
 #!/bin/bash
 # Chariot
-
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
 CHARD_HOME=""
@@ -1285,7 +1284,7 @@ checkpoint_134() {
 run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_131
 
 checkpoint_135() {
-    USE="ruby_targets_ruby34" sudo -E emerge dev-lang/ruby
+    USE="ruby_targets_ruby40" sudo -E emerge dev-lang/ruby
     rm -rf /var/tmp/portage/dev-lang/ruby-*
     eclean-dist -d
 }
@@ -1579,6 +1578,7 @@ checkpoint_148() {
     sudo -E emerge x11-base/xwayland
     rm -rf /var/tmp/portage/x11-base/xwayland-*
     eclean-dist -d
+    sudo etc-update --automode -5
 }
 run_checkpoint 148 "sudo emerge xfce4-terminal" checkpoint_148
 
