@@ -292,7 +292,9 @@ checkpoint_11() {
 run_checkpoint 11 "sudo -E emerge dev-vcs/git" checkpoint_11
 
 checkpoint_12() {
+    sudo -E emerge sys-apps/shadow
     sudo -E emerge sys-apps/coreutils
+    rm -rf /var/tmp/portage/sys-apps/shadow-*
     rm -rf /var/tmp/portage/sys-apps/coreutils-*
     eclean-dist -d
 }
