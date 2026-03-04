@@ -898,6 +898,10 @@ EOF
                 else
                     echo "${CYAN}Skipping $CHRONOS_RC - Already exists."
                 fi
+                sudo rm -rf $CHARD_ROOT/var/tmp/portage/* 2>/dev/null
+                sudo rm -rf $CHARD_ROOT/var/tmp/build/* 2>/dev/null
+                sudo rm -rf $CHARD_ROOT/var/cache/distfiles/* 2>/dev/null
+                sudo rm -rf $CHARD_ROOT/$CHARD_HOME/.cache/bazel/* 2>/dev/null
                 echo
                 source "$CHARD_ROOT/.chardrc"
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
