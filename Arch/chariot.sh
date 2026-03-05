@@ -1164,7 +1164,7 @@ checkpoint_124() {
     else
         echo "Skipping lib32-gst on $ARCH"
     fi
-    retry_pacman "sudo -E pacman -S --noconfirm libao yt-dlp opus vlc audacity vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265"
+    retry_pacman "sudo -E pacman -S --noconfirm libao yt-dlp opus vlc audacity vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 vlc-plugins-all"
     retry_pacman "yay -S --noconfirm kdenlive 2>/dev/null"
 
 }
