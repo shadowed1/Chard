@@ -2334,8 +2334,6 @@ else
 fi
 
 sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
-sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
-sudo mkdir -p $CHARD_ROOT/etc/pulse/
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
