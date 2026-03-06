@@ -192,7 +192,7 @@ trap cleanup_chroot EXIT INT TERM
                 fi
                 
                 sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
-                
+                tr -d '\0' < "$FILE" > "${FILE}.clean" && mv "${FILE}.clean" "$FILE"
                 if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
                     {
                         echo "# <<< CHARD ENV MARKER <<<"
