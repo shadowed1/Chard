@@ -1983,7 +1983,7 @@ grep -qxF ".include /etc/pulse/default.pa" "/$CHARD_HOME/.config/pulse/default.p
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
 mv "/$CHARD_HOME/.config/pulse/default.pa.tmp" "/$CHARD_HOME/.config/pulse/default.pa" )
 }
-run_checkpoint 159 "CRAS Audio Patches" checkpoint_158
+run_checkpoint 159 "CRAS Audio Patches" checkpoint_159
 
 cleanup_arch
 
