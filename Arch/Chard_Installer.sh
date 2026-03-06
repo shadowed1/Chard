@@ -1393,8 +1393,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         userdel -f alarm 2>/dev/null
                         groupdel -f alarm 2>/dev/null
                         groupdel -f video 2>/dev/null
-                        groupdel -f disk 2>/dev/null
-                        groupdel -f kmem 2>/dev/null
                         
                         /usr/sbin/getent group 1000 >/dev/null    || groupadd -g 1000 \$CHARD_USER 2>/dev/null
                         /usr/sbin/getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
@@ -1441,30 +1439,21 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         /usr/sbin/getent group 20148 >/dev/null   || groupadd -g 20148 smdisplay 2>/dev/null
                         /usr/sbin/getent group 6 >/dev/null       || groupadd -g 6 disk 2>/dev/null
                         /usr/sbin/getent group 418 >/dev/null     || groupadd -g 418 virtaccess 2>/dev/null
-                        /usr/sbin/getent group 407 >/dev/null     || groupadd -g 407 drm_dp_aux 2>/dev/null
-                        /usr/sbin/getent group 402 >/dev/null     || groupadd -g 402 serial 2>/dev/null
-                        /usr/sbin/getent group 9 >/dev/null       || groupadd -g 9 kmem 2>/dev/null
 
-                        if id "\$CHARD_USER" &>/dev/null; then
-                            EXISTING_UID=\$(id -u "\$CHARD_USER")
-                            if [ "\$EXISTING_UID" != "1000" ]; then
-                                userdel -r "\$CHARD_USER" 2>/dev/null || userdel "\$CHARD_USER" 2>/dev/null || true
-                            fi
-                        fi
-                        
                         if id -u 1000 &>/dev/null; then
                             EXISTING_USER=\$(id -un 1000)
-                            if [ "\$EXISTING_USER" != "\$CHARD_USER" ]; then
-                                userdel -r "\$EXISTING_USER" 2>/dev/null || userdel "\$EXISTING_USER" 2>/dev/null || true
+                            if [ \"\$EXISTING_USER\" != \"\$CHARD_USER\" ]; then
+                                userdel -r \"\$EXISTING_USER\" 2>/dev/null || userdel \"\$EXISTING_USER\" 2>/dev/null || true
                             fi
                         fi
                         
-                        if ! id "\$CHARD_USER" &>/dev/null; then
-                            useradd -u 1000 -g 1000 -d "/\$CHARD_HOME" -M -s /bin/bash "\$CHARD_USER"
+                        if ! id \"\$CHARD_USER\" &>/dev/null; then
+                            useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
 
-                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,hidraw,cros-disks,disk,watchdog,virtaccess,drm_dp_aux,serial,kmem,smdisplay \$CHARD_USER
-                        
+                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,hidraw,cros-disks,disk,virtaccess \$CHARD_USER
+                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,lp,input,hidraw,cros-disks \$CHARD_USER
+
                         mkdir -p \"/\$CHARD_HOME\"
                         chown \$USER:\$USER \"/\$CHARD_HOME\"        
                         mkdir -p /etc/sudoers.d
