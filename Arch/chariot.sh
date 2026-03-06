@@ -407,6 +407,7 @@ retry_pacman() {
         if eval "$cmd"; then
             echo "${GREEN}Package operation succeeded${RESET}"
             echo
+            sleep 0.1
             return 0
         else
             retry_count=$((retry_count + 1))
@@ -425,6 +426,7 @@ retry_pacman() {
                 sudo -E pacman -Fy --noconfirm 2>/dev/null
             else
                 echo "${RED}$max_retries attempts failed. Skipping this package.${RESET}"
+                sleep 0.1
                 return 1
             fi
         fi
