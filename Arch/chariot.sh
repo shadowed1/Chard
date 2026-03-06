@@ -1617,7 +1617,7 @@ GPU_VENDOR="$GPU_TYPE"
 
         *)
             echo "[!] Unknown GPU type. Installing generic Vulkan support..."
-            retry_pacman "sudo -E pacman -S --noconfirm mesa vulkan-icd-loaderc mesa-utils 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm mesa vulkan-icd-loader mesa-utils 2>/dev/null"
             ;;
     esac
 }
