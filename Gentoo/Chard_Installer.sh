@@ -1679,14 +1679,12 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
                         getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
                         getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
-                        getent group portage >/dev/null || groupadd -g 250 portage 2>/dev/null
+                        getent group 250 >/dev/null || groupadd -g 250 portage 2>/dev/null
                         getent group steam >/dev/null || groupadd -g 20001 steam 2>/dev/null
                         getent group render >/dev/null || groupadd -g 989 render 2>/dev/null
                         getent group 222  >/dev/null    || groupadd -g 222 input 2>/dev/null
                         getent group 403 >/dev/null     || groupadd -g 403 hidraw 2>/dev/null
                         getent group 213 >/dev/null     || groupadd -g 213 cros-disks 2>/dev/null
-
-
 
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
