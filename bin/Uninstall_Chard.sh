@@ -109,8 +109,12 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
             
             unset LD_PRELOAD
             echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
-            sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null
-            unset LD_PRELOAD
+            sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
+              ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" \
+              -exec timeout 5 rm -rf {} + 2>/dev/null; true
+            [ -z "$(ls -A "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null)" ] && \
+              sudo timeout 10 rm -rf "$CHARD_ROOT" 2>/dev/null; true
+  #unset LD_PRELOAD
             sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
                 sleep 0.05
                 sudo umount -l "$CHARD_ROOT/etc/resolv.conv"   2>/dev/null || true
