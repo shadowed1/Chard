@@ -421,7 +421,7 @@ TARGET_FILE=""
 if [ -f "$CHROMEOS_BASHRC" ]; then
     TARGET_FILE="$CHROMEOS_BASHRC"
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
-    echo "${RED}ChromeOS Version: ${BOLD}$CHROME_MILESTONE ${RESET}${RED}"
+    echo "${CYAN}ChromeOS Version: ${BOLD}$CHROME_MILESTONE ${RESET}${RED}"
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
     sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
     sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
@@ -446,7 +446,7 @@ if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
     } >> "$TARGET_FILE"
 fi
 
-echo "${RESET}${RED}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}${RED}"
+echo "${RESET}${CYAN}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}"
 CHARD_HOME="$(dirname "$TARGET_FILE")"
 CHARD_HOME="${CHARD_HOME#/}"
 
