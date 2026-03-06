@@ -172,7 +172,7 @@ run_checkpoint() {
 
     if (( CURRENT_CHECKPOINT < step )); then
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step / 148 ($desc) Starting ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${GREEN}${BOLD}Checkpoint $step / 149 ($desc) Starting ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}"
         echo
 
         "$@"
@@ -180,7 +180,7 @@ run_checkpoint() {
 
         if (( ret != 0 )); then
             echo
-            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step / 148 ($desc) DNF ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+            echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${RED}${BOLD}Checkpoint $step / 149 ($desc) DNF ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
             echo
             return $ret
         fi
@@ -189,7 +189,7 @@ run_checkpoint() {
         sync
         CURRENT_CHECKPOINT=$step
         echo
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 148 ($desc) Finished ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 149 ($desc) Finished ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
         echo
 
         if $SINGLE_STEP && (( step == REQUESTED_STEP )); then
@@ -198,7 +198,7 @@ run_checkpoint() {
         fi
 
     else
-        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 148 ($desc) Completed ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
+        echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 149 ($desc) Completed ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
         echo
     fi
 }
@@ -1586,6 +1586,31 @@ checkpoint_148() {
     sudo rm -rf /var/cache/distfiles/*
 }
 run_checkpoint 148 "sudo emerge xfce4-terminal" checkpoint_148
+
+checkpoint_149() {
+sudo tee /etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
+load-module module-alsa-sink device=default sink_name=cras_sink control=none
+load-module module-softvol-sink sink_name=linear_sink master=cras_sink
+set-default-sink linear_sink
+load-module module-suspend-on-idle
+EOF
+
+sudo tee /etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
+unload-module module-udev-detect
+unload-module module-alsa-card
+EOF
+sudo cp /etc/pulse/daemon.conf /etc/pulse/daemon.conf.bak.$(date +%s) 2>/dev/null
+sudo sed -i \
+    -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
+    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
+    "/etc/pulse/daemon.conf"
+
+sudo cp /$CHARD_HOME/.config/pulse/default.pa /$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s) 2>/dev/null
+grep -qxF ".include /etc/pulse/default.pa" "/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
+( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
+mv "/$CHARD_HOME/.config/pulse/default.pa.tmp" "/$CHARD_HOME/.config/pulse/default.pa" )
+}
+run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
 sudo -E chown -R $USER:$USER $HOME
 echo "Chard Root is Ready! ${RESET}"
