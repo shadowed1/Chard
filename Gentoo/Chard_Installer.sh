@@ -367,10 +367,12 @@ sudo setfacl -Rb /run/chrome 2>/dev/null
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 
-sudo find "$CHARD_ROOT" -mindepth 1 -depth ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" -delete 2>/dev/null
-sleep 0.2
-[ -z "$(ls -A "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null)" ] && sudo rm -rf "$CHARD_ROOT" 2>/dev/null
-
+sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
+  ! -path "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads*" \
+  -exec timeout 5 rm -rf {} + 2>/dev/null; true
+[ -z "$(ls -A "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null)" ] && \
+  sudo timeout 10 rm -rf "$CHARD_ROOT" 2>/dev/null; true
+  
  chard_unmount() {        
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.2
