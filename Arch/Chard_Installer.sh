@@ -1391,19 +1391,12 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin                
                         userdel -f alarm 2>/dev/null
                         
-                        for grp in wayland arc-bridge arc-keymintd arc-sensor android-everybody \
-                            audio input uinput lp video bluetooth-audio cras usb traced-producer \
-                            traced-consumer chronos-access brltty arcvm-boot-notification-server \
-                            arc-mojo-proxy arc-host-clock midis suzy-q ml-core fuse-archivemount \
-                            crash crash-access crash-user-access fuse-drivefs regmond_senders \
-                            arc-camera camera pkcs11 policy-readers arc-keymasterd debugfs-access \
-                            portage steam render hidraw cros-disks disk watchdog virtaccess \
-                            iioservice i2c drm_dp_aux serial kmem cros_ec-access power bluetooth \
-                            crosvm crosvm-root vm_cicerone seneschal seneschal-dbus pluginvm \
-                            vtpm mtp cups sshd smdisplay session_manager; do
-                            groupdel "\$grp" 2>/dev/null || true
-                        done
-                        
+                        userdel -f alarm 2>/dev/null
+                        groupdel -f alarm 2>/dev/null
+                        groupdel -f video 2>/dev/null
+                        groupdel -f disk 2>/dev/null
+                        groupdel -f power 2>/dev/null
+                        groupdel -f kmem 2>/dev/null
                         /usr/sbin/getent group 1000 >/dev/null    || groupadd -g 1000 \$CHARD_USER 2>/dev/null
                         /usr/sbin/getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
                         /usr/sbin/getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
@@ -1452,21 +1445,21 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         /usr/sbin/getent group 407 >/dev/null     || groupadd -g 407 drm_dp_aux 2>/dev/null
                         /usr/sbin/getent group 402 >/dev/null     || groupadd -g 402 serial 2>/dev/null
                         /usr/sbin/getent group 9 >/dev/null       || groupadd -g 9 kmem 2>/dev/null
-                        #/usr/sbin/getent group 416 >/dev/null     || groupadd -g 416 cros_ec-access 2>/dev/null
-                        #/usr/sbin/getent group 228 >/dev/null     || groupadd -g 228 power 2>/dev/null
+                        /usr/sbin/getent group 416 >/dev/null     || groupadd -g 416 cros_ec-access 2>/dev/null
+                        /usr/sbin/getent group 228 >/dev/null     || groupadd -g 228 power 2>/dev/null
                         /usr/sbin/getent group 218 >/dev/null     || groupadd -g 218 bluetooth 2>/dev/null
-                        #/usr/sbin/getent group 20182 >/dev/null   || groupadd -g 20182 crosvm-root 2>/dev/null
-                        #/usr/sbin/getent group 299 >/dev/null     || groupadd -g 299 crosvm 2>/dev/null
-                        #/usr/sbin/getent group 204 >/dev/null     || groupadd -g 204 sshd 2>/dev/null
+                        /usr/sbin/getent group 20182 >/dev/null   || groupadd -g 20182 crosvm-root 2>/dev/null
+                        /usr/sbin/getent group 299 >/dev/null     || groupadd -g 299 crosvm 2>/dev/null
+                        /usr/sbin/getent group 204 >/dev/null     || groupadd -g 204 sshd 2>/dev/null
                         /usr/sbin/getent group 20148 >/dev/null   || groupadd -g 20148 smdisplay 2>/dev/null
-                        #/usr/sbin/getent group 277 >/dev/null     || groupadd -g 277 cups 2>/dev/null
+                        /usr/sbin/getent group 277 >/dev/null     || groupadd -g 277 cups 2>/dev/null
                         /usr/sbin/getent group 226 >/dev/null     || groupadd -g 226 mtp 2>/dev/null
-                        #/usr/sbin/getent group 20187 >/dev/null   || groupadd -g 20187 vtpm 2>/dev/null
-                        #/usr/sbin/getent group 20128 >/dev/null   || groupadd -g 20128 pluginvm 2>/dev/null
-                        #/usr/sbin/getent group 20115 >/dev/null   || groupadd -g 20115 seneschal-dbus 2>/dev/null
-                        #/usr/sbin/getent group 20114 >/dev/null   || groupadd -g 20114 seneschal 2>/dev/null
-                        #/usr/sbin/getent group 20112 >/dev/null   || groupadd -g 20112 vm_cicerone 2>/dev/null
-                        #/usr/sbin/getent group 20209 >/dev/null   || groupadd -g 20209 session_manager 2>/dev/null
+                        /usr/sbin/getent group 20187 >/dev/null   || groupadd -g 20187 vtpm 2>/dev/null
+                        /usr/sbin/getent group 20128 >/dev/null   || groupadd -g 20128 pluginvm 2>/dev/null
+                        /usr/sbin/getent group 20115 >/dev/null   || groupadd -g 20115 seneschal-dbus 2>/dev/null
+                        /usr/sbin/getent group 20114 >/dev/null   || groupadd -g 20114 seneschal 2>/dev/null
+                        /usr/sbin/getent group 20112 >/dev/null   || groupadd -g 20112 vm_cicerone 2>/dev/null
+                        /usr/sbin/getent group 20209 >/dev/null   || groupadd -g 20209 session_manager 2>/dev/null
                         /usr/sbin/getent group 258 >/dev/null     || groupadd -g 258 uinput 2>/dev/null
                         
                         if id "\$CHARD_USER" &>/dev/null; then
