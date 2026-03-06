@@ -102,19 +102,6 @@ case "$response" in
         ;;
 esac
 
-read -rp "${GREEN}${BOLD}Install Chard?${RESET} (Y/n):" response
-response=${response:-Y}
-case "$response" in
-    y|Y|yes|YES|Yes)
-        echo
-        echo
-        ;;
-    *)
-        echo -e "${RED}[EXIT]${RESET}"
-        exit 1
-        ;;
-esac
-
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
