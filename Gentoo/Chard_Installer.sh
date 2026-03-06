@@ -2371,18 +2371,6 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     sudo ln -s /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
 fi
 
-sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
-load-module module-alsa-sink device=default sink_name=cras_sink control=none
-load-module module-softvol-sink sink_name=linear_sink master=cras_sink
-set-default-sink linear_sink
-load-module module-suspend-on-idle
-EOF
-
-sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
-unload-module module-udev-detect
-unload-module module-alsa-card
-EOF
-
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
     mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
     mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
@@ -2435,9 +2423,20 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 '
 
 chard_unmount
-$CHARD_ROOT/bin/chard_preload
+#source $CHARD_ROOT/.chard.preload
+#$CHARD_ROOT/bin/chard_preload
+#unset LD_PRELOAD
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
+load-module module-alsa-sink device=default sink_name=cras_sink control=none
+load-module module-softvol-sink sink_name=linear_sink master=cras_sink
+set-default-sink linear_sink
+load-module module-suspend-on-idle
+EOF
 
-
+sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
+unload-module module-udev-detect
+unload-module module-alsa-card
+EOF
 
 sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s) 2>/dev/null
 sudo sed -i \
