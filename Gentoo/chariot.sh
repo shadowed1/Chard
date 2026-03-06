@@ -550,7 +550,6 @@ checkpoint_45() {
     echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
     echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
     sudo -E emerge dev-libs/boehm-gc
-    #sudo -E emerge mesa-clc
     rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
     sudo emerge --update --deep --newuse --autounmask-write @world
     eclean-dist -d
@@ -581,7 +580,8 @@ checkpoint_47() {
 run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
 # Fix for long term
 checkpoint_48() {
-    sudo -E emerge -v =llvm-core/libclc-20*    
+    sudo -E emerge mesa-clc
+    sudo -E emerge llvm-core/libclc    
     sudo -E emerge llvm-runtimes/libcxx
     sudo -E emerge llvm-runtimes/libcxxabi
     sudo -E emerge dev-util/spirv-llvm-translator
@@ -1071,7 +1071,7 @@ checkpoint_115() {
 run_checkpoint 115 "sudo -E emerge app-text/doxygen" checkpoint_115
 
 checkpoint_116() {
-    sudo -E emerge -1 =llvm-core/libclc-20*
+    sudo -E emerge llvm-core/libclc-20
     sudo -E emerge gui-libs/egl-gbm
     rm -rf /var/tmp/portage/gui-libs/egl-gbm-*
     sudo emerge --update --deep --newuse @world
