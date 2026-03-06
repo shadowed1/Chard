@@ -464,8 +464,8 @@ sudo tee "$CHARD_ROOT/.chard_user" >/dev/null <<EOF
 $CHARD_USER
 EOF
 
-echo "CHARD_HOME: ${RESET}${GREEN}${BOLD}$CHARD_ROOT/$CHARD_HOME ${RESET}${GREEN}"
-echo "CHARD_USER: ${BOLD}$CHARD_USER ${RESET}${RED}"
+echo "${RESET}${GREEN}CHARD_HOME: ${BOLD}$CHARD_ROOT/$CHARD_HOME ${RESET}"
+echo "${RESET}${GREEN}CHARD_USER: ${BOLD}$CHARD_USER ${RESET}${RED}"
 
 FREE_SPACE_FILE="$CHARD_ROOT/.chard_free_space"
 STATEFUL_FREE_G=$(df -h /mnt/stateful_partition | awk 'NR==2 {print $4}' | sed 's/G//')
