@@ -580,8 +580,8 @@ checkpoint_47() {
 run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
 # Fix for long term
 checkpoint_48() {
-    sudo -E emerge mesa-clc
-    sudo -E emerge llvm-core/libclc    
+    #sudo -E emerge mesa-clc
+    sudo -E emerge -1 llvm-core/libclc    
     sudo -E emerge llvm-runtimes/libcxx
     sudo -E emerge llvm-runtimes/libcxxabi
     sudo -E emerge dev-util/spirv-llvm-translator
