@@ -88,7 +88,6 @@ show_progress() {
 
 read -rp "${GREEN}${BOLD}Install Chard?${RESET} (Y/n):" response
 response=${response:-Y}
-
 case "$response" in
     y|Y|yes|YES|Yes)
         echo
@@ -101,7 +100,8 @@ case "$response" in
 esac
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
-if [ -n "$CHARD_ROOT" ]; then
+
+if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
     echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
 elif [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
@@ -111,40 +111,39 @@ else
     CHARD_ROOT="$DEFAULT_CHARD_ROOT"
 fi
 
-    read -rp "${GREEN}Enter desired Install Path - ${RESET}${GREEN}${BOLD}leave blank for default: $CHARD_ROOT: ${RESET}" choice
-    if [ -n "$choice" ]; then
-        CHARD_ROOT="${choice}"
-    fi
-    CHARD_ROOT="${CHARD_ROOT%/}"
-    echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
-    echo
-    read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
-    echo ""
-        
-    case "$confirm" in
-        [Yy]* | "")
-            sudo mkdir -p "$CHARD_ROOT"
-            ;;
-        [Nn]*)
-            echo -e "${BLUE}Cancelled.${RESET}\n"
-            exit 1
-            ;;
-        *)
-            echo -e "${RED}Please answer Y/n.${RESET}"
-            exit 1
-            ;;
-    esac
-
-#unset LD_PRELOAD
+read -rp "${GREEN}Enter desired Install Path - ${RESET}${GREEN}${BOLD}leave blank for default: $CHARD_ROOT: ${RESET}" choice
+if [ -n "$choice" ]; then
+    CHARD_ROOT="${choice}"
+fi
+CHARD_ROOT="${CHARD_ROOT%/}"
+echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
+echo
+read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
+echo ""
+    
+case "$confirm" in
+    [Yy]* | "")
+        sudo mkdir -p "$CHARD_ROOT"
+        ;;
+    [Nn]*)
+        echo -e "${BLUE}Cancelled.${RESET}\n"
+        exit 1
+        ;;
+    *)
+        echo -e "${RED}Please answer Y/n.${RESET}"
+        exit 1
+        ;;
+esac
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
+    
 CHARD_ROOT="${CHARD_ROOT%/}"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 BUILD_DIR="$CHARD_ROOT/var/tmp/build"
 LOG_FILE="$CHARD_ROOT/chardbuild.log"
 
 echo
-echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
+echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will eventually chroot into chard. ${RESET}${GREEN}${BOLD}This means / will be $CHARD_ROOT/ in reality.${RESET}"
 echo
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard Root${RESET}"
 
