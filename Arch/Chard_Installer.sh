@@ -433,6 +433,7 @@ fi
 
 if [ -n "$TARGET_FILE" ]; then
     sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
+    tr -d '\0' < ~/.bashrc > /tmp/bashrc.clean && mv /tmp/bashrc.clean ~/.bashrc
 else
     echo "${RED}No .bashrc found! ${RESET}"
 fi
