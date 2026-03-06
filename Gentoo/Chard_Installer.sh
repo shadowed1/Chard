@@ -1643,81 +1643,56 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         groupdel video 2>/dev/null
                         groupdel input 2>/dev/null
                         groupdel lp 2>/dev/null
-                        groupdel disk 2>/dev/null
-                        groupdel power 2>/dev/null
-                        userdel -f alarm 2>/dev/null
-                        groupdel -f video 2>/dev/null
-                        groupdel -f disk 2>/dev/null
-                        groupdel -f kmem 2>/dev/null
                         
-                        getent group 1000 >/dev/null    || groupadd -g 1000 \$CHARD_USER 2>/dev/null
-                        getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
-                        getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
-                        getent group 20205 >/dev/null   || groupadd -g 20205 arc-keymintd 2>/dev/null
-                        getent group 604  >/dev/null    || groupadd -g 604 arc-sensor 2>/dev/null
-                        getent group 665357 >/dev/null  || groupadd -g 665357 android-everybody 2>/dev/null
-                        getent group 18   >/dev/null    || groupadd -g 18 audio 2>/dev/null
+                        getent group 1000 >/dev/null || groupadd -g 1000 \$CHARD_USER 2>/dev/null
+                        getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
+                        getent group 602  >/dev/null   || groupadd -g 602 arc-bridge 2>/dev/null
+                        getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd 2>/dev/null
+                        getent group 604  >/dev/null   || groupadd -g 604 arc-sensor 2>/dev/null
+                        getent group 665357 >/dev/null || groupadd -g 665357 android-everybody 2>/dev/null
+                        getent group 18   >/dev/null   || groupadd -g 18 audio 2>/dev/null
+                        getent group 222  >/dev/null   || groupadd -g 222 input 2>/dev/null
+                        getent group 7    >/dev/null   || groupadd -g 7 lp 2>/dev/null
+                        getent group 27   >/dev/null   || groupadd -g 27 video 2>/dev/null
+                        getent group 423  >/dev/null   || groupadd -g 423 bluetooth-audio 2>/dev/null
+                        getent group 600  >/dev/null   || groupadd -g 600 cras 2>/dev/null
+                        getent group 85   >/dev/null   || groupadd -g 85 usb 2>/dev/null
+                        getent group 20162 >/dev/null  || groupadd -g 20162 traced-producer 2>/dev/null
+                        getent group 20164 >/dev/null  || groupadd -g 20164 traced-consumer 2>/dev/null
+                        getent group 1001 >/dev/null   || groupadd -g 1001 chronos-access 2>/dev/null
+                        getent group 240  >/dev/null   || groupadd -g 240 brltty 2>/dev/null
+                        getent group 20150 >/dev/null  || groupadd -g 20150 arcvm-boot-notification-server 2>/dev/null
+                        getent group 20189 >/dev/null  || groupadd -g 20189 arc-mojo-proxy 2>/dev/null
+                        getent group 20152 >/dev/null  || groupadd -g 20152 arc-host-clock 2>/dev/null
+                        getent group 608  >/dev/null   || groupadd -g 608 midis 2>/dev/null
+                        getent group 415  >/dev/null   || groupadd -g 415 suzy-q 2>/dev/null
+                        getent group 612  >/dev/null   || groupadd -g 612 ml-core 2>/dev/null
+                        getent group 311  >/dev/null   || groupadd -g 311 fuse-archivemount 2>/dev/null
+                        getent group 20137 >/dev/null  || groupadd -g 20137 crash 2>/dev/null
+                        getent group 419  >/dev/null   || groupadd -g 419 crash-access 2>/dev/null
+                        getent group 420  >/dev/null   || groupadd -g 420 crash-user-access 2>/dev/null
+                        getent group 304  >/dev/null   || groupadd -g 304 fuse-drivefs 2>/dev/null
+                        getent group 20215 >/dev/null  || groupadd -g 20215 regmond_senders 2>/dev/null
+                        getent group 603  >/dev/null   || groupadd -g 603 arc-camera 2>/dev/null
+                        getent group 20042 >/dev/null  || groupadd -g 20042 camera 2>/dev/null
+                        getent group 208  >/dev/null   || groupadd -g 208 pkcs11 2>/dev/null
+                        getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
+                        getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
+                        getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
+                        getent group portage >/dev/null || groupadd -g 250 portage 2>/dev/null
+                        getent group steam >/dev/null || groupadd -g 20001 steam 2>/dev/null
+                        getent group render >/dev/null || groupadd -g 989 render 2>/dev/null
                         getent group 222  >/dev/null    || groupadd -g 222 input 2>/dev/null
-                        getent group 258  >/dev/null    || groupadd -g 258 uinput 2>/dev/null
-                        getent group 7    >/dev/null    || groupadd -g 7 lp 2>/dev/null
-                        getent group 27   >/dev/null    || groupadd -g 27 video 2>/dev/null
-                        getent group 423  >/dev/null    || groupadd -g 423 bluetooth-audio 2>/dev/null
-                        getent group 600  >/dev/null    || groupadd -g 600 cras 2>/dev/null
-                        getent group 85   >/dev/null    || groupadd -g 85 usb 2>/dev/null
-                        getent group 20162 >/dev/null   || groupadd -g 20162 traced-producer 2>/dev/null
-                        getent group 20164 >/dev/null   || groupadd -g 20164 traced-consumer 2>/dev/null
-                        getent group 1001 >/dev/null    || groupadd -g 1001 chronos-access 2>/dev/null
-                        getent group 240  >/dev/null    || groupadd -g 240 brltty 2>/dev/null
-                        getent group 20150 >/dev/null   || groupadd -g 20150 arcvm-boot-notification-server 2>/dev/null
-                        getent group 20189 >/dev/null   || groupadd -g 20189 arc-mojo-proxy 2>/dev/null
-                        getent group 20152 >/dev/null   || groupadd -g 20152 arc-host-clock 2>/dev/null
-                        getent group 608  >/dev/null    || groupadd -g 608 midis 2>/dev/null
-                        getent group 415  >/dev/null    || groupadd -g 415 suzy-q 2>/dev/null
-                        getent group 612  >/dev/null    || groupadd -g 612 ml-core 2>/dev/null
-                        getent group 311  >/dev/null    || groupadd -g 311 fuse-archivemount 2>/dev/null
-                        getent group 20137 >/dev/null   || groupadd -g 20137 crash 2>/dev/null
-                        getent group 419  >/dev/null    || groupadd -g 419 crash-access 2>/dev/null
-                        getent group 420  >/dev/null    || groupadd -g 420 crash-user-access 2>/dev/null
-                        getent group 304  >/dev/null    || groupadd -g 304 fuse-drivefs 2>/dev/null
-                        getent group 20215 >/dev/null   || groupadd -g 20215 regmond_senders 2>/dev/null
-                        getent group 603  >/dev/null    || groupadd -g 603 arc-camera 2>/dev/null
-                        getent group 20042 >/dev/null   || groupadd -g 20042 camera 2>/dev/null
-                        getent group 208  >/dev/null    || groupadd -g 208 pkcs11 2>/dev/null
-                        getent group 303  >/dev/null    || groupadd -g 303 policy-readers 2>/dev/null
-                        getent group 20132 >/dev/null   || groupadd -g 20132 arc-keymasterd 2>/dev/null
-                        getent group 605  >/dev/null    || groupadd -g 605 debugfs-access 2>/dev/null
-                        getent group 222  >/dev/null    || groupadd -g 222 input 2>/dev/null
-                        getent group 250  >/dev/null    || groupadd -g 250 portage 2>/dev/null
-                        getent group 20001 >/dev/null   || groupadd -g 20001 steam 2>/dev/null
-                        getent group render >/dev/null  || groupadd -g 989 render 2>/dev/null
-                        getent group 403 >/dev/null     || groupadd -g 403 hidraw 2>/dev/null
+                        getent group 238 >/dev/null     || groupadd -g 238 hidraw 2>/dev/null
                         getent group 213 >/dev/null     || groupadd -g 213 cros-disks 2>/dev/null
-                        getent group 20148 >/dev/null   || groupadd -g 20148 smdisplay 2>/dev/null
-                        getent group 6 >/dev/null       || groupadd -g 6 disk 2>/dev/null
-                        getent group 418 >/dev/null     || groupadd -g 418 virtaccess 2>/dev/null
-                        getent group 407 >/dev/null     || groupadd -g 407 drm_dp_aux 2>/dev/null
-                        getent group 402 >/dev/null     || groupadd -g 402 serial 2>/dev/null
-                        getent group 9 >/dev/null       || groupadd -g 9 kmem 2>/dev/null
 
-                        if id "\$CHARD_USER" &>/dev/null; then
-                            EXISTING_UID=\$(id -u "\$CHARD_USER")
-                            if [ "\$EXISTING_UID" != "1000" ]; then
-                                userdel -r "\$CHARD_USER" 2>/dev/null || userdel "\$CHARD_USER" 2>/dev/null || true
-                            fi
-                        fi
-                        
-                        if id -u 1000 &>/dev/null; then
-                            EXISTING_USER=\$(id -un 1000)
-                            if [ "\$EXISTING_USER" != "\$CHARD_USER" ]; then
-                                userdel -r "\$EXISTING_USER" 2>/dev/null || userdel "\$EXISTING_USER" 2>/dev/null || true
-                            fi
-                        fi
-                        
-                        if ! id "\$CHARD_USER" &>/dev/null; then
-                            useradd -u 1000 -g 1000 -d "/\$CHARD_HOME" -M -s /bin/bash "\$CHARD_USER"
+
+
+                        if ! id \"\$CHARD_USER\" &>/dev/null; then
+                            useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
 
-                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,hidraw,cros-disks,disk,watchdog,virtaccess,drm_dp_aux,serial,kmem,smdisplay \$CHARD_USER
+                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,input,hidraw,cros-disks \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
                         chown \$USER:\$USER \"/\$CHARD_HOME\"
