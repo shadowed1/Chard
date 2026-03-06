@@ -413,7 +413,7 @@ case "$cmd" in
         CLEANUP_ENABLED=1
 		VERSION_FILE="$CHARD_ROOT/.chard_chrome"
 		if [ -s "$VERSION_FILE" ]; then
-		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
 		
 		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
 		        sudo chown -E $USER:video /dev/dri/card0
