@@ -423,7 +423,7 @@ fi
 add_chard_marker() {
     local FILE="$1"
     sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE"
-
+    tr -d '\0' < "$FILE" > "${FILE}.clean" && mv "${FILE}.clean" "$FILE"
     if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
         {
             echo "# <<< CHARD ENV MARKER <<<"
