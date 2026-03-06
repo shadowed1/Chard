@@ -1,6 +1,10 @@
 #!/bin/bash
-SOMMELIER_DISPLAY="/run/chrome/wayland-0"
-SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
+if [ -d "/run/chrome" ]; then
+    SOMMELIER_DISPLAY="/run/chrome/wayland-0"
+else
+   SOMMELIER_DISPLAY="${XDG_RUNTIME_DIR}/wayland-0"
+fi
+SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 ARCH="$(uname -m)"
 SOMMELIER_CMD=(
     sommelier
