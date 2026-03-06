@@ -1452,21 +1452,21 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         /usr/sbin/getent group 407 >/dev/null     || groupadd -g 407 drm_dp_aux 2>/dev/null
                         /usr/sbin/getent group 402 >/dev/null     || groupadd -g 402 serial 2>/dev/null
                         /usr/sbin/getent group 9 >/dev/null       || groupadd -g 9 kmem 2>/dev/null
-                        /usr/sbin/getent group 416 >/dev/null     || groupadd -g 416 cros_ec-access 2>/dev/null
-                        /usr/sbin/getent group 228 >/dev/null     || groupadd -g 228 power 2>/dev/null
+                        #/usr/sbin/getent group 416 >/dev/null     || groupadd -g 416 cros_ec-access 2>/dev/null
+                        #/usr/sbin/getent group 228 >/dev/null     || groupadd -g 228 power 2>/dev/null
                         /usr/sbin/getent group 218 >/dev/null     || groupadd -g 218 bluetooth 2>/dev/null
-                        /usr/sbin/getent group 20182 >/dev/null   || groupadd -g 20182 crosvm-root 2>/dev/null
-                        /usr/sbin/getent group 299 >/dev/null     || groupadd -g 299 crosvm 2>/dev/null
-                        /usr/sbin/getent group 204 >/dev/null     || groupadd -g 204 sshd 2>/dev/null
+                        #/usr/sbin/getent group 20182 >/dev/null   || groupadd -g 20182 crosvm-root 2>/dev/null
+                        #/usr/sbin/getent group 299 >/dev/null     || groupadd -g 299 crosvm 2>/dev/null
+                        #/usr/sbin/getent group 204 >/dev/null     || groupadd -g 204 sshd 2>/dev/null
                         /usr/sbin/getent group 20148 >/dev/null   || groupadd -g 20148 smdisplay 2>/dev/null
-                        /usr/sbin/getent group 277 >/dev/null     || groupadd -g 277 cups 2>/dev/null
+                        #/usr/sbin/getent group 277 >/dev/null     || groupadd -g 277 cups 2>/dev/null
                         /usr/sbin/getent group 226 >/dev/null     || groupadd -g 226 mtp 2>/dev/null
-                        /usr/sbin/getent group 20187 >/dev/null   || groupadd -g 20187 vtpm 2>/dev/null
-                        /usr/sbin/getent group 20128 >/dev/null   || groupadd -g 20128 pluginvm 2>/dev/null
-                        /usr/sbin/getent group 20115 >/dev/null   || groupadd -g 20115 seneschal-dbus 2>/dev/null
-                        /usr/sbin/getent group 20114 >/dev/null   || groupadd -g 20114 seneschal 2>/dev/null
-                        /usr/sbin/getent group 20112 >/dev/null   || groupadd -g 20112 vm_cicerone 2>/dev/null
-                        /usr/sbin/getent group 20209 >/dev/null   || groupadd -g 20209 session_manager 2>/dev/null
+                        #/usr/sbin/getent group 20187 >/dev/null   || groupadd -g 20187 vtpm 2>/dev/null
+                        #/usr/sbin/getent group 20128 >/dev/null   || groupadd -g 20128 pluginvm 2>/dev/null
+                        #/usr/sbin/getent group 20115 >/dev/null   || groupadd -g 20115 seneschal-dbus 2>/dev/null
+                        #/usr/sbin/getent group 20114 >/dev/null   || groupadd -g 20114 seneschal 2>/dev/null
+                        #/usr/sbin/getent group 20112 >/dev/null   || groupadd -g 20112 vm_cicerone 2>/dev/null
+                        #/usr/sbin/getent group 20209 >/dev/null   || groupadd -g 20209 session_manager 2>/dev/null
                         /usr/sbin/getent group 258 >/dev/null     || groupadd -g 258 uinput 2>/dev/null
                         
                         if id "\$CHARD_USER" &>/dev/null; then
@@ -2144,28 +2144,6 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 
 chard_unmount
 #$CHARD_ROOT/bin/chard_preload
-
-sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
-load-module module-alsa-sink device=default sink_name=cras_sink control=none
-load-module module-softvol-sink sink_name=linear_sink master=cras_sink
-set-default-sink linear_sink
-load-module module-suspend-on-idle
-EOF
-
-sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
-unload-module module-udev-detect
-unload-module module-alsa-card
-EOF
-sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s) 2>/dev/null
-sudo sed -i \
-    -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
-    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
-    "$CHARD_ROOT/etc/pulse/daemon.conf"
-
-sudo cp $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa $CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s) 2>/dev/null
-grep -qxF ".include /etc/pulse/default.pa" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
-( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
-mv "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa.tmp" "$CHARD_ROOT/$CHARD_HOME/.config/pulse/default.pa" )
 
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
 if [[ "$(uname -m)" == "aarch64" ]]; then
