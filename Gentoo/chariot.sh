@@ -1609,6 +1609,8 @@ sudo cp /$CHARD_HOME/.config/pulse/default.pa /$CHARD_HOME/.config/pulse/default
 grep -qxF ".include /etc/pulse/default.pa" "/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
 mv "/$CHARD_HOME/.config/pulse/default.pa.tmp" "/$CHARD_HOME/.config/pulse/default.pa" )
+sudo mkdir -p /usr/share/file/misc
+sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
 }
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
