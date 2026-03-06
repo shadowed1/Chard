@@ -1353,10 +1353,10 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         /usr/sbin/getent group 20132 >/dev/null   || groupadd -g 20132 arc-keymasterd 2>/dev/null
                         /usr/sbin/getent group 605  >/dev/null    || groupadd -g 605 debugfs-access 2>/dev/null
                         /usr/sbin/getent group 222  >/dev/null    || groupadd -g 222 input 2>/dev/null
-                        /usr/sbin/getent group portage >/dev/null || groupadd -g 250 portage 2>/dev/null
+                        /usr/sbin/getent group 250 >/dev/null || groupadd -g 250 portage 2>/dev/null
                         /usr/sbin/getent group steam >/dev/null   || groupadd -g 20001 steam 2>/dev/null
                         /usr/sbin/getent group render >/dev/null  || groupadd -g 989 render 2>/dev/null
-                        /usr/sbin/getent group 238 >/dev/null     || groupadd -g 403 hidraw 2>/dev/null
+                        /usr/sbin/getent group 403 >/dev/null     || groupadd -g 403 hidraw 2>/dev/null
                         /usr/sbin/getent group 213 >/dev/null     || groupadd -g 213 cros-disks 2>/dev/null
                         /usr/sbin/getent group 6 >/dev/null     || groupadd -g 6 disk 2>/dev/null
                         /usr/sbin/getent group 229 >/dev/null     || groupadd -g 229 watchdog 2>/dev/null
@@ -1368,6 +1368,21 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         /usr/sbin/getent group 9 >/dev/null     || groupadd -g 9 kmem 2>/dev/null
                         /usr/sbin/getent group 416 >/dev/null     || groupadd -g 416 cros_ec-access 2>/dev/null
                         /usr/sbin/getent group 228 >/dev/null     || groupadd -g 228 power 2>/dev/null
+                        /usr/sbin/getent group 218 >/dev/null     || groupadd -g 218 bluetooth 2>/dev/null
+                        /usr/sbin/getent group 20182 >/dev/null     || groupadd -g 20182 crosvm-root 2>/dev/null
+                        /usr/sbin/getent group 299 >/dev/null     || groupadd -g 299 crosvm 2>/dev/null
+                        /usr/sbin/getent group 204 >/dev/null     || groupadd -g 204 sshd 2>/dev/null
+                        /usr/sbin/getent group 20148 >/dev/null     || groupadd -g 20148 smdisplay 2>/dev/null
+                        /usr/sbin/getent group 277 >/dev/null     || groupadd -g 277 cups 2>/dev/null
+                        /usr/sbin/getent group 226 >/dev/null     || groupadd -g 226 mtp 2>/dev/null
+                        /usr/sbin/getent group 20187 >/dev/null     || groupadd -g 20187 vtpm 2>/dev/null
+                        /usr/sbin/getent group 20187 >/dev/null     || groupadd -g 20187 vtpm 2>/dev/null
+                        /usr/sbin/getent group 20128 >/dev/null     || groupadd -g 20128 pluginvm 2>/dev/null
+                        /usr/sbin/getent group 20115 >/dev/null     || groupadd -g 20115 seneschal-dbus 2>/dev/null
+                        /usr/sbin/getent group 20114 >/dev/null     || groupadd -g 20114 seneschal 2>/dev/null
+                        /usr/sbin/getent group 20112 >/dev/null     || groupadd -g 20112 vm_cicerone 2>/dev/null
+                        /usr/sbin/getent group 407 >/dev/null     || groupadd -g 407 drm_dp_aux 2>/dev/null
+                        /usr/sbin/getent group 20209 >/dev/null     || groupadd -g 20209 session_manager 2>/dev/null
                         
                         if id -u 1000 &>/dev/null; then
                             EXISTING_USER=\$(id -un 1000)
@@ -1380,7 +1395,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
 
-                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,lp,input,hidraw,cros-disks,disk,watchdog,virtaccess,iioservice,i2c,drm_dp_aux,serial,kmem,cros_ec-access,power \$CHARD_USER
+                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,lp,input,hidraw,cros-disks,disk,watchdog,virtaccess,iioservice,i2c,drm_dp_aux,serial,kmem,cros_ec-access,power,crosvm,crosvm-root,vm_cicerone,seneschal,seneschal-dbus,pluginvm,vtpm,mtp,cups,sshd,smdisplay,drm_dp_aux,session_manager \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
                         chown \$USER:\$USER \"/\$CHARD_HOME\"        
