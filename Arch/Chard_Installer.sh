@@ -1389,11 +1389,9 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         HOME=/\$CHARD_HOME
                         source \$HOME/.bashrc 2>/dev/null
                         export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-                        
                         userdel -f alarm 2>/dev/null
                         groupdel -f alarm 2>/dev/null
-                        groupdel -f video 2>/dev/null
-                        /usr/sbin/getent group 1000 >/dev/null    || groupadd -g 1000 \$CHARD_USER 2>/dev/null
+                        /usr/sbin/getent group 1000 >/dev/null    || groupadd -g 1000 chronos 2>/dev/null
                         /usr/sbin/getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
                         /usr/sbin/getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
                         /usr/sbin/getent group 20205 >/dev/null   || groupadd -g 20205 arc-keymintd 2>/dev/null
@@ -1433,7 +1431,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         /usr/sbin/getent group portage >/dev/null || groupadd -g 250 portage 2>/dev/null
                         /usr/sbin/getent group steam >/dev/null   || groupadd -g 20001 steam 2>/dev/null
                         /usr/sbin/getent group render >/dev/null  || groupadd -g 989 render 2>/dev/null
-                        /usr/sbin/getent group 403 >/dev/null     || groupadd -g 403 hidraw 2>/dev/null
+                        /usr/sbin/getent group 238 >/dev/null     || groupadd -g 238 hidraw 2>/dev/null
                         /usr/sbin/getent group 213 >/dev/null     || groupadd -g 213 cros-disks 2>/dev/null
 
                         if id -u 1000 &>/dev/null; then
@@ -1447,7 +1445,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
                         fi
 
-                        usermod -aG \$CHARD_USER,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,lp,input,hidraw,cros-disks \$CHARD_USER
+                        usermod -aG chronos,wayland,arc-bridge,arc-keymintd,arc-sensor,android-everybody,audio,input,uinput,lp,video,bluetooth-audio,cras,usb,traced-producer,traced-consumer,chronos-access,brltty,arcvm-boot-notification-server,arc-mojo-proxy,arc-host-clock,midis,suzy-q,ml-core,fuse-archivemount,crash,crash-access,crash-user-access,fuse-drivefs,regmond_senders,arc-camera,camera,pkcs11,policy-readers,arc-keymasterd,debugfs-access,portage,steam,render,lp,input,hidraw,cros-disks \$CHARD_USER
                         
                         mkdir -p \"/\$CHARD_HOME\"
                         chown \$USER:\$USER \"/\$CHARD_HOME\"        
