@@ -1071,10 +1071,9 @@ checkpoint_115() {
 run_checkpoint 115 "sudo -E emerge app-text/doxygen" checkpoint_115
 
 checkpoint_116() {
-    sudo -E emerge llvm-core/libclc-20
+    sudo -E emerge llvm-core/libclc
     sudo -E emerge gui-libs/egl-gbm
     rm -rf /var/tmp/portage/gui-libs/egl-gbm-*
-    sudo emerge --update --deep --newuse @world
     eclean-dist -d
 }
 run_checkpoint 116 "sudo -E emerge gui-libs/egl-gbm" checkpoint_116
