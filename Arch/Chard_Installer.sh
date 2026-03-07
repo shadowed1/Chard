@@ -1392,6 +1392,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         
                         userdel -f alarm 2>/dev/null
                         groupdel -f alarm 2>/dev/null
+                        groupdel -f video 2>/dev/null
                         /usr/sbin/getent group 1000 >/dev/null    || groupadd -g 1000 \$CHARD_USER 2>/dev/null
                         /usr/sbin/getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
                         /usr/sbin/getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
