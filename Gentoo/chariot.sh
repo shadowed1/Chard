@@ -546,12 +546,8 @@ checkpoint_44() {
 run_checkpoint 44 "install rustup" checkpoint_44
 
 checkpoint_45() {
-    echo ">=app-text/xmlto-0.0.28-r11 text" | sudo tee -a /etc/portage/package.use/xmlto
-    echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
-    echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
     sudo -E emerge dev-libs/boehm-gc
     rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
-    sudo emerge --update --deep --newuse --autounmask-write @world
     eclean-dist -d
 }
 run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
@@ -581,6 +577,9 @@ run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
 # Fix for long term
 checkpoint_48() {
     #sudo -E emerge mesa-clc
+    #echo ">=app-text/xmlto-0.0.28-r11 text" | sudo tee -a /etc/portage/package.use/xmlto
+    #echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
+    #echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
     sudo -E emerge -1 llvm-core/libclc    
     sudo -E emerge llvm-runtimes/libcxx
     sudo -E emerge llvm-runtimes/libcxxabi
@@ -589,7 +588,7 @@ checkpoint_48() {
     rm -rf /var/tmp/portage/llvm-runtimes/libcxx-*
     rm -rf /var/tmp/portage/llvm-runtimes/libcxxabi-*
     rm -rf /var/tmp/portage/dev-util/spirv-llvm-translator-*
-    sudo emerge --update --deep --newuse @world
+    sudo -E emerge --update --deep --newuse @world
     eclean-dist -d
 }
 run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
