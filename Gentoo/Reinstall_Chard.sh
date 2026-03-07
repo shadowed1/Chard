@@ -191,15 +191,25 @@ trap cleanup_chroot EXIT INT TERM
                     [ -f "$TARGET_FILE" ] || touch "$TARGET_FILE"
                 fi
                 
-                sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
-                tr -d '\0' < "$FILE" > "${FILE}.clean" && mv "${FILE}.clean" "$FILE"
-                if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
-                    {
-                        echo "# <<< CHARD ENV MARKER <<<"
-                        echo "source \"$CHARD_RC\""
-                        echo "# <<< END CHARD ENV MARKER <<<"
-                    } >> "$TARGET_FILE"
-                fi
+                add_chard_marker() {
+                    local FILE="$1"
+                    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE"
+                    tr -d '\0' < "$FILE" > "${FILE}.clean" && mv "${FILE}.clean" "$FILE"
+                    if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
+                        {
+                            echo "# <<< CHARD ENV MARKER <<<"
+                            echo "source \"$CHARD_RC\""
+                            echo "# <<< END CHARD ENV MARKER <<<"
+                        } >> "$FILE"
+                        echo "${BLUE}[+] Chard sourced to $FILE"
+                        echo
+                    else
+                        echo "${YELLOW}[!] Chard already sourced in $FILE"
+                        echo
+                    fi
+                }
+                
+                add_chard_marker "$TARGET_FILE"
 
                 sudo chroot $CHARD_ROOT /bin/bash -c "
 
