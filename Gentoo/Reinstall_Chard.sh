@@ -92,7 +92,7 @@ cleanup_chroot() {
 trap cleanup_chroot EXIT INT TERM
 
         echo "${RESET}${GREEN}"
-        echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard!)"
+        echo "[1] Quick Reinstall - This will close all running apps in Chard! "
         echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
         echo "${RESET}${RED}[q] Cancel"
         echo "${RESET}${GREEN}"
@@ -481,7 +481,7 @@ EOF
                     /bin/SMRT 2>/dev/null
                     source \$HOME/.smrt_env.sh 2>/dev/null
                     sudo chown -R \$USER:\$USER \$HOME 2>/dev/null
-                    sudo flatpak remote-delete flathub -y 2>dev/null
+                    sudo flatpak remote-delete flathub -y 2>/dev/null
                     sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
                     sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
                     sudo chmod +x /bin/autoclicker 2>/dev/null
