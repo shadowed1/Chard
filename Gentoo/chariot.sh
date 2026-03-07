@@ -553,9 +553,9 @@ checkpoint_45() {
 run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
 
 checkpoint_46() {
-    echo ">=app-text/xmlto-0.0.28-r11 text" | sudo tee -a /etc/portage/package.use/xmlto
-    echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
-    echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
+    #echo ">=app-text/xmlto-0.0.28-r11 text" | sudo tee -a /etc/portage/package.use/xmlto
+    #echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
+    #echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
     MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
     MEM_GB=$(( (MEM_KB + 1024*1024 - 1) / (1024*1024) ))
     THREADS=$(( MEM_GB / 2 ))
@@ -579,7 +579,7 @@ checkpoint_47() {
 run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
 # Fix for long term
 checkpoint_48() {    
-    sudo -E emerge -1 llvm-core/libclc    
+    sudo -E emerge -v =llvm-core/libclc-20*    
     sudo -E emerge llvm-runtimes/libcxx
     sudo -E emerge llvm-runtimes/libcxxabi
     sudo -E emerge dev-util/spirv-llvm-translator
@@ -1069,8 +1069,7 @@ checkpoint_115() {
 run_checkpoint 115 "sudo -E emerge app-text/doxygen" checkpoint_115
 
 checkpoint_116() {
-    sudo -E emerge dev-util/mesa_clc
-    sudo -E emerge llvm-core/libclc
+    sudo -E emerge -1 =llvm-core/libclc-20*
     sudo -E emerge gui-libs/egl-gbm
     rm -rf /var/tmp/portage/dev-util/mesa_clc-*
     rm -rf /var/tmp/portage/llvm-core/libclc-*
