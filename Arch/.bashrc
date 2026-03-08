@@ -269,7 +269,7 @@ alias virtm='sudo -E virtm'
 # KDE Plasma
 alias plasmashell='/bin/chard_plasma'
 
-command -v chard_refresh >/dev/null && chard_refresh
+#command -v chard_refresh >/dev/null && chard_refresh
 
 export EDITOR=gedit
 export FILEMANAGER=thunar
