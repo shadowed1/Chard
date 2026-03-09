@@ -2337,14 +2337,13 @@ sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
 
 if [ -f "$CHROMEOS_BASHRC" ]; then
     selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
-                    
-    if [[ -z "$selected_locale" ]]; then
-        echo "Could not determine language."
-        return 0
-    fi
 
-    echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
-    echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
+    if [[ -n "$selected_locale" ]]; then
+        echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
+        echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
+    else
+        echo "${RED}Could not determine language. ${RESET}"
+    fi
 fi
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
