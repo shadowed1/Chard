@@ -467,10 +467,24 @@ EOF
 echo "${RESET}${GREEN}CHARD_HOME: ${BOLD}$CHARD_ROOT/$CHARD_HOME ${RESET}"
 echo "${RESET}${GREEN}CHARD_USER: ${BOLD}$CHARD_USER ${RESET}${RED}"
 
-FREE_SPACE_FILE="$CHARD_ROOT/.chard_free_space"
-STATEFUL_FREE_G=$(df -h /mnt/stateful_partition | awk 'NR==2 {print $4}' | sed 's/G//')
-echo "${GREEN}Free space available: ${BOLD}${STATEFUL_FREE_G} GB ${RESET}"
-echo "$STATEFUL_FREE_G" | sudo tee "$FREE_SPACE_FILE" > /dev/null
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
+    
+    if [[ -z "$selected_locale" ]]; then
+      echo "Could not determine language."
+      exit 0
+    fi
+    
+    echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
+    echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
+fi
+
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    FREE_SPACE_FILE="$CHARD_ROOT/.chard_free_space"
+    STATEFUL_FREE_G=$(df -h /mnt/stateful_partition | awk 'NR==2 {print $4}' | sed 's/G//')
+    echo "${GREEN}Free space available: ${BOLD}${STATEFUL_FREE_G} GB ${RESET}"
+    echo "$STATEFUL_FREE_G" | sudo tee "$FREE_SPACE_FILE" > /dev/null
+fi
 
 ARCH=$(uname -m)
 case "$ARCH" in
