@@ -1252,6 +1252,8 @@ checkpoint_130() {
 run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
 
 checkpoint_131() {
+    locale_code=$(cat "/.chard_language" | sed 's/-/_/')
+    sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen"
     sudo -E emerge media-gfx/gimp
     rm -rf /var/tmp/portage/media-gfx/gimp-*
     eclean-dist -d
@@ -1612,8 +1614,6 @@ grep -qxF ".include /etc/pulse/default.pa" "/$CHARD_HOME/.config/pulse/default.p
 mv "/$CHARD_HOME/.config/pulse/default.pa.tmp" "/$CHARD_HOME/.config/pulse/default.pa" )
 sudo mkdir -p /usr/share/file/misc
 sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
-locale_code=$(cat "/.chard_language" | sed 's/-/_/')
-sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen"
 }
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
