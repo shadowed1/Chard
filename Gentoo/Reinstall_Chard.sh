@@ -912,6 +912,19 @@ EOF
                 sudo rm -rf $CHARD_ROOT/var/tmp/build/* 2>/dev/null
                 sudo rm -rf $CHARD_ROOT/var/cache/distfiles/* 2>/dev/null
                 sudo rm -rf $CHARD_ROOT/$CHARD_HOME/.cache/bazel/ 2>/dev/null
+
+                if [ -f "$CHROMEOS_BASHRC" ]; then
+                    selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
+                    
+                    if [[ -z "$selected_locale" ]]; then
+                      echo "Could not determine language."
+                      return 0
+                    fi
+
+                    echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
+                    echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
+                fi
+                
                 echo
                 source "$CHARD_ROOT/.chardrc"
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
