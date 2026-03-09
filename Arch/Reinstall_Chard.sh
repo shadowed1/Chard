@@ -874,6 +874,15 @@ EOF
                     echo "${CYAN}Skipping $CHRONOS_RC - Already exists."
                 fi
                 sudo rm -rf $CHARD_ROOT/$CHARD_HOME/.cache/bazel/ 2>/dev/null
+                selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
+
+                if [[ -z "$selected_locale" ]]; then
+                  echo "Could not determine language."
+                  exit 0
+                fi
+                echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
+                echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
+                
                 echo
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
