@@ -1254,6 +1254,7 @@ run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
 checkpoint_131() {
     locale_code=$(cat "/.chard_language" | sed 's/-/_/')
     sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen"
+    sudo -E locale-gen
     sudo -E emerge media-gfx/gimp
     rm -rf /var/tmp/portage/media-gfx/gimp-*
     eclean-dist -d
