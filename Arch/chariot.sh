@@ -1953,6 +1953,8 @@ checkpoint_157() {
     sudo chmod +x /bin/virtm 2>/dev/null
     sudo rm /tmp/virtm.c 2>/dev/null
     sudo rm /tmp/autoclicker.c 2>/dev/null
+    locale_code=$(cat "/.chard_language" | sed 's/-/_/')
+    sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen"
 }
 run_checkpoint 157 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_157
 
