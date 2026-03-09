@@ -915,17 +915,15 @@ EOF
 
                 if [ -f "$CHROMEOS_BASHRC" ]; then
                     selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
-                    
-                    if [[ -z "$selected_locale" ]]; then
-                      echo "Could not determine language."
-                      return 0
+
+                    if [[ -n "$selected_locale" ]]; then
+                        echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
+                        echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
+                        locale_code=$(cat "$CHARD_ROOT/.chard_language" | sed 's/-/_/')
+                        sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "$CHARD_ROOT/etc/locale.gen"
+                    else
+                        echo "${RED}Could not determine language. ${RESET}"
                     fi
-
-                    echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
-                    echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
-
-                    locale_code=$(cat "$CHARD_ROOT/.chard_language" | sed 's/-/_/')
-                    sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "$CHARD_ROOT/etc/locale.gen"
                 fi
                 
                 echo
