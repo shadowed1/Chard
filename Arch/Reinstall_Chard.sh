@@ -884,6 +884,8 @@ EOF
 
                     echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
                     echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
+                    locale_code=$(cat "$CHARD_ROOT/.chard_language" | sed 's/-/_/')
+                    sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "$CHARD_ROOT/etc/locale.gen"
                 fi
                 echo
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
