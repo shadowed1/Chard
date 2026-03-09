@@ -472,7 +472,7 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     
     if [[ -z "$selected_locale" ]]; then
       echo "Could not determine language."
-      exit 0
+      return 0
     fi
     
     echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
