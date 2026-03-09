@@ -1953,8 +1953,6 @@ checkpoint_157() {
     sudo chmod +x /bin/virtm 2>/dev/null
     sudo rm /tmp/virtm.c 2>/dev/null
     sudo rm /tmp/autoclicker.c 2>/dev/null
-    locale_code=$(cat "/.chard_language" | sed 's/-/_/')
-    sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen"
 }
 run_checkpoint 157 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_157
 
@@ -1963,6 +1961,10 @@ checkpoint_158() {
     fc-cache -f 2>/dev/null
 }
 run_checkpoint 158 "Emoji Support" checkpoint_158
+
+locale_code=$(cat "/.chard_language" | sed 's/-/_/')
+sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen" 2>/dev/null
+sudo -E locale-gen 2>/dev/null
 
 mkdir -p /$CHARD_HOME/.config/pulse/
 sudo tee /etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
