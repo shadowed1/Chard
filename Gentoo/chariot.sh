@@ -1612,6 +1612,8 @@ grep -qxF ".include /etc/pulse/default.pa" "/$CHARD_HOME/.config/pulse/default.p
 mv "/$CHARD_HOME/.config/pulse/default.pa.tmp" "/$CHARD_HOME/.config/pulse/default.pa" )
 sudo mkdir -p /usr/share/file/misc
 sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
+locale_code=$(cat "/.chard_language" | sed 's/-/_/')
+sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen"
 }
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
