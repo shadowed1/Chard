@@ -1563,7 +1563,6 @@ tee ~/.config/gtk-4.0/settings.ini >/dev/null <<'EOF'
 gtk-theme-name=Adwaita-dark
 gtk-application-prefer-dark-theme=1
 EOF
-sudo -E emerge strace
 eclean-dist -d
 }
 run_checkpoint 146 "Dark Theme and strace" checkpoint_146
@@ -1583,6 +1582,8 @@ run_checkpoint 147 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_147
 checkpoint_148() {
     sudo -E emerge xfce4-terminal
     sudo -E emerge x11-base/xwayland
+    xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
+    xfconf-query -c xfwm4 -p /general/theme -s "Adwaita-dark"
     rm -rf /var/tmp/portage/x11-base/xwayland-*
     eclean-dist -d
     sudo etc-update --automode -5
