@@ -1848,6 +1848,8 @@ tee ~/.config/gtk-4.0/settings.ini >/dev/null <<'EOF'
 gtk-theme-name=Adwaita-dark
 gtk-application-prefer-dark-theme=1
 EOF
+xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
+xfconf-query -c xfwm4 -p /general/theme -s "Adwaita-dark"
 }
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 
