@@ -273,8 +273,8 @@ command -v chard_refresh >/dev/null && chard_refresh
 
 export EDITOR=gedit
 export FILEMANAGER=thunar
-yes | xdg-mime default thunar.desktop inode/directory
-source "$HOME/.${USER}rc"
+printf "y\n" | xdg-mime default thunar.desktop inode/directorysource
+"$HOME/.${USER}rc"
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
