@@ -1137,22 +1137,22 @@ detect_gpu_freq
 
 case "$GPU_TYPE" in
     intel)
-        VIDEO_CARDS="iris i915 intel"
+        VIDEO_CARDS="intel"
         ;;
     amd)
-        VIDEO_CARDS="radeonsi r600"
+        VIDEO_CARDS="amdgpu radeonsi"
         ;;
     nvidia)
         VIDEO_CARDS="nouveau nvk"
         ;;
     mali)
-        VIDEO_CARDS="panfrost lima"
+        VIDEO_CARDS="panfrost panthor"
         ;;
     adreno)
         VIDEO_CARDS="freedreno"
         ;;
     mediatek)
-        VIDEO_CARDS="panfrost lima"
+        VIDEO_CARDS="panfrost panthor"
         ;;
     vivante)
         VIDEO_CARDS="etnaviv"
@@ -1161,21 +1161,24 @@ case "$GPU_TYPE" in
         VIDEO_CARDS="asahi"
         ;;
     *)
-        VIDEO_CARDS="lavapipe virgl"
+        VIDEO_CARDS="lavapipe virgl vulkan video_cards_virtualbox video_cards_vmware"
         ;;
 esac
 
 USE_FLAGS="X a52 aac acl acpi alsa bindist -bluetooth branding bzip2 cairo cdda cdr cet crypt cube curl dbus dri dri3 dts encode exif egl flac gdbm gif gles2 gpm gtk gtk3 gui iconv icu introspection ipv6 jpeg jit kms layers lcms libnotify libtirpc llvm mad minizip mng multilib mp3 mp4 mpeg ncurses nls ogg opengl openmp opus pam pango pcre pdf png postproc ppds proprietary-codecs pulseaudio qml qt5 qt6 readline sdl seccomp sound -sound-server spell spirv ssl startup-notification svg tiff truetype udev -udisks unicode -upower usb -utils vorbis wayland wxwidgets x264 x265 xattr xcb xft xml xv xvid zlib python_targets_python3_13 systemd vpx zstd -elogind"
 
 case "$GPU_TYPE" in
-    amd|nvidia)
-        USE_FLAGS+=" vaapi vdpau vulkan"
+    amd)
+        USE_FLAGS+=" video_cards_amdgpu vaapi vdpau vulkan"
+        ;;
+    nvidia)
+        USE_FLAGS+=" video_cards_nvidia vaapi vdpau vulkan"
         ;;
     intel)
-        USE_FLAGS+=" video_cards_intel vulkan"
+        USE_FLAGS+=" video_cards_intel vaapi vdpau vulkan"
         ;;
     mediatek)
-        USE_FLAGS+=" virgl vulkan"
+        USE_FLAGS+=" video_cards_panthor video_cards_panfrost vulkan"
 esac
 
 sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
