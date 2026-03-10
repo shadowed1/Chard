@@ -704,6 +704,7 @@ case "$cmd" in
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
+                thunar --daemon 2>/dev/null &
                 cd ~/
                 exec chard_sommelier
             "
