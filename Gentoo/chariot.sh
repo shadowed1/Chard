@@ -1194,7 +1194,10 @@ run_checkpoint 126 "sudo -E emerge firefox" checkpoint_126
 
 checkpoint_127() {
     sudo chown -R 1000:1000 ~/
-    sudo -E emerge dev-util/vulkan-headers media-libs/vulkan-layers dev-util/vulkan-utility-libraries dev-util/vulkan-tools
+    sudo -E emerge dev-util/vulkan-headers 
+    sudo -E emerge media-libs/vulkan-layers 
+    sudo -E emerge dev-util/vulkan-utility-libraries 
+    sudo -E emerge dev-util/vulkan-tools 
     sudo -E emerge app-eselect/eselect-repository
     sudo -E eselect repository enable another-brave-overlay
     sudo -E emerge --sync another-brave-overlay
