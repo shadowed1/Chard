@@ -17,7 +17,8 @@ echo "${GREEN}${BOLD}Chard_Mesa will bypass exec capture limitation on ChromeOS!
 echo
 sleep 1
 MESA_VERSIONS=$(ls "$MESA_DIR"/*.ebuild | grep -v '9999' | sed 's/.*mesa-//;s/\.ebuild//')
-echo "${YELLOW}Found Mesa versions: ${BOLD}$MESA_VERSIONS ${RESET}"
+echo "${YELLOW}Found Mesa versions: "
+echo "${BOLD}$MESA_VERSIONS ${RESET}"
 echo
 sleep 1
 UNPACKED=$(ls -d "$WORK_BASE"/media-libs/mesa-*/work/mesa-*/src/intel/vulkan/i915/anv_device.c 2>/dev/null | head -1)
@@ -29,18 +30,24 @@ if [ -z "$UNPACKED" ]; then
         echo "${RED}Could not determine installed Mesa version${RESET}"
         exit 1
     fi
-    echo "${YELLOW}Targeting Mesa version: ${BOLD}$LATEST ${RESET}"
+    echo "${YELLOW}Targeting Mesa version:"
+    echo "${BOLD}$LATEST ${RESET}"
+    echo
     ebuild "$MESA_DIR/mesa-$LATEST.ebuild" clean unpack
     UNPACKED=$(ls -d "$WORK_BASE"/media-libs/mesa-*/work/mesa-*/src/intel/vulkan/i915/anv_device.c 2>/dev/null | head -1)
 fi
 
 if [ -z "$UNPACKED" ]; then
+    echo
     echo "${RED}Could not find anv_device.c ${RESET}"
+    echo
     sleep 5
     exit 1
 fi
 
-echo "${GREEN}Using source: ${BOLD}$UNPACKED ${RESET}"
+echo "${GREEN}Using source: "
+echo "${BOLD}$UNPACKED ${RESET}"
+echo
 
 cp "$UNPACKED" /tmp/anv_device.c.orig
 cp /tmp/anv_device.c.orig /tmp/anv_device.c.new
@@ -58,6 +65,7 @@ diff -u /tmp/anv_device.c.orig /tmp/anv_device.c.new | \
     sed 's|/tmp/anv_device.c.new|b/src/intel/vulkan/i915/anv_device.c|' \
     > "$PATCH_FILE"
 
-echo "${GREEN}Patch written: ${BOLD}$PATCH_FILE ${RESET}"
+echo "${GREEN}Patch written: "
+echo "${BOLD}$PATCH_FILE ${RESET}"
 echo ""
-echo "emerge -1 =media-libs/mesa-$(portageq best_version / media-libs/mesa | sed 's/media-libs\/mesa-//')"
+sudo -E emerge -1 =media-libs/mesa-$(ls "$MESA_DIR"/*.ebuild | grep -v '9999' | sort -V | tail -1 | sed 's/.*mesa-//;s/\.ebuild//')
