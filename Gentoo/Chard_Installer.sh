@@ -1140,7 +1140,7 @@ detect_gpu_freq
 
 case "$GPU_TYPE" in
     intel)
-        VIDEO_CARDS="intel"
+        VIDEO_CARDS="intel iris"
         ;;
     amd)
         VIDEO_CARDS="amdgpu radeonsi"
