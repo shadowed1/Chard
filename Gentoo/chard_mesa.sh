@@ -12,7 +12,7 @@ MESA_DIR="/usr/portage/media-libs/mesa"
 PATCH_DIR="/etc/portage/patches/media-libs/mesa"
 PATCH_FILE="$PATCH_DIR/anv-skip-exec-capture-check.patch"
 WORK_BASE="/var/tmp/portage"
-
+echo
 echo "${GREEN}${BOLD}Chard_Mesa will bypass exec capture limitation on ChromeOS! ${RESET}"
 echo
 sleep 1
@@ -24,13 +24,12 @@ sleep 1
 UNPACKED=$(ls -d "$WORK_BASE"/media-libs/mesa-*/work/mesa-*/src/intel/vulkan/i915/anv_device.c 2>/dev/null | head -1)
 
 if [ -z "$UNPACKED" ]; then
-    echo "${YELLOW}No unpacked Mesa source found, unpacking latest available... ${RESET}"
     LATEST=$(portageq best_version / media-libs/mesa | sed 's/media-libs\/mesa-//')
     if [ -z "$LATEST" ]; then
         echo "${RED}Could not determine installed Mesa version${RESET}"
         exit 1
     fi
-    echo "${YELLOW}Targeting Mesa version:"
+    echo "${YELLOW}Selected Mesa version:"
     echo "${BOLD}$LATEST ${RESET}"
     echo
     ebuild "$MESA_DIR/mesa-$LATEST.ebuild" clean unpack
@@ -45,6 +44,7 @@ if [ -z "$UNPACKED" ]; then
     exit 1
 fi
 
+echo
 echo "${GREEN}Using source: "
 echo "${BOLD}$UNPACKED ${RESET}"
 echo
