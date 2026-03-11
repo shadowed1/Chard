@@ -68,4 +68,7 @@ diff -u /tmp/anv_device.c.orig /tmp/anv_device.c.new | \
 echo "${GREEN}Patch written: "
 echo "${BOLD}$PATCH_FILE ${RESET}"
 echo ""
-sudo -E emerge -1 =media-libs/mesa-$(ls "$MESA_DIR"/*.ebuild | grep -v '9999' | sort -V | tail -1 | sed 's/.*mesa-//;s/\.ebuild//')
+EMERGE_VERSION=$(ls "$MESA_DIR"/*.ebuild | grep -v '9999' | sort -V | tail -1 | sed 's/.*mesa-//;s/\.ebuild//')
+echo "${GREEN}Emerging Mesa: ${BOLD}$EMERGE_VERSION${RESET}"
+echo
+sudo -E emerge -1 =media-libs/mesa-$EMERGE_VERSION
