@@ -1,0 +1,33 @@
+#!/bin/bash
+# chard_shortcut - non-functional bridge for  Chard -> Ash
+U_HASH=$(readlink /home/chronos/user | cut -d'-' -f2)
+ASH_APPS="/home/chronos/u-$U_HASH/.local/share/applications"
+CHARD_APPS="$CHARD_ROOT/usr/share/applications"
+mkdir -p "$ASH_APPS"
+for desktop_file in "$CHARD_APPS"/*.desktop; do
+    app_name=$(basename "$desktop_file")
+    output="$ASH_APPS/chard-${app_name}"
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^Icon=(.+)$ ]]; then
+            icon_name="${BASH_REMATCH[1]}"
+            svg_path="$CHARD_ROOT/usr/share/icons/hicolor/scalable/apps/${icon_name}.svg"
+            png_path="$CHARD_ROOT/usr/share/icons/hicolor/48x48/apps/${icon_name}.png"
+            px_path="$CHARD_ROOT/usr/share/pixmaps/${icon_name}.png"
+            if   [[ -f "$svg_path" ]]; then echo "Icon=$svg_path"
+            elif [[ -f "$png_path" ]]; then echo "Icon=$png_path"
+            elif [[ -f "$px_path"  ]]; then echo "Icon=$px_path"
+            else echo "$line"
+            fi
+        else
+            echo "$line"
+        fi
+    done < "$desktop_file" > "$output"
+    chmod +x "$output"
+done
+echo "Bridged $(ls "$ASH_APPS"/chard-*.desktop 2>/dev/null | wc -l) app(s)."
+sudo dbus-send --type=signal --system \
+    --dest=org.chromium.AppService \
+    /org/chromium/AppService \
+    org.chromium.AppService.Reload
+
+echo "AppService reload signal sent."
