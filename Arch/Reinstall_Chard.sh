@@ -343,6 +343,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virt
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_refresh.sh"            -o "$CHARD_ROOT/bin/chard_refresh" 2>/dev/null
 sleep 0.05
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_mesa.sh"            -o "$CHARD_ROOT/bin/chard_mesa" 2>/dev/null
+sleep 0.05
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -369,6 +371,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_refresh"
+sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
 
 #sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
 #sudo chmod +x /etc/init/chard.conf
