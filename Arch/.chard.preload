@@ -20,6 +20,7 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib/libinotifytools.so.0"
     "$CHARD_ROOT/usr/lib/libbfd-2.46.so"
     "$CHARD_ROOT/usr/lib/libsframe.so.3"
+    "$CHARD_ROOT/usr/lib/libpython3.14.so.1.0"
 )
 
 LD_PRELOAD=""
