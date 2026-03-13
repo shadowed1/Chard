@@ -1318,9 +1318,8 @@ run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 
 checkpoint_137() {
     sudo -E emerge games-util/heroic-bin
-    sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
     sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
-    sudo chown -R 1000:1000 ~/.config/heroic
+    sudo chown -R 1000:1000 ~/
     rm -rf /var/tmp/portage/games-util/heroic-bin-*
     eclean-dist -d
 }
@@ -1621,8 +1620,8 @@ sudo mkdir -p /usr/share/file/misc
 sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
 }
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
-
-sudo -E chown -R $USER:$USER $HOME
+sudo chown -R 1000:1000 ~/
+sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
 echo "Chard Root is Ready! ${RESET}"
 show_progress
 
