@@ -396,7 +396,7 @@ alias virtm='sudo -E virtm'
 alias autoclicker='sudo -E autoclicker'
 export EDITOR=gedit
 export FILEMANAGER=thunar
-#printf "y\n" | xdg-mime default thunar.desktop inode/directory
+printf "y\n" | xdg-mime default thunar.desktop inode/directory
 source "$HOME/.${USER}rc"
 
 # <<< CHARD_SMRT >>>
