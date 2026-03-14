@@ -3,13 +3,7 @@
 # chard_garcon 
 # Author: Days and shadowed1
 
-# <<< CHARD_ROOT_MARKER >>>
-CHARD_ROOT=""
-CHARD_HOME=""
-CHARD_USER=""
-# <<< END_CHARD_ROOT_MARKER >>>
-
-export PATH="/usr/bin:/bin:/usr/local/bin:/sbin:/usr/sbin:$PATH"
+# export PATH="/usr/bin:/bin:/usr/local/bin:/sbin:/usr/sbin:$PATH"
 WATCH_DIR="/$CHARD_HOME/user/MyFiles/chard/"
 
 declare -A APPS=(
