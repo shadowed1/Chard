@@ -1,4 +1,5 @@
 #!/bin/bash
+# Run in ChromeOS shell with sudo enabled or VT-2 logged in as chronos
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -105,24 +106,21 @@ skipped=0
 
 for df in "$CHARD_APPS"/*.desktop; do
     [ -f "$df" ] || continue
-
     type=$(grep -m1 '^Type=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     no_display=$(grep -m1 '^NoDisplay=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     only_show=$(grep -m1 '^OnlyShowIn=' "$df" | cut -d= -f2)
-
     [ "$type" != "Application" ] && { skipped=$((skipped+1)); continue; }
     [ "$no_display" = "true" ] && { skipped=$((skipped+1)); continue; }
     echo "$only_show" | grep -q "XFCE" && { skipped=$((skipped+1)); continue; }
-
     desktop_file_id=$(basename "$df" .desktop)
     name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
     icon=$(grep -m1 '^Icon=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     exec_final="/usr/local/bin/chard_bridge $desktop_file_id"
-
     app_id=$(generate_app_id "$desktop_file_id")
     icons_count=$(install_icons "$icon" "$app_id")
-
+    wm_class=$(grep -m1 '^StartupWMClass=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    [ -z "$wm_class" ] && wm_class="$desktop_file_id"
     cat > "$SHARED/desktops/chard-${desktop_file_id}.desktop" << DESKTOP
 [Desktop Entry]
 Type=Application
@@ -131,6 +129,7 @@ Exec=/usr/local/bin/chard_bridge $desktop_file_id
 Icon=$icon
 Terminal=false
 NoDisplay=false
+StartupWMClass=$wm_class
 DESKTOP
 
     printf "  ${GREEN}%-40s${RESET} ${YELLOW}%s${RESET} (%s icons)\n" \
@@ -145,7 +144,7 @@ done
 
 sudo rm -f "$CHARD_ROOT/tmp/chard_appdata.txt"
 for i in $(seq 0 $((count-1))); do
-    echo "${DESKTOP_FILE_IDS[$i]}|${NAMES[$i]}|${EXECS[$i]}|${TERMINALS[$i]}"
+    echo "${DESKTOP_FILE_IDS[$i]}|${NAMES[$i]}|${EXECS[$i]}|${TERMINALS[$i]}|${WM_CLASSES[$i]}"
 done | sudo tee "$CHARD_ROOT/tmp/chard_appdata.txt" > /dev/null
 
 echo
