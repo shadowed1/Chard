@@ -889,8 +889,7 @@ EOF
                         echo "${RED}Could not determine language. ${RESET}"
                     fi
                 fi
-                
-                
+                echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 echo
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
