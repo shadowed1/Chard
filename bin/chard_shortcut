@@ -63,14 +63,17 @@ install_icons() {
     local icon_name="$1"
     local app_id="$2"
     local icon_dir="/home/user/$U_HASH/app_service/icons/$app_id"
+    local shared_icon_dir="$SHARED/icons/$app_id"
     sudo mkdir -p "$icon_dir"
     sudo chmod 755 "$icon_dir"
+    mkdir -p "$shared_icon_dir"
     local count=0
     for size in 16 32 48 64 96 128; do
         local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         if [ -f "$src" ]; then
             sudo cp "$src" "$icon_dir/${size}.png"
             sudo chmod 644 "$icon_dir/${size}.png"
+            cp "$src" "$shared_icon_dir/${size}.png"
             count=$((count + 1))
         fi
     done
@@ -80,10 +83,12 @@ install_icons() {
             for size in 16 32 48 64 96 128; do
                 sudo cp "$fallback" "$icon_dir/${size}.png"
                 sudo chmod 644 "$icon_dir/${size}.png"
+                cp "$fallback" "$shared_icon_dir/${size}.png"
             done
             count=6
         fi
     fi
+    echo "$icon_name" > "$shared_icon_dir/.icon_name"
     echo $count
 }
 
