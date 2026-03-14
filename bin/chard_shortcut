@@ -1,73 +1,191 @@
 #!/bin/bash
-CHARD_HOME=$(cat /.chard_home)
-WATCH_DIR="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/launch"
-ALIASES_FILE="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/.chard_aliases"
-mkdir -p "$WATCH_DIR"
-rm -f "$WATCH_DIR"/* 2>/dev/null
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
 
-sleep 2
-DISPLAY=$(ls /tmp/.X11-unix/ 2>/dev/null | sed 's/^X/:/' | head -1)
-export DISPLAY
+DEFAULT_CHARD_ROOT="/usr/local/chard"
 
-echo "[chard_launch_daemon] DISPLAY=$DISPLAY watching $WATCH_DIR"
-
-declare -A ALIASES
-if [ -f "$ALIASES_FILE" ]; then
-    while IFS='=' read -r key val; do
-        [ -n "$key" ] && ALIASES["$key"]="$val"
-    done < "$ALIASES_FILE"
-    echo "${GREEN}loaded ${#ALIASES[@]} aliases ${RESET}"
+if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
+    CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
+    echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
+elif [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
+    CHARD_ROOT=$(sudo cat "$DEFAULT_CHARD_ROOT/.install_path")
+    echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
+else
+    CHARD_ROOT="$DEFAULT_CHARD_ROOT"
 fi
 
-resolve_exec() {
-    local exec_cmd="$1"
-    local bin=$(echo "$exec_cmd" | awk '{print $1}')
-    local args=$(echo "$exec_cmd" | cut -s -d' ' -f2-)
-    local base=$(basename "$bin")
-    if [ -n "${ALIASES[$base]}" ]; then
-        echo "${ALIASES[$base]}${args:+ $args}"
-    else
-        echo "$exec_cmd"
-    fi
-}
+U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
+echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
 
-launch_app() {
-    local desktop_file_id="$1"
-    local df=""
+CHARD_USER=$(cat "$CHARD_ROOT/.chard_user" 2>/dev/null || echo "chronos")
+CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home" 2>/dev/null || echo "/home/chronos")
+CHARD_APPS="$CHARD_ROOT/usr/share/applications"
+APP_SERVICE="/home/user/$U_HASH/app_service/icons"
+ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
+ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
+SHARED="$HOME/MyFiles/Downloads/chard_icons"
 
-    if [ -f "/usr/share/applications/${desktop_file_id}.desktop" ]; then
-        df="/usr/share/applications/${desktop_file_id}.desktop"
-    else
-        df=$(find /usr/share/applications -name "*${desktop_file_id}*.desktop" 2>/dev/null | head -1)
-    fi
+echo "${CYAN}${BOLD}Registering Chard apps with ChromeOS Ash...${RESET}"
+echo
 
-    if [ -z "$df" ]; then
-        echo "[chard_launch_daemon] no desktop file for: $desktop_file_id"
-        return
-    fi
-
-    local exec_raw=$(grep -m1 '^Exec=' "$df" | cut -d= -f2- | sed 's/ %[a-zA-Z]//g')
-    local terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
-    local name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
-    local exec_cmd=$(resolve_exec "$exec_raw")
-
-    echo "[chard_launch_daemon] launching: $name -> $exec_cmd"
-    [ -f ~/.bashrc ] && source ~/.bashrc 2>/dev/null
-
-    if [ "$terminal" = "true" ]; then
-        DISPLAY=$DISPLAY xfce4-terminal -e "$exec_cmd" &
-    else
-        DISPLAY=$DISPLAY eval "$exec_cmd" &
-    fi
-}
-
-while true; do
-    for trigger in "$WATCH_DIR"/*; do
-        [ -f "$trigger" ] || continue
-        filename=$(basename "$trigger")
-        rm -f "$trigger"
-        echo "[chard_launch_daemon] trigger: $filename"
-        launch_app "$filename" &
+echo "${CYAN}Extracting Chard aliases...${RESET}"
+mkdir -p "$SHARED"
+BASHRC="$CHARD_ROOT/$CHARD_HOME/.bashrc"
+ALIASES_FILE="$SHARED/.chard_aliases"
+> "$ALIASES_FILE"
+if [ -f "$BASHRC" ]; then
+    grep -E "^alias " "$BASHRC" | while read -r line; do
+        name=$(echo "$line" | sed "s/alias \([^=]*\)=.*/\1/")
+        value=$(echo "$line" | sed "s/alias [^=]*=['\"]//;s/['\"]$//")
+        echo "$name=$value" >> "$ALIASES_FILE"
     done
-    sleep 0.5
+    echo "  $(wc -l < "$ALIASES_FILE") aliases written to .chard_aliases"
+else
+    echo "  No .bashrc found at $BASHRC"
+fi
+
+find_png() {
+    local icon_name="$1"
+    for size in 128 96 64 48 32 16; do
+        local p="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
+        [ -f "$p" ] && echo "$p" && return
+    done
+    local p="$ICONS_PIXMAPS/${icon_name}.png"
+    [ -f "$p" ] && echo "$p" && return
+    find "$ICONS_HICOLOR" -name "${icon_name}.png" 2>/dev/null | head -1
+}
+
+install_icons() {
+    local icon_name="$1"
+    local app_id="$2"
+    local icon_dir="/home/user/$U_HASH/app_service/icons/$app_id"
+    sudo mkdir -p "$icon_dir"
+    sudo chmod 755 "$icon_dir"
+    local count=0
+    for size in 16 32 48 64 96 128; do
+        local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
+        if [ -f "$src" ]; then
+            sudo cp "$src" "$icon_dir/${size}.png"
+            sudo chmod 644 "$icon_dir/${size}.png"
+            count=$((count + 1))
+        fi
+    done
+    if [ $count -eq 0 ]; then
+        local fallback=$(find_png "$icon_name")
+        if [ -n "$fallback" ]; then
+            for size in 16 32 48 64 96 128; do
+                sudo cp "$fallback" "$icon_dir/${size}.png"
+                sudo chmod 644 "$icon_dir/${size}.png"
+            done
+            count=6
+        fi
+    fi
+    echo $count
+}
+
+generate_app_id() {
+    echo -n "crostini:termina/penguin/$1" | \
+        sha256sum | head -c 32 | tr '[:lower:]' '[:upper:]' | \
+        tr '0123456789ABCDEF' 'abcdefghijklmnop'
+}
+
+mkdir -p "$SHARED/desktops" "$SHARED/launch"
+declare -a DESKTOP_FILE_IDS NAMES EXECS TERMINALS
+count=0
+skipped=0
+
+for df in "$CHARD_APPS"/*.desktop; do
+    [ -f "$df" ] || continue
+
+    type=$(grep -m1 '^Type=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    no_display=$(grep -m1 '^NoDisplay=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    only_show=$(grep -m1 '^OnlyShowIn=' "$df" | cut -d= -f2)
+
+    [ "$type" != "Application" ] && { skipped=$((skipped+1)); continue; }
+    [ "$no_display" = "true" ] && { skipped=$((skipped+1)); continue; }
+    echo "$only_show" | grep -q "XFCE" && { skipped=$((skipped+1)); continue; }
+
+    desktop_file_id=$(basename "$df" .desktop)
+    name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
+    icon=$(grep -m1 '^Icon=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    exec_final="/usr/local/bin/chard_bridge $desktop_file_id"
+
+    app_id=$(generate_app_id "$desktop_file_id")
+    icons_count=$(install_icons "$icon" "$app_id")
+
+    cat > "$SHARED/desktops/chard-${desktop_file_id}.desktop" << DESKTOP
+[Desktop Entry]
+Type=Application
+Name=$name
+Exec=/usr/local/bin/chard_bridge $desktop_file_id
+Icon=$icon
+Terminal=false
+NoDisplay=false
+DESKTOP
+
+    printf "  ${GREEN}%-40s${RESET} ${YELLOW}%s${RESET} (%s icons)\n" \
+        "$name" "$app_id" "$icons_count"
+
+    DESKTOP_FILE_IDS+=("$desktop_file_id")
+    NAMES+=("$name")
+    EXECS+=("$exec_final")
+    TERMINALS+=("$terminal")
+    count=$((count+1))
 done
+
+sudo rm -f "$CHARD_ROOT/tmp/chard_appdata.txt"
+for i in $(seq 0 $((count-1))); do
+    echo "${DESKTOP_FILE_IDS[$i]}|${NAMES[$i]}|${EXECS[$i]}|${TERMINALS[$i]}"
+done | sudo tee "$CHARD_ROOT/tmp/chard_appdata.txt" > /dev/null
+
+echo
+echo "${CYAN}${BOLD}Sending registration to Ash...${RESET}"
+
+sudo chroot "$CHARD_ROOT" /bin/su "$CHARD_USER" -c 'python3 - << '"'"'PYEOF'"'"'
+import sys, dbus
+sys.path.insert(0, "/tmp")
+import vm_applications.apps_pb2 as apps_pb2
+
+U_HASH = open("/.chard_hash").read().strip()
+app_list = apps_pb2.ApplicationList()
+app_list.vm_name = "termina"
+app_list.container_name = "penguin"
+app_list.owner_id = U_HASH
+app_list.vm_type = 0
+
+with open("/tmp/chard_appdata.txt") as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split("|")
+        if len(parts) < 4:
+            continue
+        desktop_file_id, name, exec_cmd, terminal = parts[0], parts[1], parts[2], parts[3]
+        app = apps_pb2.App()
+        app.desktop_file_id = desktop_file_id
+        app.exec = exec_cmd
+        app.executable_file_name = exec_cmd.split()[0] if exec_cmd else desktop_file_id
+        app.no_display = False
+        app.terminal = terminal.lower() == "true"
+        name_entry = app.name.values.add()
+        name_entry.locale = ""
+        name_entry.value = name
+        app_list.apps.append(app)
+
+bus = dbus.SystemBus()
+svc = bus.get_object("org.chromium.VmApplicationsService",
+                     "/org/chromium/VmApplicationsService")
+iface = dbus.Interface(svc, "org.chromium.VmApplicationsService")
+iface.UpdateApplicationList(dbus.Array(app_list.SerializeToString(), signature="y"))
+print(f"  Sent {len(app_list.apps)} apps to VmApplicationsService")
+PYEOF'
+
+sudo rm -f "$CHARD_ROOT/tmp/chard_appdata.txt"
+echo
+echo "${GREEN}${BOLD}Done. Registered $count apps, skipped $skipped.${RESET}"
