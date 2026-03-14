@@ -1,33 +1,150 @@
 #!/bin/bash
-# chard_shortcut - non-functional bridge for  Chard -> Ash
-U_HASH=$(readlink /home/chronos/user | cut -d'-' -f2)
-ASH_APPS="/home/chronos/u-$U_HASH/.local/share/applications"
-CHARD_APPS="$CHARD_ROOT/usr/share/applications"
-mkdir -p "$ASH_APPS"
-for desktop_file in "$CHARD_APPS"/*.desktop; do
-    app_name=$(basename "$desktop_file")
-    output="$ASH_APPS/chard-${app_name}"
-    while IFS= read -r line; do
-        if [[ "$line" =~ ^Icon=(.+)$ ]]; then
-            icon_name="${BASH_REMATCH[1]}"
-            svg_path="$CHARD_ROOT/usr/share/icons/hicolor/scalable/apps/${icon_name}.svg"
-            png_path="$CHARD_ROOT/usr/share/icons/hicolor/48x48/apps/${icon_name}.png"
-            px_path="$CHARD_ROOT/usr/share/pixmaps/${icon_name}.png"
-            if   [[ -f "$svg_path" ]]; then echo "Icon=$svg_path"
-            elif [[ -f "$png_path" ]]; then echo "Icon=$png_path"
-            elif [[ -f "$px_path"  ]]; then echo "Icon=$px_path"
-            else echo "$line"
-            fi
-        else
-            echo "$line"
-        fi
-    done < "$desktop_file" > "$output"
-    chmod +x "$output"
-done
-echo "Bridged $(ls "$ASH_APPS"/chard-*.desktop 2>/dev/null | wc -l) app(s)."
-sudo dbus-send --type=signal --system \
-    --dest=org.chromium.AppService \
-    /org/chromium/AppService \
-    org.chromium.AppService.Reload
+# WIP
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
 
-echo "AppService reload signal sent."
+U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
+echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
+
+CHARD_USER=$(cat "$CHARD_ROOT/.chard_user" 2>/dev/null || echo "chronos")
+CHARD_APPS="$CHARD_ROOT/usr/share/applications"
+APP_SERVICE="/home/user/$U_HASH/app_service/icons"
+ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
+ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
+
+echo "${CYAN}${BOLD}Registering Chard apps with ChromeOS Ash...${RESET}"
+echo
+
+find_png() {
+    local icon_name="$1"
+    for size in 128 96 64 48 32 16; do
+        local p="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
+        [ -f "$p" ] && echo "$p" && return
+    done
+    local p="$ICONS_PIXMAPS/${icon_name}.png"
+    [ -f "$p" ] && echo "$p" && return
+    find "$ICONS_HICOLOR" -name "${icon_name}.png" 2>/dev/null | head -1
+}
+
+install_icons() {
+    local icon_name="$1"
+    local app_id="$2"
+    local icon_dir="$APP_SERVICE/$app_id"
+    sudo mkdir -p "$icon_dir"
+    local count=0
+    for size in 16 32 48 64 96 128; do
+        local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
+        if [ -f "$src" ]; then
+            sudo cp "$src" "$icon_dir/${size}.png"
+            count=$((count + 1))
+        fi
+    done
+    if [ $count -eq 0 ]; then
+        local fallback=$(find_png "$icon_name")
+        if [ -n "$fallback" ]; then
+            for size in 16 32 48 64 96 128; do
+                sudo cp "$fallback" "$icon_dir/${size}.png"
+            done
+            count=6
+        fi
+    fi
+    echo $count
+}
+
+generate_app_id() {
+    echo -n "crostini:termina/penguin/$1" | \
+        sha256sum | head -c 32 | tr '[:lower:]' '[:upper:]' | \
+        tr '0123456789ABCDEF' 'abcdefghijklmnop'
+}
+
+declare -a DESKTOP_FILE_IDS NAMES EXECS TERMINALS
+count=0
+skipped=0
+
+for df in "$CHARD_APPS"/*.desktop; do
+    [ -f "$df" ] || continue
+
+    type=$(grep -m1 '^Type=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    no_display=$(grep -m1 '^NoDisplay=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    only_show=$(grep -m1 '^OnlyShowIn=' "$df" | cut -d= -f2)
+
+    [ "$type" != "Application" ] && { skipped=$((skipped+1)); continue; }
+    [ "$no_display" = "true" ] && { skipped=$((skipped+1)); continue; }
+    echo "$only_show" | grep -q "XFCE" && { skipped=$((skipped+1)); continue; }
+
+    desktop_file_id=$(basename "$df" .desktop)
+    name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
+    exec_raw=$(grep -m1 '^Exec=' "$df" | cut -d= -f2-)
+    icon=$(grep -m1 '^Icon=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    exec_clean=$(echo "$exec_raw" | sed 's/ %[a-zA-Z]//g')
+
+    app_id=$(generate_app_id "$desktop_file_id")
+    icons_count=$(install_icons "$icon" "$app_id")
+
+    printf "  ${GREEN}%-40s${RESET} ${YELLOW}%s${RESET} (%s icons)\n" \
+        "$name" "$app_id" "$icons_count"
+
+    DESKTOP_FILE_IDS+=("$desktop_file_id")
+    NAMES+=("$name")
+    EXECS+=("$exec_clean")
+    TERMINALS+=("$terminal")
+    count=$((count+1))
+done
+
+sudo rm -f "$CHARD_ROOT/tmp/chard_appdata.txt"
+for i in $(seq 0 $((count-1))); do
+    echo "${DESKTOP_FILE_IDS[$i]}|${NAMES[$i]}|${EXECS[$i]}|${TERMINALS[$i]}"
+done | sudo tee "$CHARD_ROOT/tmp/chard_appdata.txt" > /dev/null
+
+echo
+echo "${CYAN}${BOLD}Sending registration to Ash...${RESET}"
+
+sudo chroot "$CHARD_ROOT" /bin/su "$CHARD_USER" -c 'python3 - << '"'"'PYEOF'"'"'
+import sys, dbus
+sys.path.insert(0, "/tmp")
+import vm_applications.apps_pb2 as apps_pb2
+
+U_HASH = open("/.chard_hash").read().strip()
+
+app_list = apps_pb2.ApplicationList()
+app_list.vm_name = "termina"
+app_list.container_name = "penguin"
+app_list.owner_id = U_HASH
+app_list.vm_type = 0
+
+with open("/tmp/chard_appdata.txt") as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split("|")
+        if len(parts) < 4:
+            continue
+        desktop_file_id, name, exec_cmd, terminal = parts[0], parts[1], parts[2], parts[3]
+        app = apps_pb2.App()
+        app.desktop_file_id = desktop_file_id
+        app.exec = exec_cmd
+        app.executable_file_name = exec_cmd.split()[0] if exec_cmd else desktop_file_id
+        app.no_display = False
+        app.terminal = terminal.lower() == "true"
+        name_entry = app.name.values.add()
+        name_entry.locale = ""
+        name_entry.value = name
+        app_list.apps.append(app)
+
+bus = dbus.SystemBus()
+svc = bus.get_object("org.chromium.VmApplicationsService",
+                     "/org/chromium/VmApplicationsService")
+iface = dbus.Interface(svc, "org.chromium.VmApplicationsService")
+iface.UpdateApplicationList(dbus.Array(app_list.SerializeToString(), signature="y"))
+print(f"  Sent {len(app_list.apps)} apps to VmApplicationsService")
+PYEOF'
+
+sudo rm -f "$CHARD_ROOT/tmp/chard_appdata.txt"
+echo
+echo "${GREEN}${BOLD}Done. Registered $count apps, skipped $skipped.${RESET}"
