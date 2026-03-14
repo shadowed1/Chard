@@ -5,10 +5,10 @@ YELLOW=$(tput setaf 3)
 RED=$(tput setaf 1)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-CHARD_ROOT=$(cat "/.install_path" 2>/dev/null)
+CHARD_ROOT=$(cat "$CHARD_ROOT/.install_path" 2>/dev/null)
 GARCON_PORT=9876
-PIDFILE=/tmp/chard_garcon.pid
-PYFILE=/tmp/chard_garcon.py
+PIDFILE=$CHARD_ROOT/tmp/chard_garcon.pid
+PYFILE=$CHARD_ROOT/tmp/chard_garcon.py
 
 if [ "$1" = "stop" ]; then
     if [ -f "$PIDFILE" ]; then
