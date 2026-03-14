@@ -420,6 +420,10 @@ case "$cmd" in
 		        sudo chown -E $USER:video /dev/dri/renderD128
 		    fi
 		fi
+		# Write our user hash to Chard for preliminary shortcut support
+		U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
+		echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
+		
         chard_volume > /dev/null 2>&1 &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
