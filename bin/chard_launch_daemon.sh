@@ -4,10 +4,13 @@ WATCH_DIR="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/launch"
 ALIASES_FILE="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/.chard_aliases"
 mkdir -p "$WATCH_DIR"
 rm -f "$WATCH_DIR"/* 2>/dev/null
+
 sleep 2
 DISPLAY=$(ls /tmp/.X11-unix/ 2>/dev/null | sed 's/^X/:/' | head -1)
 export DISPLAY
+
 echo "[chard_launch_daemon] DISPLAY=$DISPLAY watching $WATCH_DIR"
+
 declare -A ALIASES
 if [ -f "$ALIASES_FILE" ]; then
     while IFS='=' read -r key val; do
@@ -20,7 +23,6 @@ resolve_exec() {
     local exec_cmd="$1"
     local bin=$(echo "$exec_cmd" | awk '{print $1}')
     local args=$(echo "$exec_cmd" | cut -s -d' ' -f2-)
-    # Check if binary has an alias
     local base=$(basename "$bin")
     if [ -n "${ALIASES[$base]}" ]; then
         echo "${ALIASES[$base]}${args:+ $args}"
