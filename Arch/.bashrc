@@ -139,8 +139,15 @@ export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
 
 ARCH="$(uname -m)"
+
 if [ "$ARCH" = "x86_64" ]; then
-export PULSE_SERVER=unix:/run/chrome/pulse/native
+    export PULSE_SERVER=unix:/run/chrome/pulse/native
+fi
+
+if [ "$ARCH" = "aarch64" ]; then
+    export SDL_VIDEODRIVER=wayland
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=llvmpipe
 fi
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
