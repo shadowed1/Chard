@@ -11,6 +11,11 @@ RESET=$(tput sgr0)
 BASE="https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/main"
 fetch() { curl -s "$BASE/$1?format=TEXT" | base64 -d > "$2"; }
 
+sudo rm -f /tmp/vm_applications/apps_pb2.py /tmp/arc/arc_pb2.py \
+           /tmp/common_pb2.py /tmp/container_host_pb2.py \
+           /tmp/container_guest_pb2.py /tmp/cicerone_service_pb2.py \
+           /tmp/concierge_service_pb2.py 2>/dev/null
+           
 echo "${CYAN}${BOLD}Fetching protos...${RESET}"
 echo
 mkdir -p /tmp/vm_applications /tmp/arc
