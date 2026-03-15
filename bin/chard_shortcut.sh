@@ -151,6 +151,4 @@ done
 touch "$SHARED/.sync_now"
 
 echo
-echo "${GREEN}${BOLD}Done. Prepared $count app stubs, skipped $skipped.${RESET}"
-echo "${CYAN}chard_bridge_daemon will sync to Crostini; garcon will register them${RESET}"
-echo "${CYAN}alongside existing Crostini apps automatically.${RESET}"
+echo "${GREEN}${BOLD}Done. Created $count shortcuts, skipped $skipped.${RESET}"
