@@ -2053,6 +2053,7 @@ if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
     sudo chmod +x "$CHARD_ROOT/bin/chard_launch_daemon"
     sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut"
     sudo chmod +x "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon"
+    vmc share termina Downloads/chard_icons 2>/dev/null
 fi
 
 ###########################################
