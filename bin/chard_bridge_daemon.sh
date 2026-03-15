@@ -1,5 +1,5 @@
 #!/bin/bash
-# Daemon running in Crostini - syncs Chard desktop stubs to garcon
+# This daemon runs in Crostini - syncs Chard desktop stubs to garcon
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 CYAN=$(tput setaf 6)
@@ -9,24 +9,38 @@ RESET=$(tput sgr0)
 SHARED="/mnt/chromeos/MyFiles/Downloads/chard_icons"
 DESKTOPS_SRC="$SHARED/desktops"
 DESKTOPS_DST="/usr/share/applications"
-INSTALLED_LOG="$SHARED/.installed_desktops"
+SYNC_TRIGGER="$SHARED/.sync_now"
 
 echo "${CYAN}${BOLD}[chard_bridge_daemon] starting...${RESET}"
+
 sync_desktops() {
-    local count=0
+    local changed=0
     for df in "$DESKTOPS_SRC"/chard-*.desktop; do
         [ -f "$df" ] || continue
-        name=$(basename "$df")
+        local name=$(basename "$df")
         if ! diff -q "$df" "$DESKTOPS_DST/$name" > /dev/null 2>&1; then
             sudo cp "$df" "$DESKTOPS_DST/$name"
             sudo chmod 644 "$DESKTOPS_DST/$name"
-            count=$((count+1))
+            changed=$((changed+1))
         fi
     done
-    [ $count -gt 0 ] && sudo update-desktop-database "$DESKTOPS_DST" 2>/dev/null
-    echo "[chard_bridge_daemon] synced $count desktop stubs"
-}
 
+    for installed in "$DESKTOPS_DST"/chard-*.desktop; do
+        [ -f "$installed" ] || continue
+        local name=$(basename "$installed")
+        if [ ! -f "$DESKTOPS_SRC/$name" ]; then
+            sudo rm -f "$installed"
+            changed=$((changed+1))
+            echo "${YELLOW}[chard_bridge_daemon] removed stale stub: ${BOLD}$name ${RESET}"
+        fi
+    done
+
+    if [ $changed -gt 0 ]; then
+        sudo update-desktop-database "$DESKTOPS_DST" 2>/dev/null
+        echo "${GREEN}[chard_bridge_daemon] synced ${BOLD}$changed${RESET}${GREEN} desktop changes - garcon re-registering ${RESET}"
+    fi
+}
+# Doing .png's only right now but I bet we can convert easily
 sync_icons() {
     local count=0
     for app_icon_dir in "$SHARED/icons"/*/; do
@@ -46,8 +60,10 @@ sync_icons() {
             fi
         done
     done
-    [ $count -gt 0 ] && sudo gtk-update-icon-cache /usr/share/icons/hicolor 2>/dev/null || true
-    echo "[chard_bridge_daemon] synced $count icons"
+    if [ $count -gt 0 ]; then
+        sudo gtk-update-icon-cache /usr/share/icons/hicolor 2>/dev/null || true
+        echo "${BLUE}[chard_bridge_daemon] synced ${BOLD}$count${RESET} ${BLUE}icons${RESET}"
+    fi
 }
 
 if [ ! -f "/usr/local/bin/chard_bridge" ]; then
@@ -63,11 +79,17 @@ BRIDGE
 fi
 
 sync_desktops
+sync_icons
 
-echo "${GREEN}[chard_bridge_daemon] watching $DESKTOPS_SRC for updates...${RESET}"
+echo "${GREEN}[chard_bridge_daemon] watching for updates...${RESET}"
 
 while true; do
+    if [ -f "$SYNC_TRIGGER" ]; then
+        rm -f "$SYNC_TRIGGER"
+        sync_desktops
+        sync_icons
+    fi
+    sleep 10
     sync_desktops
     sync_icons
-    sleep 10
 done
