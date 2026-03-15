@@ -1407,7 +1407,6 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
                         userdel -f alarm 2>/dev/null
                         groupdel -f alarm 2>/dev/null
-                        groupmod -g 27 video 2>/dev/null
                         /usr/sbin/getent group 1000 >/dev/null    || groupadd -g 1000 chronos 2>/dev/null
                         /usr/sbin/getent group 601  >/dev/null    || groupadd -g 601 wayland 2>/dev/null
                         /usr/sbin/getent group 602  >/dev/null    || groupadd -g 602 arc-bridge 2>/dev/null
