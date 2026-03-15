@@ -37,7 +37,7 @@ while read -r PART MP; do
     if chard_bindfs -o uid=1000,gid=1001 --perms=ugo+x "$MP" "$TARGET" 2>/dev/null; then
         echo "${GREEN}bindfs mounted:${BOLD} $MP to $TARGET ${RESET}"
     else
-        echo "${RED}bindfs failed, falling back to bind mount:${RESET} $MP to $TARGET"
+        echo "${YELLOW}bindfs failed, falling back to bind mount:${BOLD} $MP to $TARGET ${RESET}"
         sudo mount --bind "$MP" "$TARGET" 2>/dev/null
     fi
 done < "$STATE_FILE"
