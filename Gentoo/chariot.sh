@@ -1625,7 +1625,7 @@ checkpoint_150() {
     sudo -E emerge bindfs
     eclean-dist -d
 }
-run_checkpoint 150 "coreutils" checkpoint_150
+run_checkpoint 150 "Bindfs" checkpoint_150
 
 sudo chown -R 1000:1000 ~/
 sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
