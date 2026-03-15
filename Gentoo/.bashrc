@@ -403,6 +403,14 @@ export FILEMANAGER=thunar
 printf "y\n" | xdg-mime default thunar.desktop inode/directory
 source "$HOME/.${USER}rc"
 
+ARCH="$(uname -m)"
+
+if [ "$ARCH" = "aarch64" ]; then
+    export SDL_VIDEODRIVER=wayland
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=llvmpipe
+fi
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
