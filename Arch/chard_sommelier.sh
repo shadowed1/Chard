@@ -43,6 +43,8 @@ SOMMELIER_CMD=(
     sleep 0.2
     xfce4-terminal 2>/dev/null &
     sleep 0.2
+    chard_launch_daemon 2>/dev/null &
+    sleep 0.2
     exec bash
 '
 error_color
