@@ -10,6 +10,12 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+if [[ ! -f /home/chronos/user/.bashrc ]]; then
+    echo "${RED}Please run this command in the ChromeOS shell."
+    sleep 3
+    exit 1
+fi
+
 STAGE3_FILE="$CHARD_ROOT/.chard_stage3_preload"
 
 if [[ ! -f "$CHARD_ROOT/.chard.preload" ]]; then
