@@ -310,15 +310,13 @@ sudo qemu-system-x86_64 \
 
 <br>
 
-- Chrome app shelf is missing icon + pin support. Remedied by customizing xfce4 shelf or install KDE Plasma. 
 - Entering Chard Root with Sommelier support will generate some harmless errors.
 
 <br>
 
 - Exiting Chard closes all running apps inside Chard, so please save your work before exiting!
-
 - Microphone support needs to be re-done. 
-- When using OBS game capture, it is recommended (and required if using chard arch) to run everything in one shell. So run `obs & prismlauncher` for example. OBS is a difficult app to fully implement.
+
 
 <br>
 
