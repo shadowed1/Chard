@@ -174,7 +174,10 @@ fi
 
 #export LD_LIBRARY_PATH=/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
-export QT_QPA_PLATFORM=wayland
+# export QT_QPA_PLATFORM=wayland 
+# Moving to x11 for icon support
+export QT_QPA_PLATFORM=xcb
+export GDK_BACKEND=x11
 export SOMMELIER_DRM_DEVICE=/dev/dri/renderD128
 export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
