@@ -901,9 +901,11 @@ EOF
                     fi
                 fi
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
+                $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
+                
                 source $CHARD_ROOT/.chardrc
                 ;;
             2)
