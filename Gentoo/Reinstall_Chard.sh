@@ -179,6 +179,9 @@ trap cleanup_chroot EXIT INT TERM
                     echo
                 }
                 chard_unmount
+                if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
+                  mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
+                fi
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 DEFAULT_BASHRC="$HOME/.bashrc"
