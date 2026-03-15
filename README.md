@@ -108,6 +108,13 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 
 <br>
 
+*Now with Icon Support!*
+<p align="left">
+  <img src="https://i.imgur.com/OOKwqZ5.png" alt="logo" width="200" />
+</p>
+
+<br>
+
 ### Features:
 
 <br>
@@ -150,8 +157,15 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - Can run certain apps directly from Chard in the Host OS (testing ChromeOS only).
 - Extremely resource light; RAM usage is below 100MB footprint.
 
+<br>
+
 - Supports mounting external drives and Android devices. Connect prior to entering Chard. 
-- Implements `virtm`, a program emulating mouse capture support; bypassing exo security delegate. 
+- Implements `virtm`, a program emulating mouse capture support; bypassing exo security delegate.
+
+<br>
+
+- Exports bindfs to ChromeOS shell, bypassing noexec mount on external drives, enabling Steam to use external drives for Chard!
+- Implements ChromeOS' native icon system using Crostini as a Bridge. 
 
 <br>
 
