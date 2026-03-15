@@ -2042,6 +2042,10 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
 fi
 
+if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
+    mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
+fi
+
 ###########################################
 # Chariot
 ###########################################
