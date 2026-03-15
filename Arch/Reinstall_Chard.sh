@@ -215,7 +215,9 @@ detect_gpu_freq() {
                     sleep 4
                     exit 1
                 fi
-
+                if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
+                  mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
+                fi
     chard_unmount() {    
         sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
         sleep 0.05
