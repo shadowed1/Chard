@@ -9,6 +9,12 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+if [[ ! -f /home/chronos/user/.bashrc ]]; then
+    echo "${RED}Please run this command in the ChromeOS shell."
+    sleep 3
+    exit 1
+fi
+
 STATE_FILE="$CHARD_ROOT/tmp/mtp_mount_state"
 MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/mtp_devices"
 
