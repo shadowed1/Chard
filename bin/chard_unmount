@@ -41,7 +41,7 @@ if [[ -d "$MOUNT_POINT" ]]; then
         [[ -d "$DIR" ]] || continue
         if ! mountpoint -q "$DIR" 2>/dev/null && [ -z "$(ls -A "$DIR" 2>/dev/null)" ]; then
             sudo rmdir "$DIR"
-            echo "${YELLOW}Removed empty dir:${RESET} $DIR"
+            echo "${YELLOW}Removed empty dir:${BOLD} $DIR ${RESET}"
         fi
     done
 fi
