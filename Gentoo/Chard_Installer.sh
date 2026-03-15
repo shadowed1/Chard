@@ -2452,6 +2452,8 @@ show_progress
 
 echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
 echo
-echo "${BLUE}${BOLD}To enable icon support for Chard, please run the following: ${RESET}"
-echo "${CYAN}${BOLD}chard_bridge_daemon ${RESET}${CYAN}in crostini.${RESET}"
+echo "${BLUE}${BOLD}To enable icon support for Chard, please run the following in Crostini: ${RESET}${BLUE}"
+echo "sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "sudo chmod +x /bin/chard_bridge_daemon"
+echo "chard_bridge_daemon"
 echo
