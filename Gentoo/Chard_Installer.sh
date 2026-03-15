@@ -2439,6 +2439,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
     umount -l /proc        2>/dev/null || true
 '
 chard_unmount
+$CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 #source $CHARD_ROOT/.chard.preload
 #$CHARD_ROOT/bin/chard_preload
 #unset LD_PRELOAD
