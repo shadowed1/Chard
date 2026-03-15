@@ -226,6 +226,7 @@ detect_gpu_freq() {
                     sudo chmod +x "$CHARD_ROOT/bin/chard_launch_daemon"
                     sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut"
                     sudo chmod +x "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon"
+                    vmc share termina Downloads/chard_icons 2>/dev/null
                 fi
     chard_unmount() {    
         sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
