@@ -2015,17 +2015,6 @@ run_checkpoint 157 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_157
 
 checkpoint_158() {
     retry_pacman "yay -S --noconfirm unicode-emoji"
-    sudo tee /bin/chard_bindfs > /dev/null << 'EOF'
-#!/bin/bash
-if [[ ! -f /home/chronos/user/.bashrc ]]; then
-    echo "Run chard_bindfs in the ChromeOS shell."
-    sleep 3
-    exit 1
-fi
-source /home/chronos/user/.bashrc
-sudo env LD_PRELOAD="$LD_PRELOAD" "$CHARD_ROOT/usr/bin/bindfs" "$@"
-EOF
-
     fc-cache -f 2>/dev/null
 }
 run_checkpoint 158 "Emoji Support" checkpoint_158
