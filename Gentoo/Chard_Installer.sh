@@ -2352,6 +2352,9 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
     fi
 fi
 
+if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
+    mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
+fi
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 if [ -f "$CHROMEOS_BASHRC" ]; then
     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
