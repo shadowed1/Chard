@@ -1,5 +1,4 @@
 #!/bin/bash
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -8,16 +7,26 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
 MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/external"
+
+if [[ ! -f /home/chronos/user/.bashrc ]]; then
+    echo "${RED}Please run this command in the ChromeOS shell."
+    sleep 3
+    exit 1
+fi
 
 if mountpoint -q "$MOUNT_POINT"; then
     sudo umount "$MOUNT_POINT" 2>/dev/null
 fi
-
 if [[ -f "$STATE_FILE" ]]; then
     while read -r PART MP; do
+        BASENAME=$(basename "$PART")
+        TARGET="$MOUNT_POINT/$BASENAME"
+        if mountpoint -q "$TARGET" 2>/dev/null; then
+            sudo umount "$TARGET" 2>/dev/null
+            echo "${CYAN}Unmounted:${RESET} $TARGET"
+        fi
         echo ""
         echo "${CYAN}Restoring: ${BOLD}"
         echo "  $PART to '$MP'"
@@ -27,4 +36,12 @@ if [[ -f "$STATE_FILE" ]]; then
     done < "$STATE_FILE"
     sudo rm -f "$STATE_FILE" 2>/dev/null
 fi
-
+if [[ -d "$MOUNT_POINT" ]]; then
+    for DIR in "$MOUNT_POINT"/*/; do
+        [[ -d "$DIR" ]] || continue
+        if ! mountpoint -q "$DIR" 2>/dev/null && [ -z "$(ls -A "$DIR" 2>/dev/null)" ]; then
+            sudo rmdir "$DIR"
+            echo "${YELLOW}Removed empty dir:${RESET} $DIR"
+        fi
+    done
+fi
