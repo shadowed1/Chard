@@ -11,6 +11,12 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+if [[ ! -f /home/chronos/user/.bashrc ]]; then
+    echo "${RED}Please run this command in the ChromeOS shell."
+    sleep 3
+    exit 1
+fi
+
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
