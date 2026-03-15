@@ -944,6 +944,12 @@ EOF
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
                 source "$CHARD_ROOT/.chardrc"
+                echo
+                echo "${BLUE}${BOLD}To enable icon support for Chard, please run the following: ${RESET}"
+                echo "${GREEN}1.) ${BOLD}chard_shortcut${RESET}${GREEN} in the chromeOS shell or in VT-2 logged in as chronos.${RESET}"
+                echo "${CYAN}2.) ${BOLD}chard_bridge_daemon ${RESET}${CYAN}in crostini.${RESET}"
+                echo "${YELLOW}3.) ${BOLD}chard_launch_daemon${RESET}${YELLOW} inside Chard.${RESET}"
+                echo
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
                 echo
                 ;;
