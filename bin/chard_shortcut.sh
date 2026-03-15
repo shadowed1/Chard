@@ -1,9 +1,12 @@
 #!/bin/bash
 # Run in ChromeOS shell with sudo enabled or VT-2 logged in as chronos
-# Thanks to Days for helping! 
+# Thanks for Days for the early documentation! 
+
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
@@ -12,10 +15,10 @@ DEFAULT_CHARD_ROOT="/usr/local/chard"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
-    echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
+    echo "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
 elif [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$DEFAULT_CHARD_ROOT/.install_path")
-    echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
+    echo "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
 else
     CHARD_ROOT="$DEFAULT_CHARD_ROOT"
 fi
@@ -26,12 +29,11 @@ echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user" 2>/dev/null || echo "chronos")
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home" 2>/dev/null || echo "/home/chronos")
 CHARD_APPS="$CHARD_ROOT/usr/share/applications"
-APP_SERVICE="/home/user/$U_HASH/app_service/icons"
 ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
 ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
 SHARED="$HOME/MyFiles/Downloads/chard_icons"
 
-echo "${CYAN}${BOLD}Registering Chard apps with ChromeOS Ash...${RESET}"
+echo "${CYAN}${BOLD}Preparing Chard app stubs for ChromeOS Ash...${RESET}"
 echo
 
 echo "${CYAN}Extracting Chard aliases...${RESET}"
@@ -94,14 +96,14 @@ install_icons() {
     echo $count
 }
 
+
 generate_app_id() {
-    echo -n "crostini:termina/penguin/$1" | \
+    echo -n "crostini:termina/penguin/chard-$1" | \
         sha256sum | head -c 32 | tr '[:lower:]' '[:upper:]' | \
         tr '0123456789ABCDEF' 'abcdefghijklmnop'
 }
 
 mkdir -p "$SHARED/desktops" "$SHARED/launch"
-declare -a DESKTOP_FILE_IDS NAMES EXECS TERMINALS
 count=0
 skipped=0
 
@@ -113,15 +115,16 @@ for df in "$CHARD_APPS"/*.desktop; do
     [ "$type" != "Application" ] && { skipped=$((skipped+1)); continue; }
     [ "$no_display" = "true" ] && { skipped=$((skipped+1)); continue; }
     echo "$only_show" | grep -q "XFCE" && { skipped=$((skipped+1)); continue; }
+
     desktop_file_id=$(basename "$df" .desktop)
     name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
     icon=$(grep -m1 '^Icon=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
-    exec_final="/usr/local/bin/chard_bridge $desktop_file_id"
-    app_id=$(generate_app_id "$desktop_file_id")
-    icons_count=$(install_icons "$icon" "$app_id")
     wm_class=$(grep -m1 '^StartupWMClass=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     [ -z "$wm_class" ] && wm_class="$desktop_file_id"
+    app_id=$(generate_app_id "$desktop_file_id")
+    icons_count=$(install_icons "$icon" "$app_id")
+
     cat > "$SHARED/desktops/chard-${desktop_file_id}.desktop" << DESKTOP
 [Desktop Entry]
 Type=Application
@@ -136,61 +139,12 @@ DESKTOP
     printf "  ${GREEN}%-40s${RESET} ${YELLOW}%s${RESET} (%s icons)\n" \
         "$name" "$app_id" "$icons_count"
 
-    DESKTOP_FILE_IDS+=("$desktop_file_id")
-    NAMES+=("$name")
-    EXECS+=("$exec_final")
-    TERMINALS+=("$terminal")
     count=$((count+1))
 done
 
-sudo rm -f "$CHARD_ROOT/tmp/chard_appdata.txt"
-for i in $(seq 0 $((count-1))); do
-    echo "${DESKTOP_FILE_IDS[$i]}|${NAMES[$i]}|${EXECS[$i]}|${TERMINALS[$i]}|${WM_CLASSES[$i]}"
-done | sudo tee "$CHARD_ROOT/tmp/chard_appdata.txt" > /dev/null
+touch "$SHARED/.sync_now"
 
 echo
-echo "${CYAN}${BOLD}Sending registration to Ash...${RESET}"
-
-sudo chroot "$CHARD_ROOT" /bin/su "$CHARD_USER" -c 'python3 - << '"'"'PYEOF'"'"'
-import sys, dbus
-sys.path.insert(0, "/tmp")
-import vm_applications.apps_pb2 as apps_pb2
-
-U_HASH = open("/.chard_hash").read().strip()
-app_list = apps_pb2.ApplicationList()
-app_list.vm_name = "termina"
-app_list.container_name = "penguin"
-app_list.owner_id = U_HASH
-app_list.vm_type = 0
-
-with open("/tmp/chard_appdata.txt") as f:
-    for line in f:
-        line = line.strip()
-        if not line:
-            continue
-        parts = line.split("|")
-        if len(parts) < 4:
-            continue
-        desktop_file_id, name, exec_cmd, terminal = parts[0], parts[1], parts[2], parts[3]
-        app = apps_pb2.App()
-        app.desktop_file_id = desktop_file_id
-        app.exec = exec_cmd
-        app.executable_file_name = exec_cmd.split()[0] if exec_cmd else desktop_file_id
-        app.no_display = False
-        app.terminal = terminal.lower() == "true"
-        name_entry = app.name.values.add()
-        name_entry.locale = ""
-        name_entry.value = name
-        app_list.apps.append(app)
-
-bus = dbus.SystemBus()
-svc = bus.get_object("org.chromium.VmApplicationsService",
-                     "/org/chromium/VmApplicationsService")
-iface = dbus.Interface(svc, "org.chromium.VmApplicationsService")
-iface.UpdateApplicationList(dbus.Array(app_list.SerializeToString(), signature="y"))
-print(f"  Sent {len(app_list.apps)} apps to VmApplicationsService")
-PYEOF'
-
-sudo rm -f "$CHARD_ROOT/tmp/chard_appdata.txt"
-echo
-echo "${GREEN}${BOLD}Done. Registered $count apps, skipped $skipped.${RESET}"
+echo "${GREEN}${BOLD}Done. Prepared $count app stubs, skipped $skipped.${RESET}"
+echo "${CYAN}chard_bridge_daemon will sync to Crostini; garcon will register them${RESET}"
+echo "${CYAN}alongside existing Crostini apps automatically.${RESET}"
