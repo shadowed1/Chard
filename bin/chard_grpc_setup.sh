@@ -82,6 +82,11 @@ for c in resp.containers:
 
 with open('/.chard_tokens', 'w') as f:
     f.write('\n'.join(lines) + '\n')
+import os, stat
+os.chmod('/.chard_tokens', 0o644)
 
 print(f"\n{len(lines)} container(s) written to /.chard_tokens")
 PYEOF
+
+sudo chown 1000:1000 /.chard_tokens 2>/dev/null
+sudo chmod 644 /.chard_tokens 2>/dev/null
