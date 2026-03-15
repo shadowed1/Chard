@@ -2023,7 +2023,8 @@ checkpoint_159() {
     retry_pacman "yay -S --noconfirm bindfs"
     fc-cache -f 2>/dev/null
 }
-run_checkpoint 158 "Bindfs" checkpoint_159
+run_checkpoint 159 "Bindfs" checkpoint_159
+
 locale_code=$(cat "/.chard_language" | sed 's/-/_/')
 sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen" 2>/dev/null
 sudo -E locale-gen 2>/dev/null
