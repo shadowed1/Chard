@@ -1,5 +1,7 @@
 #!/bin/bash
 # This daemon runs in Crostini - syncs Chard desktop stubs to garcon
+# sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
+# sudo chmod +x /bin/chard_bridge_daemon
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 CYAN=$(tput setaf 6)
