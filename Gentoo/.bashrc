@@ -294,6 +294,10 @@ export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
 
+# For Icon Support
+export QT_QPA_PLATFORM=xcb
+export GDK_BACKEND=x11
+
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
     eval "$(dbus-launch --sh-syntax )"
     export DBUS_SESSION_BUS_ADDRESS
