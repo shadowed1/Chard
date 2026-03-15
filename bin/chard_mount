@@ -7,11 +7,14 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
+
 if [[ ! -f /home/chronos/user/.bashrc ]]; then
-    echo "${RED}Please run this command in the ChromeOS shell."
+    echo "${RED}Error: Please run chard_mount in the ChromeOS shell.${RESET}"
     sleep 3
     exit 1
 fi
+source /home/chronos/user/.bashrc
+
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
 MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/external"
 : > "$STATE_FILE"
@@ -39,10 +42,10 @@ while read -r PART MP; do
     BASENAME=$(basename "$PART")
     TARGET="$MOUNT_POINT/$BASENAME"
     sudo mkdir -p "$TARGET"
-    if chard_bindfs -o uid=1000,gid=1001 --perms=ugo+x "$MP" "$TARGET" 2>/dev/null; then
-        echo "${GREEN}bindfs mounted:${BOLD} $MP to $TARGET ${RESET}"
+    if sudo env LD_PRELOAD="$LD_PRELOAD" "$CHARD_ROOT/usr/bin/bindfs" -o uid=1000,gid=1001 --perms=ugo+x "$MP" "$TARGET" 2>/dev/null; then
+        echo "${GREEN}bindfs mounted:${BOLD} $MP to $TARGET${RESET}"
     else
-        echo "${YELLOW}bindfs failed, falling back to bind mount:${BOLD} $MP to $TARGET ${RESET}"
+        echo "${YELLOW}bindfs failed, falling back to bind mount:${BOLD} $MP to $TARGET${RESET}"
         sudo mount --bind "$MP" "$TARGET" 2>/dev/null
     fi
 done < "$STATE_FILE"
