@@ -1238,12 +1238,12 @@ checkpoint_128() {
 }
 run_checkpoint 128 "xarchiver" checkpoint_128
 
-checkpoint_129() {
-    sudo -E emerge app-editors/vscodium
-    rm -rf /var/tmp/portage/app-editors/vscodium-*
-    eclean-dist -d
-}
-run_checkpoint 129 "sudo -E emerge app-editors/vscodium" checkpoint_129
+#checkpoint_129() {
+#    sudo -E emerge app-editors/vscodium
+#    rm -rf /var/tmp/portage/app-editors/vscodium-*
+#    eclean-dist -d
+#}
+#run_checkpoint 129 "sudo -E emerge app-editors/vscodium" checkpoint_129
 
 checkpoint_130() {
     sudo -E emerge games-util/gamemode 2>/dev/null
@@ -1271,14 +1271,14 @@ checkpoint_132() {
 }
 run_checkpoint 132 "Keyboard error spam fix" checkpoint_132
 
-checkpoint_133() {
-    sudo -E emerge app-office/libreoffice-bin
-    rm -rf /var/tmp/portage/app-office/libreoffice-bin-*
-    eclean-dist -d
-}
-run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
+#checkpoint_133() {
+    #sudo -E emerge app-office/libreoffice-bin
+    #rm -rf /var/tmp/portage/app-office/libreoffice-bin-*
+    #eclean-dist -d
+#}
+#run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
 
-sudo -E emerge app-office/libreoffice-bin
+#sudo -E emerge app-office/libreoffice-bin
 
 checkpoint_134() {
     echo "media-video/obs-studio" | sudo tee -a /etc/portage/package.use/obs
