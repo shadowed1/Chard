@@ -16,7 +16,7 @@ sleep 10
 STAGE2_FILE="$CHARD_ROOT/.chard_safe_preload"
 sudo rm -f "$CHARD_ROOT/.chard_stage3_preload" 2>/dev/null
 sudo rm -f "$STAGE2_FILE" 2>/dev/null
-
+source $CHARD_ROOT/.chard_preload
 if [[ -z "$LD_PRELOAD" ]]; then
     echo "${RED}${BOLD} .chard.preload not loaded.${RESET}"
     sleep 5
