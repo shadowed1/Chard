@@ -2020,8 +2020,13 @@ checkpoint_158() {
 run_checkpoint 158 "Emoji Support" checkpoint_158
 
 checkpoint_159() {
-    retry_pacman "yay -S --noconfirm bindfs"
-    fc-cache -f 2>/dev/null
+    ARCH="$(uname -m)"
+    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        echo "Skipping bindfs install on ARM ($ARCH)"
+    else
+        retry_pacman "yay -S --noconfirm bindfs"
+        fc-cache -f 2>/dev/null
+    fi
 }
 run_checkpoint 159 "Bindfs" checkpoint_159
 
