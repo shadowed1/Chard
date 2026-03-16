@@ -945,7 +945,7 @@ EOF
                 echo
                 source "$CHARD_ROOT/.chardrc"
                 echo
-                echo "${BLUE}${BOLD}To enable icon support for Chard, please run the following in Crostini: ${RESET}${BLUE}"
+                echo "${BLUE}${BOLD}To enable icon support for Chard, share Downloads folder with Linux and run in Crostini: ${RESET}${BLUE}"
                 echo
                 echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
                 echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
