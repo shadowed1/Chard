@@ -1622,13 +1622,8 @@ sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
 checkpoint_150() {
-    ARCH="$(uname -m)"
-    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        echo "Skipping bindfs install on ARM ($ARCH)"
-    else
-        sudo -E emerge bindfs
-        eclean-dist -d
-    fi
+    sudo -E emerge bindfs
+    eclean-dist -d
 }
 run_checkpoint 150 "Bindfs" checkpoint_150
 
