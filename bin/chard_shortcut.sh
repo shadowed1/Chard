@@ -31,7 +31,7 @@ fi
 
 U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
 echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
-
+sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user" 2>/dev/null || echo "chronos")
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home" 2>/dev/null || echo "/home/chronos")
 CHARD_APPS="$CHARD_ROOT/usr/share/applications"
@@ -149,6 +149,6 @@ DESKTOP
 done
 
 touch "$SHARED/.sync_now"
-
+sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
 echo
-echo "${GREEN}${BOLD}Done. Created $count shortcuts, skipped $skipped.${RESET}"
+echo "${GREEN}${BOLD}Created $count shortcuts, skipped $skipped.${RESET}"
