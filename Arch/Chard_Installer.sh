@@ -2142,8 +2142,13 @@ if [[ "$(uname -m)" == "aarch64" ]]; then
     echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
 fi
 echo
-echo "${BLUE}${BOLD}To enable icon support for Chard, please run the following in Crostini: ${RESET}${BLUE}"
-echo "sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "${BLUE}${BOLD}To enable icon support for Chard, share Downloads folder with Linux and run in Crostini: ${RESET}${BLUE}"
+echo
+echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "fi"
 echo "sudo chmod +x /bin/chard_bridge_daemon"
 echo "chard_bridge_daemon"
 echo
