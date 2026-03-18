@@ -2046,7 +2046,7 @@ checkpoint_160() {
         echo "${GREEN}Skipping Exo Color Inversion Patch.${RESET}"
     fi
 }
-run_checkpoint 160 "Patch Exo Color Inversion for ARM64" checkpoint_116
+run_checkpoint 160 "Patch Exo Color Inversion for ARM64" checkpoint_160
 
 locale_code=$(cat "/.chard_language" | sed 's/-/_/')
 sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen" 2>/dev/null
