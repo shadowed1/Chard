@@ -1079,13 +1079,54 @@ checkpoint_116() {
 run_checkpoint 116 "sudo -E emerge gui-libs/egl-gbm" checkpoint_116
 
 checkpoint_117() {
-    cd /tmp
-    git clone https://chromium.googlesource.com/chromiumos/platform2
-    cd platform2/vm_tools/sommelier
-    meson setup build
-    ninja -C build
-    sudo -E ninja -C build install
-    sudo rm -rf /tmp/platform2
+    CHROMEOS_VERSION="$(cat "/.chard_chrome" 2>/dev/null | tr -d '[:space:]')"
+    if [ -n "$CHROMEOS_VERSION" ] && [ "$CHROMEOS_VERSION" -ge 145 ]; then
+        cd /tmp
+        sudo rm -rf /tmp/platform2 2>/dev/null
+        git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
+        cd /tmp/platform2
+        git sparse-checkout set vm_tools/sommelier
+        cd vm_tools/sommelier
+    python3 << 'EOF'
+with open("/tmp/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "r") as f:
+    content = f.read()
+old = """    sl_create_host_buffer(host->shm->ctx, client, id,
+                          wl_shm_pool_create_buffer(host->proxy, offset, width,
+                                                    height, stride, format),
+                          width, height, /*is_drm=*/true);
+    return;"""
+new = """#if defined(__aarch64__)
+    if (format == WL_SHM_FORMAT_XRGB8888) format = WL_SHM_FORMAT_ARGB8888;
+#endif
+    sl_create_host_buffer(host->shm->ctx, client, id,
+                          wl_shm_pool_create_buffer(host->proxy, offset, width,
+                                                    height, stride, format),
+                          width, height, /*is_drm=*/true);
+    return;"""
+if old in content:
+    content = content.replace(old, new)
+    with open("/tmp/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "w") as f:
+        f.write(content)
+    print("WL_SHM_FORMAT_XRGB8888 swapped with WL_SHM_FORMAT_ARGB8888")
+else:
+    print("WL_SHM_FORMAT_XRGB8888 unchanged.")
+EOF
+        meson setup build
+        ninja -C build
+        sudo -E ninja -C build install
+        cd /tmp
+        sudo rm -rf /tmp/platform2 2>/dev/null
+    else
+        cd /tmp
+        sudo rm -rf /tmp/platform2 2>/dev/null
+        git clone https://chromium.googlesource.com/chromiumos/platform2
+        cd platform2/vm_tools/sommelier
+        meson setup build
+        ninja -C build
+        sudo -E ninja -C build install
+        cd /tmp
+        sudo rm -rf /tmp/platform2
+    fi
 }
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
