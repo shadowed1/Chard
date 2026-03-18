@@ -325,6 +325,7 @@ sudo qemu-system-x86_64 \
 <br>
 
 - Entering Chard Root with Sommelier support will generate some harmless errors.
+- Xbox Series X controller not working with bluetooth. 
 
 <br>
 
