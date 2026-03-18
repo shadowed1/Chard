@@ -1119,13 +1119,15 @@ EOF
     else
         cd /tmp
         sudo rm -rf /tmp/platform2 2>/dev/null
-        git clone https://chromium.googlesource.com/chromiumos/platform2
-        cd platform2/vm_tools/sommelier
+        git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
+        cd /tmp/platform2
+        git sparse-checkout set vm_tools/sommelier
+        cd vm_tools/sommelier
         meson setup build
         ninja -C build
         sudo -E ninja -C build install
         cd /tmp
-        sudo rm -rf /tmp/platform2
+        sudo rm -rf /tmp/platform2 2>/dev/null
     fi
 }
 run_checkpoint 117 "Build Sommelier" checkpoint_117
