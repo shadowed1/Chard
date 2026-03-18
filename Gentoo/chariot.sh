@@ -1079,22 +1079,17 @@ checkpoint_116() {
 run_checkpoint 116 "sudo -E emerge gui-libs/egl-gbm" checkpoint_116
 
 checkpoint_117() {
-    CHROMEOS_VERSION="$(cat "/.chard_chrome" 2>/dev/null | tr -d '[:space:]')"
-    if [ -n "$CHROMEOS_VERSION" ] && [ "$CHROMEOS_VERSION" -ge 145 ]; then
-        /bin/chard_sommelier_patch
-    else
-        cd /tmp
-        sudo rm -rf /tmp/platform2 2>/dev/null
-        git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
-        cd /tmp/platform2
-        git sparse-checkout set vm_tools/sommelier
-        cd vm_tools/sommelier
-        meson setup build
-        ninja -C build
-        sudo -E ninja -C build install
-        cd /tmp
-        sudo rm -rf /tmp/platform2 2>/dev/null
-    fi
+    cd /tmp
+    sudo rm -rf /tmp/platform2 2>/dev/null
+    git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
+    cd /tmp/platform2
+    git sparse-checkout set vm_tools/sommelier
+    cd vm_tools/sommelier
+    meson setup build
+    ninja -C build
+    sudo -E ninja -C build install
+    cd /tmp
+    sudo rm -rf /tmp/platform2 2>/dev/null
 }
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
@@ -1636,8 +1631,19 @@ checkpoint_150() {
 }
 run_checkpoint 150 "Bindfs" checkpoint_150
 
+checkpoint_151() {
+    CHROMEOS_VERSION="$(cat "/.chard_chrome" 2>/dev/null | tr -d '[:space:]')"
+    if [ -n "$CHROMEOS_VERSION" ] && [ "$CHROMEOS_VERSION" -ge 145 ] && \
+       [ "$(uname -m)" = "aarch64" ]; then
+        /bin/chard_sommelier_patch
+    else
+        echo "${GREEN}Skipping Exo Color Inversion Patch.${RESET}"
+    fi
+}
+run_checkpoint 151 "Bindfs" checkpoint_151
+
 sudo chown -R 1000:1000 ~/
-sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox
+sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox 2>/dev/null
 echo "Chard Root is Ready! ${RESET}"
 show_progress
 
