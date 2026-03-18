@@ -942,6 +942,149 @@ EOF
                         echo "${RED}Could not determine language. ${RESET}"
                     fi
                 fi
+                chard_volume > /dev/null 2>&1 &
+                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+                killall -9 pipewire 2>/dev/null
+                killall -9 pipewire-pulse 2>/dev/null
+                killall -9 pulseaudio 2>/dev/null
+                killall -9 steam 2>/dev/null
+                
+                sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+                sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+                sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
+                sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
+        
+                # Write our user hash to Chard for preliminary shortcut support
+        	U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
+        	echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
+                
+                if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+                    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+                    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+                    $CHARD_ROOT/bin/chard_mount 2>/dev/null
+                    $CHARD_ROOT/bin/chard_mtp_mount 2>/dev/null
+                else
+                    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+                fi
+                
+                sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+                
+                if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
+                else
+                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
+                fi
+                $CHARD_ROOT/bin/error_color
+                sudo chroot "$CHARD_ROOT" /bin/bash -c '
+                
+                    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+                    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                    mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
+                    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+                
+                    if [ -e /dev/zram0 ]; then
+                        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                        mount --make-rslave /dev/zram0 2>/dev/null
+                    fi
+                
+                    chmod 1777 /tmp /var/tmp
+                
+                    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                
+                    CHARD_HOME=$(cat /.chard_home)
+                    HOME=$CHARD_HOME
+                    CHARD_USER=$(cat /.chard_user)
+                    USER=$CHARD_USER
+                    GROUP_ID=1000
+                    USER_ID=1000
+                
+                    sudo -u "$USER" bash -c "
+                        cleanup() {
+                            echo \"Logging out $USER\"
+                            if [ -n \"\$PULSEAUDIO_PID\" ]; then
+                                kill -9 \"\$PULSEAUDIO_PID\" 2>/dev/null
+                            fi
+                        }
+                        trap cleanup EXIT INT TERM
+                        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+                        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+                        killall -9 pipewire 2>/dev/null
+                        killall -9 pipewire-pulse 2>/dev/null
+                        killall -9 pulseaudio 2>/dev/null
+                        #sudo chown -R 1000:audio /dev/snd
+                        #sudo chown -R 1000:1000 /dev/snd/by-path
+                        sudo mkdir -p /run/chrome/pulse
+                        sudo chown 1000:1000 /run/chrome/pulse 2>/dev/null
+                        sudo chown -R 1000:1000 /run/chrome/dconf 2>/dev/null
+                        sudo chmod 770 /run/chrome/pulse
+                        sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
+                        [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
+                        [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
+                        QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
+                        cd ~/
+                        /bin/chariot -s 151
+                    "
+                    /bin/error_color
+                    setfacl -Rb /run/chrome/pulse 2>/dev/null
+                    setfacl -Rb /run/chrome 2>/dev/null
+                    killall -9 pipewire 2>/dev/null
+                    killall -9 pipewire-pulse 2>/dev/null
+                    killall -9 pulseaudio 2>/dev/null
+                    killall -9 chardwire 2>/dev/null
+                    killall -9 powercontrol-gui 2>/dev/null
+                    #sudo chown -R root:audio /dev/snd 2>/dev/null
+                    #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+                    setfacl -Rb /root 2>/dev/null
+                    umount -l /dev/zram0   2>/dev/null || true
+                    umount -l /run/chrome  2>/dev/null || true
+                    umount -l /run/udev    2>/dev/null || true
+                    umount -l /run/dbus    2>/dev/null || true
+                    umount -l /etc/ssl     2>/dev/null || true
+                    umount -l /dev/pts     2>/dev/null || true
+                    umount -l /dev/shm     2>/dev/null || true
+                    umount -l /dev         2>/dev/null || true
+                    umount -l /sys         2>/dev/null || true
+                    umount -l /proc        2>/dev/null || true
+                '
+                $CHARD_ROOT/bin/error_color
+                killall -9 chard_volume 2>/dev/null
+                chard_unmount 2>/dev/null
+                chard_mtp_unmount 2>/dev/null
+                sudo rm -f /run/chrome/pulse/native
+                sudo rm -f /run/chrome/pulse/*
+                sudo mkdir -p /run/chrome/pulse
+                sudo -E chown $USER:$USER /run/chrome/pulse
+                sudo chmod 770 /run/chrome/pulse
+                killall -9 cras_test_client 2>/dev/null
+                killall -9 pipewire 2>/dev/null
+                killall -9 pipewire-pulse 2>/dev/null
+                killall -9 pulseaudio 2>/dev/null
+                killall -9 steam 2>/dev/null
+                killall -9 powercontrol-gui 2>/dev/null
+                killall -9 gedit 2>/dev/null
+                sudo pkill -f xfce4-session 2>/dev/null
+                sudo pkill -f xfwm4 2>/dev/null
+                sudo pkill -f xfce4-panel 2>/dev/null
+                sudo pkill -f xfdesktop 2>/dev/null
+                sudo pkill -f xfce4-terminal 2>/dev/null
+                sudo pkill -f xfce4-* 2>/dev/null
+                sudo pkill -f Xorg 2>/dev/null
+                sudo pkill -f powercontrol-gui 2>/dev/null
+                sudo pkill -f gedit 2>/dev/null
+                $CHARD_ROOT/bin/color_reset
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
