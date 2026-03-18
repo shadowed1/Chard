@@ -1640,7 +1640,7 @@ checkpoint_151() {
         echo "${GREEN}Skipping Exo Color Inversion Patch.${RESET}"
     fi
 }
-run_checkpoint 151 "Bindfs" checkpoint_151
+run_checkpoint 151 "Exo Color Inversion Patch" checkpoint_151
 
 sudo chown -R 1000:1000 ~/
 sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox 2>/dev/null
