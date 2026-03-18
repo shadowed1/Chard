@@ -14,7 +14,7 @@ if [[ ! -f /home/chronos/user/.bashrc ]]; then
     exit 1
 fi
 source /home/chronos/user/.bashrc
-
+source $CHARD_ROOT/.chard.preload 2>/dev/null
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
 MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/external"
 : > "$STATE_FILE"
