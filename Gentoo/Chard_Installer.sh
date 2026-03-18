@@ -774,6 +774,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virt
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_mesa.sh"            -o "$CHARD_ROOT/bin/chard_mesa" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_patch" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -796,7 +798,7 @@ sudo chmod +x "$CHARD_ROOT/bin/color_reset"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
-
+sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
