@@ -49,3 +49,4 @@ while read -r PART MP; do
         sudo mount --bind "$MP" "$TARGET" 2>/dev/null
     fi
 done < "$STATE_FILE"
+unset LD_PRELOAD
