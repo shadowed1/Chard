@@ -70,6 +70,37 @@ update_volume() {
     fi
 }
 
+get_mic_gain() {
+    output=$(cras_test_client 2>/dev/null)
+    gain=$(echo "$output" | grep "Input Nodes:" -A 20 | grep "yes" | \
+        grep -E "INTERNAL_MIC|MIC|FRONT_MIC|REAR_MIC|BLUETOOTH" | awk '{print $3}' | head -n 1)
+    echo "$gain"
+}
+
+update_volume() {
+    volume=$(get_volume)
+    hdmi=$(get_hdmi)
+    gain=$(get_mic_gain)
+
+    if [ -n "$volume" ]; then
+        tmp="$CHARD_ROOT/$CHARD_HOME/.chard_volume.tmp"
+        echo "$volume" > "$tmp"
+        mv "$tmp" "$CHARD_ROOT/$CHARD_HOME/.chard_volume"
+    fi
+
+    if [ -n "$hdmi" ]; then
+        tmp_hdmi="$CHARD_ROOT/$CHARD_HOME/.chard_hdmi.tmp"
+        echo "$hdmi" > "$tmp_hdmi"
+        mv "$tmp_hdmi" "$CHARD_ROOT/$CHARD_HOME/.chard_hdmi"
+    fi
+
+    if [ -n "$gain" ]; then
+        tmp_mic="$CHARD_ROOT/$CHARD_HOME/.chard_mic_gain.tmp"
+        echo "$gain" > "$tmp_mic"
+        mv "$tmp_mic" "$CHARD_ROOT/$CHARD_HOME/.chard_mic_gain"
+    fi
+}
+
 for file in .chard_volume .chard_hdmi .chard_bluetooth .chard_usb .chard_muted; do
     [ ! -f "$CHARD_ROOT/$CHARD_HOME/$file" ] && touch "$CHARD_ROOT/$CHARD_HOME/$file"
 done
