@@ -24,22 +24,22 @@ INTERVAL=5
 get_active_device() {
     local device=""
     local device_type=""
-    
+
     if [ -f "$HDMI_FILE" ]; then
         device=$(cat "$HDMI_FILE" 2>/dev/null | tr -d '\n')
         [ -n "$device" ] && device_type="HDMI"
     fi
-    
+
     if [ -z "$device" ] && [ -f "$BLUETOOTH_FILE" ]; then
         device=$(cat "$BLUETOOTH_FILE" 2>/dev/null | tr -d '\n')
         [ -n "$device" ] && device_type="Bluetooth"
     fi
-    
+
     if [ -z "$device" ] && [ -f "$USB_FILE" ]; then
         device=$(cat "$USB_FILE" 2>/dev/null | tr -d '\n')
         [ -n "$device" ] && device_type="USB"
     fi
-    
+
     if [ -z "$device" ]; then
         echo "Internal Speaker"
     else
@@ -68,28 +68,23 @@ apply_mic_gain() {
     fi
 }
 
-tail -n0 -F "$MIC_GAIN_FILE" | while read -r line; do
-    apply_mic_gain
-    sleep 0.1
-done &
-
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
         read -r volume < "$VOLUME_FILE"
     else
         volume=""
     fi
-    
+
     muted=0
     if [ -f "$MUTED_FILE" ]; then
         read -r muted < "$MUTED_FILE"
         [ "$muted" != "1" ] && muted=0
     fi
-    
+
     current_device=$(get_active_device)
-    
+
     effective_volume=$([ "$muted" = "1" ] && echo 0 || echo "$volume")
-    
+
     if [[ "$effective_volume" =~ ^[0-9]+$ ]] && [ "$effective_volume" -ge 0 ] && [ "$effective_volume" -le 100 ] && [ "$effective_volume" != "$LAST_VOLUME" ]; then
         LAST_VOLUME="$effective_volume"
         if command -v wpctl >/dev/null 2>&1; then
@@ -103,7 +98,7 @@ apply_volume() {
         fi
         echo "${CYAN}${BOLD}${current_device}${RESET} ${GREEN}${effective_volume}%${RESET}"
     fi
-    
+
     if [ "$muted" != "$LAST_MUTED" ]; then
         LAST_MUTED="$muted"
         if command -v wpctl >/dev/null 2>&1; then
@@ -116,7 +111,7 @@ apply_volume() {
         fi
         echo "${CYAN}${BOLD}${current_device}${RESET} $([ "$muted" = "1" ] && echo "${RED}Muted${RESET}" || echo "${YELLOW}Unmuted${RESET}")"
     fi
-    
+
     if [ "$current_device" != "$LAST_DEVICE" ]; then
         LAST_DEVICE="$current_device"
         echo "${BLUE}Device switched to: ${CYAN}${BOLD}${current_device}${RESET}"
@@ -129,6 +124,7 @@ FILES=(
     "$HOME/.chard_bluetooth"
     "$HOME/.chard_usb"
     "$HOME/.chard_muted"
+    "$HOME/.chard_mic_gain"
 )
 
 for f in "${FILES[@]}"; do
@@ -137,6 +133,7 @@ done
 
 tail -n0 --follow=name --retry "${FILES[@]}" 2>/dev/null | while read -r _; do
     apply_volume
+    apply_mic_gain
     sleep 0.1
 done &
 
