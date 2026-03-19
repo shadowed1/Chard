@@ -69,6 +69,7 @@ apply_mic_gain() {
         fi
     fi
 }
+
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
         read -r volume < "$VOLUME_FILE"
@@ -125,15 +126,18 @@ FILES=(
     "$HOME/.chard_bluetooth"
     "$HOME/.chard_usb"
     "$HOME/.chard_muted"
-    "$HOME/.chard_mic_gain"
 )
 
-for f in "${FILES[@]}"; do
+for f in "${FILES[@]}" "$MIC_GAIN_FILE"; do
     [ ! -f "$f" ] && touch "$f"
 done
 
 tail -n0 --follow=name --retry "${FILES[@]}" 2>/dev/null | while read -r _; do
     apply_volume
+    sleep 0.1
+done &
+
+tail -n0 --follow=name --retry "$MIC_GAIN_FILE" 2>/dev/null | while read -r _; do
     apply_mic_gain
     sleep 0.1
 done &
