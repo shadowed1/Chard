@@ -275,7 +275,8 @@ alias powercontrol-gui='sudo -E powercontrol-gui'
 
 # virtm
 alias virtm='sudo -E virtm'
-
+# gedit
+alias gedit='/bin/chard_gedit'
 # KDE Plasma
 alias plasmashell='/bin/chard_plasma'
 
