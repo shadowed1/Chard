@@ -19,6 +19,7 @@ LAST_MIC_GAIN=""
 LAST_VOLUME=""
 LAST_MUTED=""
 LAST_DEVICE=""
+MIC_GAIN_LAST_SET=0
 INTERVAL=5
 
 get_active_device() {
@@ -52,8 +53,10 @@ apply_mic_gain() {
         read -r gain_raw < "$MIC_GAIN_FILE"
         gain=$(awk "BEGIN {printf \"%d\", $gain_raw * 100}" 2>/dev/null)
         [ "$gain" -gt 100 ] 2>/dev/null && gain=100
-        if [[ "$gain" =~ ^[0-9]+$ ]] && [ "$gain" -ge 0 ] && [ "$gain" -le 100 ] && [ "$gain" != "$LAST_MIC_GAIN" ]; then
+        now=$EPOCHSECONDS
+        if [[ "$gain" =~ ^[0-9]+$ ]] && [ "$gain" -ge 0 ] && [ "$gain" -le 100 ] && [ "$gain" != "$LAST_MIC_GAIN" ] && [ $((now - MIC_GAIN_LAST_SET)) -ge 2 ]; then
             LAST_MIC_GAIN="$gain"
+            MIC_GAIN_LAST_SET=$now
             if command -v pactl >/dev/null 2>&1; then
                 SOURCE=$(pactl get-default-source 2>/dev/null)
                 if [ -z "$SOURCE" ]; then
@@ -126,18 +129,15 @@ FILES=(
     "$HOME/.chard_bluetooth"
     "$HOME/.chard_usb"
     "$HOME/.chard_muted"
+    "$HOME/.chard_mic_gain"
 )
 
-for f in "${FILES[@]}" "$MIC_GAIN_FILE"; do
+for f in "${FILES[@]}"; do
     [ ! -f "$f" ] && touch "$f"
 done
 
 tail -n0 --follow=name --retry "${FILES[@]}" 2>/dev/null | while read -r _; do
     apply_volume
-    sleep 0.1
-done &
-
-tail -n0 --follow=name --retry "$MIC_GAIN_FILE" 2>/dev/null | while read -r _; do
     apply_mic_gain
     sleep 0.1
 done &
