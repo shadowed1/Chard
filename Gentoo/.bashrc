@@ -397,7 +397,11 @@ dbus-daemon --system --fork 2>/dev/null
 
 # virtm
 alias virtm='sudo -E virtm'
+# gedit
+alias gedit='/bin/chard_gedit'
+# autoclicker
 alias autoclicker='sudo -E autoclicker'
+
 export EDITOR=gedit
 export FILEMANAGER=thunar
 printf "y\n" | xdg-mime default thunar.desktop inode/directory
