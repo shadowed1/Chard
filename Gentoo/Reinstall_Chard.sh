@@ -471,6 +471,18 @@ source /usr/.chard_prompt.sh
 EOF
                 fi
 
+                sudo tee "$CHARD_ROOT/usr/bin/chard_gedit" >/dev/null <<'EOF'
+#!/bin/bash
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS}"
+export GDK_BACKEND=wayland
+export QT_QPA_PLATFORM=wayland
+exec sudo -E gedit "$@"
+EOF
+
+sudo chmod +x "$CHARD_ROOT/usr/bin/chard_gedit"
+
                 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 2>/dev/null
                 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
                 sudo chroot $CHARD_ROOT /bin/bash -c "
