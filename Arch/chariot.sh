@@ -1429,6 +1429,18 @@ Terminal=false
 StartupNotify=true
 EOF
 
+sudo tee /usr/bin/chard_gedit >/dev/null <<'EOF'
+#!/bin/bash
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS}"
+export GDK_BACKEND=wayland
+export QT_QPA_PLATFORM=wayland
+exec sudo -E gedit "$@"
+EOF
+
+sudo chmod +x /usr/bin/chard_gedit
+
 elif [[ "$ARCH" == "aarch64" ]]; then
     sudo -E pacman -S --needed --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git bubblewrap
     cd ~/
