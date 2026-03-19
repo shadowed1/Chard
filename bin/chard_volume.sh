@@ -39,8 +39,7 @@ update_volume() {
     elif [ -n "$usb" ]; then
         echo "$usb" > "$CHARD_ROOT/$CHARD_HOME/.chard_usb"
     fi
-
-    [ -n "$gain" ] && echo "$gain" > "$CHARD_ROOT/$CHARD_HOME/.chard_mic_gain"
+    echo "${gain:-}" > "$CHARD_ROOT/$CHARD_HOME/.chard_mic_gain"
 }
 
 update_volume
