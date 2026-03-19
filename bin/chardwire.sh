@@ -50,9 +50,8 @@ get_active_device() {
 apply_mic_gain() {
     if [ -f "$MIC_GAIN_FILE" ]; then
         read -r gain_raw < "$MIC_GAIN_FILE"
-        gain=$(awk "BEGIN {printf \"%d\", $gain_raw * 100}" 2>/dev/null)
-        [ "$gain" -gt 100 ] 2>/dev/null && gain=100
-        if [[ "$gain" =~ ^[0-9]+$ ]] && [ "$gain" -ge 0 ] && [ "$gain" -le 100 ] && [ "$gain" != "$LAST_MIC_GAIN" ]; then
+        gain=$(awk '{printf "%.2f", $1}' <<< "$gain_raw" 2>/dev/null)
+        if [[ "$gain" =~ ^[0-9]+\.[0-9]+$ ]] && [ "$gain" != "$LAST_MIC_GAIN" ]; then
             LAST_MIC_GAIN="$gain"
             if command -v pactl >/dev/null 2>&1; then
                 SOURCE=$(pactl get-default-source 2>/dev/null)
@@ -60,8 +59,8 @@ apply_mic_gain() {
                     SOURCE=$(pactl list short sources 2>/dev/null | grep -v monitor | awk 'NR==1 {print $1}')
                 fi
                 if [ -n "$SOURCE" ]; then
-                    pactl set-source-volume "$SOURCE" "${gain}%" 2>/dev/null
-                    echo "${CYAN}pactl mic: ${RESET}${GREEN}$gain% on source $SOURCE${RESET}"
+                    pactl set-source-volume "$SOURCE" "$gain" 2>/dev/null
+                    echo "${CYAN}pactl mic: ${RESET}${GREEN}$gain on source $SOURCE${RESET}"
                 else
                     echo "${RED}ERROR: No PulseAudio source found.${RESET}"
                 fi
@@ -69,6 +68,7 @@ apply_mic_gain() {
         fi
     fi
 }
+
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
         read -r volume < "$VOLUME_FILE"
