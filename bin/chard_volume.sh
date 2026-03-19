@@ -45,7 +45,10 @@ update_volume() {
 
 update_volume
 
-dbus-monitor --system "type='signal',interface='org.chromium.cras.Control'" 2>/dev/null | \
+dbus-monitor --system \
+    "type='signal',interface='org.chromium.cras.Control',member='OutputVolumeChanged'" \
+    "type='signal',interface='org.chromium.cras.Control',member='InputGainChanged'" \
+    2>/dev/null | \
 while read -r line; do
     if echo "$line" | grep -q "signal"; then
         update_volume
