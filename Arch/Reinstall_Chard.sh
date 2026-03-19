@@ -669,6 +669,18 @@ EOF
 
 sudo chmod +x "$CHARD_ROOT/bin/chard_plasma"
 
+sudo tee "$CHARD_ROOT/usr/bin/chard_gedit" >/dev/null <<'EOF'
+#!/bin/bash
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS}"
+export GDK_BACKEND=wayland
+export QT_QPA_PLATFORM=wayland
+exec sudo -E gedit "$@"
+EOF
+
+sudo chmod +x "$CHARD_ROOT/usr/bin/chard_gedit"
+
 if [ -f "/home/chronos/user/.bashrc" ]; then
         CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
         BASHRC_PATH="$CHROMEOS_BASHRC"
