@@ -49,7 +49,9 @@ get_active_device() {
 
 apply_mic_gain() {
     if [ -f "$MIC_GAIN_FILE" ]; then
-        read -r gain < "$MIC_GAIN_FILE"
+        read -r gain_raw < "$MIC_GAIN_FILE"
+        gain=$(awk "BEGIN {printf \"%d\", $gain_raw * 100}" 2>/dev/null)
+        [ "$gain" -gt 100 ] 2>/dev/null && gain=100
         if [[ "$gain" =~ ^[0-9]+$ ]] && [ "$gain" -ge 0 ] && [ "$gain" -le 100 ] && [ "$gain" != "$LAST_MIC_GAIN" ]; then
             LAST_MIC_GAIN="$gain"
             if command -v pactl >/dev/null 2>&1; then
@@ -67,7 +69,6 @@ apply_mic_gain() {
         fi
     fi
 }
-
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
         read -r volume < "$VOLUME_FILE"
