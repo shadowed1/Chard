@@ -14,6 +14,8 @@ MUTED_FILE="$HOME/.chard_muted"
 HDMI_FILE="$HOME/.chard_hdmi"
 BLUETOOTH_FILE="$HOME/.chard_bluetooth"
 USB_FILE="$HOME/.chard_usb"
+MIC_GAIN_FILE="$HOME/.chard_mic_gain"
+LAST_MIC_GAIN=""
 LAST_VOLUME=""
 LAST_MUTED=""
 LAST_DEVICE=""
@@ -44,6 +46,32 @@ get_active_device() {
         echo "${device_type}: ${device}"
     fi
 }
+
+apply_mic_gain() {
+    if [ -f "$MIC_GAIN_FILE" ]; then
+        read -r gain < "$MIC_GAIN_FILE"
+        if [[ "$gain" =~ ^[0-9]+$ ]] && [ "$gain" -ge 0 ] && [ "$gain" -le 100 ] && [ "$gain" != "$LAST_MIC_GAIN" ]; then
+            LAST_MIC_GAIN="$gain"
+            if command -v pactl >/dev/null 2>&1; then
+                SOURCE=$(pactl get-default-source 2>/dev/null)
+                if [ -z "$SOURCE" ]; then
+                    SOURCE=$(pactl list short sources 2>/dev/null | grep -v monitor | awk 'NR==1 {print $1}')
+                fi
+                if [ -n "$SOURCE" ]; then
+                    pactl set-source-volume "$SOURCE" "${gain}%" 2>/dev/null
+                    echo "${CYAN}pactl mic: ${RESET}${GREEN}$gain% on source $SOURCE${RESET}"
+                else
+                    echo "${RED}ERROR: No PulseAudio source found.${RESET}"
+                fi
+            fi
+        fi
+    fi
+}
+
+tail -n0 -F "$MIC_GAIN_FILE" | while read -r line; do
+    apply_mic_gain
+    sleep 0.1
+done &
 
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
