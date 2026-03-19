@@ -1,7 +1,7 @@
 #!/bin/bash
 
 for file in .chard_volume .chard_hdmi .chard_bluetooth .chard_usb .chard_muted .chard_mic_gain; do
-    [ ! -f "$CHARD_ROOT/$CHARD_HOME/$file" ] && touch "$CHARD_ROOT/$CHARD_HOME/$file"
+    [ ! -f "$CHARD_ROOT/$CHARD_HOME/$file" ] && sudo touch "$CHARD_ROOT/$CHARD_HOME/$file"
 done
 
 update_volume() {
