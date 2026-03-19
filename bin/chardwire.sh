@@ -19,7 +19,6 @@ LAST_MIC_GAIN=""
 LAST_VOLUME=""
 LAST_MUTED=""
 LAST_DEVICE=""
-MIC_GAIN_LAST_SET=0
 INTERVAL=5
 
 get_active_device() {
@@ -53,10 +52,8 @@ apply_mic_gain() {
         read -r gain_raw < "$MIC_GAIN_FILE"
         gain=$(awk "BEGIN {printf \"%d\", $gain_raw * 100}" 2>/dev/null)
         [ "$gain" -gt 100 ] 2>/dev/null && gain=100
-        now=$EPOCHSECONDS
-        if [[ "$gain" =~ ^[0-9]+$ ]] && [ "$gain" -ge 0 ] && [ "$gain" -le 100 ] && [ "$gain" != "$LAST_MIC_GAIN" ] && [ $((now - MIC_GAIN_LAST_SET)) -ge 2 ]; then
+        if [[ "$gain" =~ ^[0-9]+$ ]] && [ "$gain" -ge 0 ] && [ "$gain" -le 100 ] && [ "$gain" != "$LAST_MIC_GAIN" ]; then
             LAST_MIC_GAIN="$gain"
-            MIC_GAIN_LAST_SET=$now
             if command -v pactl >/dev/null 2>&1; then
                 SOURCE=$(pactl get-default-source 2>/dev/null)
                 if [ -z "$SOURCE" ]; then
@@ -72,7 +69,6 @@ apply_mic_gain() {
         fi
     fi
 }
-
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
         read -r volume < "$VOLUME_FILE"
