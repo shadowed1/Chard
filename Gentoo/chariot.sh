@@ -1465,6 +1465,18 @@ sudo -u $CHARD_USER \
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
     sudo chmod +x /bin/chard_flatpak
+
+    sudo tee /usr/bin/chard_gedit >/dev/null <<'EOF'
+#!/bin/bash
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS}"
+export GDK_BACKEND=wayland
+export QT_QPA_PLATFORM=wayland
+exec sudo -E gedit "$@"
+EOF
+
+sudo chmod +x /usr/bin/chard_gedit
 }
 run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
