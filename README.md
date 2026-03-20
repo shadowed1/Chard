@@ -389,6 +389,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.28: `Added bindfs to chard_mount, bypassing noexec limitation for external drives. This enables Steam to use external drives. Added Shortcut and Icon support for Chard using a VM as an app launcher.` <br><br>
 - 0.29: `Patched Color Inversion bug on ChromeOS 145 ARM64 for Chard Arch and Chard Gentoo. Fixed Bindfs from being properly called on chard_mount. Enabled microphone support. Equalized pulseaudio and ALSA volume.` <br><br>
 - 0.30: `Native mouse capture achieved. Thanks to Days for finding how to actually enable that. To use mouse capture, launch chard using "cg" or "chard game". App Icons will not be enabled in this mode, but that will be worked on soon.`
+- 0.31: `Mouse capture support with app icons enabled. Removed "cg" or "chard game" since it is no longer needed. Integrated sommelier patch logic for "chard_sommelier_patch" to enable mouse capture on all devices.` <br><br>
 <br><br>
 <br>
 
