@@ -88,17 +88,32 @@ apply_volume() {
     current_device=$(get_active_device)
 
     effective_volume=$([ "$muted" = "1" ] && echo 0 || echo "$volume")
-
+    # Attempt at normalizing PulseAudio with ALSA! 
     if [[ "$effective_volume" =~ ^[0-9]+$ ]] && [ "$effective_volume" -ge 0 ] && [ "$effective_volume" -le 100 ] && [ "$effective_volume" != "$LAST_VOLUME" ]; then
         LAST_VOLUME="$effective_volume"
+        vol_offset=$(awk -v p="$effective_volume" 'BEGIN {
+	    x = p / 100;
+	    gamma = 0.125;
+	    amp = x ^ gamma * (1 + 0.10 * sin(3.14159 * x));
+	    if (amp > 1) amp = 1;
+	    offset = int(amp * 65536 + 0.5);
+	    if (offset > 65536) offset = 65536;
+	    print offset;
+	}')
         if command -v wpctl >/dev/null 2>&1; then
-            volume_decimal=$(echo "scale=2; $effective_volume / 100" | bc)
-            wpctl set-volume @DEFAULT_AUDIO_SINK@ "$volume_decimal" 2>/dev/null
+            vol_decimal=$(awk -v p="$effective_volume" 'BEGIN {
+	        x = p / 100;
+	        gamma = 0.125;
+	        amp = x ^ gamma * (1 + 0.10 * sin(3.14159 * x));
+	        if (amp > 1) amp = 1;
+	        printf "%.4f", amp;
+	    }')
+            wpctl set-volume @DEFAULT_AUDIO_SINK@ "$vol_decimal" 2>/dev/null
         fi
         if command -v pactl >/dev/null 2>&1; then
             SINK=$(pactl get-default-sink 2>/dev/null)
             [ -z "$SINK" ] && SINK=$(pactl list short sinks 2>/dev/null | awk 'NR==1 {print $1}')
-            [ -n "$SINK" ] && pactl set-sink-volume "$SINK" "${effective_volume}%" 2>/dev/null
+            [ -n "$SINK" ] && pactl set-sink-volume "$SINK" "$vol_units" 2>/dev/null
         fi
         echo "${CYAN}${BOLD}${current_device}${RESET} ${GREEN}${effective_volume}%${RESET}"
     fi
