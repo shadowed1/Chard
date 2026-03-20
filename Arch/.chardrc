@@ -52,6 +52,7 @@ chard() {
     esac
 }
 
+alias cg='chard game'
 alias cs='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
