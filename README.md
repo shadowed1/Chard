@@ -142,6 +142,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 
 <br>
 
+- Supports native mouse capture/lock for games!
 - Greatly exceeds Crostini performance and can achieve superior performance to Borealis (RIP) with significantly lower memory overhead.
 - USB + Bluetooth controller support for games.
 
@@ -172,7 +173,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 
 <br>
 
-- Supports mounting external drives and Android devices. Connect prior to entering Chard. 
+- Supports mounting external drives and Android devices. Connect prior to entering Chard.
 - Implements `virtm`, a program emulating mouse capture support; bypassing exo security delegate.
 
 <br>
@@ -250,12 +251,13 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - And too many to test. 
 
 ### Commands (Some not listed) <br>
-- `chard <binary> <arguments>` -- to run a command wrapped within /usr/local/chard paths outside of chroot (Not fully supported right now).
-- `chard root` or `cr` -- Enter Chard Chroot with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
-- `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
 
 
 *In ChromeOS:* 
+- `chard root` or `cr` -- Enter Chard Root with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
+- `chard game` or `cg` -- Enter Chard Root with everything listed above and with mouse capture/lock support. No app icons in this mode. 
+- `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
+- `chard unmount` or `cu` -- Force chard to unmount as if exiting (force kill).
 - `autoclicker <clicks-per-second>` -- Run an autoclicker script in ChromeOS!
 - `virtm` Start mouse capture/lock script. Allows spinning around, Ctrl - C to exit. 
 - `chard reinstall` -- Option 1 for fast reinstall (does not remove). Option 2 is a full reinstall (removes Chard).
@@ -264,7 +266,10 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - `chard chariot` or `chariot` -- Chard's companion tool for setting itself up with a checkpoint system.
 - `chardonnay` -- Launch Sommelier in ChromeOS natively (Gentoo only -- WIP).
 - `chard version` -- Check for updates.
-- `chard unmount` or `cu` -- Force chard to unmount as if exiting (force kill).
+- `chard_mount` -- Tell chard to mount an external drive.
+- `chard_unmount` -- Tell chard to umount an external drive. 
+- `chard_mtp_mount` -- Tell chard to mount an Android device that is connected.
+- `chard_mtp_unmount` -- Tell chard to unmount the Android device. 
 - `rainbow` -- Enable a rainbow shell in ChromeOS. (Fun extra)
 
 <br>
