@@ -11,7 +11,7 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
+sleep 5
 apply_volume() {
     if [ -f "$VOLUME_FILE" ]; then
         read -r volume < "$VOLUME_FILE"
