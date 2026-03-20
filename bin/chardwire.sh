@@ -20,7 +20,7 @@ LAST_VOLUME=""
 LAST_MUTED=""
 LAST_DEVICE=""
 INTERVAL=5
-
+sleep 5
 get_active_device() {
     local device=""
     local device_type=""
