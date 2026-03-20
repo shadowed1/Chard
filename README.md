@@ -33,7 +33,19 @@ sudo bash /usr/local/Chard_Installer
 
 5. Once install is finished in VT-2, press `CTRL-D` to log out and log back in as `chronos`. Type `cr` or `chard root` to start. <br>
 
-6. Return back to ChromeOS shell, and `xfce4-terminal` should appear. Run apps through there, or through the app launcher if Crostini is installed. <br><br>
+6. Return back to ChromeOS shell, and `xfce4-terminal` should appear. Run apps through there, or through the app launcher if Crostini is installed. <br>
+
+Running chard directly in ChromeOS shell is possible using one of these two tools:
+<br>
+
+*Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD:* 
+<br>
+`https://github.com/shadowed1/sudoCrosh` <br>
+
+*Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO:* 
+<br>
+`https://github.com/shadowed1/Sucrose` 
+<br><br>
 
 ## About Chard (*Chrome-Arch Development*):
 
@@ -317,18 +329,6 @@ sudo qemu-system-x86_64 \
 - Do not exit a Chard shell if you have other ones open. Append & at end of an app to run more apps in same shell. 
 
 <br>
-
-Running chard directly in ChromeOS shell is possible using these two tools:
-<br>
-
-*Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD:* 
-<br>
-`https://github.com/shadowed1/sudoCrosh` <br>
-
-*Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO:* 
-<br>
-`https://github.com/shadowed1/Sucrose` 
-<br><br>
 
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
