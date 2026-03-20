@@ -86,28 +86,25 @@ apply_volume() {
     fi
 
     current_device=$(get_active_device)
-
     effective_volume=$([ "$muted" = "1" ] && echo 0 || echo "$volume")
-    # Attempt at normalizing PulseAudio with ALSA! 
+
     if [[ "$effective_volume" =~ ^[0-9]+$ ]] && [ "$effective_volume" -ge 0 ] && [ "$effective_volume" -le 100 ] && [ "$effective_volume" != "$LAST_VOLUME" ]; then
         LAST_VOLUME="$effective_volume"
-        vol_offset=$(awk -v p="$effective_volume" 'BEGIN {
-	    x = p / 100;
-	    gamma = 0.125;
-	    amp = x ^ gamma * (1 + 0.10 * sin(3.14159 * x));
-	    if (amp > 1) amp = 1;
-	    offset = int(amp * 65536 + 0.5);
-	    if (offset > 65536) offset = 65536;
-	    print offset;
-	}')
+        vol_units=$(awk -v p="$effective_volume" 'BEGIN {
+            x = p / 100;
+            gamma = 0.125;
+            amp = x ^ gamma;
+            units = int(amp * 65536 + 0.5);
+            if (units > 65536) units = 65536;
+            print units;
+        }')
         if command -v wpctl >/dev/null 2>&1; then
             vol_decimal=$(awk -v p="$effective_volume" 'BEGIN {
-	        x = p / 100;
-	        gamma = 0.125;
-	        amp = x ^ gamma * (1 + 0.10 * sin(3.14159 * x));
-	        if (amp > 1) amp = 1;
-	        printf "%.4f", amp;
-	    }')
+                x = p / 100;
+                gamma = 0.125;
+                amp = x ^ gamma;
+                printf "%.4f", amp;
+            }')
             wpctl set-volume @DEFAULT_AUDIO_SINK@ "$vol_decimal" 2>/dev/null
         fi
         if command -v pactl >/dev/null 2>&1; then
