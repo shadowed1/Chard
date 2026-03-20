@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Runs in chroot and reads volume controls by chard_volume 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -49,7 +49,10 @@ get_active_device() {
 
 apply_mic_gain() {
     if [ -f "$MIC_GAIN_FILE" ]; then
-        read -r gain_raw < "$MIC_GAIN_FILE"
+        read -r line < "$MIC_GAIN_FILE"
+        gain_raw=$(echo "$line" | awk '{print $NF}')
+        mic_name=$(echo "$line" | awk '{$NF=""; print $0}' | sed 's/[[:space:]]*$//')
+        [ -z "$mic_name" ] && mic_name="Microphone"
         gain=$(awk '{printf "%.2f", $1}' <<< "$gain_raw" 2>/dev/null)
         if [[ "$gain" =~ ^[0-9]+\.[0-9]+$ ]] && [ "$gain" != "$LAST_MIC_GAIN" ]; then
             LAST_MIC_GAIN="$gain"
@@ -60,7 +63,7 @@ apply_mic_gain() {
                 fi
                 if [ -n "$SOURCE" ]; then
                     pactl set-source-volume "$SOURCE" "$gain" 2>/dev/null
-                    echo "${CYAN}pactl mic: ${RESET}${GREEN}$gain on source $SOURCE${RESET}"
+                    echo "${CYAN}${BOLD}${mic_name}${RESET} ${GREEN}${gain}${RESET}"
                 else
                     echo "${RED}ERROR: No PulseAudio source found.${RESET}"
                 fi
