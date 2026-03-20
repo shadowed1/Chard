@@ -371,6 +371,7 @@ chard_unmount() {
 			echo "  ${RED}PID $pid: $cmdline"
 			echo "    (exe: $exe) ${RESET}"
 			sudo kill "$pid" && echo "${RED}    Killed${RESET}" || echo "${RED}    Failed to kill${RESET}"
+			echo
 			found=1
 		fi
 		done < <(ls /proc | grep -E '^[0-9]+$')
