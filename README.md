@@ -285,6 +285,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - Prepend `root` to an app that requires user namespace creation and it might work.
 - `chariot 144` -- Resume on checkpoint 144 and continue until Chariot finishes.
 - `chariot -s 90` -- Resume on checkpoint 90 and exit after finishing that specific checkpoint.
+- `chard_debug` -- List Chard's environmental variables in alphabetical order with colors. 
 - `exit` -- Leave Chard Root
 - `flatpak override --user --nosocket=wayland org.app.Appname` -- Example for Flatpak troubleshooting
 
