@@ -1611,10 +1611,12 @@ run_checkpoint 148 "sudo emerge xfce4-terminal" checkpoint_148
 checkpoint_149() {
 sudo mkdir -p /etc/pulse/default.pa.d/
 sudo mkdir -p /etc/pulse/
-sudo tee /etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
+sudo tee "/etc/pulse/default.pa.d/10-cras.pa" > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink control=none
 load-module module-softvol-sink sink_name=linear_sink master=cras_sink
 set-default-sink linear_sink
+load-module module-alsa-source device=default source_name=cras-source control=none
+set-default-source cras-source
 load-module module-suspend-on-idle
 EOF
 
