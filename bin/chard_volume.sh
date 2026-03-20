@@ -1,4 +1,5 @@
 #!/bin/bash
+# Runs on ChromeOS and writes volumes to files for chardwire to read in chroot 
 for file in .chard_volume .chard_hdmi .chard_bluetooth .chard_usb .chard_muted .chard_mic_gain; do
     if [ ! -f "$CHARD_ROOT/$CHARD_HOME/$file" ]; then
         sudo touch "$CHARD_ROOT/$CHARD_HOME/$file"
@@ -13,6 +14,9 @@ update_volume() {
     bluetooth=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "BLUETOOTH" | grep "yes" | head -n 1 | sed -n 's/.*BLUETOOTH[[:space:]]*[0-9]*\*\?//p')
     usb_node=$(echo "$output" | grep "Output Nodes:" -A 20 | grep "USB" | grep "yes" | head -n 1)
     gain=$(echo "$output" | grep "Input Nodes:" -A 20 | grep "yes" | grep -E "INTERNAL_MIC|MIC|FRONT_MIC|REAR_MIC|BLUETOOTH" | head -n 1 | awk '{print $4}')
+    mic_name=$(echo "$output" | grep "Input Nodes:" -A 20 | grep "yes" | grep -E "INTERNAL_MIC|MIC|FRONT_MIC|REAR_MIC|BLUETOOTH" | head -n 1 | sed 's/.*X\*//' | sed 's/^[[:space:]]*//')
+    [ -z "$mic_name" ] && mic_name="Microphone"
+    [ -n "$gain" ] && echo "$mic_name $gain" > "$CHARD_ROOT/$CHARD_HOME/.chard_mic_gain"
     if echo "$output" | grep -q "User muted: Muted"; then
         muted="1"
     else
