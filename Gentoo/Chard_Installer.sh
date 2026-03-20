@@ -218,6 +218,25 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.2
     sudo setfacl -Rb /run/chrome 2>/dev/null
+    echo
+	echo "${YELLOW}Searching for processes running from: $CHARD_ROOT ${RESET}"
+	echo ""
+	found=0
+	while IFS= read -r pid; do
+	    exe=$(readlink -f "/proc/$pid/exe" 2>/dev/null) || continue
+	    cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)
+	    if [[ "$exe" == "$CHARD_ROOT"* ]] || [[ "$cmdline" == *"$CHARD_ROOT"* ]]; then
+	        echo "  ${RED}PID $pid: $cmdline"
+	        echo "    (exe: $exe) ${RESET}"
+	        sudo kill "$pid" && echo "    → Killed" || echo "    → Failed to kill"
+	        found=1
+	    fi
+	done < <(ls /proc | grep -E '^[0-9]+$')
+	
+	if [[ "$found" -eq 0 ]]; then
+	    echo "${GREEN}No processes found from $CHARD_ROOT ${RESET}"
+		echo
+	fi
 }
 
 existing_int_trap=$(trap -p INT | cut -d"'" -f2)
@@ -364,6 +383,25 @@ sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
 sudo setfacl -Rb /run/chrome 2>/dev/null
+echo
+	echo "${YELLOW}Searching for processes running from: $CHARD_ROOT ${RESET}"
+	echo ""
+	found=0
+	while IFS= read -r pid; do
+	    exe=$(readlink -f "/proc/$pid/exe" 2>/dev/null) || continue
+	    cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)
+	    if [[ "$exe" == "$CHARD_ROOT"* ]] || [[ "$cmdline" == *"$CHARD_ROOT"* ]]; then
+	        echo "  ${RED}PID $pid: $cmdline"
+	        echo "    (exe: $exe) ${RESET}"
+	        sudo kill "$pid" && echo "    → Killed" || echo "    → Failed to kill"
+	        found=1
+	    fi
+	done < <(ls /proc | grep -E '^[0-9]+$')
+	
+	if [[ "$found" -eq 0 ]]; then
+	    echo "${GREEN}No processes found from $CHARD_ROOT ${RESET}"
+		echo
+	fi
 echo "${RED}[*] Removing $CHARD_ROOT...${RESET}"
 sleep 0.2
 
