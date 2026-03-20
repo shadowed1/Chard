@@ -330,13 +330,9 @@ sudo qemu-system-x86_64 \
 <br>
 
 - Exiting Chard closes all running apps inside Chard, so please save your work before exiting!
-- Microphone support needs to be re-done. 
-
+- LXC and VM support is not fully implemented.
 
 <br>
-
-- LXC and VM support is not fully implemented.
-- Apps using Pulse Audio uses a different volume curve than apps using ALSA.
 
 - Sucrose users can launch Chard with `sudo chard root`. Sucrose users should uninstall Chard with VT-2.  
 <br>
