@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Generates a Stage 3 LD_PRELOAD for running programs in ChromeOS natively. 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
