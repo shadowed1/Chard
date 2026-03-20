@@ -1,7 +1,7 @@
 #!/bin/bash
 # Version 1.0 
 # chard_garcon 
-# Author: Days and shadowed1
+# Author: Days
 
 # export PATH="/usr/bin:/bin:/usr/local/bin:/sbin:/usr/sbin:$PATH"
 WATCH_DIR="/$CHARD_HOME/user/MyFiles/chard/"
