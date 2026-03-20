@@ -226,6 +226,7 @@ chard_unmount() {
 			echo "  ${RED}PID $pid: $cmdline"
 			echo "    (exe: $exe) ${RESET}"
 			sudo kill "$pid" && echo "${RED}    Killed${RESET}" || echo "${RED}    Failed to kill${RESET}"
+			echo
 			found=1
 		fi
 		done < <(ls /proc | grep -E '^[0-9]+$')
@@ -650,7 +651,7 @@ case "$cmd" in
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
-        
+        sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
         sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
