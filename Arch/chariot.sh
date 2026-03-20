@@ -2050,13 +2050,7 @@ checkpoint_159() {
 run_checkpoint 159 "Bindfs" checkpoint_159
 
 checkpoint_160() {
-    CHROMEOS_VERSION="$(cat "/.chard_chrome" 2>/dev/null | tr -d '[:space:]')"
-    if [ -n "$CHROMEOS_VERSION" ] && [ "$CHROMEOS_VERSION" -ge 145 ] && \
-       [ "$(uname -m)" = "aarch64" ]; then
-        /bin/chard_sommelier_patch
-    else
-        echo "${GREEN}Skipping Exo Color Inversion Patch.${RESET}"
-    fi
+    /bin/chard_sommelier_patch
 }
 run_checkpoint 160 "Patch Exo Color Inversion for ARM64" checkpoint_160
 
