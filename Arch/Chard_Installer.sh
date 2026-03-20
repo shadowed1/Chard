@@ -246,7 +246,7 @@ cleanup_chroot() {
     done < <(ls /proc | grep -E '^[0-9]+$')
     
     if [[ "$found" -eq 0 ]]; then
-        echo "${GREEN}No processes found originating from $CHARD_ROOT ${RESET}"
+        echo "${GREEN}No processes found from $CHARD_ROOT ${RESET}"
     	echo
     fi
 }
@@ -435,7 +435,7 @@ sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || t
     done < <(ls /proc | grep -E '^[0-9]+$')
     
     if [[ "$found" -eq 0 ]]; then
-        echo "${GREEN}No processes found originating from $CHARD_ROOT ${RESET}"
+        echo "${GREEN}No processes found from $CHARD_ROOT ${RESET}"
     	echo
     fi
 sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
