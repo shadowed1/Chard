@@ -845,10 +845,12 @@ set-default-source cras-source
 load-module module-suspend-on-idle
 EOF
 
-sudo tee $CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
+sudo tee "$CHARD_ROOT/etc/pulse/default.pa.d/99-disable-hw.pa" > /dev/null << 'EOF'
 unload-module module-udev-detect
 unload-module module-alsa-card
 EOF
+
+sudo sed -i '/^load-module module-udev-detect/s/^/#/' "$CHARD_ROOT/etc/pulse/default.pa"
 
 sudo cp $CHARD_ROOT/etc/pulse/daemon.conf $CHARD_ROOT/etc/pulse/daemon.conf.bak.$(date +%s) 2>/dev/null
 sudo sed -i \
