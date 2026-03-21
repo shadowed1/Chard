@@ -1,4 +1,4 @@
-# <<< CHARD_ENV <<<
+## <<< CHARD_ENV <<<
 
 # <<< CHARD_ROOT_MARKER >>>
 CHARD_ROOT=""
@@ -52,7 +52,6 @@ chard() {
     esac
 }
 
-alias cg='chard game'
 alias cs='chard safe'
 alias cr='chard root'
 alias chariot='chard chariot'
