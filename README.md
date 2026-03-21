@@ -174,7 +174,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 <br>
 
 - Supports mounting external drives and Android devices. Connect prior to entering Chard.
-- Implements `virtm`, a program emulating mouse capture support; bypassing exo security delegate.
+- Patches and Builds Sommelier with mouse capture + icon support. 
 
 <br>
 
@@ -258,7 +258,6 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
 - `chard unmount` or `cu` -- Force chard to unmount as if exiting (force kill).
 - `autoclicker <clicks-per-second>` -- Run an autoclicker script in ChromeOS!
-- `virtm` Start mouse capture/lock script. Allows spinning around, Ctrl - C to exit. 
 - `chard reinstall` -- Option 1 for fast reinstall (does not remove). Option 2 is a full reinstall (removes Chard).
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard help` -- Show help examples.
