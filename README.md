@@ -255,6 +255,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 
 *In ChromeOS:* 
 - `chard root` or `cr` -- Enter Chard Root with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
+- `chard game` or `cg` -- Enter Chard Root with everything listed above but with Mouse Capture support too. Currently breaks right click in some apps. 
 - `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
 - `chard unmount` or `cu` -- Force chard to unmount as if exiting (force kill).
 - `autoclicker <clicks-per-second>` -- Run an autoclicker script in ChromeOS!
@@ -389,7 +390,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.30: `Native mouse capture achieved. Thanks to Days for finding how to actually enable that. To use mouse capture, launch chard using "cg" or "chard game". App Icons will not be enabled in this mode, but that will be worked on soon.` <br><br>
 - 0.31: `Mouse capture support with app icons enabled. Removed "cg" or "chard game" since it is no longer needed. Integrated sommelier patch logic for "chard_sommelier_patch" to enable mouse capture on all devices.` <br><br>
 <br><br>
-
+- 0.32: `Patched default.pa to bypass unload-module module-udev-detect limitation. Added back "cg" or "chard game" due to mouse capture breaking right click and menu interactions on certain apps.` <br><br>
 
 ### Acknowledgements
 - *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
