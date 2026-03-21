@@ -255,7 +255,6 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 
 *In ChromeOS:* 
 - `chard root` or `cr` -- Enter Chard Root with Sommelier Xwayland GPU acceleration with OpenGL,Vulkan, GUI, and audio support.
-- `chard game` or `cg` -- Enter Chard Root with everything listed above and with mouse capture/lock support. No app icons in this mode. 
 - `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful for using emerge or entering Chard prior to finishing Installer.
 - `chard unmount` or `cu` -- Force chard to unmount as if exiting (force kill).
 - `autoclicker <clicks-per-second>` -- Run an autoclicker script in ChromeOS!
