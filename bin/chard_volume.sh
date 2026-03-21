@@ -39,7 +39,6 @@ update_volume() {
     elif [ -n "$usb" ]; then
         echo "$usb" > "$CHARD_ROOT/$CHARD_HOME/.chard_usb"
     fi
-    [ -n "$gain" ] && echo "$gain" > "$CHARD_ROOT/$CHARD_HOME/.chard_mic_gain"
 }
 update_volume
 dbus-monitor --system "type='signal',interface='org.chromium.cras.Control'" 2>/dev/null | \
