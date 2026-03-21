@@ -30,9 +30,9 @@ if old in content:
     content = content.replace(old, new)
     with open("/tmp/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "w") as f:
         f.write(content)
-    print("WL_SHM_FORMAT_XRGB8888 swapped with WL_SHM_FORMAT_ARGB8888 ✓")
+    print("WL_SHM_FORMAT_XRGB8888 swapped with WL_SHM_FORMAT_ARGB8888")
 else:
-    print("WL_SHM_FORMAT_XRGB8888 unchanged ✗")
+    print("WL_SHM_FORMAT_XRGB8888 unchanged")
 EOF
 else
     echo "Skipping Exo Color Inversion Patch."
@@ -60,9 +60,9 @@ if old in content:
     content = content.replace(old, new)
     with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "w") as f:
         f.write(content)
-    print("arc.session shelf icon patch applied ✓")
+    print("arc.session shelf icon patch applied")
 else:
-    print("Pattern not found — patch not applied ✗")
+    print("Patch not applied")
 EOF
 
 meson setup build
