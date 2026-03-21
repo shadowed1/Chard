@@ -38,7 +38,7 @@ else
     echo "Skipping Exo Color Inversion Patch."
 fi
 
-echo "Applying arc.session shelf icon patch (all platforms)..."
+echo "Applying arc.session patch..."
 python3 << 'EOF'
 with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "r") as f:
     content = f.read()
