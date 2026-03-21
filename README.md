@@ -386,10 +386,10 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.27: `Altered some group ID's to match ChromeOS'. Improved non-ChromeOS support. Added sanitization safeguard to .bashrc on uninstall. Added required sys-apps/shadow dependency for coreutils on Gentoo. Fixed typo for installing Vulkan on Chard Arch on Virtual Machines. Fixed .bashrc thunar bug causing shell to hang. Fixed Steam not opening Thunar when opening files. Added xfce4 dark theme to be autoapplied during installer. Added Language checker to no longer auto-apply English and instead use ChromeOS'. Patched Mesa for Intel iGPU's to re-enable Vulkan on ChromeOS with chard_mesa.` <br><br>
 - 0.28: `Added bindfs to chard_mount, bypassing noexec limitation for external drives. This enables Steam to use external drives. Added Shortcut and Icon support for Chard using a VM as an app launcher.` <br><br>
 - 0.29: `Patched Color Inversion bug on ChromeOS 145 ARM64 for Chard Arch and Chard Gentoo. Fixed Bindfs from being properly called on chard_mount. Enabled microphone support. Equalized pulseaudio and ALSA volume.` <br><br>
-- 0.30: `Native mouse capture achieved. Thanks to Days for finding how to actually enable that. To use mouse capture, launch chard using "cg" or "chard game". App Icons will not be enabled in this mode, but that will be worked on soon.`
+- 0.30: `Native mouse capture achieved. Thanks to Days for finding how to actually enable that. To use mouse capture, launch chard using "cg" or "chard game". App Icons will not be enabled in this mode, but that will be worked on soon.` <br><br>
 - 0.31: `Mouse capture support with app icons enabled. Removed "cg" or "chard game" since it is no longer needed. Integrated sommelier patch logic for "chard_sommelier_patch" to enable mouse capture on all devices.` <br><br>
 <br><br>
-<br>
+
 
 ### Acknowledgements
 - *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
