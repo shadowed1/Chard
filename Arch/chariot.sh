@@ -1967,27 +1967,27 @@ checkpoint_148() {
 }
 run_checkpoint 148 "pavucontrol" checkpoint_148
 
-#checkpoint_149() {
-#yay -S --noconfirm vscodium-bin
-#}
-#run_checkpoint 149 "VSCodium" checkpoint_149
+checkpoint_149() {
+yay -S --noconfirm vscodium-bin
+}
+run_checkpoint 149 "VSCodium" checkpoint_149
 
-#checkpoint_150() {
-#   yay -S --noconfirm libreoffice 2>/dev/null
-#}
-#run_checkpoint 150 "LibreOffice" checkpoint_150
+checkpoint_150() {
+   yay -S --noconfirm libreoffice 2>/dev/null
+}
+run_checkpoint 150 "LibreOffice" checkpoint_150
 
-#checkpoint_151() {
-#    ARCH=$(uname -m)
-#        if [[ "$ARCH" == "x86_64" ]]; then
-#            yay -S --noconfirm winegui
-#        elif [[ "$ARCH" == "aarch64" ]]; then
-#            echo "Unsupported architecture: $ARCH"
-#        else
-#            echo "Unsupported architecture: $ARCH"
-#        fi   
-#}
-#run_checkpoint 151 "winegui" checkpoint_151
+checkpoint_151() {
+    ARCH=$(uname -m)
+        if [[ "$ARCH" == "x86_64" ]]; then
+            yay -S --noconfirm winegui
+        elif [[ "$ARCH" == "aarch64" ]]; then
+            echo "Unsupported architecture: $ARCH"
+        else
+            echo "Unsupported architecture: $ARCH"
+        fi   
+}
+run_checkpoint 151 "winegui" checkpoint_151
 
 # Day's Garcon
 checkpoint_152() {
