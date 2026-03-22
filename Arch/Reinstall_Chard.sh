@@ -285,6 +285,22 @@ detect_gpu_freq() {
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
         echo
+		killall -9 cras_test_client 2>/dev/null
+        killall -9 pipewire 2>/dev/null
+        killall -9 pipewire-pulse 2>/dev/null
+        killall -9 pulseaudio 2>/dev/null
+        killall -9 steam 2>/dev/null
+		killall -9 powercontrol-gui 2>/dev/null
+		killall -9 gedit 2>/dev/null
+        sudo pkill -f xfce4-session 2>/dev/null
+        sudo pkill -f xfwm4 2>/dev/null
+        sudo pkill -f xfce4-panel 2>/dev/null
+        sudo pkill -f xfdesktop 2>/dev/null
+        sudo pkill -f xfce4-terminal 2>/dev/null
+        sudo pkill -f xfce4-* 2>/dev/null
+        sudo pkill -f Xorg 2>/dev/null
+		sudo pkill -f powercontrol-gui 2>/dev/null
+		sudo pkill -f gedit 2>/dev/null
         found=0
 		while IFS= read -r pid; do
 		[[ "$pid" -eq "$$" ]] && continue
