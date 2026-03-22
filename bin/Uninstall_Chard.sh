@@ -10,6 +10,12 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+if ls /.chard* > /dev/null 2>&1; then
+    echo "${RED}Uninstall_Chard must be run from the host shell, not inside Chard.${RESET}"
+    sleep 3
+    exit 1
+fi
+
 read -r -p "${RED}${BOLD}Remove $CHARD_ROOT and Chard entry from ~/.bashrc? [y/N] ${RESET}" ans
 
 if [[ "$ans" =~ ^[Yy]$ ]]; then
