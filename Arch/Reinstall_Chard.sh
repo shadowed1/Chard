@@ -16,6 +16,7 @@ if ls /.chard* > /dev/null 2>&1; then
 fi
 
 cleanup_chroot() {
+	sudo stop chard 2>/dev/null
     sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
     sleep 0.05
     sudo umount -l "$CHARD_ROOT/etc/resolv.conv"   2>/dev/null || true
@@ -235,7 +236,8 @@ detect_gpu_freq() {
                     sudo chmod +x "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon"
                     vmc share termina Downloads/chard_icons 2>/dev/null
                 fi
-    chard_unmount() {    
+    chard_unmount() { 
+		sudo stop chard 2>/dev/null
         sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/etc/resolv.conv"   2>/dev/null || true
