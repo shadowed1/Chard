@@ -1,4 +1,4 @@
-# Chard Startup created by Days. Edited by shadowed1
+# Chard Startup created by Days.
 start on started ui
 stop on stopping ui
 
