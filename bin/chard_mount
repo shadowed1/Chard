@@ -8,11 +8,12 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-if [[ ! -f /home/chronos/user/.bashrc ]]; then
-    echo "${RED}Error: Please run chard_mount in the ChromeOS shell.${RESET}"
+if ls /.chard* > /dev/null 2>&1; then
+    echo "${RED}chard_startup must be run from the host shell, not inside Chard.${RESET}"
     sleep 3
     exit 1
 fi
+
 source /home/chronos/user/.bashrc 2>/dev/null
 source $CHARD_ROOT/.chard.preload 2>/dev/null
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
