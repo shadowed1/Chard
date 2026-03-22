@@ -202,13 +202,12 @@ chard_boot_setup() {
 
     sudo chmod 644 /etc/init/chard.conf
     sudo initctl reload-configuration 2>/dev/null
-	sudo stop chard 2>/dev/null
     echo ""
     echo "${GREEN}Chard startup enabled.${RESET}"
     echo ""
     return 0
 }
-
+sudo stop chard 2>/dev/null
 chard_boot_setup
 
 CHARD_ROOT="${CHARD_ROOT%/}"
