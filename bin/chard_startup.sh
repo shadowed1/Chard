@@ -71,9 +71,10 @@ case "$confirm" in
         exit 1
         ;;
 esac
-
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" \
-    -o "/etc/init/chard.conf"
+sleep 0.05
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_autostart.sh" -o "$CHARD_ROOT/bin/chard_autostart"
+sleep 0.05
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
 
 if [ $? -ne 0 ]; then
     echo
@@ -81,7 +82,7 @@ if [ $? -ne 0 ]; then
     echo
     exit 1
 fi
-
+sudo chmod +x "$CHARD_ROOT/bin/chard_autostart"
 sudo chmod 644 /etc/init/chard.conf
 sudo initctl reload-configuration 2>/dev/null
 echo
