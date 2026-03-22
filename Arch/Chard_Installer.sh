@@ -144,7 +144,7 @@ chard_boot_setup() {
     local TEST_FILE="/etc/init/.boot_test"
 
     if ! sudo touch "$TEST_FILE" 2>/dev/null; then
-        echo "${RED}Rootfs is not writable — rootfs verification must be disabled first.${RESET}"
+        echo "${RED}Rootfs verification must be disabled for on-boot startup.${RESET}"
         echo ""
         while true; do
             read -rp "${BLUE}${BOLD}Disable rootfs verification now? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" verify
