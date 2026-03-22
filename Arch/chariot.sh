@@ -1015,22 +1015,17 @@ checkpoint_115() {
 run_checkpoint 115 "sudo -E pacman -S --noconfirm libclc egl-gbm" checkpoint_115
 
 checkpoint_116() {
-    CHROMEOS_VERSION="$(cat "/.chard_chrome" 2>/dev/null | tr -d '[:space:]')"
-    if [ -n "$CHROMEOS_VERSION" ] && [ "$CHROMEOS_VERSION" -ge 145 ]; then
-        /bin/chard_sommelier_patch
-    else
-        cd /tmp
-        sudo rm -rf /tmp/platform2 2>/dev/null
-        git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
-        cd /tmp/platform2
-        git sparse-checkout set vm_tools/sommelier
-        cd vm_tools/sommelier
-        meson setup build
-        ninja -C build
-        sudo -E ninja -C build install
-        cd /tmp
-        sudo rm -rf /tmp/platform2 2>/dev/null
-    fi
+    cd /tmp
+    sudo rm -rf /tmp/platform2 2>/dev/null
+    git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
+    cd /tmp/platform2
+    git sparse-checkout set vm_tools/sommelier
+    cd vm_tools/sommelier
+    meson setup build
+    ninja -C build
+    sudo -E ninja -C build install
+    cd /tmp
+    sudo rm -rf /tmp/platform2 2>/dev/null
 }
 run_checkpoint 116 "Build Sommelier" checkpoint_116
 
@@ -2052,7 +2047,7 @@ run_checkpoint 159 "Bindfs" checkpoint_159
 checkpoint_160() {
     /bin/chard_sommelier_patch
 }
-run_checkpoint 160 "Patch Exo Color Inversion for ARM64" checkpoint_160
+run_checkpoint 160 "Patch Sommelier" checkpoint_160
 
 locale_code=$(cat "/.chard_language" | sed 's/-/_/')
 sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen" 2>/dev/null
