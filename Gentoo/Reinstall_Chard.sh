@@ -10,7 +10,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-if ls /.chard* > /dev/null 2>&1; then
+if ls /.chardrc > /dev/null 2>&1; then
     echo "${RED}Reinstall_Chard must be run from the host shell, not inside Chard.${RESET}"
     sleep 3
     exit 1
