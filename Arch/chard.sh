@@ -17,6 +17,7 @@ RESET=$(tput sgr0)
 CLEANUP_ENABLED=0
 
 cleanup_chroot() {
+	sudo stop chard 2>/dev/null
     [[ "$CLEANUP_ENABLED" -eq 1 ]] || return 0
     echo "${RESET}"
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
@@ -265,6 +266,7 @@ export EGL_PLATFORM=wayland
 
 chard_unmount() { 
     echo
+	sudo stop chard 2>/dev/null
     echo "${RESET}${YELLOW}Unmounting Chard... ${RESET}"
     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
     sleep 0.05
