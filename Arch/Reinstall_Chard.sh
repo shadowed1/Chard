@@ -216,7 +216,7 @@ detect_gpu_freq() {
             1)
                 echo
                 echo "${RESET}${GREEN}[*] Performing Quick Reinstall!"
-
+				sudo stop chard 2>/dev/null
                 if [[ -z "$CHARD_ROOT" || "$CHARD_ROOT" == "/" ]]; then
                     echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty.${RESET}"
                     sleep 4
