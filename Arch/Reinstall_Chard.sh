@@ -9,6 +9,12 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+if ls /.chard* > /dev/null 2>&1; then
+    echo "${RED}Reinstall_Chard must be run from the host shell, not inside Chard.${RESET}"
+    sleep 3
+    exit 1
+fi
+
 cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
     sleep 0.05
