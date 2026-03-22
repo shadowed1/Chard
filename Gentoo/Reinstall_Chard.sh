@@ -376,6 +376,8 @@ trap cleanup_chroot EXIT INT TERM
                 sleep 0.05
                 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_patch" 2>/dev/null
                 sleep 0.05
+				sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh"            -o "$CHARD_ROOT/bin/chard_startup" 2>/dev/null
+				sleep 0.05
                 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
                 sudo chmod +x "$CHARD_ROOT/bin/chard"
                 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -400,6 +402,7 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
+				sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
                 "$CHARD_ROOT/.chard.env" \
