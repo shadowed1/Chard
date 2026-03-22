@@ -196,8 +196,7 @@ chard_boot_setup() {
 
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
         echo ""
-        echo "${RED}Failed to download chard.conf — check your internet connection.${RESET}"
-        sudo rm -f "/etc/init/chard.conf"
+        echo "${RED}Failed to download chard.conf${RESET}"
         echo ""
         return 1
     fi
