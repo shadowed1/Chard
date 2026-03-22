@@ -17,6 +17,7 @@ if ls /.chard* > /dev/null 2>&1; then
 fi
 
 cleanup_chroot() {
+		sudo stop chard 2>/dev/null
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
@@ -109,6 +110,7 @@ trap cleanup_chroot EXIT INT TERM
             1)
                 chard_unmount() {
                     echo
+					sudo stop chard 2>/dev/null
                     echo "${YELLOW}Chard is unmounting... ${RESET}"
                     sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
                     sleep 0.05
