@@ -1001,6 +1001,8 @@ EOF
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
                 killall -9 steam 2>/dev/null
+				killall -9 xfce4-terminal 2>/dev/null
+				killall -9 powercontrol-gui 2>/dev/null
                 
                 sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
                 sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
@@ -1127,6 +1129,7 @@ EOF
                 killall -9 steam 2>/dev/null
                 killall -9 powercontrol-gui 2>/dev/null
                 killall -9 gedit 2>/dev/null
+				killall -9 xfce4-terminal 2>/dev/null
                 sudo pkill -f xfce4-session 2>/dev/null
                 sudo pkill -f xfwm4 2>/dev/null
                 sudo pkill -f xfce4-panel 2>/dev/null
