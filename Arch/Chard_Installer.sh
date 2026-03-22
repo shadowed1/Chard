@@ -221,6 +221,7 @@ echo "${GREEN}[+] Creating ${RESET}${RED}Chard ${RESET}${YELLOW}Root${RESET}"
 
 cleanup_chroot() {
     echo "${RED}Unmounting Chard${RESET}"
+	sudo stop chard 2>/dev/null
     sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
