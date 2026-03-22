@@ -10,7 +10,7 @@ RESET=$(tput sgr0)
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
 MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/external"
 
-if ls /.chard* > /dev/null 2>&1; then
+if ls /.chardrc > /dev/null 2>&1; then
     echo "${RED}chard_unmount must be run from the host shell, not inside Chard.${RESET}"
     sleep 3
     exit 1
