@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Not final
+BASHRC="/home/chronos/user/.bashrc"
+if [ ! -f "$BASHRC" ]; then
+    logger -t chard "chard-start: $BASHRC not found"
+    exit 1
+fi
+
+CHARD_ROOT=$(sed -n \
+    '/<<< CHARD ENV MARKER <<</,/<<< END CHARD ENV MARKER <<</p' \
+    "$BASHRC" | \
+    sed -n 's|.*source "\(.*\)/\.chardrc".*|\1|p')
+
+if [ -z "$CHARD_ROOT" ]; then
+    logger -t chard "chard-start: could not parse CHARD_ROOT"
+    exit 1
+fi
+
+if [ ! -x "$CHARD_ROOT/bin/chard" ]; then
+    logger -t chard "chard-start: binary missing at $CHARD_ROOT/bin/chard"
+    exit 1
+fi
+
+logger -t chard "chard-start: launching $CHARD_ROOT/bin/chard root"
+exec "$CHARD_ROOT/bin/chard" root
