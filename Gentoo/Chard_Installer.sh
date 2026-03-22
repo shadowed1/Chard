@@ -228,7 +228,7 @@ trap 'cleanup_chroot; '"$existing_int_trap" INT
 trap 'cleanup_chroot; '"$existing_term_trap" TERM
 trap cleanup_chroot EXIT
 
-echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
+echo "${RESET}${RED}[*] Unmounting $CHARD_ROOT bind mounts...${RESET}"
 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
@@ -800,6 +800,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/c
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_patch" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh"            -o "$CHARD_ROOT/bin/chard_startup" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -823,6 +825,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_mount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
+sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
 for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
