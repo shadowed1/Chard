@@ -389,8 +389,11 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.29: `Patched Color Inversion bug on ChromeOS 145 ARM64 for Chard Arch and Chard Gentoo. Fixed Bindfs from being properly called on chard_mount. Enabled microphone support. Equalized pulseaudio and ALSA volume.` <br><br>
 - 0.30: `Native mouse capture achieved. Thanks to Days for finding how to actually enable that. To use mouse capture, launch chard using "cg" or "chard game". App Icons will not be enabled in this mode, but that will be worked on soon.` <br><br>
 - 0.31: `Mouse capture support with app icons enabled. Removed "cg" or "chard game" since it is no longer needed. Integrated sommelier patch logic for "chard_sommelier_patch" to enable mouse capture on all devices.` <br><br>
-<br><br>
 - 0.32: `Patched default.pa to bypass unload-module module-udev-detect limitation. Added back "cg" or "chard game" due to mouse capture breaking right click and menu interactions on certain apps.` <br><br>
+- 0.33: `Added chard_startup command. Chard can now start on boot! Implemented smarter detection for running scripts in incorrect locations.` <br><br
+
+<br><br>
+
 
 ### Acknowledgements
 - *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
