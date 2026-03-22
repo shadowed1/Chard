@@ -191,9 +191,8 @@ chard_boot_setup() {
         esac
     done
 
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" \
-        -o "/etc/init/chard.conf"
-
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+	sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_autostart.sh" -o "$CHARD_ROOT/bin/chard_autostart"
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
         echo ""
         echo "${RED}Failed to download chard.conf${RESET}"
@@ -202,6 +201,7 @@ chard_boot_setup() {
     fi
 
     sudo chmod 644 /etc/init/chard.conf
+	sudo chmod +x "$CHARD_ROOT/bin/chard_autostart"
     sudo initctl reload-configuration 2>/dev/null
 
     echo ""
