@@ -1,5 +1,12 @@
 #!/bin/bash
-# Runs on ChromeOS and writes volumes to files for chardwire to read in chroot 
+# Runs on ChromeOS and writes volumes to files for chardwire to read in chroot
+
+if ls /.chard* > /dev/null 2>&1; then
+    echo "${RED}chard_volume must be run from the host shell, not inside Chard.${RESET}"
+    sleep 3
+    exit 1
+fi
+
 for file in .chard_volume .chard_hdmi .chard_bluetooth .chard_usb .chard_muted .chard_mic_gain; do
     if [ ! -f "$CHARD_ROOT/$CHARD_HOME/$file" ]; then
         sudo touch "$CHARD_ROOT/$CHARD_HOME/$file"
