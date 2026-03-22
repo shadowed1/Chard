@@ -192,6 +192,7 @@ chard_boot_setup() {
     done
 
     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+	sleep 0.05
 	sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_autostart.sh" -o "$CHARD_ROOT/bin/chard_autostart"
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
         echo ""
