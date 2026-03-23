@@ -279,6 +279,9 @@ alias virtm='sudo -E virtm'
 alias gedit='/bin/chard_gedit'
 # KDE Plasma
 alias plasmashell='/bin/chard_plasma'
+# QEMU
+alias qemu-system-x86_64='/bin/chard_qemu'
+alias qemu-system-aarch64='/bin/chard_qemu'
 
 command -v chard_refresh >/dev/null && chard_refresh
 
