@@ -387,6 +387,8 @@ trap cleanup_chroot EXIT INT TERM
                 sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
                 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 				sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
+				sudo chmod +x "$CHARD_ROOT/bin/chard_version"
+				sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
                 "$CHARD_ROOT/.chard.env" \
