@@ -14,7 +14,7 @@ ALIASES_FILE="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/.chard_aliases"
 
 mkdir -p "$WATCH_DIR"
 rm -f "$WATCH_DIR"/* 2>/dev/null
-sleep 1
+sleep 5
 
 if [ -S /tmp/.X11-unix/X0 ]; then
     export DISPLAY=:0
@@ -78,5 +78,5 @@ while true; do
         echo "${CYAN}[chard_launch_daemon] trigger: $filename ${RESET}"
         launch_app "$filename" &
     done
-    sleep 0.5
+    sleep 1
 done
