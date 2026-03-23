@@ -390,7 +390,8 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.30: `Native mouse capture achieved. Thanks to Days for finding how to actually enable that. To use mouse capture, launch chard using "cg" or "chard game". App Icons will not be enabled in this mode, but that will be worked on soon.` <br><br>
 - 0.31: `Mouse capture support with app icons enabled. Removed "cg" or "chard game" since it is no longer needed. Integrated sommelier patch logic for "chard_sommelier_patch" to enable mouse capture on all devices.` <br><br>
 - 0.32: `Patched default.pa to bypass unload-module module-udev-detect limitation. Added back "cg" or "chard game" due to mouse capture breaking right click and menu interactions on certain apps.` <br><br>
-- 0.33: `Added chard_startup command. Chard can now start on boot! Implemented smarter detection for running scripts in incorrect locations.` <br><br
+- 0.33: `Added chard_startup command. Chard can now start on boot! Implemented smarter detection for running scripts in incorrect locations.` <br><br>
+- 0.34: `Added right click + context menu support for org.chromium.arc. Forked sommelier to own repo due to the amount of edits made. Re-removed "chard game" or "cg" due to fixing right click issue. Added additional cleanup procedures with new chard startup service.` <br><br>
 
 <br><br>
 
