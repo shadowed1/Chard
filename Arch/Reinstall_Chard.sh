@@ -1204,6 +1204,7 @@ EOF
         		        sudo chown root:video /dev/dri/renderD128
         		    fi
         		fi
+				sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
