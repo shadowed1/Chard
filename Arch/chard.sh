@@ -924,38 +924,36 @@ case "$cmd" in
         chard_unmount
         ;;
         version)
-        # Denny's version checker
-        CLEANUP_ENABLED=0
-        if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
-            CURRENT_VER=$(cat "$CHARD_ROOT/bin/chard_version")
-            CURRENT_CLEAN=$(echo "$CURRENT_VER" | sed -E 's/.*VERSION="?([0-9]+\.[0-9]+)"?/\1/')
-            LATEST_VER=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version")
-            LATEST_CLEAN=$(echo "$LATEST_VER" | sed -E 's/.*VERSION="?([0-9]+\.[0-9]+)"?/\1/')
-            CURRENT_VER_NO=$(echo "$CURRENT_CLEAN" | awk -F. '{ printf("%d%02d\n", $1, $2) }')
-            LATEST_VER_NO=$(echo "$LATEST_CLEAN" | awk -F. '{ printf("%d%02d\n", $1, $2) }')
-        
-            if [[ "$CURRENT_VER_NO" =~ ^[0-9]+$ && "$LATEST_VER_NO" =~ ^[0-9]+$ ]]; then
-                if (( 10#$CURRENT_VER_NO < 10#$LATEST_VER_NO )); then
-                    echo "${CYAN}You're using $CURRENT_VER which is NOT the latest version.${RESET}"
-                    read -rp "Would you like to 'reinstall' to get $LATEST_VER ? (Y/n): " choice
-                    if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
-                        echo "${CYAN}Reinstalling!${RESET}"
-                        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
-
-                    else
-                        echo "${YELLOW}Skipping reinstall.${RESET}"
-                    fi
-                else
-                    echo "${GREEN}You're using $CURRENT_VER which is up-to-date, so you're good.${RESET}"
-                fi
-            else
-                echo "${RED}Version check failed. One of the version numbers is invalid.${RESET}"
-            fi
-        else
-            echo "${RED}Version file not found.${RESET}"
-            exit 1
-        fi
-        ;;
+		    if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
+			CURRENT_CLEAN=$(grep '^VERSION=' "$CHARD_ROOT/bin/chard_version" | sed -E 's/.*"?([0-9]+\.[0-9]+)"?/\1/')
+			LATEST_RAW=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version")
+			LATEST_CLEAN=$(echo "$LATEST_RAW" | grep '^VERSION=' | sed -E 's/.*"?([0-9]+\.[0-9]+)"?/\1/')
+			CURRENT_VER_NO=$(echo "$CURRENT_CLEAN" | awk -F. '{ printf("%d%02d\n", $1, $2) }')
+			LATEST_VER_NO=$(echo "$LATEST_CLEAN" | awk -F. '{ printf("%d%02d\n", $1, $2) }')
+			if [[ "$CURRENT_VER_NO" =~ ^[0-9]+$ && "$LATEST_VER_NO" =~ ^[0-9]+$ ]]; then
+			    if (( 10#$CURRENT_VER_NO < 10#$LATEST_VER_NO )); then
+			        echo "${CYAN}You're using v$CURRENT_CLEAN (latest is v$LATEST_CLEAN)${RESET}"
+			        echo "${YELLOW}--- Changelog ---${RESET}"
+			        echo "$LATEST_RAW" | sed -n '/changelog()/,/^}/p' | sed '1d;$d'
+			        read -rp "Reinstall to update? (Y/n): " choice
+			        if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
+			            bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
+			        fi
+			    else
+			        echo "${GREEN}You're up-to-date (v$CURRENT_CLEAN)${RESET}"
+			        echo "${CYAN}Changelog:${RESET}"
+					echo
+			        source "$CHARD_ROOT/bin/chard_version"
+			        changelog
+			    fi
+			else
+			    echo "${RED}Version parsing failed.${RESET}"
+			fi
+		    else
+			echo "${RED}Version file not found.${RESET}"
+			exit 1
+		    fi
+		;;
     unmount)
         CLEANUP_ENABLED=1
         chard_unmount
