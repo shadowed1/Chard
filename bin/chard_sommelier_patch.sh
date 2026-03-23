@@ -1,9 +1,8 @@
 #!/bin/bash
 cd /tmp
-sudo rm -rf /tmp/platform2 2>/dev/null
-git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
-cd /tmp/platform2
-git sparse-checkout set vm_tools/sommelier
+sudo rm -rf /tmp/chardonnay 2>/dev/null
+git clone https://github.com/shadowed1/chardonnay.git /tmp/chardonnay
+cd /tmp/chardonnay/platform2/vm_tools/sommelier
 cd vm_tools/sommelier
 
 CHROMEOS_VERSION="$(cat "/.chard_chrome" 2>/dev/null | tr -d '[:space:]')"
@@ -11,7 +10,7 @@ if [ -n "$CHROMEOS_VERSION" ] && [ "$CHROMEOS_VERSION" -ge 145 ] && \
    [ "$(uname -m)" = "aarch64" ]; then
     echo "Applying Exo Color Inversion Patch (aarch64, ChromeOS 145+)..."
     python3 << 'EOF'
-with open("/tmp/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "r") as f:
+with open("/tmp/chardonnay/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "r") as f:
     content = f.read()
 old = """    sl_create_host_buffer(host->shm->ctx, client, id,
                           wl_shm_pool_create_buffer(host->proxy, offset, width,
@@ -28,7 +27,7 @@ new = """#if defined(__aarch64__)
     return;"""
 if old in content:
     content = content.replace(old, new)
-    with open("/tmp/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "w") as f:
+    with open("/tmp/chardonnay/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "w") as f:
         f.write(content)
     print("Color inversion patch applied")
 else:
@@ -42,7 +41,7 @@ echo "Applying arc.session + unmanaged popup fix patches..."
 python3 << 'EOF'
 results = []
 
-with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "r") as f:
+with open("/tmp/chardonnay/platform2/vm_tools/sommelier/sommelier-window.cc", "r") as f:
     content = f.read()
 
 old = """  if (ctx->application_id) {
@@ -76,7 +75,7 @@ if old in content:
 else:
     results.append("popup application_id not found")
 
-with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "w") as f:
+with open("/tmp/chardonnay/platform2/vm_tools/sommelier/sommelier-window.cc", "w") as f:
     f.write(content)
 
 for r in results:
@@ -87,4 +86,4 @@ meson setup build
 ninja -C build
 sudo -E ninja -C build install
 cd /tmp
-sudo rm -rf /tmp/platform2 2>/dev/null
+sudo rm -rf /tmp/chardonnay 2>/dev/null
