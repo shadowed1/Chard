@@ -52,7 +52,6 @@ old = """  if (ctx->application_id) {
 new = """  if (ctx->application_id) {
     if (strstr(ctx->application_id, "arc.session") != nullptr) {
       zaura_surface_set_application_id(window->aura_surface, ctx->application_id);
-      // fall through to WM_CLASS path below
     } else {
       zaura_surface_set_application_id(window->aura_surface, ctx->application_id);
       return;
