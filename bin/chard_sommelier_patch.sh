@@ -30,9 +30,9 @@ if old in content:
     content = content.replace(old, new)
     with open("/tmp/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "w") as f:
         f.write(content)
-    print("Color inversion patch applied ✓")
+    print("Color inversion patch applied")
 else:
-    print("Color inversion patch not applied ✗")
+    print("Color inversion patch not applied")
 EOF
 else
     echo "Skipping Exo Color Inversion Patch."
@@ -42,7 +42,6 @@ echo "Applying arc.session + unmanaged popup fix patches..."
 python3 << 'EOF'
 results = []
 
-# Patch 1: sommelier-window.cc arc.session shelf icon fallthrough
 with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "r") as f:
     content = f.read()
 
@@ -64,11 +63,10 @@ new = """  if (ctx->application_id) {
   }"""
 if old in content:
     content = content.replace(old, new)
-    results.append("arc.session shelf icon patch ✓")
+    results.append("arc.session shelf icon patch")
 else:
-    results.append("arc.session shelf icon patch ✗")
+    results.append("arc.session shelf icon patch")
 
-# Patch 2: skip application_id for unmanaged windows under arc.session
 old = """    zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
     sl_update_application_id(ctx, window);"""
 new = """    zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
@@ -81,9 +79,9 @@ new = """    zaura_surface_set_startup_id(window->aura_surface, window->startup_
     }"""
 if old in content:
     content = content.replace(old, new)
-    results.append("unmanaged popup application_id guard ✓")
+    results.append("unmanaged popup application_id guard")
 else:
-    results.append("unmanaged popup application_id guard ✗")
+    results.append("unmanaged popup application_id guard")
 
 with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "w") as f:
     f.write(content)
