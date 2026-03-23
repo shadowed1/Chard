@@ -8,5 +8,6 @@ changelog() {
     echo "- Added additional cleanup procedures with new chard startup service."
     echo "- Added changelog to chard version command."
     echo "- Added chard_qemu wrapper for GPU acceleration. Windows 10 is now smooth!"
+    echo "- Increased startup .conf wait timer."
     echo
 }
