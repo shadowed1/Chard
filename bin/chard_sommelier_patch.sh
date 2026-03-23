@@ -50,9 +50,6 @@ old = """  if (ctx->application_id) {
     return;
   }"""
 new = """  if (ctx->application_id) {
-    // Chard: for arc.session, stamp it to authorize pointer capture in Exo,
-    // then fall through to WM_CLASS path for shelf icon resolution.
-    // For any other forced application_id, preserve original behaviour.
     if (strstr(ctx->application_id, "arc.session") != nullptr) {
       zaura_surface_set_application_id(window->aura_surface, ctx->application_id);
       // fall through to WM_CLASS path below
@@ -70,18 +67,15 @@ else:
 old = """    zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
     sl_update_application_id(ctx, window);"""
 new = """    zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
-    // Chard: skip application_id for unmanaged (override-redirect) windows
-    // under arc.session. Exo immediately destroys override-redirect popups
-    // and context menus that have application_id set (VLC, Qt, Brave, Steam).
     if (window->managed || !ctx->application_id ||
         strstr(ctx->application_id, "arc.session") == nullptr) {
       sl_update_application_id(ctx, window);
     }"""
 if old in content:
     content = content.replace(old, new)
-    results.append("unmanaged popup application_id guard")
+    results.append("Patched unmanaged popup application_id guard")
 else:
-    results.append("unmanaged popup application_id guard")
+    results.append("popup application_id not found")
 
 with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "w") as f:
     f.write(content)
