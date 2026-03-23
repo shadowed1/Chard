@@ -142,7 +142,7 @@ chard_boot_setup() {
     local TEST_FILE="/etc/init/.boot_test"
 
     if ! sudo touch "$TEST_FILE" 2>/dev/null; then
-        echo "${RED}Rootfs is not writable — rootfs verification must be disabled first.${RESET}"
+        echo "${RED}Rootfs is not writable — Disable rootfs verification first for automatic startup${RESET}"
         echo ""
         while true; do
             read -rp "${BLUE}${BOLD}Disable rootfs verification now? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" verify
@@ -898,6 +898,9 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
+sudo chmod +x "$CHARD_ROOT/bin/chard_version"
+sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
+
 for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
