@@ -959,6 +959,7 @@ case "$cmd" in
         done | sort
         ;;
        version)
+	    # Denny's Version Checker
 		if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
 			CURRENT_CLEAN=$(grep '^VERSION=' "$CHARD_ROOT/bin/chard_version" | sed -E 's/.*"?([0-9]+\.[0-9]+)"?/\1/')
 			LATEST_RAW=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version")
@@ -968,7 +969,8 @@ case "$cmd" in
 		if [[ "$CURRENT_VER_NO" =~ ^[0-9]+$ && "$LATEST_VER_NO" =~ ^[0-9]+$ ]]; then
 			if (( 10#$CURRENT_VER_NO < 10#$LATEST_VER_NO )); then
 			    echo "${CYAN}You're using v$CURRENT_CLEAN (latest is v$LATEST_CLEAN)${RESET}"
-			    echo "${YELLOW}--- Changelog ---${RESET}"
+				echo
+			    echo "${YELLOW}Changelog:${RESET}"
 			    echo "$LATEST_RAW" | sed -n '/changelog()/,/^}/p' | sed '1d;$d'
 			    read -rp "Reinstall to update? (Y/n): " choice
 			    if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
@@ -976,6 +978,7 @@ case "$cmd" in
 			    fi
 			else
 			    echo "${GREEN}You're up-to-date (v$CURRENT_CLEAN)${RESET}"
+				echo
 			    echo "${CYAN}Changelog:${RESET}"
 				echo
 			    source "$CHARD_ROOT/bin/chard_version"
