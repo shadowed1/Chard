@@ -1118,6 +1118,7 @@ EOF
                 sudo pkill -f powercontrol-gui 2>/dev/null
                 sudo pkill -f gedit 2>/dev/null
                 $CHARD_ROOT/bin/color_reset
+				sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
