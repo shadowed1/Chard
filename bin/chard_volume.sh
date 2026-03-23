@@ -1,7 +1,7 @@
 #!/bin/bash
 # Runs on ChromeOS and writes volumes to files for chardwire to read in chroot
 
-if ls /.chard* > /dev/null 2>&1; then
+if ls /.chardrc > /dev/null 2>&1; then
     echo "${RED}chard_volume must be run from the host shell, not inside Chard.${RESET}"
     sleep 3
     exit 1
