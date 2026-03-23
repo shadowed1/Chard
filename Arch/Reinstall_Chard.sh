@@ -430,8 +430,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/cha
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_patch" 2>/dev/null
 sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_sommelier_game.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_game" 2>/dev/null
-sleep 0.05
+#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_sommelier_game.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_game" 2>/dev/null
+#sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh"            -o "$CHARD_ROOT/bin/chard_startup" 2>/dev/null
 sleep 0.05
 sudo mkdir -p "$CHARD_ROOT/run/udev"
@@ -462,7 +462,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
 sudo chmod +x "$CHARD_ROOT/bin/chard_refresh"
 sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
-sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_game"
+#sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_game"
 sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
 sudo chmod +x "$CHARD_ROOT/bin/chard_version"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
