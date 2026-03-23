@@ -1105,6 +1105,37 @@ sudo chmod "$ORIG_MODE" "$RUNTIME_DIR"
 EOF
 
 sudo chmod +x /bin/chard_plasma
+
+sudo tee /bin/chard_qemu >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+xhost +SI:localuser:root
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+source /$CHARD_HOME/.bashrc
+WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+sudo env \
+    HOME=/$CHARD_HOME \
+    USER=$CHARD_USER \
+    DISPLAY="${DISPLAY:-:0}" \
+    PULSE_SERVER=unix:/run/chrome/pulse/native \
+    PATH="$WRAPPED_PATH" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    LIBGL_ALWAYS_INDIRECT=0 \
+    GDK_BACKEND="wayland" \
+    EGL_PLATFORM=wayland \
+    GDK_SCALE="${GDK_SCALE:-1.25}" \
+    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    XDG_RUNTIME_DIR="/run/user/$(id -u $CHARD_USER)" \
+    qemu-system-x86_64 "$@"
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+sudo chmod +x /bin/chard_qemu
+
 }
 run_checkpoint 117 "sudo -E pacman -S --noconfirm flatpak" checkpoint_117
 
