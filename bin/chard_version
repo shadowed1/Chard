@@ -7,5 +7,6 @@ changelog() {
     echo "- Re-removed 'chard game' or 'cg' due to fixing right click issue."
     echo "- Added additional cleanup procedures with new chard startup service."
     echo "- Added changelog to chard version command."
+    echo "- Added chard_qemu wrapper for GPU acceleration. Windows 10 is now smooth!"
     echo
 }
