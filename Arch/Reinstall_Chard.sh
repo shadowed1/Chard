@@ -294,6 +294,8 @@ detect_gpu_freq() {
         killall -9 steam 2>/dev/null
 		killall -9 powercontrol-gui 2>/dev/null
 		killall -9 gedit 2>/dev/null
+		killall -9 chard_launch_daemon 2>/dev/null
+		killall -9 chardwire 2>/dev/null
         sudo pkill -f xfce4-session 2>/dev/null
         sudo pkill -f xfwm4 2>/dev/null
         sudo pkill -f xfce4-panel 2>/dev/null
