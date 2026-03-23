@@ -304,23 +304,19 @@ QEMU Example:
 <br>
 
 ```
-xhost +SI:localuser:root
-sudo qemu-system-x86_64 \
-  -m 4G \
-  -cpu host \
-  -smp 4 \
-  -machine type=q35,accel=kvm \
-  -drive file=/home/chronos/ubuntu.qcow2,format=qcow2 \
-  -cdrom ~/Downloads/ubuntu.iso \
-  -display sdl,gl=on \
-  -boot d \
-  -name "Ubuntu VM"
-```
+# Download .iso. I use chrome browser and download iso to my chromeos downloads folder.
+# Inside chard, I run:
+qemu-img create -f qcow2 ~/win10.qcow2 40G # to create a 40GB disk image called win10 inside chard's home folder. 
+# Install Windows:
+chard_qemu -m 4G -cpu host -smp 4 -machine type=q35,accel=kvm -drive file=~/win10.qcow2,format=qcow2 -cdrom ~/user/MyFiles/Downloads/Win10_22H2_English_x64v1.iso   -display sdl,gl=on -boot d -name "Win10"
+# After it finishes, close and re-launch without  cdrom:
+# I disconnect from internet here to skip internet login prompt (enable function keys in chromeos settings to active shift + f10 in windows 10)
+chard_qemu -m 4G -cpu host -smp 4 -machine type=q35,accel=kvm -drive file=~/win10.qcow2,format=qcow2 -vga qxl -display sdl -audiodev pa,id=snd0 -device ich9-intel-hda -device hda-output,audiodev=snd0 -name "Win10"
 
-  - -m 4G allocated 4GB of RAM to the VM
-  - -smp 4 allocates 4 threads to the VM
-  - accel=kvm enables GPU passthrough
-  - -display sdl,gl=on enables OpenGL acceleration
+# Above command allocated 4GB of RAM and 4 cpu cores
+# Reconnect to internet after it is set up.
+
+```
 
 <br>
 
