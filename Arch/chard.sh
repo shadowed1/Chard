@@ -924,6 +924,7 @@ case "$cmd" in
         chard_unmount
         ;;
         version)
+			# Denny's Version Checker
 		    if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
 			CURRENT_CLEAN=$(grep '^VERSION=' "$CHARD_ROOT/bin/chard_version" | sed -E 's/.*"?([0-9]+\.[0-9]+)"?/\1/')
 			LATEST_RAW=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version")
