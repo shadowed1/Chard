@@ -1,1 +1,10 @@
-VERSION="0.33"
+VERSION="0.34"
+
+changelog() {
+    echo
+    echo "Added right click + context menu support for org.chromium.arc."
+    echo "Forked sommelier to own repo due to the amount of edits made."
+    echo "Re-removed 'chard game' or 'cg' due to fixing right click issue."
+    echo "Added additional cleanup procedures with new chard startup service."
+    echo
+}
