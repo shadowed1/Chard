@@ -3,7 +3,6 @@ cd /tmp
 sudo rm -rf /tmp/chardonnay 2>/dev/null
 git clone https://github.com/shadowed1/chardonnay.git /tmp/chardonnay
 cd /tmp/chardonnay/platform2/vm_tools/sommelier
-cd vm_tools/sommelier
 
 CHROMEOS_VERSION="$(cat "/.chard_chrome" 2>/dev/null | tr -d '[:space:]')"
 if [ -n "$CHROMEOS_VERSION" ] && [ "$CHROMEOS_VERSION" -ge 145 ] && \
