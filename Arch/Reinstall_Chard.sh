@@ -464,6 +464,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_game"
 sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
+sudo chmod +x "$CHARD_ROOT/bin/chard_version"
+sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 #sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
 #sudo chmod +x /etc/init/chard.conf
 
