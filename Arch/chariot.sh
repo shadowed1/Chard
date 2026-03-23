@@ -1147,7 +1147,6 @@ sudo env \
     XDG_RUNTIME_DIR="/run/chrome" \
     "$QEMU_BIN" "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
-
 EOF
 
 sudo chmod +x /bin/chard_qemu
