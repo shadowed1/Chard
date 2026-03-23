@@ -30,27 +30,33 @@ if old in content:
     content = content.replace(old, new)
     with open("/tmp/platform2/vm_tools/sommelier/compositor/sommelier-shm.cc", "w") as f:
         f.write(content)
-    print("WL_SHM_FORMAT_XRGB8888 swapped with WL_SHM_FORMAT_ARGB8888")
+    print("Color inversion patch applied ✓")
 else:
-    print("WL_SHM_FORMAT_XRGB8888 unchanged")
+    print("Color inversion patch not applied ✗")
 EOF
 else
     echo "Skipping Exo Color Inversion Patch."
 fi
 
-echo "Applying arc.session patch..."
+echo "Applying arc.session + unmanaged popup fix patches..."
 python3 << 'EOF'
+results = []
+
+# Patch 1: sommelier-window.cc arc.session shelf icon fallthrough
 with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "r") as f:
     content = f.read()
+
 old = """  if (ctx->application_id) {
     zaura_surface_set_application_id(window->aura_surface, ctx->application_id);
     return;
   }"""
 new = """  if (ctx->application_id) {
-    // Calling arc.session authorizes pointer capture in Exo.
-    // Falling through allows WM_CLASS ID to overwrite for shelf icon resolution.
+    // Chard: for arc.session, stamp it to authorize pointer capture in Exo,
+    // then fall through to WM_CLASS path for shelf icon resolution.
+    // For any other forced application_id, preserve original behaviour.
     if (strstr(ctx->application_id, "arc.session") != nullptr) {
       zaura_surface_set_application_id(window->aura_surface, ctx->application_id);
+      // fall through to WM_CLASS path below
     } else {
       zaura_surface_set_application_id(window->aura_surface, ctx->application_id);
       return;
@@ -58,116 +64,32 @@ new = """  if (ctx->application_id) {
   }"""
 if old in content:
     content = content.replace(old, new)
-    with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "w") as f:
-        f.write(content)
-    print("arc.session shelf icon patch applied")
+    results.append("arc.session shelf icon patch ✓")
 else:
-    print("Patch not applied")
-EOF
+    results.append("arc.session shelf icon patch ✗")
 
-python3 << 'EOF'
-with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "r") as f:
-    content = f.read()
-
-old = """  if (ctx->aura_shell) {
-    uint32_t frame_color;
-
-    if (!window->aura_surface) {
-      window->aura_surface = zaura_shell_get_aura_surface(
-          ctx->aura_shell->internal, host_surface->proxy);
-    }
-
-    zaura_surface_set_frame(window->aura_surface,
-                            window->decorated ? ZAURA_SURFACE_FRAME_TYPE_NORMAL
-                            : window->depth == 32
-                                ? ZAURA_SURFACE_FRAME_TYPE_NONE
-                                : ZAURA_SURFACE_FRAME_TYPE_SHADOW);
-
-    frame_color = window->dark_frame ? ctx->dark_frame_color : ctx->frame_color;
-    zaura_surface_set_frame_colors(window->aura_surface, frame_color,
-                                   frame_color);
-    zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
-    sl_update_application_id(ctx, window);
-
-    if (ctx->aura_shell->version >=
-        ZAURA_SURFACE_SET_FULLSCREEN_MODE_SINCE_VERSION) {
-      zaura_surface_set_fullscreen_mode(window->aura_surface,
-                                        ctx->fullscreen_mode);
-    }
-  }"""
-
-new = """  if (ctx->aura_shell) {
-    uint32_t frame_color;
-
-    if (!window->aura_surface) {
-      // Chard: skip aura_surface for override-redirect (unmanaged) windows
-      // under arc.session — Exo immediately destroys any override-redirect
-      // popup/menu that has an aura_surface (VLC, Qt, Brave, Steam etc).
-      bool skip_aura = !window->managed && ctx->application_id &&
-                       strstr(ctx->application_id, "arc.session") != nullptr;
-      if (!skip_aura) {
-        window->aura_surface = zaura_shell_get_aura_surface(
-            ctx->aura_shell->internal, host_surface->proxy);
-      }
-    }
-
-    if (window->aura_surface) {
-      zaura_surface_set_frame(window->aura_surface,
-                              window->decorated ? ZAURA_SURFACE_FRAME_TYPE_NORMAL
-                              : window->depth == 32
-                                  ? ZAURA_SURFACE_FRAME_TYPE_NONE
-                                  : ZAURA_SURFACE_FRAME_TYPE_SHADOW);
-
-      frame_color = window->dark_frame ? ctx->dark_frame_color : ctx->frame_color;
-      zaura_surface_set_frame_colors(window->aura_surface, frame_color,
-                                     frame_color);
-      zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
+# Patch 2: skip application_id for unmanaged windows under arc.session
+old = """    zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
+    sl_update_application_id(ctx, window);"""
+new = """    zaura_surface_set_startup_id(window->aura_surface, window->startup_id);
+    // Chard: skip application_id for unmanaged (override-redirect) windows
+    // under arc.session. Exo immediately destroys override-redirect popups
+    // and context menus that have application_id set (VLC, Qt, Brave, Steam).
+    if (window->managed || !ctx->application_id ||
+        strstr(ctx->application_id, "arc.session") == nullptr) {
       sl_update_application_id(ctx, window);
-
-      if (ctx->aura_shell->version >=
-          ZAURA_SURFACE_SET_FULLSCREEN_MODE_SINCE_VERSION) {
-        zaura_surface_set_fullscreen_mode(window->aura_surface,
-                                          ctx->fullscreen_mode);
-      }
-    }
-  }"""
-
+    }"""
 if old in content:
     content = content.replace(old, new)
-    print("aura_surface block guarded ✓")
+    results.append("unmanaged popup application_id guard ✓")
 else:
-    print("block pattern not found ✗")
-
-old = """  if ((window->size_flags & (US_POSITION | P_POSITION)) && parent &&
-      ctx->aura_shell) {
-    int32_t diffx = window->x - parent->x;
-    int32_t diffy = window->y - parent->y;
-
-    sl_transform_guest_to_host(window->ctx, window->paired_surface, &diffx,
-                               &diffy);
-    zaura_surface_set_parent(window->aura_surface, parent->aura_surface, diffx,
-                             diffy);
-  }"""
-
-new = """  if ((window->size_flags & (US_POSITION | P_POSITION)) && parent &&
-      ctx->aura_shell && window->aura_surface && parent->aura_surface) {
-    int32_t diffx = window->x - parent->x;
-    int32_t diffy = window->y - parent->y;
-
-    sl_transform_guest_to_host(window->ctx, window->paired_surface, &diffx,
-                               &diffy);
-    zaura_surface_set_parent(window->aura_surface, parent->aura_surface, diffx,
-                             diffy);
-  }"""
-
-if old in content:
-    content = content.replace(old, new)
-    print("Patched zaura_surface_set_parent null guard")
-else:
-    print("set_parent pattern not found")
+    results.append("unmanaged popup application_id guard ✗")
 
 with open("/tmp/platform2/vm_tools/sommelier/sommelier-window.cc", "w") as f:
     f.write(content)
+
+for r in results:
+    print(r)
 EOF
 
 meson setup build
