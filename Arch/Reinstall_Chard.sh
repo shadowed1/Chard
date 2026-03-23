@@ -766,6 +766,19 @@ CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+ARCH=$(uname -m)
+case "$ARCH" in
+  x86_64)
+    QEMU_BIN="qemu-system-x86_64"
+    ;;
+  aarch64|arm64)
+    QEMU_BIN="qemu-system-aarch64"
+    ;;
+  *)
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+    ;;
+esac
 xhost +SI:localuser:root
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 source /$CHARD_HOME/.bashrc
@@ -784,10 +797,11 @@ sudo env \
     EGL_PLATFORM=wayland \
     GDK_SCALE="${GDK_SCALE:-1.25}" \
     XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    XDG_RUNTIME_DIR="/run/user/$(id -u $CHARD_USER)" \
-    qemu-system-x86_64 "$@"
+    XDG_RUNTIME_DIR="/run/chrome" \
+    "$QEMU_BIN" "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
+
 sudo chmod +x "$CHARD_ROOT/bin/chard_qemu"
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
@@ -1008,7 +1022,7 @@ if [[ $- != *i* ]] ; then
         return
 fi
 
-# Put your fun stuff here.
+# Put your fun stuff here.f
 EOF
                     sudo chown "$CHARD_USER:$CHARD_USER" "$CHRONOS_RC"
                     echo "${GREEN}Created $CHRONOS_RC - Add your .bashrc entries here! ${RESET}"
