@@ -635,7 +635,7 @@ STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
 xhost +SI:localuser:$USER
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-/usr/bin/steam -no-cef-sandbox -cef-disable-gpu-compositing "$@"
+/usr/bin/steam -console -no-cef-sandbox -cef-disable-gpu-compositing "$@"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
         sudo chmod +x "$CHARD_ROOT/bin/chard_steam"
