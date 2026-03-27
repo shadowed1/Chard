@@ -1129,7 +1129,6 @@ EOF
                 source "$CHARD_ROOT/.chardrc"
                 if [ -f /home/chronos/user/.bashrc ]; then
 				    if vmc list | grep -q '^termina'; then
-				        sleep 6
 				        vmc start termina >/dev/null 2>&1 &
 				        sleep 6
 				        vmc share termina Downloads
@@ -1145,12 +1144,12 @@ sudo chmod +x /bin/chard_bridge_daemon
 chard_bridge_daemon &
 "
 EOF
-    else
-        echo "termina VM not found, skipping"
-    fi
-else
-    echo ".bashrc not found, skipping"
-fi
+				    else
+				        echo "termina VM not found, skipping"
+				    fi
+				else
+				    echo ".bashrc not found, skipping"
+				fi
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
                 echo
                 ;;
