@@ -5,6 +5,6 @@ changelog() {
     echo "- Added stop, startup command for chard_bridge_daemon."
     echo "- Added chard_shortcut_daemon to auto-sync icons and shortcuts."
     echo "- Cleaned up exiting Reinstaller."
-    echo "- Added ability for chard_bridge_daemon to automatically install and run in Crostini on Reinstall and Install"
+    echo "- Added ability for chard_bridge_daemon to automatically install and run in Crostini on Reinstall and Install."
     echo
 }
