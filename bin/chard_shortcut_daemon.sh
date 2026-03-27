@@ -1,9 +1,9 @@
 #!/bin/bash
 # chard_shortcut_daemon
-#   chard_shortcut_daemon start - start daemon
-#   chard_shortcut_daemon stop - stop daemon
-#   chard_shortcut_daemon status - check if daemon is running
-#   chard_shortcut_daemon sync - one-shot sync then exit
+# chard_shortcut_daemon start - start daemon
+# chard_shortcut_daemon stop - stop daemon
+# chard_shortcut_daemon status - check if daemon is running
+# chard_shortcut_daemon sync - one-shot sync then exit
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -16,7 +16,7 @@ DEFAULT_CHARD_ROOT="/usr/local/chard"
 LOG_FILE="/tmp/chard_shortcut_daemon.log"
 PID_FILE="/tmp/chard_shortcut_daemon.pid"
 STATE_FILE="/tmp/chard_shortcut_daemon.state"
-POLL_INTERVAL=5
+POLL_INTERVAL=20
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"
 }
