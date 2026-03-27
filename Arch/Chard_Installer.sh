@@ -768,6 +768,8 @@ sleep 0.2
 #sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh"            -o "$CHARD_ROOT/bin/chard_startup" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut_daemon.sh"            -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
@@ -800,6 +802,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 #sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_game"
 sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
 sudo chmod +x "$CHARD_ROOT/bin/chard_version"
+sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut_daemon"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
 for file in \
