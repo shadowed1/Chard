@@ -2277,14 +2277,26 @@ echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}
 if [[ "$(uname -m)" == "aarch64" ]]; then
     echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
 fi
-echo
-echo "${BLUE}${BOLD}To enable icon support for Chard, share Downloads folder with Linux and run in Crostini: ${RESET}${BLUE}"
-echo
-echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
-echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
-echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
-echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
-echo "fi"
-echo "sudo chmod +x /bin/chard_bridge_daemon"
-echo "chard_bridge_daemon"
-echo
+if [ -f /home/chronos/user/.bashrc ]; then
+    if vmc list | grep -q '^termina'; then
+        vmc start termina >/dev/null 2>&1 &
+        sleep 3
+        vmc share termina Downloads
+        vmc launch termina -- bash -c 'cat > /tmp/temp_install.sh' <<'EOF'
+lxc start penguin >/dev/null 2>&1 || true
+lxc exec penguin -- bash -c "
+if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
+    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
+elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
+    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
+fi
+sudo chmod +x /bin/chard_bridge_daemon
+chard_bridge_daemon &
+"
+EOF
+    else
+        echo "termina VM not found, skipping"
+    fi
+else
+    echo ".bashrc not found, skipping"
+fi
