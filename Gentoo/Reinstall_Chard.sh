@@ -1129,27 +1129,28 @@ EOF
                 source "$CHARD_ROOT/.chardrc"
                 if [ -f /home/chronos/user/.bashrc ]; then
 				    if vmc list | grep -q '^termina'; then
+				        sleep 6
 				        vmc start termina >/dev/null 2>&1 &
-				        sleep 3
+				        sleep 6
 				        vmc share termina Downloads
-				        vmc launch termina -- bash -c 'cat > /tmp/temp_install.sh' <<'EOF'
-				lxc start penguin >/dev/null 2>&1 || true
-				lxc exec penguin -- bash -c "
-				if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
-				    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
-				elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
-				    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
-				fi
-				sudo chmod +x /bin/chard_bridge_daemon
-				chard_bridge_daemon &
-				"
-				EOF
-				    else
-				        echo "termina VM not found, skipping"
-				    fi
-				else
-				    echo ".bashrc not found, skipping"
-				fi
+        vmc launch termina -- bash -c 'cat > /tmp/temp_install.sh' <<'EOF'
+lxc start penguin >/dev/null 2>&1 || true
+lxc exec penguin -- bash -c "
+if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
+    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
+elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
+    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
+fi
+sudo chmod +x /bin/chard_bridge_daemon
+chard_bridge_daemon &
+"
+EOF
+    else
+        echo "termina VM not found, skipping"
+    fi
+else
+    echo ".bashrc not found, skipping"
+fi
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
                 echo
                 ;;
