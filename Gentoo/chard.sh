@@ -647,6 +647,7 @@ case "$cmd" in
     root)
         CLEANUP_ENABLED=1
         chard_volume > /dev/null 2>&1 &
+		chard_shortcut_daemon start 2>/dev/null &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
         killall -9 pipewire 2>/dev/null
@@ -788,6 +789,7 @@ case "$cmd" in
         sudo pkill -f Xorg 2>/dev/null
         sudo pkill -f powercontrol-gui 2>/dev/null
         sudo pkill -f gedit 2>/dev/null
+		chard_shortcut_daemon stop 2>/dev/null
         $CHARD_ROOT/bin/color_reset
         ;;
     chariot)
