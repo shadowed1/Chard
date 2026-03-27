@@ -240,7 +240,7 @@ run_daemon() {
     trap on_exit EXIT
     trap on_term TERM INT
     pid_write
-    log "Daemon started (PID $$, CHARD_ROOT=$CHARD_ROOT, poll=${POLL_INTERVAL}s)"
+    log "Chard_Shortcut_Daemon started (PID $$, $CHARD_ROOT, poll=${POLL_INTERVAL}s)"
     do_sync
     local last_checksum=""
     while true; do
@@ -272,11 +272,12 @@ CMD="${1:-start}"
 case "$CMD" in
     start)
         if pid_running; then
-            echo "chard_shortcut_daemon already running (PID $(pid_read))" >&2
+            echo "${GREEN}chard_shortcut_daemon already running (PID $(pid_read)) ${RESET}" >&2
             exit 0
         fi
         nohup "$0" _run >> "$LOG_FILE" 2>&1 &
-        echo "chard_shortcut_daemon started (PID $!)"
+        echo
+        echo "${CYAN}chard_shortcut_daemon started (PID $!) ${RESET}"
         ;;
 
     stop)
@@ -291,17 +292,18 @@ case "$CMD" in
             done
             pid_running && kill -9 "$pid" 2>/dev/null
             pid_clear
-            echo "chard_shortcut_daemon stopped"
+            echo
+            echo "${RED}chard_shortcut_daemon stopped ${RESET}"
         else
-            echo "chard_shortcut_daemon not running"
+            echo "${RED}chard_shortcut_daemon not running ${RESET}"
         fi
         ;;
 
     status)
         if pid_running; then
-            echo "chard_shortcut_daemon running (PID $(pid_read))"
+            echo "${CYAN}chard_shortcut_daemon running (PID $(pid_read)) ${RESET}"
         else
-            echo "chard_shortcut_daemon not running"
+            echo "${RED}chard_shortcut_daemon not running ${RESET}"
         fi
         ;;
 
@@ -309,7 +311,7 @@ case "$CMD" in
         resolve_paths
         sync_aliases
         do_sync
-        echo "One-shot sync complete. See $LOG_FILE for details."
+        echo "${GREEN}One-shot sync complete. See $LOG_FILE for details. ${RESET}"
         ;;
 
     _run)
@@ -321,9 +323,9 @@ case "$CMD" in
     *)
         echo "Usage: $0 {start|stop|status|sync}" >&2
         if pid_running; then
-            echo "chard_shortcut_daemon running (PID $(pid_read))"
+            echo "${CYAN}chard_shortcut_daemon running (PID $(pid_read)) ${RESET}"
         else
-            echo "chard_shortcut_daemon not running"
+            echo "${RED}chard_shortcut_daemon not running ${RESET}"
         fi
         ;;
 esac
