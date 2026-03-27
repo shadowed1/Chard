@@ -14,7 +14,6 @@ SYNC_TRIGGER="$SHARED/.sync_now"
 SERVICE_NAME="chard-bridge-daemon"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 PID_FILE="/tmp/chard_bridge_daemon.pid"
-
 sync_desktops() {
     local changed=0
     for df in "$DESKTOPS_SRC"/chard-*.desktop; do
@@ -40,7 +39,6 @@ sync_desktops() {
         echo "${GREEN}[chard_bridge_daemon] synced ${BOLD}$changed${RESET}${GREEN} desktop changes - garcon re-registering ${RESET}"
     fi
 }
-
 sync_icons() {
     local count=0
     for app_icon_dir in "$SHARED/icons"/*/; do
@@ -62,10 +60,9 @@ sync_icons() {
     done
     if [ $count -gt 0 ]; then
         sudo gtk-update-icon-cache /usr/share/icons/hicolor 2>/dev/null || true
-        echo "${BLUE}[chard_bridge_daemon] synced ${BOLD}$count${RESET} ${BLUE}icons${RESET}"
+        #echo "${BLUE}[chard_bridge_daemon] synced ${BOLD}$count${RESET} ${BLUE}icons${RESET}"
     fi
 }
-
 ensure_bridge() {
     if [ ! -f "/usr/local/bin/chard_bridge" ]; then
         echo "${RED}[chard_bridge_daemon] chard_bridge not found, installing...${RESET}"
@@ -79,7 +76,6 @@ BRIDGE
         sudo chmod +x /usr/local/bin/chard_bridge
     fi
 }
-
 run_daemon() {
     if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
         echo "${YELLOW}[chard_bridge_daemon] already running${RESET}"
@@ -98,12 +94,11 @@ run_daemon() {
             sync_desktops
             sync_icons
         fi
-        sleep 10
+        sleep 30
         sync_desktops
         sync_icons
     done
 }
-
 stop_daemon() {
     if [ ! -f "$PID_FILE" ]; then
         echo "${YELLOW}[chard_bridge_daemon] not running${RESET}"
@@ -120,7 +115,6 @@ stop_daemon() {
         echo "${YELLOW}[chard_bridge_daemon] stale pid removed${RESET}"
     fi
 }
-
 cmd_startup() {
     printf "${CYAN}${BOLD}Do you want chard_bridge_daemon to start automatically with Crostini? [Y/n]: ${RESET}"
     read -r answer
@@ -138,7 +132,6 @@ cmd_startup() {
             ;;
     esac
 }
-
 _startup_enable() {
     local daemon_path
     daemon_path=$(command -v chard_bridge_daemon 2>/dev/null || echo "/bin/chard_bridge_daemon")
@@ -173,14 +166,12 @@ SERVICE
     echo "${CYAN}To start it now without rebooting: ${BOLD}"
     echo "sudo systemctl start $SERVICE_NAME ${RESET}"
 }
-
 _startup_disable() {
     sudo systemctl stop "$SERVICE_NAME" 2>/dev/null || true
     sudo systemctl disable "$SERVICE_NAME" 2>/dev/null || true
     sudo rm -f "$SERVICE_FILE"
     sudo systemctl daemon-reload 2>/dev/null || true
 }
-
 case "${1:-}" in
     startup)
         cmd_startup
