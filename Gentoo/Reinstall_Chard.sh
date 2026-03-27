@@ -100,9 +100,10 @@ cleanup_chroot() {
 trap cleanup_chroot EXIT INT TERM
 
         echo "${RESET}${GREEN}"
-        echo "[1] Quick Reinstall - This will close all running apps in Chard! "
-        echo "${RESET}${YELLOW}[2] Full Reinstall (Run Chard Installer)"
-        echo "${RESET}${RED}[q] Cancel"
+        echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard) ${RESET}${YELLOW}"
+        echo "[2] Full Reinstall (Run Chard Installer) ${RESET}${CYAN}"
+		echo "[3] Toggle on/off Chard starting on boot ${RESET}${RED}"
+        echo "[q] Cancel"
         echo "${RESET}${GREEN}"
         read -p "Choose an option [1/2/q]: " choice
         
@@ -1156,7 +1157,13 @@ EOF
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
                 bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")
                 ;;
+            3)	
+				echo
+				"$CHARD_ROOT/bin/chard_startup"
+				;;
             q|Q|*)
-                echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
+                echo "${RESET}${RED}[*] Reinstall cancelled. Exiting.${RESET}"
+				sleep 3
+				exit 0
                 ;;
          esac
