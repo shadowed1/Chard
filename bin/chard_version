@@ -1,13 +1,10 @@
 #!/bin/bash
-VERSION="0.34"
+VERSION="0.35"
 
 changelog() {
-    echo "- Added right click + context menu support for org.chromium.arc."
-    echo "- Forked sommelier to own repo due to the amount of edits made."
-    echo "- Re-removed 'chard game' or 'cg' due to fixing right click issue."
-    echo "- Added additional cleanup procedures with new chard startup service."
-    echo "- Added changelog to chard version command."
-    echo "- Added chard_qemu wrapper for GPU acceleration. Windows 10 is now smooth!"
-    echo "- Increased startup .conf wait timer."
+    echo "- Added stop, startup command for chard_bridge_daemon."
+    echo "- Added chard_shortcut_daemon to auto-sync icons and shortcuts."
+    echo "- Cleaned up exiting Reinstaller."
+    echo "- Added ability for chard_bridge_daemon to automatically install and run in Crostini on Reinstall and Install"
     echo
 }
