@@ -207,10 +207,10 @@ detect_gpu_freq() {
 }
 
  		echo "${RESET}${GREEN}"
-        echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard!) ${RESET}${YELLOW}"
+        echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard) ${RESET}${YELLOW}"
         echo "[2] Full Reinstall (Run Chard Installer) ${RESET}${CYAN}"
-		echo "[3] Toggle on/off Chard starting on boot"
-        echo "${RESET}${RED}[q] Cancel"
+		echo "[3] Toggle on/off Chard starting on boot ${RESET}${RED}"
+        echo "[q] Cancel"
         echo "${RESET}${GREEN}"
         read -p "Choose an option [1/2/q]: " choice
         
@@ -1231,7 +1231,10 @@ EOF
 			3)	
 				echo
 				"$CHARD_ROOT/bin/chard_startup"
+				;;
             q|Q|*)
-                echo "${RESET}${RED}[*] Reinstall cancelled.${RESET}"
+                echo "${RESET}${RED}[*] Reinstall cancelled. Exiting.${RESET}"
+				sleep 3
+				exit 0
                 ;;
          esac
