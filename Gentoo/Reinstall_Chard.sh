@@ -1141,14 +1141,14 @@ elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; the
     sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
 fi
 sudo chmod +x /bin/chard_bridge_daemon
-chard_bridge_daemon &
+nohup chard_bridge_daemon >/dev/null 2>&1 &
 "
 EOF
 				    else
-				        echo "termina VM not found, skipping"
+				        echo "${RED}Termina VM not found, skipping Termina setup ${RESET}"
 				    fi
 				else
-				    echo ".bashrc not found, skipping"
+				    echo "${RED}ChromeOS .bashrc not found, skipping Termina setup ${RESET}"
 				fi
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
                 echo
