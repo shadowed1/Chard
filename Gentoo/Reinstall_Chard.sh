@@ -196,8 +196,11 @@ trap cleanup_chroot EXIT INT TERM
                     sleep 0.2
                     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut.sh"            -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
                     sleep 0.2
+					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut_daemon.sh"            -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
+                    sleep 0.2
                     sudo chmod +x "$CHARD_ROOT/bin/chard_launch_daemon"
                     sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut"
+					sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut_daemon"
                     sudo chmod +x "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon"
                 fi
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
