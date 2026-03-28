@@ -675,6 +675,17 @@ EOF
 
 sudo chmod +x "$CHARD_ROOT/bin/chard_firefox"
 
+sudo tee "$CHARD_ROOT/bin/chard_gparted" >/dev/null <<'EOF'
+#!/bin/bash
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo /bin/bash -c '
+  DISPLAY=:0
+  exec /usr/bin/gparted "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x "$CHARD_ROOT/bin/chard_gparted"
+
 sudo tee "$CHARD_ROOT/bin/chard_tor" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
