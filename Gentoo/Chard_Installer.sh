@@ -2585,7 +2585,7 @@ EOF
 else
     echo "${YELLOW}ChromeOS .bashrc not found, skipping Termina icon syncing. ${RESET}"
 fi
-
+echo
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
 if [[ "$(uname -m)" == "aarch64" ]]; then
     echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
