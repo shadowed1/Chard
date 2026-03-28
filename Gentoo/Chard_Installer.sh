@@ -2551,15 +2551,8 @@ $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 #$CHARD_ROOT/bin/chard_preload
 #unset LD_PRELOAD
 sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
-echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
-if [[ "$(uname -m)" == "aarch64" ]]; then
-    echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
-fi
-show_progress
-
-echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
 if [ -f /home/chronos/user/.bashrc ]; then
-    if vmc list | grep -q '^termina'; then
+    if vmc list | grep -q '^termina.* running'; then
         vmc start termina >/dev/null 2>&1 &
         sleep 3
         vmc share termina Downloads
@@ -2576,8 +2569,27 @@ chard_bridge_daemon &
 "
 EOF
     else
-        echo "termina VM not found, skipping"
+        echo "${YELLOW}Termina VM not found/running.${RESET}${GREEN}"
+		echo
+		echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste: ${BOLD}"
+		echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+		echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+		echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+		echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+		echo "fi"
+		echo "sudo chmod +x /bin/chard_bridge_daemon"
+		echo "chard_bridge_daemon &"
+		echo "chard_bridge_daemon startup"
+		echo "${RESET}"
     fi
 else
-    echo ".bashrc not found, skipping"
+    echo "${YELLOW}ChromeOS .bashrc not found, skipping Termina icon syncing. ${RESET}"
 fi
+
+echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
+if [[ "$(uname -m)" == "aarch64" ]]; then
+    echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
+fi
+show_progress
+
+echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
