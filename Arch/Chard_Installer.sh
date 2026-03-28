@@ -2294,7 +2294,7 @@ EOF
     else
         echo "${YELLOW}Termina VM not found/running.${RESET}${GREEN}"
 		echo
-		echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste: ${BOLD}"
+		echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste in Terminal: ${BOLD}"
 		echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
 		echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
 		echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
