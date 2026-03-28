@@ -1833,6 +1833,17 @@ EOF
 
 sudo chmod +x "/bin/chard_firefox"
 
+sudo tee "/bin/chard_gparted" >/dev/null <<'EOF'
+#!/bin/bash
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo /bin/bash -c '
+  DISPLAY=:0
+  exec /usr/bin/gparted "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x "/bin/chard_gparted"
+
 sudo tee "/bin/chard_tor" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
