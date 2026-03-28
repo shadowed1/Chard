@@ -282,6 +282,8 @@ alias plasmashell='/bin/chard_plasma'
 # QEMU
 alias qemu-system-x86_64='/bin/chard_qemu'
 alias qemu-system-aarch64='/bin/chard_qemu'
+# DennyL's FastFetch alias
+alias ffa='fastfetch -c all.jsonc'
 
 command -v chard_refresh >/dev/null && chard_refresh
 
