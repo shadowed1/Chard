@@ -1127,12 +1127,12 @@ EOF
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
                 source "$CHARD_ROOT/.chardrc"
-                if [ -f /home/chronos/user/.bashrc ]; then
-				    if vmc list | grep -q '^termina'; then
-				        vmc start termina >/dev/null 2>&1 &
-				        sleep 6
-				        vmc share termina Downloads
-        vmc launch termina -- bash -c 'cat > /tmp/temp_install.sh' <<'EOF'
+				if [ -f /home/chronos/user/.bashrc ]; then
+    				if vmc list | grep -q '^termina.* running'; then
+        				vmc start termina >/dev/null 2>&1 &
+        				sleep 3
+        				vmc share termina Downloads
+        				vmc launch termina -- bash -c 'cat > /tmp/temp_install.sh' <<'EOF'
 lxc start penguin >/dev/null 2>&1 || true
 lxc exec penguin -- bash -c "
 if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
@@ -1141,14 +1141,25 @@ elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; the
     sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
 fi
 sudo chmod +x /bin/chard_bridge_daemon
-nohup chard_bridge_daemon >/dev/null 2>&1 &
+chard_bridge_daemon &
 "
 EOF
 				    else
-				        echo "${RED}Termina VM not found, skipping Termina setup ${RESET}"
+				        echo "${YELLOW}Termina VM not found/running.${RESET}${GREEN}"
+						echo
+						echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste in terminal: ${BOLD}"
+						echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+						echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+						echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+						echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+						echo "fi"
+						echo "sudo chmod +x /bin/chard_bridge_daemon"
+						echo "chard_bridge_daemon &"
+						echo "chard_bridge_daemon startup"
+						echo "${RESET}"
 				    fi
 				else
-				    echo "${RED}ChromeOS .bashrc not found, skipping Termina setup ${RESET}"
+				    echo "${YELLOW}ChromeOS .bashrc not found, skipping Termina icon syncing. ${RESET}"
 				fi
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
                 echo
