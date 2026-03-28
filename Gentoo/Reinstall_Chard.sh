@@ -1154,8 +1154,8 @@ EOF
 						echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
 						echo "fi"
 						echo "sudo chmod +x /bin/chard_bridge_daemon"
-						echo "chard_bridge_daemon &"
 						echo "chard_bridge_daemon startup"
+						echo "chard_bridge_daemon &"
 						echo "${RESET}"
 				    fi
 				else
