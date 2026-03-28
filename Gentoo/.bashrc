@@ -401,6 +401,8 @@ alias virtm='sudo -E virtm'
 alias gedit='/bin/chard_gedit'
 # autoclicker
 alias autoclicker='sudo -E autoclicker'
+# DennyL's FastFetch alias
+alias ffa='fastfetch -c all.jsonc'
 
 export EDITOR=gedit
 export FILEMANAGER=thunar
