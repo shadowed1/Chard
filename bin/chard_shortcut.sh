@@ -1,6 +1,5 @@
 #!/bin/bash
 # Run in ChromeOS shell with sudo enabled or VT-2 logged in as chronos
-# Thanks for Days for the early documentation! 
 
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -12,7 +11,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 if [[ ! -f /home/chronos/user/.bashrc ]]; then
-    echo "${RED}Please run this command in the ChromeOS shell."
+    echo "${RED}Please run this command in the ChromeOS shell.${RESET}"
     sleep 3
     exit 1
 fi
@@ -38,8 +37,17 @@ CHARD_APPS="$CHARD_ROOT/usr/share/applications"
 ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
 ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
 SHARED="$HOME/MyFiles/Downloads/chard_icons"
+SOCKET="$SHARED/chard.sock"
 
 echo "${CYAN}${BOLD}Preparing Chard app stubs for ChromeOS Ash...${RESET}"
+echo
+
+if [ -S "$SOCKET" ]; then
+    echo "${GREEN}Unix socket found: $SOCKET${RESET}"
+else
+    echo "${YELLOW}Warning: $SOCKET not found — chard_bridge_daemon not running in Crostini?${RESET}"
+    echo "${YELLOW}Shortcuts will be installed but launches will fail until it is started.${RESET}"
+fi
 echo
 
 echo "${CYAN}Extracting Chard aliases...${RESET}"
@@ -49,15 +57,15 @@ ALIASES_FILE="$SHARED/.chard_aliases"
 > "$ALIASES_FILE"
 if [ -f "$BASHRC" ]; then
     grep -E "^alias " "$BASHRC" | while read -r line; do
-        name=$(echo "$line" | sed "s/alias \([^=]*\)=.*/\1/")
+        name=$(echo "$line"  | sed "s/alias \([^=]*\)=.*/\1/")
         value=$(echo "$line" | sed "s/alias [^=]*=['\"]//;s/['\"]$//")
         echo "$name=$value" >> "$ALIASES_FILE"
     done
+    echo "${BLUE}"
     echo "  $(wc -l < "$ALIASES_FILE") aliases written to .chard_aliases"
 else
     echo "  No .bashrc found at $BASHRC"
 fi
-
 find_png() {
     local icon_name="$1"
     for size in 128 96 64 48 32 16; do
@@ -87,8 +95,9 @@ install_icons() {
             count=$((count + 1))
         fi
     done
-    if [ $count -eq 0 ]; then
-        local fallback=$(find_png "$icon_name")
+    if [ "$count" -eq 0 ]; then
+        local fallback
+        fallback=$(find_png "$icon_name")
         if [ -n "$fallback" ]; then
             for size in 16 32 48 64 96 128; do
                 sudo cp "$fallback" "$icon_dir/${size}.png"
@@ -99,9 +108,8 @@ install_icons() {
         fi
     fi
     echo "$icon_name" > "$shared_icon_dir/.icon_name"
-    echo $count
+    echo "$count"
 }
-
 
 generate_app_id() {
     echo -n "crostini:termina/penguin/chard-$1" | \
@@ -109,23 +117,23 @@ generate_app_id() {
         tr '0123456789ABCDEF' 'abcdefghijklmnop'
 }
 
-mkdir -p "$SHARED/desktops" "$SHARED/launch"
+echo "${RESET}"
+mkdir -p "$SHARED/desktops" "$SHARED/icons"
 count=0
 skipped=0
 
 for df in "$CHARD_APPS"/*.desktop; do
     [ -f "$df" ] || continue
-    type=$(grep -m1 '^Type=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    type=$(grep -m1 '^Type='      "$df" | cut -d= -f2 | tr -d '[:space:]')
     no_display=$(grep -m1 '^NoDisplay=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     only_show=$(grep -m1 '^OnlyShowIn=' "$df" | cut -d= -f2)
-    [ "$type" != "Application" ] && { skipped=$((skipped+1)); continue; }
-    [ "$no_display" = "true" ] && { skipped=$((skipped+1)); continue; }
-    echo "$only_show" | grep -q "XFCE" && { skipped=$((skipped+1)); continue; }
+    [ "$type"       != "Application" ] && { skipped=$((skipped+1)); continue; }
+    [ "$no_display" =  "true"        ] && { skipped=$((skipped+1)); continue; }
+    echo "$only_show" | grep -q "XFCE"  && { skipped=$((skipped+1)); continue; }
 
     desktop_file_id=$(basename "$df" .desktop)
-    name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
-    icon=$(grep -m1 '^Icon=' "$df" | cut -d= -f2 | tr -d '[:space:]')
-    terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    name=$(grep -m1     '^Name='          "$df" | cut -d= -f2-)
+    icon=$(grep -m1     '^Icon='          "$df" | cut -d= -f2 | tr -d '[:space:]')
     wm_class=$(grep -m1 '^StartupWMClass=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     [ -z "$wm_class" ] && wm_class="$desktop_file_id"
     app_id=$(generate_app_id "$desktop_file_id")
@@ -142,9 +150,8 @@ NoDisplay=false
 StartupWMClass=$wm_class
 DESKTOP
 
-    printf "  ${GREEN}%-40s${RESET} ${YELLOW}%s${RESET} (%s icons)\n" \
+    printf "  ${GREEN}%-40s${RESET} ${YELLOW}%s${RESET} ${RED}(${BOLD}%s${RESET}${RED} icons)\n ${RESET}" \
         "$name" "$app_id" "$icons_count"
-
     count=$((count+1))
 done
 
