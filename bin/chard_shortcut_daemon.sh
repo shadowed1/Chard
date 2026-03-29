@@ -121,7 +121,7 @@ write_desktop_stub() {
 [Desktop Entry]
 Type=Application
 Name=$name
-Exec=/usr/local/bin/chard_bridge $desktop_file_id
+Exec=/bin/chard_bridge $desktop_file_id
 Icon=$icon
 Terminal=false
 NoDisplay=false
