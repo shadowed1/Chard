@@ -2309,6 +2309,17 @@ else
     echo "${YELLOW}ChromeOS .bashrc not found, skipping Termina icon syncing. ${RESET}"
 fi
 echo
+echo "${GREEN}"
+echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste in Terminal: ${BOLD}"
+echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "fi"
+echo "sudo chmod +x /bin/chard_bridge_daemon"
+echo "chard_bridge_daemon startup"
+echo "chard_bridge_daemon &"
+echo "${RESET}"
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
 if [[ "$(uname -m)" == "aarch64" ]]; then
     echo "${YELLOW}[!] ARM64 Devices might need to reboot ChromeOS before proceeding. ${RESET}"
