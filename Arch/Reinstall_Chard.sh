@@ -1094,7 +1094,18 @@ EOF
 				else
 				    echo "${YELLOW}ChromeOS .bashrc not found, skipping Termina icon syncing. ${RESET}"
 				fi
-
+				echo
+				echo "${GREEN}"
+				echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste in Terminal: ${BOLD}"
+				echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+				echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+				echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+				echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+				echo "fi"
+				echo "sudo chmod +x /bin/chard_bridge_daemon"
+				echo "chard_bridge_daemon startup"
+				echo "chard_bridge_daemon &"
+				echo "${RESET}"
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
