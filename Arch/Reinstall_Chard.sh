@@ -212,7 +212,7 @@ detect_gpu_freq() {
 		echo "[3] Toggle on/off Chard starting on boot ${RESET}${RED}"
         echo "[q] Cancel"
         echo "${RESET}${GREEN}"
-        read -p "Choose an option [1/2/q]: " choice
+        read -p "Choose an option [1/2/3/q]: " choice
         
         case "$choice" in
             1)
