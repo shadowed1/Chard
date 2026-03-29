@@ -158,4 +158,5 @@ done
 touch "$SHARED/.sync_now"
 sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
 echo
-echo "${GREEN}${BOLD}Created $count shortcuts, skipped $skipped.${RESET}"
+echo "${GREEN}Created ${BOLD}$count ${RESET}${GREEN}shortcuts, skipped $skipped.${RESET}"
+echo
