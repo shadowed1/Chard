@@ -973,14 +973,14 @@ case "$cmd" in
 			exit 1
 		    fi
 		;;
-	size
-		chard_size
+		size)
+			chard_size
 		;;
     unmount)
-        CLEANUP_ENABLED=1
-        chard_unmount
+        	CLEANUP_ENABLED=1
+        	chard_unmount
         ;;
-    *)
-        chard_run "$cmd" "$@"
+    	*)
+        	chard_run "$cmd" "$@"
         ;;
 esac
