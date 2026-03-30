@@ -1074,7 +1074,7 @@ elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; the
     sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
 fi
 sudo chmod +x /bin/chard_bridge_daemon
-chard_bridge_daemon &
+chard_bridge_daemon
 EOF
 				        else
 				            echo "Detected standard termina VM"
@@ -1087,7 +1087,7 @@ elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; the
     sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
 fi
 sudo chmod +x /bin/chard_bridge_daemon
-chard_bridge_daemon &
+chard_bridge_daemon
 "
 '
 				        fi
