@@ -386,6 +386,18 @@ chard_unmount() {
     #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
 }
 
+chard_size() {
+	EXCLUDES=(
+	  "${CHARD_ROOT%/}/home/$CHARD_USER/user"
+	  "${CHARD_ROOT%/}/sys"
+	  "${CHARD_ROOT%/}/dev"
+	  "${CHARD_ROOT%/}/proc"
+	  "${CHARD_ROOT%/}/run"
+	)
+	
+	sudo du -sh $(printf -- '--exclude=%q ' "${EXCLUDES[@]}") "$CHARD_ROOT"
+}
+
 chard_uninstall() {
     if [ -z "$CHARD_ROOT" ]; then
         echo "Error: CHARD_ROOT not found."
@@ -958,6 +970,9 @@ case "$cmd" in
 			echo "${RED}Version file not found.${RESET}"
 			exit 1
 		    fi
+		;;
+	size
+		chard_size
 		;;
     unmount)
         CLEANUP_ENABLED=1
