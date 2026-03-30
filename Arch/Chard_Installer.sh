@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 RED=$(tput setaf 1)
