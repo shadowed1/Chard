@@ -387,7 +387,7 @@ chard_unmount() {
 }
 
 chard_size() {
-	echo "${GREEN}Reading the amount of space $CHARD_ROOT is using... Please wait or ctrl-c to cancel. ${RESET}
+	echo "${GREEN}Reading the amount of space $CHARD_ROOT is using... Please wait or ctrl-c to cancel. ${RESET}"
 	EXCLUDES=(
 	  "${CHARD_ROOT%/}/home/$CHARD_USER/user"
 	  "${CHARD_ROOT%/}/sys"
