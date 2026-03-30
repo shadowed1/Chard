@@ -2279,7 +2279,8 @@ if [ -f /home/chronos/user/.bashrc ]; then
         echo "$VM_INFO" | grep -q 'running' || vmc start termina >/dev/null 2>&1
         vmc share termina Downloads >/dev/null 2>&1
         if echo "$VM_INFO" | grep -q 'VM type: baguette'; then
-            echo "Detected baguette VM"
+            echo "${RESET}${BLUE}Detected baguette ${RESET}"
+			echo
             crosh -- vsh termina penguin <<'EOF'
 if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
     sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
@@ -2290,7 +2291,8 @@ sudo chmod +x /bin/chard_bridge_daemon
 chard_bridge_daemon &
 EOF
         else
-            echo "Detected standard termina VM"
+            echo "${RESET}${BLUE}Detected termina ${RESET}"
+			echo
             vmc launch termina -- bash -c '
 lxc start penguin >/dev/null 2>&1 || true
 lxc exec penguin -- bash -c "
