@@ -160,7 +160,7 @@ SERVICE
     echo
     sudo systemctl daemon-reload
     sudo systemctl enable "$SERVICE_NAME"
-    echohttps://github.com/shadowed1/Chard/blob/main/bin/chard_bridge_daemon.sh
+    echo
     echo "${GREEN}${BOLD}chard_bridge_daemon will now start automatically with Crostini.${RESET}"
     echo
     echo "${CYAN}To start it now without rebooting: ${BOLD}"
