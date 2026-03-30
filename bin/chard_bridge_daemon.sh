@@ -1,4 +1,3 @@
-
 #!/bin/bash
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -65,16 +64,16 @@ sync_icons() {
     fi
 }
 ensure_bridge() {
-    if [ ! -f "/usr/local/bin/chard_bridge" ]; then
+    if [ ! -f "//bin/chard_bridge" ]; then
         echo "${RED}[chard_bridge_daemon] chard_bridge not found, installing...${RESET}"
-        sudo tee /usr/local/bin/chard_bridge << 'BRIDGE'
+        sudo tee /bin/chard_bridge << 'BRIDGE'
 #!/bin/bash
 DESKTOP_FILE_ID="$1"
 SHARED="/mnt/chromeos/MyFiles/Downloads/chard_icons"
 [ -z "$DESKTOP_FILE_ID" ] && exit 1
 touch "$SHARED/launch/$DESKTOP_FILE_ID"
 BRIDGE
-        sudo chmod +x /usr/local/bin/chard_bridge
+        sudo chmod +x /bin/chard_bridge
     fi
 }
 run_daemon() {
