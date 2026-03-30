@@ -1436,7 +1436,7 @@ checkpoint_137() {
     
         echo "[*] Selecting provider number: $DRIVER"
         printf "%s\n%s\ny\n" "$DRIVER" "$DRIVER" | sudo -E pacman -S steam
-        retry_pacman "sudo -E pacman -S --noconfirm perl-json lib32-libusb lib32-vkd3d lib32-openal libsoup 2>/dev/null"
+        retry_pacman "sudo -E pacman -S --noconfirm perl-json lib32-libusb lib32-vkd3d lib32-openal libsoup winetricks 2>/dev/null"
         STEAM_SCRIPT="/usr/lib/steam/steam"
         sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
         
