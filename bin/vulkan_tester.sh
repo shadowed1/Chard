@@ -4,44 +4,43 @@ GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 BLUE=$(tput setaf 4)
 MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
+VULKANINFO64=$(command -v vulkaninfo)
+VULKANINFO32=$(command -v vulkaninfo32 || command -v /usr/bin/vulkaninfo32)
 
+sudo mkdir -p /usr/share/vulkan/registry/backup 
+sudo mv /usr/share/vulkan/registry/* /usr/share/vulkan/registry/backup/ 2>/dev/null
+yay -S --noconfirm lib32-vulkan-tools
+sudo pacman -S --noconfirm vulkan-tools
+
+if [[ -z "$VULKANINFO64" ]]; then
+    echo "${RED}64-bit vulkaninfo not found. ${RESET}"
+    exit 1
+fi
+if [[ -z "$VULKANINFO32" ]]; then
+    echo "${YELLOW}32-bit vulkaninfo not found. ${RESET}"
+fi
 for icd in /usr/share/vulkan/icd.d/*.json; do
-    echo ${BLUE}
-    echo "Testing ICD: ${RESET}${MAGENTA}${BOLD}$icd"
-    echo "${RESET}"
-    sleep 1
-
+    echo "${BLUE}Testing ICD:${RESET} ${MAGENTA}${BOLD}$icd ${RESET}"
     if [[ "$icd" == *i686* ]]; then
-        if command -v vkcube >/dev/null; then
-            cmd="vkcube"
-        else
-            echo "${YELLOW}Skipping (no vkcube32)${RESET}"
-            echo ""
+        if [[ -z "$VULKANINFO32" ]]; then
+            echo "${YELLOW}vulkaninfo32 not found. ${RESET}"
+            echo
             continue
         fi
+        cmd="$VULKANINFO32"
+        arch="32-bit"
     else
-        cmd="vkcube"
+        cmd="$VULKANINFO64"
+        arch="64-bit"
     fi
-
-    VK_ICD_FILENAMES="$icd" $cmd >/dev/null 2>&1 &
-    pid=$!
-
-    sleep 2
-
-    if kill -0 $pid 2>/dev/null; then
-        kill $pid 2>/dev/null
-        wait $pid 2>/dev/null
-        echo "${BOLD}"
-        echo "${GREEN}Success! ${RESET}"
-        echo
+    VK_ICD_FILENAMES="$icd" "$cmd" >/dev/null 2>&1
+    ret=$?
+    if [[ $ret -eq 0 ]]; then
+        echo "${BOLD}${GREEN}Success! ${arch} ICD is working.${RESET}"
     else
-        echo
-        echo "${RED}Could not start. ${RESET}"
-        echo
+        echo "${BOLD}${RED}${arch} ICD could not initialize.${RESET}"
     fi
-
-    echo ""
+    echo
 done
