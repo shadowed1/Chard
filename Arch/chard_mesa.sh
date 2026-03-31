@@ -141,8 +141,11 @@ detect_gpu_freq() {
 }
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
-
+sudo pacman -S --noconfirm llvm
+sudo pacman -S --noconfirm python-pyyaml
+sudo pacman -S --noconfirm spirv-llvm-translator
 cd
+rm -rf mesa-* 2>/dev/null
 wget https://archive.mesa3d.org/mesa-26.0.1.tar.xz
 tar xf mesa-26.0.1.tar.xz
 cd mesa-26.0.1
