@@ -2179,10 +2179,10 @@ checkpoint_161() {
 }
 run_checkpoint 161 "sudo -E pacman -S --noconfirm lib32-vulkan-intel" checkpoint_161
 rm -rf ~/.cache/yay/* 2>/dev/null
-locale_code=$(cat "/.chard_language" | sed 's/-/_/')
-sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen" 2>/dev/null
-sudo -E locale-gen 2>/dev/null
-
+locale_raw=$(cat "/.chard_language")
+locale_code=$(echo "$locale_raw" | sed 's/-/_/').UTF-8
+sudo sed -i "s/^#\s*\(${locale_code}[[:space:]]\+UTF-8\)/\1/" /etc/locale.gen
+sudo locale-gen
 mkdir -p /$CHARD_HOME/.config/pulse/
 sudo tee /etc/pulse/default.pa.d/10-cras.pa > /dev/null << 'EOF'
 load-module module-alsa-sink device=default sink_name=cras_sink control=none
