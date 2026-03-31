@@ -317,6 +317,11 @@ endian     = 'little'
 EOF
 
     if [ "$GPU_VENDOR" = "intel" ]; then
+        cp src/intel/vulkan/i915/anv_device.c /tmp/anv_device.c.orig
+        cp /tmp/anv_device.c.orig /tmp/anv_device.c.new
+        sed -i '/I915_PARAM_HAS_EXEC_CAPTURE,/,/^   }$/{/I915_PARAM_HAS_EXEC_TIMELINE/!d}' /tmp/anv_device.c.new
+        sed -i '/I915_PARAM_HAS_EXEC_TIMELINE_FENCES,/,/^   }$/d' /tmp/anv_device.c.new
+        cp /tmp/anv_device.c.new src/intel/vulkan/i915/anv_device.c
         meson setup build32 \
             --cross-file /tmp/i686-cross.ini \
             -Dprefix=/usr \
