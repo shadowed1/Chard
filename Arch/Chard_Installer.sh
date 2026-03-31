@@ -142,34 +142,40 @@ echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
 
 chard_boot_setup() {
     local TEST_FILE="/etc/init/.boot_test"
-
-    if ! sudo touch "$TEST_FILE" 2>/dev/null; then
-        echo "${RED}Rootfs verification must be disabled for on-boot startup.${RESET}"
-        echo ""
-        while true; do
-            read -rp "${BLUE}${BOLD}Disable rootfs verification now? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" verify
+    local CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+    local DEFAULT_BASHRC="$HOME/.bashrc"
+    if [ -f "$CHROMEOS_BASHRC" ]; then
+        if ! sudo touch "$TEST_FILE" 2>/dev/null; then
+            echo "${RED}Rootfs verification must be disabled for on-boot startup.${RESET}"
             echo ""
-            case "$verify" in
-                [Yy]* | "")
-                    sudo /usr/libexec/debugd/helpers/dev_features_rootfs_verification
-                    echo ""
-                    echo "${GREEN}Done. Please ${BOLD}${YELLOW}REBOOT${RESET}${GREEN} and re-run the installer to complete boot setup.${RESET}"
-                    echo ""
-                    return 0
-                    ;;
-                [Nn]*)
-                    echo "${BLUE}Skipping boot setup.${RESET}"
-                    echo ""
-                    return 0
-                    ;;
-                *)
-                    echo "${RED}Please answer Y/n.${RESET}"
-                    echo ""
-                    ;;
-            esac
-        done
+            while true; do
+                read -rp "${BLUE}${BOLD}Disable rootfs verification now? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" verify
+                echo ""
+                case "$verify" in
+                    [Yy]* | "")
+                        sudo /usr/libexec/debugd/helpers/dev_features_rootfs_verification
+                        echo ""
+                        echo "${GREEN}Done. Please ${BOLD}${YELLOW}REBOOT${RESET}${GREEN} and re-run the installer to complete boot setup.${RESET}"
+                        echo ""
+                        return 0
+                        ;;
+                    [Nn]*)
+                        echo "${BLUE}Skipping boot setup.${RESET}"
+                        echo ""
+                        return 0
+                        ;;
+                    *)
+                        echo "${RED}Please answer Y/n.${RESET}"
+                        echo ""
+                        ;;
+                esac
+            done
+        fi
+        sudo rm -f "$TEST_FILE"
+    elif [ -f "$DEFAULT_BASHRC" ]; then
+        echo "${GREEN}Skipping, not ChromeOS! ${RESET}"
     fi
-    sudo rm -f "$TEST_FILE"
+}
 
     echo ""
     while true; do
