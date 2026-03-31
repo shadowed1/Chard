@@ -346,7 +346,7 @@ chard_qemu -m 4G -cpu host -smp 4 -machine type=q35,accel=kvm -drive file=~/win1
 - LXC and VM support is not fully implemented.
 
 <br>
-
+- Steam often work best with Proton 10.05 (as of March 31st, 2026)
 - Sucrose users can launch Chard with `sudo chard root`. Sucrose users should uninstall Chard with VT-2.  
 <br>
 
