@@ -1099,8 +1099,11 @@ EOF
                     if [[ -n "$selected_locale" ]]; then
                         echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
                         echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
-                        locale_code=$(cat "$CHARD_ROOT/.chard_language" | sed 's/-/_/')
-                        sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "$CHARD_ROOT/etc/locale.gen"
+						sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/locale.gen"            -o "$CHARD_ROOT/etc/locale.gen" 2>/dev/null
+						chmod 644 "$CHARD_ROOT/etc/locale.gen" 2>/dev/null
+						locale_raw=$(cat "$CHARD_ROOT/.chard_language")
+						locale_code=$(echo "$locale_raw" | sed 's/-/_/').UTF-8
+						sudo sed -i "s/^#\s*\(${locale_code}[[:space:]]\+UTF-8\)/\1/" "$CHARD_ROOT/etc/locale.gen"
                     else
                         echo "${RED}Could not determine language. ${RESET}"
                     fi
