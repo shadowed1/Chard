@@ -15,8 +15,8 @@ for icd in /usr/share/vulkan/icd.d/*.json; do
     sleep 1
 
     if [[ "$icd" == *i686* ]]; then
-        if command -v vkcube32 >/dev/null; then
-            cmd="vkcube32"
+        if command -v vkcube >/dev/null; then
+            cmd="vkcube"
         else
             echo "${YELLOW}Skipping (no vkcube32)${RESET}"
             echo ""
