@@ -2178,7 +2178,7 @@ checkpoint_161() {
     fi
 }
 run_checkpoint 161 "sudo -E pacman -S --noconfirm lib32-vulkan-intel" checkpoint_161
-
+rm -rf ~/.cache/yay/* 2>/dev/null
 locale_code=$(cat "/.chard_language" | sed 's/-/_/')
 sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen" 2>/dev/null
 sudo -E locale-gen 2>/dev/null
