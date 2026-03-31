@@ -141,14 +141,21 @@ detect_gpu_freq() {
 }
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
+
 sudo pacman -S --noconfirm llvm
 sudo pacman -S --noconfirm python-pyyaml
 sudo pacman -S --noconfirm spirv-llvm-translator
+
 cd
 rm -rf mesa-* 2>/dev/null
-wget https://archive.mesa3d.org/mesa-26.0.1.tar.xz
-tar xf mesa-26.0.1.tar.xz
-cd mesa-26.0.1
+LATEST=$(curl -s https://archive.mesa3d.org/ \
+  | grep -oE 'mesa-[0-9]+\.[0-9]+\.[0-9]+\.tar\.xz' \
+  | grep -v 'rc' \
+  | sort -V \
+  | tail -n1)
+wget "https://archive.mesa3d.org/$LATEST"
+tar xf "$LATEST"
+cd "${LATEST%.tar.xz}"
 
 if [ "$GPU_VENDOR" = "intel" ]; then
     cp src/intel/vulkan/i915/anv_device.c /tmp/anv_device.c.orig
