@@ -141,7 +141,7 @@ detect_gpu_freq() {
 }
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
-
+source ~/.smrt_env.sh 2>/dev/null
 sudo pacman -S --noconfirm llvm
 sudo pacman -S --noconfirm python-pyyaml
 sudo pacman -S --noconfirm spirv-llvm-translator
@@ -250,5 +250,113 @@ fi
 
 ninja -C build
 sudo ninja -C build install
+
+if [ "$GPU_VENDOR" = "intel" ] || [ "$GPU_VENDOR" = "amd" ]; then
+    echo
+    echo "${CYAN}${BOLD}[*] Building 32-bit Mesa for Steam (multilib)...${RESET}"
+    echo
+    
+    sudo pacman -S --noconfirm gcc-multilib
+    sudo pacman -S --noconfirm lib32-llvm
+    sudo pacman -S --noconfirm lib32-libdrm
+    sudo pacman -S --noconfirm lib32-libx11
+    sudo pacman -S --noconfirm lib32-libxext
+    sudo pacman -S --noconfirm lib32-libxfixes
+    sudo pacman -S --noconfirm lib32-libxshmfence
+    sudo pacman -S --noconfirm lib32-libxxf86vm
+    sudo pacman -S --noconfirm lib32-libxrandr
+    sudo pacman -S --noconfirm lib32-expat
+    sudo pacman -S --noconfirm lib32-zlib
+    sudo pacman -S --noconfirm lib32-zstd
+    sudo pacman -S --noconfirm lib32-wayland
+    sudo pacman -S --noconfirm lib32-clang
+    sudo cp ~/mesa-26.0.3/build/src/compiler/clc/mesa_clc /bin/ 2>/dev/null
+    sudo cp ~/mesa-26.0.3/build/src/compiler/spirv/vtn_bindgen2 /bin/ 2>/dev/null
+    sudo chmod +x /bin/mesa_cld 2>/dev/null
+    sudo chmod +x /bin/vtn_bindgen2 2>/dev/null
+    
+#meson setup build-host \
+#  -Dprefix=$HOME/.local \
+#  -Dlibdir=lib \
+#  -Dmesa-clc=enabled \
+#  -Dgallium-rusticl=false \
+#  -Dtools=intel,nir,all
+
+#ninja -C build-host
+
+    cat > /tmp/i686-cross.ini << 'EOF'
+[binaries]
+c            = '/usr/bin/gcc'
+cpp          = '/usr/bin/g++'
+ar           = '/usr/bin/ar'
+strip        = '/usr/bin/strip'
+pkg-config   = '/usr/bin/pkgconf'
+llvm-config  = '/usr/bin/llvm-config32'
+cmake        = '/usr/bin/cmake'
+llvm-spirv = '/usr/bin/llvm-spirv'
+
+[built-in options]
+c_args        = ['-m32']
+cpp_args      = ['-m32']
+c_link_args   = ['-m32']
+cpp_link_args = ['-m32']
+
+[properties]
+pkg_config_libdir = '/usr/lib32/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig'
+llvm_spirv_libdir = '/usr/lib'
+
+[host_machine]
+system     = 'linux'
+cpu_family = 'x86'
+cpu        = 'i686'
+endian     = 'little'
+
+#[paths]
+#mesa_clc = '~/mesa-26.0.3/build/src/compiler/clc/mesa_clc'
+
+EOF
+
+    if [ "$GPU_VENDOR" = "intel" ]; then
+        meson setup build32 \
+            --cross-file /tmp/i686-cross.ini \
+            -Dprefix=/usr \
+            -Dlibdir=lib32 \
+            -Dvulkan-drivers=intel,intel_hasvk \
+            -Dgallium-drivers=iris \
+            -Dplatforms=x11,wayland \
+            -Dbuildtype=release \
+            -Dglx=dri \
+            -Degl=enabled \
+            -Dgles1=enabled \
+            -Dgles2=enabled \
+            -Dspirv-tools=disabled \
+            -Dmesa-clc=system \
+            -Dgallium-rusticl=false
+
+    elif [ "$GPU_VENDOR" = "amd" ]; then
+        meson setup build32 \
+            --cross-file /tmp/i686-cross.ini \
+            -Dprefix=/usr \
+            -Dlibdir=lib32 \
+            -Dvulkan-drivers=amd \
+            -Dgallium-drivers=radeonsi \
+            -Dplatforms=x11,wayland \
+            -Dbuildtype=release \
+            -Dglx=dri \
+            -Degl=enabled \
+            -Dgles1=enabled \
+            -Dgles2=enabled \
+            -Dllvm=enabled \
+            -Dspirv-tools=disabled \
+            -Dmesa-clc=system \
+            -Dgallium-rusticl=false
+    fi
+
+    ninja -C build32
+    sudo ninja -C build32 install
+else
+    echo "Skipping 32-bit Mesa (not applicable for ${GPU_VENDOR})"
+fi
+
 cd
-rm -rf mesa-26.0.1
+rm -rf ~/mesa-* 2>/dev/null
