@@ -52,6 +52,7 @@ Running chard directly in ChromeOS shell is possible using one of these two tool
 ### Chard is a chroot (change root) that is Arch or Gentoo Linux.
 Safely lives inside an existing ChromeOS or Linux install without prepending its paths to the system.
 
+- Open Source and free forever. 
 - Automated rolling-release installer will build everything needed with full hardware detection.
 - Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!*
 - Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS + pulse virtualization.
@@ -393,7 +394,8 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 <br><br>
 
 
-### Acknowledgements
+### Acknowledgements - This project would not exist without the help and support from the ChromeOS community. 
+
 - *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
 - *Terry Stormchaser* - Spending time testing Borealis alternatives, testing Chard + reporting bugs, and providing ideas.
 - *DennyL* - Testing Chard, reporting bugs, and making suggestions.
