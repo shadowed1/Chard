@@ -189,6 +189,7 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
         -Dplatforms=x11,wayland \
         -Dbuildtype=release \
         -Dglx=dri \
+        -Dvideo-codecs=all \
         -Degl=enabled \
         -Dspirv-tools=enabled \
         -Dgles1=enabled \
@@ -203,9 +204,11 @@ elif [ "$GPU_VENDOR" = "nvidia" ]; then
         -Dplatforms=x11,wayland \
         -Dbuildtype=release \
         -Dglx=dri \
+        -Dvideo-codecs=all \
         -Degl=enabled \
         -Dgles1=enabled \
         -Dgles2=enabled
+        
 elif [ "$GPU_VENDOR" = "mali" ] || [ "$GPU_VENDOR" = "mediatek" ]; then
     meson setup build \
         -Dprefix=/usr \
@@ -346,7 +349,7 @@ EOF
             -Dgallium-rusticl=false \
             -Dvideo-codecs=all \
             -Dgallium-d3d12-video=enabled \
-            -Dgallium-d3d12-graphics=enabled \
+            -Dgallium-d3d12-graphics=enabled
             
     elif [ "$GPU_VENDOR" = "amd" ]; then
         meson setup build32 \
@@ -358,6 +361,7 @@ EOF
             -Dplatforms=x11,wayland \
             -Dbuildtype=release \
             -Dglx=dri \
+            -Dvideo-codecs=all \
             -Degl=enabled \
             -Dgles1=enabled \
             -Dgles2=enabled \
