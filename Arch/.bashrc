@@ -286,6 +286,9 @@ alias qemu-system-aarch64='/bin/chard_qemu'
 alias ffa='fastfetch -c all.jsonc'
 # Gparted
 alias gparted='/bin/chard_gparted'
+# Heroic
+alias heroic='/bin/chard_heroic'
+
 command -v chard_refresh >/dev/null && chard_refresh
 
 export EDITOR=gedit
