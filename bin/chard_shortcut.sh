@@ -153,3 +153,16 @@ touch "$SHARED/.sync_now"
 sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
 echo
 echo "${GREEN}${BOLD}Created $count shortcuts, skipped $skipped.${RESET}"
+echo "${GREEN}"
+echo
+echo "To enable icons and shortcuts for Chard, start Termina (Crostini), share your Downloads folder to Linux, and copy paste in Terminal: ${BOLD}"
+echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
+echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
+echo "fi"
+echo "sudo chmod +x /bin/chard_bridge_daemon"
+echo "chard_bridge_daemon startup"
+echo "chard_bridge_daemon &"
+echo "${RESET}"
+echo
