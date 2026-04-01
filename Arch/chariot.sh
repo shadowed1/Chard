@@ -2214,6 +2214,8 @@ cleanup_arch
 
 sudo chown -R 1000:1000 ~/
 sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo chown root:root /opt/Heroic/chrome-sandbox 2>/dev/null
+sudo chmod 4755 /opt/Heroic/chrome-sandbox 2>/dev/null
 echo "Chard Root is Ready! Open a new shell and run: chard root${RESET}"
 show_progress
 
