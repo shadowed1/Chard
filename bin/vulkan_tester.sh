@@ -9,8 +9,8 @@ RESET=$(tput sgr0)
 VULKANINFO64=$(command -v vulkaninfo)
 VULKANINFO32=$(command -v vulkaninfo32 || command -v /usr/bin/vulkaninfo32)
 
-sudo mkdir -p /usr/share/vulkan/registry/backup 
-sudo mv /usr/share/vulkan/registry/* /usr/share/vulkan/registry/backup/ 2>/dev/null
+#sudo mkdir -p /usr/share/vulkan/registry/backup 
+#sudo mv /usr/share/vulkan/registry/* /usr/share/vulkan/registry/backup/ 2>/dev/null
 yay -S --noconfirm lib32-vulkan-tools
 sudo pacman -S --noconfirm vulkan-tools
 
