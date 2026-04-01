@@ -2551,57 +2551,6 @@ $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 #$CHARD_ROOT/bin/chard_preload
 #unset LD_PRELOAD
 sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
-if [ -f /home/chronos/user/.bashrc ]; then
-    VM_INFO="$(vmc list 2>/dev/null | grep '^termina')"
-    if [ -n "$VM_INFO" ]; then
-        echo "$VM_INFO" | grep -q 'running' || vmc start termina >/dev/null 2>&1
-        vmc share termina Downloads >/dev/null 2>&1
-        if echo "$VM_INFO" | grep -q 'VM type: baguette'; then
-            echo "${RESET}${BLUE}Detected baguette ${RESET}"
-			echo
-            crosh -- vsh termina penguin <<'EOF'
-if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
-    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
-elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
-    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
-fi
-sudo chmod +x /bin/chard_bridge_daemon
-chard_bridge_daemon &
-EOF
-        else
-            echo "${RESET}${BLUE}Detected termina ${RESET}"
-			echo
-            vmc launch termina -- bash -c '
-lxc start penguin >/dev/null 2>&1 || true
-lxc exec penguin -- bash -c "
-if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
-    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
-elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
-    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
-fi
-sudo chmod +x /bin/chard_bridge_daemon
-chard_bridge_daemon &
-"
-'
-        fi
-    else
-        echo "${YELLOW}Termina VM not found.${RESET}${GREEN}"
-        echo
-        echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and run:"
-        echo "${BOLD}"
-        echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
-        echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
-        echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
-        echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
-        echo "fi"
-        echo "sudo chmod +x /bin/chard_bridge_daemon"
-        echo "chard_bridge_daemon startup"
-        echo "chard_bridge_daemon &"
-        echo "${RESET}"
-    fi
-else
-    echo "${YELLOW}ChromeOS .bashrc not found, skipping Termina icon syncing.${RESET}"
-fi
 echo
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
 if [[ "$(uname -m)" == "aarch64" ]]; then
