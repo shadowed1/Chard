@@ -1116,18 +1116,6 @@ EOF
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 				sudo rm -rf "$CHARD_ROOT/$CHARD_HOME/.cache/yay/*" 2>/dev/null
-				echo
-				echo "${GREEN}"
-				echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste in Terminal: ${BOLD}"
-				echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
-				echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
-				echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
-				echo "    sudo cp /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
-				echo "fi"
-				echo "sudo chmod +x /bin/chard_bridge_daemon"
-				echo "chard_bridge_daemon startup"
-				echo "chard_bridge_daemon &"
-				echo "${RESET}"
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
