@@ -1111,7 +1111,8 @@ EOF
                         echo "${RED}Could not determine language. ${RESET}"
                     fi
                 fi
-     
+     			sudo chown root:root "$CHARD_ROOT/opt/Heroic/chrome-sandbox" 2>/dev/null
+				sudo chmod 4755 "$CHARD_ROOT/opt/Heroic/chrome-sandbox" 2>/dev/null
 				sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
