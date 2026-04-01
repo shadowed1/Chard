@@ -2179,9 +2179,8 @@ checkpoint_161() {
     }
 
     if detect_intel_gpu; then
-        sudo mv /usr/lib/libvulkan_intel.so /usr/local/libvulkan_intel.so.bak
-        retry_pacman "sudo pacman -S --noconfirm lib32-vulkan-intel"
-        sudo mv /usr/local/libvulkan_intel.so.bak /usr/lib/libvulkan_intel.so
+        /bin/chard_mesa
+        /bin/vulkan_tester
     else
         echo "[*] Skipping Intel driver installation"
     fi
