@@ -369,8 +369,7 @@ EOF
             -Degl=enabled \
             -Dgles1=enabled \
             -Dgles2=enabled \
-            -Dllvm=enabled \
-            -Dspirv-tools=disabled \
+            -Dspirv-tools=enabled \
             -Dmesa-clc=system \
             -Dgallium-d3d12-video=enabled \
             -Dgallium-d3d12-graphics=enabled \
