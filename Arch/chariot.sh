@@ -1882,6 +1882,15 @@ EOF
 
 sudo chmod +x "/bin/chard_firefox"
 
+sudo tee "/bin/chard_heroic" >/dev/null <<'EOF'
+#!/bin/bash
+sudo chown root:root /opt/Heroic/chrome-sandbox
+sudo chmod 4755 /opt/Heroic/chrome-sandbox
+exec /usr/bin/heroic "$@"
+EOF
+
+sudo chmod +x /bin/chard_heroic
+
 sudo tee "/bin/chard_gparted" >/dev/null <<'EOF'
 #!/bin/bash
 xhost +SI:localuser:root >/dev/null 2>&1
