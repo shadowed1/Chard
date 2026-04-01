@@ -145,6 +145,7 @@ source ~/.smrt_env.sh 2>/dev/null
 sudo pacman -S --noconfirm llvm
 sudo pacman -S --noconfirm python-pyyaml
 sudo pacman -S --noconfirm spirv-llvm-translator
+sudo pacman -S --noconfirm valgrind
 
 cd
 rm -rf mesa-* 2>/dev/null
@@ -171,10 +172,14 @@ if [ "$GPU_VENDOR" = "intel" ]; then
         -Dbuildtype=release \
         -Dglx=dri \
         -Degl=enabled \
-        -Dspirv-tools=enabled \
         -Dgles1=enabled \
         -Dgles2=enabled \
-        -Dgallium-vulkan-experimental=true
+        -Dspirv-tools=enabled \
+        -Dgallium-rusticl=false \
+        -Dvideo-codecs=all \
+        -Dgallium-d3d12-video=enabled \
+        -Dgallium-d3d12-graphics=enabled \
+        -Dintel-rt=enabled
 
 elif [ "$GPU_VENDOR" = "amd" ]; then
     meson setup build \
@@ -188,8 +193,7 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
         -Dspirv-tools=enabled \
         -Dgles1=enabled \
         -Dgles2=enabled \
-        -Dllvm=enabled \
-        -Dgallium-vulkan-experimental=true
+        -Dllvm=enabled
 
 elif [ "$GPU_VENDOR" = "nvidia" ]; then
     meson setup build \
@@ -201,9 +205,7 @@ elif [ "$GPU_VENDOR" = "nvidia" ]; then
         -Dglx=dri \
         -Degl=enabled \
         -Dgles1=enabled \
-        -Dgles2=enabled \
-        -Dgallium-vulkan-experimental=true
-
+        -Dgles2=enabled
 elif [ "$GPU_VENDOR" = "mali" ] || [ "$GPU_VENDOR" = "mediatek" ]; then
     meson setup build \
         -Dprefix=/usr \
@@ -339,11 +341,13 @@ EOF
             -Degl=enabled \
             -Dgles1=enabled \
             -Dgles2=enabled \
-            -Dspirv-tools=disabled \
+            -Dspirv-tools=enabled \
             -Dmesa-clc=system \
             -Dgallium-rusticl=false \
-            -Dgallium-vulkan-experimental=true
-
+            -Dvideo-codecs=all \
+            -Dgallium-d3d12-video=enabled \
+            -Dgallium-d3d12-graphics=enabled \
+            
     elif [ "$GPU_VENDOR" = "amd" ]; then
         meson setup build32 \
             --cross-file /tmp/i686-cross.ini \
@@ -360,8 +364,7 @@ EOF
             -Dllvm=enabled \
             -Dspirv-tools=disabled \
             -Dmesa-clc=system \
-            -Dgallium-rusticl=false \
-            -Dgallium-vulkan-experimental=true
+            -Dgallium-rusticl=false
     fi
 
     ninja -C build32
