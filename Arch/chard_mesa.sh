@@ -194,6 +194,8 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
         -Dspirv-tools=enabled \
         -Dgles1=enabled \
         -Dgles2=enabled \
+        -Dgallium-d3d12-video=enabled \
+        -Dgallium-d3d12-graphics=enabled \
         -Dllvm=enabled
 
 elif [ "$GPU_VENDOR" = "nvidia" ]; then
@@ -207,6 +209,8 @@ elif [ "$GPU_VENDOR" = "nvidia" ]; then
         -Dvideo-codecs=all \
         -Degl=enabled \
         -Dgles1=enabled \
+        -Dgallium-d3d12-video=enabled \
+        -Dgallium-d3d12-graphics=enabled \
         -Dgles2=enabled
         
 elif [ "$GPU_VENDOR" = "mali" ] || [ "$GPU_VENDOR" = "mediatek" ]; then
@@ -368,6 +372,8 @@ EOF
             -Dllvm=enabled \
             -Dspirv-tools=disabled \
             -Dmesa-clc=system \
+            -Dgallium-d3d12-video=enabled \
+            -Dgallium-d3d12-graphics=enabled \
             -Dgallium-rusticl=false
     fi
 
