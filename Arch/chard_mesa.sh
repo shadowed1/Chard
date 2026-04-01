@@ -171,8 +171,10 @@ if [ "$GPU_VENDOR" = "intel" ]; then
         -Dbuildtype=release \
         -Dglx=dri \
         -Degl=enabled \
+        -Dspirv-tools=enabled \
         -Dgles1=enabled \
-        -Dgles2=enabled
+        -Dgles2=enabled \
+        -Dgallium-vulkan-experimental=true
 
 elif [ "$GPU_VENDOR" = "amd" ]; then
     meson setup build \
@@ -183,9 +185,11 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
         -Dbuildtype=release \
         -Dglx=dri \
         -Degl=enabled \
+        -Dspirv-tools=enabled \
         -Dgles1=enabled \
         -Dgles2=enabled \
-        -Dllvm=enabled
+        -Dllvm=enabled \
+        -Dgallium-vulkan-experimental=true
 
 elif [ "$GPU_VENDOR" = "nvidia" ]; then
     meson setup build \
@@ -197,7 +201,8 @@ elif [ "$GPU_VENDOR" = "nvidia" ]; then
         -Dglx=dri \
         -Degl=enabled \
         -Dgles1=enabled \
-        -Dgles2=enabled
+        -Dgles2=enabled \
+        -Dgallium-vulkan-experimental=true
 
 elif [ "$GPU_VENDOR" = "mali" ] || [ "$GPU_VENDOR" = "mediatek" ]; then
     meson setup build \
@@ -336,7 +341,8 @@ EOF
             -Dgles2=enabled \
             -Dspirv-tools=disabled \
             -Dmesa-clc=system \
-            -Dgallium-rusticl=false
+            -Dgallium-rusticl=false \
+            -Dgallium-vulkan-experimental=true
 
     elif [ "$GPU_VENDOR" = "amd" ]; then
         meson setup build32 \
@@ -354,7 +360,8 @@ EOF
             -Dllvm=enabled \
             -Dspirv-tools=disabled \
             -Dmesa-clc=system \
-            -Dgallium-rusticl=false
+            -Dgallium-rusticl=false \
+            -Dgallium-vulkan-experimental=true
     fi
 
     ninja -C build32
