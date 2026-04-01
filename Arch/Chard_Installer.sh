@@ -2282,7 +2282,7 @@ $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
 echo
 echo "${GREEN}"
-echo "To enable icons and shortcuts for Chard, start Termina (Crostini), and copy paste in Terminal: ${BOLD}"
+echo "To enable icons and shortcuts for Chard, start Termina (Crostini), share your Downloads folder to Linux, and copy paste in Terminal: ${BOLD}"
 echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
 echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
 echo "elif [ -f /mnt/chromeos/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
