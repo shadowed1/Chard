@@ -26,6 +26,7 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
                         exit 1
             fi
             unset LD_PRELOAD
+		"$CHARD_ROOT/bin/chard unmount" 2>/dev/null
         echo "${RESET}${RED}[*] Unmounting active bind mounts...${RESET}"
         unset LD_PRELOAD
 				sudo stop chard 2>/dev/null
