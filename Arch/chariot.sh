@@ -2219,6 +2219,10 @@ grep -qxF ".include /etc/pulse/default.pa" "/$CHARD_HOME/.config/pulse/default.p
 ( sed '/^\.fail$/a\.include /etc/pulse/default.pa' "/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null > "/$CHARD_HOME/.config/pulse/default.pa.tmp" && \
 mv "/$CHARD_HOME/.config/pulse/default.pa.tmp" "/$CHARD_HOME/.config/pulse/default.pa" )
 
+# Enable the Pacman reference!
+sudo grep -q '^ILoveCandy$' "/etc/pacman.conf" || \
+sudo sed -i '/^# Misc options$/a ILoveCandy' "/etc/pacman.conf"
+
 cleanup_arch
 
 sudo chown -R 1000:1000 ~/
