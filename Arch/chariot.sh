@@ -1214,7 +1214,7 @@ checkpoint_119() {
 run_checkpoint 119 "sudo -E pacman -S --noconfirm gvfs" checkpoint_119
 
 checkpoint_120() {
-    retry_pacman "sudo -E pacman -S --noconfirm xfce4"
+    retry_pacman "sudo -E pacman -S --noconfirm xfce4 xfce4-taskmanager"
 }
 run_checkpoint 120 "sudo -E pacman -S --noconfirm xfce4" checkpoint_120
 
