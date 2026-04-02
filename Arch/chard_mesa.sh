@@ -147,74 +147,6 @@ sudo pacman -S --noconfirm python-pyyaml
 sudo pacman -S --noconfirm spirv-llvm-translator
 sudo pacman -S --noconfirm valgrind
 
-sudo tee /bin/exec_patch.py << 'EOF'
-#!/usr/bin/env python3
-"""
-patch i915 EXEC_TIMELINES issues
-"""
-
-import sys
-
-PARAMS_TO_REMOVE = {
-    'I915_PARAM_HAS_EXEC_CAPTURE',
-    'I915_PARAM_HAS_EXEC_TIMELINE_FENCES',
-}
-
-def remove_check_blocks(source):
-    lines = source.splitlines(keepends=True)
-    out = []
-    i = 0
-    removed = 0
-    while i < len(lines):
-        line = lines[i]
-
-        matched = next(
-            (p for p in PARAMS_TO_REMOVE
-             if 'intel_gem_get_param' in line and p in line),
-            None
-        )
-
-        if matched:
-            depth = line.count('{') - line.count('}')
-            j = i + 1
-            while j < len(lines) and depth > 0:
-                depth += lines[j].count('{') - lines[j].count('}')
-                j += 1
-            print(f"  [-] Removed {matched} block (src lines {i+1}–{j})",
-                  file=sys.stderr)
-            removed += 1
-            i = j
-
-            if i < len(lines) and lines[i].strip() == '':
-                i += 1
-        else:
-            out.append(line)
-            i += 1
-
-    if removed != len(PARAMS_TO_REMOVE):
-        print(f"WARNING: expected {len(PARAMS_TO_REMOVE)} blocks, "
-              f"removed {removed}.", file=sys.stderr)
-
-    return ''.join(out)
-
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <anv_device.c>", file=sys.stderr)
-        sys.exit(1)
-
-    path = sys.argv[1]
-    with open(path) as f:
-        source = f.read()
-
-    patched = remove_check_blocks(source)
-
-    with open(path, 'w') as f:
-        f.write(patched)
-
-    print("Done.", file=sys.stderr)
-EOF
-sudo chmod +x /bin/exec_patch.py
-
 cd
 rm -rf mesa-* 2>/dev/null
 LATEST=$(curl -s https://archive.mesa3d.org/ \
@@ -229,7 +161,8 @@ cd "${LATEST%.tar.xz}"
 if [ "$GPU_VENDOR" = "intel" ]; then
     cp src/intel/vulkan/i915/anv_device.c /tmp/anv_device.c.orig
     cp /tmp/anv_device.c.orig /tmp/anv_device.c.new
-    python3 /bin/exec_patch.py src/intel/vulkan/i915/anv_device.c
+    sed -i '/I915_PARAM_HAS_EXEC_CAPTURE,/,/^   }$/{/I915_PARAM_HAS_EXEC_TIMELINE/!d}' /tmp/anv_device.c.new
+    sed -i '/I915_PARAM_HAS_EXEC_TIMELINE_FENCES,/,/^   }$/d' /tmp/anv_device.c.new
     cp /tmp/anv_device.c.new src/intel/vulkan/i915/anv_device.c
     meson setup build \
         -Dprefix=/usr \
@@ -400,7 +333,8 @@ EOF
     if [ "$GPU_VENDOR" = "intel" ]; then
         cp src/intel/vulkan/i915/anv_device.c /tmp/anv_device.c.orig
         cp /tmp/anv_device.c.orig /tmp/anv_device.c.new
-        python3 /bin/exec_patch.py src/intel/vulkan/i915/anv_device.c
+        sed -i '/I915_PARAM_HAS_EXEC_CAPTURE,/,/^   }$/{/I915_PARAM_HAS_EXEC_TIMELINE/!d}' /tmp/anv_device.c.new
+        sed -i '/I915_PARAM_HAS_EXEC_TIMELINE_FENCES,/,/^   }$/d' /tmp/anv_device.c.new
         cp /tmp/anv_device.c.new src/intel/vulkan/i915/anv_device.c
         meson setup build32 \
             --cross-file /tmp/i686-cross.ini \
