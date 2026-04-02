@@ -1126,6 +1126,9 @@ EOF
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 				sudo rm -rf "$CHARD_ROOT/$CHARD_HOME/.cache/yay/*" 2>/dev/null
+				# Enable the Pacman reference!
+				sudo grep -q '^ILoveCandy$' "$CHARD_ROOT/etc/pacman.conf" || \
+				sudo sed -i '/^# Misc options$/a ILoveCandy' "$CHARD_ROOT/etc/pacman.conf"
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
