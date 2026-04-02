@@ -1276,6 +1276,7 @@ run_checkpoint 125 "sudo -E pacman -S --noconfirm vulkan-tools" checkpoint_125
 
 checkpoint_126() {
     retry_pacman "sudo -E pacman -S --noconfirm p7zip arj lha lzop unrar unzip zip xarchiver"
+    retry_pacman "sudo -E pacman -S --noconfirm file-roller"
 }
 run_checkpoint 126 "sudo -E pacman -S --noconfirm xarchiver + archivers" checkpoint_126
 #checkpoint_127() {
