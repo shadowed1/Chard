@@ -293,6 +293,15 @@ command -v chard_refresh >/dev/null && chard_refresh
 # vkgears bandaid
 vkgears() { LIBDECOR_PLUGIN_DIR="" command vkgears "$@"; }
 
+# Flatpak override
+flatpak() {
+    if [[ "$1" == "override" ]]; then
+        /usr/bin/flatpak "$@"
+    else
+        /bin/chard_flatpak "$@"
+    fi
+}
+
 export EDITOR=gedit
 export FILEMANAGER=thunar
 printf "y\n" | xdg-mime default thunar.desktop inode/directory
