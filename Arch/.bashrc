@@ -190,7 +190,6 @@ export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
 
 obs() {
-    export QT_QPA_PLATFORM=xcb
     export OBS_VKCAPTURE=1
     export OBS_GAMECAPTURE=1
     /usr/bin/obs "$@" &
