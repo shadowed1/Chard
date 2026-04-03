@@ -600,16 +600,16 @@ echo "$KERNEL_VER" | sudo tee $CHARD_ROOT/.chard_kernel >/dev/null
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
 xhost +SI:localuser:$CHARD_USER
-sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
-sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-source /$CHARD_HOME/.bashrc
+[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
 WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
-LWJGL_TMPDIR="/$CHARD_HOME/.local/tmp"
+export PATH="$WRAPPED_PATH"
+LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
-chown $CHARD_USER:$CHARD_USER "$LWJGL_TMPDIR"
+chmod 700 "$LWJGL_TMPDIR"
+
 NO_USER_CMDS=(
   make-current enter ps kill
   documents document-export document-unexport document-info
@@ -620,60 +620,55 @@ NO_USER_CMDS=(
 )
 
 if [[ $# -eq 0 ]]; then
-  sudo -u $CHARD_USER \
-    env HOME=/$CHARD_HOME \
+    env \
+        HOME="$HOME" \
         PULSE_SERVER=unix:/run/chrome/pulse/native \
         DISPLAY="${DISPLAY:-:0}" \
-        PATH="$WRAPPED_PATH" \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
         LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+        OBS_VKCAPTURE=1 \
+        OBS_GAMECAPTURE=1 \
         LIBGL_ALWAYS_INDIRECT=0 \
-        GDK_BACKEND="wayland" \
-        EGL_PLATFORM=wayland \
         GDK_SCALE="${GDK_SCALE:-1.25}" \
         XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    /usr/bin/flatpak
-  sudo setfacl -Rb /run/chrome 2>/dev/null
-  exit 0
+        DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
+    flatpak
+    exit 0
 fi
 
 CMD="$1"
 shift
-
 USE_USER=1
 for c in "${NO_USER_CMDS[@]}"; do
-  if [[ "$CMD" == "$c" ]]; then
-    USE_USER=0
-    break
-  fi
+    [[ "$CMD" == "$c" ]] && USE_USER=0 && break
 done
 case "$CMD" in
   -h|--help|--version|--default-arch|--supported-arches|--gl-drivers|--installations|--print-updated-env|--print-system-only|-v|--verbose|--ostree-verbose)
     USE_USER=0
     ;;
 esac
-if [[ $USE_USER -eq 1 ]]; then
-  FINAL_ARGS=(--user "$CMD" "$@")
-else
-  FINAL_ARGS=("$CMD" "$@")
-fi
-sudo -u $CHARD_USER \
-  env HOME=/$CHARD_HOME \
-      PULSE_SERVER=unix:/run/chrome/pulse/native \
-      DISPLAY="${DISPLAY:-:0}" \
-      PATH="$WRAPPED_PATH" \
-      LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-      LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-      LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-      LIBGL_ALWAYS_INDIRECT=0 \
-      GDK_BACKEND="wayland" \
-      EGL_PLATFORM=wayland \
-      GDK_SCALE="${GDK_SCALE:-1.25}" \
-      XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-  /usr/bin/flatpak "${FINAL_ARGS[@]}"
 
-sudo setfacl -Rb /run/chrome 2>/dev/null
+if [[ $USE_USER -eq 1 ]]; then
+    FINAL_ARGS=(--user "$CMD" "$@")
+else
+    FINAL_ARGS=("$CMD" "$@")
+fi
+
+env \
+    HOME="$HOME" \
+    PULSE_SERVER=unix:/run/chrome/pulse/native \
+    DISPLAY="${DISPLAY:-:0}" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    OBS_VKCAPTURE=1 \
+    OBS_GAMECAPTURE=1 \
+    LIBGL_ALWAYS_INDIRECT=0 \
+    GDK_SCALE="${GDK_SCALE:-1.25}" \
+    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
+flatpak "${FINAL_ARGS[@]}"
 EOF
 
 		sudo chmod +x "$CHARD_ROOT/bin/chard_flatpak"
