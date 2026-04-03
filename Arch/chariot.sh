@@ -2186,7 +2186,7 @@ checkpoint_161() {
         echo "[*] Skipping Intel driver installation"
     fi
 }
-run_checkpoint 161 "sudo -E pacman -S --noconfirm lib32-vulkan-intel" checkpoint_161
+run_checkpoint 161 "Chard Mesa" checkpoint_161
 
 checkpoint_162() {
     retry_pacman "sudo pacman -S --noconfirm wget"
