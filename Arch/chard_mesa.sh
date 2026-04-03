@@ -168,7 +168,7 @@ if [ "$GPU_VENDOR" = "intel" ]; then
     meson setup build \
         -Dprefix=/usr \
         -Dvulkan-drivers=intel,intel_hasvk \
-        -Dgallium-drivers=iris \
+        -Dgallium-drivers=iris,zink \
         -Dplatforms=x11,wayland \
         -Dbuildtype=release \
         -Dglx=dri \
@@ -186,7 +186,7 @@ elif [ "$GPU_VENDOR" = "amd" ]; then
     meson setup build \
         -Dprefix=/usr \
         -Dvulkan-drivers=amd \
-        -Dgallium-drivers=radeonsi \
+        -Dgallium-drivers=radeonsi,zink \
         -Dplatforms=x11,wayland \
         -Dbuildtype=release \
         -Dglx=dri \
@@ -203,7 +203,7 @@ elif [ "$GPU_VENDOR" = "nvidia" ]; then
     meson setup build \
         -Dprefix=/usr \
         -Dvulkan-drivers=nouveau \
-        -Dgallium-drivers=nouveau \
+        -Dgallium-drivers=nouveau,zink \
         -Dplatforms=x11,wayland \
         -Dbuildtype=release \
         -Dglx=dri \
@@ -342,7 +342,7 @@ EOF
             -Dprefix=/usr \
             -Dlibdir=lib32 \
             -Dvulkan-drivers=intel,intel_hasvk \
-            -Dgallium-drivers=iris \
+            -Dgallium-drivers=iris,zink \
             -Dplatforms=x11,wayland \
             -Dbuildtype=release \
             -Dglx=dri \
@@ -362,7 +362,7 @@ EOF
             -Dprefix=/usr \
             -Dlibdir=lib32 \
             -Dvulkan-drivers=amd \
-            -Dgallium-drivers=radeonsi \
+            -Dgallium-drivers=radeonsi,zink \
             -Dplatforms=x11,wayland \
             -Dbuildtype=release \
             -Dglx=dri \
