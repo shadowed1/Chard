@@ -285,8 +285,8 @@ if [ "$GPU_VENDOR" = "intel" ] || [ "$GPU_VENDOR" = "amd" ]; then
     sudo pacman -S --noconfirm lib32-zstd
     sudo pacman -S --noconfirm lib32-wayland
     sudo pacman -S --noconfirm lib32-clang
-    sudo cp build/src/compiler/clc/mesa_clc /tmp/ 2>/dev/null
-    sudo cp build/src/compiler/spirv/vtn_bindgen2 /tmp/ 2>/dev/null
+    sudo cp build/src/compiler/clc/mesa_clc /bin/ 2>/dev/null
+    sudo cp build/src/compiler/spirv/vtn_bindgen2 /bin/ 2>/dev/null
     sudo chmod +x /bin/mesa_cld 2>/dev/null
     sudo chmod +x /bin/vtn_bindgen2 2>/dev/null
     
