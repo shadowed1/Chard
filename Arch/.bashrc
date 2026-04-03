@@ -293,9 +293,10 @@ command -v chard_refresh >/dev/null && chard_refresh
 # vkgears bandaid
 vkgears() { LIBDECOR_PLUGIN_DIR="" command vkgears "$@"; }
 
-# Flatpak override
 flatpak() {
-    if [[ "$1" == "override" ]]; then
+    if [[ $# -eq 0 ]]; then
+        /usr/bin/flatpak
+    elif [[ "$1" == "override" ]]; then
         /usr/bin/flatpak "$@"
     else
         /bin/chard_flatpak "$@"
