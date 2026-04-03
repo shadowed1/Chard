@@ -291,6 +291,9 @@ alias heroic='/bin/chard_heroic'
 
 command -v chard_refresh >/dev/null && chard_refresh
 
+# vkgears bandaid
+vkgears() { LIBDECOR_PLUGIN_DIR="" command vkgears "$@"; }
+
 export EDITOR=gedit
 export FILEMANAGER=thunar
 printf "y\n" | xdg-mime default thunar.desktop inode/directory
