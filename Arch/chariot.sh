@@ -1067,11 +1067,12 @@ if [[ $# -eq 0 ]]; then
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
         LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+        OBS_VKCAPTURE=1 \
+        OBS_GAMECAPTURE=1 \
         LIBGL_ALWAYS_INDIRECT=0 \
-        GDK_BACKEND="wayland" \
-        EGL_PLATFORM=wayland \
         GDK_SCALE="${GDK_SCALE:-1.25}" \
         XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+        DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
     /usr/bin/flatpak
   sudo setfacl -Rb /run/chrome 2>/dev/null
   exit 0
@@ -1105,11 +1106,12 @@ sudo -u $CHARD_USER \
       LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
       LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
       LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+      OBS_VKCAPTURE=1 \
+      OBS_GAMECAPTURE=1 \
       LIBGL_ALWAYS_INDIRECT=0 \
-      GDK_BACKEND="wayland" \
-      EGL_PLATFORM=wayland \
       GDK_SCALE="${GDK_SCALE:-1.25}" \
       XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+      DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
   /usr/bin/flatpak "${FINAL_ARGS[@]}"
 
 sudo setfacl -Rb /run/chrome 2>/dev/null
