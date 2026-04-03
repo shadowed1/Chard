@@ -47,6 +47,7 @@ export PYTHONMULTIPROCESSING_START_METHOD=fork
 export XDG_RUNTIME_DIR=""
 # <<< END CHARD_XDG_RUNTIME_DIR >>>
 
+export XDG_SESSION_TYPE=x11
 export CC="$ROOT/usr/bin/gcc"
 export CXX="$ROOT/usr/bin/g++"
 export AR="$ROOT/usr/bin/ar"
