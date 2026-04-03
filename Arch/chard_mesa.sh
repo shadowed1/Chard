@@ -142,6 +142,7 @@ detect_gpu_freq() {
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
 source ~/.smrt_env.sh 2>/dev/null
+sudo pacman -S --noconfirm wget
 sudo pacman -S --noconfirm llvm
 sudo pacman -S --noconfirm python-pyyaml
 sudo pacman -S --noconfirm spirv-llvm-translator
