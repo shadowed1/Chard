@@ -856,14 +856,14 @@ checkpoint_83() {
 }
 run_checkpoint 83 "pacman -S --noconfirm ttf-dejavu" checkpoint_83
 
-checkpoint_84() {
-    if [[ "$ARCH" == "x86_64" ]]; then
-        retry_pacman "yay -S --noconfirm gtk-engines"
-    else
-        echo "Skipping gtk-engines on $ARCH - Deprecated"
-    fi
-}
-run_checkpoint 84 "yay -S --noconfirm gtk-engines" checkpoint_84
+#checkpoint_84() {
+#    if [[ "$ARCH" == "x86_64" ]]; then
+#        retry_pacman "yay -S --noconfirm gtk-engines"
+#    else
+#        echo "Skipping gtk-engines on $ARCH - Deprecated"
+#    fi
+#}
+#run_checkpoint 84 "yay -S --noconfirm gtk-engines" checkpoint_84
 
 checkpoint_86() {
     retry_pacman "sudo -E pacman -S --noconfirm python python-pip"
