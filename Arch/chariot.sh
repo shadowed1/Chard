@@ -2183,7 +2183,7 @@ checkpoint_161() {
         echo "[*] Skipping Intel driver installation"
     fi
 }
-run_checkpoint 161 "Chard Mesa" checkpoint_161
+run_checkpoint 161 "Chard Mesa prerequisite" checkpoint_161
 
 checkpoint_162() {
     retry_pacman "sudo pacman -S --noconfirm man"
