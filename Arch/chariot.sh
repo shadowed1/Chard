@@ -2177,7 +2177,7 @@ checkpoint_161() {
     }
 
     if detect_intel_gpu; then
-        #/bin/chard_mesa
+        /bin/chard_mesa
         /bin/vulkan_tester
     else
         echo "[*] Skipping Intel driver installation"
