@@ -1838,7 +1838,7 @@ checkpoint_140() {
 run_checkpoint 140 "Fix machine-id" checkpoint_140
 
 checkpoint_141() {
-retry_pacman "yay -S --noconfirm prismlauncher"
+#retry_pacman "yay -S --noconfirm prismlauncher"
 retry_pacman "sudo -E pacman -S --noconfirm gamemode"
 retry_pacman "sudo -E pacman -S --noconfirm flite"
 sudo tee /bin/chard_prismlauncher >/dev/null <<'EOF'
@@ -1855,7 +1855,7 @@ EOF
 sudo chmod +x /bin/chard_prismlauncher
     
 }
-run_checkpoint 141 "Prism Launcher" checkpoint_141
+run_checkpoint 141 "Prism Launcher prerequisite" checkpoint_141
 
 checkpoint_142() {
 retry_pacman "sudo -E pacman -S --noconfirm firefox"
