@@ -1455,28 +1455,28 @@ checkpoint_137() {
             echo "[*] GPU vendor detected: $GPU_VENDOR"
             case "$GPU_VENDOR" in
                 intel)
-                    DRIVER="6"
+                    DRIVER="7"
                     ;;
                 amd)
-                    DRIVER="8"
+                    DRIVER="12"
                     ;;
                 nvidia)
                     DRIVER="1"
                     ;;
                 mali|panfrost)
-                    DRIVER="4"
+                    DRIVER="10"
                     ;;
                 adreno)
-                    DRIVER="4"
+                    DRIVER="11"
                     ;;
                 asahi)
                     DRIVER="2"
                     ;;
                 mediatek|vivante)
-                    DRIVER="4"
+                    DRIVER="10"
                     ;;
                 *)
-                    DRIVER="9"
+                    DRIVER="13"
                     ;;
             esac
     
