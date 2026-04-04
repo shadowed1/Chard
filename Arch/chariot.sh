@@ -667,10 +667,10 @@ checkpoint_41() {
 }
 run_checkpoint 41 "sudo -E pacman -S brotli" checkpoint_41
 
-checkpoint_42() {
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-}
-run_checkpoint 42 "install rustup" checkpoint_42
+#checkpoint_42() {
+#    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+#}
+#run_checkpoint 42 "install rustup" checkpoint_42
 
 checkpoint_43() {
     retry_pacman "sudo -E pacman -S --noconfirm gc"
