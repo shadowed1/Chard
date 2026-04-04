@@ -1338,10 +1338,10 @@ checkpoint_135() {
 }
 run_checkpoint 135 "sudo -E pacman -S --noconfirm lib32gpu" checkpoint_135
 
-checkpoint_136() {
-    curl -fsS https://dl.brave.com/install.sh | sh
-}
-run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
+#checkpoint_136() {
+#    curl -fsS https://dl.brave.com/install.sh | sh
+#}
+#run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
 
 checkpoint_137() {
     detect_gpu_freq() {
