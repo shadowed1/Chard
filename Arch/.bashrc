@@ -191,8 +191,18 @@ export SOMMELIER_GLAMOR=1
 export SOMMELIER_VERSION=0.20
 
 obs() {
-    export OBS_VKCAPTURE=1
-    export OBS_GAMECAPTURE=1
+export OBS_VKCAPTURE=1
+export OBS_GAMECAPTURE=1
+export QT_QPA_PLATFORM=xcb
+    case ":$LD_LIBRARY_PATH:" in
+        *:/usr/lib64/obs-plugins:*) ;;
+        *) LD_LIBRARY_PATH="/usr/lib64/obs-plugins:$LD_LIBRARY_PATH" ;;
+    esac
+    case ":$LD_LIBRARY_PATH:" in
+        *:/usr/lib64/obs_glcapture:*) ;;
+        *) LD_LIBRARY_PATH="/usr/lib64/obs_glcapture:$LD_LIBRARY_PATH" ;;
+    esac
+    export LD_LIBRARY_PATH
     /usr/bin/obs "$@" &
 }
 
