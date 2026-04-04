@@ -1410,7 +1410,7 @@ checkpoint_137() {
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
         retry_pacman "sudo -E pacman -S --needed --noconfirm lib32-libvdpau 2>/dev/null"
-        retry_pacman "yay -S --noconfirm lib32-gtk2 2>/dev/null"
+        #retry_pacman "yay -S --noconfirm lib32-gtk2 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null"
         cd ~/
