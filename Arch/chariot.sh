@@ -1014,20 +1014,20 @@ checkpoint_115() {
 }
 run_checkpoint 115 "sudo -E pacman -S --noconfirm libclc egl-gbm" checkpoint_115
 
-checkpoint_116() {
-    cd /tmp
-    sudo rm -rf /tmp/platform2 2>/dev/null
-    git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
-    cd /tmp/platform2
-    git sparse-checkout set vm_tools/sommelier
-    cd vm_tools/sommelier
-    meson setup build
-    ninja -C build
-    sudo -E ninja -C build install
-    cd /tmp
-    sudo rm -rf /tmp/platform2 2>/dev/null
-}
-run_checkpoint 116 "Build Sommelier" checkpoint_116
+#checkpoint_116() {
+#    cd /tmp
+#    sudo rm -rf /tmp/platform2 2>/dev/null
+#    git clone --filter=blob:none --sparse https://chromium.googlesource.com/chromiumos/platform2 /tmp/platform2
+#    cd /tmp/platform2
+#    git sparse-checkout set vm_tools/sommelier
+#    cd vm_tools/sommelier
+#    meson setup build
+#    ninja -C build
+#    sudo -E ninja -C build install
+#    cd /tmp
+#    sudo rm -rf /tmp/platform2 2>/dev/null
+#}
+#run_checkpoint 116 "Build Sommelier" checkpoint_116
 
 checkpoint_117() {
     retry_pacman "sudo -E pacman -S --noconfirm flatpak"
