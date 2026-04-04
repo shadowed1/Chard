@@ -2185,9 +2185,10 @@ checkpoint_161() {
 run_checkpoint 161 "Chard Mesa" checkpoint_161
 
 checkpoint_162() {
+    retry_pacman "sudo pacman -S --noconfirm man"
     retry_pacman "sudo pacman -S --noconfirm wget"
 }
-run_checkpoint 162 "wget" checkpoint_162
+run_checkpoint 162 "man + wget" checkpoint_162
 
 rm -rf ~/.cache/yay/* 2>/dev/null
 locale_raw=$(cat "/.chard_language")
