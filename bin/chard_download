@@ -54,17 +54,19 @@ curl -L "$URL" -o ~/Chard_Installer || {
 }
 
 echo "          ${RED}For ChromeOS users - CTRL-ALT-BACK exits VT-2 and CTRL-ALT-REFRESH enters VT-2! ${RESET}"
-echo "            ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh${RESET}${YELLOW} or ${RESET}${MAGENTA}VT-2 logged in as ${BOLD}chronos${RESET}${YELLOW}:${RESET}"
+echo "   ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in crosh (not enabled by default)${RESET}${YELLOW} or ${RESET}${MAGENTA}VT-2 logged in as ${BOLD}chronos${RESET}${YELLOW}:${RESET}"
+echo "               ${BLUE}CTRL-ALT-REFRESH enters VT-2.${RESET} ${CYAN}CTRL-ALT-BACK returns to ChromeoS.${RESET}"
 echo
 echo
-echo "                                  ${GREEN}${BOLD}If on ChromeOS, run these 3 commands:${RESET}${GREEN}"
+echo "${GREEN}${BOLD}If on ChromeOS, run these 3 commands in VT-2 logged in as ${RESET}${BLUE}${BOLD}chronos${RESET}${GREEN}${BOLD} or use sudo in crosh (if enabled):${RESET}${GREEN}"
 echo
-echo "${BOLD}cd"
+echo "${RESET}${GREEN}cd"
 echo "sudo mv Chard_Installer /usr/local"
 echo "sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
 echo ""
-echo "                                  ${CYAN}${BOLD}If on anything else, copy paste:${RESET}${CYAN}"
 echo
-echo "${BOLD}sudo -u $USER bash ~/Chard_Installer${RESET}${CYAN}"
+echo "${CYAN}${BOLD}If on anything else, copy paste:${RESET}${CYAN}"
+echo
+echo "${RESET}${CYAN}sudo -u $USER bash ~/Chard_Installer${RESET}${CYAN}"
 echo
 echo
