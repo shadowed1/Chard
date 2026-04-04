@@ -1331,7 +1331,7 @@ checkpoint_135() {
         retry_pacman "sudo -E pacman -S --noconfirm lib32-libxi"
         retry_pacman "sudo -E pacman -S --noconfirm lib32-gdk-pixbuf2"
         retry_pacman "sudo -E pacman -S --noconfirm lib32-pulseaudio"
-        retry_pacman "yay -S --noconfirm lib32-gtk2"
+        #retry_pacman "yay -S --noconfirm lib32-gtk2"
     else
         echo "Skipping lib32 audio on $ARCH"
     fi
