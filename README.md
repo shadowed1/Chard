@@ -390,7 +390,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.33: `Added chard_startup command. Chard can now start on boot! Implemented smarter detection for running scripts in incorrect locations.` <br><br>
 - 0.34: `Added right click + context menu support for org.chromium.arc. Forked sommelier to own repo due to the amount of edits made. Re-removed "chard game" or "cg" due to fixing right click issue. Added additional cleanup procedures with new chard startup service. Added chard_qemu wrapper. Updated chard version command to show changelog. Increased startup .conf wait timer.` <br><br>
 - 0.35: `Added stop, startup command for chard_bridge_daemon. Added chard_shortcut_daemon to auto-sync icons and shortcuts. Added 3rd option in Reinstall for chard_startup command. Cleaned up exiting Reinstaller. Added ability for chard_bridge_daemon to automatically install and run in Crostini.`
-- 0.36: `Fixed bugs with chard_mesa. Added vulkan_tester script. Improved Flatpak to now support running far more apps. Improved OBS suppport to now handle Vulkan. Added pacman easter egg.`
+- 0.36: `Fixed bugs with chard_mesa. Added vulkan_tester script. Improved Flatpak to now support running far more apps. Improved OBS suppport to now handle Vulkan. Added pacman easter egg. Updated Dowmloader instructions. Removing brave, prismlauncher, and rust from chariot. `
 
 <br><br>
 
