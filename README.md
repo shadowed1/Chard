@@ -404,4 +404,5 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - *Sebanc* - Helping me move from Gentoo to Arch and enabling audio for Arch.
 - *days* - Helping fix audio issues with Wine, chard_garcon, enabled mouse capture/lock, and more. 
 - *WeirdTreeThing* - Help with further supporting pipewire support with their vast audio knowledge. Great ideas for ARM64 GPU acceleration.
-- *C0d1ngR4bb1t* - Created and tested syntax for external USB support. 
+- *C0d1ngR4bb1t* - Created and tested syntax for external USB support.
+- *gd_minecraft_programmer* - Created and tested syntax to support ChromeOS 103 and older. 
