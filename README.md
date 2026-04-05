@@ -389,8 +389,10 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.32: `Patched default.pa to bypass unload-module module-udev-detect limitation. Added back "cg" or "chard game" due to mouse capture breaking right click and menu interactions on certain apps.` <br><br>
 - 0.33: `Added chard_startup command. Chard can now start on boot! Implemented smarter detection for running scripts in incorrect locations.` <br><br>
 - 0.34: `Added right click + context menu support for org.chromium.arc. Forked sommelier to own repo due to the amount of edits made. Re-removed "chard game" or "cg" due to fixing right click issue. Added additional cleanup procedures with new chard startup service. Added chard_qemu wrapper. Updated chard version command to show changelog. Increased startup .conf wait timer.` <br><br>
-- 0.35: `Added stop, startup command for chard_bridge_daemon. Added chard_shortcut_daemon to auto-sync icons and shortcuts. Added 3rd option in Reinstall for chard_startup command. Cleaned up exiting Reinstaller. Added ability for chard_bridge_daemon to automatically install and run in Crostini.`
-- 0.36: `Fixed bugs with chard_mesa and now relying on Steam's GPU drivers (again). Added vulkan_tester script. Improved Flatpak to now support running far more apps. Improved OBS support to now record + stream Vulkan. Added pacman easter egg. Updated Dowmloader instructions. Removing brave, prismlauncher, and rust from chariot to reduce Arch down to 11GB!. `
+- 0.35: `Added stop, startup command for chard_bridge_daemon. Added chard_shortcut_daemon to auto-sync icons and shortcuts. Added 3rd option in Reinstall for chard_startup command. Cleaned up exiting Reinstaller. Added ability for chard_bridge_daemon to automatically install and run in Crostini.` <br><br>
+- 0.36: `Fixed bugs with chard_mesa and now relying on Steam's GPU drivers (again). Added vulkan_tester script. Improved Flatpak to now support running far more apps. Improved OBS support to now record + stream Vulkan. Added pacman easter egg. Updated Dowmloader instructions. Removing brave, prismlauncher, and rust from chariot to reduce Arch down to 11GB!. ` <br><br>
+- 0.37*: `Added ChromeOS 103 support. Thanks to gd_minecraft_programmer for creating that syntax.` <br><br>
+* = in progress
 <br><br>
 
 
