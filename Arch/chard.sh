@@ -563,7 +563,6 @@ case "$cmd" in
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
-				/usr/lib/gvfsd-fuse /run/chrome/gvfs 2>/dev/null &
 				QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
                 cd ~/
                 exec chard_sommelier
