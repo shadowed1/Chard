@@ -910,8 +910,10 @@ chard_obs_cleanup() {
 }
 
 chard_obs_mounts
-trap chard_obs_cleanup EXIT
 /usr/bin/obs "$@" &
+OBS_PID=$!
+wait $OBS_PID
+chard_obs_cleanup
 EOF
 
 sudo chmod +x "$CHARD_ROOT/bin/chard_obs"
