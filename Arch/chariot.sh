@@ -2177,7 +2177,8 @@ checkpoint_161() {
     }
 
     if detect_intel_gpu; then
-        retry_pacman "sudo -S pacman --noconfirm intel-gpu-tools"
+        retry_pacman "sudo pacman -S --noconfirm intel-gpu-tools"
+        retry_pacman "sudo pacman -S --noconfirm python-dissect.cstruct"
     else
         echo "[*] Skipping Intel driver installation"
     fi
