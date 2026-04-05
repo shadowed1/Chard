@@ -464,7 +464,7 @@ case "$cmd" in
 		# Write our user hash to Chard for preliminary shortcut support
 		U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
 		echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
-		
+		sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
         chard_volume > /dev/null 2>&1 &
 		chard_shortcut_daemon start 2>/dev/null &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
