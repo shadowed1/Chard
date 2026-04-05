@@ -219,7 +219,14 @@ echo "${RED}Chard Installs to ${CHARD_ROOT}${RESET}${YELLOW} - Install will even
 echo
 echo "${GREEN}[+] Creating ${RESET}${RED}Chard ${RESET}${YELLOW}Root${RESET}"
 
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
+fi
+
 cleanup_chroot() {
+	VERSION_FILE="$CHARD_ROOT/.chard_chrome"
     echo "${RED}Unmounting Chard${RESET}"
     sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
     sleep 0.2
@@ -2482,6 +2489,14 @@ if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
 else
     sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+fi
+VERSION_FILE="$CHARD_ROOT/.chard_chrome"
+if [ -s "$VERSION_FILE" ]; then
+CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+	if [ "$CHROMEOS_VERSION" -le 103 ]; then
+		sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
+		sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
+	fi
 fi
         
 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
