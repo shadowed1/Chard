@@ -2162,28 +2162,27 @@ checkpoint_160() {
 }
 run_checkpoint 160 "Patch Sommelier" checkpoint_160
 
-#checkpoint_161() {
-#    detect_intel_gpu() {
-#        if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
-#            GPU_MAX_FREQ=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
-#            GPU_TYPE="intel"
-#            echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
-#            return 0
-#        else
-#            GPU_TYPE="unknown"
-#            echo "[*] No Intel GPU detected, skipping this checkpoint"
-#            return 1
-#        fi
-#    }
+checkpoint_161() {
+    detect_intel_gpu() {
+        if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+            GPU_MAX_FREQ=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
+            GPU_TYPE="intel"
+            echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
+            return 0
+        else
+            GPU_TYPE="unknown"
+            echo "[*] No Intel GPU detected, skipping this checkpoint"
+            return 1
+        fi
+    }
 
-#    if detect_intel_gpu; then
-#        /bin/chard_mesa
-#        /bin/vulkan_tester
-#    else
-#        echo "[*] Skipping Intel driver installation"
-#    fi
-#}
-#run_checkpoint 161 "Chard Mesa prerequisite" checkpoint_161
+    if detect_intel_gpu; then
+        retry_pacman "sudo -S pacman --noconfirm intel-gpu-tools"
+    else
+        echo "[*] Skipping Intel driver installation"
+    fi
+}
+run_checkpoint 161 "Chard Mesa prerequisite" checkpoint_161
 
 checkpoint_162() {
     retry_pacman "sudo pacman -S --noconfirm man"
