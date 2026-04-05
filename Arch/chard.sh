@@ -489,6 +489,8 @@ case "$cmd" in
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+			sudo umount -l "$CHARD_ROOT/run/chrome/gvfs" 2>/dev/null || true
+			sudo umount -l "$CHARD_ROOT/run/chrome/doc" 2>/dev/null || true
             sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             $CHARD_ROOT/bin/chard_mount 2>/dev/null
@@ -561,6 +563,7 @@ case "$cmd" in
                 sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
                 [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
                 [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
+				/usr/lib/gvfsd-fuse /run/chrome/gvfs 2>/dev/null &
 				QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
                 cd ~/
                 exec chard_sommelier
