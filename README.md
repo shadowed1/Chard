@@ -392,7 +392,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.35: `Added stop, startup command for chard_bridge_daemon. Added chard_shortcut_daemon to auto-sync icons and shortcuts. Added 3rd option in Reinstall for chard_startup command. Cleaned up exiting Reinstaller. Added ability for chard_bridge_daemon to automatically install and run in Crostini.` <br><br>
 - 0.36: `Fixed bugs with chard_mesa and now relying on Steam's GPU drivers (again). Added vulkan_tester script. Improved Flatpak to now support running far more apps. Improved OBS support to now record + stream Vulkan. Added pacman easter egg. Updated Dowmloader instructions. Removing brave, prismlauncher, and rust from chariot to reduce Arch down to 11GB!. ` <br><br>
 - 0.37*: `Added ChromeOS 103 support. Thanks to gd_minecraft_programmer for creating that syntax.` <br><br>
-* = in progress
+- * = in progress
 <br><br>
 
 
