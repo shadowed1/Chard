@@ -1,10 +1,13 @@
 #!/bin/bash
-VERSION="0.35"
+VERSION="0.36"
 
 changelog() {
-    echo "- Added stop, startup command for chard_bridge_daemon."
-    echo "- Added chard_shortcut_daemon to auto-sync icons and shortcuts."
-    echo "- Cleaned up exiting Reinstaller."
-    echo "- Added ability for chard_bridge_daemon to automatically install and run in Crostini on Reinstall and Install."
+    echo "- Fixed bugs with chard_mesa and now relying on Steam's GPU drivers (again)."
+    echo "- Added vulkan_tester script.."
+    echo "- Improved Flatpak to now support running far more apps. "
+    echo "- Improved OBS suppport to now handle Vulkan."
+    echo "- Added pacman easter egg. Updated Dowmloader instructions."
+    echo "- Removing brave, prismlauncher, and rust from chariot to reduce Arch down to 11GB!"
+    echo "- Improved OBS suppport to now record + stream Vulkan."
     echo
 }
