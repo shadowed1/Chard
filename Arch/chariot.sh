@@ -1310,8 +1310,9 @@ run_checkpoint 124 "sudo -E pacman -S --noconfirm yt-dlp + vlc + audacity" check
 
 checkpoint_125() {
     retry_pacman "sudo -E pacman -S --noconfirm vulkan-tools"
+    retry_pacman "sudo -E pacman -S --noconfirm mangohud"
 }
-run_checkpoint 125 "sudo -E pacman -S --noconfirm vulkan-tools" checkpoint_125
+run_checkpoint 125 "sudo -E pacman -S --noconfirm vulkan-tools + mangohud" checkpoint_125
 
 checkpoint_126() {
     retry_pacman "sudo -E pacman -S --noconfirm p7zip arj lha lzop unrar unzip zip xarchiver"
