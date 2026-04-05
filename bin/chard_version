@@ -5,7 +5,6 @@ changelog() {
     echo "- Fixed bugs with chard_mesa and now relying on Steam's GPU drivers (again)."
     echo "- Added vulkan_tester script.."
     echo "- Improved Flatpak to now support running far more apps. "
-    echo "- Improved OBS suppport to now handle Vulkan."
     echo "- Added pacman easter egg. Updated Dowmloader instructions."
     echo "- Removing brave, prismlauncher, and rust from chariot to reduce Arch down to 11GB!"
     echo "- Improved OBS support to now record + stream Vulkan."
