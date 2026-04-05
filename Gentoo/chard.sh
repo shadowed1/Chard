@@ -646,6 +646,15 @@ case "$cmd" in
         ;;
     root)
         CLEANUP_ENABLED=1
+		VERSION_FILE="$CHARD_ROOT/.chard_chrome"
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		
+		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
+		        sudo chown -E $USER:video /dev/dri/card0
+		        sudo chown -E $USER:video /dev/dri/renderD128
+		    fi
+		fi
         chard_volume > /dev/null 2>&1 &
 		chard_shortcut_daemon start 2>/dev/null &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
@@ -673,7 +682,15 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
-        
+
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+		        sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
+		        sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
+		    fi
+		fi
+		
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
@@ -791,15 +808,47 @@ case "$cmd" in
         sudo pkill -f gedit 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
         $CHARD_ROOT/bin/color_reset
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+				sudo umount -l "$CHARD_ROOT/dev/"    2>/dev/null || true
+				sudo umount -l "$CHARD_ROOT/proc/"    2>/dev/null || true
+		    fi
+		fi
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
+		
+		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
+		        sudo chown root:video /dev/dri/card0
+		        sudo chown root:video /dev/dri/renderD128
+		    fi
+		fi
         ;;
     chariot)
         CLEANUP_ENABLED=1
+		VERSION_FILE="$CHARD_ROOT/.chard_chrome"
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		
+		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
+		        sudo chown -E $USER:video /dev/dri/card0
+		        sudo chown -E $USER:video /dev/dri/renderD128
+		    fi
+		fi
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
-        
+
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+		        sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
+		        sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
+		    fi
+		fi
+		
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
@@ -874,6 +923,21 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         "
         chard_unmount
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+				sudo umount -l "$CHARD_ROOT/dev/"    2>/dev/null || true
+				sudo umount -l "$CHARD_ROOT/proc/"    2>/dev/null || true
+		    fi
+		fi
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
+		
+		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
+		        sudo chown root:video /dev/dri/card0
+		        sudo chown root:video /dev/dri/renderD128
+		    fi
+		fi
         ;;
     safe)
         CLEANUP_ENABLED=1
@@ -885,7 +949,15 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
-        
+
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+		        sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
+		        sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
+		    fi
+		fi
+		
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
@@ -946,6 +1018,21 @@ case "$cmd" in
         "
         
         chard_unmount
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+				sudo umount -l "$CHARD_ROOT/dev/"    2>/dev/null || true
+				sudo umount -l "$CHARD_ROOT/proc/"    2>/dev/null || true
+		    fi
+		fi
+		if [ -s "$VERSION_FILE" ]; then
+		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
+		
+		    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
+		        sudo chown root:video /dev/dri/card0
+		        sudo chown root:video /dev/dri/renderD128
+		    fi
+		fi
         ;;
     categories|cat)
         CLEANUP_ENABLED=0
