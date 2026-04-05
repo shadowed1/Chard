@@ -8,6 +8,6 @@ changelog() {
     echo "- Improved OBS suppport to now handle Vulkan."
     echo "- Added pacman easter egg. Updated Dowmloader instructions."
     echo "- Removing brave, prismlauncher, and rust from chariot to reduce Arch down to 11GB!"
-    echo "- Improved OBS suppport to now record + stream Vulkan."
+    echo "- Improved OBS support to now record + stream Vulkan."
     echo
 }
