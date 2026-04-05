@@ -264,6 +264,9 @@ alias gwenview='QT_QPA_PLATFORM=xcb gwenview'
 # Handbrake
 alias handbrake='ghb'
 
+# Handbrake
+alias obs='chard_obs'
+
 # Powercontrol
 alias powercontrol-gui='sudo -E powercontrol-gui'
 
