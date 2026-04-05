@@ -874,6 +874,48 @@ EOF
 
 sudo chmod +x "$CHARD_ROOT/bin/chard_qemu"
 
+sudo tee "$CHARD_ROOT/bin/chard_obs" >/dev/null <<'EOF'
+#!/bin/bash
+export OBS_VKCAPTURE=1
+export OBS_GAMECAPTURE=1
+export QT_QPA_PLATFORM=xcb
+
+case ":$LD_LIBRARY_PATH:" in
+    *:/usr/lib64/obs-plugins:*) ;;
+    *) LD_LIBRARY_PATH="/usr/lib64/obs-plugins:$LD_LIBRARY_PATH" ;;
+esac
+case ":$LD_LIBRARY_PATH:" in
+    *:/usr/lib64/obs_glcapture:*) ;;
+    *) LD_LIBRARY_PATH="/usr/lib64/obs_glcapture:$LD_LIBRARY_PATH" ;;
+esac
+export LD_LIBRARY_PATH
+
+chard_obs_mounts() {
+    sudo mkdir -p /run/obs-glcapture /run/obs-plugins /run/obs-vklayer
+    mountpoint -q /run/obs-glcapture || sudo mount --bind /usr/lib64/obs_glcapture /run/obs-glcapture
+    mountpoint -q /run/obs-plugins   || sudo mount --bind /usr/lib64/obs-plugins /run/obs-plugins
+    OBS_LAYER_JSON_SRC="/usr/share/vulkan/implicit_layer.d/obs_vkcapture_64.json"
+    OBS_LAYER_JSON_DST="/run/obs-vklayer/obs_vkcapture_64.json"
+    sudo cp "$OBS_LAYER_JSON_SRC" "$OBS_LAYER_JSON_DST"
+    sudo sed -i 's|"library_path": *"/usr/lib/libVkLayer_obs_vkcapture.so"|"library_path": "/run/obs-vklayer/libVkLayer_obs_vkcapture.so"|' "$OBS_LAYER_JSON_DST"
+    sudo touch /run/obs-vklayer/libVkLayer_obs_vkcapture.so
+    mountpoint -q /run/obs-vklayer/libVkLayer_obs_vkcapture.so || sudo mount --bind /usr/lib/libVkLayer_obs_vkcapture.so /run/obs-vklayer/libVkLayer_obs_vkcapture.so
+}
+
+chard_obs_cleanup() {
+    sudo umount -l /run/obs-vklayer/libVkLayer_obs_vkcapture.so 2>/dev/null
+    sudo umount -l /run/obs-vklayer 2>/dev/null
+    sudo umount -l /run/obs-glcapture 2>/dev/null
+    sudo umount -l /run/obs-plugins 2>/dev/null
+}
+
+chard_obs_mounts
+trap chard_obs_cleanup EXIT
+/usr/bin/obs "$@" &
+EOF
+
+sudo chmod +x "$CHARD_ROOT/bin/chard_obs"
+
 if [ -f "/home/chronos/user/.bashrc" ]; then
         CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
         BASHRC_PATH="$CHROMEOS_BASHRC"
