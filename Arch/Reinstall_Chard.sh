@@ -1168,6 +1168,8 @@ EOF
 				# Enable the Pacman reference!
 				sudo grep -q '^ILoveCandy$' "$CHARD_ROOT/etc/pacman.conf" || \
 				sudo sed -i '/^# Misc options$/a ILoveCandy' "$CHARD_ROOT/etc/pacman.conf"
+				sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
+
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
