@@ -1022,6 +1022,15 @@ sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
                     sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
                 fi
 
+				VERSION_FILE="$CHARD_ROOT/.chard_chrome"
+				if [ -s "$VERSION_FILE" ]; then
+				CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+					if [ "$CHROMEOS_VERSION" -le 103 ]; then
+						sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
+						sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
+					fi
+				fi
+
                 sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
                 sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
                 sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
