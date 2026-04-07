@@ -2009,7 +2009,7 @@ StartupWMClass=torbrowser
 Categories=Network;WebBrowser;
 EOF
 
-tee /usr/share/applications/chard-thunderbird.desktop > /dev/null << 'EOF'
+sudo tee /usr/share/applications/chard-thunderbird.desktop > /dev/null << 'EOF'
 [Desktop Entry]
 Version=1.0
 Type=Application
@@ -2023,7 +2023,7 @@ Categories=Network;Email;
 MimeType=x-scheme-handler/mailto;
 EOF
 
-tee /usr/share/applications/chard-prismlauncher.desktop > /dev/null << 'EOF'
+sudo tee /usr/share/applications/chard-prismlauncher.desktop > /dev/null << 'EOF'
 [Desktop Entry]
 Version=1.0
 Type=Application
@@ -2036,7 +2036,7 @@ StartupWMClass=prismlauncher
 Categories=Game;
 EOF
 
-tee /usr/share/applications/chard-steam.desktop > /dev/null << 'EOF'
+sudo tee /usr/share/applications/chard-steam.desktop > /dev/null << 'EOF'
 [Desktop Entry]
 Version=1.0
 Type=Application
