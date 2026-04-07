@@ -39,7 +39,7 @@ while true; do
         fi
     done < <(find "$ZONEINFO_DIR" -type f)
     if [[ -z "$MATCH" ]]; then
-        echo "${YELLOW}[TZD] No exact match, using GMT fallback${RESET}"
+        echo "${YELLOW}[Chard TimeZone Daemon] No exact match, using GMT fallback${RESET}"
 
         OFFSET_HOURS=$((10#${TZ_OFFSET:0:3}))
 
