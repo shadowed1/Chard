@@ -43,7 +43,7 @@ show_progress() {
     local current_time=$(date +%s)
     local elapsed=$((current_time - START_TIME))
     local formatted_time=$(format_time $elapsed)
-    echo "${CYAN}[Runtime: $formatted_time]${RESET} $1"
+    echo "${CYAN}[Chariot Runtime: $formatted_time]${RESET} $1"
 }
 
 if [[ "$1" == "reset" ]]; then
