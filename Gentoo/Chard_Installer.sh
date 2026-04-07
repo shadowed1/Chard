@@ -881,6 +881,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh"            -o "$CHARD_ROOT/bin/chard_startup" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_timezone_daemon.sh"            -o "$CHARD_ROOT/bin/chard_timezone_daemon" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -906,6 +908,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
 sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
 sudo chmod +x "$CHARD_ROOT/bin/chard_version"
+sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
 for file in \
