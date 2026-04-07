@@ -2313,6 +2313,6 @@ chard_unmount
 #$CHARD_ROOT/bin/chard_preload
 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
-
+show_progress
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}"
 echo "${YELLOW}[!] ChromeOS devices might need to reboot ChromeOS before proceeding. ${RESET}"
