@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # chard_shortcut_daemon
 # chard_shortcut_daemon start - start daemon
