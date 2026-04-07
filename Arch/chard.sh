@@ -467,9 +467,11 @@ case "$cmd" in
 		sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
         chard_volume > /dev/null 2>&1 &
 		chard_shortcut_daemon start 2>/dev/null &
+		chard_timezone_daemon &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
         killall -9 pipewire 2>/dev/null
+		killall -9 chard_timezone_daemon 2>/dev/null
         killall -9 pipewire-pulse 2>/dev/null
         killall -9 pulseaudio 2>/dev/null
         killall -9 steam 2>/dev/null
@@ -610,6 +612,7 @@ case "$cmd" in
 		killall -9 chard_launch_daemon 2>/dev/null
 		killall -9 xfce4-terminal 2>/dev/null
 		killall -9 chardwire 2>/dev/null
+		killall -9 chard_timezone_daemon 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
         sudo pkill -f xfce4-session 2>/dev/null
         sudo pkill -f xfwm4 2>/dev/null
@@ -620,6 +623,7 @@ case "$cmd" in
         sudo pkill -f Xorg 2>/dev/null
 		sudo pkill -f powercontrol-gui 2>/dev/null
 		sudo pkill -f gedit 2>/dev/null
+		sudo pkill -f chard_timezone_daemon 2>/dev/null
 		if [ -s "$VERSION_FILE" ]; then
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
 		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
