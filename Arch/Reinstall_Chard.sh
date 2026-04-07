@@ -439,6 +439,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/vulkan_tester.sh"            -o "$CHARD_ROOT/bin/vulkan_tester" 2>/dev/null
 sleep 0.05
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_timezone_daemon.sh"            -o "$CHARD_ROOT/bin/chard_timezone_daemon" 2>/dev/null
+sleep 0.05
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -471,6 +473,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
 sudo chmod +x "$CHARD_ROOT/bin/chard_version"
 sudo chmod +x "$CHARD_ROOT/bin/vulkan_tester"
+sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 #sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
 #sudo chmod +x /etc/init/chard.conf
