@@ -93,6 +93,7 @@ PATHS_TO_ADD=(
     "$ROOT/sbin"
     "$ROOT/usr/local/bin"
     "$ROOT/usr/local/sbin"
+    "$ROOT/opt"
     "$HOME/.local/bin"
     "$HOME/.cargo/bin"
     "${OPT_BINS[@]}"
