@@ -240,7 +240,7 @@ run_daemon() {
     trap on_exit EXIT
     trap on_term TERM INT
     pid_write
-    log "Chard_Shortcut_Daemon started (PID $$, $CHARD_ROOT, poll=${POLL_INTERVAL}s)"
+    log "chard_shortcut_daemon started (PID $$, $CHARD_ROOT, poll=${POLL_INTERVAL}s)"
     do_sync
     local last_checksum=""
     while true; do
@@ -277,7 +277,7 @@ case "$CMD" in
         fi
         nohup "$0" _run >> "$LOG_FILE" 2>&1 &
         echo
-        echo "${CYAN}chard_shortcut_daemon started (PID $!) ${RESET}"
+        echo "${CYAN}[Chard Shortcut daemon] started (PID $!) ${RESET}"
         ;;
 
     stop)
