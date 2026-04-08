@@ -657,6 +657,7 @@ case "$cmd" in
 		fi
         chard_volume > /dev/null 2>&1 &
 		chard_shortcut_daemon start 2>/dev/null &
+		chard_timezone_daemon &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
         killall -9 pipewire 2>/dev/null
@@ -797,6 +798,7 @@ case "$cmd" in
         killall -9 steam 2>/dev/null
         killall -9 powercontrol-gui 2>/dev/null
         killall -9 gedit 2>/dev/null
+		killall -9 chard_timezone_daemon 2>/dev/null
         sudo pkill -f xfce4-session 2>/dev/null
         sudo pkill -f xfwm4 2>/dev/null
         sudo pkill -f xfce4-panel 2>/dev/null
@@ -806,6 +808,7 @@ case "$cmd" in
         sudo pkill -f Xorg 2>/dev/null
         sudo pkill -f powercontrol-gui 2>/dev/null
         sudo pkill -f gedit 2>/dev/null
+		sudo pkill -f chard_timezone_daemon 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
         $CHARD_ROOT/bin/color_reset
 		if [ -s "$VERSION_FILE" ]; then
