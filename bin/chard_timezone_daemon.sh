@@ -24,7 +24,7 @@ while true; do
     TZ_ABBR="$(date +%Z)"
     TZ_OFFSET="$(date +%z)"
     echo
-    echo "${BLUE}[Chard TimeZone Daemon] Detected: ${BOLD}$TZ_ABBR $TZ_OFFSET${RESET}"
+    echo "${BLUE}[Chard TimeZone Daemon]: ${BOLD}$TZ_ABBR $TZ_OFFSET${RESET}"
     echo "$TZ_ABBR $TZ_OFFSET" | sudo tee "$CHARD_TZ_FILE" > /dev/null
     MATCH=""
     while IFS= read -r zone; do
