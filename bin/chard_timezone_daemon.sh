@@ -24,7 +24,7 @@ while true; do
     TZ_ABBR="$(date +%Z)"
     TZ_OFFSET="$(date +%z)"
     echo
-    echo "${BLUE}[Chard TimeZone Daemon]: ${BOLD}$TZ_ABBR $TZ_OFFSET${RESET}"
+    echo "${BLUE}[Chard TimeZone daemon]: ${BOLD}$TZ_ABBR $TZ_OFFSET${RESET}"
     echo "$TZ_ABBR $TZ_OFFSET" | sudo tee "$CHARD_TZ_FILE" > /dev/null
     MATCH=""
     while IFS= read -r zone; do
@@ -39,7 +39,7 @@ while true; do
         fi
     done < <(find "$ZONEINFO_DIR" -type f)
     if [[ -z "$MATCH" ]]; then
-        echo "${YELLOW}[Chard TimeZone Daemon] No exact match, using GMT fallback${RESET}"
+        echo "${YELLOW}[Chard TimeZone daemon] No exact match, using GMT fallback${RESET}"
 
         OFFSET_HOURS=$((10#${TZ_OFFSET:0:3}))
 
