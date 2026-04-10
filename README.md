@@ -22,8 +22,8 @@
 2. Choose your distro: <br>
    `Option 1` is Chard Arch, which supports Steam, Heroic, Flatpak, and is the recommended option for most users. <br>
    `Option 2` is Chard Gentoo, tailored for ChromeOS development. This enables running Gentoo binaries + toolchain in ChromeOS outside of chroot. <br>
-
-3. For ChromeOS users, `CTRL-ALT-REFRESH` enters VT-2. Log in as `chronos` and run:
+  
+3. For ChromeOS users, `CTRL-ALT-REFRESH` enters VT-2. Log in as `chronos` and run these three commands on their own:
 ```
 cd
 sudo mv Chard_Installer /usr/local
@@ -35,12 +35,17 @@ sudo bash /usr/local/Chard_Installer
 
 6. Return back to ChromeOS shell, and `xfce4-terminal` should appear. Run apps through there, or through the app launcher if Crostini is installed. <br>
 
-Running chard directly in ChromeOS shell and starting automatically on boot is possible using this tool:
+Running chard directly in ChromeOS shell is possible using one of these two tools:
 <br>
 
 *Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD:* 
 <br>
 `https://github.com/shadowed1/sudoCrosh` <br>
+
+*Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO:* 
+<br>
+`https://github.com/shadowed1/Sucrose` 
+<br><br>
 
 ## About Chard (*Chrome-Arch Development*):
 
