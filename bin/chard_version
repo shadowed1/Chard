@@ -6,7 +6,7 @@ changelog() {
     echo "- Fixed chard_bridge_daemon not working on some devices."
     echo "- Added chard_timezone_daemon to keep Chard's timezone synced with ChromeOS'. "
     echo "- Added /opt to paths."
-    echo "- Added "chard log" command to run in Host shell to compress a log to our Downloads folder."
+    echo "- Added 'chard log' command to run in Host shell to compress a log to our Downloads folder."
     echo
 }
 
