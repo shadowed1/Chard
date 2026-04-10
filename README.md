@@ -35,17 +35,12 @@ sudo bash /usr/local/Chard_Installer
 
 6. Return back to ChromeOS shell, and `xfce4-terminal` should appear. Run apps through there, or through the app launcher if Crostini is installed. <br>
 
-Running chard directly in ChromeOS shell is possible using one of these two tools:
+Running chard directly in ChromeOS shell and starting automatically on boot is possible using this tool:
 <br>
 
 *Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD:* 
 <br>
 `https://github.com/shadowed1/sudoCrosh` <br>
-
-*Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO:* 
-<br>
-`https://github.com/shadowed1/Sucrose` 
-<br><br>
 
 ## About Chard (*Chrome-Arch Development*):
 
