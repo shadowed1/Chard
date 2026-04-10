@@ -1339,7 +1339,7 @@ run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 checkpoint_130() {
     if [[ "$ARCH" == "x86_64" ]]; then
         retry_pacman "sudo -E pacman -S --noconfirm obs-studio"
-        retry_pacman "sudo pacman -R --noconfirm obs-vkcapture-debug"
+        #retry_pacman "sudo pacman -R --noconfirm obs-vkcapture-debug"
         retry_pacman "yay -S --noconfirm obs-vkcapture-git"
     else
         echo "Skipping OBS on $ARCH"
