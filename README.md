@@ -13,39 +13,37 @@
 
 <br>
 
-1. For **ChromeOS, and most Linux Distros,** press `ctrl-alt-t`, open a crosh `shell` and copy paste:
+1.)   For **ChromeOS, and most Linux Distros,** press `ctrl-alt-t`, open a crosh `shell` and copy paste:
 
 <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")</pre>
 
 <br>
 
-2. Choose your distro: <br>
+2.)   Choose your distro: <br>
    `Option 1` is Chard Arch, which supports Steam, Heroic, Flatpak, and is the recommended option for most users. <br>
    `Option 2` is Chard Gentoo, tailored for ChromeOS development. This enables running Gentoo binaries + toolchain in ChromeOS outside of chroot. <br>
   
-3. For ChromeOS users, `CTRL-ALT-REFRESH` enters VT-2. Log in as `chronos` and run these three commands on their own:
+3.)   For ChromeOS, please use VT-2 to proceed. `CTRL-ALT-REFRESH` enters VT-2. `CTRL-ALT-BACK` exits VT-2.
+- To login, type `chronos` and run these three commands on their own:
 ```
 cd
 sudo mv Chard_Installer /usr/local
 sudo bash /usr/local/Chard_Installer
 ```
-4. Follow the instructions on screen. `CTRL-ALT-BACK` returns back to ChromeOS. Sleep is recommended to be disabled while installing. <br>
+<br>
+
+4. Follow the instruction on screen. `CTRL-ALT-BACK` returns back to ChromeOS. Sleep is recommended to be disabled while installing. <br>
 
 5. Once install is finished in VT-2, press `CTRL-D` to log out and log back in as `chronos`. Type `cr` or `chard root` to start. <br>
 
 6. Return back to ChromeOS shell, and `xfce4-terminal` should appear. Run apps through there, or through the app launcher if Crostini is installed. <br>
 
-Running chard directly in ChromeOS shell is possible using one of these two tools:
+Running chard directly in ChromeOS shell and having it start automatically on boot is possible using this tool:
 <br>
 
 *Enabling sudo in ChromeOS shell natively using minijail LD_PRELOAD:* 
 <br>
 `https://github.com/shadowed1/sudoCrosh` <br>
-
-*Emulating sudo in ChromeOS shell with encrypted bidirectional FIFO:* 
-<br>
-`https://github.com/shadowed1/Sucrose` 
-<br><br>
 
 ## About Chard (*Chrome-Arch Development*):
 
