@@ -203,6 +203,7 @@ PATHS_TO_ADD=(
     "$CHARD_ROOT/bin"
     "$CHARD_ROOT/usr/local/bin"
     "$CHARD_ROOT/usr/bin"
+	"$CHARD_ROOT/opt"
 )
 LIBS_TO_ADD=(
     #"$CHARD_ROOT/usr/lib64"
