@@ -639,7 +639,6 @@ sudo -u $CHARD_USER \
         LIBGL_ALWAYS_INDIRECT=0 \
         GDK_SCALE="${GDK_SCALE:-1.25}" \
         XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-        DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
     flatpak
     exit 0
 fi
