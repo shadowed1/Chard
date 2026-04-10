@@ -1048,6 +1048,8 @@ export PATH="$WRAPPED_PATH"
 LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
+sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 
 NO_USER_CMDS=(
   make-current enter ps kill
@@ -1059,11 +1061,13 @@ NO_USER_CMDS=(
 )
 
 if [[ $# -eq 0 ]]; then
-    env \
+sudo -u $CHARD_USER \
+    	env \
         HOME="$HOME" \
         PULSE_SERVER=unix:/run/chrome/pulse/native \
         DISPLAY="${DISPLAY:-:0}" \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+        XDG_RUNTIME_DIR="/run/chrome" \
         LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
         LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
         OBS_VKCAPTURE=1 \
@@ -1071,7 +1075,6 @@ if [[ $# -eq 0 ]]; then
         LIBGL_ALWAYS_INDIRECT=0 \
         GDK_SCALE="${GDK_SCALE:-1.25}" \
         XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-        DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
     flatpak
     exit 0
 fi
@@ -1094,10 +1097,12 @@ else
     FINAL_ARGS=("$CMD" "$@")
 fi
 
+sudo -u $CHARD_USER \
 env \
     HOME="$HOME" \
     PULSE_SERVER=unix:/run/chrome/pulse/native \
     DISPLAY="${DISPLAY:-:0}" \
+    XDG_RUNTIME_DIR="/run/chrome" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
@@ -1106,8 +1111,8 @@ env \
     LIBGL_ALWAYS_INDIRECT=0 \
     GDK_SCALE="${GDK_SCALE:-1.25}" \
     XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
 flatpak "${FINAL_ARGS[@]}"
+sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
 
 sudo chmod +x /bin/chard_flatpak
