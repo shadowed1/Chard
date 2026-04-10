@@ -423,6 +423,36 @@ chard_uninstall() {
     fi
 }
 
+chard_log() {
+    LOG_PATH="$CHARD_ROOT/$CHARD_HOME/chariot.log"
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+    if [ ! -f "$LOG_PATH" ]; then
+        echo "Log file not found: $LOG_PATH"
+        return 1
+    fi
+
+    if [ -f "/home/chronos/user/.bashrc" ]; then
+        DEST_DIR="/home/chronos/user/MyFiles/Downloads"
+    else
+        DEST_DIR="$HOME/Downloads"
+    fi
+
+    ARCHIVE_NAME="chard_log_${TIMESTAMP}.tar.gz"
+    DEST_PATH="$DEST_DIR/$ARCHIVE_NAME"
+    sudo tar -czf "$DEST_PATH" -C "$(dirname "$LOG_PATH")" "$(basename "$LOG_PATH")"
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to create archive"
+        return 1
+    fi
+
+    sudo chown 1000:1000 "$DEST_PATH"
+	echo
+    echo "${GREEN}Log created at: ${BOLD}$DEST_PATH${RESET}"
+	echo
+}
+
 cmd="$1"; shift || true
 
 case "$cmd" in
@@ -856,6 +886,9 @@ case "$cmd" in
 			echo "${RED}Version file not found.${RESET}"
 			exit 1
 		    fi
+		;;
+		log)
+			chard_log
 		;;
 		size)
 			chard_size
