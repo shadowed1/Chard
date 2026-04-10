@@ -406,4 +406,5 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - *days* - Helping fix audio issues with Wine, chard_garcon, enabled mouse capture/lock, and more. 
 - *WeirdTreeThing* - Help with further supporting pipewire support with their vast audio knowledge. Great ideas for ARM64 GPU acceleration.
 - *C0d1ngR4bb1t* - Created and tested syntax for external USB support.
-- *gd_minecraft_programmer* - Created and tested syntax to support ChromeOS 103 and older. 
+- *gd_minecraft_programmer* - Created and tested syntax to support ChromeOS 103 and older.
+- *nobody067481* - Found bugs with installer and tested a lot of emulators.
