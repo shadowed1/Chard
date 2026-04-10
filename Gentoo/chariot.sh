@@ -1476,36 +1476,79 @@ sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
 xhost +SI:localuser:$CHARD_USER
+[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+export PATH="$WRAPPED_PATH"
+LWJGL_TMPDIR="$HOME/.local/tmp"
+mkdir -p "$LWJGL_TMPDIR"
+chmod 700 "$LWJGL_TMPDIR"
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-source /$CHARD_HOME/.bashrc
-DBUS_ADDR="$(grep "export DBUS_SESSION_BUS_ADDRESS=" /.chard_dbus | cut -d"'" -f2)"
-DBUS_PID="$(grep "export DBUS_SESSION_BUS_PID=" /.chard_dbus | cut -d"'" -f2)"
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
-LWJGL_TMPDIR="/$CHARD_HOME/.local/tmp"
-mkdir -p "$LWJGL_TMPDIR"
-chown $CHARD_USER:$CHARD_USER "$LWJGL_TMPDIR"
+
+NO_USER_CMDS=(
+  make-current enter ps kill
+  documents document-export document-unexport document-info
+  permissions permission-remove permission-set permission-show permission-reset
+  remotes remote-add remote-modify remote-delete remote-ls remote-info
+  build-init build build-finish build-export build-bundle build-import-bundle
+  build-sign build-update-repo build-commit-from repo
+)
+
+if [[ $# -eq 0 ]]; then
 sudo -u $CHARD_USER \
-  env HOME=/$CHARD_HOME \
-      PULSE_SERVER=unix:/run/chrome/pulse/native \
-      DISPLAY="${DISPLAY:-:0}" \
-      WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
-      XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/chrome}" \
-      DBUS_SESSION_BUS_ADDRESS="$DBUS_ADDR" \
-      DBUS_SESSION_BUS_PID="$DBUS_PID" \
-      PATH="$WRAPPED_PATH" \
-      LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-      LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-      LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-      LIBGL_ALWAYS_INDIRECT=0 \
-      GDK_BACKEND="wayland" \
-      EGL_PLATFORM=wayland \
-      GDK_SCALE="${GDK_SCALE:-1.25}" \
-      XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-  /usr/bin/flatpak "$@"
+    	env \
+        HOME="$HOME" \
+        PULSE_SERVER=unix:/run/chrome/pulse/native \
+        DISPLAY="${DISPLAY:-:0}" \
+        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+        XDG_RUNTIME_DIR="/run/chrome" \
+        LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+        LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+        OBS_VKCAPTURE=1 \
+        OBS_GAMECAPTURE=1 \
+        LIBGL_ALWAYS_INDIRECT=0 \
+        GDK_SCALE="${GDK_SCALE:-1.25}" \
+        XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    flatpak
+    exit 0
+fi
+
+CMD="$1"
+shift
+USE_USER=1
+for c in "${NO_USER_CMDS[@]}"; do
+    [[ "$CMD" == "$c" ]] && USE_USER=0 && break
+done
+case "$CMD" in
+  -h|--help|--version|--default-arch|--supported-arches|--gl-drivers|--installations|--print-updated-env|--print-system-only|-v|--verbose|--ostree-verbose)
+    USE_USER=0
+    ;;
+esac
+
+if [[ $USE_USER -eq 1 ]]; then
+    FINAL_ARGS=(--user "$CMD" "$@")
+else
+    FINAL_ARGS=("$CMD" "$@")
+fi
+
+sudo -u $CHARD_USER \
+env \
+    HOME="$HOME" \
+    PULSE_SERVER=unix:/run/chrome/pulse/native \
+    DISPLAY="${DISPLAY:-:0}" \
+    XDG_RUNTIME_DIR="/run/chrome" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    OBS_VKCAPTURE=1 \
+    OBS_GAMECAPTURE=1 \
+    LIBGL_ALWAYS_INDIRECT=0 \
+    GDK_SCALE="${GDK_SCALE:-1.25}" \
+    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+flatpak "${FINAL_ARGS[@]}"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
     sudo chmod +x /bin/chard_flatpak
