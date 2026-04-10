@@ -20,8 +20,8 @@
 <br>
 
 2.)   Choose your distro: <br>
-   `Option 1` is Chard Arch, which supports Steam, Heroic, Flatpak, and is the recommended option for most users. <br>
-   `Option 2` is Chard Gentoo, tailored for ChromeOS development. This enables running Gentoo binaries + toolchain in ChromeOS outside of chroot. <br>
+   `Option 1` is Arch - Supports Steam, Heroic, Flatpak, and is the recommended option for most users. <br>
+   `Option 2` is Gentoo - Tailored for ChromeOS development. This enables running Gentoo binaries + toolchain in ChromeOS outside of chroot. <br>
   
 3.)   For ChromeOS, please use VT-2 to proceed. `CTRL-ALT-REFRESH` enters VT-2. `CTRL-ALT-BACK` exits VT-2.
 - To login, type `chronos` and run these three commands on their own:
