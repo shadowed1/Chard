@@ -268,8 +268,8 @@ alias handbrake='ghb'
 # Handbrake
 alias obs='chard_obs'
 
-# Powercontrol
-alias powercontrol-gui='sudo -E powercontrol-gui'
+# Powercontrol - removing alias, not needed
+#alias powercontrol-gui='sudo -E powercontrol-gui'
 
 # virtm
 alias virtm='sudo -E virtm'
