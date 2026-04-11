@@ -86,7 +86,7 @@ show_progress() {
     local current_time=$(date +%s)
     local elapsed=$((current_time - START_TIME))
     local formatted_time=$(format_time $elapsed)
-    echo "${CYAN}Setup Runtime (not including Chariot): $formatted_time]${RESET} $1"
+    echo "${CYAN}Setup Runtime (including Chariot): $formatted_time]${RESET} $1"
 }
 
 read -rp "${GREEN}${BOLD}Install Chard?${RESET} (Y/n):" response
