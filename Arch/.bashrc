@@ -87,6 +87,7 @@ for d in "$ROOT/opt"/*/bin; do
 done
 
 PATHS_TO_ADD=(
+    "$ROOT/usr/local/bubblepatch/bin"
     "$ROOT/usr/bin"
     "$ROOT/usr/sbin"
     "$ROOT/bin"
