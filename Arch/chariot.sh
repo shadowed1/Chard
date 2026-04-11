@@ -2083,7 +2083,7 @@ sudo chown -R 1000:1000 ~/.config/gtk-3.0 2>/dev/null
 sudo chown -R 1000:1000 ~/.config/gtk-4.0 2>/dev/null
 sudo chown 1000:1000 ~/.Xauthority 2>/dev/null
 xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark" 2>/dev/null
-xfconf-query -c xfwm4 -p /general/theme -s "Adwaita-dark" 2>/dev/null
+xfconf-query -c xfwm4 -p /general/theme -n -t string -s "Adwaita-dark" 2>/dev/null
 }
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 
