@@ -388,7 +388,6 @@ alias ksp='LC_ALL=C ./KSP_x86_64'
 # xcb
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 alias seamonkey='GDK_BACKEND=x11 seamonkey'
-alias powercontrol-gui='sudo -E powercontrol-gui'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
 alias gparted='sudo -E gparted'
@@ -403,6 +402,8 @@ alias gedit='/bin/chard_gedit'
 alias autoclicker='sudo -E autoclicker'
 # DennyL's FastFetch alias
 alias ffa='fastfetch -c all.jsonc'
+# Flatpak
+alias flatpak='/bin/chard_flatpak'
 
 export EDITOR=gedit
 export FILEMANAGER=thunar
