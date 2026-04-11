@@ -151,7 +151,7 @@ chard_boot_setup() {
                 [Yy]* | "")
                     sudo /usr/libexec/debugd/helpers/dev_features_rootfs_verification
                     echo ""
-                    echo "${GREEN}Done. Please ${BOLD}${YELLOW}REBOOT${RESET}${GREEN} and re-run the installer to complete boot setup.${RESET}"
+                    echo "${GREEN}After install is finished, reboot and run ${BOLD}${YELLOW}chard_startup${RESET}${GREEN} to enable automatic startup.${RESET}"
                     echo ""
                     return 0
                     ;;
