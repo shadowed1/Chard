@@ -50,7 +50,7 @@ while true; do
         fi
     fi
 
-    echo "${BLUE}[Chard TimeZone daemon] synced: ${RESET}${GREEN}$TZ_ABBR $TZ_OFFSET $MATCH ${RESET}"
+    #echo "${BLUE}[Chard TimeZone daemon] synced: ${RESET}${GREEN}$TZ_ABBR $TZ_OFFSET $MATCH ${RESET}"
     sudo mkdir -p "$(dirname "$LOCALTIME_LINK")"
     sudo ln -sf "/usr/share/zoneinfo/$MATCH" "$LOCALTIME_LINK"
     sleep 3600
