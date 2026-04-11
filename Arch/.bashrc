@@ -87,14 +87,12 @@ for d in "$ROOT/opt"/*/bin; do
 done
 
 PATHS_TO_ADD=(
-    "$ROOT/usr/local/bubblepatch/bin"
     "$ROOT/usr/bin"
     "$ROOT/usr/sbin"
     "$ROOT/bin"
     "$ROOT/sbin"
     "$ROOT/usr/local/bin"
     "$ROOT/usr/local/sbin"
-    "$ROOT/opt"
     "$HOME/.local/bin"
     "$HOME/.cargo/bin"
     "${OPT_BINS[@]}"
@@ -268,9 +266,6 @@ alias handbrake='ghb'
 
 # Handbrake
 alias obs='chard_obs'
-
-# Powercontrol - removing alias, not needed
-#alias powercontrol-gui='sudo -E powercontrol-gui'
 
 # virtm
 alias virtm='sudo -E virtm'
