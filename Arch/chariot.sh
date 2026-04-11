@@ -2064,23 +2064,26 @@ XA="$HOME/.Xauthority"
 if [[ -f "$XA" ]]; then
     rm "$XA"
 fi
-touch ~/.Xauthority 2>/dev/null
+sudo touch ~/.Xauthority 2>/dev/null
 retry_pacman "sudo -E pacman -S --noconfirm gedit 2>/dev/null"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 mkdir -p ~/.config/gtk-3.0
-tee ~/.config/gtk-3.0/settings.ini >/dev/null <<'EOF'
+sudo tee ~/.config/gtk-3.0/settings.ini >/dev/null <<'EOF'
 [Settings]
 gtk-theme-name=Adwaita-dark
 gtk-application-prefer-dark-theme=1
 EOF
 mkdir -p ~/.config/gtk-4.0
-tee ~/.config/gtk-4.0/settings.ini >/dev/null <<'EOF'
+sudo tee ~/.config/gtk-4.0/settings.ini >/dev/null <<'EOF'
 [Settings]
 gtk-theme-name=Adwaita-dark
 gtk-application-prefer-dark-theme=1
 EOF
-xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
-xfconf-query -c xfwm4 -p /general/theme -s "Adwaita-dark"
+sudo chown -R 1000:1000 ~/.config/gtk-3.0 2>/dev/null
+sudo chown -R 1000:1000 ~/.config/gtk-4.0 2>/dev/null
+sudo chown 1000:1000 ~/.Xauthority 2>/dev/null
+xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark" 2>/dev/null
+xfconf-query -c xfwm4 -p /general/theme -s "Adwaita-dark" 2>/dev/null
 }
 run_checkpoint 143 "X Authority & gedit" checkpoint_143
 
