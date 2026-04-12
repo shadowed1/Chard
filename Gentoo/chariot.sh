@@ -1414,6 +1414,7 @@ checkpoint_141() {
     sudo ninja -C build install
     cd ~/
     rm -rf bubblepatch 2>/dev/null
+    sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
 
 sudo tee /bin/chard_firefox >/dev/null <<'EOF'
 #!/bin/bash
@@ -1772,6 +1773,7 @@ checkpoint_152() {
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     chown -R 1000:1000 ~/.local/share/flatpak
     eclean-dist -d
+    sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
 }
 run_checkpoint 152 "Chardpak" checkpoint_152
 
