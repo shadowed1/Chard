@@ -1464,6 +1464,7 @@ checkpoint_137() {
         retry_pacman "sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null"
         cd ~/
+        sudo rm -rf /usr/local/bubblepatch
         rm -rf bubblepatch 2>/dev/null
         git clone https://github.com/shadowed1/bubblepatch.git
         cd bubblepatch
@@ -2276,7 +2277,7 @@ checkpoint_163() {
     sudo rm -rf /tmp/flatpak-* 2>/dev/null
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     sudo chown -R 1000:1000 ~/.local/share/flatpak 2>/dev/null
-    sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
+    #sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
 }
 run_checkpoint 163 "Chardpak" checkpoint_163
 
