@@ -2245,7 +2245,8 @@ checkpoint_162() {
 run_checkpoint 162 "man + wget" checkpoint_162
 
 checkpoint_163() {
-    retry_pacman "yay -S --noconfirm glib2-devel"
+    retry_pacman "sudo pacman -S --noconfirm glib2-devel"
+    retry_pacman "sudo pacman -S --noconfirm python-pyparsing"
     cd
     sudo rm -rf /tmp/flatpak-* 2>/dev/null
     wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
