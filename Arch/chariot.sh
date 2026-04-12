@@ -2246,11 +2246,11 @@ run_checkpoint 162 "man + wget" checkpoint_162
 
 checkpoint_163() {
     retry_pacman "yay -S --noconfirm glib2-devel"
-    cd && \
-    sudo rm -rf /tmp/flatpak-* 2>/dev/null && \
-    wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz && \
-    tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp && \
-    cd /tmp/flatpak-1.16.3 && \
+    cd
+    sudo rm -rf /tmp/flatpak-* 2>/dev/null
+    wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
+    tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
+    cd /tmp/flatpak-1.16.3
     meson setup builddir \
       --prefix=/usr \
       --libdir=/usr/lib \
@@ -2266,10 +2266,12 @@ checkpoint_163() {
       -Dtests=false \
       -Dinstalled_tests=false \
       -Dauto_sideloading=false \
-      -Dgdm_env_file=false \
-    && \
-    ninja -C builddir -j$(nproc) && \
+      -Dgdm_env_file=false
+      
+    ninja -C builddir -j$(nproc)
     sudo ninja -C builddir install
+    cd
+    sudo rm -rf /tmp/flatpak-* 2>/dev/null    
 }
 run_checkpoint 163 "Chardpak" checkpoint_163
 
