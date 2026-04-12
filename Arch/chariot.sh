@@ -1473,6 +1473,7 @@ checkpoint_137() {
         sudo ninja -C build install
         cd ~/
         rm -rf bubblepatch 2>/dev/null
+        sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
         sudo -E pacman -Rns --noconfirm steam 2>/dev/null 
         sudo -E pacman -Rns --noconfirm lib32-vulkan-intel 2>/dev/null 
         sudo -E pacman -Rns --noconfirm vulkan-intel 2>/dev/null 
