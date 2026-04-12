@@ -2276,6 +2276,7 @@ checkpoint_163() {
     sudo rm -rf /tmp/flatpak-* 2>/dev/null
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     sudo chown -R 1000:1000 ~/.local/share/flatpak 2>/dev/null
+    sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
 }
 run_checkpoint 163 "Chardpak" checkpoint_163
 
