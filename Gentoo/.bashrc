@@ -405,6 +405,15 @@ alias ffa='fastfetch -c all.jsonc'
 # Flatpak
 alias flatpak='/bin/chard_flatpak'
 
+# Patch Sober automatically
+flatpak() {
+    if [[ "$*" == "run org.vinegarhq.Sober" ]]; then
+        exec /bin/chard_flatpak override --user --nosocket=wayland org.vinegarhq.Sober
+    fi
+
+    command flatpak "$@"
+}
+
 export EDITOR=gedit
 export FILEMANAGER=thunar
 printf "y\n" | xdg-mime default thunar.desktop inode/directory
