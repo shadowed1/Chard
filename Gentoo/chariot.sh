@@ -1093,15 +1093,15 @@ checkpoint_117() {
 }
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
-checkpoint_118() {
-    sudo -E emerge sys-apps/flatpak
-    #flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    rm -rf /var/tmp/portage/sys-apps/flatpak-*
-    chown -R 1000:1000 ~/.local/share/flatpak
-    eclean-dist -d
-}
-run_checkpoint 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
+#checkpoint_118() {
+#    sudo -E emerge sys-apps/flatpak
+#    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+#    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+#    rm -rf /var/tmp/portage/sys-apps/flatpak-*
+#    chown -R 1000:1000 ~/.local/share/flatpak
+#    eclean-dist -d
+#}
+# 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
 
 checkpoint_119() {
     sudo -E emerge app-admin/sudo
@@ -1738,6 +1738,43 @@ checkpoint_151() {
     /bin/chard_sommelier_patch
 }
 run_checkpoint 151 "Exo Color Inversion Patch" checkpoint_151
+
+checkpoint_152() {
+    cd
+    sudo rm -rf /tmp/flatpak-* 2>/dev/null
+    wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
+    tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
+    cd /tmp/flatpak-1.16.3
+    meson setup builddir \
+      --prefix=/usr \
+      --libdir=/usr/lib \
+      -Dsystem_bubblewrap=/usr/local/bubblepatch/bin/bwrap \
+      -Dsystem_helper=disabled \
+      -Dsandboxed_triggers=false \
+      -Dselinux_module=disabled \
+      -Dmalcontent=disabled \
+      -Dgir=disabled \
+      -Dgtkdoc=disabled \
+      -Ddocbook_docs=disabled \
+      -Dman=disabled \
+      -Dtests=false \
+      -Dinstalled_tests=false \
+      -Dauto_sideloading=false \
+      -Dgdm_env_file=false
+      
+    ninja -C builddir -j$(nproc)
+    sudo ninja -C builddir install
+    cd
+    sudo rm -rf /tmp/flatpak-* 2>/dev/null    
+    #sudo -E emerge sys-apps/flatpak
+    #flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    rm -rf /var/tmp/portage/sys-apps/flatpak-*
+    chown -R 1000:1000 ~/.local/share/flatpak
+    eclean-dist -d
+}
+run_checkpoint 152 "Chardpak" checkpoint_152
+
 
 sudo chown -R 1000:1000 ~/
 sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox 2>/dev/null
