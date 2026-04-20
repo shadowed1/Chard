@@ -247,6 +247,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - Heroic Game Launcher
 - Steam
 - Firefox
+- Sober
 - And too many to test. 
 
 ### Commands (Some not listed) <br>
