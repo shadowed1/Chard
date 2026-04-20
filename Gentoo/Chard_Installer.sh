@@ -2455,6 +2455,8 @@ fi
 
 sudo cp /etc/asound.conf $CHARD_ROOT/etc 2>/dev/null
 
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+
 if [ -f "$CHROMEOS_BASHRC" ]; then
     selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
 
