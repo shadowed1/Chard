@@ -574,6 +574,8 @@ EOF
 echo "${RESET}${GREEN}CHARD_HOME: ${BOLD}$CHARD_ROOT/$CHARD_HOME ${RESET}"
 echo "${RESET}${GREEN}CHARD_USER: ${BOLD}$CHARD_USER ${RESET}${RED}"
 
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+
 if [ -f "$CHROMEOS_BASHRC" ]; then
     selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
 
