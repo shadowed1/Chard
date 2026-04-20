@@ -2,9 +2,10 @@
 VERSION="0.38"
 
 changelog() {
-    echo "- Downgrading Flatpak to 1.16.3 to fix Flatpak."
-    echo "- Added sober wrapper to automatically fix text issue."
+    echo "- Downgrading Flatpak to 1.16.3 to fix Flatpak. "
+    echo "- Added sober wrapper to automatically fix text issue. "
     echo "- Added dbus-launch initialization on startup to fix thunar not opening properly. "
+    echo "- Attempting to fix language not being properly set on fresh install. "
     echo
 }
 
