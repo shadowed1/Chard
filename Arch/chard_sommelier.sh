@@ -33,6 +33,9 @@ SOMMELIER_CMD=(
    sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
     [ -f ~/.bashrc ] && source ~/.bashrc
+    if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+        eval "$(dbus-launch --sh-syntax)"
+    fi
     cd ~/
     powercontrol-gui 2>/dev/null &
     sleep 0.2
