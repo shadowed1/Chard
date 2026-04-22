@@ -664,7 +664,7 @@ MAKE_PROFILE="$CHARD_ROOT/etc/portage/make.profile"
 sudo mkdir -p "$(dirname "$MAKE_PROFILE")"
 if [ -d "$PROFILE_DIR" ]; then
     REL_TARGET=$(realpath --relative-to="$CHARD_ROOT/etc/portage" "$PROFILE_DIR")
-    sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE"
+    sudo ln -sfn "$REL_TARGET" "$MAKE_PROFILE" 2>/dev/null
     echo "${RESET}${GREEN}[+] Portage profile set to $REL_TARGET"
 else
     echo "${YELLOW}[!] Desktop profile not found for $GENTOO_ARCH at $PROFILE_DIR"
