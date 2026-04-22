@@ -2576,4 +2576,4 @@ echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}
 echo "${YELLOW}[!] ChromeOS devices might need to reboot before proceeding. ${RESET}"
 show_progress
 
-echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
+#echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
