@@ -1200,6 +1200,38 @@ EOF
 
 sudo chmod +x /bin/chard_qemu
 
+sudo tee /bin/chard_bazaar >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+xhost +SI:localuser:$CHARD_USER
+sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+source /$CHARD_HOME/.bashrc
+WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+LWJGL_TMPDIR="/$CHARD_HOME/.local/tmp"
+mkdir -p "$LWJGL_TMPDIR"
+chown $CHARD_USER:$CHARD_USER "$LWJGL_TMPDIR"
+  env HOME=/$CHARD_HOME \
+      PULSE_SERVER=unix:/run/chrome/pulse/native \
+      DISPLAY="${DISPLAY:-:0}" \
+      PATH="$WRAPPED_PATH" \
+      LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+      LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+      LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+      LIBGL_ALWAYS_INDIRECT=0 \
+      GDK_BACKEND="wayland" \
+      EGL_PLATFORM=wayland \
+      GDK_SCALE="${GDK_SCALE:-1.25}" \
+      XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+  /usr/bin/bazaar "$@"
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+
+sudo chmod +x /bin/chard_bazaar
+
 sudo tee /bin/chard_obs >/dev/null <<'EOF'
 #!/bin/bash
 export OBS_VKCAPTURE=1
