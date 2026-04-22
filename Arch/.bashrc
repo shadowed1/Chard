@@ -282,6 +282,9 @@ alias ffa='fastfetch -c all.jsonc'
 alias gparted='/bin/chard_gparted'
 # Heroic
 alias heroic='/bin/chard_heroic'
+# Bazaar
+alias bazaar='/bin/chard_bazaar'
+
 
 command -v chard_refresh >/dev/null && chard_refresh
 
