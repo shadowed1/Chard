@@ -408,4 +408,5 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - *C0d1ngR4bb1t* - Created and tested syntax for external USB support.
 - *gd_minecraft_programmer* - Created and tested syntax to support ChromeOS 103 and older.
 - *nobody067481* - Found bugs with installer and tested a lot of emulators.
-- *DarkDonkey* - Testing QEMU and working on improving performance. 
+- *DarkDonkey* - Testing QEMU and working on improving performance.
+- *Quince* - Recommending GUI apps that work with Chard.
