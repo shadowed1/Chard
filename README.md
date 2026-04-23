@@ -317,10 +317,12 @@ chard_qemu -m 4G -cpu host -smp 4 -machine type=q35,accel=kvm -drive file=~/win1
 # Reconnect to internet after it is set up.
 
 ```
+More QEMU documentation: <br>
+`https://sysguides.com/install-windows-11-on-kvm#18-add-a-tpm-device-for-windows-requirements`
 
 <br>
 
-- Use `pavucontrol` for volume mixer for Steam games.
+- Use `pavucontrol` for volume mixer if needed.
 
 
 <br>
