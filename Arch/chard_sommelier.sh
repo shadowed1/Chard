@@ -51,9 +51,9 @@ SOMMELIER_CMD=(
     sleep 0.2
     chard_launch_daemon 2>/dev/null &
     sleep 0.2
-    QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null
-    sleep 0.1 &
-    killall -9 thunar 2>/dev/null
+    QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
+    sleep 0.1
+    killall -9 thunar 2>/dev/null &
     exec bash
 '
 error_color
