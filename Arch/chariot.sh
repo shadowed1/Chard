@@ -2313,15 +2313,15 @@ checkpoint_163() {
 }
 run_checkpoint 163 "Chardpak" checkpoint_163
 
-checkpoint_164() {
-    ARCH="$(uname -m)"
-    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        echo "Skipping Bazaar on ARM ($ARCH)"
-    else
-        retry_pacman "yay -S --noconfirm bazaar"
-    fi
-}
-run_checkpoint 164 "Bazaar" checkpoint_164
+#checkpoint_164() {
+#    ARCH="$(uname -m)"
+#    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+#        echo "Skipping Bazaar on ARM ($ARCH)"
+#    else
+#        retry_pacman "yay -S --noconfirm bazaar"
+#    fi
+#}
+#run_checkpoint 164 "Bazaar" checkpoint_164
 
 
 
