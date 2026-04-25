@@ -23,7 +23,7 @@
    `Option 1` is Arch   - Supports Steam, Heroic, Flatpak, and is the recommended option for most users. <br>
    `Option 2` is Gentoo - Tailored for ChromeOS development. Run binaries + toolchain in ChromeOS. <br>
   
-3.)   For ChromeOS, please use VT-2 to proceed. `CTRL-ALT-REFRESH` enters VT-2. `CTRL-ALT-BACK` exits VT-2.
+3.)   For ChromeOS, please use VT-2 to proceed. `CTRL-ALT-REFRESH` enters VT-2. `CTRL-ALT-BACK` returns to ChromeOS.
 - To login, type `chronos` and run these three commands on their own:
 ```
 cd
