@@ -683,9 +683,22 @@ checkpoint_44() {
 run_checkpoint 44 "sudo -E pacman -S polkit" checkpoint_44
 
 checkpoint_45() {
-    retry_pacman "sudo -E pacman -S --noconfirm bubblewrap"
+    #retry_pacman "sudo -E pacman -S --noconfirm bubblewrap"
+    retry_pacman "yay -S --noconfirm libselinux"
+    retry_pacman "sudo pacman -S --noconfirm bash-completion"
+
+    cd
+    sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+    wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
+    
+    tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
+    cd /tmp/bubblewrap-0.11.1
+        
+    meson setup -Dprefix=/usr/bin build
+    ninja -C build
+    sudo ninja -C build install
 }
-run_checkpoint 45 "sudo -E pacman -S bubblewrap" checkpoint_45
+run_checkpoint 45 "Bubblewrap 0.11.1" checkpoint_45
 
 checkpoint_46() {
     retry_pacman "sudo -E pacman -S --noconfirm libclc"
