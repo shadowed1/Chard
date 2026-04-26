@@ -37,7 +37,7 @@ SOMMELIER_CMD=(
         eval "$(dbus-launch --sh-syntax)"
     fi
     cd ~/
-    powercontrol-gui 2>/dev/null &
+    #powercontrol-gui 2>/dev/null &
     sleep 0.2
     pipewire 2>/dev/null &
     sleep 0.2
