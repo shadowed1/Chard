@@ -413,3 +413,5 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - *nobody067481* - Found bugs with installer and tested a lot of emulators.
 - *DarkDonkey* - Testing QEMU and working on improving performance.
 - *Quince* - Recommending GUI apps that work with Chard.
+- *VALID* - Reporting Flatpak bugs.
+- *Rein* - Reporting Bubbelwrap breaking everything. 
