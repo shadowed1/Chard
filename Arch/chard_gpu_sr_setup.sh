@@ -227,7 +227,7 @@ rm -rf /tmp/gpu-screen-recorder
 # We install gpu-screen-recorder from patched source, so pacman is told to treat it as present.
 # Revisit this assumed version if Arch updates gpu-screen-recorder-ui to require a newer GSR.
 
-sudo -E pacman -S --needed --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification --assume-installed gpu-screen-recorder=5.13.3 || return 1
+# sudo -E pacman -S --needed --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification
 
 [[ -x /usr/bin/gpu-screen-recorder ]] || return 1
 [[ -x /usr/bin/gsr-ui ]] || return 1
