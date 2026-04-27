@@ -690,11 +690,9 @@ checkpoint_45() {
     cd
     sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
     wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
-    
     tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
     cd /tmp/bubblewrap-0.11.1
-        
-    meson setup -Dprefix=/usr/bin build
+    meson setup build -Dprefix=/usr
     ninja -C build
     sudo ninja -C build install
     cd
