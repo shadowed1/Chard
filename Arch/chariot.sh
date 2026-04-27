@@ -1507,7 +1507,7 @@ checkpoint_137() {
         retry_pacman "sudo -E pacman -S --needed --noconfirm lib32-libvdpau 2>/dev/null"
         #retry_pacman "yay -S --noconfirm lib32-gtk2 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null"
-        retry_pacman "sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null"
+        #retry_pacman "sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null"
         cd ~/
         sudo rm -rf /usr/local/bubblepatch
         rm -rf bubblepatch 2>/dev/null
@@ -1626,7 +1626,7 @@ EOF
 sudo chmod +x /usr/bin/chard_gedit
 
 elif [[ "$ARCH" == "aarch64" ]]; then
-    sudo -E pacman -S --needed --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git bubblewrap
+    sudo -E pacman -S --needed --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git
     cd ~/
     rm -rf bubblewrap
     git clone https://github.com/shadowed1/bubblewrap.git
