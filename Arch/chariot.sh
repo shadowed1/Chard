@@ -697,6 +697,8 @@ checkpoint_45() {
     meson setup -Dprefix=/usr/bin build
     ninja -C build
     sudo ninja -C build install
+    cd
+    sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 }
 run_checkpoint 45 "Bubblewrap 0.11.1" checkpoint_45
 
