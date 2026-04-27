@@ -285,6 +285,7 @@ Categories=AudioVideo;Recorder;
 DESKTOP_EOF
 
 echo
+sudo groupmod -g 27 video
 echo "${CYAN}GPU Screen Recorder CLI usage:${RESET} /bin/chard_gpusrc -w XWAYLAND0 -s 1920x1080 -f 60 -o ~/recording.mp4"
 echo "${CYAN}GPU Screen Recorder UI usage:${RESET} /bin/chard_gpusr"
 echo
