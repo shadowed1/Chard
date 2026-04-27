@@ -10,6 +10,12 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+if [[ "$ARCH" != "x86_64" ]]; then
+    echo "${YELLOW}Unsupported architecture: $ARCH${RESET}"
+    sleep 3
+    exit 0
+fi
+    
 sudo -E pacman -S --needed --noconfirm git gcc make meson ninja pkgconf python
 sudo -E pacman -S --needed --noconfirm ffmpeg libva libva-utils libdrm mesa mesa-demos vulkan-headers vulkan-icd-loader
 sudo -E pacman -S --needed --noconfirm wayland wayland-protocols libx11 libxcomposite libxrandr libxfixes libxdamage libpulse pipewire dbus libcap
