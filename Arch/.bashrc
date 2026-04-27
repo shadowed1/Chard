@@ -284,7 +284,10 @@ alias gparted='/bin/chard_gparted'
 alias heroic='/bin/chard_heroic'
 # Bazaar
 alias bazaar='/bin/chard_bazaar'
-
+# GPU Screen Recorder Cli
+alias gpusrc='/bin/chard_gpusrc'
+# GPU Screen Recorder Ui
+alias gpusr='/bin/chard_gpusr'
 
 command -v chard_refresh >/dev/null && chard_refresh
 
