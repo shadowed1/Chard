@@ -2327,6 +2327,7 @@ checkpoint_163() {
 run_checkpoint 163 "Chardpak" checkpoint_163
 
 checkpoint_164() {
+    # Thanks to Days for making GPU Screen Recorder work
     if [[ "$ARCH" != "x86_64" ]]; then
         echo "${YELLOW}Unsupported architecture: $ARCH${RESET}"
         return 0
