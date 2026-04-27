@@ -15,20 +15,25 @@ if [[ "$ARCH" != "x86_64" ]]; then
     sleep 3
     exit 0
 fi
-    
+
+sudo pacman -R --noconfirm gpu-screen-recorder-ui 2>/dev/null
+sudo pacman -R --noconfirm gpu-screen-recorder-notification 2>/dev/null
+
 sudo -E pacman -S --needed --noconfirm git gcc make meson ninja pkgconf python
 sudo -E pacman -S --needed --noconfirm ffmpeg libva libva-utils libdrm mesa mesa-demos vulkan-headers vulkan-icd-loader
 sudo -E pacman -S --needed --noconfirm wayland wayland-protocols libx11 libxcomposite libxrandr libxfixes libxdamage libpulse pipewire dbus libcap
 
-cd /tmp || return 1
-rm -rf /tmp/gpu-screen-recorder
-git clone https://repo.dec05eba.com/gpu-screen-recorder /tmp/gpu-screen-recorder || return 1
-cd /tmp/gpu-screen-recorder || return 1
+cd /tmp
+sudo rm -rf /tmp/gpu-screen-recorder* 2>/dev/null
+mkdir -p /tmp/gpu-screen-recorder
+wget -c -P /tmp/ https://dec05eba.com/snapshot/gpu-screen-recorder.git.5.13.3.tar.gz
+tar -xf /tmp/gpu-screen-recorder.git.5.13.3.tar.gz -C /tmp/gpu-screen-recorder
+cd /tmp/gpu-screen-recorder
 
 cp -n src/window/wayland.c src/window/wayland.c.orig
 cp -n src/main.cpp src/main.cpp.orig
 
-    python3 - <<'PY' || return 1
+    python3 - <<'PY'
 from pathlib import Path
 import re
 
@@ -214,13 +219,18 @@ p.write_text(s)
 print("gpu-screen-recorder ChromeOS patches applied")
 PY
 
-sudo rm -rf build || return 1
-meson setup build --prefix=/usr --buildtype=release -Dstrip=true || return 1
-meson compile -C build || return 1
-sudo meson install -C build || return 1
+meson setup build \
+  --prefix=/usr \
+  --libdir=/usr/lib \
+  --buildtype=release \
+  -Dstrip=true \
+  -Dportal=false
+
+meson compile -C build
+sudo meson install -C build
 hash -r
 
-cd "$HOME" || return 1
+cd "$HOME"
 rm -rf /tmp/gpu-screen-recorder
 
 # The UI package depends on the packaged gpu-screen-recorder version.
@@ -229,12 +239,12 @@ rm -rf /tmp/gpu-screen-recorder
 
 # sudo -E pacman -S --needed --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification
 
-[[ -x /usr/bin/gpu-screen-recorder ]] || return 1
-[[ -x /usr/bin/gsr-ui ]] || return 1
+[[ -x /usr/bin/gpu-screen-recorder ]]
+[[ -x /usr/bin/gsr-ui ]]
 
-strings /usr/bin/gpu-screen-recorder | grep -F "wl output interface version is < 4; continuing with limited wl_output metadata" >/dev/null || return 1
-strings /usr/bin/gpu-screen-recorder | grep -F "GSR_FORCE_X11 is set; treating Xwayland as X11" >/dev/null || return 1
-strings /usr/bin/gpu-screen-recorder | grep -F "GSR_FORCE_X11 is set; forcing X11 windowing even if the X server reports Xwayland" >/dev/null || return 1
+strings /usr/bin/gpu-screen-recorder | grep -F "wl output interface version is < 4; continuing with limited wl_output metadata" >/dev/null
+strings /usr/bin/gpu-screen-recorder | grep -F "GSR_FORCE_X11 is set; treating Xwayland as X11" >/dev/null
+strings /usr/bin/gpu-screen-recorder | grep -F "GSR_FORCE_X11 is set; forcing X11 windowing even if the X server reports Xwayland" >/dev/null
 
     sudo tee /bin/chard_gpusrc >/dev/null <<'GPUSR_CLI_EOF'
 #!/bin/bash
@@ -249,7 +259,7 @@ exec env \
   LIBEGL_DRIVERS_PATH=/usr/lib64/dri \
   /usr/bin/gpu-screen-recorder "$@"
 GPUSR_CLI_EOF
-    sudo chmod +x /bin/chard_gpusrc || return 1
+    sudo chmod +x /bin/chard_gpusrc
 
     sudo tee /bin/chard_gpusr >/dev/null <<'GPUSR_UI_EOF'
 #!/bin/bash
@@ -270,7 +280,7 @@ exec env \
   LIBEGL_DRIVERS_PATH=/usr/lib64/dri \
   /usr/bin/gsr-ui launch-show
 GPUSR_UI_EOF
-    sudo chmod +x /bin/chard_gpusr || return 1
+    sudo chmod +x /bin/chard_gpusr
 
     sudo tee /usr/share/applications/gpu-screen-recorder.desktop >/dev/null <<'DESKTOP_EOF'
 [Desktop Entry]
