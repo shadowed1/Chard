@@ -18,10 +18,10 @@ fi
 
 sudo pacman -R --noconfirm gpu-screen-recorder-ui 2>/dev/null
 sudo pacman -R --noconfirm gpu-screen-recorder-notification 2>/dev/null
-
-sudo -E pacman -S --needed --noconfirm git gcc make meson ninja pkgconf python
-sudo -E pacman -S --needed --noconfirm ffmpeg libva libva-utils libdrm mesa mesa-demos vulkan-headers vulkan-icd-loader
-sudo -E pacman -S --needed --noconfirm wayland wayland-protocols libx11 libxcomposite libxrandr libxfixes libxdamage libpulse pipewire dbus libcap
+sudo pacman -S --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification --overwrite '*'
+#sudo -E pacman -S --needed --noconfirm git gcc make meson ninja pkgconf python
+#sudo -E pacman -S --needed --noconfirm ffmpeg libva libva-utils libdrm mesa mesa-demos vulkan-headers vulkan-icd-loader
+#sudo -E pacman -S --needed --noconfirm wayland wayland-protocols libx11 libxcomposite libxrandr libxfixes libxdamage libpulse pipewire dbus libcap
 
 cd /tmp
 sudo rm -rf /tmp/gpu-screen-recorder* 2>/dev/null
@@ -237,7 +237,7 @@ rm -rf /tmp/gpu-screen-recorder
 # We install gpu-screen-recorder from patched source, so pacman is told to treat it as present.
 # Revisit this assumed version if Arch updates gpu-screen-recorder-ui to require a newer GSR.
 
-# sudo -E pacman -S --needed --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification
+sudo -E pacman -S --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification
 
 [[ -x /usr/bin/gpu-screen-recorder ]]
 [[ -x /usr/bin/gsr-ui ]]
