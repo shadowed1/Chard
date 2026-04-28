@@ -52,7 +52,7 @@ SOMMELIER_CMD=(
     chard_launch_daemon 2>/dev/null &
     sleep 0.2
     QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
-    sleep 0.1
+    sleep 0.2
     killall -9 thunar 2>/dev/null &
     exec bash
 '
