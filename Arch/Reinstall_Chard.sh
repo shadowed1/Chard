@@ -443,6 +443,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.05
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_gpu_sr_setup.sh"            -o "$CHARD_ROOT/bin/chard_gpu_sr_setup" 2>/dev/null
 sleep 0.05
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/downgrade_flatpak_bwrap.sh"            -o "$CHARD_ROOT/bin/downgrade_flatpak_bwrap" 2>/dev/null
+sleep 0.05
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -477,6 +479,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_version"
 sudo chmod +x "$CHARD_ROOT/bin/vulkan_tester"
 sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
 sudo chmod +x "$CHARD_ROOT/bin/chard_gpu_sr_setup"
+sudo chmod +x "$CHARD_ROOT/bin/downgrade_flatpak_bwrap"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 #sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
 #sudo chmod +x /etc/init/chard.conf
