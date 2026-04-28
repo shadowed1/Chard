@@ -17,7 +17,7 @@ rm -f "$WATCH_DIR"/* 2>/dev/null
 sleep 5
 echo
 echo "${YELLOW}Press [ENTER] to continue. ${RESET}"
-
+echo
 if [ -S /tmp/.X11-unix/X0 ]; then
     export DISPLAY=:0
 else
