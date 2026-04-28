@@ -15,6 +15,8 @@ ALIASES_FILE="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/.chard_aliases"
 mkdir -p "$WATCH_DIR"
 rm -f "$WATCH_DIR"/* 2>/dev/null
 sleep 5
+echo
+echo "${YELLOW}Press [ENTER] to continue. ${RESET}"
 
 if [ -S /tmp/.X11-unix/X0 ]; then
     export DISPLAY=:0
