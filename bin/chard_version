@@ -3,7 +3,7 @@ VERSION="0.39"
 
 changelog() {
     echo "- Downgrading bwrap to 0.11.1. "
-    echo "- Days added "GPU Screen Recorder" app support. "
+    echo "- Days added 'GPU Screen Recorder' app support. "
     echo "- Added downgrading bwrap and flatpak into reinstaller. "
     echo
 }
