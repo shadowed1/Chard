@@ -1,12 +1,9 @@
 #!/bin/bash
-VERSION="0.38"
+VERSION="0.39"
 
 changelog() {
-    echo "- Downgrading Flatpak to 1.16.3 to fix Flatpak. "
-    echo "- Added Sober wrapper to automatically fix text issue. "
-    echo "- Added dbus-launch initialization on startup to fix Thunar not opening properly. "
-    echo "- Attempting to fix language not being properly set on fresh install. "
+    echo "- Downgrading bwrap to 0.11.1. "
+    echo "- Days added "GPU Screen Recorder" app support. "
+    echo "- Added downgrading bwrap and flatpak into reinstaller. "
     echo
 }
-
-  
