@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd
 sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
@@ -8,7 +10,6 @@ ninja -C build
 sudo ninja -C build install
 cd
 sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
-#!/bin/bash
 
 cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
