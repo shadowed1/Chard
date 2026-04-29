@@ -825,7 +825,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_version"
 sudo chmod +x "$CHARD_ROOT/bin/vulkan_tester"
 sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
 sudo chmod +x "$CHARD_ROOT/bin/chard_gpu_sr_setup"
-sudo chmod +x "$CHARD_ROOT/downgrade_flatpak_bwrap"
+sudo chmod +x "$CHARD_ROOT/bin/downgrade_flatpak_bwrap"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
 for file in \
