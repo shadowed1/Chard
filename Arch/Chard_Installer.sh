@@ -491,10 +491,12 @@ sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || t
 	exe=$(readlink -f "/proc/$pid/exe" 2>/dev/null) || continue
 	cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)
 	if [[ "$exe" == "$CHARD_ROOT"* ]] || [[ "$cmdline" == *"$CHARD_ROOT"* ]]; then
-		if [[ "$cmdline" == *"$CHARD_ROOT/bin/chard"* ]]; then
-			echo "  ${GREEN}PID $pid: $cmdline"
-			echo "   (skipping) ${RESET}"
-			continue
+		if [[ "$cmdline" == *"$CHARD_ROOT/bin/chard"* ]] || \
+		   [[ "$cmdline" == *"/usr/local/Chard_Installer"* ]] || \
+		   [[ "$cmdline" == *"Chard_Installer"* ]]; then
+		    echo "  ${GREEN}PID $pid: $cmdline"
+		    echo "   (skipping) ${RESET}"
+		    continue
 		fi
 		echo "  ${RED}PID $pid: $cmdline"
 		echo "    (exe: $exe) ${RESET}"
