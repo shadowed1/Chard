@@ -954,11 +954,7 @@ checkpoint_101() {
 run_checkpoint 101 "sudo -E pacman -S --noconfirm gpgme" checkpoint_101
 
 checkpoint_102() {
-    if [[ "$ARCH" == "x86_64" ]]; then
-        retry_pacman "sudo -E pacman -S --noconfirm ostree"
-    else
-        echo "Skipping ostree on $ARCH"
-    fi
+    retry_pacman "sudo -E pacman -S --noconfirm ostree"
 }
 run_checkpoint 102 "sudo -E pacman -S --noconfirm ostree" checkpoint_102
 
