@@ -1743,6 +1743,8 @@ case "$ARCH" in
                 CONFIG_LAVAPIPE=n
                 CONFIG_KVM_INTEL=y
                 CONFIG_KVM_AMD=n
+				CONFIG_VIDEO_HI556=m
+				
                 ;;
             nvidia)
                 CONFIG_DRM_AMDGPU=n
@@ -1843,6 +1845,10 @@ CONFIG_IP_NF_TARGET_MASQUERADE=y
 CONFIG_NF_CONNTRACK=y
 CONFIG_BRIDGE=y
 CONFIG_BRIDGE_NF_EBTABLES=y
+CONFIG_MEDIA_SUPPORT=y
+CONFIG_MEDIA_CONTROLLER=y
+CONFIG_V4L_PLATFORM_DRIVERS=y
+CONFIG_IPU_BRIDGE=y
 EOF
         ;;
     aarch64)
