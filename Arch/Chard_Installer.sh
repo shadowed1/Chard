@@ -1744,7 +1744,8 @@ case "$ARCH" in
                 CONFIG_KVM_INTEL=y
                 CONFIG_KVM_AMD=n
 				CONFIG_VIDEO_HI556=m
-				
+				CONFIG_VIDEO_INTEL_IPU6_ISYS=m
+				CONFIG_INTEL_SKL_INT3472=m
                 ;;
             nvidia)
                 CONFIG_DRM_AMDGPU=n
