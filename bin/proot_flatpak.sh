@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # Created by Days
 set -euo pipefail
+
+if ls /.chardrc > /dev/null 2>&1; then
+    echo "${RED}proot_flatpak must be run from the host shell, not inside Chard.${RESET}"
+    sleep 3
+    exit 1
+fi
+
 R=$CHARD_ROOT
 #FLATPAK_ROOT=/usr/local/flatpak-1.16.6
 sudo true
