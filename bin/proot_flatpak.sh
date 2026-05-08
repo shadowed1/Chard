@@ -2,12 +2,12 @@
 # Created by Days
 set -euo pipefail
 
-sudo install -o root -g root -m 0755 /dev/stdin /bin/chard_flatpak <<'EOF'
+sudo install -o root -g root -m 0755 /dev/stdin /bin/proot_flatpak <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 
-R=/usr/local/chard
-FLATPAK_ROOT=/usr/local/flatpak-1.16.6
+R=$CHARD_ROOT
+#FLATPAK_ROOT=/usr/local/flatpak-1.16.6
 
 sudo true
 
