@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 # Created by Days
 set -euo pipefail
-
-sudo install -o root -g root -m 0755 /dev/stdin /bin/proot_flatpak <<'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
 R=$CHARD_ROOT
 #FLATPAK_ROOT=/usr/local/flatpak-1.16.6
-
 sudo true
-
 CHARD_USER="$(sudo cat "$R/.chard_user")"
 CHARD_UID="$(sudo chroot "$R" id -u "$CHARD_USER")"
 CHARD_GID="$(sudo chroot "$R" id -g "$CHARD_USER")"
@@ -27,9 +20,9 @@ if [ -z "$CHARD_DBUS" ] && [ -S /run/user/1000/bus ]; then
 fi
 [ -z "$CHARD_DBUS" ] && CHARD_DBUS="disabled:"
 
-test -x "$R$CHARD_HOME/bwrap-nosuid"
-test -x "$R$CHARD_HOME/bwrap-userns-chard"
-test -x "$R$FLATPAK_ROOT/bin/flatpak"
+test -x "$R/usr/local/bwrap-nosuid/bin/bwrap"
+test -x "$R/bin/bwrap-userns-chard"
+#test -x "$R$FLATPAK_ROOT/bin/flatpak"
 
 NO_USER_CMDS=(
     make-current enter ps kill
@@ -148,4 +141,3 @@ exec chroot \
     /usr/bin/env -i "${ENV_ARGS[@]}" \
     "$FLATPAK_ROOT/bin/flatpak" "$@"
 PIVOT
-EOF
