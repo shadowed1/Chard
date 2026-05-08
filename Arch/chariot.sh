@@ -1046,6 +1046,7 @@ checkpoint_117() {
     
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
+#!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 export HOME=/$CHARD_HOME
@@ -1078,6 +1079,7 @@ sudo -u $CHARD_USER \
         LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
         XDG_RUNTIME_DIR="/run/chrome" \
         LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+        DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
         LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
         OBS_VKCAPTURE=1 \
         OBS_GAMECAPTURE=1 \
@@ -1114,6 +1116,7 @@ env \
     XDG_RUNTIME_DIR="/run/chrome" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
     OBS_VKCAPTURE=1 \
     OBS_GAMECAPTURE=1 \
