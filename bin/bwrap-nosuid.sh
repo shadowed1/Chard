@@ -21,6 +21,5 @@ ninja -C /tmp/bubblewrap-build
 
 sudo rm -f "/$CHARD_HOME/bwrap-nosuid" 2>/dev/null
 sudo install -o 1000 -g 1000 -m 0755 /tmp/bubblewrap-build/bwrap "/usr/local/bwrap-nosuid/bin/bwrap"
-
 cd
 sudo rm -rf /tmp/bubblewrap /tmp/bubblewrap-build
