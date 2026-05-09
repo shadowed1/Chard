@@ -9,7 +9,7 @@ if ls /.chardrc > /dev/null 2>&1; then
 fi
 
 R=$CHARD_ROOT
-#FLATPAK_ROOT=/usr/local/flatpak-1.16.6
+FLATPAK_ROOT=/usr/local/flatpak-1.16.6
 sudo true
 CHARD_USER="$(sudo cat "$R/.chard_user")"
 CHARD_UID="$(sudo chroot "$R" id -u "$CHARD_USER")"
@@ -30,7 +30,7 @@ fi
 
 test -x "$R/usr/local/bwrap-nosuid/bin/bwrap"
 test -x "$R/bin/bwrap-userns-chard"
-#test -x "$R$FLATPAK_ROOT/bin/flatpak"
+test -x "$R$FLATPAK_ROOT/bin/flatpak"
 
 NO_USER_CMDS=(
     make-current enter ps kill
@@ -138,7 +138,7 @@ ENV_ARGS=(
     PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     LD_LIBRARY_PATH="$FLATPAK_ROOT/lib:$FLATPAK_ROOT/lib64"
     XDG_DATA_DIRS="$FLATPAK_ROOT/share:/usr/local/share:/usr/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$CHARD_HOME/.local/share/flatpak/exports/share"
-    FLATPAK_BWRAP="$CHARD_HOME/bwrap-userns-chard"
+    FLATPAK_BWRAP="/usr/local/bin/bwrap-nosuid/bin/bwrap"
 )
 [ -n "$CHARD_WAYLAND_DISPLAY" ] && ENV_ARGS+=(WAYLAND_DISPLAY="$CHARD_WAYLAND_DISPLAY")
 [ -n "$CHARD_DISPLAY" ] && ENV_ARGS+=(DISPLAY="$CHARD_DISPLAY")
