@@ -19,6 +19,7 @@ CHARD_HOME="$(sudo cat "$R/.chard_home")"
 CHARD_HOME="/${CHARD_HOME#/}"
 CHARD_DISPLAY="${DISPLAY:-}"
 CHARD_WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}"
+WRAPPED_PATH="$R/usr/local/bwrap-nosuid/bin:$PATH"
 [ "${CHARD_FORCE_NO_WAYLAND:-0}" = 1 ] && CHARD_WAYLAND_DISPLAY=""
 
 CHARD_DBUS="${DBUS_SESSION_BUS_ADDRESS:-}"
@@ -63,13 +64,14 @@ fi
 
 exec sudo env \
     R="$R" \
-    FLATPAK_ROOT="$FLATPAK_ROOT" \
+    #FLATPAK_ROOT="$FLATPAK_ROOT" \
     CHARD_USER="$CHARD_USER" \
     CHARD_UID="$CHARD_UID" \
     CHARD_GID="$CHARD_GID" \
     CHARD_GROUPS="$CHARD_GROUPS" \
     CHARD_HOME="$CHARD_HOME" \
     CHARD_DISPLAY="$CHARD_DISPLAY" \
+    PATH="$WRAPPED_PATH"
     CHARD_WAYLAND_DISPLAY="$CHARD_WAYLAND_DISPLAY" \
     CHARD_DBUS="$CHARD_DBUS" \
     unshare -m -f /bin/bash -s -- "${FINAL_ARGS[@]}" <<'PIVOT'
@@ -133,7 +135,7 @@ ENV_ARGS=(
     LOGNAME="$CHARD_USER"
     XDG_RUNTIME_DIR=/run/chrome
     DBUS_SESSION_BUS_ADDRESS="$CHARD_DBUS"
-    PATH="$FLATPAK_ROOT/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     LD_LIBRARY_PATH="$FLATPAK_ROOT/lib:$FLATPAK_ROOT/lib64"
     XDG_DATA_DIRS="$FLATPAK_ROOT/share:/usr/local/share:/usr/share:/usr/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$CHARD_HOME/.local/share/flatpak/exports/share"
     FLATPAK_BWRAP="$CHARD_HOME/bwrap-userns-chard"
