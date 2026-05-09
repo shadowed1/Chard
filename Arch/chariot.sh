@@ -2091,6 +2091,20 @@ StartupWMClass=torbrowser
 Categories=Network;WebBrowser;
 EOF
 
+sudo tee /usr/share/applications/chard-gparted.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Name=GParted (Chard)
+GenericName=Partition Editor
+Comment=Create, reorganize, and delete partitions
+Exec=/bin/chard_gparted %f
+Icon=gparted
+Terminal=false
+Type=Application
+Categories=GNOME;System;Filesystem;
+Keywords=Partition;
+StartupNotify=true
+EOF
+
 sudo tee /usr/share/applications/chard-thunderbird.desktop > /dev/null << 'EOF'
 [Desktop Entry]
 Version=1.0
