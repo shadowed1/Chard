@@ -2355,7 +2355,18 @@ checkpoint_164() {
 }
 run_checkpoint 164 "Chard GPU Screen Recorder" checkpoint_164
 
-#checkpoint_165() {
+checkpoint_165() {
+    ARCH="$(uname -m)"
+    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        echo "Skipping On-Screen Display Keyboard ($ARCH)"
+    else
+        yay -S --noconfirm xf86-input-wacom
+        yay -S --noconfirm corekeyboard
+    fi
+}
+run_checkpoint 165 "On-Screen keyboard + wacom" checkpoint_165
+
+#checkpoint_XXX() {
 #    ARCH="$(uname -m)"
 #    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
 #        echo "Skipping Bazaar on ARM ($ARCH)"
@@ -2363,7 +2374,7 @@ run_checkpoint 164 "Chard GPU Screen Recorder" checkpoint_164
 #        retry_pacman "yay -S --noconfirm bazaar"
 #    fi
 #}
-#run_checkpoint 165 "Bazaar" checkpoint_165
+#run_checkpoint XXX "Bazaar" checkpoint_XXX
 
 
 
