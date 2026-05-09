@@ -517,6 +517,10 @@ sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
 sleep 2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
+sudo rm -rf /usr/local/chard 2>/dev/null
+sleep 0.2
+sudo rm -rf $CHARD_ROOT 2>/dev/null
+sleep 0.2
 sudo mkdir -p "$CHARD_ROOT/run/dbus"
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 sudo mkdir -p "$CHARD_ROOT/tmp"
