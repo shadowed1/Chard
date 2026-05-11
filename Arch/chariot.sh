@@ -1046,11 +1046,11 @@ checkpoint_117() {
     
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
-#!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
 WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
@@ -1072,20 +1072,22 @@ NO_USER_CMDS=(
 
 if [[ $# -eq 0 ]]; then
 sudo -u $CHARD_USER \
-    	env \
-        HOME="$HOME" \
-        PULSE_SERVER=unix:/run/chrome/pulse/native \
-        DISPLAY="${DISPLAY:-:0}" \
-        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-        XDG_RUNTIME_DIR="/run/chrome" \
-        LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-        DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
-        LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-        OBS_VKCAPTURE=1 \
-        OBS_GAMECAPTURE=1 \
-        LIBGL_ALWAYS_INDIRECT=0 \
-        GDK_SCALE="${GDK_SCALE:-1.25}" \
-        XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    env \
+    HOME="$HOME" \
+    PULSE_SERVER=unix:/run/chrome/pulse/native \
+    DISPLAY="${DISPLAY:-:0}" \
+    XDG_RUNTIME_DIR="/run/chrome" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    OBS_VKCAPTURE=1 \
+    OBS_GAMECAPTURE=1 \
+    LIBGL_ALWAYS_INDIRECT=0 \
+    GDK_SCALE="${GDK_SCALE:-1.25}" \
+    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    WAYLAND_DISPLAY="" \
+    QT_QPA_PLATFORM=xcb \
     flatpak
     exit 0
 fi
@@ -1108,6 +1110,13 @@ else
     FINAL_ARGS=("$CMD" "$@")
 fi
 
+if [[ "$CMD" == "run" ]]; then
+    FINAL_ARGS=("${FINAL_ARGS[@]:0:1}" \
+        "--env=WAYLAND_DISPLAY=" \
+        "--env=QT_QPA_PLATFORM=xcb" \
+        "${FINAL_ARGS[@]:1}")
+fi
+
 sudo -u $CHARD_USER \
 env \
     HOME="$HOME" \
@@ -1123,6 +1132,8 @@ env \
     LIBGL_ALWAYS_INDIRECT=0 \
     GDK_SCALE="${GDK_SCALE:-1.25}" \
     XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    WAYLAND_DISPLAY="" \
+    QT_QPA_PLATFORM=xcb \
 flatpak "${FINAL_ARGS[@]}"
 sudo setfacl -Rb /run/chrome 2>/dev/null
 EOF
