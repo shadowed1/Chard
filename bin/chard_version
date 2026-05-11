@@ -1,9 +1,10 @@
 #!/bin/bash
-VERSION="0.39"
+VERSION="0.40"
 
 changelog() {
-    echo "- Downgrading bwrap to 0.11.1. "
-    echo "- Days added 'GPU Screen Recorder' app support. "
-    echo "- Added downgrading bwrap and flatpak into reinstaller. "
+    echo "- Improved gpu screen recorder installation script. "
+    echo "- Fixed Discord and Heroic, thanks to VALID for reporting. "
+    echo "- Fixed Flatpak issue and added socket detection to prevent override micromanagement. "
+    echo "- Added On-Screen Keyboard and multi-touchscreen support. "
     echo
 }
