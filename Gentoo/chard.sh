@@ -702,8 +702,8 @@ case "$cmd" in
         sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
 
         # Write our user hash to Chard for preliminary shortcut support
-	U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
-	echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
+		U_HASH=$(sudo sh -c 'ls /home/.shadow/ 2>/dev/null' | grep -v 'salt\|root' | head -1)
+		echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
