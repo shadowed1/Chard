@@ -8,7 +8,7 @@
 
 <br>
 
-
+### Supports ChromeOS and most Linux Distros
 # How to Install:
 
 <br>
