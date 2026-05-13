@@ -15,6 +15,20 @@ if ls /.chardrc > /dev/null 2>&1; then
     exit 1
 fi
 
+USER=$(eval echo "~$CHARD_USER")
+USER_BASHRC="$USER_HOME/.bashrc"
+HOME="/$CHARD_HOME"
+CHARD_RC="$CHARD_ROOT/.chardrc"
+
+echo
+echo $USER
+echo $USER_BASHRC
+echo $HOME
+echo $CHARD_RC
+echo
+
+source $HOME/.bashrc
+
 cleanup_chroot() {
 	sudo stop chard 2>/dev/null
     sudo umount -l "$CHARD_ROOT/etc/hosts"   2>/dev/null || true
@@ -205,7 +219,7 @@ detect_gpu_freq() {
 
     GPU_TYPE="unknown"
 }
-
+		
  		echo "${RESET}${GREEN}"
         echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard) ${RESET}${YELLOW}"
         echo "[2] Full Reinstall (Run Chard Installer and Remove Chard) ${RESET}${CYAN}"
@@ -548,6 +562,9 @@ add_chard_marker() {
         echo
     fi
 }
+
+echo $CHARD_ROOT
+echo $CHARD_RC
 
 add_chard_marker "$TARGET_FILE"
 
