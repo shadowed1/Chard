@@ -501,14 +501,7 @@ case "$cmd" in
 		chard_timezone_daemon &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-        killall -9 pipewire 2>/dev/null
-        killall -9 pipewire-pulse 2>/dev/null
-        killall -9 pulseaudio 2>/dev/null
-        killall -9 steam 2>/dev/null
-		killall -9 plasmashell 2>/dev/null
-		killall -9 obs 2>/dev/null
 		killall -9 chard_launch_daemon 2>/dev/null
-		killall -9 xfce4-terminal 2>/dev/null
 		killall -9 chardwire 2>/dev/null
 		sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
@@ -632,26 +625,10 @@ case "$cmd" in
         sudo chown chronos:chronos /run/chrome/pulse 2>/dev/null
         sudo chmod 770 /run/chrome/pulse 2>/dev/null
         killall -9 cras_test_client 2>/dev/null
-        killall -9 pipewire 2>/dev/null
-        killall -9 pipewire-pulse 2>/dev/null
-        killall -9 pulseaudio 2>/dev/null
-        killall -9 steam 2>/dev/null
-		killall -9 powercontrol-gui 2>/dev/null
-		killall -9 gedit 2>/dev/null
 		killall -9 chard_launch_daemon 2>/dev/null
-		killall -9 xfce4-terminal 2>/dev/null
 		killall -9 chardwire 2>/dev/null
 		killall -9 chard_timezone_daemon 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
-        sudo pkill -f xfce4-session 2>/dev/null
-        sudo pkill -f xfwm4 2>/dev/null
-        sudo pkill -f xfce4-panel 2>/dev/null
-        sudo pkill -f xfdesktop 2>/dev/null
-        sudo pkill -f xfce4-terminal 2>/dev/null
-        sudo pkill -f xfce4-* 2>/dev/null
-        sudo pkill -f Xorg 2>/dev/null
-		sudo pkill -f powercontrol-gui 2>/dev/null
-		sudo pkill -f gedit 2>/dev/null
 		sudo pkill -f chard_timezone_daemon 2>/dev/null
 		if [ -s "$VERSION_FILE" ]; then
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
