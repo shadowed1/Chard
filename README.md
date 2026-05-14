@@ -8,7 +8,10 @@
 
 <br>
 
-### Supports ChromeOS, mainstream Linux distros, and even Asahi Linux for Apple Silicon. <br>
+### Supports ChromeOS, mainstream Linux distros, and even Asahi Linux for Apple Silicon. 
+
+<br><br>
+
 # How to Install:
 
 <br>
