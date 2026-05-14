@@ -1114,7 +1114,10 @@ case "$1" in
 esac
 EOF
 
-sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname
+sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname 2>/dev/null
+sudo cp /usr/share/vulkan/icd.d/asahi_icd.aarch64.json  $CHARD_ROOT/usr/share/vulkan/icd.d/ 2>/dev/null
+sudo cp /usr/lib64/libvulkan_asahi.so $CHARD_ROOT/usr/lib64/libvulkan_asahi.so 2>/dev/null
+
 
                 if [ -f "/home/chronos/user/.bashrc" ]; then
                     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
