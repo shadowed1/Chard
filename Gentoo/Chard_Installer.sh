@@ -66,7 +66,7 @@ echo "${MAGENTA}${BOLD}"
 echo "Please disable sleep during the install - Requires Developer Mode for ChromeOS users."
 echo "${RESET}"
 echo "${YELLOW}${BOLD}"
-echo "If using Crew Sudo please uninstall it first."
+echo "If using Crew Sudo please uninstall it and use SudoCrosh as alternative."
 echo "${RESET}"
 
 format_time() {
