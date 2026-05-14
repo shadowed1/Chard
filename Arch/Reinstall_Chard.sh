@@ -16,16 +16,13 @@ if ls /.chardrc > /dev/null 2>&1; then
 fi
 
 USER=$(eval echo "~$CHARD_USER")
+if [ "$USER_HOME" = "/home/chronos/user" ] || [ -z "$USER_HOME" ]; then
+    USER_HOME="/home/chronos/user"
+fi
 USER_BASHRC="$USER_HOME/.bashrc"
 HOME="/$CHARD_HOME"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
-echo
-echo $USER
-echo $USER_BASHRC
-echo $HOME
-echo $CHARD_RC
-echo
 
 source $HOME/.bashrc
 
