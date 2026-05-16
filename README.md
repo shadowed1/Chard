@@ -402,7 +402,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 <br><br>
 - 0.40: `Improved gpu screen recorder installation script. Fixed Discord and Heroic, thanks to VALID for reporting. Fixed Flatpak issue and added socket detection to prevent override micromanagement. Adding On-Screen Keyboard support. Adding multi-touchscreen support.` <br><br>
 - 0.41: `Added support for Apple Silicon and non ChromeOS Linux Distros.` <br><br>
-
+- 0.42: `Fixed shortcut issue for "chard_shortcut" and "chard_shortcut_daemon". Updated GDK_DPI_SCALE to use scaling values.` <br><br>
 
 ### Acknowledgements - This project would not exist without the help and support from the ChromeOS community. 
 
