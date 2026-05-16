@@ -58,6 +58,7 @@ echo "   ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in cros
 echo "               ${BLUE}CTRL-ALT-REFRESH enters VT-2.${RESET} ${CYAN}CTRL-ALT-BACK returns to ChromeoS.${RESET}"
 echo
 echo
+echo "${YELLOW}If using crew-sudo, please uninstall it and use Sudocrosh instead.${REsET}"
 echo "${GREEN}${BOLD}If on ChromeOS, run these 3 commands in VT-2 logged in as ${RESET}${BLUE}${BOLD}chronos${RESET}${GREEN}${BOLD} or use sudo in crosh (if enabled):${RESET}${GREEN}"
 echo
 echo "${RESET}${GREEN}cd"
