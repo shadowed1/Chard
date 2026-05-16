@@ -136,7 +136,7 @@ for df in "$CHARD_APPS"/*.desktop; do
 [Desktop Entry]
 Type=Application
 Name=$name
-Exec=/usr/local/bin/chard_bridge $desktop_file_id
+Exec=/bin/chard_bridge $desktop_file_id
 Icon=$icon
 Terminal=false
 NoDisplay=false
