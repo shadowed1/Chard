@@ -202,7 +202,7 @@ chard_sort() {
 : "${XCURSOR_SIZE:=32}"
 : "${XCURSOR_THEME:=Adwaita}"
 export GDK_SCALE="$CHARD_SCALE"
-export GDK_DPI_SCALE=1
+export GDK_DPI_SCALE="$CHARD_SCALE"
 export QT_SCALE_FACTOR="$CHARD_SCALE"
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_WAYLAND_FORCE_DPI=$(awk "BEGIN {print int(96 * $CHARD_SCALE)}")
