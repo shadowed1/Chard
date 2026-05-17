@@ -24,7 +24,7 @@ HOME="/$CHARD_HOME"
 CHARD_RC="$CHARD_ROOT/.chardrc"
 
 
-source $HOME/.bashrc
+source $HOME/.bashrc 2>/dev/null
 
 cleanup_chroot() {
 	sudo stop chard 2>/dev/null
