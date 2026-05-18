@@ -1358,6 +1358,22 @@ EOF
 
 sudo chmod +x /bin/chard_bazaar
 
+sudo tee /bin/chard_blender >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  export PULSE_SERVER=unix:/run/chrome/pulse/native
+  exec /usr/bin/blender "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x /bin/chard_blender
+
 sudo tee /bin/chard_obs >/dev/null <<'EOF'
 #!/bin/bash
 export OBS_VKCAPTURE=1
