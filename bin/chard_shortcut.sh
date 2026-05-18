@@ -32,6 +32,7 @@ fi
 
 U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
 echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
+rm -rf ~/MyFiles/Downloads/chard_icons/desktops/* 2>/dev/null
 sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user" 2>/dev/null || echo "chronos")
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home" 2>/dev/null || echo "/home/chronos")
