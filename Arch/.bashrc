@@ -222,7 +222,12 @@ safe_wine() {
 alias winegui='safe_wine'
 # KSP
 alias ksp='LC_ALL=C ./KSP_x86_64'
-
+# Blender
+alias blender='/bin/chard_blender'
+# Vinegar
+alias vinegar='/bin/chard_flatpak_ns run org.vinegarhq.Vinegar'
+# Sober
+alias sober='/bin/chard_flatpak run org.vinegarhq.Sober'
 # xcb
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 alias kiwix-desktop='QT_QPA_PLATFORM=xcb kiwix-desktop'
