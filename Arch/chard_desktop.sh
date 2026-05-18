@@ -74,3 +74,19 @@ StartupWMClass=steam
 Categories=Network;FileTransfer;Game;
 MimeType=x-scheme-handler/steam;x-scheme-handler/steamlink;
 EOF
+
+sudo tee /usr/share/applications/chard-blender.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Name=Blender
+GenericName=3D modeler
+Comment=3D modeling, animation, rendering and post-production
+Keywords=3d;cg;modeling;animation;painting;sculpting;texturing;video editing;video tracking;rendering;render engine;cycles;python;
+Exec=chard_blender %f
+Icon=blender
+Terminal=false
+Type=Application
+PrefersNonDefaultGPU=true
+Categories=Graphics;3DGraphics;
+MimeType=application/x-blender;
+StartupWMClass=Blender
+EOF
