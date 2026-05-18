@@ -1489,7 +1489,11 @@ run_checkpoint 124 "sudo -E pacman -S --noconfirm yt-dlp + vlc + audacity" check
 
 checkpoint_125() {
     retry_pacman "sudo -E pacman -S --noconfirm vulkan-tools"
-    retry_pacman "sudo -E pacman -S --noconfirm mangohud"
+    if [[ "$ARCH" == "x86_64" ]]; then
+        retry_pacman "sudo -E pacman -S --noconfirm mangohud"
+    else
+        echo "Skipping Mangohud on $ARCH"
+    fi
 }
 run_checkpoint 125 "sudo -E pacman -S --noconfirm vulkan-tools + mangohud" checkpoint_125
 
