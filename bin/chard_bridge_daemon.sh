@@ -123,7 +123,7 @@ sync_desktops
 sync_icons
 
 echo
-echo "${GREEN}[chard_bridge_daemon] waiting for updates, press [ENTER] to continue...${RESET}"
+echo "${GREEN}[chard_bridge_daemon] monitoring shortcut folder, press [ENTER] to continue${RESET}"
 
 while true; do
     if [ -f "$SYNC_TRIGGER" ]; then
