@@ -964,7 +964,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
 ' bash "$@"
 EOF
 
-sudo chmod +x $CHARD_ROOT/bin/chard_blender"
+sudo chmod +x "$CHARD_ROOT/bin/chard_blender"
 
 sudo tee "$CHARD_ROOT/bin/chard_tor" >/dev/null <<'EOF'
 #!/bin/bash
