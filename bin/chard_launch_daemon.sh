@@ -72,13 +72,8 @@ launch_app() {
     fi
 }
 
-while true; do
-    for trigger in "$WATCH_DIR"/*; do
-        [ -f "$trigger" ] || continue
-        filename=$(basename "$trigger")
-        rm -f "$trigger"
-        echo "${CYAN}[chard_launch_daemon] trigger: $filename ${RESET}"
-        launch_app "$filename" &
-    done
-    sleep 1
+inotifywait -m -e create --format "%f" "$WATCH_DIR" | while read filename; do
+    rm -f "$WATCH_DIR/$filename"
+    echo "[chard_launch_daemon] trigger: $filename"
+    launch_app "$filename" &
 done
