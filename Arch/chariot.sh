@@ -2510,23 +2510,24 @@ checkpoint_165() {
     if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
         echo "Skipping On-Screen Display Keyboard ($ARCH)"
     else
-        yay -S --noconfirm xf86-input-wacom
-        yay -S --noconfirm corekeyboard
+        retry_pacman "yay -S --noconfirm xf86-input-wacom"
+        retry_pacman "yay -S --noconfirm corekeyboard"
     fi
 }
 run_checkpoint 165 "On-Screen keyboard + wacom" checkpoint_165
 
 checkpoint_166() {
-    sudo pacman -S --noconfirm noto-fonts-emoji
+    retry_pacman "sudo pacman -S --noconfirm noto-fonts-emoji"
 
 }
 run_checkpoint 166 "noto-fonts-emoji" checkpoint_166
 
 checkpoint_167() {
-    sudo pacman -S --noconfirm bat
+    retry_pacman "sudo pacman -S --noconfirm bat"
+    retry_pacman "yay -S --noconfirm python-cairo"
 
 }
-run_checkpoint 167 "bat, a cat clone with customization" checkpoint_167
+run_checkpoint 167 "bat, a cat clone with customization and python cairo" checkpoint_167
 
 #checkpoint_XXX() {
 #    ARCH="$(uname -m)"
