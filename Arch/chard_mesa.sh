@@ -147,7 +147,8 @@ sudo pacman -S --noconfirm llvm
 sudo pacman -S --noconfirm python-pyyaml
 sudo pacman -S --noconfirm spirv-llvm-translator
 sudo pacman -S --noconfirm valgrind
-
+sudo pacman -S --noconfirm python-mako
+sudo pacman -S --noconfirm libunwind
 cd
 rm -rf mesa-* 2>/dev/null
 LATEST=$(curl -s https://archive.mesa3d.org/ \
@@ -285,8 +286,9 @@ if [ "$GPU_VENDOR" = "intel" ] || [ "$GPU_VENDOR" = "amd" ]; then
     sudo pacman -S --noconfirm lib32-zstd
     sudo pacman -S --noconfirm lib32-wayland
     sudo pacman -S --noconfirm lib32-clang
+    sudo pacman -S --noconfirm lib32-libunwind
     sudo cp build/src/compiler/clc/mesa_clc /bin/ 2>/dev/null
-    sudo cp build/src/compiler/spirv/vtn_bindgen2 /bin/ 2>/dev/null
+    sudo cp build/src/compiler/spirv/vtn_bindgen2 /bin 2>/dev/null
     sudo chmod +x /bin/mesa_cld 2>/dev/null
     sudo chmod +x /bin/vtn_bindgen2 2>/dev/null
     
