@@ -62,6 +62,8 @@ case "$confirm" in
     [Nn]*)
         echo "${BLUE}Skipping boot setup.${RESET}"
         echo
+        sleep 1
+        sudo rm -f /etc/init/chard.conf 2>/dev/null
         exit 0
         ;;
     *)
