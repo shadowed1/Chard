@@ -404,7 +404,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.41: `Added support for Apple Silicon and non ChromeOS Linux Distros.` <br><br>
 - 0.42: `Fixed shortcut issue for "chard_shortcut" and "chard_shortcut_daemon". Updated GDK_DPI_SCALE to use scaling values.` <br><br>
 
-### Acknowledgements - This project would not exist without the help and support from the ChromeOS community. 
+### Acknowledgements - This project would not exist without the help and support from the ChromeOS community.
 
 - *Google* - Ending official Steam support gave me motivation to learn to run Linux apps inside ChromeOS.
 - *Terry Stormchaser* - Spending time testing Borealis alternatives, testing Chard + reporting bugs, and providing ideas.
@@ -421,4 +421,4 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - *Quince* - Recommending GUI apps that work with Chard.
 - *VALID* - Reporting Flatpak bugs, discord issues, heroic bug, and more. 
 - *Rein* - Reporting Bubblewrap breaking everything.
-- *nightshaded* - Testing on AMD and Intel Meteor Lake, reporting numerous bugs.
+- *nightshaded* - Testing on AMD Ryzen 7000 and Intel Meteor Lake, reporting numerous bugs. 
