@@ -420,4 +420,5 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - *DarkDonkey* - Testing QEMU and working on improving performance.
 - *Quince* - Recommending GUI apps that work with Chard.
 - *VALID* - Reporting Flatpak bugs, discord issues, heroic bug, and more. 
-- *Rein* - Reporting Bubblewrap breaking everything. 
+- *Rein* - Reporting Bubblewrap breaking everything.
+- *nightshaded* - Testing on AMD and Intel Meteor Lake, reporting numerous bugs.
