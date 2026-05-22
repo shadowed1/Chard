@@ -2250,15 +2250,19 @@ if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
     mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
     sleep 0.2
     curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.sh"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon" 2>/dev/null
+	sleep 0.2
     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_launch_daemon.sh"            -o "$CHARD_ROOT/bin/chard_launch_daemon" 2>/dev/null
     sleep 0.2
     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut.sh"            -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
     sleep 0.2
 	sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut_daemon.sh"            -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
 	sleep 0.2
+	curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.service"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service" 2>/dev/null
+	sleep 0.2
     sudo chmod +x "$CHARD_ROOT/bin/chard_launch_daemon"
     sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut"
 	sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut_daemon"
+	sudo
     sudo chmod +x "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon"
     vmc share termina Downloads/chard_icons 2>/dev/null
 fi
