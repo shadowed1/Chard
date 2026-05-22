@@ -1,0 +1,8 @@
+[Unit]
+Description=Chard Bridge Daemon
+After=multi-user.target
+[Service]
+Type=simple
+ExecStart=/bin/chard_bridge_daemon
+[Install]
+WantedBy=multi-user.target
