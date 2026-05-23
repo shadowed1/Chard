@@ -224,8 +224,6 @@ alias winegui='safe_wine'
 alias ksp='LC_ALL=C ./KSP_x86_64'
 # Blender
 alias blender='/bin/chard_blender'
-# Vinegar
-alias vinegar='/bin/chard_flatpak_ns run org.vinegarhq.Vinegar'
 # Sober
 alias sober='/bin/chard_flatpak run org.vinegarhq.Sober'
 # xcb
