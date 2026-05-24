@@ -2,22 +2,25 @@
 
 cd
 sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+sudo mkdir -p /usr/local/bwrap-0.11
 wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
 tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
 cd /tmp/bubblewrap-0.11.1
-meson setup build -Dprefix=/usr
+meson setup build -Dprefix=/usr/local/bwrap-0.11
 ninja -C build
 sudo ninja -C build install
 cd
 sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+sudo pacman -S bubblewrap --noconfirm --overwrite '*' 2>/dev/null
 
 cd
+sudo mkdir -p /usr/local/flatpak-1.16.3
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
-tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
-cd /tmp/flatpak-1.16.3
+sudo tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
+cd /tmp/flatpak-1.16.3 
 meson setup builddir \
-  --prefix=/usr \
+  --prefix=/usr/local/flatpak-1.16.3 \
   --libdir=/usr/lib \
   -Dsystem_bubblewrap=/usr/local/bubblepatch/bin/bwrap \
   -Dsystem_helper=disabled \
@@ -37,5 +40,6 @@ ninja -C builddir -j$(nproc)
 sudo ninja -C builddir install
 cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
+sudo pacman -S flatpak --noconfirm --overwrite '*' 2>/dev/null
 flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo chown -R 1000:1000 ~/.local/share/flatpak 2>/dev/null
