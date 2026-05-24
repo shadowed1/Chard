@@ -234,6 +234,9 @@ export FCFLAGS
 export FFLAGS
 
 PATHS_TO_ADD=(
+    "$ROOT/usr/local/bwrap-0.11/bin"
+    "$ROOT/usr/local/bubblepatch/bin"
+    "$ROOT/usr/local/flatpak-1.16.3/bin"
     "$PYEXEC_DIR"
     "$ROOT/usr/bin"
     "$ROOT/bin"
