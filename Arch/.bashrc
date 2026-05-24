@@ -87,6 +87,9 @@ for d in "$ROOT/opt"/*/bin; do
 done
 
 PATHS_TO_ADD=(
+    "$ROOT/usr/local/bwrap-0.11/bin"
+    "$ROOT/usr/local/bubblepatch/bin"
+    "$ROOT/usr/local/flatpak-1.16.3/bin"
     "$ROOT/usr/bin"
     "$ROOT/usr/sbin"
     "$ROOT/bin"
@@ -97,6 +100,7 @@ PATHS_TO_ADD=(
     "$HOME/.cargo/bin"
     "${OPT_BINS[@]}"
 )
+
 LIBS_TO_ADD=(
     "$ROOT/usr/lib64"
     "$ROOT/lib64"
