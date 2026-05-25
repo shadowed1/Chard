@@ -39,6 +39,8 @@ SOMMELIER_CMD=(
     cd ~/
     powercontrol-gui 2>/dev/null &
     sleep 0.2
+    sudo -E chard_scale daemon 2>/dev/null &
+    sleep 0.2
     pipewire 2>/dev/null &
     sleep 0.2
     pulseaudio 2>/dev/null &
