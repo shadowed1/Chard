@@ -594,6 +594,7 @@ case "$cmd" in
             /bin/error_color
             setfacl -Rb /run/chrome/pulse 2>/dev/null
             setfacl -Rb /run/chrome 2>/dev/null
+			killall -9 chard_scale 2>/dev/null
             killall -9 pipewire 2>/dev/null
             killall -9 pipewire-pulse 2>/dev/null
             killall -9 pulseaudio 2>/dev/null
