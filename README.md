@@ -340,6 +340,7 @@ More QEMU documentation: <br>
 
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
 - *Mediatek GPU support is currently being worked on (hard!) - ARM64 is software rendering only for now.
+- *Meteor Lake iGPU support is currently having issues.
 
 <br>
 
