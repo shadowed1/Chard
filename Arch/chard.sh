@@ -601,6 +601,7 @@ case "$cmd" in
             killall -9 chardwire 2>/dev/null
 			killall -9 powercontrol-gui 2>/dev/null
 			killall -9 inotifywait 2>/dev/null
+			killall -9 chard_scale 2>/dev/null
             #sudo chown -R root:audio /dev/snd 2>/dev/null
             #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             sudo chown -R root:root /run/chrome/dconf 2>/dev/null
