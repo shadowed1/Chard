@@ -24,6 +24,12 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib/libfuse3.so.4"
     "$CHARD_ROOT/usr/lib/libstdc++.so.6"
     "$CHARD_ROOT/usr/lib/libruby.so.3.4"
+    "$CHARD_ROOT/usr/lib/libctf-nobfd.so.0"
+    "$CHARD_ROOT/usr/lib/libdebuginfod.so.1"
+    "$CHARD_ROOT/usr/lib/libopcodes-2.46.0.so"
+    "$CHARD_ROOT/usr/lib/libctf.so.0"
+    "$CHARD_ROOT/usr/lib/libopcodes-2.46.0.so"
+    "$CHARD_ROOT/usr/lib/libbfd-2.46.0.so"
 )
 
 LD_PRELOAD=""
