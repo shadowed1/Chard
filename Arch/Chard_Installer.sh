@@ -2270,6 +2270,12 @@ fi
 ###########################################
 # Chariot
 ###########################################
+if [ "$GPU_TYPE" = "asahi" ]; then
+	sudo mkdir -p "$CHARD_ROOT/usr/lib64"
+	sudo cp "/usr/lib64/libvulkan_asahi.so" "$CHARD_ROOT/usr/lib64" 2>/dev/null
+	sudo mkdir -p "$CHARD_ROOT/usr/share/vulkan/icd.d" 2>/dev/null
+	sudo cp "/usr/share/vulkan/icd.d/asahi_icd.aarch64.json" "$CHARD_ROOT/usr/share/vulkan/icd.d" 2>/dev/null
+fi
 
 if [ -f "/home/chronos/user/.bashrc" ]; then
     sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
