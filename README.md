@@ -8,7 +8,7 @@
 
 <br>
 
-### Supports ChromeOS, mainstream Linux distros, and even Asahi Linux for Apple Silicon.
+### Supports ChromeOS, mainstream Linux distros, Asahi Linux for Apple Silicon, and more!
 __ChromeOS requires developer mode. crew-sudo should not be used for Chard; Use SudoCrosh instead__ 
 
 <br><br>
@@ -404,7 +404,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.40: `Improved gpu screen recorder installation script. Fixed Discord and Heroic, thanks to VALID for reporting. Fixed Flatpak issue and added socket detection to prevent override micromanagement. Adding On-Screen Keyboard support. Adding multi-touchscreen support.` <br><br>
 - 0.41: `Added support for Apple Silicon and non ChromeOS Linux Distros.` <br><br>
 - 0.42: `Fixed shortcut issue for "chard_shortcut" and "chard_shortcut_daemon". Updated GDK_DPI_SCALE to use scaling values.` <br><br>
-- 0.43 (in progress) - `Added .conf removal for chard_startup. Enhanced chard_scale to read display size with modetest and adapt to multiple displays.` <br><br>
+- 0.43 (in progress) - `Added .conf removal for chard_startup. Enhanced chard_scale to read display size with modetest and adapt to multiple displays. Added Vulkan support for Apple Silicon` <br><br>
 
 ### Acknowledgements - This project would not exist without the help and support from the ChromeOS community.
 
