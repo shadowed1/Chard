@@ -9,8 +9,26 @@ if ls /.chardrc > /dev/null 2>&1; then
 fi
 
 R=$CHARD_ROOT
-FLATPAK_ROOT=/usr/local/flatpak-1.16.6
-sudo true
+
+FLATPAK_VERSION="$(git ls-remote --tags https://github.com/flatpak/flatpak.git \
+    | awk -F/ '/refs\/tags\/[0-9]+\.[0-9]+\.[0-9]+$/ {print $3}' \
+    | sort -V \
+    | tail -n1)"
+
+if [ -z "$FLATPAK_VERSION" ]; then
+    echo "Failed to determine latest Flatpak version"
+    exit 1
+fi
+
+TMP_TARBALL="/tmp/flatpak-${FLATPAK_VERSION}.tar.gz"
+curl -L "https://github.com/flatpak/flatpak/archive/refs/tags/${FLATPAK_VERSION}.tar.gz" \
+    -o "$TMP_TARBALL"
+
+sudo tar -xzf "$TMP_TARBALL" -C /usr/local/
+FLATPAK_ROOT="/usr/local/flatpak-${FLATPAK_VERSION}"
+echo
+echo "${GREEN}Using Flatpak version at: ${BOLD}$FLATPAK_ROOT ${RESET}"
+echo
 CHARD_USER="$(sudo cat "$R/.chard_user")"
 CHARD_UID="$(sudo chroot "$R" id -u "$CHARD_USER")"
 CHARD_GID="$(sudo chroot "$R" id -g "$CHARD_USER")"
