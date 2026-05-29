@@ -15,10 +15,19 @@ RETRY_DELAY=30
 
 cancel_chroot() {
     echo "${RED}Cancelled${RESET}"
+	sleep 1
     exit 1
 }
 
 trap cancel_chroot INT TERM
+
+if grep -q '^PRETTY_NAME="Debian' /etc/os-release && [ -d /opt/google/cros-containers ]; then
+	echo ""
+    echo "${RED}${BOLD}Chard cannot be installed inside Crostini. Please use Crosh instead! ${RESET}"
+	echo "${YELLOW}To install Chard, please enable Developer mode, and install it via crosh (ctrl-alt-t) in ChromeOS. ${RESET}"
+	sleep 5
+    exit 0
+fi
 
 echo "${RESET}${GREEN}"
 echo
