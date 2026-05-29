@@ -7,6 +7,15 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
+
+if grep -q '^PRETTY_NAME="Debian' /etc/os-release && [ -d /opt/google/cros-containers ]; then
+	echo ""
+    echo "${RED}${BOLD}Chard cannot be installed inside Crostini. Please use Crosh instead! ${RESET}"
+	echo "${YELLOW}To install Chard, please enable Developer mode, and install it via crosh (ctrl-alt-t) in ChromeOS. ${RESET}"
+	sleep 5
+    exit 0
+fi
+
 echo
 echo "${GREEN}"
 echo "╔═══════════════════════════════════════════════════════════════════════════════════════════╗"
