@@ -11,6 +11,9 @@
 ### Supports ChromeOS, mainstream Linux distros, Asahi Linux for Apple Silicon, and more!
 __ChromeOS requires developer mode. crew-sudo should not be used for Chard; Use SudoCrosh instead__ 
 
+*Enabling Developer Mode for ChromeOS:* <br>
+https://www.chromium.org/chromium-os/developer-library/guides/device/developer-mode/#enable-developer-mode
+
 <br><br>
 
 # How to Install:
