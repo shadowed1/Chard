@@ -1347,7 +1347,7 @@ sudo cp /usr/lib64/libvulkan_asahi.so $CHARD_ROOT/usr/lib64/libvulkan_asahi.so 2
                 if [ -f "$CHROMEOS_BASHRC" ]; then
                     CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
                     echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
-                    sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
+                    #sudo ln -sf /usr/local/chard/usr/bin/xkbcomp /usr/bin/xkbcomp 2>/dev/null
                 fi
                 # Remove .chard.preload
                 # sudo rm $CHARD_ROOT/.chard.preload 2>/dev/null
