@@ -1053,7 +1053,7 @@ export USER=$CHARD_USER
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:$PATH"
 export PATH="$WRAPPED_PATH"
 LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
