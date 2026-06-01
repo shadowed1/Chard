@@ -1053,7 +1053,7 @@ export USER=$CHARD_USER
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
-WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:$PATH"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:/usr/local/flatpak-1.16.3/bin:$PATH"
 export PATH="$WRAPPED_PATH"
 FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
 LWJGL_TMPDIR="$HOME/.local/tmp"
@@ -1150,7 +1150,7 @@ export USER=$CHARD_USER
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:/usr/local/flatpak-1.16.3/bin:$PATH"
 export PATH="$WRAPPED_PATH"
 LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
@@ -1307,7 +1307,7 @@ esac
 xhost +SI:localuser:root
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 source /$CHARD_HOME/.bashrc
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:/usr/local/flatpak-1.16.3/bin:$PATH"
 sudo env \
     HOME=/$CHARD_HOME \
     USER=$CHARD_USER \
@@ -1339,7 +1339,7 @@ xhost +SI:localuser:$CHARD_USER
 sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
 sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
 source /$CHARD_HOME/.bashrc
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:/usr/local/flatpak-1.16.3/bin:$PATH"
 LWJGL_TMPDIR="/$CHARD_HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
 chown $CHARD_USER:$CHARD_USER "$LWJGL_TMPDIR"
