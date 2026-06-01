@@ -728,6 +728,8 @@ xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
 WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
 export PATH="$WRAPPED_PATH"
+FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
+export FLATPAK_BWRAP
 LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
@@ -757,6 +759,7 @@ if [[ $# -eq 0 ]]; then
     DISPLAY="${DISPLAY:-:0}" \
     XDG_RUNTIME_DIR="/run/chrome" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+	FLATPAK_BWRAP="$FLATPAK_BWRAP" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
     DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
@@ -805,6 +808,7 @@ env \
     DISPLAY="${DISPLAY:-:0}" \
     XDG_RUNTIME_DIR="/run/chrome" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+	FLATPAK_BWRAP="$FLATPAK_BWRAP" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
     OBS_VKCAPTURE=1 \
