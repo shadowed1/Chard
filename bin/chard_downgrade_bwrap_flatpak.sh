@@ -17,8 +17,6 @@ meson setup \
 
 ninja -C build
 sudo ninja -C build install
-sudo pacman -S bubblewrap --noconfirm --overwrite '*' 2>/dev/null
-
 cd ~/
 sudo rm -rf bubblepatch
 sudo mkdir -p /usr/local/flatpak-1.16.3
@@ -54,7 +52,6 @@ ninja -C builddir -j$(nproc)
 sudo ninja -C builddir install
 cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
-
 sudo pacman -S flatpak --noconfirm --overwrite '*' 2>/dev/null
 flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo chown -R 1000:1000 ~/.local/share/flatpak 2>/dev/null
