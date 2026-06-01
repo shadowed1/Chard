@@ -80,6 +80,8 @@ LDFLAGS=""
 export LDFLAGS
 export FCFLAGS
 export FFLAGS
+FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
+export FLATPAK_BWRAP
 
 OPT_BINS=()
 for d in "$ROOT/opt"/*/bin; do
