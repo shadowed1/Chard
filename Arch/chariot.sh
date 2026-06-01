@@ -1055,6 +1055,7 @@ xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
 WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:$PATH"
 export PATH="$WRAPPED_PATH"
+FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
 LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
@@ -1077,6 +1078,7 @@ sudo -u $CHARD_USER \
     PULSE_SERVER=unix:/run/chrome/pulse/native \
     DISPLAY="${DISPLAY:-:0}" \
     XDG_RUNTIME_DIR="/run/chrome" \
+    FLATPAK_BWRAP="$FLATPAK_BWRAP" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
@@ -1122,6 +1124,7 @@ env \
     PULSE_SERVER=unix:/run/chrome/pulse/native \
     DISPLAY="${DISPLAY:-:0}" \
     XDG_RUNTIME_DIR="/run/chrome" \
+    FLATPAK_BWRAP="$FLATPAK_BWRAP" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
