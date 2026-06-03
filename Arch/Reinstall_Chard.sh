@@ -858,6 +858,58 @@ EOF
 
 sudo chmod +x "$CHARD_ROOT/bin/chard_bazaar"
 
+		sudo tee "$CHARD_ROOT/bin/chard_xfce4" >/dev/null <<'EOF'
+#!/bin/bash
+XFCE4="$1"
+if [ -z "$XFCE4" ]; then
+    exit 1
+fi
+
+shift
+
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME="/$CHARD_HOME"
+export USER="$CHARD_USER"
+export QT_QPA_PLATFORMTHEME=gtk3
+xhost +SI:localuser:$CHARD_USER
+[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+export PATH="$WRAPPED_PATH"
+FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
+export FLATPAK_BWRAP
+LWJGL_TMPDIR="$HOME/.local/tmp"
+mkdir -p "$LWJGL_TMPDIR"
+chmod 700 "$LWJGL_TMPDIR"
+WINE_UID=$(id -u "$CHARD_USER")
+WINE_TMP="/tmp/.wine-${WINE_UID}"
+mkdir -p "$WINE_TMP"
+chown "$CHARD_USER":"$CHARD_USER" "$WINE_TMP"
+chmod 700 "$WINE_TMP"
+sudo setfacl -Rm u:$CHARD_USER:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo -u "$CHARD_USER" env \
+    HOME="$HOME" \
+    USER="$CHARD_USER" \
+    PULSE_SERVER=unix:/run/chrome/pulse/native \
+    DISPLAY="${DISPLAY:-:0}" \
+    XDG_RUNTIME_DIR="/run/chrome" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    FLATPAK_BWRAP="$FLATPAK_BWRAP" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
+    XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}" \
+    GDK_SCALE="${GDK_SCALE:-1.25}" \
+    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    WAYLAND_DISPLAY="" \
+    QT_QPA_PLATFORM=xcb \
+    "$XFCE4" "$@"
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+
+sudo chmod +x "$CHARD_ROOT/bin/chard_xfce4"
+
         sudo tee "$CHARD_ROOT/bin/chard_steam" >/dev/null <<'EOF'
 #!/bin/bash
 export PATH=/usr/local/bubblepatch/bin:$PATH
