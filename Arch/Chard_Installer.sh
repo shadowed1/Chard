@@ -151,6 +151,8 @@ case "$confirm" in
 esac
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
+echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
+
 
 chard_boot_setup() {
     local TEST_FILE="/etc/init/.boot_test"
