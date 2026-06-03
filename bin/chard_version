@@ -1,7 +1,7 @@
 #!/bin/bash
-VERSION="0.41"
+VERSION="0.43"
 
 changelog() {
-    echo "- Added support for Apple Silicon and non-ChromeOS Linux Distros!"
+    echo "- Fixed bugs."
     echo
 }
