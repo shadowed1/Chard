@@ -888,6 +888,57 @@ export ALSOFT_DRIVERS=alsa
 EOF
 sudo chmod +x "$CHARD_ROOT/bin/chard_prismlauncher"
 
+sudo tee "$CHARD_ROOT/bin/chard_xfce4-terminal" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export QT_QPA_PLATFORMTHEME=gtk3
+xhost +SI:localuser:$CHARD_USER
+[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
+export PATH="$WRAPPED_PATH"
+FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
+export FLATPAK_BWRAP
+LWJGL_TMPDIR="$HOME/.local/tmp"
+mkdir -p "$LWJGL_TMPDIR"
+chmod 700 "$LWJGL_TMPDIR"
+WINE_UID=$(id -u "$CHARD_USER")
+WINE_TMP="/tmp/.wine-${WINE_UID}"
+mkdir -p "$WINE_TMP"
+chown "$CHARD_USER":"$CHARD_USER" "$WINE_TMP"
+chmod 700 "$WINE_TMP"
+sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR"
+XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
+
+sudo -u $CHARD_USER \
+env \
+    HOME="$HOME" \
+    PULSE_SERVER=unix:/run/chrome/pulse/native \
+    DISPLAY="${DISPLAY:-:0}" \
+    XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    FLATPAK_BWRAP="$FLATPAK_BWRAP" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    OBS_VKCAPTURE=1 \
+    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
+    XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}" \
+    OBS_GAMECAPTURE=1 \
+    LIBGL_ALWAYS_INDIRECT=0 \
+    GDK_SCALE="${GDK_SCALE:-1.25}" \
+    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+    WAYLAND_DISPLAY="" \
+    QT_QPA_PLATFORM=xcb \
+xfce4-terminal
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+
+sudo chmod +x "$CHARD_ROOT/bin/chard_xfce4-terminal"
+
 sudo tee "$CHARD_ROOT/bin/chard_firefox" >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
