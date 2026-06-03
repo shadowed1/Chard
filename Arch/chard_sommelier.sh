@@ -49,7 +49,7 @@ SOMMELIER_CMD=(
     sleep 0.2
     color_reset 2>/dev/null &
     sleep 0.2
-    xfce4-terminal 2>/dev/null &
+    chard_xfce4 xfce4-terminal 2>/dev/null &
     sleep 0.2
     chard_launch_daemon 2>/dev/null &
     sleep 0.2
