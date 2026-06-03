@@ -306,7 +306,26 @@ alias gpusr='/bin/chard_gpusr'
 if [ -s "$VERSION_FILE" ]; then
 	CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
 	if [ "$CHROMEOS_VERSION" -ge 148 ]; then
-		alias xfce4-terminal='/bin/chard_xfce4-terminal
+		alias xfce4-about='chard_xfce4 xfce4-about'
+		alias xfce4-accessibility-settings='xfce4-accessibility-settings'
+		alias xfce4-appearance-settings='chard_xfce4 xfce4-appearance-settings'
+		alias xfce4-appfinder='chard_xfce4 xfce4-appfinder'
+		alias xfce4-color-settings='chard_xfce4 xfce4-color-settings'
+		alias xfce4-display-settings='chard_xfce4 xfce4-display-settings'
+		alias xfce4-find-cursor='chard_xfce4 xfce4-find-cursor'
+		alias xfce4-keyboard-settings='chard_xfce4 xfce4-keyboard-settings'
+		alias xfce4-kiosk-query='chard_xfce4 xfce4-kiosk-query'
+		alias xfce4-mime-helper='chard_xfce4 xfce4-mime-helper'
+		alias xfce4-mime-settings='chard_xfce4 xfce4-mime-settings'
+		alias xfce4-mouse-settings='chard_xfce4 xfce4-mouse-settings'
+		alias xfce4-panel='chard_xfce4 xfce4-panel'
+		alias xfce4-popup-applicationsmenu='chard_xfce4 xfce4-popup-applicationsmenu'
+		alias xfce4-session-logout='chard_xfce4 xfce4-session-logout'
+		alias xfce4-session-settings='chard_xfce4 xfce4-session-settings'
+		alias xfce4-settings-editor='chard_xfce4 xfce4-settings-editor'
+		alias xfce4-settings-manager='chard_xfce4 xfce4-settings-manager'
+		alias xfce4-taskmanager='chard_xfce4 xfce4-taskmanager'
+		alias xfce4-terminal='chard_xfce4 xfce4-terminal'
 	fi
 fi
 
