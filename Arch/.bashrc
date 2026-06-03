@@ -14,7 +14,7 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
+VERSION_FILE="/.chard_chrome"
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)
@@ -301,6 +301,14 @@ alias bazaar='/bin/chard_bazaar'
 alias gpusrc='/bin/chard_gpusrc'
 # GPU Screen Recorder Ui
 alias gpusr='/bin/chard_gpusr'
+
+# xfce4 aliases
+if [ -s "$VERSION_FILE" ]; then
+	CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+	if [ "$CHROMEOS_VERSION" -ge 148 ]; then
+		alias xfce4-terminal='/bin/chard_xfce4-terminal
+	fi
+fi
 
 command -v chard_refresh >/dev/null && chard_refresh
 
