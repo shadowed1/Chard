@@ -11,6 +11,16 @@ sudo ninja -C build install
 cd
 sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 
+sudo mkdir -p /usr/local/bwrap-0.11
+wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
+tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
+cd /tmp/bubblewrap-0.11.1
+meson setup build -Dprefix=/usr/local/bwrap-0.11
+ninja -C build
+sudo ninja -C build install
+cd
+sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+
 cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
