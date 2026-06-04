@@ -322,6 +322,8 @@ alias xfce4-settings-editor='chard_xfce4 xfce4-settings-editor'
 alias xfce4-settings-manager='chard_xfce4 xfce4-settings-manager'
 alias xfce4-taskmanager='chard_xfce4 xfce4-taskmanager'
 alias xfce4-terminal='chard_xfce4 xfce4-terminal'
+alias powercontrol-gui='chard_xfce4 powercontrol-gui'
+
 
 command -v chard_refresh >/dev/null && chard_refresh
 
