@@ -889,7 +889,6 @@ EOF
 				sudo chmod 4755 "$CHARD_ROOT/opt/Heroic/chrome-sandbox" 2>/dev/null
 				sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
-                $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 				sudo rm -rf "$CHARD_ROOT/$CHARD_HOME/.cache/yay/*" 2>/dev/null
 				# Enable the Pacman reference!
 				sudo grep -q '^ILoveCandy$' "$CHARD_ROOT/etc/pacman.conf" || \
@@ -1083,6 +1082,7 @@ EOF
 						        sudo chown root:video /dev/dri/renderD128
 						    fi
 						fi
+				$CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
