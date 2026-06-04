@@ -21,6 +21,28 @@ sudo ninja -C build install
 cd
 sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 
+cd ~/
+sudo rm -rf /usr/local/bubblepatch 2>/dev/null
+rm -rf bubblepatch 2>/dev/null
+git clone https://github.com/shadowed1/bubblepatch.git
+cd bubblepatch
+sudo mkdir -p /usr/local/bubblepatch
+
+meson setup \
+  -Dprefix=/usr/local/bubblepatch \
+  -Drequire_userns=false \
+  -Dselinux=disabled \
+  -Dtests=false \
+  -Dbash_completion=disabled \
+  -Dzsh_completion=disabled \
+  -Dman=disabled \
+  build
+
+ninja -C build
+sudo ninja -C build install
+cd ~/
+sudo rm -rf bubblepatch
+
 cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
