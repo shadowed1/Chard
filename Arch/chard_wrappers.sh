@@ -8,6 +8,37 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+sudo tee /bin/chard_steam >/dev/null <<'EOF'
+#!/bin/bash
+export PATH=/usr/local/bubblepatch/bin:$PATH
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export QT_QPA_PLATFORM=xcb
+STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
+xhost +SI:localuser:$USER
+sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+/usr/bin/steam -console -chromeos -force-opaque-background "$@"
+sudo setfacl -Rb /run/chrome 2>/dev/null
+EOF
+
+sudo chmod +x /bin/chard_steam
+
+mkdir -p ~/.local/share/applications
+tee ~/.local/share/applications/steam-chard.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Name=Steam (Chard)
+Comment=Wrapper to allow Steam to run on ChromeOS
+Exec=chard_steam
+Icon=steam
+Type=Application
+Categories=Game;
+Terminal=false
+StartupNotify=true
+EOF
+
 sudo tee "/bin/chard_xfce4" >/dev/null <<'EOF'
 #!/bin/bash
 XFCE4="$1"
