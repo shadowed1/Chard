@@ -19,6 +19,7 @@ ninja -C build
 sudo ninja -C build install
 cd ~/
 sudo rm -rf bubblepatch
+
 sudo mkdir -p /usr/local/flatpak-1.16.3
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
