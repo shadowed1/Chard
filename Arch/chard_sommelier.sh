@@ -37,7 +37,7 @@ SOMMELIER_CMD=(
         eval "$(dbus-launch --sh-syntax)"
     fi
     cd ~/
-    powercontrol-gui 2>/dev/null &
+    chard_xfce4 powercontrol-gui 2>/dev/null &
     sleep 0.2
     sudo -E chard_scale daemon 2>/dev/null &
     sleep 0.2
