@@ -1,5 +1,4 @@
 #!/bin/bash
-
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -15,13 +14,10 @@ ALIASES_FILE="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/.chard_aliases"
 
 mkdir -p "$WATCH_DIR"
 rm -f "$WATCH_DIR"/* 2>/dev/null
-
 sleep 5
-
 echo
-echo "${YELLOW}Press [ENTER] to continue.${RESET}"
+echo "${YELLOW}Press [ENTER] to continue. ${RESET}"
 echo
-
 if [ -S /tmp/.X11-unix/X0 ]; then
     export DISPLAY=:0
 else
@@ -32,38 +28,18 @@ fi
 echo "${CYAN}[chard_launch_daemon] DISPLAY=$DISPLAY watching $WATCH_DIR ${RESET}"
 
 declare -A ALIASES
-
 if [ -f "$ALIASES_FILE" ]; then
     while IFS='=' read -r key val; do
         [ -n "$key" ] && ALIASES["$key"]="$val"
     done < "$ALIASES_FILE"
-
     echo "${GREEN}[chard_launch_daemon] loaded ${#ALIASES[@]} aliases ${RESET}"
 fi
 
-cleanup() {
-    echo "${YELLOW}[chard_launch_daemon] cleaning up...${RESET}"
-
-    if [ -n "$INOTIFY_PID" ]; then
-        kill "$INOTIFY_PID" 2>/dev/null
-        wait "$INOTIFY_PID" 2>/dev/null
-    fi
-}
-
-trap cleanup EXIT INT TERM
-
 resolve_exec() {
     local exec_cmd="$1"
-
-    local bin
-    bin=$(echo "$exec_cmd" | awk '{print $1}')
-
-    local args
-    args=$(echo "$exec_cmd" | cut -s -d' ' -f2-)
-
-    local base
-    base=$(basename "$bin")
-
+    local bin=$(echo "$exec_cmd" | awk '{print $1}')
+    local args=$(echo "$exec_cmd" | cut -s -d' ' -f2-)
+    local base=$(basename "$bin")
     if [ -n "${ALIASES[$base]}" ]; then
         echo "${ALIASES[$base]}${args:+ $args}"
     else
@@ -74,72 +50,35 @@ resolve_exec() {
 launch_app() {
     local desktop_file_id="$1"
     local df=""
-
     if [ -f "/usr/share/applications/${desktop_file_id}.desktop" ]; then
         df="/usr/share/applications/${desktop_file_id}.desktop"
     else
         df=$(find /usr/share/applications -name "*${desktop_file_id}*.desktop" 2>/dev/null | head -1)
     fi
-
     if [ -z "$df" ]; then
-        echo "${RED}[chard_launch_daemon] no desktop file for: $desktop_file_id ${RESET}"
+        echo "[chard_launch_daemon] no desktop file for: $desktop_file_id"
         return
     fi
-
-    local exec_raw
-    exec_raw=$(grep -m1 '^Exec=' "$df" | cut -d= -f2- | sed 's/ %[a-zA-Z]//g')
-
-    local terminal
-    terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
-
-    local name
-    name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
-
-    local exec_cmd
-    exec_cmd=$(resolve_exec "$exec_raw")
-
+    local exec_raw=$(grep -m1 '^Exec=' "$df" | cut -d= -f2- | sed 's/ %[a-zA-Z]//g')
+    local terminal=$(grep -m1 '^Terminal=' "$df" | cut -d= -f2 | tr -d '[:space:]')
+    local name=$(grep -m1 '^Name=' "$df" | cut -d= -f2-)
+    local exec_cmd=$(resolve_exec "$exec_raw")
     echo "${BLUE}[chard_launch_daemon] launching: $name -> $exec_cmd ${RESET}"
-
     [ -f ~/.bashrc ] && source ~/.bashrc 2>/dev/null
-
     if [ "$terminal" = "true" ]; then
-        DISPLAY=$DISPLAY xfce4-terminal -e "$exec_cmd" \
-            </dev/null >/dev/null 2>&1 &
+        DISPLAY=$DISPLAY xfce4-terminal -e "$exec_cmd" &
     else
-        DISPLAY=$DISPLAY eval "$exec_cmd" \
-            </dev/null >/dev/null 2>&1 &
+        DISPLAY=$DISPLAY eval "$exec_cmd" &
     fi
 }
 
 while true; do
-
-    if [ ! -d "$WATCH_DIR" ]; then
-        echo "${RED}[chard_launch_daemon] watch dir missing: $WATCH_DIR ${RESET}"
-        sleep 1
-        continue
-    fi
-
-    echo "${CYAN}[chard_launch_daemon] starting inotifywait...${RESET}"
-
-    coproc INOTIFY_PROC {
-        exec inotifywait -m -q \
-            -e close_write,moved_to,delete_self,move_self \
-            --format '%f' \
-            "$WATCH_DIR"
-    }
-    
-    INOTIFY_PID=$INOTIFY_PROC_PID
-    while IFS= read -r filename <&"${INOTIFY_PROC[0]}"; do
-        [ -n "$filename" ] || break
-        trigger="$WATCH_DIR/$filename"
+    for trigger in "$WATCH_DIR"/*; do
         [ -f "$trigger" ] || continue
+        filename=$(basename "$trigger")
         rm -f "$trigger"
         echo "${CYAN}[chard_launch_daemon] trigger: $filename ${RESET}"
         launch_app "$filename" &
     done
-    echo "${YELLOW}[chard_launch_daemon] inotifywait stopped, restarting...${RESET}"
-    kill "$INOTIFY_PID" 2>/dev/null
-    wait "$INOTIFY_PID" 2>/dev/null
-
     sleep 1
 done
