@@ -724,8 +724,10 @@ sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CH
 echo "${BLUE}[*] Downloading Chard components...${RESET}"
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"            -o "$CHARD_ROOT/.chardrc"
 sleep 0.2
+echo ""
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.env"          -o "$CHARD_ROOT/.chard.env"
 sleep 0.2
+echo ""
 #sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh"  -o "$CHARD_ROOT/bin/Reinstall_Chard.sh"
 #sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
@@ -810,6 +812,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/down
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_wrappers.sh"            -o "$CHARD_ROOT/bin/chard_wrappers" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_svg.sh"            -o "$CHARD_ROOT/bin/chard_svg" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
@@ -846,7 +850,8 @@ sudo chmod +x "$CHARD_ROOT/bin/vulkan_tester"
 sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
 sudo chmod +x "$CHARD_ROOT/bin/chard_gpu_sr_setup"
 sudo chmod +x "$CHARD_ROOT/bin/downgrade_flatpak_bwrap"
-sudo chmox +x "$CHARD_ROOT/bin/chard_wrappers"
+sudo chmod +x "$CHARD_ROOT/bin/chard_wrappers"
+sudo chmod +x "$CHARD_ROOT/bin/chard_svg"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
 for file in \
