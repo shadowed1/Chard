@@ -16,14 +16,16 @@ if ! ls /.chardrc > /dev/null 2>&1; then
 fi
 
 if ! command -v inkscape &>/dev/null; then
-    echo "${RED}inkscape is not installed. If Arch:   sudo pacman -S --noconfirm inkscape${RESET}"
-    echo "${RED}inkscape is not installed. If Gentoo: sudo emerge inkscape${RESET}"
-    exit 1
+    echo "${RED}inkscape is not installed. Installing Inkscape${RESET}"
+    sleep 3
+    sudo pacman -S --noconfirm inkscape 2>/dev/null
+    sudo -E emerge -S inkscape 2>/dev/null
 fi
 
 ICONS_HICOLOR="/usr/share/icons/hicolor"
 ICONS_PIXMAPS="/usr/share/pixmaps"
 SIZES=(16 32 48 64 96 128)
+
 converted=0
 skipped=0
 failed=0
@@ -51,23 +53,26 @@ convert_svg() {
         "$src" > /dev/null 2>&1; then
         converted=$((converted + 1))
     else
-        echo "  ${RED}Failed:${RESET} $(basename "$src") → ${size}x${size}"
+        echo "  ${RED}Failed:${RESET} $(basename "$src") ${RESET}${GREEN}->${RESET} ${RED}${size}x${size}${RED}"
         failed=$((failed + 1))
         return 1
     fi
 }
 
-echo "${CYAN}Processing scalable icons...${RESET}"
+echo
+echo "${CYAN}Processing scalable icons${RESET}"
+echo
 while IFS= read -r -d '' svg; do
     icon_name=$(basename "$svg" .svg)
     for size in "${SIZES[@]}"; do
         dest="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
-        printf "  ${YELLOW}%-40s${RESET} → %sx%s\n" "$icon_name" "$size" "$size"
+        printf "  ${YELLOW}%-40s${RESET} ${RESET}${GREEN}->${RESET} ${BLUE}%sx%s\n${RESET}" "$icon_name" "$size" "$size"
         convert_svg "$svg" "$dest" "$size"
     done
 done < <(find "$ICONS_HICOLOR/scalable/apps" -name "*.svg" -print0 2>/dev/null)
 
+echo
 echo "${CYAN}Processing sized icon directories...${RESET}"
 for size in "${SIZES[@]}"; do
     dir="$ICONS_HICOLOR/${size}x${size}/apps"
@@ -76,24 +81,23 @@ for size in "${SIZES[@]}"; do
         icon_name=$(basename "$svg" .svg)
         dest="$dir/${icon_name}.png"
         [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
-        printf "  ${YELLOW}%-40s${RESET} → %sx%s\n" "$icon_name" "$size" "$size"
+        printf "  ${YELLOW}%-40s${RESET} ${RESET}${GREEN}->${RESET} ${YELLOW}%sx%s\n${RESET}" "$icon_name" "$size" "$size"
         convert_svg "$svg" "$dest" "$size"
     done < <(find "$dir" -maxdepth 1 -name "*.svg" -print0 2>/dev/null)
 done
 
-echo "${CYAN}Processing pixmap icons...${RESET}"
+echo
+echo "${CYAN}Processing pixmap icons:${RESET}"
 while IFS= read -r -d '' svg; do
     icon_name=$(basename "$svg" .svg)
     dest="$ICONS_PIXMAPS/${icon_name}.png"
     [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
-    printf "  ${YELLOW}%-40s${RESET} → pixmaps (128px)\n" "$icon_name"
+    printf "  ${YELLOW}%-40s${RESET} ${RESET}${GREEN}->${RESET}${BLUE} pixmaps (128px)\n${RESET}" "$icon_name"
     convert_svg "$svg" "$dest" 128
 done < <(find "$ICONS_PIXMAPS" -maxdepth 1 -name "*.svg" -print0 2>/dev/null)
 
 echo
-echo "${GREEN}${BOLD}Done.${RESET} Converted: ${GREEN}$converted${RESET}, Already existed: ${YELLOW}$skipped${RESET}, Failed: ${RED}$failed${RESET}"
+echo "${RESET}${GREEN}Converted:           ${BOLD}${GREEN}$converted${RESET}"
+echo "${MAGENTA}Already existed:     ${BOLD}${MAGENTA}$skipped${RESET}"
+echo "${RED}Failed:              ${BOLD}${RED}$failed${RESET}"
 echo
-
-if [ "$converted" -gt 0 ]; then
-    echo "${CYAN}Now run ${BOLD}chard_shortcut${RESET}${CYAN} from the ChromeOS shell to register the apps.${RESET}"
-fi
