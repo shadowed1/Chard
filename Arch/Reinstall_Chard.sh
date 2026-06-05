@@ -1013,6 +1013,7 @@ EOF
 				                cd ~/
 								sudo pacman -S --noconfirm ostree 2>/dev/null
 				                /bin/downgrade_flatpak_bwrap 2>/dev/null
+								/bin/chard_svg 2>/dev/null
 				                "
 				            /bin/error_color
 				            setfacl -Rb /run/chrome/pulse 2>/dev/null
