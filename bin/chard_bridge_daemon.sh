@@ -104,12 +104,10 @@ echo "${RED}[chard_bridge_daemon] installing /bin/chard_bridge...${RESET}"
 
     sudo tee /bin/chard_bridge << BRIDGE
 #!/bin/bash
-DESKTOP_FILE_ID="$1"
+DESKTOP_FILE_ID="\$1"
 SHARED="$SHARED/chard_icons"
-
-[ -z "$DESKTOP_FILE_ID" ] && exit 1
-
-touch "$SHARED/launch/$DESKTOP_FILE_ID"
+[ -z "\$DESKTOP_FILE_ID" ] && exit 1
+touch "\$SHARED/launch/\$DESKTOP_FILE_ID"
 BRIDGE
 
     sudo chmod +x /bin/chard_bridge
