@@ -9,11 +9,11 @@ RESET=$(tput sgr0)
 sudo rm /bin/chard_bridge 2>/dev/null
 detect_shared() {
 if [ -d "/mnt/chromeos/MyFiles/Downloads" ]; then
-echo "/mnt/chromeos/MyFiles/Downloads"
+    echo "/mnt/chromeos/MyFiles/Downloads"
 elif [ -d "/mnt/shared/MyFiles/Downloads" ]; then
-echo "/mnt/shared/MyFiles/Downloads"
+    echo "/mnt/shared/MyFiles/Downloads"
 else
-return 1
+    return 1
 fi
 }
 
@@ -131,7 +131,6 @@ while true; do
         sync_desktops
         sync_icons
     fi
-
     sleep 10
     sync_desktops
     sync_icons
