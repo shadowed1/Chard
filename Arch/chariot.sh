@@ -2595,6 +2595,7 @@ run_checkpoint 162 "man + wget" checkpoint_162
 checkpoint_163() {
     retry_pacman "sudo pacman -S --noconfirm glib2-devel"
     retry_pacman "sudo pacman -S --noconfirm python-pyparsing"
+    retry_pacman "sudo pacman -S --noconfirm ostree"
     sudo -E pacman -Rdd --noconfirm bubblewrap 2>/dev/null
     /bin/downgrade_flatpak_bwrap
     #sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
