@@ -928,7 +928,7 @@ EOF
 				                [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
 				                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
 				                cd ~/
-								sudo pacman -S --noconfirm ostree 2>/dev/null
+								#sudo pacman -S --noconfirm ostree 2>/dev/null
 				                #/bin/downgrade_flatpak_bwrap 2>/dev/null
 								#/bin/chard_svg 2>/dev/null
 				                "
