@@ -410,7 +410,7 @@ for entry in "${FILES[@]}"; do
     sudo mkdir -p "$(dirname "$target")"
 
     if sudo curl -fsSL "$BASE_URL/$source" -o "$target"; then
-        echo "${BLUE}Downloaded: ${BOLD}$target ${RESET}"
+        echo "${BLUE}${BOLD}$target ${RESET}"
 
         if [ "$executable" = "1" ]; then
             sudo chmod +x "$target"
@@ -516,6 +516,7 @@ fi
 
 BOARD_NAME=${BOARD_NAME%%-*}
 
+echo
 echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
 
 sudo tee "$CHARD_ROOT/usr/.chard_prompt.sh" >/dev/null <<EOF
