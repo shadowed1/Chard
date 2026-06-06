@@ -6,7 +6,7 @@ BLUE=$(tput setaf 4)
 CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
+sudo rm /bin/chard_bridge 2>/dev/null
 detect_shared() {
 if [ -d "/mnt/chromeos/MyFiles/Downloads" ]; then
 echo "/mnt/chromeos/MyFiles/Downloads"
@@ -99,20 +99,22 @@ fi
 }
 
 ensure_bridge() {
-if [ ! -f "/bin/chard_bridge" ]; then
-echo "${RED}[chard_bridge_daemon] installing /bin/chard_bridge...${RESET}"
+    if [ ! -f "/bin/chard_bridge" ]; then
+        echo "${BLUE}[chard_bridge_daemon] installing /bin/chard_bridge...${RESET}"
 
-    sudo tee /bin/chard_bridge << BRIDGE
+        local shared_path="$SHARED/chard_icons"
+        sudo tee /bin/chard_bridge << 'BRIDGE_TEMPLATE' > /dev/null
 #!/bin/bash
-DESKTOP_FILE_ID="\$1"
-SHARED="$SHARED/chard_icons"
-[ -z "\$DESKTOP_FILE_ID" ] && exit 1
-touch "\$SHARED/launch/\$DESKTOP_FILE_ID"
-BRIDGE
+DESKTOP_FILE_ID="$1"
+BRIDGE_TEMPLATE
+        echo "SHARED=\"${shared_path}\"" | sudo tee -a /bin/chard_bridge > /dev/null
+        sudo tee -a /bin/chard_bridge << 'BRIDGE_TEMPLATE' > /dev/null
+[ -z "$DESKTOP_FILE_ID" ] && exit 1
+touch "$SHARED/launch/$DESKTOP_FILE_ID"
+BRIDGE_TEMPLATE
 
-    sudo chmod +x /bin/chard_bridge
-fi
-
+        sudo chmod +x /bin/chard_bridge
+    fi
 }
 
 run_daemon() {
