@@ -373,137 +373,52 @@ detect_gpu_freq() {
 chard unmount
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
-echo "${CYAN}[*] Downloading Chard components...${RESET}"
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chardrc"           -o "$CHARD_ROOT/.chardrc" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.env"         -o "$CHARD_ROOT/.chard.env" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard.sh"           -o "$CHARD_ROOT/bin/chard" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.bashrc"            -o "$CHARD_ROOT/$CHARD_HOME/.bashrc" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version"       -o "$CHARD_ROOT/bin/chard_version" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"                 -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.rootrc"            -o "$CHARD_ROOT/bin/.rootrc" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chariot.sh"         -o "$CHARD_ROOT/bin/chariot" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_sommelier.sh" -o "$CHARD_ROOT/bin/chard_sommelier" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/wx"                  -o "$CHARD_ROOT/bin/wx" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/SMRT.sh"            -o "$CHARD_ROOT/bin/SMRT" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_unmount"       -o "$CHARD_ROOT/bin/chard_unmount" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chardsetup.sh"      -o "$CHARD_ROOT/bin/chardsetup" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/root.sh"            -o "$CHARD_ROOT/bin/root" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_volume.sh"            -o "$CHARD_ROOT/bin/chard_volume" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardwire.sh"            -o "$CHARD_ROOT/bin/chardwire" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/.chard.preload"            -o "$CHARD_ROOT/.chard.preload" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_ucm.sh"            -o "$CHARD_ROOT/bin/chard_ucm" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"            -o "$CHARD_ROOT/bin/chard_preload" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"            -o "$CHARD_ROOT/bin/rainbow" 2>/dev/null
-#sleep 0.05
-#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_garcon.sh"            -o "$CHARD_ROOT/bin/chard_garcon" 2>/dev/null
-#sleep 0.05
-#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf"            -o /etc/init/chard.conf 2>/dev/null
-#sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"            -o "$CHARD_ROOT/bin/rainbow" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/error_color.sh"            -o "$CHARD_ROOT/bin/error_color" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/color_reset.sh"            -o "$CHARD_ROOT/bin/color_reset" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker.c"            -o "$CHARD_ROOT/tmp/autoclicker.c" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_mount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_mount" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_unmount" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c"            -o "$CHARD_ROOT/tmp/virtm.c" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_refresh.sh"            -o "$CHARD_ROOT/bin/chard_refresh" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_mesa.sh"            -o "$CHARD_ROOT/bin/chard_mesa" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_patch" 2>/dev/null
-sleep 0.05
-#sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_sommelier_game.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_game" 2>/dev/null
-#sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh"            -o "$CHARD_ROOT/bin/chard_startup" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/vulkan_tester.sh"            -o "$CHARD_ROOT/bin/vulkan_tester" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_timezone_daemon.sh"            -o "$CHARD_ROOT/bin/chard_timezone_daemon" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_gpu_sr_setup.sh"            -o "$CHARD_ROOT/bin/chard_gpu_sr_setup" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/downgrade_flatpak_bwrap.sh"            -o "$CHARD_ROOT/bin/downgrade_flatpak_bwrap" 2>/dev/null
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_wrappers.sh"            -o "$CHARD_ROOT/bin/chard_wrappers" 2>/dev/null
-sleep 0.2
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_svg.sh"            -o "$CHARD_ROOT/bin/chard_svg" 2>/dev/null
-sleep 0.2
 sudo mkdir -p "$CHARD_ROOT/run/udev"
-sudo chmod +x "$CHARD_ROOT/bin/chard"
-sudo chmod +x "$CHARD_ROOT/bin/chariot"
-sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
-sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
-sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
-sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
-sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
-sudo chmod +x "$CHARD_ROOT/bin/wx"
-sudo chmod +x "$CHARD_ROOT/bin/SMRT"
-sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
-sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
-sudo chmod +x "$CHARD_ROOT/bin/chardsetup"
-sudo chmod +x "$CHARD_ROOT/bin/root"
-sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
-sudo chmod +x "$CHARD_ROOT/bin/chardwire"
-sudo chmod +x "$CHARD_ROOT/.chard.preload"
-sudo chmod +x "$CHARD_ROOT/bin/chard_ucm"
-sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
-sudo chmod +x "$CHARD_ROOT/bin/rainbow"
-sudo chmod +x "$CHARD_ROOT/bin/color_reset"
-sudo chmod +x "$CHARD_ROOT/bin/error_color"
-sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
-sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_mount"
-sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
-sudo chmod +x "$CHARD_ROOT/bin/chard_refresh"
-sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
-sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
-#sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_game"
-sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
-sudo chmod +x "$CHARD_ROOT/bin/chard_version"
-sudo chmod +x "$CHARD_ROOT/bin/vulkan_tester"
-sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
-sudo chmod +x "$CHARD_ROOT/bin/chard_gpu_sr_setup"
-sudo chmod +x "$CHARD_ROOT/bin/downgrade_flatpak_bwrap"
-sudo chmod +x "$CHARD_ROOT/bin/chard_wrappers"
-sudo chmod +x "$CHARD_ROOT/bin/chard_svg"
-sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
-#sudo chmod +x "$CHARD_ROOT/bin/chard_garcon"
-#sudo chmod +x /etc/init/chard.conf
+
+echo "${CYAN}[*] Downloading Chard components...${RESET}"
+BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
+
+FILES=(
+    "Arch/.chardrc|$CHARD_ROOT/.chardrc|0"
+    "Arch/.chard.env|$CHARD_ROOT/.chard.env|0"
+    "bin/Uninstall_Chard.sh|$CHARD_ROOT/bin/Uninstall_Chard.sh|1"
+    "Arch/chard.sh|$CHARD_ROOT/bin/chard|1"
+    "Arch/.bashrc|$CHARD_ROOT/$CHARD_HOME/.bashrc|0"
+    "bin/chard_version|$CHARD_ROOT/bin/chard_version|1"
+    "LICENSE|$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE|0"
+    "Arch/.rootrc|$CHARD_ROOT/bin/.rootrc|1"
+    "Arch/chariot.sh|$CHARD_ROOT/bin/chariot|1"
+    "bin/chard_debug.sh|$CHARD_ROOT/bin/chard_debug|1"
+    "Arch/chard_sommelier.sh|$CHARD_ROOT/bin/chard_sommelier|1"
+    "bin/chard_scale.sh|$CHARD_ROOT/bin/chard_scale|1"
+    "bin/wx|$CHARD_ROOT/bin/wx|1"
+    "Arch/SMRT.sh|$CHARD_ROOT/bin/SMRT|1"
+    "bin/chard_mount|$CHARD_ROOT/bin/chard_mount|1"
+    "bin/chard_unmount|$CHARD_ROOT/bin/chard_unmount|1"
+    "Arch/chardsetup.sh|$CHARD_ROOT/bin/chardsetup|1"
+    "Arch/root.sh|$CHARD_ROOT/bin/root|1"
+    "bin/chard_volume.sh|$CHARD_ROOT/bin/chard_volume|1"
+    "bin/chardwire.sh|$CHARD_ROOT/bin/chardwire|1"
+    "Arch/.chard.preload|$CHARD_ROOT/.chard.preload|1"
+    "Arch/chard_ucm.sh|$CHARD_ROOT/bin/chard_ucm|1"
+    "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1".
+)
+
+for entry in "${FILES[@]}"; do
+    IFS='|' read -r source target executable <<< "$entry"
+
+    sudo mkdir -p "$(dirname "$target")"
+
+    if sudo curl -fsSL "$BASE_URL/$source" -o "$target"; then
+        echo "${BLUE}Downloaded: ${BOLD}$target ${RESET}"
+
+        if [ "$executable" = "1" ]; then
+            sudo chmod +x "$target"
+        fi
+    else
+        echo "${RED}Failed: ${BOLD}$source ${RESET}"
+    fi
+done
 
 for file in \
     "$CHARD_ROOT/.chardrc" \
