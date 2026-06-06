@@ -2,6 +2,10 @@
 VERSION="0.43"
 
 changelog() {
-    echo "- Fixed bugs."
+    echo "- Added .conf removal for chard_startup."
+    echo "- Enhanced chard_scale to read display size with modetest and adapt to multiple displays."
+    echo "- Added Vulkan support for Apple Silicon."
+    echo "- Fixed xfce4 apps."
+    echo "- Fixed shortcut issues."
     echo
 }
