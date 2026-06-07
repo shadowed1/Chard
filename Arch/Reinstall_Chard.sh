@@ -402,7 +402,8 @@ FILES=(
     "bin/chardwire.sh|$CHARD_ROOT/bin/chardwire|1"
     "Arch/.chard.preload|$CHARD_ROOT/.chard.preload|1"
     "Arch/chard_ucm.sh|$CHARD_ROOT/bin/chard_ucm|1"
-    "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1".
+    "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
+	"Arch/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
 )
 
 for entry in "${FILES[@]}"; do
@@ -825,7 +826,7 @@ EOF
 						    fi
 						fi
 						# Write our user hash to Chard for preliminary shortcut support
-						U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
+						U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1) 2>/dev/null
 						echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
 						sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
 				        chard_volume > /dev/null 2>&1 &
