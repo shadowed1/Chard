@@ -377,6 +377,7 @@ sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 sudo mkdir -p "$CHARD_ROOT/run/udev"
 
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
+echo ""
 BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
 
 FILES=(
@@ -479,6 +480,7 @@ add_chard_marker() {
             echo "source \"$CHARD_RC\""
             echo "# <<< END CHARD ENV MARKER <<<"
         } >> "$FILE"
+		echo
         echo "${BLUE}[+] Chard sourced to $FILE"
         echo
     else
