@@ -408,6 +408,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.41: `Added support for Apple Silicon and non ChromeOS Linux Distros.` <br><br>
 - 0.42: `Fixed shortcut issue for "chard_shortcut" and "chard_shortcut_daemon". Updated GDK_DPI_SCALE to use scaling values.` <br><br>
 - 0.43: `Added .conf removal for chard_startup. Enhanced chard_scale to read display size with modetest and adapt to multiple displays. Added Vulkan support for Apple Silicon. Fixed xfce4 apps. Fixed shortcut issues.` <br><br>
+- 0.44 (in progress): `Updated bubblepatch to include 0.11.1 fixes. Added pacman lock removal command on reinstall.` <br><br>
 
 ### Acknowledgements - This project would not exist without the help and support from the ChromeOS community.
 
