@@ -2651,6 +2651,8 @@ checkpoint_169() {
 run_checkpoint 169 "inkscape" checkpoint_169
 
 checkpoint_170() {
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_svg.sh"            -o "/bin/chard_svg" 2>/dev/null
+    sudo chmod +x /bin/chard_svg 2>/dev/null
     /bin/chard_svg
 }
 run_checkpoint 170 "svg conversion" checkpoint_170
