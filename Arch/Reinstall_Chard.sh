@@ -1005,7 +1005,7 @@ EOF
 						        sudo chown root:video /dev/dri/renderD128
 						    fi
 						fi
-				#$CHARD_ROOT/bin/chard_shortcut 2>/dev/null
+				$CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
