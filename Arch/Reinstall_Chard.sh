@@ -405,6 +405,7 @@ FILES=(
     "Arch/chard_ucm.sh|$CHARD_ROOT/bin/chard_ucm|1"
     "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
 	"Arch/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
+	"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
 )
 
 for entry in "${FILES[@]}"; do
