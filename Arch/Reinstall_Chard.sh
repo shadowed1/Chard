@@ -489,8 +489,9 @@ add_chard_marker() {
     fi
 }
 
-echo $CHARD_ROOT
-echo $CHARD_RC
+# Debugging
+#echo $CHARD_ROOT
+#echo $CHARD_RC
 
 add_chard_marker "$TARGET_FILE"
 
