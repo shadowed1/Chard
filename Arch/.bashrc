@@ -232,6 +232,8 @@ alias ksp='LC_ALL=C ./KSP_x86_64'
 alias blender='/bin/chard_blender'
 # Sober
 alias sober='/bin/chard_flatpak run org.vinegarhq.Sober'
+# Flatpak_ns
+alias flatpak_ns='/bin/chard_flatpak_ns'
 # xcb
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 alias kiwix-desktop='QT_QPA_PLATFORM=xcb kiwix-desktop'
