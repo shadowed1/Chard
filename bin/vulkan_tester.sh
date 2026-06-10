@@ -50,7 +50,6 @@ for icd in /usr/share/vulkan/icd.d/*.json; do
     else
         echo "${YELLOW}$icd ${BOLD}[OFF]${RESET}"
     fi
-    echo
 done
 
 sleep 1
