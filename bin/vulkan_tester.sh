@@ -32,11 +32,6 @@ fi
 
 for icd in /usr/share/vulkan/icd.d/*.json; do
     if [[ "$icd" == *i686* ]]; then
-        if [[ -z "$VULKANINFO32" ]]; then
-            echo "${YELLOW}vulkaninfo32 not found. ${RESET}"
-            echo
-            continue
-        fi
         cmd="$VULKANINFO32"
         arch="32-bit"
     else
