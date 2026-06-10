@@ -43,7 +43,7 @@ for icd in /usr/share/vulkan/icd.d/*.json; do
     if [[ $ret -eq 0 ]]; then
         echo "${RED}$icd ${BOLD}[ON]${RESET}"
     else
-        echo "${YELLOW}$icd ${BOLD}[OFF]${RESET}"
+        echo "${BLUE}$icd ${BOLD}[OFF]${RESET}"
     fi
 done
 
