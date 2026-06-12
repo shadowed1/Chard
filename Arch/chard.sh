@@ -492,9 +492,14 @@ case "$cmd" in
 		        sudo chown -E $USER:video /dev/dri/renderD128
 		    fi
 		fi
+		
 		# Write our user hash to Chard for preliminary shortcut support
-		U_HASH=$(sudo sh -c 'ls /home/.shadow/ 2>/dev/null' | grep -v 'salt\|root' | head -1)
+		U_HASH=""
+		if [ -d /home/.shadow ]; then
+		    U_HASH=$(sudo find /home/.shadow -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | head -n1)
+		fi
 		echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
+		
 		sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
         chard_volume > /dev/null 2>&1 &
 		chard_shortcut_daemon start 2>/dev/null &
