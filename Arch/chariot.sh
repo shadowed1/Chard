@@ -687,16 +687,16 @@ checkpoint_45() {
     retry_pacman "yay -S --noconfirm libselinux"
     retry_pacman "sudo pacman -S --noconfirm bash-completion"
 
-    cd
-    sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
-    wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
-    tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
-    cd /tmp/bubblewrap-0.11.1
-    meson setup build -Dprefix=/usr
-    ninja -C build
-    sudo ninja -C build install
-    cd
-    sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+#    cd
+#    sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+#    wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
+#    tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
+#    cd /tmp/bubblewrap-0.11.1
+#    meson setup build -Dprefix=/usr
+#    ninja -C build
+#    sudo ninja -C build install
+#    cd
+#    sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 }
 run_checkpoint 45 "Bubblewrap 0.11.1" checkpoint_45
 
