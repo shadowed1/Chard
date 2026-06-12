@@ -525,3 +525,18 @@ chard_obs_cleanup
 EOF
 
 sudo chmod +x /bin/chard_obs
+
+sudo tee /bin/chard_7z >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  exec /usr/bin/7zFM "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x /bin/chard_7z
