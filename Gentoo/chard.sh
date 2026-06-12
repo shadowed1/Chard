@@ -702,7 +702,10 @@ case "$cmd" in
         sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
 
         # Write our user hash to Chard for preliminary shortcut support
-		U_HASH=$(sudo sh -c 'ls /home/.shadow/ 2>/dev/null' | grep -v 'salt\|root' | head -1)
+		U_HASH=""
+		if [ -d /home/.shadow ]; then
+		    U_HASH=$(sudo find /home/.shadow -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | head -n1)
+		fi
 		echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
