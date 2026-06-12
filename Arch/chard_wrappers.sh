@@ -8,20 +8,294 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-sudo tee /bin/chard_steam >/dev/null <<'EOF'
+sudo tee "/bin/chard_firefox" >/dev/null <<'EOF'
 #!/bin/bash
-export PATH=/usr/local/bubblepatch/bin:$PATH
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  export PULSE_SERVER=unix:$XDG_RUNTIME/pulse/native
+  export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
+  exec /usr/bin/firefox "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x "/bin/chard_firefox"
+
+sudo tee "/bin/chard_discord" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+fix_sandbox() {
+    for base in \
+        "$HOME/.config/discord" \
+        "$HOME/.local/share/discord" \
+        "/home/chronos/.config/discord" \
+        "/home/chronos/user/.config/discord"
+    do
+        [ -d "$base" ] || continue
+        find "$base" -type f -name chrome-sandbox 2>/dev/null | while read -r sb; do
+            sudo chown root:root "$sb" 2>/dev/null || true
+            sudo chmod 4755 "$sb" 2>/dev/null || true
+        done
+    done
+}
+
+fix_sandbox
+exec /usr/bin/discord "$@"
+EOF
+
+sudo chmod +x "/bin/chard_discord"
+
+sudo tee "/bin/chard_heroic" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+sudo chown root:root /opt/Heroic/chrome-sandbox
+sudo chmod 4755 /opt/Heroic/chrome-sandbox
+exec /usr/bin/heroic "$@"
+EOF
+
+sudo chmod +x /bin/chard_heroic
+
+sudo tee "/bin/chard_appfinder" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIRsudo chmod u-s,g-s /usr/bin/xfce4-appfinder
+exec /usr/bin/xfce4-appfinder "$@"
+EOF
+
+sudo chmod +x "/bin/chard_appfinder"
+
+sudo tee "/bin/chard_gparted" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo /bin/bash -c '
+  DISPLAY=:0
+  exec /usr/bin/gparted "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x "/bin/chard_gparted"
+
+sudo tee "/bin/chard_tor" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
+  export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
+  exec /usr/bin/torbrowser-launcher "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x "/bin/chard_tor"
+
+sudo tee "/bin/chard_thunderbird" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
+  export MOZ_CUBEB_FORCE_PULSE=1
+  export MOZ_ENABLE_WAYLAND=1
+  export MOZ_GTK_TITLEBAR_DECORATION=client
+  exec /usr/bin/thunderbird "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x "/bin/chard_thunderbird"
+
+sudo tee "/bin/chard_gedit" >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS}"
+export GDK_BACKEND=wayland
+export QT_QPA_PLATFORM=wayland
+exec sudo -E gedit "$@"
+EOF
+
+sudo chmod +x "/bin/chard_gedit"
+
+mkdir -p ~/.local/share/applications
+
+tee ~/.local/share/applications/firefox-chard.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Name=Firefox (Chard)
+Comment=Wrapper to run Firefox on ChromeOS
+Exec=chard_firefox %u
+Icon=firefox
+Type=Application
+Categories=Network;WebBrowser;
+Terminal=false
+StartupNotify=true
+EOF
+
+sudo tee /usr/share/applications/chard-blender.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Name=Blender
+GenericName=3D modeler
+Comment=3D modeling, animation, rendering and post-production
+Keywords=3d;cg;modeling;animation;painting;sculpting;texturing;video editing;video tracking;rendering;render engine;cycles;python;
+Exec=chard_blender %f
+Icon=blender
+Terminal=false
+Type=Application
+PrefersNonDefaultGPU=true
+Categories=Graphics;3DGraphics;
+MimeType=application/x-blender;
+StartupWMClass=Blender
+EOF
+
+sudo tee /usr/share/applications/chard-tor.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Tor Browser (Chard)
+Exec=chard_tor %u
+Icon=torbrowser
+Terminal=false
+StartupNotify=true
+StartupWMClass=torbrowser
+Categories=Network;WebBrowser;
+EOF
+
+sudo tee /usr/share/applications/chard-gparted.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Name=GParted (Chard)
+GenericName=Partition Editor
+Comment=Create, reorganize, and delete partitions
+Exec=/bin/chard_gparted %f
+Icon=gparted
+Terminal=false
+Type=Application
+Categories=GNOME;System;Filesystem;
+Keywords=Partition;
+StartupNotify=true
+EOF
+
+sudo tee /usr/share/applications/chard-thunderbird.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Thunderbird (Chard)
+Exec=chard_thunderbird %u
+Icon=thunderbird
+Terminal=false
+StartupNotify=true
+StartupWMClass=thunderbird
+Categories=Network;Email;
+MimeType=x-scheme-handler/mailto;
+EOF
+
+sudo tee /usr/share/applications/chard-prismlauncher.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Prism Launcher (Chard)
+Exec=chard_prismlauncher %u
+Icon=org.prismlauncher.PrismLauncher
+Terminal=false
+StartupNotify=true
+StartupWMClass=prismlauncher
+Categories=Game;
+EOF
+
+sudo tee /usr/share/applications/chard-steam.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Steam (Chard)
+Exec=chard_steam %u
+Icon=steam
+Terminal=false
+StartupNotify=true
+StartupWMClass=steam
+Categories=Network;FileTransfer;Game;
+MimeType=x-scheme-handler/steam;x-scheme-handler/steamlink;
+EOF
+
+sudo tee /bin/chard_steam >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORM=xcb
 STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
 xhost +SI:localuser:$USER
-sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
-sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
+sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
+sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
 /usr/bin/steam -console -chromeos -force-opaque-background "$@"
-sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
 sudo chmod +x /bin/chard_steam
@@ -51,8 +325,11 @@ shift
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
-export HOME="/$CHARD_HOME"
-export USER="$CHARD_USER"
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
@@ -97,8 +374,11 @@ sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
@@ -195,8 +475,11 @@ sudo tee /bin/chard_xfce4-terminal >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
@@ -247,8 +530,11 @@ sudo tee /bin/chard_flatpak_ns >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
@@ -354,8 +640,11 @@ export PATH=/usr/local/bubblepatch/bin:$PATH
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORM=xcb
 RUNTIME_DIR="$XDG_RUNTIME_DIR"
 xhost +SI:localuser:$USER
@@ -392,8 +681,11 @@ sudo tee /bin/chard_qemu >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 ARCH=$(uname -m)
 case "$ARCH" in
   x86_64)
@@ -439,6 +731,9 @@ CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 xhost +SI:localuser:$CHARD_USER
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
@@ -470,8 +765,11 @@ sudo tee /bin/chard_blender >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
@@ -484,6 +782,14 @@ sudo chmod +x /bin/chard_blender
 
 sudo tee /bin/chard_obs >/dev/null <<'EOF'
 #!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export OBS_VKCAPTURE=1
 export OBS_GAMECAPTURE=1
 export QT_QPA_PLATFORM=xcb
@@ -530,8 +836,12 @@ sudo tee /bin/chard_7z >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
 export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
