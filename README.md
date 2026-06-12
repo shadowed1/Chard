@@ -357,7 +357,7 @@ More QEMU documentation: <br>
 
 <br>
 
-- Steam often work best with Proton 10.05 (as of March 31st, 2026)
+- Steam often work best with Proton 10 and 11 (as of June, 2026)
 - Sucrose users can launch Chard with `sudo chard root`. Sucrose users should uninstall Chard with VT-2.  
 <br>
 
