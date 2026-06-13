@@ -57,7 +57,7 @@ echo "${RESET}${BLUE}                           ╔═════════�
 echo "                           ║ Downloading to: ~/Chard_Installer ║"
 echo "                           ╚═══════════════════════════════════╝${RESET}" 
 
-curl -L "$URL" -o ~/Chard_Installer || {
+curl -L "$URL" -o $HOME/Chard_Installer || {
     echo "${RED}Download failed. ${RESET}"
     exit 1
 }
