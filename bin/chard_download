@@ -84,6 +84,7 @@ if find /home/chronos/user -maxdepth 1 -type d -name MyFiles >/dev/null 2>&1; th
 else
     echo
     echo "${GREEN}${BOLD}Linux install${RESET}"
+    echo
     echo "${CYAN}Running:${RESET}"
     echo "${BLUE}${BOLD}sudo -u $RUN_USER bash ~/Chard_Installer ${RESET}"
     sleep 3
