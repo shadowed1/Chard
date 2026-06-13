@@ -67,16 +67,25 @@ echo "   ${YELLOW}Run the commands below with ${RESET}${CYAN}${BOLD}sudo in cros
 echo "               ${BLUE}CTRL-ALT-REFRESH enters VT-2.${RESET} ${CYAN}CTRL-ALT-BACK returns to ChromeoS.${RESET}"
 echo
 echo
-echo "${YELLOW}If using crew-sudo, please uninstall it and use Sudocrosh instead.${REsET}"
-echo "${GREEN}${BOLD}If on ChromeOS, run these 3 commands in VT-2 logged in as ${RESET}${BLUE}${BOLD}chronos${RESET}${GREEN}${BOLD} or use sudo in crosh (if enabled):${RESET}${GREEN}"
-echo
-echo "${RESET}${GREEN}cd"
-echo "sudo mv Chard_Installer /usr/local"
-echo "sudo bash /usr/local/Chard_Installer${RESET}${GREEN}"
-echo ""
-echo
-echo "${CYAN}${BOLD}If on anything else, copy paste:${RESET}${CYAN}"
-echo
-echo "${RESET}${CYAN}sudo -u $USER bash ~/Chard_Installer${RESET}${CYAN}"
-echo
-echo
+
+RUN_USER="${CHARD_USER:-$USER}"
+
+if find /home/chronos/user -maxdepth 1 -type d -name MyFiles >/dev/null 2>&1; then
+    echo
+    echo "${GREEN}${BOLD}ChromeOS install${RESET}"
+    echo
+    echo "${YELLOW}If using crew-sudo, please uninstall it and use Sudocrosh instead.${RESET}"
+    echo "${CYAN}Run these commands in VT-2 logged in as chronos (or in crosh with sudo enabled):${RESET}"
+    echo "${BLUE}${BOLD}"
+    echo "cd"
+    echo "sudo mv Chard_Installer /usr/local"
+    echo "sudo bash /usr/local/Chard_Installer"
+    echo "${RESET}"
+else
+    echo
+    echo "${GREEN}${BOLD}Linux install${RESET}"
+    echo "${CYAN}Running:${RESET}"
+    echo "${BLUE}${BOLD}sudo -u $RUN_USER bash ~/Chard_Installer ${RESET}"
+    sleep 3
+    sudo -u "$RUN_USER" bash ~/Chard_Installer
+fi
