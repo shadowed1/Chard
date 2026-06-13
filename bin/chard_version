@@ -1,11 +1,11 @@
 #!/bin/bash
-VERSION="0.43"
+VERSION="0.44"
 
 changelog() {
-    echo "- Added .conf removal for chard_startup."
-    echo "- Enhanced chard_scale to read display size with modetest and adapt to multiple displays."
-    echo "- Added Vulkan support for Apple Silicon."
-    echo "- Fixed xfce4 apps."
-    echo "- Fixed shortcut issues."
+    echo "- Updated bubblepatch to include 0.11.1 fixes."
+    echo "- Added pacman lock removal command on reinstall."
+    echo "- Cleaned up various packages and wrappers."
+    echo "- Fixed U_HASH variable."
+    echo "- Updated Downloader to be less verbose."
     echo
 }
