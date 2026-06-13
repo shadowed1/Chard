@@ -1822,7 +1822,7 @@ checkpoint_137() {
         retry_pacman "sudo -E pacman -S --noconfirm lib32-libusb 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm lib32-vkd3d 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm lib32-openal 2>/dev/null"
-        retry_pacman "sudo -E pacman -S --noconfirm libsoup 2>/dev/null"
+        #retry_pacman "sudo -E pacman -S --noconfirm libsoup 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm winetricks 2>/dev/null"
         STEAM_SCRIPT="/usr/lib/steam/steam"
         sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
