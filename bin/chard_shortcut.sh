@@ -157,6 +157,7 @@ echo "${GREEN}${BOLD}Created $count shortcuts, skipped $skipped.${RESET}"
 echo "${GREEN}"
 echo
 echo "To enable icons and shortcuts for Chard, start Termina (Crostini), share your Downloads folder to Linux, and copy paste in Terminal: ${BOLD}"
+echo
 echo "if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then"
 echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/"
 echo "    sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service /etc/systemd/system/"
