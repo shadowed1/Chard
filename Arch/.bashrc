@@ -273,7 +273,7 @@ alias dolphin='QT_QPA_PLATFORM=xcb dolphin'
 alias gwenview='QT_QPA_PLATFORM=xcb gwenview'
 
 # Handbrake
-alias handbrake='sudo -E ghb'
+alias handbrake='DBUS_SESSION_BUS_ADDRESS="" ghb'
 
 # Handbrake
 alias obs='chard_obs'
