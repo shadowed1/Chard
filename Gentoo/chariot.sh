@@ -1741,34 +1741,10 @@ checkpoint_151() {
 run_checkpoint 151 "Exo Color Inversion Patch" checkpoint_151
 
 checkpoint_152() {
-    cd
-    sudo rm -rf /tmp/flatpak-* 2>/dev/null
-    wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
-    tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
-    cd /tmp/flatpak-1.16.3
-    meson setup builddir \
-      --prefix=/usr \
-      --libdir=/usr/lib \
-      -Dsystem_bubblewrap=/usr/local/bubblepatch/bin/bwrap \
-      -Dsystem_helper=disabled \
-      -Dsandboxed_triggers=false \
-      -Dselinux_module=disabled \
-      -Dmalcontent=disabled \
-      -Dgir=disabled \
-      -Dgtkdoc=disabled \
-      -Ddocbook_docs=disabled \
-      -Dman=disabled \
-      -Dtests=false \
-      -Dinstalled_tests=false \
-      -Dauto_sideloading=false \
-      -Dgdm_env_file=false
-      
-    ninja -C builddir -j$(nproc)
-    sudo ninja -C builddir install
-    cd
-    sudo rm -rf /tmp/flatpak-* 2>/dev/null    
-    #sudo -E emerge sys-apps/flatpak
-    #flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    sudo -E emerge dev-python/pyparsing
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak"
+    sudo chmod +x /bin/chard_downgrade_bwrap_flatpak
+    /bin/chard_downgrade_bwrap_flatpak
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     rm -rf /var/tmp/portage/sys-apps/flatpak-*
     chown -R 1000:1000 ~/.local/share/flatpak
