@@ -17,11 +17,11 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+  export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
   export PULSE_SERVER=unix:$XDG_RUNTIME/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
@@ -37,11 +37,11 @@ sudo tee "/bin/chard_discord" >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 fix_sandbox() {
     for base in \
         "$HOME/.config/discord" \
@@ -72,7 +72,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 sudo chown root:root /opt/Heroic/chrome-sandbox
 sudo chmod 4755 /opt/Heroic/chrome-sandbox
 exec /usr/bin/heroic "$@"
@@ -89,10 +88,9 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIRsudo chmod u-s,g-s /usr/bin/xfce4-appfinder
+sudo chmod u-s,g-s /usr/bin/xfce4-appfinder
 exec /usr/bin/xfce4-appfinder "$@"
 EOF
 
@@ -107,7 +105,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo /bin/bash -c '
   DISPLAY=:0
@@ -126,7 +123,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
@@ -149,7 +145,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
@@ -173,7 +168,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export WAYLAND_DISPLAY="${WAYLAND_DISPLAY}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS}"
@@ -287,6 +281,7 @@ sudo tee /bin/chard_steam >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
@@ -329,11 +324,11 @@ shift
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
@@ -379,11 +374,11 @@ sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
@@ -502,11 +497,11 @@ sudo tee /bin/chard_xfce4-terminal >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
@@ -524,7 +519,6 @@ chown "$CHARD_USER":"$CHARD_USER" "$WINE_TMP"
 chmod 700 "$WINE_TMP"
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
-XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR"
 XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
 
 sudo -u $CHARD_USER \
@@ -557,11 +551,11 @@ sudo tee /bin/chard_flatpak_ns >/dev/null <<'EOF'
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
 
@@ -698,7 +692,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORM=xcb
 RUNTIME_DIR="$XDG_RUNTIME_DIR"
 xhost +SI:localuser:$USER
@@ -739,7 +732,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 ARCH=$(uname -m)
 case "$ARCH" in
   x86_64)
@@ -787,7 +779,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 xhost +SI:localuser:$CHARD_USER
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
@@ -823,7 +814,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
@@ -843,7 +833,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export OBS_VKCAPTURE=1
 export OBS_GAMECAPTURE=1
 export QT_QPA_PLATFORM=xcb
@@ -895,7 +884,6 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
 export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
