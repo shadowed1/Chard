@@ -499,6 +499,7 @@ case "$cmd" in
 		    U_HASH=$(sudo find /home/.shadow -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | head -n1)
 		fi
 		echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
+		echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
 		
 		sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
         chard_volume > /dev/null 2>&1 &
