@@ -257,11 +257,13 @@ alias steam='/bin/chard_steam'
 alias firefox='/bin/chard_firefox'
 alias torbrowser-launcher='/bin/chard_tor'
 alias thunderbird='/bin/chard_thunderbird'
-#export MOZ_CUBEB_FORCE_PULSE=1
 
 # Brave
-#export BRAVE_USE_SYSTEM_KEYRING=0
-alias brave='brave --force-dark-mode --enable-features=WebUIDarkMode'
+alias brave='brave --force-dark-mode --enable-features=WebUIDarkMode' --ozone-platform=wayland
+
+# Chrome
+alias google-chrome-stable='google-chrome-stable --ozone-platform=wayland'
+alias chrome='google-chrome-stable --ozone-platform=wayland'
 
 # Flatpak
 alias flatpak='/bin/chard_flatpak'
