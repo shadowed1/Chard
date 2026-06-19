@@ -151,42 +151,38 @@ esac
 }
 
 _startup_enable() {
-local shared_check
-shared_check=$(detect_shared) || {
-echo
-echo "${RED}${BOLD}Cannot enable startup.${RESET}"
-echo "${YELLOW}Please share your Downloads folder with Linux first.${RESET}"
-exit 1
-}
+    local shared_check
+    
+    if ! shared_check=$(detect_shared); then
+        echo
+        echo "${RED}${BOLD}Cannot enable startup.${RESET}"
+        echo "${YELLOW}Please share your Downloads folder with Linux first.${RESET}"
+        exit 1
+    fi
 
+    echo "${CYAN}Installing systemd service...${RESET}"
 
-local daemon_path
-daemon_path=$(command -v chard_bridge_daemon 2>/dev/null || echo "/bin/chard_bridge_daemon")
-
-echo "${CYAN}Installing systemd service...${RESET}"
-
-sudo tee "$SERVICE_FILE" > /dev/null << SERVICE
+    sudo tee "$SERVICE_FILE" > /dev/null << SERVICE
 [Unit]
 Description=Chard Bridge Daemon
-After=local-fs.target
-ConditionPathExists=${shared_check}
+After=local-fs.target graphical.target
 
 [Service]
 Type=simple
-ExecStart=${daemon_path}
+ExecStart=/usr/bin/chard_bridge_daemon
 Restart=always
 RestartSec=5
 ExecStartPre=/bin/sleep 3
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical.target
 SERVICE
 
-sudo systemctl daemon-reload
-sudo systemctl enable "$SERVICE_NAME"
-echo
-echo "${GREEN}${BOLD}Startup enabled.${RESET}"
-echo "${CYAN}Start now:${RESET} sudo systemctl start $SERVICE_NAME"
+    sudo systemctl daemon-reload
+    sudo systemctl enable "$SERVICE_NAME"
+    echo
+    echo "${GREEN}${BOLD}Startup enabled.${RESET}"
+    sudo systemctl start $SERVICE_NAME
 
 }
 
