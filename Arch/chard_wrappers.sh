@@ -372,6 +372,7 @@ sudo chmod +x "/bin/chard_xfce4"
     
 sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
 #!/bin/bash
+
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
@@ -387,11 +388,25 @@ WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:/usr/local/fl
 export PATH="$WRAPPED_PATH"
 FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
 LWJGL_TMPDIR="$HOME/.local/tmp"
+
+if [[ -z "$LIBVA_DRIVER_NAME" ]]; then
+    if [[ -e /dev/dri/renderD128 ]]; then
+        _DRIVER=$(LIBVA_DISPLAY=drm vainfo --display drm --device /dev/dri/renderD128 2>/dev/null \
+            | grep -oP '(?<=Driver version: ).*' | head -1)
+        case "$_DRIVER" in
+            *iHD*)   LIBVA_DRIVER_NAME="iHD" ;;
+            *i965*)  LIBVA_DRIVER_NAME="i965" ;;
+            *radeon*|*r600*|*radeonsi*) LIBVA_DRIVER_NAME="radeonsi" ;;
+            *nvidia*|*NVD*) LIBVA_DRIVER_NAME="nvidia" ;;
+        esac
+    fi
+fi
+export LIBVA_DRIVER_NAME
+
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
-
 NO_USER_CMDS=(
   make-current enter ps kill
   documents document-export document-unexport document-info
@@ -400,7 +415,6 @@ NO_USER_CMDS=(
   build-init build build-finish build-export build-bundle build-import-bundle
   build-sign build-update-repo build-commit-from repo
 )
-
 if [[ $# -eq 0 ]]; then
 sudo -u $CHARD_USER \
     env \
@@ -409,9 +423,14 @@ sudo -u $CHARD_USER \
     DISPLAY="${DISPLAY:-:0}" \
     XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
     FLATPAK_BWRAP="$FLATPAK_BWRAP" \
+    PATH="$WRAPPED_PATH" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    LIBVA_DRIVER_NAME="$LIBVA_DRIVER_NAME" \
+    LIBVA_DISPLAY="drm" \
+    LIBVA_DRIVERS_PATH="$LIBVA_DRIVERS_PATH" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    MESA_LOADER_DRIVER_OVERRIDE="$MESA_LOADER_DRIVER_OVERRIDE" \
     OBS_VKCAPTURE=1 \
     OBS_GAMECAPTURE=1 \
     LIBGL_ALWAYS_INDIRECT=0 \
@@ -422,7 +441,6 @@ sudo -u $CHARD_USER \
     flatpak
     exit 0
 fi
-
 CMD="$1"
 shift
 USE_USER=1
@@ -434,20 +452,20 @@ case "$CMD" in
     USE_USER=0
     ;;
 esac
-
 if [[ $USE_USER -eq 1 ]]; then
     FINAL_ARGS=(--user "$CMD" "$@")
 else
     FINAL_ARGS=("$CMD" "$@")
 fi
-
 if [[ "$CMD" == "run" ]]; then
     FINAL_ARGS=("${FINAL_ARGS[@]:0:1}" \
+        "--device=dri" \
         "--env=WAYLAND_DISPLAY=" \
         "--env=QT_QPA_PLATFORM=xcb" \
+        "--env=LIBVA_DRIVER_NAME=iHD" \
+        "--env=LIBVA_DISPLAY=drm" \
         "${FINAL_ARGS[@]:1}")
 fi
-
 sudo -u $CHARD_USER \
 env \
     HOME="$HOME" \
@@ -458,8 +476,13 @@ env \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
+    LIBVA_DRIVER_NAME="$LIBVA_DRIVER_NAME" \
+    LIBVA_DISPLAY="drm" \
+    LIBVA_DRIVERS_PATH="$LIBVA_DRIVERS_PATH" \
+    MESA_LOADER_DRIVER_OVERRIDE="$MESA_LOADER_DRIVER_OVERRIDE" \
     OBS_VKCAPTURE=1 \
     OBS_GAMECAPTURE=1 \
+    PATH="$WRAPPED_PATH" \
     LIBGL_ALWAYS_INDIRECT=0 \
     GDK_SCALE="${GDK_SCALE:-1.25}" \
     XDG_DATA_DIRS="$XDG_DATA_DIRS" \
@@ -538,6 +561,21 @@ export USER=$CHARD_USER
 export XDG_RUNTIME_DIR
 export QT_QPA_PLATFORMTHEME=gtk3
 xhost +SI:localuser:$CHARD_USER
+
+if [[ -z "$LIBVA_DRIVER_NAME" ]]; then
+    if [[ -e /dev/dri/renderD128 ]]; then
+        _DRIVER=$(LIBVA_DISPLAY=drm vainfo --display drm --device /dev/dri/renderD128 2>/dev/null \
+            | grep -oP '(?<=Driver version: ).*' | head -1)
+        case "$_DRIVER" in
+            *iHD*)   LIBVA_DRIVER_NAME="iHD" ;;
+            *i965*)  LIBVA_DRIVER_NAME="i965" ;;
+            *radeon*|*r600*|*radeonsi*) LIBVA_DRIVER_NAME="radeonsi" ;;
+            *nvidia*|*NVD*) LIBVA_DRIVER_NAME="nvidia" ;;
+        esac
+    fi
+fi
+export LIBVA_DRIVER_NAME
+
 [ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
 WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:/usr/local/flatpak-1.16.3/bin:$PATH"
 export PATH="$WRAPPED_PATH"
@@ -570,11 +608,17 @@ if [[ $# -eq 0 ]]; then
     DISPLAY="${DISPLAY:-:0}" \
     XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    LIBVA_DRIVER_NAME="$LIBVA_DRIVER_NAME" \
+    LIBVA_DISPLAY="drm" \
+    LIBVA_DRIVERS_PATH="$LIBVA_DRIVERS_PATH" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
     DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
     XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}" \
     OBS_VKCAPTURE=1 \
+    PATH="$WRAPPED_PATH" \
     OBS_GAMECAPTURE=1 \
     LIBGL_ALWAYS_INDIRECT=0 \
     GDK_SCALE="${GDK_SCALE:-1.25}" \
@@ -621,6 +665,12 @@ env \
     LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
     LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
     OBS_VKCAPTURE=1 \
+    PATH="$WRAPPED_PATH" \
+    LIBVA_DRIVER_NAME="$LIBVA_DRIVER_NAME" \
+    LIBVA_DISPLAY="drm" \
+    LIBVA_DRIVERS_PATH="$LIBVA_DRIVERS_PATH" \
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
     DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
     XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}" \
     OBS_GAMECAPTURE=1 \
