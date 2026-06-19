@@ -131,7 +131,7 @@ while true; do
         sync_desktops
         sync_icons
     fi
-    sleep 10
+    sleep 60
     sync_desktops
     sync_icons
 done
