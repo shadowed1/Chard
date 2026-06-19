@@ -2191,7 +2191,7 @@ checkpoint_142() {
     retry_pacman "sudo -E pacman -S --noconfirm firefox"
     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_wrappers.sh" -o "/bin/chard_wrappers" 2>/dev/null
     sudo chmod +x /bin/chard_wrappers 2>/dev/null
-    /bin/chard_wrappers 2>/dev/null
+    sudo /bin/chard_wrappers 2>/dev/null
     sudo rm -rf /bin/chard_wrappers 2>/dev/null
 }
 run_checkpoint 142 "Firefox" checkpoint_142
