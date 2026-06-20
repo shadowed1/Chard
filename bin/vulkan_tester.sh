@@ -8,7 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-VULKANINFO64=$(command -v vulkaninfo)
+VULKANINFO64=$(command -v vulkaninfo || command -v /usr/bin/vulkaninfo)
 VULKANINFO32=$(command -v vulkaninfo32 || command -v /usr/bin/vulkaninfo32)
 
 #sudo mkdir -p /usr/share/vulkan/registry/backup 
