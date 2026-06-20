@@ -953,10 +953,6 @@ EOF
 				chard_timezone_daemon &
 		        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
 		        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-		        killall -9 pipewire 2>/dev/null
-		        killall -9 pipewire-pulse 2>/dev/null
-		        killall -9 pulseaudio 2>/dev/null
-		        killall -9 steam 2>/dev/null
 				sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
 		        sudo mount --make-rslave "$CHARD_ROOT"
 				sudo mount --make-rshared "$CHARD_ROOT"
@@ -1093,22 +1089,7 @@ EOF
 		        sudo -E chown $USER:$USER /run/chrome/pulse
 		        sudo chmod 770 /run/chrome/pulse
 		        killall -9 cras_test_client 2>/dev/null
-		        killall -9 pipewire 2>/dev/null
-		        killall -9 pipewire-pulse 2>/dev/null
-		        killall -9 pulseaudio 2>/dev/null
-		        killall -9 steam 2>/dev/null
-		        killall -9 powercontrol-gui 2>/dev/null
-		        killall -9 gedit 2>/dev/null
-				killall -9 chard_timezone_daemon 2>/dev/null
-		        sudo pkill -f xfce4-session 2>/dev/null
-		        sudo pkill -f xfwm4 2>/dev/null
-		        sudo pkill -f xfce4-panel 2>/dev/null
-		        sudo pkill -f xfdesktop 2>/dev/null
-		        sudo pkill -f xfce4-terminal 2>/dev/null
-		        sudo pkill -f xfce4-* 2>/dev/null
-		        sudo pkill -f Xorg 2>/dev/null
 		        sudo pkill -f powercontrol-gui 2>/dev/null
-		        sudo pkill -f gedit 2>/dev/null
 				sudo pkill -f chard_timezone_daemon 2>/dev/null
 				chard_shortcut_daemon stop 2>/dev/null
 		        $CHARD_ROOT/bin/color_reset
