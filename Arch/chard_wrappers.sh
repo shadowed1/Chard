@@ -22,6 +22,7 @@ xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
   export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+  PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
   export PULSE_SERVER=unix:$XDG_RUNTIME/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
@@ -126,6 +127,7 @@ export USER=$CHARD_USER
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+  PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
   export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
@@ -149,6 +151,7 @@ export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+  PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
   export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
