@@ -1,3 +1,8 @@
+# Discord
+echo "net-im/discord all-rights-reserved" | sudo tee -a /etc/portage/package.license
+sudo -E emerge discord
+
+# Steam
 ARCH=$(uname -m)    
 if [[ "$ARCH" == "x86_64" ]]; then
     grep -q '^ABI_X86="64 32"' /etc/portage/make.conf || echo 'ABI_X86="64 32"' | sudo tee -a /etc/portage/make.conf
