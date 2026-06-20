@@ -1357,214 +1357,6 @@ checkpoint_140() {
     rm -rf /var/tmp/sys-apps/usermode-utilities*
     eclean-dist -d
 
-    sudo tee "$CHARD_ROOT/bin/chard_qemu" >/dev/null <<'EOF'
-#!/bin/bash
-CHARD_HOME=$(cat /.chard_home)
-CHARD_USER=$(cat /.chard_user)
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-ARCH=$(uname -m)
-case "$ARCH" in
-  x86_64)
-    QEMU_BIN="qemu-system-x86_64"
-    ;;
-  aarch64|arm64)
-    QEMU_BIN="qemu-system-aarch64"
-    ;;
-  *)
-    echo "Unsupported architecture: $ARCH"
-    exit 1
-    ;;
-esac
-xhost +SI:localuser:root
-sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-source /$CHARD_HOME/.bashrc
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
-sudo env \
-    HOME=/$CHARD_HOME \
-    USER=$CHARD_USER \
-    DISPLAY="${DISPLAY:-:0}" \
-    PULSE_SERVER=unix:/run/chrome/pulse/native \
-    PATH="$WRAPPED_PATH" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-    LIBGL_ALWAYS_INDIRECT=0 \
-    GDK_BACKEND="wayland" \
-    EGL_PLATFORM=wayland \
-    GDK_SCALE="${GDK_SCALE:-1.25}" \
-    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    XDG_RUNTIME_DIR="/run/chrome" \
-    "$QEMU_BIN" "$@"
-sudo setfacl -Rb /run/chrome 2>/dev/null
-EOF
-
-sudo chmod +x "$CHARD_ROOT/bin/chard_qemu"
-}
-run_checkpoint 140 "sudo -E emerge app-emulation/qemu" checkpoint_140
-
-checkpoint_141() {
-    cd ~/
-    rm -rf bubblepatch 2>/dev/null
-    git clone https://github.com/shadowed1/bubblepatch.git
-    cd bubblepatch
-    sudo mkdir -p /usr/local/bubblepatch
-    meson setup -Dprefix=/usr/local/bubblepatch build
-    ninja -C build
-    sudo ninja -C build install
-    cd ~/
-    rm -rf bubblepatch 2>/dev/null
-    sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
-
-sudo tee /bin/chard_firefox >/dev/null <<'EOF'
-#!/bin/bash
-CHARD_HOME=$(cat /.chard_home)
-CHARD_USER=$(cat /.chard_user)
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-export PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:root >/dev/null 2>&1
-exec sudo -u "$CHARD_USER" /bin/bash -c '
-  export PULSE_SERVER=unix:/run/chrome/pulse/native
-  export MOZ_CUBEB_FORCE_PULSE=1
-  export MOZ_ENABLE_WAYLAND=1
-  export MOZ_GTK_TITLEBAR_DECORATION=client
-  exec /usr/bin/firefox-bin "$@"
-' bash "$@"
-EOF
-
-sudo chmod +x /bin/chard_firefox
-
-sudo tee /bin/chard_thunderbird >/dev/null <<'EOF'
-#!/bin/bash
-CHARD_HOME=$(cat /.chard_home)
-CHARD_USER=$(cat /.chard_user)
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-export PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:root >/dev/null 2>&1
-exec sudo -u "$CHARD_USER" /bin/bash -c '
-  export PULSE_SERVER=unix:/run/chrome/pulse/native
-  export MOZ_CUBEB_FORCE_PULSE=1
-  export MOZ_ENABLE_WAYLAND=1
-  export MOZ_GTK_TITLEBAR_DECORATION=client
-  exec /usr/bin/thunderbird "$@"
-' bash "$@"
-EOF
-
-sudo chmod +x /bin/chard_thunderbird
-
-sudo tee /bin/chard_tor >/dev/null <<'EOF'
-#!/bin/bash
-CHARD_HOME=$(cat /.chard_home)
-CHARD_USER=$(cat /.chard_user)
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-export PATH=/usr/local/bubblepatch/bin:$PATH
-xhost +SI:localuser:root >/dev/null 2>&1
-exec sudo -u "$CHARD_USER" /bin/bash -c '
-  export PULSE_SERVER=unix:/run/chrome/pulse/native
-  export MOZ_CUBEB_FORCE_PULSE=1
-  export MOZ_ENABLE_WAYLAND=1
-  export MOZ_GTK_TITLEBAR_DECORATION=client
-  exec /usr/bin/torbrowser-launcher "$@"
-' bash "$@"
-EOF
-
-sudo chmod +x /bin/chard_tor
-
-sudo tee /bin/chard_flatpak >/dev/null <<'EOF'
-#!/bin/bash
-CHARD_HOME=$(cat /.chard_home)
-CHARD_USER=$(cat /.chard_user)
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-xhost +SI:localuser:$CHARD_USER
-[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
-export PATH="$WRAPPED_PATH"
-LWJGL_TMPDIR="$HOME/.local/tmp"
-mkdir -p "$LWJGL_TMPDIR"
-chmod 700 "$LWJGL_TMPDIR"
-sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
-sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-
-NO_USER_CMDS=(
-  make-current enter ps kill
-  documents document-export document-unexport document-info
-  permissions permission-remove permission-set permission-show permission-reset
-  remotes remote-add remote-modify remote-delete remote-ls remote-info
-  build-init build build-finish build-export build-bundle build-import-bundle
-  build-sign build-update-repo build-commit-from repo
-)
-
-if [[ $# -eq 0 ]]; then
-sudo -u $CHARD_USER \
-    	env \
-        HOME="$HOME" \
-        PULSE_SERVER=unix:/run/chrome/pulse/native \
-        DISPLAY="${DISPLAY:-:0}" \
-        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-        XDG_RUNTIME_DIR="/run/chrome" \
-        LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-        LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-        OBS_VKCAPTURE=1 \
-        OBS_GAMECAPTURE=1 \
-        LIBGL_ALWAYS_INDIRECT=0 \
-        GDK_SCALE="${GDK_SCALE:-1.25}" \
-        XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    flatpak
-    exit 0
-fi
-
-CMD="$1"
-shift
-USE_USER=1
-for c in "${NO_USER_CMDS[@]}"; do
-    [[ "$CMD" == "$c" ]] && USE_USER=0 && break
-done
-case "$CMD" in
-  -h|--help|--version|--default-arch|--supported-arches|--gl-drivers|--installations|--print-updated-env|--print-system-only|-v|--verbose|--ostree-verbose)
-    USE_USER=0
-    ;;
-esac
-
-if [[ $USE_USER -eq 1 ]]; then
-    FINAL_ARGS=(--user "$CMD" "$@")
-else
-    FINAL_ARGS=("$CMD" "$@")
-fi
-
-sudo -u $CHARD_USER \
-env \
-    HOME="$HOME" \
-    PULSE_SERVER=unix:/run/chrome/pulse/native \
-    DISPLAY="${DISPLAY:-:0}" \
-    XDG_RUNTIME_DIR="/run/chrome" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-    OBS_VKCAPTURE=1 \
-    OBS_GAMECAPTURE=1 \
-    LIBGL_ALWAYS_INDIRECT=0 \
-    GDK_SCALE="${GDK_SCALE:-1.25}" \
-    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-flatpak "${FINAL_ARGS[@]}"
-sudo setfacl -Rb /run/chrome 2>/dev/null
-EOF
-    sudo chmod +x /bin/chard_flatpak
-
-    sudo tee /usr/bin/chard_gedit >/dev/null <<'EOF'
-#!/bin/bash
-export WAYLAND_DISPLAY="${WAYLAND_DISPLAY}"
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
-export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS}"
-export GDK_BACKEND=wayland
-export QT_QPA_PLATFORM=wayland
-exec sudo -E gedit "$@"
-EOF
-
-sudo chmod +x /usr/bin/chard_gedit
 }
 run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
 
@@ -1758,6 +1550,20 @@ checkpoint_153() {
     eclean-dist -d
 }
 run_checkpoint 153 "VAInfo" checkpoint_153
+
+checkpoint_154() {
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_wrappers.sh" -o "/bin/chard_wrappers" 2>/dev/null
+    sudo chmod +x /bin/chard_wrappers 2>/dev/null
+    sudo /bin/chard_wrappers 2>/dev/null
+    sudo rm -rf /bin/chard_wrappers 2>/dev/null
+
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_flatpak_bwrap.sh" -o "/bin/chard_downgrade_flatpak_bwrap" 2>/dev/null
+    sudo chmod +x /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
+    /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
+}
+run_checkpoint 154 "chard_wrappers" checkpoint_153
+
+
 
 sudo chown -R 1000:1000 ~/
 sudo chown root:root /opt/heroic-2.18.1/chrome-sandbox 2>/dev/null
