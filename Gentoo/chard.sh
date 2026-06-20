@@ -676,6 +676,7 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
+		echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
         CLEANUP_ENABLED=1
 		VERSION_FILE="$CHARD_ROOT/.chard_chrome"
 		if [ -s "$VERSION_FILE" ]; then
