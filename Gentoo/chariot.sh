@@ -723,6 +723,7 @@ run_checkpoint 66 "sudo -E emerge xfce-base/xfconf" checkpoint_66
 
 checkpoint_67() {
     sudo -E emerge sys-apps/xdg-desktop-portal
+    sudo -E emerge xdg-desktop-portal-gtk
     rm -rf /var/tmp/portage/sys-apps/xdg-desktop-portal-*
     eclean-dist -d
 }
