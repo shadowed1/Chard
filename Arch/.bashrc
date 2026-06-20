@@ -225,6 +225,27 @@ safe_wine() {
     winegui
 }
 
+##################################################################################################
+if [[ -z "$LIBVA_DRIVER_NAME" ]]; then
+    if [[ -e /dev/dri/renderD128 ]]; then
+        _DRIVER=$(LIBVA_DISPLAY=drm vainfo --display drm --device /dev/dri/renderD128 2>/dev/null \
+            | grep -oP '(?<=Driver version: ).*' | head -1)
+        case "$_DRIVER" in
+            *iHD*)   LIBVA_DRIVER_NAME="iHD" ;;
+            *i965*)  LIBVA_DRIVER_NAME="i965" ;;
+            *radeon*|*r600*|*radeonsi*) LIBVA_DRIVER_NAME="radeonsi" ;;
+            *nvidia*|*NVD*) LIBVA_DRIVER_NAME="nvidia" ;;
+        esac
+    fi
+fi
+
+export LIBVA_DRIVER_NAME="$LIBVA_DRIVER_NAME"
+export LIBVA_DISPLAY="drm"
+export LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH"
+export LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH"
+##################################################################################################
+
+
 alias winegui='safe_wine'
 # KSP
 alias ksp='LC_ALL=C ./KSP_x86_64'
