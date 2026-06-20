@@ -1054,8 +1054,8 @@ EOF
 		                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
 		                QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
 		                cd ~/
-		                sudo /bin/chard_wrappers
-						sudo /bin/chard_downgrade_flatpak_bwrap
+		                sudo /bin/chard_wrappers 2>/dev/null
+						sudo /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
 		            "
 		            /bin/error_color
 		            setfacl -Rb /run/chrome/pulse 2>/dev/null
