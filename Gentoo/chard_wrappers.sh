@@ -27,7 +27,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
-  exec /usr/bin/firefox "$@"
+  exec /usr/bin/firefox-bin "$@"
 ' bash "$@"
 EOF
 
@@ -66,16 +66,28 @@ sudo chmod +x "/bin/chard_discord"
 
 sudo tee "/bin/chard_heroic" >/dev/null <<'EOF'
 #!/bin/bash
+
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
 XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-sudo chown root:root /opt/Heroic/chrome-sandbox
-sudo chmod 4755 /opt/Heroic/chrome-sandbox
-exec /usr/bin/heroic "$@"
+
+HOME="/$CHARD_HOME"
+USER="$CHARD_USER"
+
+export HOME USER XDG_RUNTIME_DIR
+
+HEROIC_DIR=$(find /opt -maxdepth 1 -type d -name 'heroic-*' | sort -V | tail -n1)
+
+if [ -z "$HEROIC_DIR" ]; then
+    echo "Heroic installation not found in /opt" >&2
+    sleep 3
+    exit 1
+fi
+
+sudo chown root:root "$HEROIC_DIR/chrome-sandbox"
+sudo chmod 4755 "$HEROIC_DIR/chrome-sandbox"
+
+exec "$HEROIC_DIR/heroic" "$@"
 EOF
 
 sudo chmod +x /bin/chard_heroic
@@ -132,7 +144,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
-  exec /usr/bin/torbrowser-launcher "$@"
+  exec /usr/bin/torbrowser-launcher-bin "$@"
 ' bash "$@"
 EOF
 
@@ -156,7 +168,7 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
-  exec /usr/bin/thunderbird "$@"
+  exec /usr/bin/thunderbird-bin "$@"
 ' bash "$@"
 EOF
 
