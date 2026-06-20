@@ -298,104 +298,55 @@ trap cleanup_chroot EXIT INT TERM
                 
                 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
                 echo ""
-                echo "${BLUE}[*] Downloading Chard components..."
                 
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chardrc"            -o "$CHARD_ROOT/.chardrc"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chard.env"          -o "$CHARD_ROOT/.chard.env"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chard.logic"        -o "$CHARD_ROOT/.chard.logic"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.chard.preload"      -o "$CHARD_ROOT/.chard.preload"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/SMRT.sh"             -o "$CHARD_ROOT/bin/SMRT"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard.sh"            -o "$CHARD_ROOT/bin/chard"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.bashrc"             -o "$CHARD_ROOT/$CHARD_HOME/.bashrc"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version"       -o "$CHARD_ROOT/bin/chard_version"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/LICENSE"             -o "$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/.rootrc"             -o "$CHARD_ROOT/bin/.rootrc"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chariot.sh"          -o "$CHARD_ROOT/bin/chariot"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_debug.sh"      -o "$CHARD_ROOT/bin/chard_debug"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_sommelier.sh"  -o "$CHARD_ROOT/bin/chard_sommelier"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_scale.sh"      -o "$CHARD_ROOT/bin/chard_scale"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/wx"                  -o "$CHARD_ROOT/bin/wx"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mount"         -o "$CHARD_ROOT/bin/chard_mount"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_unmount"         -o "$CHARD_ROOT/bin/chard_unmount"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chardonnay.sh"         -o "$CHARD_ROOT/bin/chardonnay"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_preload.sh"         -o "$CHARD_ROOT/bin/chard_preload"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chardwire.sh"         -o "$CHARD_ROOT/bin/chardwire"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_volume.sh"         -o "$CHARD_ROOT/bin/chard_volume"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_stage3_preload.sh"         -o "$CHARD_ROOT/bin/chard_stage3_preload"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/rainbow.sh"         -o "$CHARD_ROOT/bin/rainbow"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/error_color.sh"         -o "$CHARD_ROOT/bin/error_color"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/color_reset.sh"         -o "$CHARD_ROOT/bin/color_reset"
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker.c"            -o "$CHARD_ROOT/tmp/autoclicker.c" 2>/dev/null
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_mount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_mount" 2>/dev/null
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_mtp_unmount.sh"            -o "$CHARD_ROOT/bin/chard_mtp_unmount" 2>/dev/null
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c"            -o "$CHARD_ROOT/tmp/virtm.c" 2>/dev/null
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_mesa.sh"            -o "$CHARD_ROOT/bin/chard_mesa" 2>/dev/null
-                sleep 0.05
-                sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh"            -o "$CHARD_ROOT/bin/chard_sommelier_patch" 2>/dev/null
-                sleep 0.05
-				sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh"            -o "$CHARD_ROOT/bin/chard_startup" 2>/dev/null
-				sleep 0.05
-				sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_timezone_daemon.sh"            -o "$CHARD_ROOT/bin/chard_timezone_daemon" 2>/dev/null
-				sleep 0.05
-                sudo chmod +x "$CHARD_ROOT/bin/SMRT"
-                sudo chmod +x "$CHARD_ROOT/bin/chard"
-                sudo chmod +x "$CHARD_ROOT/bin/chariot"
-                sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_debug"
-                sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_scale"
-                sudo chmod +x "$CHARD_ROOT/bin/wx"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_mount"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_unmount"
-                sudo chmod +x "$CHARD_ROOT/bin/chardonnay"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_preload"
-                sudo chmod +x "$CHARD_ROOT/bin/chardwire"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_volume"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_stage3_preload"
-                sudo chmod +x "$CHARD_ROOT/bin/rainbow"
-                sudo chmod +x "$CHARD_ROOT/bin/error_color"
-                sudo chmod +x "$CHARD_ROOT/bin/color_reset"
-                sudo chmod +x "$CHARD_ROOT/bin/autoclicker"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_mount"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_mtp_unmount"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_mesa"
-                sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
-				sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
-				sudo chmod +x "$CHARD_ROOT/bin/chard_version"
-				sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
+				echo "${CYAN}[*] Downloading Chard components...${RESET}"
+				echo ""
+				BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
+				
+				FILES=(
+				    "Gentoo/.chardrc|$CHARD_ROOT/.chardrc|0"
+				    "Gentoo/.chard.env|$CHARD_ROOT/.chard.env|0"
+				    "bin/Uninstall_Chard.sh|$CHARD_ROOT/bin/Uninstall_Chard.sh|1"
+				    "Gentoo/chard.sh|$CHARD_ROOT/bin/chard|1"
+				    "Gentoo/.bashrc|$CHARD_ROOT/$CHARD_HOME/.bashrc|0"
+				    "bin/chard_version|$CHARD_ROOT/bin/chard_version|1"
+				    "LICENSE|$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE|0"
+				    "Gentoo/.rootrc|$CHARD_ROOT/bin/.rootrc|1"
+				    "Gentoo/chariot.sh|$CHARD_ROOT/bin/chariot|1"
+				    "bin/chard_debug.sh|$CHARD_ROOT/bin/chard_debug|1"
+				    "Gentoo/chard_sommelier.sh|$CHARD_ROOT/bin/chard_sommelier|1"
+				    "bin/chard_scale.sh|$CHARD_ROOT/bin/chard_scale|1"
+				    "bin/wx|$CHARD_ROOT/bin/wx|1"
+				    "Gentoo/SMRT.sh|$CHARD_ROOT/bin/SMRT|1"
+				    "bin/chard_mount|$CHARD_ROOT/bin/chard_mount|1"
+				    "bin/chard_unmount|$CHARD_ROOT/bin/chard_unmount|1"
+				    "bin/chard_volume.sh|$CHARD_ROOT/bin/chard_volume|1"
+				    "bin/chardwire.sh|$CHARD_ROOT/bin/chardwire|1"
+				    "Gentoo/.chard.preload|$CHARD_ROOT/.chard.preload|1"
+				    "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
+					"Gentoo/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
+					"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
+					"bin/chard_downgrade_bwrap_flatpak.sh|$CHARD_ROOT/bin/chard_downgrade_bwrap_flatpak|1"
+				)
+				
+				for entry in "${FILES[@]}"; do
+				    IFS='|' read -r source target executable <<< "$entry"
+				
+				    sudo mkdir -p "$(dirname "$target")"
+				
+				    if sudo curl -fsSL "$BASE_URL/$source" -o "$target"; then
+				        echo "${BLUE}${BOLD}$target ${RESET}"
+				
+				        if [ "$executable" = "1" ]; then
+				            sudo chmod +x "$target"
+				        fi
+				    else
+				        echo "${RED}Failed: ${BOLD}$source ${RESET}"
+				    fi
+				done
+				
 				sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
+				
                 for file in \
                 "$CHARD_ROOT/.chardrc" \
                 "$CHARD_ROOT/.chard.env" \
@@ -987,6 +938,196 @@ EOF
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
+				echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
+				VERSION_FILE="$CHARD_ROOT/.chard_chrome"
+				if [ -s "$VERSION_FILE" ]; then
+				    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+				
+				    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
+				        sudo chown -E $USER:video /dev/dri/card0
+				        sudo chown -E $USER:video /dev/dri/renderD128
+				    fi
+				fi
+		        chard_volume > /dev/null 2>&1 &
+				chard_shortcut_daemon start 2>/dev/null &
+				chard_timezone_daemon &
+		        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+		        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+		        killall -9 pipewire 2>/dev/null
+		        killall -9 pipewire-pulse 2>/dev/null
+		        killall -9 pulseaudio 2>/dev/null
+		        killall -9 steam 2>/dev/null
+				sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
+		        sudo mount --make-rslave "$CHARD_ROOT"
+				sudo mount --make-rshared "$CHARD_ROOT"
+		        sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+		        sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
+		        sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+		        sudo chmod u+s "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
+		        sudo chown root:root "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
+		        sudo chmod u+s "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null
+		
+		        # Write our user hash to Chard for preliminary shortcut support
+				U_HASH=""
+				if [ -d /home/.shadow ]; then
+				    U_HASH=$(sudo find /home/.shadow -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | head -n1)
+				fi
+				echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
+		        
+		        if [ -f "/home/chronos/user/.bashrc" ]; then
+		            sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+		            sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+		            sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+		            $CHARD_ROOT/bin/chard_mount 2>/dev/null
+		            $CHARD_ROOT/bin/chard_mtp_mount 2>/dev/null
+		        else
+		            sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+		        fi
+		
+				if [ -s "$VERSION_FILE" ]; then
+				    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+				    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+				        sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
+				        sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
+				    fi
+				fi
+				
+		        sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+		        sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
+		        sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+		        sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+		        
+		        if [ -f "/home/chronos/user/.bashrc" ]; then
+		            sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
+		        else
+		            sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
+		        fi
+		        $CHARD_ROOT/bin/error_color
+		        sudo chroot "$CHARD_ROOT" /bin/bash -c '
+		        
+		            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+		            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+		            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+		            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+		            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+		            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+		            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+		            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
+		            mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+		        
+		            if [ -e /dev/zram0 ]; then
+		                mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+		                mount --make-rslave /dev/zram0 2>/dev/null
+		            fi
+		        
+		            chmod 1777 /tmp /var/tmp
+		        
+		            [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+		            [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+		            [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+		            [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+		        
+		            CHARD_HOME=$(cat /.chard_home)
+		            HOME=$CHARD_HOME
+		            CHARD_USER=$(cat /.chard_user)
+		            USER=$CHARD_USER
+		            GROUP_ID=1000
+		            USER_ID=1000
+		        
+		            sudo -u "$USER" bash -c "
+		                cleanup() {
+		                    echo \"Logging out $USER\"
+		                    if [ -n \"\$PULSEAUDIO_PID\" ]; then
+		                        kill -9 \"\$PULSEAUDIO_PID\" 2>/dev/null
+		                    fi
+		                }
+		                trap cleanup EXIT INT TERM
+		                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+		                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
+		                killall -9 pipewire 2>/dev/null
+		                killall -9 pipewire-pulse 2>/dev/null
+		                killall -9 pulseaudio 2>/dev/null
+		                #sudo chown -R 1000:audio /dev/snd
+		                #sudo chown -R 1000:1000 /dev/snd/by-path
+		                sudo mkdir -p /run/chrome/pulse
+		                sudo chown 1000:1000 /run/chrome/pulse 2>/dev/null
+		                sudo chown -R 1000:1000 /run/chrome/dconf 2>/dev/null
+		                sudo chmod 770 /run/chrome/pulse
+		                sudo setfacl -Rm u:1000:rwx /root 2>/dev/null
+		                [ -f \"\$HOME/.bashrc\" ] && source \"\$HOME/.bashrc\" 2>/dev/null
+		                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
+		                QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
+		                cd ~/
+		                sudo /bin/chard_wrappers
+						sudo /bin/chard_downgrade_flatpak_bwrap
+		            "
+		            /bin/error_color
+		            setfacl -Rb /run/chrome/pulse 2>/dev/null
+		            setfacl -Rb /run/chrome 2>/dev/null
+		            killall -9 pipewire 2>/dev/null
+		            killall -9 pipewire-pulse 2>/dev/null
+		            killall -9 pulseaudio 2>/dev/null
+		            killall -9 chardwire 2>/dev/null
+		            killall -9 powercontrol-gui 2>/dev/null
+		            #sudo chown -R root:audio /dev/snd 2>/dev/null
+		            #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
+		            setfacl -Rb /root 2>/dev/null
+		            umount -l /dev/zram0   2>/dev/null || true
+		            umount -l /run/chrome  2>/dev/null || true
+		            umount -l /run/udev    2>/dev/null || true
+		            umount -l /run/dbus    2>/dev/null || true
+		            umount -l /etc/ssl     2>/dev/null || true
+		            umount -l /dev/pts     2>/dev/null || true
+		            umount -l /dev/shm     2>/dev/null || true
+		            umount -l /dev         2>/dev/null || true
+		            umount -l /sys         2>/dev/null || true
+		            umount -l /proc        2>/dev/null || true
+		        '
+		        $CHARD_ROOT/bin/error_color
+		        killall -9 chard_volume 2>/dev/null
+		        chard_unmount 2>/dev/null
+		        chard_mtp_unmount 2>/dev/null
+		        sudo rm -f /run/chrome/pulse/native
+		        sudo rm -f /run/chrome/pulse/*
+		        sudo mkdir -p /run/chrome/pulse
+		        sudo -E chown $USER:$USER /run/chrome/pulse
+		        sudo chmod 770 /run/chrome/pulse
+		        killall -9 cras_test_client 2>/dev/null
+		        killall -9 pipewire 2>/dev/null
+		        killall -9 pipewire-pulse 2>/dev/null
+		        killall -9 pulseaudio 2>/dev/null
+		        killall -9 steam 2>/dev/null
+		        killall -9 powercontrol-gui 2>/dev/null
+		        killall -9 gedit 2>/dev/null
+				killall -9 chard_timezone_daemon 2>/dev/null
+		        sudo pkill -f xfce4-session 2>/dev/null
+		        sudo pkill -f xfwm4 2>/dev/null
+		        sudo pkill -f xfce4-panel 2>/dev/null
+		        sudo pkill -f xfdesktop 2>/dev/null
+		        sudo pkill -f xfce4-terminal 2>/dev/null
+		        sudo pkill -f xfce4-* 2>/dev/null
+		        sudo pkill -f Xorg 2>/dev/null
+		        sudo pkill -f powercontrol-gui 2>/dev/null
+		        sudo pkill -f gedit 2>/dev/null
+				sudo pkill -f chard_timezone_daemon 2>/dev/null
+				chard_shortcut_daemon stop 2>/dev/null
+		        $CHARD_ROOT/bin/color_reset
+				if [ -s "$VERSION_FILE" ]; then
+				    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+				    if [ "$CHROMEOS_VERSION" -le 103 ]; then
+						sudo umount -l "$CHARD_ROOT/dev/"    2>/dev/null || true
+						sudo umount -l "$CHARD_ROOT/proc/"    2>/dev/null || true
+				    fi
+				fi
+				if [ -s "$VERSION_FILE" ]; then
+				    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
+				
+				    if [ "$CHROMEOS_VERSION" -lt 106 ]; then
+				        sudo chown root:video /dev/dri/card0
+				        sudo chown root:video /dev/dri/renderD128
+				    fi
+				fi
+				
                 source "$CHARD_ROOT/.chardrc"
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
                 echo
