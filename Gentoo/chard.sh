@@ -698,6 +698,7 @@ case "$cmd" in
         killall -9 steam 2>/dev/null
 		sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
+		sudo mount --make-rshared "$CHARD_ROOT"
         sudo mount --bind "$CHARD_ROOT/$CHARD_HOME/bwrap" "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
         sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
         sudo chown root:root "$CHARD_ROOT/usr/bin/bwrap" 2>/dev/null
