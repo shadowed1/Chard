@@ -46,7 +46,8 @@ sudo mkdir -p /usr/local/flatpak-1.16.3
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
 sudo tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
-cd /tmp/flatpak-1.16.3 
+cd /tmp/flatpak-1.16.3
+sed -i '69d' /tmp/flatpak-1.16.3/common/flatpak-exports.c
 meson setup builddir \
   --prefix=/usr/local/flatpak-1.16.3 \
   --libdir=/usr/lib \
