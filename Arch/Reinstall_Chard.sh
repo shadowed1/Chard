@@ -736,6 +736,7 @@ sudo cp /usr/lib64/libvulkan_asahi.so $CHARD_ROOT/usr/lib64/libvulkan_asahi.so 2
                         sudo rm /tmp/virtm.c 2>/dev/null
                         sudo rm /tmp/autoclicker.c 2>/dev/null
 						sudo /bin/chard_wrappers 2>/dev/null
+						sudo pacman -S --noconfirm libva-utils
                     "
   
                     killall -9 pipewire 2>/dev/null
