@@ -1,13 +1,13 @@
 #!/bin/bash
 # Generates a Stage 3 LD_PRELOAD for running programs in ChromeOS natively. 
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
+RED=$'\033[31m'
+GREEN=$'\033[32m'
+YELLOW=$'\033[33m'
+BLUE=$'\033[34m'
+MAGENTA=$'\033[35m'
+CYAN=$'\033[36m'
+BOLD=$'\033[1m'
+RESET=$'\033[0m'
 echo
 echo "${BOLD}${RED} Run: ${RESET}${BOLD}${GREEN}sudo rm $CHARD_ROOT/.chard_stage3_preload${RESET}${BOLD}${RED} to remove this LD_PRELOAD"
 echo "${GREEN}CTRL-C to exit. Starts in 10 seconds! ${RESET}"
