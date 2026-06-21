@@ -1018,7 +1018,7 @@ EOF
                 ;;
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
-				sudo rm /usr/local/Chard_Insaller.sh 2>/dev/null
+				sudo rm /usr/local/Chard_Installer.sh 2>/dev/null
                 bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")
                 ;;
 			3)	
