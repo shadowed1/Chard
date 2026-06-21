@@ -3,14 +3,14 @@
 # Run in ChromeOS shell with sudo enabled or VT-2 logged in as chronos
 # Thanks for Days for the early documentation! 
 
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
+RED=$'\033[31m'
+GREEN=$'\033[32m'
+YELLOW=$'\033[33m'
+BLUE=$'\033[34m'
+MAGENTA=$'\033[35m'
+CYAN=$'\033[36m'
+BOLD=$'\033[1m'
+RESET=$'\033[0m'
 
 if [[ ! -f /home/chronos/user/.bashrc ]]; then
     echo "${RED}Please run this command in the ChromeOS shell."
