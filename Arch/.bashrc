@@ -281,11 +281,10 @@ alias torbrowser-launcher='/bin/chard_tor'
 alias thunderbird='/bin/chard_thunderbird'
 
 # Brave
-alias brave='brave --force-dark-mode --enable-features=WebUIDarkMode' --ozone-platform=wayland
-
+alias brave='brave --force-dark-mode --enable-features=WebUIDarkMode'
+# --ozone-platform=wayland causes crashes
 # Chrome
-alias google-chrome-stable='google-chrome-stable --ozone-platform=wayland'
-alias chrome='google-chrome-stable --ozone-platform=wayland'
+alias chrome='google-chrome-stable'
 
 # Flatpak
 alias flatpak='/bin/chard_flatpak'
