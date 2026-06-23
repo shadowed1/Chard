@@ -21,11 +21,32 @@ detect_shared() {
     fi
 }
 
-SHARED="$(detect_shared)" || {
-    echo "${RED}${BOLD}[chard_bridge_daemon] ERROR:${RESET} Downloads folder is not shared with Linux."
-    echo "${YELLOW}Please enable sharing for Downloads in ChromeOS settings and retry.${RESET}"
-    exit 1
+wait_for_shared() {
+    local elapsed=0
+    local interval=5
+    local timeout=60
+
+    while [ $elapsed -lt $timeout ]; do
+        if detect_shared > /dev/null 2>&1; then
+            return 0
+        fi
+        echo "${YELLOW}[chard_bridge_daemon] waiting for Downloads folder to be shared... (${elapsed}s/${timeout}s)${RESET}"
+        sleep $interval
+        elapsed=$((elapsed + interval))
+    done
+    return 1
 }
+
+if ! SHARED="$(detect_shared)"; then
+    echo "${YELLOW}[chard_bridge_daemon] Downloads folder not yet available, waiting up to 60s...${RESET}"
+    if wait_for_shared; then
+        SHARED="$(detect_shared)"
+    else
+        echo "${RED}${BOLD}[chard_bridge_daemon] ERROR:${RESET} Downloads folder is not shared with Linux."
+        echo "${YELLOW}Please enable sharing for Downloads in ChromeOS settings and retry.${RESET}"
+        exit 1
+    fi
+fi
 
 DESKTOPS_SRC="$SHARED/chard_icons/desktops"
 DESKTOPS_DST="/usr/share/applications"
