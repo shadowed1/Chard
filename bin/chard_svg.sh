@@ -22,9 +22,16 @@ if ! command -v inkscape &>/dev/null; then
     sudo -E emerge -S inkscape 2>/dev/null
 fi
 
-ICONS_HICOLOR="/usr/share/icons/hicolor"
+ICON_ROOTS=(
+    "/usr/share/icons/hicolor"
+    "$HOME/.local/share/flatpak/exports/share/icons/hicolor"
+)
+
 ICONS_PIXMAPS="/usr/share/pixmaps"
 SIZES=(16 32 48 64 96 128)
+
+PROCESSED_FILE="$HOME/.chard_processed_svgs"
+touch "$PROCESSED_FILE"
 
 converted=0
 skipped=0
@@ -32,6 +39,10 @@ failed=0
 
 echo "${CYAN}${BOLD}Converting SVG icons to PNG for ChromeOS compatibility...${RESET}"
 echo
+
+already_processed() {
+    grep -Fxq "$1" "$PROCESSED_FILE"
+}
 
 convert_svg() {
     local src="$1"
@@ -62,27 +73,57 @@ convert_svg() {
 echo
 echo "${CYAN}Processing scalable icons${RESET}"
 echo
-while IFS= read -r -d '' svg; do
-    icon_name=$(basename "$svg" .svg)
-    for size in "${SIZES[@]}"; do
-        dest="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
-        [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
-        printf "  ${YELLOW}%-40s${RESET} ${RESET}${GREEN}->${RESET} ${BLUE}%sx%s\n${RESET}" "$icon_name" "$size" "$size"
-        convert_svg "$svg" "$dest" "$size"
-    done
-done < <(find "$ICONS_HICOLOR/scalable/apps" -name "*.svg" -print0 2>/dev/null)
+for root in "${ICON_ROOTS[@]}"; do
+    [ -d "$root/scalable/apps" ] || continue
+
+    while IFS= read -r -d '' svg; do
+
+        if already_processed "$svg"; then
+            continue
+        fi
+
+        icon_name=$(basename "$svg" .svg)
+
+        for size in "${SIZES[@]}"; do
+            dest="$root/${size}x${size}/apps/${icon_name}.png"
+            [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
+
+            printf "  ${YELLOW}%-40s${RESET} ${GREEN}->${RESET} ${BLUE}%sx%s${RESET}\n" \
+                "$icon_name" "$size" "$size"
+
+            convert_svg "$svg" "$dest" "$size"
+        done
+
+        echo "$svg" >> "$PROCESSED_FILE"
+
+    done < <(find "$root/scalable/apps" -name "*.svg" -print0 2>/dev/null)
+done
 
 echo
 echo "${CYAN}Processing sized icon directories...${RESET}"
+
 for size in "${SIZES[@]}"; do
     dir="$ICONS_HICOLOR/${size}x${size}/apps"
     [ -d "$dir" ] || continue
+
     while IFS= read -r -d '' svg; do
+
+        if already_processed "$svg"; then
+            continue
+        fi
+
         icon_name=$(basename "$svg" .svg)
         dest="$dir/${icon_name}.png"
+
         [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
-        printf "  ${YELLOW}%-40s${RESET} ${RESET}${GREEN}->${RESET} ${YELLOW}%sx%s\n${RESET}" "$icon_name" "$size" "$size"
+
+        printf "  ${YELLOW}%-40s${RESET} ${GREEN}->${RESET} ${YELLOW}%sx%s${RESET}\n" \
+            "$icon_name" "$size" "$size"
+
         convert_svg "$svg" "$dest" "$size"
+
+        echo "$svg" >> "$PROCESSED_FILE"
+
     done < <(find "$dir" -maxdepth 1 -name "*.svg" -print0 2>/dev/null)
 done
 
