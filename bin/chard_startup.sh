@@ -65,6 +65,7 @@ case "$confirm" in
         echo
         sleep 1
         sudo rm -f /etc/init/chard.conf 2>/dev/null
+        sudo rm -f /etc/init/chard_baguette.conf 2>/dev/null
         exit 0
         ;;
     *)
