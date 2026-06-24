@@ -49,6 +49,8 @@ chard_boot_setup() {
         echo ""
         case "$confirm" in
             [Yy]* | "")
+				echo "${GREEN}Chard startup enabled.${RESET}"
+				sleep 0.5
                 break
                 ;;
             [Nn]*)
@@ -90,6 +92,7 @@ chard_boot_setup() {
                     sudo chmod 644 /etc/init/chard_baguette.conf
                     sudo initctl reload-configuration 2>/dev/null
                     echo "${GREEN}Crostini startup enabled.${RESET}"
+					sleep 0.5
                     echo ""
                     break
                     ;;
@@ -106,10 +109,8 @@ chard_boot_setup() {
         done
     fi
 
-    echo "${GREEN}Chard startup enabled.${RESET}"
 	echo "${YELLOW}Run: ${BOLD}chard_startup${RESET}${YELLOW} in VT-2 logged in as chronos to change! ${RESET}"
     echo ""
-	sleep 4
     return 0
 }
 chard_boot_setup
