@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Run in ChromeOS shell with sudo enabled or VT-2 logged in as chronos
 # Thanks for Days for the early documentation! 
