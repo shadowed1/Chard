@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ -f /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon ]; then
     sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon /bin/
     sudo cp /mnt/shared/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service /etc/systemd/system/
