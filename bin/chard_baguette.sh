@@ -1,5 +1,5 @@
 description "Start Baguette on boot."
-#grep chard /var/log/messages | tail -10
+#grep chard_baguette /var/log/messages | tail -10
 start on started ui
 stop on stopping ui
 task
