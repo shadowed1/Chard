@@ -187,7 +187,9 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 <br>
 
 - Exports bindfs to ChromeOS shell, bypassing noexec mount on external drives, enabling Steam to use external drives for Chard!
-- Implements ChromeOS' native icon system using Crostini as a Bridge. 
+- Implements ChromeOS' native icon system using Crostini as a Bridge.
+- Has ability to start on boot for instant icon launch support
+
 
 <br>
 
@@ -267,6 +269,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - `chard safe` or `cs` -- Enter Chard Root without GUI support -- Useful debugging. 
 - `chard unmount` or `cu` -- Force chard to unmount as if exiting (force kill).
 - `autoclicker <clicks-per-second>` -- Run an autoclicker script in ChromeOS!
+- `chard_startup` -- Start or stop Chard from starting on boot.
 - `chard reinstall` -- Option 1 for fast reinstall (does not remove). Option 2 is a full reinstall (removes Chard).
 - `chard uninstall` -- Remove Chard. Refresh shell to remove .bashrc entries.
 - `chard help` -- Show help examples.
