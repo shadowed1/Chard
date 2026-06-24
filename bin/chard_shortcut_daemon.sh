@@ -25,6 +25,7 @@ die() {
     log "FATAL: $*"
     exit 1
 }
+
 resolve_paths() {
     if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
         CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
@@ -37,27 +38,36 @@ resolve_paths() {
     [ -z "$U_HASH" ] && die "Could not resolve user hash from /home/.shadow/"
     CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home" 2>/dev/null || echo "/home/chronos")
     CHARD_APPS="$CHARD_ROOT/usr/share/applications"
+    CHARD_APPS_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share/applications"
+    ICONS_HICOLOR_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share/icons/hicolor"
     ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
     ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
     SHARED="/home/chronos/user/MyFiles/Downloads/chard_icons"
     ICON_SERVICE_BASE="/home/user/$U_HASH/app_service/icons"
     mkdir -p "$SHARED/desktops" "$SHARED/launch" "$SHARED/icons"
 }
+
 generate_app_id() {
     echo -n "crostini:termina/penguin/chard-$1" | \
         sha256sum | head -c 32 | tr '[:lower:]' '[:upper:]' | \
         tr '0123456789ABCDEF' 'abcdefghijklmnop'
 }
+
 find_png() {
     local icon_name="$1"
     for size in 128 96 64 48 32 16; do
         local p="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         [ -f "$p" ] && echo "$p" && return
     done
+    for size in 128 96 64 48 32 16; do
+        local p="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
+        [ -f "$p" ] && echo "$p" && return
+    done
     local p="$ICONS_PIXMAPS/${icon_name}.png"
     [ -f "$p" ] && echo "$p" && return
-    find "$ICONS_HICOLOR" -name "${icon_name}.png" 2>/dev/null | head -1
+    find "$ICONS_HICOLOR" "$ICONS_HICOLOR_FLATPAK" -name "${icon_name}.png" 2>/dev/null | head -1
 }
+
 install_icons() {
     local icon_name="$1"
     local app_id="$2"
@@ -67,6 +77,7 @@ install_icons() {
     sudo chmod 755 "$icon_dir"
     mkdir -p "$shared_icon_dir"
     local count=0
+    
     for size in 16 32 48 64 96 128; do
         local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         if [ -f "$src" ]; then
@@ -74,8 +85,17 @@ install_icons() {
             sudo chmod 644 "$icon_dir/${size}.png"
             cp "$src" "$shared_icon_dir/${size}.png"
             count=$((count + 1))
+        else
+            local src_fp="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
+            if [ -f "$src_fp" ]; then
+                sudo cp "$src_fp" "$icon_dir/${size}.png"
+                sudo chmod 644 "$icon_dir/${size}.png"
+                cp "$src_fp" "$shared_icon_dir/${size}.png"
+                count=$((count + 1))
+            fi
         fi
     done
+
     if [ "$count" -eq 0 ]; then
         local fallback
         fallback=$(find_png "$icon_name")
@@ -91,6 +111,7 @@ install_icons() {
     echo "$icon_name" > "$shared_icon_dir/.icon_name"
     echo "$count"
 }
+
 remove_shortcut() {
     local desktop_file_id="$1"
     local app_id
@@ -119,26 +140,32 @@ NoDisplay=false
 StartupWMClass=$wm_class
 DESKTOP
 }
+
 desktop_fingerprint() {
     local df="$1"
     grep -E '^(Name|Icon|StartupWMClass|NoDisplay|OnlyShowIn|Type)=' "$df" | sha256sum | cut -d' ' -f1
 }
+
 state_get() {
     local id="$1"
     grep "^$id " "$STATE_FILE" 2>/dev/null | awk '{print $2}'
 }
+
 state_set() {
     local id="$1" fp="$2"
     sed -i "/^$id /d" "$STATE_FILE" 2>/dev/null
     echo "$id $fp" >> "$STATE_FILE"
 }
+
 state_remove() {
     local id="$1"
     sed -i "/^$id /d" "$STATE_FILE" 2>/dev/null
 }
+
 state_all_ids() {
     awk '{print $1}' "$STATE_FILE" 2>/dev/null
 }
+
 should_register() {
     local df="$1"
     local type no_display only_show
@@ -150,17 +177,19 @@ should_register() {
     echo "$only_show" | grep -q "XFCE" && return 1
     return 0
 }
+
 current_ids() {
-    for df in "$CHARD_APPS"/*.desktop; do
+    for df in "$CHARD_APPS"/*.desktop "$CHARD_APPS_FLATPAK"/*.desktop; do
         [ -f "$df" ] || continue
         should_register "$df" || continue
         basename "$df" .desktop
     done
 }
+
 do_sync() {
     [ -f "$STATE_FILE" ] || touch "$STATE_FILE"
     local added=0 removed=0 updated=0
-    for df in "$CHARD_APPS"/*.desktop; do
+    for df in "$CHARD_APPS"/*.desktop "$CHARD_APPS_FLATPAK"/*.desktop; do
         [ -f "$df" ] || continue
         should_register "$df" || continue
         local id fp_new fp_old
@@ -209,32 +238,40 @@ do_sync() {
         log "Sync complete — added=$added updated=$updated removed=$removed"
     fi
 }
+
 apps_dir_checksum() {
-    find "$CHARD_APPS" -maxdepth 1 -name '*.desktop' -printf '%f %T@\n' 2>/dev/null \
+    find "$CHARD_APPS" "$CHARD_APPS_FLATPAK" -maxdepth 1 -name '*.desktop' -printf '%f %T@\n' 2>/dev/null \
         | sort | sha256sum | cut -d' ' -f1
 }
+
 pid_write() {
     echo $$ > "$PID_FILE"
 }
+
 pid_read() {
     cat "$PID_FILE" 2>/dev/null
 }
+
 pid_running() {
     local pid
     pid=$(pid_read)
     [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
 }
+
 pid_clear() {
     rm -f "$PID_FILE"
 }
+
 on_exit() {
     log "Daemon stopping (PID $$)"
     pid_clear
 }
+
 on_term() {
     log "Received SIGTERM — shutting down"
     exit 0
 }
+
 run_daemon() {
     resolve_paths
     trap on_exit EXIT
@@ -254,6 +291,7 @@ run_daemon() {
         fi
     done
 }
+
 sync_aliases() {
     local bashrc="$CHARD_ROOT/$CHARD_HOME/.bashrc"
     local aliases_file="$SHARED/.chard_aliases"
@@ -268,6 +306,7 @@ sync_aliases() {
         log "Aliases synced ($(wc -l < "$aliases_file") entries)"
     fi
 }
+
 CMD="${1:-start}"
 case "$CMD" in
     start)
