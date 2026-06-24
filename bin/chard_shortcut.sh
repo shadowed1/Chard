@@ -42,17 +42,6 @@ ICONS_HICOLOR_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/shar
 ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
 SHARED="$HOME/MyFiles/Downloads/chard_icons"
 
-PROCESSED_PNGS_FILE="$CHARD_ROOT/$CHARD_HOME/.chard_processed_pngs"
-touch "$PROCESSED_PNGS_FILE" 2>/dev/null || sudo touch "$PROCESSED_PNGS_FILE"
-
-already_processed_png() {
-    grep -Fxq "$1" "$PROCESSED_PNGS_FILE"
-}
-
-mark_processed_png() {
-    echo "$1" >> "$PROCESSED_PNGS_FILE"
-}
-
 echo "${CYAN}${BOLD}Preparing Chard app stubs for ChromeOS Ash...${RESET}"
 echo
 
@@ -102,18 +91,11 @@ install_icons() {
 
         local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         if [ -f "$src" ]; then
-            if ! already_processed_png "$src"; then
                 sudo cp "$src" "$icon_dir/${size}.png"
                 sudo chmod 644 "$icon_dir/${size}.png"
                 cp "$src" "$shared_icon_dir/${size}.png"
-                mark_processed_png "$src"
-            else
-                sudo cp "$src" "$icon_dir/${size}.png"
-                sudo chmod 644 "$icon_dir/${size}.png"
-                cp "$src" "$shared_icon_dir/${size}.png"
-            fi
-            count=$((count + 1))
-            installed=1
+                count=$((count + 1))
+                installed=1
         fi
 
         if [ $installed -eq 0 ]; then
