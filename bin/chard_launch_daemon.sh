@@ -50,11 +50,27 @@ resolve_exec() {
 launch_app() {
     local desktop_file_id="$1"
     local df=""
-    if [ -f "/usr/share/applications/${desktop_file_id}.desktop" ]; then
-        df="/usr/share/applications/${desktop_file_id}.desktop"
-    else
-        df=$(find /usr/share/applications -name "*${desktop_file_id}*.desktop" 2>/dev/null | head -1)
+    # Flatpak + system desktop search (minimal change)
+
+df=""
+
+SEARCH_DIRS=(
+    "/usr/share/applications"
+    "$HOME/.local/share/flatpak/exports/share/applications"
+    "/var/lib/flatpak/exports/share/applications"
+)
+
+for dir in "${SEARCH_DIRS[@]}"; do
+    [ -d "$dir" ] || continue
+
+    if [ -f "$dir/${desktop_file_id}.desktop" ]; then
+        df="$dir/${desktop_file_id}.desktop"
+        break
     fi
+
+    df=$(find "$dir" -maxdepth 1 -name "*${desktop_file_id}*.desktop" 2>/dev/null | head -1)
+    [ -n "$df" ] && break
+done
     if [ -z "$df" ]; then
         echo "[chard_launch_daemon] no desktop file for: $desktop_file_id"
         return
