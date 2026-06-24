@@ -225,14 +225,14 @@ chard_boot_setup() {
             echo ""
             case "$baguette_confirm" in
                 [Yy]* | "")
-                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.sh" -o "/etc/init/chard_baguette.sh"
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
                     sleep 0.05
-                    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.sh" ]; then
-                        echo "${RED}Failed to download chard_baguette.sh${RESET}"
+                    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
+                        echo "${RED}Failed to download chard_baguette.conf${RESET}"
                         echo ""
                         return 1
                     fi
-                    sudo chmod 644 /etc/init/chard_baguette.sh
+                    sudo chmod 644 /etc/init/chard_baguette.conf
                     sudo initctl reload-configuration 2>/dev/null
                     echo "${GREEN}Crostini startup enabled.${RESET}"
                     echo ""
