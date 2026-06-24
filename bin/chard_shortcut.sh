@@ -1,6 +1,6 @@
 #!/bin/bash
 # Run in ChromeOS shell with sudo enabled or VT-2 logged in as chronos
-# Thanks for Days for the early documentation! 
+# Thanks for Days for the early documentation!
 
 RED=$'\033[31m'
 GREEN=$'\033[32m'
@@ -36,9 +36,22 @@ sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user" 2>/dev/null || echo "chronos")
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home" 2>/dev/null || echo "/home/chronos")
 CHARD_APPS="$CHARD_ROOT/usr/share/applications"
+CHARD_APPS_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share/applications"
 ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
+ICONS_HICOLOR_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share/icons/hicolor"
 ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
 SHARED="$HOME/MyFiles/Downloads/chard_icons"
+
+PROCESSED_PNGS_FILE="$CHARD_ROOT/$CHARD_HOME/.chard_processed_pngs"
+touch "$PROCESSED_PNGS_FILE" 2>/dev/null || sudo touch "$PROCESSED_PNGS_FILE"
+
+already_processed_png() {
+    grep -Fxq "$1" "$PROCESSED_PNGS_FILE"
+}
+
+mark_processed_png() {
+    echo "$1" >> "$PROCESSED_PNGS_FILE"
+}
 
 echo "${CYAN}${BOLD}Preparing Chard app stubs for ChromeOS Ash...${RESET}"
 echo
@@ -65,9 +78,13 @@ find_png() {
         local p="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         [ -f "$p" ] && echo "$p" && return
     done
+    for size in 128 96 64 48 32 16; do
+        local p="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
+        [ -f "$p" ] && echo "$p" && return
+    done
     local p="$ICONS_PIXMAPS/${icon_name}.png"
     [ -f "$p" ] && echo "$p" && return
-    find "$ICONS_HICOLOR" -name "${icon_name}.png" 2>/dev/null | head -1
+    find "$ICONS_HICOLOR" "$ICONS_HICOLOR_FLATPAK" -name "${icon_name}.png" 2>/dev/null | head -1
 }
 
 install_icons() {
@@ -79,15 +96,45 @@ install_icons() {
     sudo chmod 755 "$icon_dir"
     mkdir -p "$shared_icon_dir"
     local count=0
+
     for size in 16 32 48 64 96 128; do
+        local installed=0
+
         local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         if [ -f "$src" ]; then
-            sudo cp "$src" "$icon_dir/${size}.png"
-            sudo chmod 644 "$icon_dir/${size}.png"
-            cp "$src" "$shared_icon_dir/${size}.png"
+            if ! already_processed_png "$src"; then
+                sudo cp "$src" "$icon_dir/${size}.png"
+                sudo chmod 644 "$icon_dir/${size}.png"
+                cp "$src" "$shared_icon_dir/${size}.png"
+                mark_processed_png "$src"
+            else
+                sudo cp "$src" "$icon_dir/${size}.png"
+                sudo chmod 644 "$icon_dir/${size}.png"
+                cp "$src" "$shared_icon_dir/${size}.png"
+            fi
             count=$((count + 1))
+            installed=1
+        fi
+
+        if [ $installed -eq 0 ]; then
+            local src_fp="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
+            if [ -f "$src_fp" ]; then
+                if ! already_processed_png "$src_fp"; then
+                    sudo cp "$src_fp" "$icon_dir/${size}.png"
+                    sudo chmod 644 "$icon_dir/${size}.png"
+                    cp "$src_fp" "$shared_icon_dir/${size}.png"
+                    mark_processed_png "$src_fp"
+                else
+                    sudo cp "$src_fp" "$icon_dir/${size}.png"
+                    sudo chmod 644 "$icon_dir/${size}.png"
+                    cp "$src_fp" "$shared_icon_dir/${size}.png"
+                fi
+                count=$((count + 1))
+                installed=1
+            fi
         fi
     done
+
     if [ $count -eq 0 ]; then
         local fallback=$(find_png "$icon_name")
         if [ -n "$fallback" ]; then
@@ -96,9 +143,13 @@ install_icons() {
                 sudo chmod 644 "$icon_dir/${size}.png"
                 cp "$fallback" "$shared_icon_dir/${size}.png"
             done
+            if ! already_processed_png "$fallback"; then
+                mark_processed_png "$fallback"
+            fi
             count=6
         fi
     fi
+
     echo "$icon_name" > "$shared_icon_dir/.icon_name"
     echo $count
 }
@@ -114,7 +165,7 @@ mkdir -p "$SHARED/desktops" "$SHARED/launch"
 count=0
 skipped=0
 
-for df in "$CHARD_APPS"/*.desktop; do
+for df in "$CHARD_APPS"/*.desktop "$CHARD_APPS_FLATPAK"/*.desktop; do
     [ -f "$df" ] || continue
     type=$(grep -m1 '^Type=' "$df" | cut -d= -f2 | tr -d '[:space:]')
     no_display=$(grep -m1 '^NoDisplay=' "$df" | cut -d= -f2 | tr -d '[:space:]')
