@@ -207,7 +207,6 @@ chard_boot_setup() {
                 ;;
         esac
     done
-
     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
     sleep 0.05
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
@@ -216,15 +215,48 @@ chard_boot_setup() {
         echo ""
         return 1
     fi
-
     sudo chmod 644 /etc/init/chard.conf
     sudo initctl reload-configuration 2>/dev/null
-    echo ""
+
+    if vmc list 2>/dev/null | grep -q "^termina\b.*baguette"; then
+        echo ""
+        while true; do
+            read -rp "${GREEN}${BOLD}Start Crostini automatically on boot for shortcut support? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" baguette_confirm
+            echo ""
+            case "$baguette_confirm" in
+                [Yy]* | "")
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.sh" -o "/etc/init/chard_baguette.sh"
+                    sleep 0.05
+                    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.sh" ]; then
+                        echo "${RED}Failed to download chard_baguette.sh${RESET}"
+                        echo ""
+                        return 1
+                    fi
+                    sudo chmod 644 /etc/init/chard_baguette.sh
+                    sudo initctl reload-configuration 2>/dev/null
+                    echo "${GREEN}Crostini startup enabled.${RESET}"
+                    echo ""
+                    break
+                    ;;
+                [Nn]*)
+                    echo "${BLUE}Skipping Crostini boot setup.${RESET}"
+                    echo ""
+                    break
+                    ;;
+                *)
+                    echo "${RED}Please answer Y/n.${RESET}"
+                    echo ""
+                    ;;
+            esac
+        done
+    fi
+
     echo "${GREEN}Chard startup enabled.${RESET}"
+	echo "${YELLOW}Run: ${BOLD}chard_startup${RESET}${YELLOW} in VT-2 logged in as chronos to change! ${RESET}"
     echo ""
+	sleep 4
     return 0
 }
-
 sudo stop chard 2>/dev/null
 chard_boot_setup
 
