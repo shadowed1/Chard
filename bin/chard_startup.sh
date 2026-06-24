@@ -8,84 +8,108 @@ CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
 
-if ls /.chardrc > /dev/null 2>&1; then
-    echo "${RED}chard_startup must be run from the host shell, not inside Chard.${RESET}"
-    sleep 3
-    exit 1
-fi
 
-CHARD_USER=$(awk -F: '$3 == 1000 {print $1}' /etc/passwd)
-CHARD_USER="${CHARD_USER:-chronos}"
-
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    BASHRC="/home/chronos/user/.bashrc"
-elif [ -f "/home/$CHARD_USER/.bashrc" ]; then
-    BASHRC="/home/$CHARD_USER/.bashrc"
-else
-    echo "${RED}Error: Could not find .bashrc — please run this from the Host shell.${RESET}"
-    sleep 3
-    exit 1
-fi
-
-TEST_FILE="/etc/init/.boot_test"
-if ! sudo touch "$TEST_FILE" 2>/dev/null; then
-    echo "${RED}Rootfs is not writable — rootfs verification must be disabled first.${RESET}"
-    echo ""
-    read -rp "${BLUE}${BOLD}Disable rootfs verification now? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" verify
-    echo ""
-    case "$verify" in
-        [Yy]* | "")
-            sudo /usr/libexec/debugd/helpers/dev_features_rootfs_verification
+chard_boot_setup() {
+    local TEST_FILE="/etc/init/.boot_test"
+    local CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+    if [ ! -f "$CHROMEOS_BASHRC" ]; then
+        echo "${GREEN}Skipping boot setup, not ChromeOS!${RESET}"
+        return 0
+    fi
+    if ! sudo touch "$TEST_FILE" 2>/dev/null; then
+        echo "${RED}Rootfs verification must be disabled for on-boot startup.${RESET}"
+        echo ""
+        while true; do
+            read -rp "${BLUE}${BOLD}Disable rootfs verification now? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" verify
             echo ""
-            echo "${GREEN}Done. Please ${BOLD}${YELLOW}REBOOT${RESET}${GREEN} and re-run ${BOLD}chard_startup${RESET}${GREEN} to complete boot setup.${RESET}"
-            exit 0
-            ;;
-        [Nn]*)
-            echo "${BLUE}Skipping boot setup.${RESET}"
-            exit 0
-            ;;
-        *)
-            echo "${RED}Please answer Y/n.${RESET}"
-            sleep 2
-            exit 1
-            ;;
-    esac
-fi
-sudo rm -f "$TEST_FILE"
+            case "$verify" in
+                [Yy]* | "")
+                    sudo /usr/libexec/debugd/helpers/dev_features_rootfs_verification
+                    echo ""
+                    echo "${GREEN}After install is finished, reboot and run ${BOLD}${YELLOW}chard_startup${RESET}${GREEN} to enable automatic startup.${RESET}"
+                    echo ""
+                    return 0
+                    ;;
+                [Nn]*)
+                    echo "${BLUE}Skipping boot setup.${RESET}"
+                    echo ""
+                    return 0
+                    ;;
+                *)
+                    echo "${RED}Please answer Y/n.${RESET}"
+                    echo ""
+                    ;;
+            esac
+        done
+    fi
+    sudo rm -f "$TEST_FILE"
+    echo ""
+    while true; do
+        read -rp "${GREEN}${BOLD}Start Chard automatically on boot? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" confirm
+        echo ""
+        case "$confirm" in
+            [Yy]* | "")
+                break
+                ;;
+            [Nn]*)
+                echo "${BLUE}Skipping boot setup.${RESET}"
+                echo ""
+                return 0
+                ;;
+            *)
+                echo "${RED}Please answer Y/n.${RESET}"
+                echo ""
+                ;;
+        esac
+    done
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+    sleep 0.05
+    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
+        echo ""
+        echo "${RED}Failed to download chard.conf${RESET}"
+        echo ""
+        return 1
+    fi
+    sudo chmod 644 /etc/init/chard.conf
+    sudo initctl reload-configuration 2>/dev/null
 
-echo ""
-read -rp "${GREEN}${BOLD}Start Chard automatically on boot? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" confirm
-echo ""
+    if vmc list 2>/dev/null | grep -q "^termina\b.*baguette"; then
+        echo ""
+        while true; do
+            read -rp "${GREEN}${BOLD}Start Crostini automatically on boot for shortcut support? Enter counts as yes! ${RESET}${BOLD}(Y/n): ${RESET}" baguette_confirm
+            echo ""
+            case "$baguette_confirm" in
+                [Yy]* | "")
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+                    sleep 0.05
+                    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
+                        echo "${RED}Failed to download chard_baguette.conf${RESET}"
+                        echo ""
+                        return 1
+                    fi
+                    sudo chmod 644 /etc/init/chard_baguette.conf
+                    sudo initctl reload-configuration 2>/dev/null
+                    echo "${GREEN}Crostini startup enabled.${RESET}"
+                    echo ""
+                    break
+                    ;;
+                [Nn]*)
+                    echo "${BLUE}Skipping Crostini boot setup.${RESET}"
+                    echo ""
+                    break
+                    ;;
+                *)
+                    echo "${RED}Please answer Y/n.${RESET}"
+                    echo ""
+                    ;;
+            esac
+        done
+    fi
 
-case "$confirm" in
-    [Yy]* | "")
-        ;;
-    [Nn]*)
-        echo "${BLUE}Skipping boot setup.${RESET}"
-        echo
-        sleep 1
-        sudo rm -f /etc/init/chard.conf 2>/dev/null
-        sudo rm -f /etc/init/chard_baguette.conf 2>/dev/null
-        exit 0
-        ;;
-    *)
-        echo "${RED}Please answer Y/n.${RESET}"
-        sleep 2
-        echo
-        exit 1
-        ;;
-esac
-sleep 0.05
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
-
-if [ $? -ne 0 ]; then
-    echo
-    echo "${RED}Failed to download chard.conf${RESET}"
-    echo
-    exit 1
-fi
-sudo chmod 644 /etc/init/chard.conf
-sudo initctl reload-configuration 2>/dev/null
-echo
-echo "${GREEN}Chard startup enabled. ${RESET}"
-echo
+    echo "${GREEN}Chard startup enabled.${RESET}"
+	echo "${YELLOW}Run: ${BOLD}chard_startup${RESET}${YELLOW} in VT-2 logged in as chronos to change! ${RESET}"
+    echo ""
+	sleep 4
+    return 0
+}
+chard_boot_setup
