@@ -101,16 +101,9 @@ install_icons() {
         if [ $installed -eq 0 ]; then
             local src_fp="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
             if [ -f "$src_fp" ]; then
-                if ! already_processed_png "$src_fp"; then
-                    sudo cp "$src_fp" "$icon_dir/${size}.png"
-                    sudo chmod 644 "$icon_dir/${size}.png"
-                    cp "$src_fp" "$shared_icon_dir/${size}.png"
-                    mark_processed_png "$src_fp"
-                else
-                    sudo cp "$src_fp" "$icon_dir/${size}.png"
-                    sudo chmod 644 "$icon_dir/${size}.png"
-                    cp "$src_fp" "$shared_icon_dir/${size}.png"
-                fi
+                sudo cp "$src_fp" "$icon_dir/${size}.png"
+                sudo chmod 644 "$icon_dir/${size}.png"
+                cp "$src_fp" "$shared_icon_dir/${size}.png"
                 count=$((count + 1))
                 installed=1
             fi
@@ -125,9 +118,6 @@ install_icons() {
                 sudo chmod 644 "$icon_dir/${size}.png"
                 cp "$fallback" "$shared_icon_dir/${size}.png"
             done
-            if ! already_processed_png "$fallback"; then
-                mark_processed_png "$fallback"
-            fi
             count=6
         fi
     fi
