@@ -1,11 +1,10 @@
 #!/bin/bash
-VERSION="0.44"
+VERSION="0.45"
 
 changelog() {
-    echo "- Updated bubblepatch to include 0.11.1 fixes."
-    echo "- Added pacman lock removal command on reinstall."
-    echo "- Cleaned up various packages and wrappers."
-    echo "- Fixed U_HASH variable."
-    echo "- Updated Downloader to be less verbose."
+    echo "- Added dev_install check to avoid breaking its python."
+    echo "- Fixed Steam wrapper with Bubblepatch."
+    echo "- Added automatic baguette on boot support."
+    echo "- Cleaned up chard_shortcut.sh"
     echo
 }
