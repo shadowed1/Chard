@@ -55,15 +55,17 @@ Running chard directly in ChromeOS shell and having it start automatically on bo
 ## About Chard (*Chrome-Arch Development*):
 
 ### Chard is a chroot (change root) that is Arch or Gentoo Linux.
-Safely lives inside an existing ChromeOS or Linux install without prepending its paths to the system.
+Safely lives inside an existing ChromeOS or Linux install without prepending its paths to the system. <br>
 
 - Open Source and free forever. 
 - Automated rolling-release installer will build everything needed with full hardware detection.
 - Run Linux Apps with GUI support natively inside ChromeOS with GPU acceleration!*
 - Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS + pulse virtualization.
-- Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture emulation for first person games.  
-- *Chard is in development. Bug reports, suggestions, and ideas are greatly appreciated.*
-- Can be safely uninstalled at anytime without altering our ChromeOS install! 
+- Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture/Lock!
+- Can be safely uninstalled at anytime without altering our ChromeOS install!
+- Detects for dev_install and if found, Chard avoids exporting its toolchain.
+- *Chard is in development. Bug reports, suggestions, and ideas are greatly appreciated. Some things are hard to implement.*
+
   
 <br>
 
