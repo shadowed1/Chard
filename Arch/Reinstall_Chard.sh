@@ -1024,7 +1024,7 @@ EOF
                 ;;
 			3)	
 				echo
-				"$CHARD_ROOT/bin/chard_startup"
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/CHard/main/bin/chard_startup.sh")
 				;;
             q|Q|*)
                 echo "${RESET}${RED}[*] Reinstall cancelled. Exiting.${RESET}"
