@@ -381,21 +381,61 @@ alias torbrowser-launcher='/bin/chard_tor'
 alias thunderbird='/bin/chard_thunderbird'
 alias torbrowser-launcher-bin='/bin/chard_tor'
 alias thunderbird-bin='/bin/chard_thunderbird'
-# Brave
-#export BRAVE_USE_SYSTEM_KEYRING=0
-alias brave='brave-browser-stable --force-dark-mode --enable-features=WebUIDarkMode'
 
-# KSP
-alias ksp='LC_ALL=C ./KSP_x86_64'
+# Brave
+alias brave='brave-browser-stable --force-dark-mode --enable-features=WebUIDarkMode'
 
 # xcb
 alias pcsx2-qt='QT_QPA_PLATFORM=xcb pcsx2-qt'
 alias seamonkey='GDK_BACKEND=x11 seamonkey'
 alias cs='chard_sommelier'
 alias smrt='SMRT'
-alias gparted='sudo -E gparted'
+
+# Gparted
+alias gparted='/bin/chard_gparted'
 export EMERGE_DEFAULT_OPTS=--quiet-build=y
 dbus-daemon --system --fork 2>/dev/null
+
+# GPU Screen Recorder Cli
+alias gpusrc='/bin/chard_gpusrc'
+# GPU Screen Recorder Ui
+alias gpusr='/bin/chard_gpusr'
+
+# DennyL's FastFetch alias
+alias ffa='fastfetch -c all.jsonc'
+# Gparted
+alias gparted='/bin/chard_gparted'
+# Heroic
+alias heroic='/bin/chard_heroic'
+# Appfinder
+alias xfce4-appfinder='/bin/chard_appfinder'
+# Discord
+alias discord='/bin/chard_discord'
+# Bazaar
+alias bazaar='/bin/chard_bazaar'
+
+# XFCE4
+alias xfce4-about='chard_xfce4 xfce4-about'
+alias xfce4-accessibility-settings='xfce4-accessibility-settings'
+alias xfce4-appearance-settings='chard_xfce4 xfce4-appearance-settings'
+alias xfce4-appfinder='chard_xfce4 xfce4-appfinder'
+alias xfce4-color-settings='chard_xfce4 xfce4-color-settings'
+alias xfce4-display-settings='chard_xfce4 xfce4-display-settings'
+alias xfce4-find-cursor='chard_xfce4 xfce4-find-cursor'
+alias xfce4-keyboard-settings='chard_xfce4 xfce4-keyboard-settings'
+alias xfce4-kiosk-query='chard_xfce4 xfce4-kiosk-query'
+alias xfce4-mime-helper='chard_xfce4 xfce4-mime-helper'
+alias xfce4-mime-settings='chard_xfce4 xfce4-mime-settings'
+alias xfce4-mouse-settings='chard_xfce4 xfce4-mouse-settings'
+alias xfce4-panel='chard_xfce4 xfce4-panel'
+alias xfce4-popup-applicationsmenu='chard_xfce4 xfce4-popup-applicationsmenu'
+alias xfce4-session-logout='chard_xfce4 xfce4-session-logout'
+alias xfce4-session-settings='chard_xfce4 xfce4-session-settings'
+alias xfce4-settings-editor='chard_xfce4 xfce4-settings-editor'
+alias xfce4-settings-manager='chard_xfce4 xfce4-settings-manager'
+alias xfce4-taskmanager='chard_xfce4 xfce4-taskmanager'
+alias xfce4-terminal='chard_xfce4 xfce4-terminal'
+alias powercontrol-gui='chard_xfce4 powercontrol-gui'
 
 # virtm
 alias virtm='sudo -E virtm'
