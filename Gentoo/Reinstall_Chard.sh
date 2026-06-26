@@ -296,6 +296,7 @@ trap cleanup_chroot EXIT INT TERM
                 fi
                 
                 sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME"
+				sudo mkdir -p /usr/local/bin/
                 echo ""
                 
 				echo "${CYAN}[*] Downloading Chard components...${RESET}"
@@ -305,7 +306,7 @@ trap cleanup_chroot EXIT INT TERM
 				FILES=(
 				    "Gentoo/.chardrc|$CHARD_ROOT/.chardrc|0"
 				    "Gentoo/.chard.env|$CHARD_ROOT/.chard.env|0"
-					"Gentoo/chard_repair.sh|$CHARD_ROOT/bin/chard_repair|1"
+					"Gentoo/chard_repair.sh|/usr/local/bin/chard_repair|1"
 				    "bin/Uninstall_Chard.sh|$CHARD_ROOT/bin/Uninstall_Chard.sh|1"
 				    "Gentoo/chard.sh|$CHARD_ROOT/bin/chard|1"
 				    "Gentoo/.bashrc|$CHARD_ROOT/$CHARD_HOME/.bashrc|0"
