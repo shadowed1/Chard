@@ -234,7 +234,10 @@ detect_gpu_freq() {
                 if [[ -z "$CHARD_ROOT" || "$CHARD_ROOT" == "/" ]]; then
                     echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty. Entering Repair Mode!${RESET}"
 					sleep 2
-					bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh")
+					sudo mkdir -p /usr/local/bin
+					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh" -o "/usr/local/bin/chard_repair" 2>/dev/null
+					sudo chmod +x /usr/local/bin/chard_repair 2>/dev/null
+					/usr/local/bin/chard_repair 2>/dev/null
                 fi
 				
                 if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
