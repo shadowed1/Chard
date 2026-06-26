@@ -1919,6 +1919,8 @@ checkpoint_164() {
     if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
         echo "Skipping GPU Screen Recorder on ARM ($ARCH)"
     else
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_gpu_sr_setup.sh"            -o "/bin/chard_gpu_sr_setup" 2>/dev/null
+        sudo chmod +x /bin/chard_gpu_sr_setup 2>/dev/null
         /bin/chard_gpu_sr_setup
     fi
 }
