@@ -305,12 +305,13 @@ trap cleanup_chroot EXIT INT TERM
 				FILES=(
 				    "Gentoo/.chardrc|$CHARD_ROOT/.chardrc|0"
 				    "Gentoo/.chard.env|$CHARD_ROOT/.chard.env|0"
+					"Gentoo/chard_repair.sh|$CHARD_ROOT/bin/chard_repair|1"
 				    "bin/Uninstall_Chard.sh|$CHARD_ROOT/bin/Uninstall_Chard.sh|1"
 				    "Gentoo/chard.sh|$CHARD_ROOT/bin/chard|1"
 				    "Gentoo/.bashrc|$CHARD_ROOT/$CHARD_HOME/.bashrc|0"
 				    "bin/chard_version|$CHARD_ROOT/bin/chard_version|1"
 				    "LICENSE|$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE|0"
-				    "Gentoo/.rootrc|$CHARD_ROOT/bin/.rootrc|1"
+				    "Gentoo/.rootrc|$CHARD_ROOT/.rootrc|1"
 				    "Gentoo/chariot.sh|$CHARD_ROOT/bin/chariot|1"
 				    "bin/chard_debug.sh|$CHARD_ROOT/bin/chard_debug|1"
 				    "Gentoo/chard_sommelier.sh|$CHARD_ROOT/bin/chard_sommelier|1"
@@ -353,7 +354,7 @@ trap cleanup_chroot EXIT INT TERM
                 "$CHARD_ROOT/.chard.preload" \
                 "$CHARD_ROOT/bin/SMRT" \
                 "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-                "$CHARD_ROOT/bin/.rootrc" \
+                "$CHARD_ROOT/.rootrc" \
                 "$CHARD_ROOT/bin/chariot" \
                 "$CHARD_ROOT/bin/chard_debug" \
                 "$CHARD_ROOT/bin/chard"; do
