@@ -9,6 +9,10 @@ CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
 
+echo
+echo "${YELLOW}Welcome to Chard Repair. This does not remove any files, it just updates Chard Markers. ${RESET}"
+echo
+
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
