@@ -45,6 +45,26 @@ case "$confirm" in
         ;;
 esac
 
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+TARGET_FILE=""
+        
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    TARGET_FILE="$CHROMEOS_BASHRC"
+elif [ -f "$DEFAULT_BASHRC" ]; then
+    TARGET_FILE="$DEFAULT_BASHRC"
+fi
+
+echo "${RESET}${CYAN}Detected .bashrc: ${BOLD}${TARGET_FILE}${RESET}"
+CHARD_HOME="$(dirname "$TARGET_FILE")"
+CHARD_HOME="${CHARD_HOME#/}"
+
+if [[ "$CHARD_HOME" == home/* ]]; then
+    CHARD_HOME="${CHARD_HOME%%/user*}"
+
+    CHARD_USER="${CHARD_HOME#*/}"
+fi
+
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 echo ""
 BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
