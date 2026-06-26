@@ -388,7 +388,7 @@ FILES=(
     "Arch/.bashrc|$CHARD_ROOT/$CHARD_HOME/.bashrc|0"
     "bin/chard_version|$CHARD_ROOT/bin/chard_version|1"
     "LICENSE|$CHARD_ROOT/$CHARD_HOME/CHARD_LICENSE|0"
-    "Arch/.rootrc|$CHARD_ROOT/bin/.rootrc|1"
+    "Arch/.rootrc|$CHARD_ROOT/.rootrc|1"
     "Arch/chariot.sh|$CHARD_ROOT/bin/chariot|1"
     "bin/chard_debug.sh|$CHARD_ROOT/bin/chard_debug|1"
     "Arch/chard_sommelier.sh|$CHARD_ROOT/bin/chard_sommelier|1"
@@ -428,7 +428,7 @@ for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-    "$CHARD_ROOT/bin/.rootrc" \
+    "$CHARD_ROOT/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard_debug" \
     "$CHARD_ROOT/bin/SMRT" \
