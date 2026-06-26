@@ -9,6 +9,12 @@ CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
 
+if ls /.chardrc > /dev/null 2>&1; then
+    echo "${RED}chard_mount must be run from the host shell, not inside Chard.${RESET}"
+    sleep 3
+    exit 1
+fi
+
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
