@@ -864,6 +864,7 @@ sudo rm -f \
 
     
 sudo mkdir -p $CHARD_ROOT/run/user/1000
+sudo mkdir -p /usr/local/bin
 #sudo cp /run/user/1000/.Xauthority $CHARD_ROOT/run/user/1000/.Xauthority 2>/dev/null
 #sudo cp /run/user/1000/.mutter-Xwaylandauth.ID0RE3 $CHARD_ROOT/run/user/1000/.mutter-Xwaylandauth.ID0RE3 2>/dev/null
 sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CHARD_ROOT/usr/lib64" "$CHARD_ROOT/tmp"
@@ -937,6 +938,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_timezone_daemon.sh"            -o "$CHARD_ROOT/bin/chard_timezone_daemon" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh"            -o "/usr/local/bin/chard_repair" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -963,6 +966,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_sommelier_patch"
 sudo chmod +x "$CHARD_ROOT/bin/chard_startup"
 sudo chmod +x "$CHARD_ROOT/bin/chard_version"
 sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
+sudo chmod +x "/usr/local//bin/chard_repair"
+
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
 for file in \
