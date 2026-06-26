@@ -375,6 +375,7 @@ chard unmount
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 sudo mkdir -p "$CHARD_ROOT/run/udev"
+sudo mkdir -p /usr/local/bin
 
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 echo ""
@@ -383,6 +384,7 @@ BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
 FILES=(
     "Arch/.chardrc|$CHARD_ROOT/.chardrc|0"
     "Arch/.chard.env|$CHARD_ROOT/.chard.env|0"
+	"Arch/chard_repair.sh|/usr/local/bin/chard_repair|1"
     "bin/Uninstall_Chard.sh|$CHARD_ROOT/bin/Uninstall_Chard.sh|1"
     "Arch/chard.sh|$CHARD_ROOT/bin/chard|1"
     "Arch/.bashrc|$CHARD_ROOT/$CHARD_HOME/.bashrc|0"
