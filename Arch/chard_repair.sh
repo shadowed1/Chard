@@ -9,6 +9,10 @@ CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
 
+echo
+echo "${YELLOW}Welcome to Chard Repair. This does not remove any files, it just updates Chard Markers. ${RESET}"
+echo
+
 if ls /.chardrc > /dev/null 2>&1; then
     echo "${RED}chard_mount must be run from the host shell, not inside Chard.${RESET}"
     sleep 3
