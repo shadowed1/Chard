@@ -230,11 +230,13 @@ detect_gpu_freq() {
                 echo
                 echo "${RESET}${GREEN}[*] Performing Quick Reinstall!"
 				sudo stop chard 2>/dev/null
+				
                 if [[ -z "$CHARD_ROOT" || "$CHARD_ROOT" == "/" ]]; then
-                    echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty.${RESET}"
-                    sleep 4
-                    exit 1
+                    echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty. Entering Repair Mode!${RESET}"
+					sleep 2
+					bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh")
                 fi
+				
                 if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
                     mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
                     sleep 0.2
