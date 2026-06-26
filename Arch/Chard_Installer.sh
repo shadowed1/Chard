@@ -748,6 +748,7 @@ sudo rm -f \
 
     
 sudo mkdir -p $CHARD_ROOT/run/user/1000
+sudo mkdir -p /usr/local/bin
 #sudo cp /run/user/1000/.Xauthority $CHARD_ROOT/run/user/1000/.Xauthority 2>/dev/null
 #sudo cp /run/user/1000/.mutter-Xwaylandauth.ID0RE3 $CHARD_ROOT/run/user/1000/.mutter-Xwaylandauth.ID0RE3 2>/dev/null
 sudo mkdir -p "$CHARD_ROOT/tmp"
