@@ -846,6 +846,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/cha
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_svg.sh"            -o "$CHARD_ROOT/bin/chard_svg" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh"            -o "/usr/local/bin/chard_repair" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
 sudo chmod +x "$CHARD_ROOT/bin/.rootrc"
@@ -884,6 +886,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_gpu_sr_setup"
 sudo chmod +x "$CHARD_ROOT/bin/downgrade_flatpak_bwrap"
 sudo chmod +x "$CHARD_ROOT/bin/chard_wrappers"
 sudo chmod +x "$CHARD_ROOT/bin/chard_svg"
+sudo chmod +x "/usr/local/bin/chard_repair"
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
 for file in \
