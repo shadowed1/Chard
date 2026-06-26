@@ -204,6 +204,14 @@ trap cleanup_chroot EXIT INT TERM
                     sudo chmod +x "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon"
                 fi
                 echo "${RESET}${GREEN}[*] Performing quick reinstall..."
+				sudo stop chard 2>/dev/null
+				
+                if [[ -z "$CHARD_ROOT" || "$CHARD_ROOT" == "/" ]]; then
+                    echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty. Entering Repair Mode!${RESET}"
+					sleep 2
+					bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_repair.sh")
+                fi
+				
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 DEFAULT_BASHRC="$HOME/.bashrc"
                 TARGET_FILE=""
