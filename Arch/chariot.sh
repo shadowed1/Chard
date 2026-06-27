@@ -1908,7 +1908,9 @@ checkpoint_163() {
     retry_pacman "sudo pacman -S --noconfirm python-pyparsing"
     retry_pacman "sudo pacman -S --noconfirm ostree"
     sudo -E pacman -Rdd --noconfirm bubblewrap 2>/dev/null
-    /bin/downgrade_flatpak_bwrap
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak" 2>/dev/null
+    sudo chmod +x /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
+    /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
     #sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
 }
 run_checkpoint 163 "Chardpak" checkpoint_163
