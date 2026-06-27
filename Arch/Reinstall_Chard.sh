@@ -413,7 +413,7 @@ FILES=(
     "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
 	"Arch/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
 	"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
-	"bin/downgrade_flatpak_bwrap.sh|$CHARD_ROOT/bin/downgrade_flatpak_bwrap|1"
+	"bin/downgrade_flatpak_bwrap.sh|$CHARD_ROOT/bin/chard_downgrade_flatpak_bwrap|1"
 )
 
 for entry in "${FILES[@]}"; do
@@ -945,7 +945,7 @@ EOF
 				                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
 				                cd ~/
 								sudo pacman -S --noconfirm ostree 2>/dev/null
-				                /bin/downgrade_flatpak_bwrap 2>/dev/null
+				                /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
 								/bin/chard_svg 2>/dev/null
 				                "
 				            /bin/error_color
