@@ -1,3 +1,6 @@
+grep -q '^IgnorePkg.*bubblewrap' /etc/pacman.conf || \
+  sudo sed -i 's/^#IgnorePkg   =$/IgnorePkg   = bubblewrap flatpak/' /etc/pacman.conf
+
 cd ~/
 sudo rm -rf /usr/local/bubblepatch
 rm -rf bubblepatch 2>/dev/null
@@ -77,6 +80,7 @@ sudo ninja -C builddir install
 cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 sudo pacman -S flatpak --noconfirm --overwrite '*' 2>/dev/null
+sudo pacman -S bubblewrap --noconfirm --overwrite '*' 2>/dev/null
 /usr/local/flatpak-1.16.3/bin/flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo chown -R 1000:1000 ~/.local/share/flatpak 2>/dev/null
 sudo chown -R 1000:1000 /usr/local/flatpak-1.16.3/var/lib/flatpak/exports/share 2>/dev/null
