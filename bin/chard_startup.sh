@@ -55,6 +55,7 @@ chard_boot_setup() {
                 ;;
             [Nn]*)
                 echo "${BLUE}Skipping boot setup.${RESET}"
+				sudo rm /etc/init/chard.conf 2>/dev/null
                 echo ""
                 return 0
                 ;;
@@ -98,6 +99,7 @@ chard_boot_setup() {
                     ;;
                 [Nn]*)
                     echo "${BLUE}Skipping Crostini boot setup.${RESET}"
+					sudo rm /etc/init/chard_baguette.conf 2>/dev/null
                     echo ""
                     break
                     ;;
