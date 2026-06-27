@@ -74,7 +74,6 @@ sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 
 ##################################################################################################
 
-
 sudo mkdir -p /usr/local/flatpak-1.16.3
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
