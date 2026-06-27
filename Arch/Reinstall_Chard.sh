@@ -413,6 +413,7 @@ FILES=(
     "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
 	"Arch/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
 	"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
+	"bin/downgrade_flatpak_bwrap.sh|$CHARD_ROOT/bin/downgrade_flatpak_bwrap|1"
 )
 
 for entry in "${FILES[@]}"; do
