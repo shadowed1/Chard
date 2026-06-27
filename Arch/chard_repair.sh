@@ -82,6 +82,7 @@ BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
 FILES=(
     "Arch/.chardrc|$CHARD_ROOT/.chardrc|0"
     "Arch/.chard.env|$CHARD_ROOT/.chard.env|0"
+	"Arch/chard_repair.sh|/usr/local/bin/chard_repair|1"
     "bin/Uninstall_Chard.sh|$CHARD_ROOT/bin/Uninstall_Chard.sh|1"
     "Arch/chard.sh|$CHARD_ROOT/bin/chard|1"
     "Arch/.bashrc|$CHARD_ROOT/$CHARD_HOME/.bashrc|0"
@@ -105,6 +106,7 @@ FILES=(
     "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
 	"Arch/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
 	"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
+	"bin/downgrade_flatpak_bwrap.sh|$CHARD_ROOT/bin/downgrade_flatpak_bwrap|1"
 )
 
 for entry in "${FILES[@]}"; do
