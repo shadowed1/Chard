@@ -16,6 +16,7 @@ VULKANINFO32=$(command -v vulkaninfo32 || command -v /usr/bin/vulkaninfo32)
 sudo pacman -S vulkan-headers --noconfirm --overwrite '*' 2>/dev/null
 yay -S --noconfirm lib32-vulkan-tools 2>/dev/null
 sudo pacman -S --noconfirm vulkan-tools 2>/dev/null
+sudo apt update 2>/dev/null
 sudo apt install mesa-utils -y 2>/dev/null
 sudo apt install vulkan-tools -y 2>/dev/null
 
