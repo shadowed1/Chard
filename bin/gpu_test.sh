@@ -17,7 +17,7 @@ sudo pacman -S --noconfirm vulkan-tools 2>/dev/null
 sudo apt update 2>/dev/null
 sudo apt install mesa-utils -y 2>/dev/null
 sudo apt install vulkan-tools -y 2>/dev/null
-
+sudo apt install vainfo -y 2>/dev/null
 echo
 echo
 echo "${BOLD}${RED}< < < Vulkan > > >${RESET}"
