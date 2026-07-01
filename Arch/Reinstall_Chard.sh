@@ -825,6 +825,7 @@ EOF
 				sudo chmod 4755 "$CHARD_ROOT/opt/Heroic/chrome-sandbox" 2>/dev/null
 				sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
+				echo "$CHARD_ROOT" | sudo tee "/usr/local/.chard_install_path" >/dev/null
 				sudo rm -rf "$CHARD_ROOT/$CHARD_HOME/.cache/yay/*" 2>/dev/null
 				# Enable the Pacman reference!
 				sudo grep -q '^ILoveCandy$' "$CHARD_ROOT/etc/pacman.conf" || \
