@@ -50,8 +50,6 @@ resolve_exec() {
 launch_app() {
     local desktop_file_id="$1"
     local df=""
-    # Flatpak + system desktop search (minimal change)
-
 df=""
 
 SEARCH_DIRS=(
