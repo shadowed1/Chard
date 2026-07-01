@@ -947,6 +947,7 @@ EOF
                 
 				sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
                 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
+				echo "$CHARD_ROOT" | sudo tee "/usr/local/.chard_install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
 				echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
