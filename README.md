@@ -63,7 +63,7 @@ Safely lives inside an existing ChromeOS or Linux install without prepending its
 - Audio support over Bluetooth, USB, 3.5mm, and internal speakers with CRAS + pulse virtualization.
 - Supports Flatpak, Steam, Heroic, Wine, and even Mouse Capture/Lock!
 - Can be safely uninstalled at anytime without altering our ChromeOS install!
-- Detects for dev_install and if found, Chard avoids exporting its toolchain.
+- Detects for dev_install and if found, Chard avoids exporting its toolchain to ChromeOS. 
 - *Chard is in development. Bug reports, suggestions, and ideas are greatly appreciated. Some things are hard to implement.*
 
   
