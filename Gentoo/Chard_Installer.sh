@@ -2409,6 +2409,16 @@ else
     XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/user/1000"'
 fi
 
+if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+    if [[ -d /run/chrome ]]; then
+        XDG_RUNTIME_DIR="/run/chrome/"
+    else
+        XDG_RUNTIME_DIR="/run/user/1000/"
+    fi
+fi
+
+echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
+
 sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
 # <<< CHARD_XDG_RUNTIME_DIR >>>\n${XDG_RUNTIME_VALUE}\n# <<< END CHARD_XDG_RUNTIME_DIR >>>" \
 "$CHARD_ROOT/$CHARD_HOME/.bashrc"
