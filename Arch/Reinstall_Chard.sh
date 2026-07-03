@@ -505,16 +505,16 @@ add_chard_marker() {
 add_chard_marker "$TARGET_FILE"
 
 if grep -q "CHROMEOS_RELEASE" /etc/lsb-release 2>/dev/null; then
-    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/chrome"'
+    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/chrome/"'
 else
-    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/user/1000"'
+    XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/user/1000/"'
 fi
 
 if [[ -z "$XDG_RUNTIME_DIR" ]]; then
     if [[ -d /run/chrome ]]; then
-        XDG_RUNTIME_DIR="/run/chrome"
+        XDG_RUNTIME_DIR="/run/chrome/"
     else
-        XDG_RUNTIME_DIR="/run/user/1000"
+        XDG_RUNTIME_DIR="/run/user/1000/"
     fi
 fi
 
