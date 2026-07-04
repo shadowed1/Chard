@@ -539,7 +539,6 @@ fi
 BOARD_NAME=${BOARD_NAME%%-*}
 
 echo
-echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
 
 sudo tee "$CHARD_ROOT/usr/.chard_prompt.sh" >/dev/null <<EOF
 #!/bin/bash
