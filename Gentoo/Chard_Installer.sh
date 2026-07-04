@@ -57,7 +57,7 @@ echo "                                          A====                           
 echo "${RESET}"
 echo               
 echo "${RESET}"
-echo "${RED}- Chard Gentoo can take ${BOLD}2 to 24 hours${RESET}${RED} depending on your CPU and storage speed. Requires ~12 GB of space. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
+echo "${RED}- Chard Gentoo can take ${BOLD}2 to 24 hours${RESET}${RED} depending on your CPU and storage speed. Requires ~12 GB of space. 8 GB of RAM is strongly recommended, as is 4+ CPU threads. Supports ${BOLD}x86_64${RESET}${RED} and ${BOLD}ARM64${RESET}${RED}! ${RESET}"
 echo "${RED}- Chard install location can be customized and will not affect ChromeOS system commands. Please be logged in as ${BOLD}chronos${RESET}${RED} if using VT-2${RESET}"
 echo
 echo "${YELLOW}- It is ${BOLD}semi-sandboxed within itself${RESET}${YELLOW}, but can rely on Host libraries.${RESET}"
@@ -113,7 +113,22 @@ case "$response" in
         exit 1
         ;;
 esac
-
+NPROC=$(nproc)
+RAM=$(awk '/MemTotal/{print $2}' /proc/meminfo)
+if [ ${NPROC} -lt 4 ] || [ ${RAM} -lt 7500000 ]; then
+read -rp "${RED}${BOLD}Are you sure? Your device does not meet requirements for Chard Gentoo. It will likely take more than 18 hours to install on your device${RESET} (Y/n):" response
+response=${response:-Y}
+case "$response" in
+    y|Y|yes|YES|Yes)
+        echo
+        echo
+        ;;
+    *)
+        echo -e "${RED}[EXIT]${RESET}"
+        exit 1
+        ;;
+esac
+fi
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
