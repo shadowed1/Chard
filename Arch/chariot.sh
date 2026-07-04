@@ -92,21 +92,28 @@ echo "${GREEN}"
     fi
 
     # AMD 1
-   if [ -f /sys/class/drm/card*/device/pp_od_clk_voltage ]; then
-        GPU_TYPE="amd"
-        for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
-            if [ -f "$f" ]; then
-                mapfile -t SCLK_LINES < <(sudo grep -i '^sclk' "$f" 2>/dev/null)
-                if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-                GPU_MAX_FREQ=$(printf '%s\n' "${SCLK_LINES[@]}" \
-                    | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' \
-                    | sort -nr | head -n1)
-                fi
-                GPU_FREQ_PATH="$f"
-                done
-                echo "[*] Detected AMD GPU (pp_od): max freq ${GPU_MAX_FREQ} MHz"
-                return
+   for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
+    [ -f "$f" ] || continue
+
+    GPU_TYPE="amd"
+
+    mapfile -t SCLK_LINES < <(grep -i '^sclk' "$f" 2>/dev/null)
+
+    if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+        MAX_MHZ=$(
+            printf '%s\n' "${SCLK_LINES[@]}" |
+            sed -n 's/.*\([0-9]\+\)[Mm][Hh][Zz].*/\1/p' |
+            sort -nr |
+            head -n1
+        )
+
+        GPU_MAX_FREQ="$MAX_MHZ"
+        GPU_FREQ_PATH="$f"
+
+        echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
+        return
     fi
+done
                 
 
     # AMD 2
