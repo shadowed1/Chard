@@ -676,7 +676,6 @@ case "$cmd" in
          chard_uninstall
         ;;
     root)
-		echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
         CLEANUP_ENABLED=1
 		VERSION_FILE="$CHARD_ROOT/.chard_chrome"
 		if [ -s "$VERSION_FILE" ]; then
@@ -687,6 +686,17 @@ case "$cmd" in
 		        sudo chown -E $USER:video /dev/dri/renderD128
 		    fi
 		fi
+		
+		if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+		    if [[ -d /run/chrome ]]; then
+		        XDG_RUNTIME_DIR="/run/chrome/"
+		    else
+		        XDG_RUNTIME_DIR="/run/user/1000/"
+		    fi
+		fi
+		
+		echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
+		
         chard_volume > /dev/null 2>&1 &
 		chard_shortcut_daemon start 2>/dev/null &
 		chard_timezone_daemon &
