@@ -959,7 +959,6 @@ EOF
 				echo "$CHARD_ROOT" | sudo tee "/usr/local/.chard_install_path" >/dev/null
                 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 echo
-				echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
 				VERSION_FILE="$CHARD_ROOT/.chard_chrome"
 				if [ -s "$VERSION_FILE" ]; then
 				    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
