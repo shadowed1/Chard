@@ -1,9 +1,7 @@
-sudo pacman -Rdd --noconfirm bwrap 2>/dev/null
+sudo pacman -Rdd --noconfirm bubblewrap 2>/dev/null
 sudo pacman -Rdd --noconfirm flatpak 2>/dev/null
-#grep -q '^IgnorePkg.*bubblewrap' /etc/pacman.conf || sudo sed -i 's/^#IgnorePkg   =$/IgnorePkg   = bubblewrap flatpak/' /etc/pacman.conf
+grep -q '^IgnorePkg.*bubblewrap' /etc/pacman.conf || sudo sed -i 's/^#IgnorePkg   =$/IgnorePkg   = bubblewrap flatpak/' /etc/pacman.conf
 sudo rm -rf /usr/share/bash-completion/completions/bwrap /usr/bin/bwrap /usr/share/zsh/site-functions/_bwrap 2>/dev/null
-sudo sed -i '/^IgnorePkg[[:space:]]*=.*bubblewrap.*flatpak/d' /etc/pacman.conf
-sudo pacmman -S --noconfirm bubblewrap
 
 ##################################################################################################
 
@@ -90,6 +88,7 @@ cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 
 ##################################################################################################
+
 
 sudo mkdir -p /usr/local/flatpak-1.16.3
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
