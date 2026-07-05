@@ -50,7 +50,7 @@ if [[ "$1" == "reset" ]]; then
     reset
 fi
 echo "${GREEN}"
-    detect_gpu_freq() {
+detect_gpu_freq() {
     GPU_FREQ_PATH=""
     GPU_MAX_FREQ=""
     GPU_TYPE="unknown"
