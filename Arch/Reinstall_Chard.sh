@@ -153,18 +153,26 @@ detect_gpu_freq() {
     fi
     # NVIDIA / Nouveau
     if [ "$GPU_TYPE" = "nvidia" ]; then
-        if command -v nvidia-smi &>/dev/null; then
-            GPU_MAX_FREQ=$(nvidia-smi --query-gpu=clocks.max.gr \
-                --format=csv,noheader,nounits 2>/dev/null | head -n1)
+        if command -v nvidia-smi >/dev/null 2>&1 &&
+           nvidia-smi -L >/dev/null 2>&1; then
+    
+            GPU_MAX_FREQ=$(
+                nvidia-smi --query-gpu=clocks.max.graphics \
+                    --format=csv,noheader,nounits |
+                head -n1
+            )
             GPU_FREQ_PATH="nvidia-smi"
+    
         elif [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
             GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
             GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        else
+            GPU_MAX_FREQ="unknown"
         fi
-        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ:-unknown} MHz"
+    
+        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
         return
     fi
-
     # AMD 1
    for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
     [ -f "$f" ] || continue
