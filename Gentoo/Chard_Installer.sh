@@ -1214,25 +1214,45 @@ detect_gpu_freq() {
     GPU_FREQ_PATH=""
     GPU_MAX_FREQ=""
     GPU_TYPE="unknown"
+    local VENDOR_FILE=""
+    for card in /sys/class/drm/card[0-9]/device/vendor; do
+        [ -f "$card" ] && VENDOR_FILE="$card" && break
+    done
 
-    if [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+    if [ -f "$VENDOR_FILE" ]; then
+        local VENDOR_ID
+        VENDOR_ID=$(cat "$VENDOR_FILE" 2>/dev/null | tr '[:upper:]' '[:lower:]')
+        case "$VENDOR_ID" in
+            0x10de) GPU_TYPE="nvidia" ;;
+            0x1002) GPU_TYPE="amd"    ;;
+            0x8086) GPU_TYPE="intel"  ;;
+        esac
+    fi
+
+    # Intel
+    if [ "$GPU_TYPE" = "intel" ] || { [ "$GPU_TYPE" = "unknown" ] && [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; }; then
         GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
         GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
         GPU_TYPE="intel"
         echo "[*] Detected Intel GPU: max freq ${GPU_MAX_FREQ} MHz"
         return
     fi
-
-    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
-        GPU_TYPE="nvidia"
-        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
-        MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
-        GPU_MAX_FREQ="$MAX_MHZ"
-        GPU_FREQ_PATH="$PP_DPM_SCLK"
-        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
+    # NVIDIA / Nouveau
+    if [ "$GPU_TYPE" = "nvidia" ]; then
+        if command -v nvidia-smi &>/dev/null; then
+            GPU_MAX_FREQ=$(nvidia-smi --query-gpu=clocks.max.gr \
+                --format=csv,noheader,nounits 2>/dev/null | head -n1)
+            GPU_FREQ_PATH="nvidia-smi"
+        elif [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
+            GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+            GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        fi
+        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ:-unknown} MHz"
         return
     fi
-	for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
+
+    # AMD 1
+   for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
     [ -f "$f" ] || continue
 
     GPU_TYPE="amd"
@@ -1253,8 +1273,20 @@ detect_gpu_freq() {
         echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
         return
     fi
-done     
+done
+                
 
+    # AMD 2
+    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
+        GPU_TYPE="amd"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        GPU_MAX_FREQ=$(grep -oi '[0-9]\+mhz' "$PP_DPM_SCLK" | grep -oi '[0-9]\+' | sort -nr | head -n1)
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        echo "[*] Detected AMD GPU (pp_dpm): max freq ${GPU_MAX_FREQ} MHz"
+        return
+    fi
+
+    # Mediatek
     if [[ -d /sys/class/drm ]]; then
         if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
             GPU_TYPE="mediatek"
@@ -1275,6 +1307,7 @@ done
         fi
     fi
 
+    # Mali
     for d in /sys/class/devfreq/*; do
         if grep -qi 'mali' <<< "$d" || grep -qi 'gpu' <<< "$d"; then
             if [ -f "$d/max_freq" ]; then
@@ -1293,6 +1326,7 @@ done
         fi
     done
 
+    # Adreno
     if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
         if [ -f "/sys/class/kgsl/kgsl-3d0/max_gpuclk" ]; then
             GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
@@ -1310,7 +1344,10 @@ done
     fi
 
     GPU_TYPE="unknown"
+    echo "[!] GPU type unknown"
 }
+detect_gpu_freq
+GPU_VENDOR="$GPU_TYPE"
 
 ARCH=$(uname -m)
 MAKECONF_DIR="$CHARD_ROOT/etc/portage"
