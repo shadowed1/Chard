@@ -970,6 +970,9 @@ EOF
 				                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
 				                cd ~/
 								sudo pacman -S --noconfirm ostree 2>/dev/null
+								sudo pacman -S --noconfirm nautilus
+    							xdg-mime default org.gnome.Nautilus.desktop inode/directory 2>/dev/null
+    							xdg-mime default org.gnome.Nautilus.desktop application/x-gnome-saved-search 2>/dev/null
 				                /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
 								/bin/chard_svg 2>/dev/null
 				                "
