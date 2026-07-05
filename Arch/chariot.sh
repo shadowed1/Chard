@@ -1399,6 +1399,8 @@ checkpoint_138() {
             fi
             retry_pacman "sudo -E pacman -S --noconfirm mesa 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm $DRIVER 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm opencl-nvidia 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm nvidia-settings 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm nvidia-utils 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm lib32-nvidia-utils 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm vulkan-icd-loader 2>/dev/null"
