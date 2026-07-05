@@ -1,6 +1,9 @@
-sudo pacman -Rdd --noconfirm bubblewrap 2>/dev/null
+sudo pacman -Rdd --noconfirm bwrap 2>/dev/null
 sudo pacman -Rdd --noconfirm flatpak 2>/dev/null
-grep -q '^IgnorePkg.*bubblewrap' /etc/pacman.conf || sudo sed -i 's/^#IgnorePkg   =$/IgnorePkg   = bubblewrap flatpak/' /etc/pacman.conf
+#grep -q '^IgnorePkg.*bubblewrap' /etc/pacman.conf || sudo sed -i 's/^#IgnorePkg   =$/IgnorePkg   = bubblewrap flatpak/' /etc/pacman.conf
+sudo rm -rf /usr/share/bash-completion/completions/bwrap /usr/bin/bwrap /usr/share/zsh/site-functions/_bwrap 2>/dev/null
+sudo sed -i '/^IgnorePkg[[:space:]]*=.*bubblewrap.*flatpak/d' /etc/pacman.conf
+sudo pacmman -S --noconfirm bubblewrap
 
 ##################################################################################################
 
@@ -36,29 +39,6 @@ meson setup build -Dprefix=/usr/local/bwrap-0.11
 
 meson setup \
   -Dprefix=/usr/local/bwrap-0.11 \
-  -Drequire_userns=false \
-  -Dselinux=disabled \
-  -Dtests=false \
-  -Dbash_completion=disabled \
-  -Dzsh_completion=disabled \
-  -Dman=disabled \
-  build
-  
-ninja -C build
-sudo ninja -C build install
-cd
-sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
-
-##################################################################################################
-
-sudo mkdir -p /usr/local/bwrap-0.11
-wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
-tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
-cd /tmp/bubblewrap-0.11.1
-meson setup build -Dprefix=/usr/local/bwrap-0.11
-
-meson setup \
-  -Dprefix=/usr \
   -Drequire_userns=false \
   -Dselinux=disabled \
   -Dtests=false \
@@ -110,7 +90,6 @@ cd
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
 
 ##################################################################################################
-
 
 sudo mkdir -p /usr/local/flatpak-1.16.3
 sudo rm -rf /tmp/flatpak-* 2>/dev/null
