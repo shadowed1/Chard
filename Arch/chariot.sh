@@ -1393,10 +1393,11 @@ checkpoint_138() {
             echo "[+] Installing NVIDIA Vulkan drivers..."
             KVER=$(uname -r)
             if [[ "$KVER" == *"lts"* ]]; then
-                DRIVER="nvidia-inst"
+                DRIVER="nvidia-dkms"
             else
-                DRIVER="nvidia-inst"
+                DRIVER="nvidia-dkms"
             fi
+            retry_pacman "sudo -E pacman -S --noconfirm mesa 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm $DRIVER 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm nvidia-utils 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm lib32-nvidia-utils 2>/dev/null"
