@@ -30,13 +30,14 @@ SOMMELIER_CMD=(
 )
 
    "${SOMMELIER_CMD[@]}" -- bash -c '
-   sleep 0.1
+    sleep 0.1
     export DISPLAY=$(ls /tmp/.X11-unix | sed "s/^X/:/" | head -n1)
-    [ -f ~/.bashrc ] && source ~/.bashrc
+    CHARD_HOME="/$(cat /.chard_home)"
+    [ -f "$CHARD_HOME/.bashrc" ] && source "$CHARD_HOME/.bashrc"
     if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
         eval "$(dbus-launch --sh-syntax)"
     fi
-    cd ~/
+    cd "$CHARD_HOME"
     chard_xfce4 powercontrol-gui 2>/dev/null &
     sleep 0.2
     sudo -E chard_scale daemon 2>/dev/null &
