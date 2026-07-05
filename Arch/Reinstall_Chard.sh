@@ -22,7 +22,7 @@ fi
 USER_BASHRC="$USER_HOME/.bashrc"
 HOME="/$CHARD_HOME"
 CHARD_RC="$CHARD_ROOT/.chardrc"
-
+USER=$CHARD_USER
 
 source $HOME/.bashrc 2>/dev/null
 
