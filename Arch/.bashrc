@@ -356,8 +356,6 @@ command -v chard_refresh >/dev/null && chard_refresh
 vkgears() { LIBDECOR_PLUGIN_DIR="" command vkgears "$@"; }
 
 export EDITOR=gedit
-export FILEMANAGER=thunar
-printf "y\n" | xdg-mime default thunar.desktop inode/directory 2>/dev/null
 source "$HOME/.${USER}rc"
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
