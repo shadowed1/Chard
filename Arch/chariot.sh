@@ -79,18 +79,26 @@ detect_gpu_freq() {
     fi
     # NVIDIA / Nouveau
     if [ "$GPU_TYPE" = "nvidia" ]; then
-        if command -v nvidia-smi &>/dev/null; then
-            GPU_MAX_FREQ=$(nvidia-smi --query-gpu=clocks.max.gr \
-                --format=csv,noheader,nounits 2>/dev/null | head -n1)
+        if command -v nvidia-smi >/dev/null 2>&1 &&
+           nvidia-smi -L >/dev/null 2>&1; then
+    
+            GPU_MAX_FREQ=$(
+                nvidia-smi --query-gpu=clocks.max.graphics \
+                    --format=csv,noheader,nounits |
+                head -n1
+            )
             GPU_FREQ_PATH="nvidia-smi"
+    
         elif [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
             GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
             GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        else
+            GPU_MAX_FREQ="unknown"
         fi
-        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ:-unknown} MHz"
+    
+        echo "[*] Detected NVIDIA GPU: max freq ${GPU_MAX_FREQ} MHz"
         return
     fi
-
     # AMD 1
    for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
     [ -f "$f" ] || continue
@@ -1209,6 +1217,7 @@ run_checkpoint 135 "sudo -E pacman -S --noconfirm lib32gpu" checkpoint_135
 #run_checkpoint 136 "curl -fsS https://dl.brave.com/install.sh | sh" checkpoint_136
 
 checkpoint_137() {
+    detect_gpu_freq
     echo "${MAGENTA}GPU_TYPE=$GPU_TYPE"
     echo "GPU_FREQ_PATH=$GPU_FREQ_PATH"
     echo "GPU_MAX_FREQ=$GPU_MAX_FREQ ${RESET}"
@@ -1373,18 +1382,29 @@ checkpoint_138() {
             ;;
         amd)
             echo "[+] Installing AMD Vulkan drivers..."
-            retry_pacman "sudo -E pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon mesa-utils 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm mesa 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm lib32-mesa 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm vulkan-radeon 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm lib32-vulkan-radeon 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm mesa-utils 2>/dev/null"
             ;;
 
         nvidia)
             echo "[+] Installing NVIDIA Vulkan drivers..."
             KVER=$(uname -r)
             if [[ "$KVER" == *"lts"* ]]; then
-                DRIVER="nvidia-lts"
+                DRIVER="nvidia-inst"
             else
-                DRIVER="nvidia"
+                DRIVER="nvidia-inst"
             fi
-            retry_pacman "sudo -E pacman -S --noconfirm $DRIVER nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader mesa-utils lib32-vulkan-driver 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm $DRIVER 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm nvidia-utils 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm lib32-nvidia-utils 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm vulkan-icd-loader 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm lib32-vulkan-icd-loader 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm mesa-utils 2>/dev/null"
+            retry_pacman "sudo -E pacman -S --noconfirm lib32-vulkan-driver 2>/dev/null"
+            retry pacman "yay -S --noconfirm nvidia-580xx-dkms nvidia-580xx-utils 2>/dev/null"
             ;;
 
         mali|panfrost|mediatek|vivante|asahi)
