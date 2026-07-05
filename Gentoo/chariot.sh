@@ -244,7 +244,22 @@ echo "${RESET}${YELLOW}Example to resume from a specific checkpoint: ${RESET}${Y
 echo "${RESET}${YELLOW}Example to run a checkpoint and stop after: ${RESET}${YELLOW}${BOLD} chariot -s 73${RESET}"
 echo "${GREEN}Run: ${RESET}${BOLD}${RED}chariot reset ${RESET}${GREEN}to ${RESET}${RED}revert${GREEN} to checkpoint 1.${RESET}${GREEN}"
 echo
-
+read -p "Enter standard SMRT core allocation ${RESET}${BOLD}${RED}(If you don't know what this is, press enter):${RESET}${GREEN} " user_input1
+if [[ "$user_input1" =~ ^[0-9]+$ ]] && (( $((user_input1)) < 101 )); then
+    PCT_DEFAULT=$user_input1
+    echo "Standard core allocation is now ${RESET}${BOLD}${RED}$PCT_DEFAULT%${RESET}${GREEN}"   
+else
+    PCT_DEFAULT=75
+    echo "Standard core allocation is now ${RESET}${BOLD}${RED}$PCT_DEFAULT%${RESET}${GREEN}" 
+fi
+read -p "Enter load SMRT core allocation ${RESET}${BOLD}${RED}(If you don't know what this is, press enter):${RESET}${GREEN} " user_input2
+if [[ "$user_input2" =~ ^[0-9]+$ ]] && (( $((user_input2)) < 101 )); then
+    PCT_LOAD=$user_input2
+    echo "Load core allocation is now ${RESET}${BOLD}${RED}$PCT_LOAD%${RESET}${GREEN}" 
+else
+    PCT_LOAD=50
+    echo "Load core allocation is now ${RESET}${BOLD}${RED}$PCT_LOAD%${RESET}${GREEN}" 
+fi
 CHECKPOINT_FILE="/.chard_checkpoint"
 
 if [[ -z "$CHECKPOINT_FILE" || "${CHECKPOINT_FILE:0:1}" != "/" ]]; then
@@ -253,7 +268,7 @@ if [[ -z "$CHECKPOINT_FILE" || "${CHECKPOINT_FILE:0:1}" != "/" ]]; then
 fi
 
 echo "$CHECKPOINT_FILE"
-
+SMRT $((PCT_DEFAULT))
 if [[ ! -e "$CHECKPOINT_FILE" ]]; then
     sudo bash -c "echo 0 > '$CHECKPOINT_FILE'" || { echo "${RED}Cannot create $CHECKPOINT_FILE${RESET}"; exit 1; }
 fi
@@ -695,7 +710,7 @@ checkpoint_46() {
     echo ">=app-text/xmlto-0.0.28-r11 text" | sudo tee -a /etc/portage/package.use/xmlto
     echo ">=media-libs/freetype-2.14.1-r1 harfbuzz" | sudo tee -a /etc/portage/package.use/freetype
     echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
-    # SMRT "$PCT"
+    SMRT $((PCT_LOAD))
     source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
     sudo -E emerge sys-auth/polkit
     rm -rf /var/tmp/portage/sys-auth/polkit-*
@@ -725,7 +740,7 @@ checkpoint_48() {
 run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
 
 checkpoint_49() {
-    SMRT 75
+    SMRT $((PCT_DEFAULT))
     source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
     sudo -E emerge x11-base/xorg-drivers
     rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
