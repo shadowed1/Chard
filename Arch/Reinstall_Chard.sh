@@ -513,6 +513,14 @@ add_chard_marker() {
 
 add_chard_marker "$TARGET_FILE"
 
+sudo tee "$CHARD_ROOT/.chard_home" >/dev/null <<EOF
+$CHARD_HOME
+EOF
+
+sudo tee "$CHARD_ROOT/.chard_user" >/dev/null <<EOF
+$CHARD_USER
+EOF
+
 if grep -q "CHROMEOS_RELEASE" /etc/lsb-release 2>/dev/null; then
     XDG_RUNTIME_VALUE='export XDG_RUNTIME_DIR="$ROOT/run/chrome/"'
 else
