@@ -252,24 +252,28 @@ echo "${RESET}${YELLOW}Example to resume from a specific checkpoint: ${RESET}${Y
 echo "${RESET}${YELLOW}Example to run a checkpoint and stop after: ${RESET}${YELLOW}${BOLD} chariot -s 73${RESET}"
 echo "${GREEN}Run: ${RESET}${BOLD}${RED}chariot reset ${RESET}${GREEN}to ${RESET}${RED}revert${GREEN} to checkpoint 1.${RESET}${GREEN}"
 echo
-read -p "Enter standard SMRT core allocation ${RESET}${BOLD}${RED}(If you don't know what this is, press enter):${RESET}${GREEN} " user_input1
-if [[ "$user_input1" =~ ^[0-9]+$ ]] && (( $((user_input1)) < 101 )); then
+
+read -t 15 -p "Enter standard SMRT core allocation ${RESET}${BOLD}${RED}(If you don't know what this is, press enter):${RESET}${GREEN} " user_input1
+echo
+if [[ "$user_input1" =~ ^[0-9]+$ ]] && (( user_input1 < 101 )); then
     PCT_DEFAULT=$user_input1
-    echo "Standard core allocation is now ${RESET}${BOLD}${RED}$PCT_DEFAULT%${RESET}${GREEN}"   
+    echo "Standard core allocation is now ${RESET}${BOLD}${RED}$PCT_DEFAULT%${RESET}${GREEN}"
 else
     PCT_DEFAULT=75
-    echo "Standard core allocation is now ${RESET}${BOLD}${RED}$PCT_DEFAULT%${RESET}${GREEN}" 
+    echo "Standard core allocation is now ${RESET}${BOLD}${RED}$PCT_DEFAULT%${RESET}${GREEN}"
 fi
-read -p "Enter load SMRT core allocation ${RESET}${BOLD}${RED}(If you don't know what this is, press enter):${RESET}${GREEN} " user_input2
-if [[ "$user_input2" =~ ^[0-9]+$ ]] && (( $((user_input2)) < 101 )); then
+echo
+read -t 15 -p "Enter load SMRT core allocation ${RESET}${BOLD}${RED}(If you don't know what this is, press enter):${RESET}${GREEN} " user_input2
+echo
+if [[ "$user_input2" =~ ^[0-9]+$ ]] && (( user_input2 < 101 )); then
     PCT_LOAD=$user_input2
-    echo "Load core allocation is now ${RESET}${BOLD}${RED}$PCT_LOAD%${RESET}${GREEN}" 
+    echo "Load core allocation is now ${RESET}${BOLD}${RED}$PCT_LOAD%${RESET}${GREEN}"
 else
     PCT_LOAD=50
-    echo "Load core allocation is now ${RESET}${BOLD}${RED}$PCT_LOAD%${RESET}${GREEN}" 
+    echo "Load core allocation is now ${RESET}${BOLD}${RED}$PCT_LOAD%${RESET}${GREEN}"
 fi
-CHECKPOINT_FILE="/.chard_checkpoint"
 
+CHECKPOINT_FILE="/.chard_checkpoint"
 if [[ -z "$CHECKPOINT_FILE" || "${CHECKPOINT_FILE:0:1}" != "/" ]]; then
     echo "${RED}FATAL: CHECKPOINT_FILE is not set correctly: '$CHECKPOINT_FILE'${RESET}"
     exit 1
