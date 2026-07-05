@@ -1616,18 +1616,28 @@ detect_gpu_freq() {
         return
     fi
 
-    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
-        GPU_TYPE="amd"
-        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
-        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
-        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
-            GPU_MAX_FREQ="$MAX_MHZ"
-        fi
-        GPU_FREQ_PATH="$PP_OD_FILE"
+    for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
+    [ -f "$f" ] || continue
+
+    GPU_TYPE="amd"
+
+    mapfile -t SCLK_LINES < <(grep -i '^sclk' "$f" 2>/dev/null)
+
+    if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+        MAX_MHZ=$(
+            printf '%s\n' "${SCLK_LINES[@]}" |
+            sed -n 's/.*\([0-9]\+\)[Mm][Hh][Zz].*/\1/p' |
+            sort -nr |
+            head -n1
+        )
+
+        GPU_MAX_FREQ="$MAX_MHZ"
+        GPU_FREQ_PATH="$f"
+
         echo "[*] Detected AMD GPU: max freq ${GPU_MAX_FREQ} MHz"
         return
     fi
+done     
 
     if [[ -d /sys/class/drm ]]; then
         if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
@@ -1998,27 +2008,26 @@ detect_gpu_freq() {
         return
     fi
 
-    if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
-        GPU_TYPE="nvidia"
-        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
-        MAX_MHZ=$(grep -o '[0-9]\+' "$PP_DPM_SCLK" | sort -nr | head -n1)
+for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
+    [ -f "$f" ] || continue
+
+    GPU_TYPE="amd"
+
+    mapfile -t SCLK_LINES < <(grep -i '^sclk' "$f" 2>/dev/null)
+
+    if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+        MAX_MHZ=$(
+            printf '%s\n' "${SCLK_LINES[@]}" |
+            sed -n 's/.*\([0-9]\+\)[Mm][Hh][Zz].*/\1/p' |
+            sort -nr |
+            head -n1
+        )
+
         GPU_MAX_FREQ="$MAX_MHZ"
-        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        GPU_FREQ_PATH="$f"
         return
     fi
-
-    if [ -f "/sys/class/drm/card0/device/pp_od_clk_voltage" ]; then
-        GPU_TYPE="amd"
-        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
-        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$PP_OD_FILE")
-        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-            MAX_MHZ=$(printf '%s\n' "${SCLK_LINES[@]}" | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' | sort -nr | head -n1)
-            GPU_MAX_FREQ="$MAX_MHZ"
-        fi
-        GPU_FREQ_PATH="$PP_OD_FILE"
-        return
-    fi
-
+done     
     if [[ -d /sys/class/drm ]]; then
         if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
             GPU_TYPE="mediatek"
