@@ -2236,12 +2236,6 @@ sudo tee "$WAYLAND_CONF_FILE" > /dev/null <<EOF
 # Wayland GPU environment setup for Chard
 EOF
 
-WAYLAND_CONF_FILE="$WAYLAND_CONF_DIR/wayland_gpu.sh"
-sudo tee "$WAYLAND_CONF_FILE" > /dev/null <<EOF
-#!/bin/sh
-# Wayland GPU environment setup for Chard
-EOF
-
 case "$GPU_TYPE" in
     intel)
         DRIVER="iris"
