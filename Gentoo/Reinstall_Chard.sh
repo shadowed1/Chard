@@ -354,6 +354,7 @@ trap cleanup_chroot EXIT INT TERM
 				    else
 				        echo "${RED}Failed: ${BOLD}$source ${RESET}"
 				    fi
+					sleep 0.2
 				done
 				
 				sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
