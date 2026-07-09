@@ -1647,14 +1647,15 @@ checkpoint_151() {
     ARCH=$(uname -m)
         if [[ "$ARCH" == "x86_64" ]]; then
             #yay -S --noconfirm winegui
-            retry_pacman "yay -S --noconfirm faugus-launcher"
+            #retry_pacman "yay -S --noconfirm faugus-launcher"
+            retry_pacman "yay -S --noconfirm lutris"
         elif [[ "$ARCH" == "aarch64" ]]; then
             echo "Unsupported architecture: $ARCH"
         else
             echo "Unsupported architecture: $ARCH"
         fi   
 }
-run_checkpoint 151 "faugus replacing winegui" checkpoint_151
+run_checkpoint 151 "lutris replacing faugus" checkpoint_151
 
 # Day's Garcon
 checkpoint_152() {
