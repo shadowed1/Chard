@@ -477,13 +477,14 @@ for entry in "${FILES[@]}"; do
 
     if sudo curl -fsSL "$BASE_URL/$source" -o "$target"; then
         echo "${BLUE}${BOLD}$target ${RESET}"
-
+		
         if [ "$executable" = "1" ]; then
             sudo chmod +x "$target"
         fi
     else
         echo "${RED}Failed: ${BOLD}$source ${RESET}"
     fi
+	sleep 1
 done
 
 for file in \
