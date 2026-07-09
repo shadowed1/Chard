@@ -329,9 +329,10 @@ download_file() {
 }
 		
  		echo "${RESET}${GREEN}"
-        echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard) ${RESET}${YELLOW}"
+        echo "[1] Quick Reinstall (Update Chard - This will close all running apps in Chard but not remove data) ${RESET}${YELLOW}"
         echo "[2] Full Reinstall (Run Chard Installer and Remove Chard) ${RESET}${CYAN}"
-		echo "[3] Toggle on/off Chard starting on boot ${RESET}${RED}"
+		echo "[3] Toggle on/off Chard starting on boot ${RESET}${MAGENTA}"
+		echo "[r] Repair Chard - (Reassign install path - Closes all running apps in Chard, updates core files, and does not remove data) ${RESET}${RED}"
         echo "[q] Cancel"
         echo "${RESET}${GREEN}"
         read -p "Choose an option [1/2/3/q]: " choice
@@ -1163,8 +1164,12 @@ EOF
                 ;;
 			3)	
 				echo
-				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/CHard/main/bin/chard_startup.sh")
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh")
 				;;
+			r|R)
+				echo
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh")
+			    ;;
             q|Q|*)
                 echo "${RESET}${RED}[*] Reinstall cancelled. Exiting.${RESET}"
 				sleep 3
