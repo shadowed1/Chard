@@ -346,6 +346,5 @@ fi
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
 
-echo
-echo "${GREEN}Repair finished. ${RESET}"
+echo "${GREEN}${BOLD}Repair finished. ${RESET}"
 echo
