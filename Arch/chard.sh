@@ -887,9 +887,19 @@ case "$cmd" in
 		size)
 			chard_size
 		;;
+		reinstall
+		    CLEANUP_ENABLED=1
+			chard_reinstall
+		;;
 		repair)
+			CLEANUP_ENABLED=1
 			echo
 			bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh")
+		;;
+		uninstall)
+			CLEANUP_ENABLED=1
+			echo
+			bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh")
 		;;
     unmount)
         	CLEANUP_ENABLED=1
