@@ -230,6 +230,7 @@ FILES=(
 	"bin/color_reset.sh|$CHARD_ROOT/bin/color_reset|1"
 	"bin/gpu_test.sh|$CHARD_ROOT/bin/gpu_test|1"
 	"bin/chard_timezone_daemon.sh|$CHARD_ROOT/bin/chard_timezone_daemon|1"
+	"bin/chard_sommelier_patch.sh|$CHARD_ROOT/bin/chard_sommelier_patch|1"
 )
 
 for entry in "${FILES[@]}"; do
