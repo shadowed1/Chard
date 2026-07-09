@@ -1,12 +1,15 @@
 #!/bin/bash
-VERSION="0.45"
+VERSION="0.46"
 
 changelog() {
-    echo "- Added dev_install check to avoid breaking its python."
-    echo "- Fixed Steam wrapper with Bubblepatch."
-    echo "- Added automatic baguette on boot support."
-    echo "- Cleaned up chard_shortcut.sh"
-    echo "- Improved wrappers and added VA-API support."
-    echo "- Added Flatpak app icon and launch support."
+    echo "- Fixed GPU Screen Recorder install."
+    echo "- Fixed bubblewrap and flatpak package management. "
+    echo "- Added nautilus."
+    echo "- Enhanced chard_repair.sh script."
+    echo "- Added partial Github DDoS fallback logic."
+    echo "- Added noexec install check with install location prompt."
+    echo "- Improved GPU detection logic and SMRT thanks to Terry Stormchaser."
     echo
 }
+
+  
