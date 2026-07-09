@@ -154,3 +154,8 @@ sudo rm -rf /tmp/flatpak-* 2>/dev/null
 /usr/bin/flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo chown -R 1000:1000 ~/.local/share/flatpak 2>/dev/null
 sudo chown -R 1000:1000 /usr/local/flatpak-1.16.3/var/lib/flatpak/exports/share 2>/dev/null
+
+# Remove for now
+sudo rm /usr/bin/bwrap 2>/dev/null
+sudo rm /usr/share/zsh/site-functions/_bwrap 2>/dev/null
+sudo rm /usr/share/bash-completion/completions/bwrap 2>/dev/null
