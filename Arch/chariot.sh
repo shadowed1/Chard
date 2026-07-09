@@ -1719,7 +1719,7 @@ run_checkpoint 159 "Bindfs" checkpoint_159
 checkpoint_160() {
      sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh" -o "/bin/chard_sommelier_patch" 2>/dev/null
      sudo chmod +x /bin/chard_sommelier_patch 2>/dev/null
-    /bin/chard_sommelier_patch
+     /bin/chard_sommelier_patch
 }
 run_checkpoint 160 "Patch Sommelier" checkpoint_160
 
