@@ -853,6 +853,8 @@ FILES=(
 	"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
 	"bin/chard_downgrade_bwrap_flatpak.sh|$CHARD_ROOT/bin/chard_downgrade_bwrap_flatpak|1"
 	"bin/error_color.sh|$CHARD_ROOT/bin/error_color|1"
+	"bin/color_reset.sh|$CHARD_ROOT/bin/color_reset|1"
+	"bin/gpu_test.sh|$CHARD_ROOT/bin/gpu_test|1"
 )
 
 for entry in "${FILES[@]}"; do
