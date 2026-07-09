@@ -151,8 +151,10 @@ case "$confirm" in
 esac
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
-
+echo "${BOLD}${RED}INSTALL LOCATION SET: ${RESET}${GREEN}${BOLD}$CHARD_ROOT${RESET}"
+echo
 echo "$CHARD_ROOT" | sudo tee "/usr/local/.chard_install_path" >/dev/null
+
 if [[ -z "$XDG_RUNTIME_DIR" ]]; then
     if [[ -d /run/chrome ]]; then
         XDG_RUNTIME_DIR="/run/chrome/"
