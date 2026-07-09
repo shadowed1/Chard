@@ -274,36 +274,50 @@ GPU_VENDOR="$GPU_TYPE"
 download_file() {
     local url="$1"
     local output="$2"
-
+    local use_sudo="${3:-1}"
     local attempt=1
-    local max_attempts=5
+    local max_attempts=10
     local wait=2
 
     while [ $attempt -le $max_attempts ]; do
         local http_code
 
-        http_code=$(sudo curl \
-            -L \
-            --silent \
-            --show-error \
-            --output "$output" \
-            --write-out "%{http_code}" \
-            "$url")
+        if [ "$use_sudo" -eq 1 ]; then
+            http_code=$(sudo curl \
+                -L \
+                --silent \
+                --show-error \
+                --output "$output" \
+                --write-out "%{http_code}" \
+                "$url")
+        else
+            http_code=$(curl \
+                -L \
+                --silent \
+                --show-error \
+                --output "$output" \
+                --write-out "%{http_code}" \
+                "$url")
+        fi
 
         if [ "$http_code" = "200" ] && [ -s "$output" ]; then
             return 0
         fi
 
-        sudo rm -f "$output"
+        if [ "$use_sudo" -eq 1 ]; then
+            sudo rm -f "$output"
+        else
+            rm -f "$output"
+        fi
 
         case "$http_code" in
             429|500|502|503|504)
-                echo "${YELLOW}Download failed (HTTP $http_code). Retrying in ${wait}s (${attempt}/${max_attempts})...${RESET}"
+                echo "${YELLOW}Download failed (HTTP $http_code) - Retrying in ${wait}s (${attempt}/${max_attempts})...${RESET}"
                 sleep "$wait"
                 wait=$((wait * 2))
                 ;;
             *)
-                echo "${RED}Download failed (HTTP $http_code).${RESET}"
+                echo "${RED}Download failed (HTTP $http_code) - ${RESET}"
                 return 1
                 ;;
         esac
@@ -527,9 +541,9 @@ for entry in "${FILES[@]}"; do
     else
         echo "${RED}Failed: ${BOLD}$source${RESET}"
     fi
-
     sleep 0.2
 done
+
 for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
