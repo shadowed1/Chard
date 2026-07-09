@@ -1067,7 +1067,8 @@ run_checkpoint 115 "sudo -E pacman -S --noconfirm libclc egl-gbm" checkpoint_115
 #run_checkpoint 117 "sudo -E pacman -S --noconfirm flatpak" checkpoint_117
 
 checkpoint_118() {
-    retry_pacman "sudo -E pacman -S --noconfirm thunar"
+    #retry_pacman "sudo -E pacman -S --noconfirm thunar"
+    echo "Dropped Thunar for Nautilus"
 }
 run_checkpoint 118 "sudo -E pacman -S --noconfirm thunar" checkpoint_118
 
