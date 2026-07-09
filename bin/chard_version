@@ -7,6 +7,6 @@ changelog() {
     echo "- Added automatic baguette on boot support."
     echo "- Cleaned up chard_shortcut.sh"
     echo "- Improved wrappers and added VA-API support."
-    echo "- Added Flatpak app icon and launch support.
+    echo "- Added Flatpak app icon and launch support."
     echo
 }
