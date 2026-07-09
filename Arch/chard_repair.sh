@@ -19,6 +19,49 @@ if ls /.chardrc > /dev/null 2>&1; then
     exit 1
 fi
 
+download_file() {
+    local url="$1"
+    local output="$2"
+
+    local attempt=1
+    local max_attempts=5
+    local wait=2
+
+    while [ $attempt -le $max_attempts ]; do
+        local http_code
+
+        http_code=$(sudo curl \
+            -L \
+            --silent \
+            --show-error \
+            --output "$output" \
+            --write-out "%{http_code}" \
+            "$url")
+
+        if [ "$http_code" = "200" ] && [ -s "$output" ]; then
+            return 0
+        fi
+
+        sudo rm -f "$output"
+
+        case "$http_code" in
+            429|500|502|503|504)
+                echo "${YELLOW}Download failed (HTTP $http_code). Retrying in ${wait}s (${attempt}/${max_attempts})...${RESET}"
+                sleep "$wait"
+                wait=$((wait * 2))
+                ;;
+            *)
+                echo "${RED}Download failed (HTTP $http_code).${RESET}"
+                return 1
+                ;;
+        esac
+
+        attempt=$((attempt + 1))
+    done
+
+    return 1
+}
+
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 CHARD_ROOT="${CHARD_ROOT%/}"
 CHARD_RC="$CHARD_ROOT/.chardrc"
@@ -176,16 +219,16 @@ for entry in "${FILES[@]}"; do
 
     sudo mkdir -p "$(dirname "$target")"
 
-    if sudo curl -fsSL "$BASE_URL/$source" -o "$target"; then
-        echo "${BLUE}${BOLD}$target ${RESET}"
+    if download_file "$BASE_URL/$source" "$target"; then
+        echo "${BLUE}${BOLD}$target${RESET}"
 
         if [ "$executable" = "1" ]; then
             sudo chmod +x "$target"
         fi
     else
-        echo "${RED}Failed: ${BOLD}$source ${RESET}"
+        echo "${RED}Failed: ${BOLD}$source${RESET}"
     fi
-	sleep 1
+    sleep 0.2
 done
 
 for file in \
