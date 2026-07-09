@@ -887,7 +887,7 @@ case "$cmd" in
 		size)
 			chard_size
 		;;
-		reinstall
+		reinstall)
 		    CLEANUP_ENABLED=1
 			chard_reinstall
 		;;
