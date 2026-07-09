@@ -78,7 +78,6 @@ download_file() {
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
 CHARD_ROOT="${CHARD_ROOT%/}"
-CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
@@ -113,6 +112,13 @@ case "$confirm" in
         exit 1
         ;;
 esac
+
+echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
+CHARD_ROOT="${CHARD_ROOT%/}"
+CHARD_RC="$CHARD_ROOT/.chardrc"
+
+echo "${BOLD}${RED}INSTALL LOCATION SET: ${RESET}${GREEN}${BOLD}$CHARD_ROOT${RESET}"
+echo
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
