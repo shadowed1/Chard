@@ -106,7 +106,7 @@ while true; do
             ;;
         [Nn]*)
             echo -e "${BLUE}Cancelled.${RESET}\n"
-            exit 1
+            continue
             ;;
         *)
             echo -e "${RED}Please answer Y/n.${RESET}\n"
@@ -373,7 +373,8 @@ fi
 
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
-
+echo "${MAGENTA}"
+sed -n '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</p' ~/.bashrc
 echo
-echo "${GREEN}Repair finished. ${RESET}"
+echo "${RESET}${GREEN}Repair finished. ${RESET}"
 echo
