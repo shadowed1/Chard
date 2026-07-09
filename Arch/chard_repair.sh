@@ -185,6 +185,7 @@ for entry in "${FILES[@]}"; do
     else
         echo "${RED}Failed: ${BOLD}$source ${RESET}"
     fi
+	sleep 1
 done
 
 for file in \
