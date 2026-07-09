@@ -20,6 +20,8 @@ if ls /.chardrc > /dev/null 2>&1; then
 fi
 
 DEFAULT_CHARD_ROOT="/usr/local/chard"
+CHARD_ROOT="${CHARD_ROOT%/}"
+CHARD_RC="$CHARD_ROOT/.chardrc"
 
 if [ -n "$CHARD_ROOT" ] && [ -f "$CHARD_ROOT/.install_path" ]; then
     CHARD_ROOT=$(sudo cat "$CHARD_ROOT/.install_path")
@@ -74,6 +76,66 @@ if [[ "$CHARD_HOME" == home/* ]]; then
 
     CHARD_USER="${CHARD_HOME#*/}"
 fi
+
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+TARGET_FILE=""
+
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    TARGET_FILE="$CHROMEOS_BASHRC"
+    CHROME_MILESTONE=$(grep '^CHROMEOS_RELEASE_CHROME_MILESTONE=' /etc/lsb-release | cut -d'=' -f2)
+    echo "${CYAN}ChromeOS Version: ${BOLD}$CHROME_MILESTONE ${RESET}${RED}"
+    echo "$CHROME_MILESTONE" | sudo tee "$CHARD_ROOT/.chard_chrome" > /dev/null
+    sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
+    sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
+    sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
+    sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
+elif [ -f "$DEFAULT_BASHRC" ]; then
+    TARGET_FILE="$DEFAULT_BASHRC"
+fi
+
+if [ -n "$TARGET_FILE" ]; then
+    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$TARGET_FILE"
+    tr -d '\0' < "$TARGET_FILE" > "${TARGET_FILE}.clean" && mv "${TARGET_FILE}.clean" "$TARGET_FILE"
+else
+    echo "${RED}No .bashrc found! ${RESET}"
+fi
+
+if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$TARGET_FILE"; then
+    {
+        echo "# <<< CHARD ENV MARKER <<<"
+        echo "source \"$CHARD_RC\""
+        echo "# <<< END CHARD ENV MARKER <<<"
+    } >> "$TARGET_FILE"
+fi
+
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+DEFAULT_BASHRC="$HOME/.bashrc"
+TARGET_FILE=""
+
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    TARGET_FILE="$CHROMEOS_BASHRC"
+    sudo mkdir -p "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+else
+    TARGET_FILE="$DEFAULT_BASHRC"
+fi
+
+add_chard_marker() {
+    local FILE="$1"
+    sed -i '/^# <<< CHARD ENV MARKER <<</,/^# <<< END CHARD ENV MARKER <<</d' "$FILE"
+
+    if ! grep -Fxq "# <<< CHARD ENV MARKER <<<" "$FILE"; then
+        {
+            echo "# <<< CHARD ENV MARKER <<<"
+            echo "source \"$CHARD_RC\""
+            echo "# <<< END CHARD ENV MARKER <<<"
+        } >> "$FILE"
+        echo "${BLUE}[+] Chard sourced to $FILE"
+    else
+        echo "${YELLOW}[!] Chard already sourced in $FILE"
+    fi
+}
+add_chard_marker "$TARGET_FILE"
 
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 echo ""
