@@ -225,7 +225,8 @@ FILES=(
     "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
 	"Arch/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
 	"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
-	"bin/chard_downgrade_flatpak_bwrap.sh|$CHARD_ROOT/bin/chard_downgrade_flatpak_bwrap|1"
+	"bin/chard_downgrade_bwrap_flatpak.sh|$CHARD_ROOT/bin/chard_downgrade_bwrap_flatpak|1"
+	"bin/error_color.sh|$CHARD_ROOT/bin/error_color|1"
 )
 
 for entry in "${FILES[@]}"; do
