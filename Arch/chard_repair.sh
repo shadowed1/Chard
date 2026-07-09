@@ -124,14 +124,14 @@ while true; do
     fi
 
     if ! sudo chmod +x "$CHARD_TEST_EXEC"; then
-        echo "${RED}[!] Could not chmod +x the test file at $CHARD_ROOT — check permissions.${RESET}"
+        echo "${RED}[!] Could not chmod +x the test file at $CHARD_ROOT${RESET}"
         echo "${YELLOW}Please choose a different install path.${RESET}\n"
         sudo rm -f "$CHARD_TEST_EXEC" 2>/dev/null
         continue
     fi
 
     if ! sudo "$CHARD_TEST_EXEC"; then
-        echo "${RED}[!] Test executable failed to run from $CHARD_ROOT (filesystem may be mounted noexec).${RESET}"
+        echo "${RED}[!] Install location has noexec mount! ${RESET}"
         echo "${YELLOW}Please choose a different install path.${RESET}\n"
         sudo rm -f "$CHARD_TEST_EXEC" 2>/dev/null
         continue
