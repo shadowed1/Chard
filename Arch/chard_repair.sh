@@ -89,29 +89,57 @@ else
     CHARD_ROOT="$DEFAULT_CHARD_ROOT"
 fi
 
-read -rp "${GREEN}Enter desired Install Path - ${RESET}${GREEN}${BOLD}leave blank for default: $CHARD_ROOT: ${RESET}" choice
-if [ -n "$choice" ]; then
-    CHARD_ROOT="${choice}"
-fi
-CHARD_ROOT="${CHARD_ROOT%/}"
-echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
-echo
-read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
-echo ""
-    
-case "$confirm" in
-    [Yy]* | "")
-        sudo mkdir -p "$CHARD_ROOT"
-        ;;
-    [Nn]*)
-        echo -e "${BLUE}Cancelled.${RESET}\n"
-        exit 1
-        ;;
-    *)
-        echo -e "${RED}Please answer Y/n.${RESET}"
-        exit 1
-        ;;
-esac
+while true; do
+    read -rp "${GREEN}Enter desired Install Path - ${RESET}${GREEN}${BOLD}leave blank for default: $CHARD_ROOT: ${RESET}" choice
+    if [ -n "$choice" ]; then
+        CHARD_ROOT="${choice}"
+    fi
+    CHARD_ROOT="${CHARD_ROOT%/}"
+    echo -e "\n${CYAN}You entered: ${BOLD}$CHARD_ROOT${RESET}"
+    echo
+    read -rp "${BLUE}${BOLD}Confirm this install path? Enter key counts as yes! ${RESET}${BOLD} (Y/n): ${RESET}" confirm
+    echo ""
+
+    case "$confirm" in
+        [Yy]* | "")
+            sudo mkdir -p "$CHARD_ROOT"
+            ;;
+        [Nn]*)
+            echo -e "${BLUE}Cancelled.${RESET}\n"
+            exit 1
+            ;;
+        *)
+            echo -e "${RED}Please answer Y/n.${RESET}\n"
+            continue
+            ;;
+    esac
+
+    CHARD_TEST_EXEC="$CHARD_ROOT/.chard_write_test"
+
+    if ! printf '#!/bin/bash\nexit 0\n' | sudo tee "$CHARD_TEST_EXEC" >/dev/null; then
+        echo "${RED}[!] Could not write a test file to $CHARD_ROOT — check permissions.${RESET}"
+        echo "${YELLOW}Please choose a different install path.${RESET}\n"
+        sudo rm -f "$CHARD_TEST_EXEC" 2>/dev/null
+        continue
+    fi
+
+    if ! sudo chmod +x "$CHARD_TEST_EXEC"; then
+        echo "${RED}[!] Could not chmod +x the test file at $CHARD_ROOT — check permissions.${RESET}"
+        echo "${YELLOW}Please choose a different install path.${RESET}\n"
+        sudo rm -f "$CHARD_TEST_EXEC" 2>/dev/null
+        continue
+    fi
+
+    if ! sudo "$CHARD_TEST_EXEC"; then
+        echo "${RED}[!] Test executable failed to run from $CHARD_ROOT (filesystem may be mounted noexec).${RESET}"
+        echo "${YELLOW}Please choose a different install path.${RESET}\n"
+        sudo rm -f "$CHARD_TEST_EXEC" 2>/dev/null
+        continue
+    fi
+
+    sudo rm -f "$CHARD_TEST_EXEC"
+    break
+done
 
 echo "$CHARD_ROOT" | sudo tee "$CHARD_ROOT/.install_path" >/dev/null
 CHARD_ROOT="${CHARD_ROOT%/}"
@@ -346,5 +374,6 @@ fi
 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 
 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
 
-echo "${GREEN}${BOLD}Repair finished. ${RESET}"
+echo
+echo "${GREEN}Repair finished. ${RESET}"
 echo
