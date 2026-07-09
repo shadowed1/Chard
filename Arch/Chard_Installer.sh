@@ -143,7 +143,7 @@ while true; do
             ;;
         [Nn]*)
             echo -e "${BLUE}Cancelled.${RESET}\n"
-            exit 1
+            continue
             ;;
         *)
             echo -e "${RED}Please answer Y/n.${RESET}\n"
