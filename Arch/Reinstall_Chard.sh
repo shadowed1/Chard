@@ -951,7 +951,7 @@ EOF
 						locale_code=$(echo "$locale_raw" | sed 's/-/_/').UTF-8
 						sudo sed -i "s/^#\s*\(${locale_code}[[:space:]]\+UTF-8\)/\1/" "$CHARD_ROOT/etc/locale.gen"
                     else
-                        echo "${RED}Could not determine language. ${RESET}"
+                        echo "${RED}Could not determine language from $CHROMEOS_SESSION_LOG_DIR ${RESET}"
                     fi
                 fi
      			sudo chown root:root "$CHARD_ROOT/opt/Heroic/chrome-sandbox" 2>/dev/null
