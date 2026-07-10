@@ -49,25 +49,32 @@ convert_svg() {
     local dest="$2"
     local size="$3"
 
-    if [ -f "$dest" ]; then
-        skipped=$((skipped + 1))
-        return 0
-    fi
+    [ -f "$dest" ] && return 0
 
     mkdir -p "$(dirname "$dest")"
 
-    if inkscape \
+    timeout 10s inkscape \
         --export-type=png \
         --export-width="$size" \
         --export-height="$size" \
         --export-filename="$dest" \
-        "$src" > /dev/null 2>&1; then
-        converted=$((converted + 1))
-    else
-        echo "  ${RED}Failed:${RESET} $(basename "$src") ${RESET}${GREEN}->${RESET} ${RED}${size}x${size}${RED}"
-        failed=$((failed + 1))
-        return 1
-    fi
+        "$src" >/dev/null 2>&1
+
+    case $? in
+        0)
+            converted=$((converted + 1))
+            return 0
+            ;;
+        124)
+            echo "  ${RED}Timed out:${RESET} $(basename "$src")"
+            ;;
+        *)
+            echo "  ${RED}Failed:${RESET} $(basename "$src")"
+            ;;
+    esac
+
+    failed=$((failed + 1))
+    return 1
 }
 
 echo
@@ -91,7 +98,9 @@ for root in "${ICON_ROOTS[@]}"; do
             printf "  ${YELLOW}%-40s${RESET} ${GREEN}->${RESET} ${BLUE}%sx%s${RESET}\n" \
                 "$icon_name" "$size" "$size"
 
-            convert_svg "$svg" "$dest" "$size"
+            if ! convert_svg "$svg" "$dest" "$size"; then
+                break
+            fi
         done
 
         echo "$svg" >> "$PROCESSED_FILE"
