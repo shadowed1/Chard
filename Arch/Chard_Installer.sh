@@ -731,7 +731,7 @@ if [ -f "$CHROMEOS_BASHRC" ]; then
         echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
         echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
     else
-        echo "${RED}Could not determine language. ${RESET}"
+        echo "${RED}Could not determine language from $CHROMEOS_SESSION_LOG_DIR ${RESET}"
     fi
 fi
 
