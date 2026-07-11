@@ -1082,7 +1082,7 @@ EOF
 								sudo pacman -S --noconfirm nautilus
     							xdg-mime default org.gnome.Nautilus.desktop inode/directory 2>/dev/null
     							xdg-mime default org.gnome.Nautilus.desktop application/x-gnome-saved-search 2>/dev/null
-				                /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
+				                /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
 								#/bin/chard_svg 2>/dev/null
 				                "
 				            /bin/error_color
