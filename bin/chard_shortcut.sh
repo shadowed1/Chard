@@ -91,7 +91,7 @@ install_icons() {
     local count=0
     local best_src=""
 
-    for size in 16 32 48 64 96 128; do
+    for size in 16 32 48 64 96 128 256; do
         local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         [ -f "$src" ] || src="$ICONS_HICOLOR/${size}x${size}/${icon_name}.png"
         [ -f "$src" ] || src="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
@@ -109,7 +109,7 @@ install_icons() {
     [ -z "$best_src" ] && best_src=$(find_png "$icon_name")
 
     if [ -n "$best_src" ]; then
-        for size in 16 32 48 64 96 128; do
+        for size in 16 32 48 64 96 128 256; do
             if [ ! -f "$icon_dir/${size}.png" ]; then
                 sudo cp "$best_src" "$icon_dir/${size}.png"
                 sudo chmod 644 "$icon_dir/${size}.png"
