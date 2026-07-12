@@ -418,7 +418,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 - 0.45: `Added dev_install check to avoid breaking its python. Fixed Steam wrapper with Bubblepatch. Added automatic baguette on boot support. Cleaned up chard_shortcut.sh.
 Improved wrappers and added VA-API support. Added Flatpak app icon and launch support.` <br><br>
 - 0.46: `Fixed GPU Screen Recorder install. Fixed bubblewrap and flatpak package management. Added nautilus. Enhanced chard_repair.sh script. Added partial Github DDoS fallback logic. Added noexec install check with install location prompt. Improved GPU detection logic and SMRT thanks to Terry Stormchaser.` <br><br>
-- 0.47 (in progress): `Fixed chard_svg hanging on hangbrake svg conversion. Fixed Chard Gentoo failing to launch apps via shelf. Fixed typo in Chard Arch quick reinstall.` <br><br>
+- 0.47 (in progress): `Fixed chard_svg hanging on handbrake svg conversion. Fixed icon path scanning. Fixed Chard Gentoo failing to launch apps via shelf. Fixed typo in Chard Arch quick reinstall.` <br><br>
 
 ### Acknowledgements - This project would not exist without the help and support from the ChromeOS community.
 
