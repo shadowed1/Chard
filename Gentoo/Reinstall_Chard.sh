@@ -969,10 +969,10 @@ sudo chmod +x $CHARD_ROOT/bin/chard_tor
                     sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
                 fi
 
-                if [ -x "/usr/local/bin/powercontrol" ]; then
-                    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
-                    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
-                fi
+                if [ -d "/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config" ]; then
+				    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+				    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
+				fi
 
                                 CHRONOS_RC="$CHARD_ROOT/$CHARD_HOME/.${CHARD_USER}rc"
 
