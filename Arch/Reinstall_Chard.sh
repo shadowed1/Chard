@@ -914,7 +914,8 @@ sudo cp /usr/lib64/libvulkan_asahi.so $CHARD_ROOT/usr/lib64/libvulkan_asahi.so 2
                 # Remove .chard.preload
                 # sudo rm $CHARD_ROOT/.chard.preload 2>/dev/null
                 
-                if [ -d "/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config" ]; then
+				if [ -x "/usr/local/bin/powercontrol" ] && \
+				   [ -d "/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config" ]; then
 				    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
 				    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
 				fi
