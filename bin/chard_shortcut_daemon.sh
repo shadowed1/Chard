@@ -55,12 +55,16 @@ generate_app_id() {
 
 find_png() {
     local icon_name="$1"
-    for size in 128 96 64 48 32 16; do
+    for size in 256 128 96 64 48 32 16; do
         local p="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
         [ -f "$p" ] && echo "$p" && return
+        p="$ICONS_HICOLOR/${size}x${size}/${icon_name}.png"
+        [ -f "$p" ] && echo "$p" && return
     done
-    for size in 128 96 64 48 32 16; do
+    for size in 256 128 96 64 48 32 16; do
         local p="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
+        [ -f "$p" ] && echo "$p" && return
+        p="$ICONS_HICOLOR_FLATPAK/${size}x${size}/${icon_name}.png"
         [ -f "$p" ] && echo "$p" && return
     done
     local p="$ICONS_PIXMAPS/${icon_name}.png"
@@ -71,45 +75,44 @@ find_png() {
 install_icons() {
     local icon_name="$1"
     local app_id="$2"
-    local icon_dir="$ICON_SERVICE_BASE/$app_id"
+    local icon_dir="/home/user/$U_HASH/app_service/icons/$app_id"
     local shared_icon_dir="$SHARED/icons/$app_id"
     sudo mkdir -p "$icon_dir"
     sudo chmod 755 "$icon_dir"
     mkdir -p "$shared_icon_dir"
     local count=0
-    
-    for size in 16 32 48 64 96 128; do
+    local best_src=""
+
+    for size in 16 32 48 64 96 128 256; do
         local src="$ICONS_HICOLOR/${size}x${size}/apps/${icon_name}.png"
+        [ -f "$src" ] || src="$ICONS_HICOLOR/${size}x${size}/${icon_name}.png"
+        [ -f "$src" ] || src="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
+        [ -f "$src" ] || src="$ICONS_HICOLOR_FLATPAK/${size}x${size}/${icon_name}.png"
+
         if [ -f "$src" ]; then
             sudo cp "$src" "$icon_dir/${size}.png"
             sudo chmod 644 "$icon_dir/${size}.png"
             cp "$src" "$shared_icon_dir/${size}.png"
             count=$((count + 1))
-        else
-            local src_fp="$ICONS_HICOLOR_FLATPAK/${size}x${size}/apps/${icon_name}.png"
-            if [ -f "$src_fp" ]; then
-                sudo cp "$src_fp" "$icon_dir/${size}.png"
-                sudo chmod 644 "$icon_dir/${size}.png"
-                cp "$src_fp" "$shared_icon_dir/${size}.png"
-                count=$((count + 1))
-            fi
+            best_src="$src"
         fi
     done
 
-    if [ "$count" -eq 0 ]; then
-        local fallback
-        fallback=$(find_png "$icon_name")
-        if [ -n "$fallback" ]; then
-            for size in 16 32 48 64 96 128; do
-                sudo cp "$fallback" "$icon_dir/${size}.png"
+    [ -z "$best_src" ] && best_src=$(find_png "$icon_name")
+
+    if [ -n "$best_src" ]; then
+        for size in 16 32 48 64 96 128 256; do
+            if [ ! -f "$icon_dir/${size}.png" ]; then
+                sudo cp "$best_src" "$icon_dir/${size}.png"
                 sudo chmod 644 "$icon_dir/${size}.png"
-                cp "$fallback" "$shared_icon_dir/${size}.png"
-            done
-            count=6
-        fi
+                cp "$best_src" "$shared_icon_dir/${size}.png"
+                count=$((count + 1))
+            fi
+        done
     fi
+
     echo "$icon_name" > "$shared_icon_dir/.icon_name"
-    echo "$count"
+    echo $count
 }
 
 remove_shortcut() {
