@@ -16,7 +16,7 @@ if ! ls /.chardrc > /dev/null 2>&1; then
 fi
 
 if ! command -v inkscape &>/dev/null; then
-    echo "${RED}inkscape is not installed. Installing Inkscape${RESET}"
+    echo "${RED}Inkscape is not installed. Installing Inkscape${RESET}"
     sleep 3
     sudo pacman -S --noconfirm inkscape 2>/dev/null
     sudo -E emerge -S inkscape 2>/dev/null
@@ -26,9 +26,9 @@ ICON_ROOTS=(
     "/usr/share/icons/hicolor"
     "$HOME/.local/share/flatpak/exports/share/icons/hicolor"
 )
-
 ICONS_PIXMAPS="/usr/share/pixmaps"
-SIZES=(16 32 48 64 96 128)
+
+SIZES=(16 32 48 64 96 128 256)
 
 PROCESSED_FILE="$HOME/.chard_processed_svgs"
 touch "$PROCESSED_FILE"
@@ -109,31 +109,33 @@ for root in "${ICON_ROOTS[@]}"; do
 done
 
 echo
-echo "${CYAN}Processing sized icon directories...${RESET}"
+echo "${CYAN}Processing existing sized icon directories...${RESET}"
 
-for size in "${SIZES[@]}"; do
-    dir="$ICONS_HICOLOR/${size}x${size}/apps"
-    [ -d "$dir" ] || continue
+for root in "${ICON_ROOTS[@]}"; do
+    for size in "${SIZES[@]}"; do
+        dir="$root/${size}x${size}/apps"
+        [ -d "$dir" ] || continue
 
-    while IFS= read -r -d '' svg; do
+        while IFS= read -r -d '' svg; do
 
-        if already_processed "$svg"; then
-            continue
-        fi
+            if already_processed "$svg"; then
+                continue
+            fi
 
-        icon_name=$(basename "$svg" .svg)
-        dest="$dir/${icon_name}.png"
+            icon_name=$(basename "$svg" .svg)
+            dest="$dir/${icon_name}.png"
 
-        [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
+            [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
 
-        printf "  ${YELLOW}%-40s${RESET} ${GREEN}->${RESET} ${YELLOW}%sx%s${RESET}\n" \
-            "$icon_name" "$size" "$size"
+            printf "  ${YELLOW}%-40s${RESET} ${GREEN}->${RESET} ${RED}$size x $size${RESET}\n" \
+                "$(basename "$dir")/$(basename "$svg")"
 
-        convert_svg "$svg" "$dest" "$size"
+            convert_svg "$svg" "$dest" "$size"
 
-        echo "$svg" >> "$PROCESSED_FILE"
+            echo "$svg" >> "$PROCESSED_FILE"
 
-    done < <(find "$dir" -maxdepth 1 -name "*.svg" -print0 2>/dev/null)
+        done < <(find "$dir" -maxdepth 1 -name "*.svg" -print0 2>/dev/null)
+    done
 done
 
 echo
@@ -142,7 +144,7 @@ while IFS= read -r -d '' svg; do
     icon_name=$(basename "$svg" .svg)
     dest="$ICONS_PIXMAPS/${icon_name}.png"
     [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
-    printf "  ${YELLOW}%-40s${RESET} ${RESET}${GREEN}->${RESET}${BLUE} pixmaps (128px)\n${RESET}" "$icon_name"
+    printf "  ${YELLOW}%-40s${RESET} -> pixmaps (128px)\n${RESET}" "$icon_name"
     convert_svg "$svg" "$dest" 128
 done < <(find "$ICONS_PIXMAPS" -maxdepth 1 -name "*.svg" -print0 2>/dev/null)
 
