@@ -80,32 +80,23 @@ convert_svg() {
 echo
 echo "${CYAN}Processing scalable icons${RESET}"
 echo
+
 for root in "${ICON_ROOTS[@]}"; do
-    [ -d "$root/scalable/apps" ] || continue
-
-    while IFS= read -r -d '' svg; do
-
-        if already_processed "$svg"; then
-            continue
-        fi
-
-        icon_name=$(basename "$svg" .svg)
-
-        for size in "${SIZES[@]}"; do
-            dest="$root/${size}x${size}/apps/${icon_name}.png"
-            [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
-
-            printf "  ${YELLOW}%-40s${RESET} ${GREEN}->${RESET} ${BLUE}%sx%s${RESET}\n" \
-                "$icon_name" "$size" "$size"
-
-            if ! convert_svg "$svg" "$dest" "$size"; then
-                break
-            fi
-        done
-
-        echo "$svg" >> "$PROCESSED_FILE"
-
-    done < <(find "$root/scalable/apps" -name "*.svg" -print0 2>/dev/null)
+    for d in "$root/scalable/apps" "$root/scalable"; do
+        [ -d "$d" ] || continue
+        while IFS= read -r -d '' svg; do
+            already_processed "$svg" && continue
+            icon_name=$(basename "$svg" .svg)
+            for size in "${SIZES[@]}"; do
+                dest="$root/${size}x${size}/apps/${icon_name}.png"
+                [ -f "$dest" ] && { skipped=$((skipped + 1)); continue; }
+                printf "  ${YELLOW}%-40s${RESET} ${GREEN}->${RESET} ${BLUE}%sx%s${RESET}\n" \
+                    "$icon_name" "$size" "$size"
+                convert_svg "$svg" "$dest" "$size" || break
+            done
+            echo "$svg" >> "$PROCESSED_FILE"
+        done < <(find "$d" -maxdepth 1 -name "*.svg" -print0 2>/dev/null)
+    done
 done
 
 echo
