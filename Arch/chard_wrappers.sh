@@ -895,3 +895,18 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
 EOF
 
 sudo chmod +x /bin/chard_7z
+
+sudo tee /usr/share/applications/chard-garcon.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Name=ChromeOS Host Browser
+Exec=/bin/chard_garcon %U
+MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;applica
+/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/chromium
+Type=Application
+Icon=
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true
+NoDisplay=false
+EOF
+
