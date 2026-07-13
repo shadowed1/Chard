@@ -102,6 +102,7 @@ PATHS_TO_ADD=(
     "$HOME/.local/bin"
     "$HOME/.cargo/bin"
     "${OPT_BINS[@]}"
+    "$ROOT/usr/local/google/cros-containers/bin"
 )
 
 LIBS_TO_ADD=(
@@ -111,6 +112,7 @@ LIBS_TO_ADD=(
     "$ROOT/usr/lib32"
     "$ROOT/lib"
     "$LLVM_DIR/lib"
+    "$ROOT/usr/local/google/cros-containers/lib"
 )
 
 unique_join() {
