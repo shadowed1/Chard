@@ -1,15 +1,10 @@
 #!/bin/bash
-VERSION="0.46"
+VERSION="0.47"
 
 changelog() {
-    echo "- Fixed GPU Screen Recorder install."
-    echo "- Fixed bubblewrap and flatpak package management. "
-    echo "- Added nautilus."
-    echo "- Enhanced chard_repair.sh script."
-    echo "- Added partial Github DDoS fallback logic."
-    echo "- Added noexec install check with install location prompt."
-    echo "- Improved GPU detection logic and SMRT thanks to Terry Stormchaser."
+    echo "- Fixed chard_svg hanging on handbrake svg conversion."
+    echo "- Fixed icon path scanning. "
+    echo "- Fixed Chard Gentoo failing to launch apps via shelf."
+    echo "- Fixed typo in Chard Arch quick reinstall."
     echo
 }
-
-  
