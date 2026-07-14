@@ -908,17 +908,17 @@ sudo -n nsenter -t 1 -m -- vsh --vm_name=termina --target_container=penguin --ow
 EOF
 sudo chmod +x /bin/chard_garcon
 
-sudo tee /usr/share/applications/chard-garcon.desktop > /dev/null << 'EOF'
+sudo tee /usr/share/applications/chard-garcon.desktop >/dev/null <<'EOF'
 [Desktop Entry]
-Name=ChromeOS Host Browser
-Exec=/bin/chard_garcon %U
-MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;applica
-/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/chromium
+Version=1.0
 Type=Application
-Icon=
+Name=Chard Garcon
+Comment=Open links in ChromeOS Chrome via chard_garcon
+Exec=/bin/chard_garcon %u
 Terminal=false
+Icon=chrome
 Categories=Network;WebBrowser;
-StartupNotify=true
-NoDisplay=false
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/about;x-scheme-handler/unknown;
 EOF
 
+sudo update-desktop-database /usr/share/applications
