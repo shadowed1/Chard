@@ -51,7 +51,6 @@ add_browser thorium-browser.desktop "Thorium"
 
 for i in "${!BROWSERS[@]}"; do
     IFS='|' read -r desktop name <<< "${BROWSERS[$i]}"
-    printf " ${GREEN}%2d) %s\n" $((i+1)) "${BOLD}$name${RESET}"
 done
 
 printf " ${GREEN}%2d) Enter a desktop file manually (include the ${BOLD}.desktop${RESET}${GREEN} in the name)\n ${RESET}" $(( ${#BROWSERS[@]} + 1 ))
@@ -64,7 +63,6 @@ while true; do
     if [ $? -ne 0 ] || [ -z "$choice" ]; then
         IFS='|' read -r BROWSER_DESKTOP _ <<< "$DEFAULT_BROWSER"
         echo
-        echo "${GREEN}Using default: ChromeOS Chrome${RESET}"
         break
     fi
 
@@ -86,5 +84,5 @@ xdg-mime default "$BROWSER_DESKTOP" x-scheme-handler/http
 xdg-mime default "$BROWSER_DESKTOP" x-scheme-handler/https
 xdg-settings set default-web-browser "$BROWSER_DESKTOP"
 echo
-echo "${BOLD}${BLUE}Using ${BROWSER_DESKTOP}${RESET}"
+echo "${BOLD}${BLUE}Default Browser set to: ${RESET}${MAGENTA}${BOLD}${BROWSER_DESKTOP}${RESET}"
 echo
