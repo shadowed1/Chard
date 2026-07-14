@@ -754,6 +754,12 @@ sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
 sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
 sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
 sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
+sudo mkdir -p "$CHARD_ROOT/opt/usr/bin"
+sudo mkdir -p "$CHARD_ROOT/opt/usr/lib64"
+sudo mkdir -p "$CHARD_ROOT/opt/lib64"
+sudo mkdir -p "$CHARD_ROOT/opt/lib"
+sudo mkdir -p "$CHARD_ROOT/opt/usr/lib"
+
 else
 sudo tee "$CHARD_ROOT/etc/asound.conf" 2>/dev/null << 'EOF'
 pcm.!default {
