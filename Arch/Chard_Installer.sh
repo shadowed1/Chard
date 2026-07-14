@@ -836,11 +836,11 @@ sudo mkdir -p "$CHARD_ROOT/mnt"
 sudo mkdir -p "$CHARD_ROOT/usr/local/src/gtest-1.16.0"
 sudo mkdir -p "$(dirname "$LOG_FILE")"
 sudo mkdir -p "$CHARD_ROOT/etc/portage/repos.conf"
-sudo mkdir -p $CHARD_ROOT/opt/usr/bin
-sudo mkdir -p $CHARD_ROOT/opt/usr/lib64
-sudo mkdir -p $CHARD_ROOT/opt/lib64
-sudo mkdir -p $CHARD_ROOT/opt/lib
-sudo mkdir -p $CHARD_ROOT/opt/usr/lib
+sudo mkdir -p "$CHARD_ROOT/opt/usr/bin"
+sudo mkdir -p "$CHARD_ROOT/opt/usr/lib64"
+sudo mkdir -p "$CHARD_ROOT/opt/lib64"
+sudo mkdir -p "$CHARD_ROOT/opt/lib"
+sudo mkdir -p "$CHARD_ROOT/opt/usr/lib"
 
 sudo rm -f \
     "$CHARD_ROOT/.chardrc" \
