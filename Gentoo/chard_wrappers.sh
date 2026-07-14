@@ -907,3 +907,30 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
 EOF
 
 sudo chmod +x /bin/chard_7z
+
+sudo tee /bin/chard_garcon >/dev/null <<'EOF'
+#!/bin/bash
+# chard_garcon
+# by days (iamday) 
+URL="$1"
+if [[ "$URL" != http://* && "$URL" != https://* ]]; then
+    URL="https://$URL"
+fi
+sudo -n nsenter -t 1 -m -- vsh --vm_name=termina --target_container=penguin --owner_id="$(cat /.chard_hash)" -- /opt/google/cros-containers/bin/garcon --client --url "$URL"
+EOF
+sudo chmod +x /bin/chard_garcon
+
+sudo tee /usr/share/applications/chard-garcon.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Chard Garcon
+Comment=Open links in ChromeOS Chrome via chard_garcon
+Exec=/bin/chard_garcon %u
+Terminal=false
+Icon=chrome
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/about;x-scheme-handler/unknown;
+EOF
+
+sudo update-desktop-database /usr/share/applications
