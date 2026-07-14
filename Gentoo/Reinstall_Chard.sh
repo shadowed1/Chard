@@ -355,6 +355,12 @@ trap cleanup_chroot EXIT INT TERM
 					"bin/chard_timezone_daemon.sh|$CHARD_ROOT/bin/chard_timezone_daemon|1"
 					"bin/chard_sommelier_patch.sh|$CHARD_ROOT/bin/chard_sommelier_patch|1"
 					"bin/chard_startup.sh|$CHARD_ROOT/bin/chard_startup|1"
+					"bin/chard_mtp_mount.sh|$CHARD_ROOT/bin/chard_mtp_mount|1"
+					"bin/autoclicker.c|$CHARD_ROOT/tmp/chard_startup|1"
+					"bin/chard_mtp_unmount.sh|$CHARD_ROOT/bin/chard_mtp_unmount|1"
+					"bin/virtm.c|$CHARD_ROOT/tmp/virtm.c|1"
+					"bin/rainbow.sh|$CHARD_ROOT/bin/rainbow|1"
+					"bin/chard_browser.sh|$CHARD_ROOT/bin/chard_browser|1"
 
 				)
 				
