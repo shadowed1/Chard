@@ -97,7 +97,7 @@ echo
 DEFAULT_BROWSER="${BROWSERS[$DEFAULT_INDEX]}"
 
 while true; do
-    read -t 15 -rp "${GREEN}Default Browser: [1-$(( ${#BROWSERS[@]} + 1 ))] (Defaulting to current in 15 seconds...): ${RESET}" choice
+    read -t 15 -rp "${GREEN}Select Default Browser: [1-$(( ${#BROWSERS[@]} + 1 ))] (Defaulting to current in 15 seconds...): ${RESET}" choice
 
     if [ $? -ne 0 ] || [ -z "$choice" ]; then
         IFS='|' read -r BROWSER_DESKTOP _ <<< "$DEFAULT_BROWSER"
