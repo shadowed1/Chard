@@ -1158,6 +1158,7 @@ EOF
 		                [ -f \"\$HOME/.smrt_env.sh\" ] && source \"\$HOME/.smrt_env.sh\"
 		                QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
 		                cd ~/
+						sudo /bin/chard_browser 2>/dev/null
 		                sudo /bin/chard_wrappers 2>/dev/null
 						sudo /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
 		            "
