@@ -101,6 +101,12 @@ cleanup_chroot() {
     sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/lib64"
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/lib64"
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/bin"
+	sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
@@ -355,6 +361,12 @@ chard_unmount() {
     sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/lib64"
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/lib64"
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/bin"
+	sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
