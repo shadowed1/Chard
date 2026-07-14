@@ -17,41 +17,53 @@ echo "${RESET}"
 BROWSERS=()
 
 add_browser() {
-    local desktop="$1"
+    local pattern="$1"
     local name="$2"
+    local desktop
 
-    if [ -f "/usr/share/applications/$desktop" ]; then
-        BROWSERS+=("$desktop|$name")
+    desktop=$(compgen -G "/usr/share/applications/$pattern" | head -n1)
+
+    if [ -n "$desktop" ]; then
+        desktop=$(basename "$desktop")
+        for existing in "${BROWSERS[@]}"; do
+        IFS='|' read -r existing_desktop _ <<< "$existing"
+        if [ "$existing_desktop" = "$desktop" ]; then
+            return 0
+        fi
+done
+
+BROWSERS+=("$desktop|$name")
+        return 0
     fi
+
+    return 1
 }
 
-if [ -f "/usr/share/applications/firefox.desktop" ]; then
-    BROWSERS+=("firefox.desktop|Firefox")
-elif [ -f "/usr/share/applications/org.mozilla.firefox.desktop" ]; then
-    BROWSERS+=("org.mozilla.firefox.desktop|Firefox")
-else
-    BROWSERS+=("chard-garcon.desktop|ChromeOS Chrome")
+if ! add_browser "firefox*.desktop" "Firefox"; then
+    if ! add_browser "org.mozilla.firefox.desktop" "Firefox"; then
+        add_browser "chard-garcon.desktop" "ChromeOS' Chrome (Requires Crostini to be running to send command)"
+    fi
 fi
 
-add_browser chard-garcon.desktop "ChromeOS' Chrome (Requires Crostini to be running to send command)"
-add_browser org.mozilla.firefox.desktop "Firefox"
-add_browser brave-browser.desktop "Brave"
-add_browser microsoft-edge.desktop "Microsoft Edge"
-add_browser microsoft-edge-beta.desktop "Microsoft Edge Beta"
-add_browser microsoft-edge-dev.desktop "Microsoft Edge Dev"
-add_browser vivaldi-stable.desktop "Vivaldi"
-add_browser opera.desktop "Opera"
-add_browser opera-beta.desktop "Opera Beta"
-add_browser opera-developer.desktop "Opera Developer"
-add_browser google-chrome.desktop "Google Chrome"
-add_browser google-chrome-stable.desktop "Google Chrome"
-add_browser chromium.desktop "Chromium"
-add_browser ungoogled-chromium.desktop "Ungoogled Chromium"
-add_browser librewolf.desktop "LibreWolf"
-add_browser waterfox.desktop "Waterfox"
-add_browser floorp.desktop "Floorp"
-add_browser zen.desktop "Zen Browser"
-add_browser thorium-browser.desktop "Thorium"
+add_browser "chard-garcon.desktop" "ChromeOS' Chrome (Requires Crostini to be running to send command)"
+add_browser "firefox*.desktop" "Firefox"
+add_browser "org.mozilla.firefox.desktop" "Firefox"
+add_browser "brave-browser*.desktop" "Brave"
+add_browser "microsoft-edge*.desktop" "Microsoft Edge"
+add_browser "microsoft-edge-beta*.desktop" "Microsoft Edge Beta"
+add_browser "microsoft-edge-dev*.desktop" "Microsoft Edge Dev"
+add_browser "vivaldi*.desktop" "Vivaldi"
+add_browser "opera.desktop" "Opera"
+add_browser "opera-beta*.desktop" "Opera Beta"
+add_browser "opera-developer*.desktop" "Opera Developer"
+add_browser "google-chrome*.desktop" "Google Chrome"
+add_browser "chromium*.desktop" "Chromium"
+add_browser "ungoogled-chromium*.desktop" "Ungoogled Chromium"
+add_browser "librewolf*.desktop" "LibreWolf"
+add_browser "waterfox*.desktop" "Waterfox"
+add_browser "floorp*.desktop" "Floorp"
+add_browser "zen*.desktop" "Zen Browser"
+add_browser "thorium*.desktop" "Thorium"
 
 SAVED_BROWSER=""
 if [ -f "$CHARD_BROWSER_FILE" ]; then
