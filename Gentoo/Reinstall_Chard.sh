@@ -1212,6 +1212,32 @@ EOF
 				        sudo chown root:video /dev/dri/renderD128
 				    fi
 				fi
+
+				if [ -f "/etc/init/chard.conf" ]; then
+				    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+				    sleep 0.05
+				    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
+				        echo ""
+				        echo "${RED}Failed to download chard.conf${RESET}"
+				        echo ""
+				        return 1
+				    fi
+				    sudo chmod 644 /etc/init/chard.conf
+				    sudo initctl reload-configuration 2>/dev/null
+				fi
+				
+				if [ -f "/etc/init/chard_baguette.conf" ]; then
+				    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+				    sleep 0.05
+				    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
+				        echo ""
+				        echo "${RED}Failed to download chard_baguette.conf${RESET}"
+				        echo ""
+				        return 1
+				    fi
+				    sudo chmod 644 /etc/init/chard_baguette.conf
+				    sudo initctl reload-configuration 2>/dev/null
+				fi
 				
                 source "$CHARD_ROOT/.chardrc"
                 echo "${MAGENTA}${BOLD}[*] Quick reinstall complete.${RESET}"
