@@ -29,7 +29,7 @@ elif [ -f "/usr/share/applications/org.mozilla.firefox.desktop" ]; then
 else
     BROWSERS+=("chard-garcon.desktop|ChromeOS Chrome")
 fi
-add_browser chard-garcon.desktop "ChromeOS' Chrome"
+add_browser chard-garcon.desktop "ChromeOS' Chrome (Requires Crostini to be running to send command)"
 add_browser org.mozilla.firefox.desktop "Firefox"
 add_browser brave-browser.desktop "Brave"
 add_browser microsoft-edge.desktop "Microsoft Edge"
