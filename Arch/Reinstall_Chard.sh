@@ -538,6 +538,7 @@ FILES=(
 	"bin/chard_mtp_unmount.sh|$CHARD_ROOT/bin/chard_mtp_unmount|1"
 	"bin/virtm.c|$CHARD_ROOT/tmp/virtm.c|1"
 	"bin/rainbow.sh|$CHARD_ROOT/bin/rainbow|1"
+	"bin/chard_browser.sh|$CHARD_ROOT/bin/chard_browser|1"
 )
 
 for entry in "${FILES[@]}"; do
@@ -628,6 +629,32 @@ add_chard_marker() {
 #echo $CHARD_RC
 
 add_chard_marker "$TARGET_FILE"
+
+if [ -f "/etc/init/chard.conf" ]; then
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+    sleep 0.05
+    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
+        echo ""
+        echo "${RED}Failed to download chard.conf${RESET}"
+        echo ""
+        return 1
+    fi
+    sudo chmod 644 /etc/init/chard.conf
+    sudo initctl reload-configuration 2>/dev/null
+fi
+
+if [ -f "/etc/init/chard_baguette.conf" ]; then
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+    sleep 0.05
+    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
+        echo ""
+        echo "${RED}Failed to download chard_baguette.conf${RESET}"
+        echo ""
+        return 1
+    fi
+    sudo chmod 644 /etc/init/chard_baguette.conf
+    sudo initctl reload-configuration 2>/dev/null
+fi
 
 sudo tee "$CHARD_ROOT/.chard_home" >/dev/null <<EOF
 $CHARD_HOME
@@ -884,6 +911,7 @@ sudo cp /usr/lib64/libvulkan_asahi.so $CHARD_ROOT/usr/lib64/libvulkan_asahi.so 2
                         sudo rm /tmp/virtm.c 2>/dev/null
                         sudo rm /tmp/autoclicker.c 2>/dev/null
 						sudo /bin/chard_wrappers 2>/dev/null
+						chard_browser 2>/dev/null
 						chard_svg 2>/dev/null
 						sudo pacman -S --noconfirm libva-utils 2>/dev/null
                     "
