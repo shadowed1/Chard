@@ -249,6 +249,12 @@ trap cleanup_chroot EXIT INT TERM
                 }
                 
                 add_chard_marker "$TARGET_FILE"
+				
+				sudo mkdir -p "$CHARD_ROOT/opt/usr/bin"
+				sudo mkdir -p "$CHARD_ROOT/opt/usr/lib64"
+				sudo mkdir -p "$CHARD_ROOT/opt/lib64"
+				sudo mkdir -p "$CHARD_ROOT/opt/lib"
+				sudo mkdir -p "$CHARD_ROOT/opt/usr/lib"
 
                 sudo chroot $CHARD_ROOT /bin/bash -c "
 
