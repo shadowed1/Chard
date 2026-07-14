@@ -1,9 +1,8 @@
 #!/bin/bash
 # chard_garcon
-# version 1 by days
-LD="/opt/lib64/ld-linux-x86-64.so.2"
-LIB="/opt/lib64:/opt/usr/lib64"
-VSH="/opt/usr/bin/vsh"
-HASH="$(cat /.chard_hash)"
-GARCON="/usr/local/google/cros-containers/bin/garcon"
-exec $LD --library-path $LIB $VSH --vm_name=termina --target_container=penguin --owner_id=$HASH -- $GARCON --client --url "$@"
+# by days (iamday) 
+URL="$1"
+if [[ "$URL" != http://* && "$URL" != https://* ]]; then
+    URL="https://$URL"
+fi
+sudo -n nsenter -t 1 -m -- vsh --vm_name=termina --target_container=penguin --owner_id="$(cat /.chard_hash)" -- /opt/google/cros-containers/bin/garcon --client --url "$URL"
