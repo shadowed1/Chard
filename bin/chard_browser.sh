@@ -22,8 +22,14 @@ add_browser() {
     fi
 }
 
-BROWSERS+=("chard-garcon.desktop|ChromeOS Chrome")
-add_browser firefox.desktop "Firefox"
+if [ -f "/usr/share/applications/firefox.desktop" ]; then
+    BROWSERS+=("firefox.desktop|Firefox")
+elif [ -f "/usr/share/applications/org.mozilla.firefox.desktop" ]; then
+    BROWSERS+=("org.mozilla.firefox.desktop|Firefox")
+else
+    BROWSERS+=("chard-garcon.desktop|ChromeOS Chrome")
+fi
+add_browser chard-garcon.desktop "ChromeOS' Chrome"
 add_browser org.mozilla.firefox.desktop "Firefox"
 add_browser brave-browser.desktop "Brave"
 add_browser microsoft-edge.desktop "Microsoft Edge"
@@ -55,7 +61,6 @@ DEFAULT_BROWSER="${BROWSERS[0]}"
 
 while true; do
     read -t 15 -rp "${CYAN}Default Browser: [1-$(( ${#BROWSERS[@]} + 1 ))] (Defaulting to option 1 in 15 seconds...): ${RESET}" choice
-    # Timeout or blank input = default Chrome
     if [ $? -ne 0 ] || [ -z "$choice" ]; then
         IFS='|' read -r BROWSER_DESKTOP _ <<< "$DEFAULT_BROWSER"
         echo
