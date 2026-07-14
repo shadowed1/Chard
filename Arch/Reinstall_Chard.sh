@@ -983,7 +983,18 @@ EOF
 						    fi
 						fi
 						# Write our user hash to Chard for preliminary shortcut support
-						U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1) 2>/dev/null
+						U_HASH=""
+						if [ -d /home/.shadow ]; then
+						    U_HASH=$(sudo find /home/.shadow -mindepth 1 -maxdepth 1 -type d \
+						        -regextype posix-extended -regex '.*/[0-9a-f]{40}$' \
+						        -printf '%f\n' 2>/dev/null | head -n1)
+						fi
+						
+						if [ -n "$U_HASH" ]; then
+						    echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
+						else
+						    echo "ERROR: could not determine cryptohome hash" >&2
+						fi
 						echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
 						sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
 				        chard_volume > /dev/null 2>&1 &
