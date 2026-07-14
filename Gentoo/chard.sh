@@ -715,9 +715,16 @@ case "$cmd" in
         # Write our user hash to Chard for preliminary shortcut support
 		U_HASH=""
 		if [ -d /home/.shadow ]; then
-		    U_HASH=$(sudo find /home/.shadow -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | head -n1)
+		    U_HASH=$(sudo find /home/.shadow -mindepth 1 -maxdepth 1 -type d \
+		        -regextype posix-extended -regex '.*/[0-9a-f]{40}$' \
+		        -printf '%f\n' 2>/dev/null | head -n1)
 		fi
-		echo "$U_HASH" | sudo tee $CHARD_ROOT/.chard_hash > /dev/null
+		
+		if [ -n "$U_HASH" ]; then
+		    echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
+		else
+		    echo "ERROR: could not determine cryptohome hash" >&2
+		fi
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
