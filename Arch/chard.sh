@@ -573,11 +573,6 @@ case "$cmd" in
         
         if [ -f "/home/chronos/user/.bashrc" ]; then
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
-			sudo mkdir -p $CHARD_ROOT/opt/usr/bin
-			sudo mkdir -p $CHARD_ROOT/opt/usr/lib64
-			sudo mkdir -p $CHARD_ROOT/opt/lib64
-			sudo mkdir -p $CHARD_ROOT/opt/lib
-			sudo mkdir -p $CHARD_ROOT/opt/usr/lib
             sudo mount --rbind /usr/bin $CHARD_ROOT/opt/usr/bin
 			sudo mount --make-rslave $CHARD_ROOT/opt/usr/bin
 			sudo mount --rbind /usr/lib64 $CHARD_ROOT/opt/usr/lib64
