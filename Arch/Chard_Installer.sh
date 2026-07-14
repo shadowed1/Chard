@@ -894,6 +894,7 @@ FILES=(
 	"bin/chard_mtp_unmount.sh|$CHARD_ROOT/bin/chard_mtp_unmount|1"
 	"bin/virtm.c|$CHARD_ROOT/tmp/virtm.c|1"
 	"bin/rainbow.sh|$CHARD_ROOT/bin/rainbow|1"
+	"bin/chard_browser.sh|$CHARD_ROOT/bin/chard_browser|1"
 )
 
 for entry in "${FILES[@]}"; do
