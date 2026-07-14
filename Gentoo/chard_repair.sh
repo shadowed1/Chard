@@ -94,9 +94,15 @@ BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
 				    "bin/chardwire.sh|$CHARD_ROOT/bin/chardwire|1"
 				    "Gentoo/.chard.preload|$CHARD_ROOT/.chard.preload|1"
 				    "bin/chard_preload.sh|$CHARD_ROOT/bin/chard_preload|1"
-					  "Gentoo/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
-					  "bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
-					  "bin/chard_downgrade_bwrap_flatpak.sh|$CHARD_ROOT/bin/chard_downgrade_bwrap_flatpak|1"
+					"Gentoo/chard_wrappers.sh|$CHARD_ROOT/bin/chard_wrappers|1"
+					"bin/chard_svg.sh|$CHARD_ROOT/bin/chard_svg|1"
+					"bin/chard_downgrade_bwrap_flatpak.sh|$CHARD_ROOT/bin/chard_downgrade_bwrap_flatpak|1"
+					"bin/chard_mtp_mount.sh|$CHARD_ROOT/bin/chard_mtp_mount|1"
+					"bin/autoclicker.c|$CHARD_ROOT/tmp/chard_startup|1"
+					"bin/chard_mtp_unmount.sh|$CHARD_ROOT/bin/chard_mtp_unmount|1"
+					"bin/virtm.c|$CHARD_ROOT/tmp/virtm.c|1"
+					"bin/rainbow.sh|$CHARD_ROOT/bin/rainbow|1"
+					"bin/chard_browser.sh|$CHARD_ROOT/bin/chard_browser|1"
 				)
         
 for entry in "${FILES[@]}"; do
@@ -147,3 +153,29 @@ CHARD_USER=\"$CHARD_USER\"\n\
         echo "${RED}[!] Missing: $file ${RESET}"
     fi
 done
+
+if [ -f "/etc/init/chard.conf" ]; then
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+    sleep 0.05
+    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
+        echo ""
+        echo "${RED}Failed to download chard.conf${RESET}"
+        echo ""
+        return 1
+    fi
+    sudo chmod 644 /etc/init/chard.conf
+    sudo initctl reload-configuration 2>/dev/null
+fi
+
+if [ -f "/etc/init/chard_baguette.conf" ]; then
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+    sleep 0.05
+    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
+        echo ""
+        echo "${RED}Failed to download chard_baguette.conf${RESET}"
+        echo ""
+        return 1
+    fi
+    sudo chmod 644 /etc/init/chard_baguette.conf
+    sudo initctl reload-configuration 2>/dev/null
+fi
