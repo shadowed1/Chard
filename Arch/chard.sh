@@ -101,11 +101,11 @@ cleanup_chroot() {
     sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.05
-	sudo umount -l "$CHARD_ROOT/opt/lib64"
+	sudo umount -l "$CHARD_ROOT/opt/lib64" 2>/dev/null || true
 	sleep 0.05
-	sudo umount -l "$CHARD_ROOT/opt/usr/lib64"
+	sudo umount -l "$CHARD_ROOT/opt/usr/lib64" 2>/dev/null || true
 	sleep 0.05
-	sudo umount -l "$CHARD_ROOT/opt/usr/bin"
+	sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
 	sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
@@ -361,11 +361,11 @@ chard_unmount() {
     sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.05
-	sudo umount -l "$CHARD_ROOT/opt/lib64"
+	sudo umount -l "$CHARD_ROOT/opt/lib64" 2>/dev/null || true
 	sleep 0.05
-	sudo umount -l "$CHARD_ROOT/opt/usr/lib64"
+	sudo umount -l "$CHARD_ROOT/opt/usr/lib64" 2>/dev/null || true
 	sleep 0.05
-	sudo umount -l "$CHARD_ROOT/opt/usr/bin"
+	sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
 	sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
