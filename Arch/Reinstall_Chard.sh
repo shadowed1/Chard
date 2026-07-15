@@ -72,6 +72,12 @@ cleanup_chroot() {
     sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/lib64" 2>/dev/null || true
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/lib64" 2>/dev/null || true
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
+	sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
@@ -116,6 +122,12 @@ cleanup_chroot() {
     sleep 0.05
     sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
     sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/lib64" 2>/dev/null || true
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/lib64" 2>/dev/null || true
+	sleep 0.05
+	sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
+	sleep 0.05
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
@@ -419,6 +431,12 @@ download_file() {
         sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
         sleep 0.05
+		sudo umount -l "$CHARD_ROOT/opt/lib64" 2>/dev/null || true
+		sleep 0.05
+		sudo umount -l "$CHARD_ROOT/opt/usr/lib64" 2>/dev/null || true
+		sleep 0.05
+		sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
+		sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
@@ -483,6 +501,12 @@ download_file() {
         sleep 0.05
         sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || true
         sleep 0.05
+		sudo umount -l "$CHARD_ROOT/opt/lib64" 2>/dev/null || true
+		sleep 0.05
+		sudo umount -l "$CHARD_ROOT/opt/usr/lib64" 2>/dev/null || true
+		sleep 0.05
+		sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
+		sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
         echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
