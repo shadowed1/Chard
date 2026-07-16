@@ -966,7 +966,7 @@ CHARD_USER=\"$CHARD_USER\"\n\
     fi
 done
 
-sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc"
+sudo mv "$CHARD_ROOT/bin/.rootrc" "$CHARD_ROOT/.bashrc" 2>/dev/null
 
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 DEFAULT_BASHRC="$HOME/.bashrc"
