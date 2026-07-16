@@ -1214,9 +1214,9 @@ EOF
                         sudo rm /tmp/virtm.c 2>/dev/null
                         sudo rm /tmp/autoclicker.c 2>/dev/null
 						sudo /bin/chard_wrappers 2>/dev/null
-						chard_browser 2>/dev/null
 						chard_svg 2>/dev/null
 						sudo pacman -S --noconfirm libva-utils 2>/dev/null
+						chard_browser 2>/dev/null
                     "
   
                     killall -9 pipewire 2>/dev/null
