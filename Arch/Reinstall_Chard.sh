@@ -853,115 +853,11 @@ case "$1" in
         ;;
 esac
 EOF
+				
+				sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname 2>/dev/null
+				sudo cp /usr/share/vulkan/icd.d/asahi_icd.aarch64.json  $CHARD_ROOT/usr/share/vulkan/icd.d/ 2>/dev/null
+				sudo cp /usr/lib64/libvulkan_asahi.so $CHARD_ROOT/usr/lib64/libvulkan_asahi.so 2>/dev/null
 
-sudo chmod +x $CHARD_ROOT/usr/local/bubblepatch/bin/uname 2>/dev/null
-sudo cp /usr/share/vulkan/icd.d/asahi_icd.aarch64.json  $CHARD_ROOT/usr/share/vulkan/icd.d/ 2>/dev/null
-sudo cp /usr/lib64/libvulkan_asahi.so $CHARD_ROOT/usr/lib64/libvulkan_asahi.so 2>/dev/null
-
-
-                if [ -f "/home/chronos/user/.bashrc" ]; then
-                    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
-                    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
-                    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
-                
-                else
-                    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
-                fi
-
-				VERSION_FILE="$CHARD_ROOT/.chard_chrome"
-				if [ -s "$VERSION_FILE" ]; then
-				CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
-					if [ "$CHROMEOS_VERSION" -le 103 ]; then
-						sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
-						sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
-					fi
-				fi
-
-                sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
-                sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
-                sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
-                sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
-                        
-                if [ -f "/home/chronos/user/.bashrc" ]; then
-                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
-                else
-                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
-                fi
-                
-                sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
-                sudo mount --make-rslave "$CHARD_ROOT"
-                
-                sudo chroot "$CHARD_ROOT" /bin/bash -c '
-                    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-                    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
-                
-                    if [ -e /dev/zram0 ]; then
-                        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
-                        mount --make-rslave /dev/zram0 2>/dev/null
-                    fi
-                
-                    chmod 1777 /tmp /var/tmp
-                
-                    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
-                    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
-                    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
-                    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
-                
-                    CHARD_HOME=$(cat /.chard_home)
-                    HOME=$CHARD_HOME
-                    CHARD_USER=$(cat /.chard_user)
-                    USER=$CHARD_USER
-                    GROUP_ID=1000
-                    USER_ID=1000
-                
-                    sudo -u "$USER" bash -c "
-                        source \$HOME/.bashrc 2>/dev/null
-                        #sudo chown -R 1000:1000 \$HOME 2>/dev/null
-                        cd \$HOME
-						sudo rm -f /var/lib/pacman/db.lck 2>/dev/null
-                        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
-                        sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
-                        gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
-                        sudo flatpak remote-delete flathub -y 2>/dev/null
-                        sudo -E pacman -Sy
-                        echo
-                        sudo -E pacman -Fy
-                        echo
-                        #flatpak --user update --appstream
-                        sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
-                        sudo chmod +x /bin/virtm 2>/dev/null
-                        sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
-                        sudo chmod +x /bin/autoclicker 2>/dev/null
-                        sudo rm /tmp/virtm.c 2>/dev/null
-                        sudo rm /tmp/autoclicker.c 2>/dev/null
-						sudo /bin/chard_wrappers 2>/dev/null
-						chard_browser 2>/dev/null
-						chard_svg 2>/dev/null
-						sudo pacman -S --noconfirm libva-utils 2>/dev/null
-                    "
-  
-                    killall -9 pipewire 2>/dev/null
-                    killall -9 pulseaudio 2>/dev/null
-                    umount -l /dev/zram0   2>/dev/null || true
-                    umount -l /run/chrome  2>/dev/null || true
-                    umount -l /run/dbus    2>/dev/null || true
-                    umount -l /etc/ssl     2>/dev/null || true
-                    umount -l /dev/pts     2>/dev/null || true
-                    umount -l /dev/shm     2>/dev/null || true
-                    umount -l /dev         2>/dev/null || true
-                    umount -l /sys         2>/dev/null || true
-                    umount -l /proc        2>/dev/null || true
-                '
-                
-                chard_unmount
-                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
-                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
 
                 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
                 if [ -f "$CHROMEOS_BASHRC" ]; then
@@ -1233,7 +1129,113 @@ EOF
 						        sudo chown root:video /dev/dri/renderD128
 						    fi
 						fi
-				$CHARD_ROOT/bin/chard_shortcut 2>/dev/null
+						
+				sleep 0.2
+				
+				if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo mountpoint -q "$CHARD_ROOT/run/chrome" || sudo mount --bind /run/chrome "$CHARD_ROOT/run/chrome" 2>/dev/null
+                    sudo mountpoint -q "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" || sudo mount --bind "/home/chronos/user/MyFiles/Downloads" "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
+                    sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads"
+                
+                else
+                    sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
+                fi
+
+				VERSION_FILE="$CHARD_ROOT/.chard_chrome"
+				if [ -s "$VERSION_FILE" ]; then
+				CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
+					if [ "$CHROMEOS_VERSION" -le 103 ]; then
+						sudo mountpoint -q "$CHARD_ROOT/dev"  || sudo mount --bind /dev  "$CHARD_ROOT/dev"  2>/dev/null
+						sudo mountpoint -q "$CHARD_ROOT/proc" || sudo mount --bind /proc "$CHARD_ROOT/proc" 2>/dev/null
+					fi
+				fi
+
+                sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
+                sudo mountpoint -q "$CHARD_ROOT/dev/input"  || sudo mount --bind /dev/input "$CHARD_ROOT/dev/input" 2>/dev/null
+                        
+                if [ -f "/home/chronos/user/.bashrc" ]; then
+                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/cras "$CHARD_ROOT/run/cras" 2>/dev/null
+                else
+                    sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
+                fi
+                
+                sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
+                sudo mount --make-rslave "$CHARD_ROOT"
+                
+                sudo chroot "$CHARD_ROOT" /bin/bash -c '
+                    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
+                    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
+                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
+                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
+                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
+                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                    mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
+                
+                    if [ -e /dev/zram0 ]; then
+                        mount --rbind /dev/zram0 /dev/zram0 2>/dev/null
+                        mount --make-rslave /dev/zram0 2>/dev/null
+                    fi
+                
+                    chmod 1777 /tmp /var/tmp
+                
+                    [ -e /dev/null    ] || mknod -m 666 /dev/null c 1 3
+                    [ -e /dev/tty     ] || mknod -m 666 /dev/tty c 5 0
+                    [ -e /dev/random  ] || mknod -m 666 /dev/random c 1 8
+                    [ -e /dev/urandom ] || mknod -m 666 /dev/urandom c 1 9
+                
+                    CHARD_HOME=$(cat /.chard_home)
+                    HOME=$CHARD_HOME
+                    CHARD_USER=$(cat /.chard_user)
+                    USER=$CHARD_USER
+                    GROUP_ID=1000
+                    USER_ID=1000
+                
+                    sudo -u "$USER" bash -c "
+                        source \$HOME/.bashrc 2>/dev/null
+                        #sudo chown -R 1000:1000 \$HOME 2>/dev/null
+                        cd \$HOME
+						sudo rm -f /var/lib/pacman/db.lck 2>/dev/null
+                        sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
+                        sudo mv /usr/share/libalpm/hooks/90-packagekit-refresh.hook /usr/share/libalpm/hooks/90-packagekit-refresh.hook.disabled 2>/dev/null
+                        gpg --batch --pinentry-mode loopback --passphrase '' --quick-gen-key \"dummy-kde-wallet\" default default never 2>/dev/null
+                        sudo flatpak remote-delete flathub -y 2>/dev/null
+                        sudo -E pacman -Sy
+                        echo
+                        sudo -E pacman -Fy
+                        echo
+                        #flatpak --user update --appstream
+                        sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
+                        sudo chmod +x /bin/virtm 2>/dev/null
+                        sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
+                        sudo chmod +x /bin/autoclicker 2>/dev/null
+                        sudo rm /tmp/virtm.c 2>/dev/null
+                        sudo rm /tmp/autoclicker.c 2>/dev/null
+						sudo /bin/chard_wrappers 2>/dev/null
+						chard_browser 2>/dev/null
+						chard_svg 2>/dev/null
+						sudo pacman -S --noconfirm libva-utils 2>/dev/null
+                    "
+  
+                    killall -9 pipewire 2>/dev/null
+                    killall -9 pulseaudio 2>/dev/null
+                    umount -l /dev/zram0   2>/dev/null || true
+                    umount -l /run/chrome  2>/dev/null || true
+                    umount -l /run/dbus    2>/dev/null || true
+                    umount -l /etc/ssl     2>/dev/null || true
+                    umount -l /dev/pts     2>/dev/null || true
+                    umount -l /dev/shm     2>/dev/null || true
+                    umount -l /dev         2>/dev/null || true
+                    umount -l /sys         2>/dev/null || true
+                    umount -l /proc        2>/dev/null || true
+                '
+                
+                chard_unmount
+                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
+                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+				
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
