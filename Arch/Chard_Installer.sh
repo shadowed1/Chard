@@ -937,7 +937,7 @@ for file in \
     "$CHARD_ROOT/.chardrc" \
     "$CHARD_ROOT/.chard.env" \
     "$CHARD_ROOT/$CHARD_HOME/.bashrc" \
-    "$CHARD_ROOT/bin/.rootrc" \
+    "$CHARD_ROOT/.rootrc" \
     "$CHARD_ROOT/bin/chariot" \
     "$CHARD_ROOT/bin/chard_debug" \
     "$CHARD_ROOT/bin/SMRT" \
