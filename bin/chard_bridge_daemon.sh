@@ -196,7 +196,7 @@ Description=Chard Bridge Daemon
 After=local-fs.target systemd-tmpfiles-setup.service graphical.target
 [Service]
 Type=simple
-ExecStartPre=/bin/sleep 5
+ExecStartPre=/bin/sleep 30
 ExecStart=/bin/chard_bridge_daemon
 Restart=always
 RestartSec=10
