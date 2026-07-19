@@ -86,7 +86,7 @@ if find /home/chronos/user -maxdepth 1 -type d -name MyFiles >/dev/null 2>&1; th
     echo "${YELLOW}If using crew-sudo, please uninstall it and use Sudocrosh instead.${RESET}"
     echo "${CYAN}Run these commands in VT-2 logged in as chronos (or in crosh with sudo enabled):${RESET}"
     echo "${BLUE}${BOLD}"
-    echo "cd /home/chronos/user"
+    echo "cd"
     echo "sudo mv Chard_Installer /usr/local"
     echo "sudo bash /usr/local/Chard_Installer"
     echo "${RESET}"
