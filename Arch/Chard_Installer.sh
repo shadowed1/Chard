@@ -1506,44 +1506,49 @@ detect_gpu_freq() {
         done
     fi
     
-    # NVIDIA / Nouveau
+     # NVIDIA / Nouveau
     if [ "$GPU_TYPE" = "nvidia" ]; then
-        if command -v nvidia-smi &>/dev/null; then
-            GPU_MAX_FREQ=$(nvidia-smi --query-gpu=clocks.max.gr \
-                --format=csv,noheader,nounits 2>/dev/null | head -n1)
+        if command -v nvidia-smi >/dev/null 2>&1 &&
+           nvidia-smi -L >/dev/null 2>&1; then
+    
+            GPU_MAX_FREQ=$(
+                nvidia-smi --query-gpu=clocks.max.graphics \
+                    --format=csv,noheader,nounits |
+                head -n1
+            )
             GPU_FREQ_PATH="nvidia-smi"
+    
         elif [ -f "/sys/class/drm/card0/gt_max_freq_mhz" ]; then
             GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
             GPU_MAX_FREQ=$(cat "$GPU_FREQ_PATH")
+        else
+            GPU_MAX_FREQ="unknown"
         fi
-        echo "${GREEN}[*] Detected NVIDIA GPU: max freq ${BOLD}${GPU_MAX_FREQ:-unknown}${RESET}${GREEN} MHz"
+    
+        echo "${GREEM}[*] Detected NVIDIA GPU: max freq ${BOLD}${GPU_MAX_FREQ}${RESET}${GREEN} MHz"
         return
     fi
 
     # AMD 1
    for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
     [ -f "$f" ] || continue
-
     GPU_TYPE="amd"
-
     mapfile -t SCLK_LINES < <(grep -i '^sclk' "$f" 2>/dev/null)
-
-    if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-        MAX_MHZ=$(
-            printf '%s\n' "${SCLK_LINES[@]}" |
-            sed -n 's/.*\([0-9]\+\)[Mm][Hh][Zz].*/\1/p' |
-            sort -nr |
-            head -n1
-        )
-
-        GPU_MAX_FREQ="$MAX_MHZ"
-        GPU_FREQ_PATH="$f"
-
-        echo "${RED}[*] Detected AMD GPU: max freq ${BOLD}${GPU_MAX_FREQ}${RESET}${RED} MHz"
-        return
-    fi
-done
-                
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            MAX_MHZ=$(
+                printf '%s\n' "${SCLK_LINES[@]}" |
+                sed -n 's/.*\([0-9]\+\)[Mm][Hh][Zz].*/\1/p' |
+                sort -nr |
+                head -n1
+            )
+    
+            GPU_MAX_FREQ="$MAX_MHZ"
+            GPU_FREQ_PATH="$f"
+    
+            echo "${RED}[*] Detected AMD GPU: max freq ${BOLD}${GPU_MAX_FREQ}${RESET}${RED} MHz"
+            return
+        fi
+    done      
 
     # AMD 2
     if [ -f "/sys/class/drm/card0/device/pp_dpm_sclk" ]; then
@@ -1615,6 +1620,7 @@ done
     GPU_TYPE="unknown"
     echo "${RED}[!] GPU type ${BOLD}unknown${RESET}"
 }
+
 detect_gpu_freq
 GPU_VENDOR="$GPU_TYPE"
 IDENTIFIER="Generic GPU"
