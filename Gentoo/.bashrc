@@ -301,8 +301,25 @@ export EGL_PLATFORM=wayland
 export QT_QPA_PLATFORM=xcb
 export GDK_BACKEND=x11
 
+DBUS_SESSION_FILE="/tmp/chard_dbus_$CHARD_USER"
+
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval "$(dbus-launch --sh-syntax )"
+
+    if [ -f "$DBUS_SESSION_FILE" ]; then
+        source "$DBUS_SESSION_FILE"
+    fi
+
+    if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] || ! dbus-send \
+        --session \
+        --dest=org.freedesktop.DBus \
+        --type=method_call \
+        /org/freedesktop/DBus \
+        org.freedesktop.DBus.ListNames >/dev/null 2>&1; then
+
+        dbus-launch --sh-syntax > "$DBUS_SESSION_FILE"
+        source "$DBUS_SESSION_FILE"
+    fi
+
     export DBUS_SESSION_BUS_ADDRESS
     export DBUS_SESSION_BUS_PID
 fi
