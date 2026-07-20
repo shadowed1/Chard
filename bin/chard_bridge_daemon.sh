@@ -196,12 +196,12 @@ Description=Chard Bridge Daemon
 After=local-fs.target systemd-tmpfiles-setup.service graphical.target
 [Service]
 Type=simple
-ExecStartPre=/bin/sleep 60
+ExecStartPre=/bin/sleep 10
 ExecStart=/bin/chard_bridge_daemon
 Restart=always
 RestartSec=10
 [Install]
-WantedBy=graphical.target default.target multi-user.target
+WantedBy=graphical.target multi-user.target
 SERVICE_EOF
 
     sudo systemctl daemon-reload
