@@ -515,8 +515,6 @@ case "$cmd" in
 		
 		if [ -n "$U_HASH" ]; then
 		    echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
-		else
-		    echo "ERROR: could not determine cryptohome hash" >&2
 		fi
 		
 		if [[ -z "$XDG_RUNTIME_DIR" ]]; then
