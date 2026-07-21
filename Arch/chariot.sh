@@ -1832,12 +1832,12 @@ checkpoint_171() {
 }
 run_checkpoint 171 "VAInfo" checkpoint_171
 
-checkpoint_171() {
+checkpoint_172() {
     retry_pacman "sudo pacman -S --noconfirm nautilus" 
     xdg-mime default org.gnome.Nautilus.desktop inode/directory 2>/dev/null
     xdg-mime default org.gnome.Nautilus.desktop application/x-gnome-saved-search 2>/dev/null
 }
-run_checkpoint 171 "Nautilus" checkpoint_171
+run_checkpoint 172 "Nautilus" checkpoint_172
 
 #checkpoint_XXX() {
 #    ARCH="$(uname -m)"
