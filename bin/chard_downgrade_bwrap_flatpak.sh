@@ -52,26 +52,42 @@ sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 
 ##################################################################################################
 
-sudo mkdir -p /usr/local/bwrap-0.11
-wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
-tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
-cd /tmp/bubblewrap-0.11.1
-meson setup build -Dprefix=/usr/local/bwrap-0.11
+mkdir -p ~/pkgbuilds/bubblewrap-local && cd ~/pkgbuilds/bubblewrap-local
+cat > PKGBUILD <<'EOF'
+pkgname=bubblewrap
+pkgver=0.11.1
+pkgrel=1
+pkgdesc="Unprivileged sandboxing tool (local build, no suid)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/containers/bubblewrap"
+license=('LGPL')
+depends=('glibc' 'libcap')
+makedepends=('meson' 'ninja')
+provides=('bubblewrap' 'bubblewrap-suid')
+conflicts=('bubblewrap-suid')
+source=("https://github.com/containers/bubblewrap/releases/download/v${pkgver}/bubblewrap-${pkgver}.tar.xz")
+sha256sums=('SKIP')
 
-meson setup \
-  -Dprefix=/usr \
-  -Drequire_userns=false \
-  -Dselinux=disabled \
-  -Dtests=false \
-  -Dbash_completion=disabled \
-  -Dzsh_completion=disabled \
-  -Dman=disabled \
-  build
-  
-ninja -C build
-sudo ninja -C build install
-cd
-sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+build() {
+  cd "bubblewrap-${pkgver}"
+  meson setup build \
+    -Dprefix=/usr \
+    -Drequire_userns=false \
+    -Dselinux=disabled \
+    -Dtests=false \
+    -Dbash_completion=disabled \
+    -Dzsh_completion=disabled \
+    -Dman=disabled
+  ninja -C build
+}
+
+package() {
+  cd "bubblewrap-${pkgver}"
+  DESTDIR="$pkgdir" ninja -C build install
+}
+EOF
+
+makepkg -si --noconfirm
 
 ##################################################################################################
 
