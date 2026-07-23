@@ -193,15 +193,14 @@ _startup_enable() {
     sudo tee "$SERVICE_FILE" > /dev/null << SERVICE_EOF
 [Unit]
 Description=Chard Bridge Daemon
-After=local-fs.target systemd-tmpfiles-setup.service graphical.target
+After=systemd-sysusers.service
 [Service]
 Type=simple
-ExecStartPre=/bin/sleep 10
 ExecStart=/bin/chard_bridge_daemon
-Restart=always
+Restart=on-failure
 RestartSec=10
 [Install]
-WantedBy=graphical.target multi-user.target
+WantedBy=multi-user.target
 SERVICE_EOF
 
     sudo systemctl daemon-reload
