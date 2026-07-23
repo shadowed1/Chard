@@ -187,9 +187,10 @@ _startup_enable() {
         echo "${YELLOW}Please share your Downloads folder with Linux first.${RESET}"
         exit 1
     fi
-
+    echo
     echo "${CYAN}Installing systemd service...${RESET}"
-
+    echo
+    sudo rm -f /etc/systemd/system/multi-user.target.wants/chard-bridge-daemon.service 2>/dev/null
     sudo tee "$SERVICE_FILE" > /dev/null << SERVICE_EOF
 [Unit]
 Description=Chard Bridge Daemon
@@ -202,13 +203,13 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 SERVICE_EOF
-
+    
     sudo systemctl daemon-reload
-    sudo systemctl enable "$SERVICE_NAME"
+    sudo systemctl enable --now "$SERVICE_NAME"
+    sudo systemctl status "$SERVICE_NAME"
     echo
     echo "${GREEN}${BOLD}Startup enabled.${RESET}"
-    echo "  -> Start now: sudo systemctl start $SERVICE_NAME"
-    echo "  -> Stop now:  sudo systemctl stop $SERVICE_NAME || chard_bridge_daemon startup (n)"
+    echo
 }
 
 _startup_disable() {
