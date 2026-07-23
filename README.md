@@ -419,7 +419,7 @@ Added chard_mount and chard_unmount commands. Enabled KVM kernel flag. Added GPa
 Improved wrappers and added VA-API support. Added Flatpak app icon and launch support.` <br><br>
 - 0.46: `Fixed GPU Screen Recorder install. Fixed bubblewrap and flatpak package management. Added nautilus. Enhanced chard_repair.sh script. Added partial Github DDoS fallback logic. Added noexec install check with install location prompt. Improved GPU detection logic and SMRT thanks to Terry Stormchaser.` <br><br>
 - 0.47: `Fixed chard_svg hanging on handbrake svg conversion. Fixed icon path scanning. Fixed Chard Gentoo failing to launch apps via shelf. Fixed typo in Chard Arch quick reinstall. Hardened check for ChromeOS_PowerControl.` <br><br>
-- 0.48 (in progress, already added): `Implemented chard_garcon to allow ChromeOS chrome to open links if user prefers. Fixed chard_baguette launching termina as root on boot. Created chard_browser to let us save and change default browser on reinstall. Added .conf update syntax. Fixed $U_HASH being read too early on boot and added safety fallback. Improved downloader logic. Improved GPU detection logic for Intel.` <br><br>
+- 0.48 (in progress, already added): `Implemented chard_garcon to allow ChromeOS chrome to open links if user prefers. Fixed chard_baguette launching termina as root on boot. Created chard_browser to let us save and change default browser on reinstall. Added .conf update syntax. Fixed $U_HASH being read too early on boot and added safety fallback. Improved downloader logic. Improved GPU detection logic for Intel. Improved bwrap package install.` <br><br>
 
 ### Acknowledgements - This project would not exist without the help and support from the ChromeOS community.
 
