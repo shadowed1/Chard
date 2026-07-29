@@ -229,13 +229,13 @@ detect_gpu_freq() {
     if [[ -d /sys/class/drm ]]; then
         if grep -qi "mediatek" /sys/class/drm/*/device/uevent 2>/dev/null; then
             SOC_LABEL="mediatek"
-            echo "${YELLOW}[*] Detected MediaTek GPU${RESET}"
+            echo "${YELLOW}[*] Detected MediaTek SoC${RESET}"
         elif grep -qi "vivante" /sys/class/drm/*/device/uevent 2>/dev/null; then
             SOC_LABEL="vivante"
             echo "${MAGENTA}[*] Detected Vivante GPU${RESET}"
         elif grep -qi "asahi" /sys/class/drm/*/device/uevent 2>/dev/null; then
             SOC_LABEL="asahi"
-            echo "${CYAN}[*] Detected Apple GPU${RESET}"
+            echo "${CYAN}[*] Detected Apple SoC${RESET}"
         elif grep -qi "panfrost" /sys/class/drm/*/device/uevent 2>/dev/null; then
             SOC_LABEL="mali"
             echo "${GREEN}[*] Detected Mali/Panfrost GPU${RESET}"
