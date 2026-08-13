@@ -883,7 +883,7 @@ case "$cmd" in
 			        echo "${CYAN}You're using v$CURRENT_CLEAN (latest is v$LATEST_CLEAN)${RESET}"
 					echo
 			        echo "${YELLOW}Changelog:${RESET}"
-			        echo "$LATEST_RAW" | sed -n '/changelog()/,/^}/p' | sed '1d;$d'
+			        echo "$LATEST_RAW" | sed -n '/changelog()/,/^}/p' | sed '1d;$d' | sed -E 's/^[[:space:]]*echo[[:space:]]*["\x27]?//; s/["\x27]?$//'
 			        read -rp "Reinstall to update? (Y/n): " choice
 			        if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
 			            bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
