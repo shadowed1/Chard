@@ -1170,17 +1170,6 @@ run_checkpoint 128 "Keyboard error spam fix" checkpoint_128
 #}
 #run_checkpoint 129 "sudo -E pacman -S --noconfirm libreoffice" checkpoint_129
 
-checkpoint_130() {
-    if [[ "$ARCH" == "x86_64" ]]; then
-        retry_pacman "sudo -E pacman -S --noconfirm obs-studio"
-        #retry_pacman "sudo pacman -R --noconfirm obs-vkcapture-debug"
-        retry_pacman "yay -S --noconfirm obs-vkcapture-git"
-    else
-        echo "Skipping OBS on $ARCH"
-    fi
-}
-run_checkpoint 130 "sudo -E pacman -S --noconfirm obs-studio" checkpoint_130
-
 checkpoint_131() {
     retry_pacman "sudo -E pacman -S --noconfirm ruby"
 }
