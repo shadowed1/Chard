@@ -1,10 +1,14 @@
 #!/bin/bash
-VERSION="0.47"
+VERSION="0.48"
 
 changelog() {
-    echo "- Fixed chard_svg hanging on handbrake svg conversion."
-    echo "- Fixed icon path scanning. "
-    echo "- Fixed Chard Gentoo failing to launch apps via shelf."
-    echo "- Fixed typo in Chard Arch quick reinstall."
+    echo "- Implemented chard_garcon to allow ChromeOS chrome to open links if user prefers."
+    echo "- Created chard_browser to let us save and change default browser on reinstall. "
+    echo "- Added .conf update syntax."
+    echo "- Fixed $U_HASH being read too early on boot and added safety fallback."
+    echo "- Improved downloader logic."
+    echo "- Improved GPU detection logic for Intel."
+    echo "- Removed OBS in favor of GPU Screen Recorder."
+    echo "- Simplified Baguette startup on boot."
     echo
 }
