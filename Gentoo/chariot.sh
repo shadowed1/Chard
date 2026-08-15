@@ -1720,10 +1720,9 @@ checkpoint_154() {
     sudo chmod +x /bin/chard_wrappers 2>/dev/null
     sudo /bin/chard_wrappers 2>/dev/null
     sudo rm -rf /bin/chard_wrappers 2>/dev/null
-
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_flatpak_bwrap.sh" -o "/bin/chard_downgrade_flatpak_bwrap" 2>/dev/null
-    sudo chmod +x /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
-    /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak" 2>/dev/null
+    sudo chmod +x /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
+    /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
 }
 run_checkpoint 154 "chard_wrappers" checkpoint_154
 
