@@ -1725,7 +1725,7 @@ checkpoint_154() {
     sudo chmod +x /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
     /bin/chard_downgrade_flatpak_bwrap 2>/dev/null
 }
-run_checkpoint 154 "chard_wrappers" checkpoint_153
+run_checkpoint 154 "chard_wrappers" checkpoint_154
 
 
 
