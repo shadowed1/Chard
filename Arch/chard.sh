@@ -173,7 +173,7 @@ export PYTHONMULTIPROCESSING_START_METHOD=fork
 export CC="$CHARD_ROOT/usr/bin/gcc"
 export CXX="$CHARD_ROOT/usr/bin/g++"
 export AR="$CHARD_ROOT/usr/bin/ar"
-export NM="$CHARD_ROOT/usr/bin/gcc-nm"
+export NM="$CHARD_ROOT/usr/bin/gcc-nm"f
 export RANLIB="$CHARD_ROOT/usr/bin/gcc-ranlib"
 export STRIP="$CHARD_ROOT/usr/bin/strip"
 export LD="$CHARD_ROOT/usr/bin/ld"
@@ -528,9 +528,9 @@ case "$cmd" in
 		echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
 		
 		sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
-        chard_volume > /dev/null 2>&1 &
-		chard_shortcut_daemon start 2>/dev/null &
-		chard_timezone_daemon 2>/dev/null &
+        $CHARD_ROOT/bin/chard_volume > /dev/null 2>&1 &
+		$CHARD_ROOT/bin/chard_shortcut_daemon start 2>/dev/null &
+		$CHARD_ROOT/bin/chard_timezone_daemon 2>/dev/null &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
 		killall -9 chard_launch_daemon 2>/dev/null
