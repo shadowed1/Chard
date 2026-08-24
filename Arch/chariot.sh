@@ -707,7 +707,7 @@ run_checkpoint 44 "sudo -E pacman -S polkit" checkpoint_44
 
 checkpoint_45() {
     #retry_pacman "sudo -E pacman -S --noconfirm bubblewrap"
-    retry_pacman "yay -S --noconfirm libselinux"
+    # retry_pacman "yay -S --noconfirm libselinux"
     retry_pacman "sudo pacman -S --noconfirm bash-completion"
 
 #    cd
@@ -721,7 +721,8 @@ checkpoint_45() {
 #    cd
 #    sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
 }
-run_checkpoint 45 "Bubblewrap 0.11.1" checkpoint_45
+#run_checkpoint 45 "Bubblewrap 0.11.1" checkpoint_45
+run_checkpoint 45 "bash auto-completion" checkpoint_45
 
 checkpoint_46() {
     retry_pacman "sudo -E pacman -S --noconfirm libclc"
