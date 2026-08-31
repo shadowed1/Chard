@@ -1221,6 +1221,7 @@ checkpoint_137() {
         retry_pacman "sudo -E pacman -S --needed --noconfirm lib32-libvdpau 2>/dev/null"
         #retry_pacman "yay -S --noconfirm lib32-gtk2 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null"
+        sudo pacman -S --noconfirm git 2>/dev/null
         #retry_pacman "sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null"
         cd ~/
         sudo rm -rf /usr/local/bubblepatch
@@ -1295,7 +1296,7 @@ checkpoint_137() {
         retry_pacman "sudo -E pacman -S --noconfirm perl-json 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm lib32-libusb 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm lib32-vkd3d 2>/dev/null"
-        retry_pacman "sudo -E pacman -S --noconfirm lib32-openal 2>/dev/null"
+        #retry_pacman "sudo -E pacman -S --noconfirm lib32-openal 2>/dev/null"
         #retry_pacman "sudo -E pacman -S --noconfirm libsoup 2>/dev/null"
         retry_pacman "sudo -E pacman -S --noconfirm winetricks 2>/dev/null"
         STEAM_SCRIPT="/usr/lib/steam/steam"
