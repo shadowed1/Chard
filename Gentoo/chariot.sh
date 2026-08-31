@@ -1455,7 +1455,7 @@ checkpoint_134() {
     rm -rf /var/tmp/portage/media-video/obs-studio-*
     eclean-dist -d
 }
-run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_131
+run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_134
 
 checkpoint_135() {
     USE="ruby_targets_ruby40" sudo -E emerge dev-lang/ruby
