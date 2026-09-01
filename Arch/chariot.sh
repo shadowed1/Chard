@@ -707,7 +707,7 @@ run_checkpoint 44 "sudo -E pacman -S polkit" checkpoint_44
 
 checkpoint_45() {
     #retry_pacman "sudo -E pacman -S --noconfirm bubblewrap"
-    retry_pacman "yay -S --noconfirm libselinux"
+    #retry_pacman "yay -S --noconfirm libselinux"
     retry_pacman "sudo pacman -S --noconfirm bash-completion"
 
 #    cd
