@@ -1317,9 +1317,9 @@ checkpoint_123() {
 run_checkpoint 123 "sudo -E emerge vlc" checkpoint_123
 
 checkpoint_124() {
-    sudo -E emerge media-libs/libva
-    libva-intel-media-driver
-    rm -rf /var/tmp/portage/media-libs/libva-*
+    sudo -E emerge media-libs/libva 2>/dev/null
+    sudo -E emerge media-libs/libva-intel-media-driver 2>/dev/null
+    rm -rf /var/tmp/portage/media-libs/libva-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 124 "sudo -E emerge media-libs/libva" checkpoint_124
