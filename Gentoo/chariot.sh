@@ -592,11 +592,11 @@ checkpoint_26() {
 run_checkpoint 26 "sudo -E emerge dev-libs/glib" checkpoint_26
 
 checkpoint_27() {
-    sudo -E emerge dev-util/pkgcon
-    rm -rf /var/tmp/portage/dev-util/pkgcon-*
+    sudo -E emerge dev-util/pkgconf
+    rm -rf /var/tmp/portage/dev-util/pkgconf-*
     eclean-dist -d
 }
-run_checkpoint 27 "sudo -E emerge dev-util/pkgcon" checkpoint_27
+run_checkpoint 27 "sudo -E emerge dev-util/pkgconf" checkpoint_27
 
 checkpoint_28() {
     sudo -E emerge dev-cpp/gtest
