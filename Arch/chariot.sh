@@ -1403,7 +1403,7 @@ checkpoint_138() {
             retry_pacman "sudo -E pacman -S --noconfirm lib32-vulkan-icd-loader 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm mesa-utils 2>/dev/null"
             retry_pacman "sudo -E pacman -S --noconfirm lib32-vulkan-driver 2>/dev/null"
-            #retry pacman "yay -S --noconfirm nvidia-580xx-dkms nvidia-580xx-utils 2>/dev/null"
+            retry pacman "yay -S --noconfirm lib32-nvidia-utils 2>/dev/null"
             ;;
 
         mali|panfrost|mediatek|vivante|asahi)
