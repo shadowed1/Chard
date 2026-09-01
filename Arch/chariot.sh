@@ -1218,9 +1218,9 @@ checkpoint_137() {
     echo "GPU_MAX_FREQ=$GPU_MAX_FREQ ${RESET}"
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
-        retry_pacman "sudo -E pacman -S --needed --noconfirm lib32-libvdpau 2>/dev/null"
+        retry_pacman "yay -S --noconfirm lib32-libvdpau 2>/dev/null"
         #retry_pacman "yay -S --noconfirm lib32-gtk2 2>/dev/null"
-        retry_pacman "sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 git 2>/dev/null"
+        retry_pacman "sudo -E pacman -S --noconfirm meson ninja pkgconf libcap libcap-ng glib2 2>/dev/null"
         sudo pacman -S --noconfirm git 2>/dev/null
         #retry_pacman "sudo -E pacman -S --noconfirm bubblewrap 2>/dev/null"
         cd ~/
