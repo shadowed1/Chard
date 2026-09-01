@@ -1522,7 +1522,7 @@ checkpoint_140() {
     if [ -e "$file" ]; then
         sudo mv "$file" "$file.disabled" 2>/dev/null
     fi
-    retry_pacman "sudo pacman -Rdd --noconfirm xfce4-notifyd xfce4-power-manager"
+    sudo pacman -Rdd --noconfirm xfce4-notifyd xfce4-power-manager 2>/dev/null
     PANEL_CFG="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml"
     if [[ -f "$PANEL_CFG" ]]; then
         sed -i 's/<property name="position-locked" type="bool" value="true"\/>/<property name="position-locked" type="bool" value="false"\/>/' "$PANEL_CFG"
