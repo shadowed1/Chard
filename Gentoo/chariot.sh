@@ -1522,7 +1522,7 @@ checkpoint_140() {
     eclean-dist -d
 
 }
-run_checkpoint 141 "Chard Bubblepatch" checkpoint_141
+run_checkpoint 140 "Chard Bubblepatch" checkpoint_140
 
 checkpoint_142() {
     sudo -E emerge gedit
