@@ -910,7 +910,7 @@ EOF
                 fi
                 sudo rm -rf $CHARD_ROOT/$CHARD_HOME/.cache/bazel/ 2>/dev/null
                 if [ -f "$CHROMEOS_BASHRC" ]; then
-                    selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
+                    selected_locale=$(grep -ri "Selected '" "/home/chronos/user/log" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
 
                     if [[ -n "$selected_locale" ]]; then
                         echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
@@ -921,7 +921,7 @@ EOF
 						locale_code=$(echo "$locale_raw" | sed 's/-/_/').UTF-8
 						sudo sed -i "s/^#\s*\(${locale_code}[[:space:]]\+UTF-8\)/\1/" "$CHARD_ROOT/etc/locale.gen"
                     else
-                        echo "${RED}Could not determine language from $CHROMEOS_SESSION_LOG_DIR ${RESET}"
+                        echo "${RED}Could not determine language from /home/chronos/user/log ${RESET}"
                     fi
                 fi
      			sudo chown root:root "$CHARD_ROOT/opt/Heroic/chrome-sandbox" 2>/dev/null
