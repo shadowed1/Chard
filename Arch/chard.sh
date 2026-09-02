@@ -246,11 +246,11 @@ export WAYLAND_DISPLAY=wayland-0
 export WAYLAND_DISPLAY_LOW_DENSITY=wayland-1
 export EGL_PLATFORM=wayland
 
-	if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
-	    source "$CHARD_ROOT/.chard_stage3_preload"
-	else
-	    source "$CHARD_ROOT/.chard.preload"
-	fi
+	#if [ -f "$CHARD_ROOT/.chard_stage3_preload" ]; then
+	#    source "$CHARD_ROOT/.chard_stage3_preload"
+	#else
+	#    source "$CHARD_ROOT/.chard.preload"
+	#fi
 
     echo "[*] Running '$*' inside Chard environment..."
     env \
