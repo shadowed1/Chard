@@ -1022,7 +1022,7 @@ EOF
                 sudo rm -rf $CHARD_ROOT/$CHARD_HOME/.cache/bazel/ 2>/dev/null
 
                 if [ -f "$CHROMEOS_BASHRC" ]; then
-                    selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
+                    selected_locale=$(grep -ri "Selected '" "/home/chronos/user/log" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
 
                     if [[ -n "$selected_locale" ]]; then
                         echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
