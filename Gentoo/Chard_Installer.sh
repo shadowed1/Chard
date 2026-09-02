@@ -2593,8 +2593,36 @@ $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 #unset LD_PRELOAD
 sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
 echo
+show_progress
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}${GREEN} or ${BOLD}cr${RESET}. "
 echo "${YELLOW}[!] ChromeOS devices might need to reboot before proceeding. ${RESET}"
-show_progress
+echo
+LOG_PATH="$CHARD_ROOT/$CHARD_HOME/chariot.log"
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+    if [ ! -f "$LOG_PATH" ]; then
+        echo "Log file not found: $LOG_PATH"
+        return 1
+    fi
+
+    if [ -f "/home/chronos/user/.bashrc" ]; then
+        DEST_DIR="/home/chronos/user/MyFiles/Downloads"
+    else
+        DEST_DIR="$HOME/Downloads"
+    fi
+
+    ARCHIVE_NAME="chard_log_${TIMESTAMP}.tar.gz"
+    DEST_PATH="$DEST_DIR/$ARCHIVE_NAME"
+    sudo tar -czf "$DEST_PATH" -C "$(dirname "$LOG_PATH")" "$(basename "$LOG_PATH")"
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to create archive"
+        return 1
+    fi
+
+    sudo chown 1000:1000 "$DEST_PATH"
+	echo
+    echo "${GREEN}Log created at: ${BOLD}$DEST_PATH${RESET}"
+	echo
 
 #echo "${YELLOW}Copied chardbuild.log to $HOME ${RESET}"
