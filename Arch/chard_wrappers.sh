@@ -846,3 +846,26 @@ MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme
 EOF
 
 sudo update-desktop-database /usr/share/applications
+
+sudo tee /usr/bin/steam >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export XDG_RUNTIME_DIR
+export QT_QPA_PLATFORM=xcb
+STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:$USER
+sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
+sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
+/usr/lib/steam/steam -console -chromeos -force-opaque-back "$@"
+sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
+EOF
+
+sudo chmod +x /usr/bin/steam
