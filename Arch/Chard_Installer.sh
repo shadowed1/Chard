@@ -2579,7 +2579,10 @@ $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
 show_progress
 echo "${GREEN}[+] Chard Root is ready! To use, open a new shell and run: ${BOLD}chard root${RESET}${GREEN} or ${BOLD}cr${RESET}. "
-echo "${YELLOW}[!] ChromeOS devices might need to reboot ChromeOS before proceeding. ${RESET}"
+CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
+if [ -f "$CHROMEOS_BASHRC" ]; then
+    echo "${YELLOW}[!] ChromeOS devices might need to reboot before proceeding. ${RESET}"
+fi
 echo
 LOG_PATH="$CHARD_ROOT/$CHARD_HOME/chariot.log"
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
