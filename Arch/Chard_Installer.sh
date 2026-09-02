@@ -737,13 +737,13 @@ echo "${RESET}${GREEN}CHARD_USER: ${BOLD}$CHARD_USER ${RESET}${RED}"
 CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
 
 if [ -f "$CHROMEOS_BASHRC" ]; then
-    selected_locale=$(grep -ri "Selected '" "$CHROMEOS_SESSION_LOG_DIR" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
+    selected_locale=$(grep -ri "Selected '" "/home/chronos/user/log" 2>/dev/null | sed "s/.*Selected '\([^']*\)'.*/\1/" | tail -1)
 
     if [[ -n "$selected_locale" ]]; then
         echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
         echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
     else
-        echo "${RED}Could not determine language from $CHROMEOS_SESSION_LOG_DIR ${RESET}"
+        echo "${RED}Could not determine language from /home/chronos/user/log ${RESET}"
     fi
 fi
 
