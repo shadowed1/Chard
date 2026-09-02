@@ -1,7 +1,9 @@
-# <<< CHARD_PRELOAD <<<
+# <<< CHARD_PRELOAD <
 # ChromeOS Only.
 # Manual entries.
-LD_PRELOAD_LIBS=(
+shopt -s nullglob
+
+LD_PRELOAD_PATTERNS=(
     "$CHARD_ROOT/usr/lib64/libunwind-ptrace.so.0"
     "$CHARD_ROOT/usr/lib64/libunwind-x86_64.so.8"
     "$CHARD_ROOT/usr/lib/libunwind-aarch64.so.8"
@@ -9,34 +11,35 @@ LD_PRELOAD_LIBS=(
     "$CHARD_ROOT/usr/lib64/libmagic.so.1"
     "$CHARD_ROOT/usr/lib64/libseccomp.so.2"
     "$CHARD_ROOT/usr/lib/libunwind-ptrace.so.0"
-    "$CHARD_ROOT/usr/lib/libunwind-x86_.so.8"
+    "$CHARD_ROOT/usr/lib/libunwind-x86_64.so.8"
     "$CHARD_ROOT/usr/lib/libunwind.so.8"
     "$CHARD_ROOT/usr/lib/libmagic.so.1"
     "$CHARD_ROOT/usr/lib/libseccomp.so.2"
     #"$CHARD_ROOT/usr/lib64/libstdc++.so.6"
     #"$CHARD_ROOT/usr/lib/libstdc++.so.6"
-    "$CHARD_ROOT/usr/lib/libpython3.13.so.1.0"
-    "$CHARD_ROOT/usr/lib/perl5/5.42/core_perl/CORE/libperl.so"
+    "$CHARD_ROOT/usr/lib/libpython3.*.so.1.0"
+    "$CHARD_ROOT/usr/lib/perl5/*/core_perl/CORE/libperl.so"
     "$CHARD_ROOT/usr/lib/libinotifytools.so.0"
-    "$CHARD_ROOT/usr/lib/libbfd-2.46.so"
+    "$CHARD_ROOT/usr/lib/libbfd-*.so"
     "$CHARD_ROOT/usr/lib/libsframe.so.3"
-    "$CHARD_ROOT/usr/lib/libpython3.14.so.1.0"
     "$CHARD_ROOT/usr/lib/libfuse3.so.4"
     "$CHARD_ROOT/usr/lib/libstdc++.so.6"
-    "$CHARD_ROOT/usr/lib/libruby.so.3.4"
+    "$CHARD_ROOT/usr/lib/libruby.so.*"
     "$CHARD_ROOT/usr/lib/libctf-nobfd.so.0"
-    "$CHARD_ROOT/usr/lib/libdebuginfod.so.1"
-    "$CHARD_ROOT/usr/lib/libopcodes-2.46.0.so"
+    #"$CHARD_ROOT/usr/lib/libdebuginfod.so.1"
+    "$CHARD_ROOT/usr/lib/libopcodes-*.so"
     "$CHARD_ROOT/usr/lib/libctf.so.0"
-    "$CHARD_ROOT/usr/lib/libopcodes-2.46.0.so"
-    "$CHARD_ROOT/usr/lib/libbfd-2.46.0.so"
 )
 
 LD_PRELOAD=""
 
-for lib in "${LD_PRELOAD_LIBS[@]}"; do
+for pat in "${LD_PRELOAD_PATTERNS[@]}"; do
+    matches=( $pat )
+    (( ${#matches[@]} )) || continue
+    # pick newest if multiple version matches exist
+    lib=$(printf '%s\n' "${matches[@]}" | sort -V | tail -n1)
     [[ -f "$lib" ]] && LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}$lib"
-done 2>/dev/null
+done
 
 export LD_PRELOAD
-# <<< END CHARD_PRELOAD <<<
+# <<< END CHARD_PRELOAD <
