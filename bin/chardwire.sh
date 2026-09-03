@@ -92,7 +92,7 @@ apply_volume() {
         LAST_VOLUME="$effective_volume"
         vol_units=$(awk -v p="$effective_volume" 'BEGIN {
             x = p / 100;
-            gamma = 0.125;
+            gamma = 0.5;
             amp = x ^ gamma;
             units = int(amp * 65536 + 0.5);
             if (units > 65536) units = 65536;
