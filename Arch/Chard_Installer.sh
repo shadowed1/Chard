@@ -330,7 +330,7 @@ chard_boot_setup() {
                     fi
                     sudo chmod 644 /etc/init/chard_baguette.conf
                     sudo initctl reload-configuration 2>/dev/null
-                    echo "${GREEN}Crostini startup enabled.${RESET}"
+                    echo "${GREEN}Crostini startup enabled (60s delay on login).${RESET}"
                     echo ""
                     break
                     ;;
