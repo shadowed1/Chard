@@ -48,9 +48,9 @@ if ! SHARED="$(detect_shared)"; then
     fi
 fi
 
-DESKTOPS_SRC="$SHARED/chard_icons/desktops"
+DESKTOPS_SRC="$SHARED/.config/shadowed1/chard_icons/desktops"
 DESKTOPS_DST="/usr/share/applications"
-SYNC_TRIGGER="$SHARED/chard_icons/.sync_now"
+SYNC_TRIGGER="$SHARED/.config/shadowed1/chard_icons/.sync_now"
 
 SERVICE_NAME="chard-bridge-daemon"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
@@ -100,7 +100,7 @@ sync_desktops() {
 sync_icons() {
     local count=0
 
-    for app_icon_dir in "$SHARED/chard_icons/icons"/*/; do
+    for app_icon_dir in "$SHARED/.config/shadowed1/chard_icons/icons"/*/; do
         [ -d "$app_icon_dir" ] || continue
 
         local icon_name_file="$app_icon_dir/.icon_name"
@@ -132,7 +132,7 @@ ensure_bridge() {
     if [ ! -f "/bin/chard_bridge" ]; then
         echo "${BLUE}[chard_bridge_daemon] installing /bin/chard_bridge...${RESET}"
 
-        local shared_path="$SHARED/chard_icons"
+        local shared_path="$SHARED/.config/shadowed1/chard_icons"
         
         sudo tee /bin/chard_bridge > /dev/null << BRIDGE_EOF
 #!/bin/bash

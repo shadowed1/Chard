@@ -31,8 +31,8 @@ fi
 
 U_HASH=$(sudo ls /home/.shadow/ | grep -v 'salt\|root' | head -1)
 echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
-rm -rf ~/MyFiles/Downloads/chard_icons/desktops/* 2>/dev/null
-sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
+rm -rf ~/MyFiles/Downloads/.config/shadowed1/chard_icons/desktops/* 2>/dev/null
+sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/.config/shadowed1/chard_icons/
 CHARD_USER=$(cat "$CHARD_ROOT/.chard_user" 2>/dev/null || echo "chronos")
 CHARD_HOME=$(cat "$CHARD_ROOT/.chard_home" 2>/dev/null || echo "/home/chronos")
 CHARD_APPS="$CHARD_ROOT/usr/share/applications"
@@ -40,7 +40,7 @@ CHARD_APPS_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share/a
 ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
 ICONS_HICOLOR_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share/icons/hicolor"
 ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
-SHARED="$HOME/MyFiles/Downloads/chard_icons"
+SHARED="$HOME/MyFiles/Downloads/.config/shadowed1/chard_icons"
 
 echo "${CYAN}${BOLD}Preparing Chard app stubs for ChromeOS Ash...${RESET}"
 echo
@@ -169,7 +169,7 @@ DESKTOP
 done
 
 touch "$SHARED/.sync_now"
-sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/chard_icons/
+sudo chown -R 1000:1000 /home/chronos/user/MyFiles/Downloads/.config/shadowed1/chard_icons/
 echo
 echo "${GREEN}${BOLD}Created $count shortcuts, skipped $skipped.${RESET}"
 echo "${GREEN}"

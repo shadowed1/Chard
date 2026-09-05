@@ -8,7 +8,7 @@ CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
 
-SHARED="/mnt/chromeos/MyFiles/Downloads/chard_icons"
+SHARED="/mnt/chromeos/MyFiles/Downloads/.config/shadowed1/chard_icons"
 DAEMON_SRC="$SHARED/chard_bridge_daemon"
 
 if [ ! -f "$DAEMON_SRC" ]; then

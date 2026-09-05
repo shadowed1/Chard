@@ -42,7 +42,7 @@ resolve_paths() {
     ICONS_HICOLOR_FLATPAK="$CHARD_ROOT/$CHARD_HOME/.local/share/flatpak/exports/share/icons/hicolor"
     ICONS_HICOLOR="$CHARD_ROOT/usr/share/icons/hicolor"
     ICONS_PIXMAPS="$CHARD_ROOT/usr/share/pixmaps"
-    SHARED="/home/chronos/user/MyFiles/Downloads/chard_icons"
+    SHARED="/home/chronos/user/MyFiles/Downloads/.config/shadowed1/chard_icons"
     ICON_SERVICE_BASE="/home/user/$U_HASH/app_service/icons"
     mkdir -p "$SHARED/desktops" "$SHARED/launch" "$SHARED/icons"
 }
