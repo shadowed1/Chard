@@ -9,8 +9,8 @@ BOLD=$'\033[1m'
 RESET=$'\033[0m'
 
 CHARD_HOME=$(cat /.chard_home)
-WATCH_DIR="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/launch"
-ALIASES_FILE="/$CHARD_HOME/user/MyFiles/Downloads/chard_icons/.chard_aliases"
+WATCH_DIR="/$CHARD_HOME/user/MyFiles/Downloads/.config/shadowed1/chard_icons/launch"
+ALIASES_FILE="/$CHARD_HOME/user/MyFiles/Downloads/.config/shadowed1/chard_icons/.chard_aliases"
 
 mkdir -p "$WATCH_DIR"
 rm -f "$WATCH_DIR"/* 2>/dev/null
