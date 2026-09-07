@@ -869,3 +869,25 @@ sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
 sudo chmod +x /usr/bin/steam
+
+sudo tee /bin/chard_faugus >/dev/null <<'EOF'
+#!/bin/bash
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
+export PATH=/usr/local/bubblepatch/bin:$PATH
+xhost +SI:localuser:root >/dev/null 2>&1
+exec sudo -u "$CHARD_USER" /bin/bash -c '
+  XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+  export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+  PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
+  export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
+  exec /usr/bin/faugus-launcher "$@"
+' bash "$@"
+EOF
+
+sudo chmod +x /bin/chard_faugus
