@@ -1,3 +1,4 @@
+# Install Tailscale in Chard normally.
 # In ChromeOS create /etc/init/tailscaled.conf
 
 description "Tailscale node agent (Chard-provided binary)"
