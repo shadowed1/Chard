@@ -912,7 +912,7 @@ case "$cmd" in
 		size)
 			chard_size
 		;;
-		reinstall)
+		reinstall|uppdate)
 		    CLEANUP_ENABLED=1
 			chard_reinstall
 		;;
@@ -926,7 +926,7 @@ case "$cmd" in
 			echo
 			bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh")
 		;;
-    unmount)
+    	unmount)
         	CLEANUP_ENABLED=1
         	chard_unmount
         ;;
