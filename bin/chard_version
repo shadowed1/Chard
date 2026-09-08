@@ -9,6 +9,5 @@ changelog() {
     echo "- Fixed chard run issue for Chard Arch."
     echo "- Fixed Chard Gentoo's XDG_DATA_DIRS."
     echo "- Added full $CHARD_ROOT path for commands on reinstall."
-    echo "- chard_icons folder renamed to .chard_icons"
     echo
 }
