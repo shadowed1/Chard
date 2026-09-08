@@ -520,7 +520,7 @@ download_file() {
         echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
         echo
 }
-chard unmount
+$CHARD_ROOT/bin/chard unmount 2>/dev/null
 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
 sudo rm $CHARD_ROOT/bin/Reinstall_Chard.sh 2>/dev/null
 sudo mkdir -p "$CHARD_ROOT/run/udev"
