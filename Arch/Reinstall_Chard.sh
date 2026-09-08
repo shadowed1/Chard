@@ -1111,7 +1111,7 @@ EOF
 						#killall -9 xfce4-terminal 2>/dev/null
 						killall -9 chardwire 2>/dev/null
 						killall -9 chard_timezone_daemon 2>/dev/null
-						chard_shortcut_daemon stop 2>/dev/null
+						$CHARD_ROOT/bin/chard_shortcut_daemon stop 2>/dev/null
 				        sudo pkill -f xfce4-session 2>/dev/null
 				        sudo pkill -f xfwm4 2>/dev/null
 				        sudo pkill -f xfce4-panel 2>/dev/null
@@ -1241,7 +1241,8 @@ EOF
                     umount -l /proc        2>/dev/null || true
                 '
                 
-                chard_unmount
+                $CHARD_ROOT/bin/chard_unmount
+				$CHARD_ROOT/bin/chard_shortcut
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
 				
