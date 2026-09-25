@@ -26,7 +26,7 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sleep 0.05
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/udev"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.05
@@ -43,6 +43,8 @@ cleanup_chroot() {
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.05
+        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/external" 2>/dev/null || true
         sleep 0.05
@@ -58,7 +60,7 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
         #sudo chown -R root:audio /dev/snd 2>/dev/null
         #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
@@ -67,7 +69,7 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sleep 0.05
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/udev"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.05
@@ -84,6 +86,8 @@ cleanup_chroot() {
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.05
+        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
         sleep 0.05
         $CHARD_ROOT/bin/chard_unmount 2>/dev/null
         $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
@@ -106,7 +110,7 @@ cleanup_chroot() {
 		sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null  # Could block teardown
 		echo
         #sudo chown -R root:audio /dev/snd 2>/dev/null
         #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
@@ -146,7 +150,7 @@ chard_unmount() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sleep 0.05
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/udev"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.05
@@ -163,6 +167,8 @@ chard_unmount() {
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.05
+        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.05
@@ -176,14 +182,14 @@ chard_unmount() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/input"  2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sleep 0.05
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/udev"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.05
@@ -200,6 +206,8 @@ chard_unmount() {
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.05
+        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
         sleep 0.05
         $CHARD_ROOT/bin/chard_unmount 2>/dev/null
         $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
@@ -222,7 +230,7 @@ chard_unmount() {
 		sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
 		echo
 		echo "${YELLOW}Searching for processes running from: $CHARD_ROOT ${RESET}"
 		echo ""
@@ -756,6 +764,8 @@ case "$cmd" in
 		    fi
 		fi
 		
+
+
         sudo mountpoint -q "$CHARD_ROOT/run/dbus"   || sudo mount --bind /run/dbus "$CHARD_ROOT/run/dbus" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/run/udev"   || sudo mount --bind /run/udev "$CHARD_ROOT/run/udev" 2>/dev/null
         sudo mountpoint -q "$CHARD_ROOT/dev/dri"    || sudo mount --bind /dev/dri "$CHARD_ROOT/dev/dri" 2>/dev/null
@@ -775,14 +785,15 @@ case "$cmd" in
         $CHARD_ROOT/bin/error_color
         sudo chroot "$CHARD_ROOT" /bin/bash -c '
         
-            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
+            mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+            mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+            mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
+            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev     2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
         
             if [ -e /dev/zram0 ]; then
@@ -851,6 +862,7 @@ case "$cmd" in
             umount -l /dev         2>/dev/null || true
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
+            umount -l /tmp         2>/dev/null || true
         '
         $CHARD_ROOT/bin/error_color
         killall -9 chard_volume 2>/dev/null
@@ -921,14 +933,15 @@ case "$cmd" in
         fi
         
        sudo chroot "$CHARD_ROOT" /bin/bash -c "
-            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
+            mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+            mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+            mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
+            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev     2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
         
             if [ -e /dev/zram0 ]; then
@@ -981,6 +994,7 @@ case "$cmd" in
             umount -l /dev         2>/dev/null || true
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
+            umount -l /tmp         2>/dev/null || true
         "
         chard_unmount
 		if [ -s "$VERSION_FILE" ]; then
@@ -1031,14 +1045,15 @@ case "$cmd" in
         
         sudo chroot "$CHARD_ROOT" /bin/bash -c "
 
-            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
+            mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+            mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+            mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
+            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev     2>/dev/null
             mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
         
             if [ -e /dev/zram0 ]; then
@@ -1075,6 +1090,7 @@ case "$cmd" in
             umount -l /dev         2>/dev/null || true
             umount -l /sys         2>/dev/null || true
             umount -l /proc        2>/dev/null || true
+            umount -l /tmp         2>/dev/null || true
         "
         
         chard_unmount

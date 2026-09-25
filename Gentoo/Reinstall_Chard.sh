@@ -23,7 +23,7 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sleep 0.05
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/udev"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.05
@@ -40,6 +40,8 @@ cleanup_chroot() {
         sudo umount -l "$CHARD_ROOT/sys"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
+        sleep 0.05
+        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.05
@@ -59,7 +61,7 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/dev/dri"    2>/dev/null || true
         sleep 0.05
-        sudo umount -l "$CHARD_ROOT/run/udev"    2>/dev/null || true
+        sudo umount -l "$CHARD_ROOT/run/udev"   2>/dev/null || true
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/run/dbus"   2>/dev/null || true
         sleep 0.05
@@ -77,6 +79,8 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.05
+        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
+        sleep 0.05
         $CHARD_ROOT/bin/chard_unmount 2>/dev/null
         $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
         sleep 0.05
@@ -92,7 +96,7 @@ cleanup_chroot() {
         sleep 0.05
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.05
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
         echo
 }
 
@@ -134,6 +138,8 @@ trap cleanup_chroot EXIT INT TERM
                     sleep 0.05
                     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
                     sleep 0.05
+                    sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
+                    sleep 0.05
                     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
                     sleep 0.05
                     sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -168,6 +174,8 @@ trap cleanup_chroot EXIT INT TERM
                     sleep 0.05
                     sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
                     sleep 0.05
+                    sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
+                    sleep 0.05
                     $CHARD_ROOT/bin/chard_unmount 2>/dev/null
                     $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
                     sleep 0.05
@@ -183,7 +191,7 @@ trap cleanup_chroot EXIT INT TERM
                     sleep 0.05
                     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
                     sleep 0.05
-                    sudo setfacl -Rb /run/chrome 2>/dev/null
+                    sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
                     echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
                     echo
                 }
@@ -257,13 +265,14 @@ trap cleanup_chroot EXIT INT TERM
 
                 sudo chroot $CHARD_ROOT /bin/bash -c "
 
-                        mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                        mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                        mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                        mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                        mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                        mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                        mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                        mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+                        mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+                        mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+                        mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+                        mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+                        mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+                        mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+                        mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
                         mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
                     
                         if [ -e /dev/zram0 ]; then
@@ -303,6 +312,7 @@ trap cleanup_chroot EXIT INT TERM
                         umount -l /dev         2>/dev/null || true
                         umount -l /sys         2>/dev/null || true
                         umount -l /proc        2>/dev/null || true
+                        umount -l /tmp         2>/dev/null || true
                     "
                 
                 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee "$CHARD_ROOT/etc/sudoers.d/$CHARD_USER" > /dev/null
@@ -494,13 +504,14 @@ sudo chmod +x "$CHARD_ROOT/usr/bin/chard_gedit"
                 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
                 sudo chroot $CHARD_ROOT /bin/bash -c "
 
-                    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                    mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+                    mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+                    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+                    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+                    mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+                    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+                    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+                    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
                     mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
                 
                     if [ -e /dev/zram0 ]; then
@@ -562,6 +573,7 @@ sudo chmod +x "$CHARD_ROOT/usr/bin/chard_gedit"
                     umount -l /dev         2>/dev/null || true
                     umount -l /sys         2>/dev/null || true
                     umount -l /proc        2>/dev/null || true
+                    umount -l /tmp         2>/dev/null || true
                 "
                 echo "${RESET} ${GREEN}"
                 detect_gpu_freq() {
@@ -1107,14 +1119,15 @@ EOF
 		        $CHARD_ROOT/bin/error_color
 		        sudo chroot "$CHARD_ROOT" /bin/bash -c '
 		        
-		            mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-		            mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-		            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-		            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-		            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-		            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-		            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
-		            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev 2>/dev/null
+		            mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+		            mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+		            mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+		            mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+                    mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+		            mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+		            mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+		            mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
+		            mountpoint -q /run/udev   || mount --bind /run/udev /run/udev     2>/dev/null
 		            mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
 		        
 		            if [ -e /dev/zram0 ]; then
@@ -1185,6 +1198,7 @@ EOF
 		            umount -l /dev         2>/dev/null || true
 		            umount -l /sys         2>/dev/null || true
 		            umount -l /proc        2>/dev/null || true
+                    umount -l /tmp         2>/dev/null || true
 		        '
 		        $CHARD_ROOT/bin/error_color
 		        killall -9 chard_volume 2>/dev/null
