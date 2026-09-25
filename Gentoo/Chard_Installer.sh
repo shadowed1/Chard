@@ -344,6 +344,8 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
     sleep 0.2
+    sudo umount -l "$CHARD_ROOT/tmp"                                2>/dev/null || true
+    sleep 0.2
     sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
@@ -354,7 +356,7 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.2
-    sudo setfacl -Rb /run/chrome 2>/dev/null
+    sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
     sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
@@ -377,6 +379,8 @@ cleanup_chroot() {
     sleep 0.2
     sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
     sleep 0.2
+    sudo umount -l "$CHARD_ROOT/tmp"                                2>/dev/null || true
+    sleep 0.2
     $CHARD_ROOT/bin/chard_unmount 2>/dev/null
     $CHARD_ROOT/bin/chard_mtp_unmount 2>/dev/null
     sleep 0.2
@@ -396,7 +400,7 @@ cleanup_chroot() {
 	sleep 0.2
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.2
-    sudo setfacl -Rb /run/chrome 2>/dev/null
+    sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
     echo
 }
 
@@ -430,6 +434,8 @@ sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
 sleep 0.2
+sudo umount -l "$CHARD_ROOT/tmp"                                2>/dev/null || true
+sleep 0.2
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/run/user/1000"                      2>/dev/null || true
@@ -440,7 +446,7 @@ sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
-sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
@@ -462,6 +468,8 @@ sleep 0.2
 sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/tmp"                                2>/dev/null || true
 sleep 0.2
 $CHARD_ROOT/bin/chard_unmount 2>/dev/null
 sleep 0.2
@@ -475,7 +483,7 @@ sudo umount -l -f "$CHARD_ROOT/usr/local/bubblepatch/bin/bwrap" 2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
-sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
@@ -497,6 +505,8 @@ sleep 0.2
 sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
+sleep 0.2
+sudo umount -l "$CHARD_ROOT/tmp"                                2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
 sleep 0.2
@@ -514,7 +524,7 @@ sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
-sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
 sudo umount -l "$CHARD_ROOT/run/cras"                           2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/dev/input"                          2>/dev/null || true
@@ -537,6 +547,8 @@ sudo umount -l "$CHARD_ROOT/sys"                                2>/dev/null || t
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/proc"                               2>/dev/null || true
 sleep 0.2
+sudo umount -l "$CHARD_ROOT/tmp"                                2>/dev/null || true
+sleep 0.2
 $CHARD_ROOT/bin/chard_unmount 2>/dev/null
 sleep 0.2
 sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
@@ -555,7 +567,7 @@ sudo umount -l "$CHARD_ROOT/opt/usr/bin" 2>/dev/null || true
 sleep 0.2
 sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
 sleep 0.2
-sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
 echo
 	echo "${YELLOW}Searching for processes running from: $CHARD_ROOT ${RESET}"
     echo ""
@@ -615,6 +627,8 @@ sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.2
+        sudo umount -l "$CHARD_ROOT/tmp"        2>/dev/null || true
+        sleep 0.2
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -627,7 +641,7 @@ sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
         sleep 0.2
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.2
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
         echo
         sudo umount -l "$CHARD_ROOT/run/cras"   2>/dev/null || true
         sleep 0.2
@@ -651,6 +665,8 @@ sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/proc"       2>/dev/null || true
         sleep 0.2
+        sudo umount -l "$CHARD_ROOT/tmp"                                2>/dev/null || true
+        sleep 0.2
         sudo umount -l "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null || true
         sleep 0.2
         sudo umount -l "$CHARD_ROOT/run/user/1000" 2>/dev/null || true
@@ -663,7 +679,7 @@ sudo find "$CHARD_ROOT" -mindepth 1 -xdev -depth \
         sleep 0.2
         sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
         sleep 0.2
-        sudo setfacl -Rb /run/chrome 2>/dev/null
+        sudo setfacl -Rb /run/chrome 2>/dev/null # Could block teardown
         echo
         echo "${RESET}${YELLOW}Chard safely unmounted${RESET}"
         echo
@@ -1769,13 +1785,14 @@ sudo touch "$CHARD_ROOT/var/lib/portage/world"
 
 sudo chroot $CHARD_ROOT /bin/bash -c "
 
-    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /dev/input  || mount --bind /dev/input 2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
+    mountpoint -q /proc       || mount -t proc proc /proc         2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys          2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev  2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm    2>/dev/null
+    mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp        2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts  2>/dev/null
+    mountpoint -q /dev/input  || mount --bind /dev/input          2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl   2>/dev/null
     mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
 
                         
@@ -1814,6 +1831,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     umount -l /dev         2>/dev/null || true
     umount -l /sys         2>/dev/null || true
     umount -l /proc        2>/dev/null || true
+    umount -l /tmp         2>/dev/null || true
 "
 
 sudo mv "$CHARD_ROOT/usr/lib/libcrypt.so" "$CHARD_ROOT/usr/lib/libcrypt.so.bak" 2>/dev/null
@@ -1822,13 +1840,14 @@ echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/
 
 sudo chroot $CHARD_ROOT /bin/bash -c "
 
-                        mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-                        mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-                        mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-                        mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-                        mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-                        mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-                        mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+                        mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+                        mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+                        mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+                        mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+                        mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+                        mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+                        mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+                        mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
                         mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
                     
                         if [ -e /dev/zram0 ]; then
@@ -1855,48 +1874,47 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         groupdel video 2>/dev/null
                         groupdel input 2>/dev/null
                         groupdel lp 2>/dev/null
-                        
-                        getent group 1000 >/dev/null || groupadd -g 1000 \$CHARD_USER 2>/dev/null
-                        getent group 601  >/dev/null   || groupadd -g 601 wayland 2>/dev/null
-                        getent group 602  >/dev/null   || groupadd -g 602 arc-bridge 2>/dev/null
-                        getent group 20205 >/dev/null  || groupadd -g 20205 arc-keymintd 2>/dev/null
-                        getent group 604  >/dev/null   || groupadd -g 604 arc-sensor 2>/dev/null
-                        getent group 665357 >/dev/null || groupadd -g 665357 android-everybody 2>/dev/null
-                        getent group 18   >/dev/null   || groupadd -g 18 audio 2>/dev/null
-                        getent group 222  >/dev/null   || groupadd -g 222 input 2>/dev/null
-                        getent group 7    >/dev/null   || groupadd -g 7 lp 2>/dev/null
-                        getent group 27   >/dev/null   || groupadd -g 27 video 2>/dev/null
-                        getent group 423  >/dev/null   || groupadd -g 423 bluetooth-audio 2>/dev/null
-                        getent group 600  >/dev/null   || groupadd -g 600 cras 2>/dev/null
-                        getent group 85   >/dev/null   || groupadd -g 85 usb 2>/dev/null
-                        getent group 20162 >/dev/null  || groupadd -g 20162 traced-producer 2>/dev/null
-                        getent group 20164 >/dev/null  || groupadd -g 20164 traced-consumer 2>/dev/null
-                        getent group 1001 >/dev/null   || groupadd -g 1001 chronos-access 2>/dev/null
-                        getent group 240  >/dev/null   || groupadd -g 240 brltty 2>/dev/null
-                        getent group 20150 >/dev/null  || groupadd -g 20150 arcvm-boot-notification-server 2>/dev/null
-                        getent group 20189 >/dev/null  || groupadd -g 20189 arc-mojo-proxy 2>/dev/null
-                        getent group 20152 >/dev/null  || groupadd -g 20152 arc-host-clock 2>/dev/null
-                        getent group 608  >/dev/null   || groupadd -g 608 midis 2>/dev/null
-                        getent group 415  >/dev/null   || groupadd -g 415 suzy-q 2>/dev/null
-                        getent group 612  >/dev/null   || groupadd -g 612 ml-core 2>/dev/null
-                        getent group 311  >/dev/null   || groupadd -g 311 fuse-archivemount 2>/dev/null
-                        getent group 20137 >/dev/null  || groupadd -g 20137 crash 2>/dev/null
-                        getent group 419  >/dev/null   || groupadd -g 419 crash-access 2>/dev/null
-                        getent group 420  >/dev/null   || groupadd -g 420 crash-user-access 2>/dev/null
-                        getent group 304  >/dev/null   || groupadd -g 304 fuse-drivefs 2>/dev/null
-                        getent group 20215 >/dev/null  || groupadd -g 20215 regmond_senders 2>/dev/null
-                        getent group 603  >/dev/null   || groupadd -g 603 arc-camera 2>/dev/null
-                        getent group 20042 >/dev/null  || groupadd -g 20042 camera 2>/dev/null
-                        getent group 208  >/dev/null   || groupadd -g 208 pkcs11 2>/dev/null
-                        getent group 303  >/dev/null   || groupadd -g 303 policy-readers 2>/dev/null
-                        getent group 20132 >/dev/null  || groupadd -g 20132 arc-keymasterd 2>/dev/null
-                        getent group 605  >/dev/null   || groupadd -g 605 debugfs-access 2>/dev/null
-                        getent group 250 >/dev/null || groupadd -g 250 portage 2>/dev/null
-                        getent group steam >/dev/null || groupadd -g 20001 steam 2>/dev/null
-                        getent group render >/dev/null || groupadd -g 989 render 2>/dev/null
-                        getent group 222  >/dev/null    || groupadd -g 222 input 2>/dev/null
-                        getent group 403 >/dev/null     || groupadd -g 403 hidraw 2>/dev/null
-                        getent group 213 >/dev/null     || groupadd -g 213 cros-disks 2>/dev/null
+
+                        getent group 7      >/dev/null || groupadd -g 7      lp                             2>/dev/null
+                        getent group 18     >/dev/null || groupadd -g 18     audio                          2>/dev/null
+                        getent group 27     >/dev/null || groupadd -g 27     video                          2>/dev/null
+                        getent group 85     >/dev/null || groupadd -g 85     usb                            2>/dev/null
+                        getent group 208    >/dev/null || groupadd -g 208    pkcs11                         2>/dev/null
+                        getent group 213    >/dev/null || groupadd -g 213    cros-disks                     2>/dev/null
+                        getent group 222    >/dev/null || groupadd -g 222    input                          2>/dev/null
+                        getent group 240    >/dev/null || groupadd -g 240    brltty                         2>/dev/null
+                        getent group 250    >/dev/null || groupadd -g 250    portage                        2>/dev/null
+                        getent group 303    >/dev/null || groupadd -g 303    policy-readers                 2>/dev/null
+                        getent group 304    >/dev/null || groupadd -g 304    fuse-drivefs                   2>/dev/null
+                        getent group 311    >/dev/null || groupadd -g 311    fuse-archivemount              2>/dev/null
+                        getent group 403    >/dev/null || groupadd -g 403    hidraw                         2>/dev/null
+                        getent group 415    >/dev/null || groupadd -g 415    suzy-q                         2>/dev/null
+                        getent group 419    >/dev/null || groupadd -g 419    crash-access                   2>/dev/null
+                        getent group 420    >/dev/null || groupadd -g 420    crash-user-access              2>/dev/null
+                        getent group 423    >/dev/null || groupadd -g 423    bluetooth-audio                2>/dev/null
+                        getent group 600    >/dev/null || groupadd -g 600    cras                           2>/dev/null
+                        getent group 601    >/dev/null || groupadd -g 601    wayland                        2>/dev/null
+                        getent group 602    >/dev/null || groupadd -g 602    arc-bridge                     2>/dev/null
+                        getent group 603    >/dev/null || groupadd -g 603    arc-camera                     2>/dev/null
+                        getent group 604    >/dev/null || groupadd -g 604    arc-sensor                     2>/dev/null
+                        getent group 605    >/dev/null || groupadd -g 605    debugfs-access                 2>/dev/null
+                        getent group 608    >/dev/null || groupadd -g 608    midis                          2>/dev/null
+                        getent group 612    >/dev/null || groupadd -g 612    ml-core                        2>/dev/null
+                        getent group render >/dev/null || groupadd -g 989    render                         2>/dev/null
+                        getent group 1000   >/dev/null || groupadd -g 1000 \$CHARD_USER                     2>/dev/null
+                        getent group 1001   >/dev/null || groupadd -g 1001   chronos-access                 2>/dev/null
+                        getent group steam  >/dev/null || groupadd -g 20001  steam                          2>/dev/null
+                        getent group 20042  >/dev/null || groupadd -g 20042  camera                         2>/dev/null
+                        getent group 20132  >/dev/null || groupadd -g 20132  arc-keymasterd                 2>/dev/null
+                        getent group 20137  >/dev/null || groupadd -g 20137  crash                          2>/dev/null
+                        getent group 20150  >/dev/null || groupadd -g 20150  arcvm-boot-notification-server 2>/dev/null
+                        getent group 20152  >/dev/null || groupadd -g 20152  arc-host-clock                 2>/dev/null
+                        getent group 20162  >/dev/null || groupadd -g 20162  traced-producer                2>/dev/null
+                        getent group 20164  >/dev/null || groupadd -g 20164  traced-consumer                2>/dev/null
+                        getent group 20189  >/dev/null || groupadd -g 20189  arc-mojo-proxy                 2>/dev/null
+                        getent group 20205  >/dev/null || groupadd -g 20205  arc-keymintd                   2>/dev/null
+                        getent group 20215  >/dev/null || groupadd -g 20215  regmond_senders                2>/dev/null
+                        getent group 665357 >/dev/null || groupadd -g 665357 android-everybody              2>/dev/null
 
                         if ! id \"\$CHARD_USER\" &>/dev/null; then
                             useradd -u 1000 -g 1000 -d \"/\$CHARD_HOME\" -M -s /bin/bash \"\$CHARD_USER\"
@@ -1926,19 +1944,21 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
                         umount -l /dev         2>/dev/null || true
                         umount -l /sys         2>/dev/null || true
                         umount -l /proc        2>/dev/null || true
+                        umount -l /tmp         2>/dev/null || true
                     "
                 
 echo "$CHARD_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee $CHARD_ROOT/etc/sudoers.d/$CHARD_USER > /dev/null
 
 sudo chroot $CHARD_ROOT /bin/bash -c "
 
-    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+    mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+    mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
     mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
 
     if [ -e /dev/zram0 ]; then
@@ -1993,6 +2013,7 @@ sudo chroot $CHARD_ROOT /bin/bash -c "
     umount -l /dev         2>/dev/null || true
     umount -l /sys         2>/dev/null || true
     umount -l /proc        2>/dev/null || true
+    umount -l /tmp         2>/dev/null || true
 "
 
 ARCH=$(uname -m)
@@ -2537,13 +2558,14 @@ else
 fi
 
 sudo chroot "$CHARD_ROOT" /bin/bash -c '
-    mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
-    mountpoint -q /sys        || mount -t sysfs sys /sys 2>/dev/null
-    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev 2>/dev/null
-    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm 2>/dev/null
-    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts 2>/dev/null
-    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl 2>/dev/null
-    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus 2>/dev/null
+    mountpoint -q /proc       || mount -t proc proc /proc             2>/dev/null
+    mountpoint -q /sys        || mount -t sysfs sys /sys              2>/dev/null
+    mountpoint -q /dev        || mount -t devtmpfs devtmpfs /dev      2>/dev/null
+    mountpoint -q /dev/shm    || mount -t tmpfs tmpfs /dev/shm        2>/dev/null
+    mountpoint -q /tmp        || mount -t tmpfs tmpfs /tmp            2>/dev/null
+    mountpoint -q /dev/pts    || mount -t devpts devpts /dev/pts      2>/dev/null
+    mountpoint -q /etc/ssl    || mount --bind /etc/ssl /etc/ssl       2>/dev/null
+    mountpoint -q /run/dbus   || mount --bind /run/dbus /run/dbus     2>/dev/null
     mountpoint -q /run/chrome || mount --bind /run/chrome /run/chrome 2>/dev/null
 
     if [ -e /dev/zram0 ]; then
@@ -2585,6 +2607,7 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
     umount -l /dev         2>/dev/null || true
     umount -l /sys         2>/dev/null || true
     umount -l /proc        2>/dev/null || true
+    umount -l /tmp         2>/dev/null || true
 '
 chard_unmount
 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
