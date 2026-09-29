@@ -308,9 +308,7 @@ cd /tmp/gpu-screen-recorder-ui
 meson setup build \
   --prefix=/usr \
   --libdir=/usr/lib \
-  --buildtype=release \
-  -Dstrip=true \
-  -Dportal=false
+  --buildtype=release
 
 meson compile -C build
 sudo meson install -C build
