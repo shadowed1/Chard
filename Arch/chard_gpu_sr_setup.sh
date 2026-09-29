@@ -19,7 +19,8 @@ fi
 sudo pacman -R --noconfirm gpu-screen-recorder-ui 2>/dev/null
 sudo pacman -R --noconfirm gpu-screen-recorder-notification 2>/dev/null
 sudo pacman -R --noconfirm gpu-screen-recorder 2>/dev/null
-sudo pacman -S --nodeps --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification --overwrite '*'
+sudo pacman -R --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification 2>/dev/null
+
 #sudo -E pacman -S --needed --noconfirm git gcc make meson ninja pkgconf python
 #sudo -E pacman -S --needed --noconfirm ffmpeg libva libva-utils libdrm mesa mesa-demos vulkan-headers vulkan-icd-loader
 #sudo -E pacman -S --needed --noconfirm wayland wayland-protocols libx11 libxcomposite libxrandr libxfixes libxdamage libpulse pipewire dbus libcap
@@ -294,6 +295,24 @@ Terminal=false
 StartupNotify=true
 Categories=AudioVideo;Recorder;
 DESKTOP_EOF
+
+cd /tmp
+sudo rm -rf /tmp/gpu-screen-recorder* 2>/dev/null
+mkdir -p /tmp/gpu-screen-recorder-ui
+wget -c -P /tmp/ https://dec05eba.com/snapshot/gpu-screen-recorder-ui.git.1.13.9.tar.gz
+tar -xf /tmp/gpu-screen-recorder-ui.git.1.13.9.tar.gz -C /tmp/gpu-screen-recorder-ui
+cd /tmp/gpu-screen-recorder-ui
+
+meson setup build \
+  --prefix=/usr \
+  --libdir=/usr/lib \
+  --buildtype=release \
+  -Dstrip=true \
+  -Dportal=false
+
+meson compile -C build
+sudo meson install -C build
+hash -r
 
 echo
 sudo groupmod -g 27 video
