@@ -19,7 +19,9 @@ fi
 sudo pacman -R --noconfirm gpu-screen-recorder-ui 2>/dev/null
 sudo pacman -R --noconfirm gpu-screen-recorder-notification 2>/dev/null
 sudo pacman -R --noconfirm gpu-screen-recorder 2>/dev/null
-sudo pacman -R --noconfirm gpu-screen-recorder-ui gpu-screen-recorder-notification 2>/dev/null
+sudo pacman -R --noconfirm gpu-screen-recorder-ui 2>/dev/null
+sudo pacman -S --nodeps --noconfirm gpu-screen-recorder-notification --overwrite '*' 2>/dev/null
+
 
 #sudo -E pacman -S --needed --noconfirm git gcc make meson ninja pkgconf python
 #sudo -E pacman -S --needed --noconfirm ffmpeg libva libva-utils libdrm mesa mesa-demos vulkan-headers vulkan-icd-loader
