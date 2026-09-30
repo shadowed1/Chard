@@ -431,6 +431,8 @@ run_checkpoint 2 "sudo -E emerge app-portage/gentoolkit" checkpoint_2
 
 checkpoint_3() {
     retry_emerge 'USE="-gui" sudo -E emerge -1v dev-build/cmake'
+    rm -rf /var/tmp/portage/dev-build/cmake-* 2>/dev/null
+    eclean-dist -d
 }
 run_checkpoint 3 'USE="-gui" sudo -E emerge -1v dev-build/cmake' checkpoint_3
 
