@@ -6,12 +6,11 @@ wayland_sockets=("$XDG_RUNTIME_DIR"/wayland-*)
 shopt -u nullglob
 
 if [[ ${#wayland_sockets[@]} -eq 0 ]]; then
-    echo "Error: No Wayland sockets found in $XDG_RUNTIME_DIR" >&2
+    echo "Error: No Wayland sockets found" >&2
     SOMMELIER_DISPLAY="$XDG_RUNTIME_DIR/wayland-0"
 fi
 
-SOMMELLIER_DISPLAY="${wayland_sockets[0]}"
-SOMMELIER_DISPLAY="$XDG_RUNTIME_DIR/wayland-0"
+SOMMELIER_DISPLAY="${wayland_sockets[0]}"
 SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 ARCH="$(uname -m)"
 SOMMELIER_CMD=(
