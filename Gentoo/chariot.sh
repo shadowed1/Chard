@@ -55,6 +55,44 @@ if [[ "$1" == "reset" ]]; then
     reset
 fi
 
+retry_emerge() {
+    local max_retries=10
+    local retry_count=0
+    local wait_time=5
+    local cmd="$@"
+    
+    while [ $retry_count -lt $max_retries ]; do
+        echo "${MAGENTA}Attempt $((retry_count + 1)) / $max_retries: ${RESET}"
+        echo
+    
+        if eval "$cmd"; then
+            echo "${GREEN}Emerge operation succeeded${RESET}"
+            sleep 0.1
+            return 0
+        else
+            retry_count=$((retry_count + 1))
+            
+            if [ $retry_count -lt $max_retries ]; then
+                echo "${YELLOW}Attempt $retry_count failed. Waiting ${wait_time}s before retry...${RESET}"
+                sleep $wait_time
+                
+                wait_time=$((wait_time * 2))
+                [ $wait_time -gt 60 ] && wait_time=60
+                
+                sudo -E rm -rf /var/tmp/portage/* 2>/dev/null
+                sudo -E eclean-dist -d 2>/dev/null || true
+            else
+                echo "${RED}$max_retries attempts failed. Skipping this package.${RESET}"
+                sleep 0.1
+                return 1
+            fi
+        fi
+    done
+    
+    return 1
+}
+
+
 detect_gpu_freq() {
     GPU_FREQ_PATH=""
     GPU_MAX_FREQ=""
@@ -392,11 +430,10 @@ checkpoint_2() {
 run_checkpoint 2 "sudo -E emerge app-portage/gentoolkit" checkpoint_2
 
 checkpoint_3() {
-    USE="-gui" sudo -E emerge -1 dev-build/cmake
-    rm -rf /var/tmp/portage/dev-build/cmake-*
-    eclean-dist -d
+    retry_emerge 'USE="-gui" sudo -E emerge -1v dev-build/cmake'
 }
-run_checkpoint 3 'USE="-gui" sudo -E emerge -1 dev-build/cmake' checkpoint_3
+run_checkpoint 3 'USE="-gui" sudo -E emerge -1v dev-build/cmake' checkpoint_3
+
 
 checkpoint_4() {
     sudo -E emerge app-misc/resolve-march-native
