@@ -1,8 +1,6 @@
 #!/bin/bash
 # Thanks to Days for enabling native mouse capture with --application-id=org.chromium.arc.session.1
 #export WAYLAND_DEBUG=1
-
-bash
 shopt -s nullglob
 wayland_sockets=("$XDG_RUNTIME_DIR"/wayland-*)
 shopt -u nullglob
