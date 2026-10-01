@@ -478,6 +478,21 @@ checkpoint_10() {
 run_checkpoint 10 "sudo -E emerge net-misc/curl" checkpoint_10
 
 checkpoint_11() {
+    if ! getent hosts proxy.golang.org >/dev/null 2>&1; then
+        echo "DNS lookup for proxy.golang.org failed."
+        echo "Temporarily switching DNS..."
+    
+        sudo sh -c 'printf "nameserver 1.1.1.1\nnameserver 8.8.8.8\n" > /etc/resolv.conf'
+    
+        if getent hosts proxy.golang.org >/dev/null 2>&1; then
+            echo "DNS fix successful."
+        else
+            echo "DNS failure - If this is a VM, please view your host resolv.conf settings"
+        fi
+    else
+        echo "DNS for proxy.golang.org is working."
+    fi
+    
     retry_emerge "sudo -E emerge app-misc/ca-certificates"
     sudo update-ca-certificates
     retry_emerge 'USE="curl" sudo -E emerge dev-vcs/git'    
