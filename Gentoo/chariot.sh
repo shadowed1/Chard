@@ -419,14 +419,14 @@ checkpoint_1() {
     sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc > /dev/null 2>&1
     ARCH="arm64"
     sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc > /dev/null 2>&1
-    sudo -E emerge dev-build/make
-    rm -rf /var/tmp/portage/dev-build/make-*
+    retry_emerge "sudo -E emerge dev-build/make"
+    rm -rf /var/tmp/portage/dev-build/make-* 2>/dev/null
 }
 run_checkpoint 1 "sudo -E emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
     retry_emerge "sudo -E emerge --noreplace app-portage/gentoolkit"
-    rm -rf /var/tmp/portage/app-portage/gentoolkit-*
+    rm -rf /var/tmp/portage/app-portage/gentoolkit-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 2 "sudo -E emerge app-portage/gentoolkit" checkpoint_2
@@ -438,132 +438,126 @@ checkpoint_3() {
 }
 run_checkpoint 3 'USE="-gui" sudo -E emerge -1v dev-build/cmake' checkpoint_3
 
-
 checkpoint_4() {
-    sudo -E emerge app-misc/resolve-march-native
-    rm -rf /var/tmp/portage/app-misc/resolve-march-native-*
+    retry_emerge "sudo -E emerge app-misc/resolve-march-native"
+    rm -rf /var/tmp/portage/app-misc/resolve-march-native-* 2>/dev/null
     eclean-dist -d
 }
-run_checkpoint 4 "sudo -E emerge resolve-march-native" checkpoint_4
+run_checkpoint 4 "sudo -E emerge app-misc/resolve-march-native" checkpoint_4
 
 checkpoint_5() {
-    sudo -E emerge dev-libs/gmp
-    rm -rf /var/tmp/portage/dev-libs/gmp-*
+    retry_emerge "sudo -E emerge dev-libs/gmp"
+    rm -rf /var/tmp/portage/dev-libs/gmp-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 5 "sudo -E emerge dev-libs/gmp" checkpoint_5
 
 checkpoint_6() {
-    sudo -E emerge dev-libs/mpfr
-    rm -rf /var/tmp/portage/dev-libs/mpfr-*
+    retry_emerge "sudo -E emerge dev-libs/mpfr"
+    rm -rf /var/tmp/portage/dev-libs/mpfr-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 6 "sudo -E emerge dev-libs/mpfr" checkpoint_6
 
 checkpoint_7() {
-    sudo -E emerge sys-devel/binutils
-    rm -rf /var/tmp/portage/sys-devel/binutils-*
+    retry_emerge "sudo -E emerge sys-devel/binutils"
+    rm -rf /var/tmp/portage/sys-devel/binutils-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 7 "sudo -E emerge sys-devel/binutils" checkpoint_7
 
 checkpoint_8() {
-    sudo -E emerge sys-apps/diffutils
-    rm -rf /var/tmp/portage/sys-apps/diffutils-*
+    retry_emerge "sudo -E emerge sys-apps/diffutils"
+    rm -rf /var/tmp/portage/sys-apps/diffutils-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 8 "sudo -E emerge sys-apps/diffutils" checkpoint_8
 
 checkpoint_9() {
-    sudo -E emerge dev-libs/openssl
-    rm -rf /var/tmp/portage/dev-libs/openssl-*
+    retry_emerge "sudo -E emerge dev-libs/openssl"
+    rm -rf /var/tmp/portage/dev-libs/openssl-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 9 "sudo -E emerge dev-libs/openssl" checkpoint_9
 
 checkpoint_10() {
-    sudo -E emerge net-misc/curl
-    rm -rf /var/tmp/portage/net-misc/curl-*
+    retry_emerge "sudo -E emerge net-misc/curl"
+    rm -rf /var/tmp/portage/net-misc/curl-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 10 "sudo -E emerge net-misc/curl" checkpoint_10
 
 checkpoint_11() {
-    sudo -E emerge app-misc/ca-certificates
+    retry_emerge "sudo -E emerge app-misc/ca-certificates"
     sudo update-ca-certificates
-    USE="curl" sudo -E emerge dev-vcs/git
-    rm -rf /var/tmp/portage/dev-vcs/git-*
+    retry_emerge 'USE="curl" sudo -E emerge dev-vcs/git'
+    rm -rf /var/tmp/portage/dev-vcs/git-* 2>/dev/null
     eclean-dist -d
     [ -d /usr/libexec/git-core ] && \
     [ ! -e /usr/lib/git-core ] && \
     ln -s /usr/libexec/git-core /usr/lib/git-core
     GIT_CURL_VERBOSE=1 GIT_TRACE=1 git ls-remote https://github.com/torvalds/linux.git HEAD 2>&1 | head -50
-    GIT_EXEC_PATH=/usr/libexec/git-core
+    export GIT_EXEC_PATH=/usr/libexec/git-core
 }
 run_checkpoint 11 "sudo -E emerge dev-vcs/git" checkpoint_11
 
 checkpoint_12() {
-    sudo -E emerge sys-apps/shadow
-    sudo -E emerge sys-apps/coreutils
-    rm -rf /var/tmp/portage/sys-apps/shadow-*
-    rm -rf /var/tmp/portage/sys-apps/coreutils-*
+    retry_emerge "sudo -E emerge sys-apps/shadow"
+    retry_emerge "sudo -E emerge sys-apps/coreutils"
+    rm -rf /var/tmp/portage/sys-apps/shadow-* 2>/dev/null
+    rm -rf /var/tmp/portage/sys-apps/coreutils-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 12 "sudo -E emerge sys-apps/coreutils" checkpoint_12
 
-#checkpoint_13() {
-#    sudo -E emerge app-misc/fastfetch
-#    rm -rf /var/tmp/portage/app-misc/fastfetch-*
-#    eclean-dist -d
-#}
-#run_checkpoint 13 "sudo -E emerge app-misc/fastfetch" checkpoint_13
+# checkpoint_13 skipped
 
 checkpoint_14() {
-    sudo -E emerge dev-lang/perl
-    rm -rf /var/tmp/portage/dev-lang/perl-*
+    retry_emerge "sudo -E emerge dev-lang/perl"
+    rm -rf /var/tmp/portage/dev-lang/perl-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 14 "sudo -E emerge dev-lang/perl" checkpoint_14
 
 checkpoint_15() {
-    sudo -E emerge dev-perl/Capture-Tiny
-    rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-*
+    retry_emerge "sudo -E emerge dev-perl/Capture-Tiny"
+    rm -rf /var/tmp/portage/dev-perl/Capture-Tiny-* 2>/dev/null
     eclean-dist -d
     sudo -E perl-cleaner --all
 }
 run_checkpoint 15 "sudo -E emerge dev-perl/Capture-Tiny" checkpoint_15
 
 checkpoint_16() {
-    sudo -E emerge dev-perl/Try-Tiny
-    rm -rf /var/tmp/portage/dev-perl/Try-Tiny-*
+    retry_emerge "sudo -E emerge dev-perl/Try-Tiny"
+    rm -rf /var/tmp/portage/dev-perl/Try-Tiny-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 16 "sudo -E emerge dev-perl/Try-Tiny" checkpoint_16
 
 checkpoint_17() {
-    sudo -E emerge dev-perl/Config-AutoConf
-    rm -rf /var/tmp/portage/dev-perl/Config-AutoConf-*
+    retry_emerge "sudo -E emerge dev-perl/Config-AutoConf"
+    rm -rf /var/tmp/portage/dev-perl/Config-AutoConf-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 17 "sudo -E emerge dev-perl/Config-AutoConf" checkpoint_17
 
 checkpoint_18() {
-    sudo -E emerge dev-perl/Test-Fatal
-    rm -rf /var/tmp/portage/dev-perl/Test-Fatal-*
+    retry_emerge "sudo -E emerge dev-perl/Test-Fatal"
+    rm -rf /var/tmp/portage/dev-perl/Test-Fatal-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 18 "sudo -E emerge dev-perl/Test-Fatal" checkpoint_18
 
 checkpoint_19() {
-    sudo -E emerge sys-apps/findutils
-    rm -rf /var/tmp/portage/sys-apps/findutils-*
+    retry_emerge "sudo -E emerge sys-apps/findutils"
+    rm -rf /var/tmp/portage/sys-apps/findutils-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 19 "sudo -E emerge sys-apps/findutils" checkpoint_19
 
 checkpoint_20() {
-    sudo -E emerge dev-libs/elfutils
-    rm -rf /var/tmp/portage/dev-libs/elfutils-*
+    retry_emerge "sudo -E emerge dev-libs/elfutils"
+    rm -rf /var/tmp/portage/dev-libs/elfutils-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 20 "sudo -E emerge dev-libs/elfutils" checkpoint_20
@@ -595,158 +589,158 @@ checkpoint_21() {
 run_checkpoint 21 "build and install kernel + modules" checkpoint_21
 
 checkpoint_22() {
-    sudo -E emerge dev-lang/python
-    rm -rf /var/tmp/portage/dev-lang/python-*
+    retry_emerge "sudo -E emerge dev-lang/python"
+    rm -rf /var/tmp/portage/dev-lang/python-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 22 "sudo -E emerge dev-lang/python" checkpoint_22
 
 checkpoint_23() {
-    sudo -E emerge dev-build/meson
-    rm -rf /var/tmp/portage/dev-build/meson-*
+    retry_emerge "sudo -E emerge dev-build/meson"
+    rm -rf /var/tmp/portage/dev-build/meson-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 23 "sudo -E emerge dev-build/meson" checkpoint_23
 
 checkpoint_24() {
-    USE="-tiff" sudo -E emerge media-libs/libwebp
-    USE="-truetype" sudo -E emerge -1 dev-python/pillow
-    sudo -E emerge media-libs/libwebp
-    rm -rf /var/tmp/portage/dev-python/pillow-*
-    rm -rf /var/tmp/portage/media-libs/libwebp-*
+    retry_emerge 'USE="-tiff" sudo -E emerge media-libs/libwebp'
+    retry_emerge 'USE="-truetype" sudo -E emerge -1 dev-python/pillow'
+    retry_emerge "sudo -E emerge media-libs/libwebp"
+    rm -rf /var/tmp/portage/dev-python/pillow-* 2>/dev/null
+    rm -rf /var/tmp/portage/media-libs/libwebp-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 24 "sudo -E emerge dev-python/pillow and libwebp" checkpoint_24
 
 checkpoint_25() {
-    sudo -E emerge media-libs/harfbuzz
-    rm -rf /var/tmp/portage/media-libs/harfbuzz-*
+    retry_emerge "sudo -E emerge media-libs/harfbuzz"
+    rm -rf /var/tmp/portage/media-libs/harfbuzz-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 25 "sudo -E emerge media-libs/harfbuzz" checkpoint_25
 
 checkpoint_26() {
-    sudo -E emerge dev-libs/glib
-    rm -rf /var/tmp/portage/dev-libs/glib-*
+    retry_emerge "sudo -E emerge dev-libs/glib"
+    rm -rf /var/tmp/portage/dev-libs/glib-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 26 "sudo -E emerge dev-libs/glib" checkpoint_26
 
 checkpoint_27() {
-    sudo -E emerge dev-util/pkgconf
-    rm -rf /var/tmp/portage/dev-util/pkgconf-*
+    retry_emerge "sudo -E emerge dev-util/pkgconf"
+    rm -rf /var/tmp/portage/dev-util/pkgconf-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 27 "sudo -E emerge dev-util/pkgconf" checkpoint_27
 
 checkpoint_28() {
-    sudo -E emerge dev-cpp/gtest
-    rm -rf /var/tmp/portage/dev-cpp/gtest-*
+    retry_emerge "sudo -E emerge dev-cpp/gtest"
+    rm -rf /var/tmp/portage/dev-cpp/gtest-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 28 "sudo -E emerge dev-cpp/gtest" checkpoint_28
 
 checkpoint_29() {
-    sudo -E emerge dev-util/gtest-parallel
-    rm -rf /var/tmp/portage/dev-util/gtest-parallel-*
+    retry_emerge "sudo -E emerge dev-util/gtest-parallel"
+    rm -rf /var/tmp/portage/dev-util/gtest-parallel-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 29 "sudo -E emerge dev-util/gtest-parallel" checkpoint_29
 
 checkpoint_30() {
-    sudo -E emerge dev-util/re2c
-    rm -rf /var/tmp/portage/dev-util/re2c-*
+    retry_emerge "sudo -E emerge dev-util/re2c"
+    rm -rf /var/tmp/portage/dev-util/re2c-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 30 "sudo -E emerge dev-util/re2c" checkpoint_30
 
 checkpoint_31() {
-    sudo -E emerge dev-build/ninja
-    rm -rf /var/tmp/portage/dev-build/ninja-*
+    retry_emerge "sudo -E emerge dev-build/ninja"
+    rm -rf /var/tmp/portage/dev-build/ninja-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 31 "sudo -E emerge dev-build/ninja" checkpoint_31
 
 checkpoint_32() {
-    sudo -E emerge app-text/docbook2X
-    rm -rf /var/tmp/portage/app-text/docbook2X-*
+    retry_emerge "sudo -E emerge app-text/docbook2X"
+    rm -rf /var/tmp/portage/app-text/docbook2X-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 32 "sudo -E emerge app-text/docbook2X" checkpoint_32
 
 checkpoint_33() {
-    sudo -E emerge app-text/build-docbook-catalog
-    rm -rf /var/tmp/portage/app-text/build-docbook-catalog-*
+    retry_emerge "sudo -E emerge app-text/build-docbook-catalog"
+    rm -rf /var/tmp/portage/app-text/build-docbook-catalog-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 33 "sudo -E emerge app-text/build-docbook-catalog" checkpoint_33
 
 checkpoint_34() {
-    sudo -E emerge dev-util/gtk-doc
-    rm -rf /var/tmp/portage/dev-util/gtk-doc-*
+    retry_emerge "sudo -E emerge dev-util/gtk-doc"
+    rm -rf /var/tmp/portage/dev-util/gtk-doc-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 34 "sudo -E emerge dev-util/gtk-doc" checkpoint_34
 
 checkpoint_35() {
-    sudo -E emerge sys-libs/zlib
-    rm -rf /var/tmp/portage/sys-libs/zlib-*
+    retry_emerge "sudo -E emerge sys-libs/zlib"
+    rm -rf /var/tmp/portage/sys-libs/zlib-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 35 "sudo -E emerge sys-libs/zlib" checkpoint_35
 
 checkpoint_36() {
-    sudo -E emerge dev-libs/libunistring
-    rm -rf /var/tmp/portage/dev-libs/libunistring-*
+    retry_emerge "sudo -E emerge dev-libs/libunistring"
+    rm -rf /var/tmp/portage/dev-libs/libunistring-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 36 "sudo -E emerge dev-libs/libunistring" checkpoint_36
 
 checkpoint_37() {
-    sudo -E emerge sys-apps/file
-    rm -rf /var/tmp/portage/sys-apps/file-*
+    retry_emerge "sudo -E emerge sys-apps/file"
+    rm -rf /var/tmp/portage/sys-apps/file-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 37 "sudo -E emerge sys-apps/file" checkpoint_37
 
 checkpoint_38() {
-    sudo -E emerge kde-frameworks/extra-cmake-modules
-    rm -rf /var/tmp/portage/kde-frameworks/extra-cmake-modules-*
+    retry_emerge "sudo -E emerge kde-frameworks/extra-cmake-modules"
+    rm -rf /var/tmp/portage/kde-frameworks/extra-cmake-modules-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 38 "sudo -E emerge kde-frameworks/extra-cmake-modules" checkpoint_38
 
 checkpoint_39() {
-    sudo -E emerge -j$(nproc) dev-perl/File-LibMagic
-    rm -rf /var/tmp/portage/dev-perl/File-LibMagic-*
+    retry_emerge 'sudo -E emerge -j$(nproc) dev-perl/File-LibMagic'
+    rm -rf /var/tmp/portage/dev-perl/File-LibMagic-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 39 "sudo -E emerge dev-perl/File-LibMagic" checkpoint_39
 
 checkpoint_40() {
-    sudo -E emerge net-libs/libpsl
-    rm -rf /var/tmp/portage/net-libs/libpsl-*
+    retry_emerge "sudo -E emerge net-libs/libpsl"
+    rm -rf /var/tmp/portage/net-libs/libpsl-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 40 "sudo -E emerge net-libs/libpsl" checkpoint_40
 
 checkpoint_41() {
-    sudo -E emerge dev-libs/expat
-    rm -rf /var/tmp/portage/dev-libs/expat-*
+    retry_emerge "sudo -E emerge dev-libs/expat"
+    rm -rf /var/tmp/portage/dev-libs/expat-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 41 "sudo -E emerge dev-libs/expat" checkpoint_41
 
 checkpoint_42() {
-    sudo -E emerge dev-lang/duktape
-    rm -rf /var/tmp/portage/dev-lang/duktape-*
+    retry_emerge "sudo -E emerge dev-lang/duktape"
+    rm -rf /var/tmp/portage/dev-lang/duktape-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 42 "sudo -E emerge dev-lang/duktape" checkpoint_42
 
 checkpoint_43() {
-    sudo -E emerge app-arch/brotli
-    rm -rf /var/tmp/portage/app-arch/brotli-*
+    retry_emerge "sudo -E emerge app-arch/brotli"
+    rm -rf /var/tmp/portage/app-arch/brotli-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 43 "sudo -E emerge app-arch/brotli" checkpoint_43
@@ -757,8 +751,8 @@ checkpoint_44() {
 run_checkpoint 44 "install rustup" checkpoint_44
 
 checkpoint_45() {
-    sudo -E emerge dev-libs/boehm-gc
-    rm -rf /var/tmp/portage/dev-libs/boehm-gc-*
+    retry_emerge "sudo -E emerge dev-libs/boehm-gc"
+    rm -rf /var/tmp/portage/dev-libs/boehm-gc-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
@@ -769,28 +763,28 @@ checkpoint_46() {
     echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
     SMRT $((PCT_LOAD))
     source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
-    sudo -E emerge sys-auth/polkit
-    rm -rf /var/tmp/portage/sys-auth/polkit-*
+    retry_emerge "sudo -E emerge sys-auth/polkit"
+    rm -rf /var/tmp/portage/sys-auth/polkit-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 46 "sudo -E emerge sys-auth/polkit" checkpoint_46
 
 checkpoint_47() {
-    sudo -E emerge sys-apps/bubblewrap
-    rm -rf /var/tmp/portage/sys-apps/bubblewrap-*
+    retry_emerge "sudo -E emerge sys-apps/bubblewrap"
+    rm -rf /var/tmp/portage/sys-apps/bubblewrap-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
-# Fix for long term
-checkpoint_48() {    
-    sudo -E emerge -v =llvm-core/libclc-20*    
-    sudo -E emerge llvm-runtimes/libcxx
-    sudo -E emerge llvm-runtimes/libcxxabi
-    sudo -E emerge dev-util/spirv-llvm-translator
-    rm -rf /var/tmp/portage/llvm-core/libclc-*
-    rm -rf /var/tmp/portage/llvm-runtimes/libcxx-*
-    rm -rf /var/tmp/portage/llvm-runtimes/libcxxabi-*
-    rm -rf /var/tmp/portage/dev-util/spirv-llvm-translator-*
+
+checkpoint_48() {
+    retry_emerge "sudo -E emerge -v =llvm-core/libclc-20*"
+    retry_emerge "sudo -E emerge llvm-runtimes/libcxx"
+    retry_emerge "sudo -E emerge llvm-runtimes/libcxxabi"
+    retry_emerge "sudo -E emerge dev-util/spirv-llvm-translator"
+    rm -rf /var/tmp/portage/llvm-core/libclc-* 2>/dev/null
+    rm -rf /var/tmp/portage/llvm-runtimes/libcxx-* 2>/dev/null
+    rm -rf /var/tmp/portage/llvm-runtimes/libcxxabi-* 2>/dev/null
+    rm -rf /var/tmp/portage/dev-util/spirv-llvm-translator-* 2>/dev/null
     sudo -E emerge --update --deep --newuse @world
     eclean-dist -d
 }
@@ -799,15 +793,15 @@ run_checkpoint 48 "sudo -E emerge llvm-core/libclc-20" checkpoint_48
 checkpoint_49() {
     SMRT $((PCT_DEFAULT))
     source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
-    sudo -E emerge x11-base/xorg-drivers
-    rm -rf /var/tmp/portage/x11-base/xorg-drivers-*
+    retry_emerge "sudo -E emerge x11-base/xorg-drivers"
+    rm -rf /var/tmp/portage/x11-base/xorg-drivers-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 49 "sudo -E emerge x11-base/xorg-drivers" checkpoint_49
 
 checkpoint_50() {
-    sudo -E emerge x11-base/xorg-server
-    rm -rf /var/tmp/portage/x11-base/xorg-server-*
+    retry_emerge "sudo -E emerge x11-base/xorg-server"
+    rm -rf /var/tmp/portage/x11-base/xorg-server-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 50 "sudo -E emerge x11-base/xorg-server" checkpoint_50
