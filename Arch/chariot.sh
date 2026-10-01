@@ -500,6 +500,21 @@ checkpoint_8() {
 run_checkpoint 8 "sudo -E pacman -S --noconfirm curl" checkpoint_8
 
 checkpoint_9() {
+    if ! getent hosts proxy.golang.org >/dev/null 2>&1; then
+        echo "DNS lookup for proxy.golang.org failed."
+        echo "Temporarily switching DNS..."
+    
+        sudo sh -c 'printf "nameserver 1.1.1.1\nnameserver 8.8.8.8\n" > /etc/resolv.conf'
+    
+        if getent hosts proxy.golang.org >/dev/null 2>&1; then
+            echo "DNS fix successful."
+        else
+            echo "DNS failure - If this is a VM, please view your host resolv.conf settings"
+        fi
+    else
+        echo "DNS for proxy.golang.org is working."
+    fi
+    
     retry_pacman "sudo -E pacman -S --noconfirm git"
     cd ~/
     rm -rf yay 2>/dev/null
