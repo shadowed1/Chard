@@ -4,6 +4,8 @@
 
 `https://wiki.archlinux.org/title/Chrome_OS_devices/Crostini`
 
+`Not functional with baguette. Old LXC based crostini required`
+
 `Using termina without a password`
 
 `ctrl-alt-t:`
