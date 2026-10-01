@@ -60,27 +60,30 @@ retry_emerge() {
     local retry_count=0
     local wait_time=5
     local cmd="$@"
-    
+
     while [ $retry_count -lt $max_retries ]; do
         echo "${MAGENTA}Attempt $((retry_count + 1)) / $max_retries: ${RESET}"
         echo
-    
+
         if eval "$cmd"; then
             echo "${GREEN}Emerge operation succeeded${RESET}"
             sleep 0.1
             return 0
         else
             retry_count=$((retry_count + 1))
-            
+
             if [ $retry_count -lt $max_retries ]; then
                 echo "${YELLOW}Attempt $retry_count failed. Waiting ${wait_time}s before retry...${RESET}"
                 sleep $wait_time
-                
+
                 wait_time=$((wait_time * 2))
                 [ $wait_time -gt 60 ] && wait_time=60
-                
-                sudo -E rm -rf /var/tmp/portage/* 2>/dev/null
-                sudo -E eclean-dist -d 2>/dev/null || true
+
+                echo "${CYAN}Resyncing portage tree and cleaning build state...${RESET}"
+                sudo -E eix-sync --quiet 2>/dev/null || sudo -E emerge --sync 2>/dev/null || true
+                sudo -E eclass-update 2>/dev/null || true
+                sudo -E emerge --metadata 2>/dev/null || true
+                sudo -E rm -rf /var/tmp/portage/* 2>/dev/null || true
             else
                 echo "${RED}$max_retries attempts failed. Skipping this package.${RESET}"
                 sleep 0.1
@@ -88,10 +91,9 @@ retry_emerge() {
             fi
         fi
     done
-    
+
     return 1
 }
-
 
 detect_gpu_freq() {
     GPU_FREQ_PATH=""
@@ -423,7 +425,7 @@ checkpoint_1() {
 run_checkpoint 1 "sudo -E emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
-    sudo -E emerge --noreplace app-portage/gentoolkit
+    retry_emerge "sudo -E emerge --noreplace app-portage/gentoolkit"
     rm -rf /var/tmp/portage/app-portage/gentoolkit-*
     eclean-dist -d
 }
