@@ -402,8 +402,11 @@ run_checkpoint() {
         echo "${RESET}${YELLOW}>${RED}>${RESET}${GREEN}>${RESET}${YELLOW}>${RED}>${RESET}${GREEN}> ${RESET}${CYAN}${BOLD}Checkpoint $step / 155 ($desc) Finished ${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${YELLOW}<${RED}<${RESET}${GREEN}<${RESET}${GREEN}${RESET}${GREEN}"
         echo
 
+        eclean-dist -d
+
         if $SINGLE_STEP && (( step == REQUESTED_STEP )); then
             echo "${GREEN}Single-step completed: exiting after checkpoint $step${RESET}"
+            eclean-dist -d
             exit 0
         fi
 
@@ -807,358 +810,358 @@ checkpoint_50() {
 run_checkpoint 50 "sudo -E emerge x11-base/xorg-server" checkpoint_50
 
 checkpoint_51() {
-    sudo -E emerge x11-base/xorg-apps
-    rm -rf /var/tmp/portage/x11-base/xorg-apps-*
+    retry_emerge "sudo -E emerge x11-base/xorg-apps"
+    rm -rf /var/tmp/portage/x11-base/xorg-apps-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 51 "sudo -E emerge x11-base/xorg-apps" checkpoint_51
 
 checkpoint_52() {
-    sudo -E emerge x11-libs/libX11
-    rm -rf /var/tmp/portage/x11-libs/libX11-*
+    retry_emerge "sudo -E emerge x11-libs/libX11"
+    rm -rf /var/tmp/portage/x11-libs/libX11-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 52 "sudo -E emerge x11-libs/libX11" checkpoint_52
 
 checkpoint_53() {
-    sudo -E emerge x11-libs/libXft
-    rm -rf /var/tmp/portage/x11-libs/libXft-*
+    retry_emerge "sudo -E emerge x11-libs/libXft"
+    rm -rf /var/tmp/portage/x11-libs/libXft-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 53 "sudo -E emerge x11-libs/libXft" checkpoint_53
 
 checkpoint_54() {
-    sudo -E emerge x11-libs/libXrender
-    rm -rf /var/tmp/portage/x11-libs/libXrender-*
+    retry_emerge "sudo -E emerge x11-libs/libXrender"
+    rm -rf /var/tmp/portage/x11-libs/libXrender-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 54 "sudo -E emerge x11-libs/libXrender" checkpoint_54
 
 checkpoint_55() {
-    sudo -E emerge x11-libs/libXrandr
-    rm -rf /var/tmp/portage/x11-libs/libXrandr-*
+    retry_emerge "sudo -E emerge x11-libs/libXrandr"
+    rm -rf /var/tmp/portage/x11-libs/libXrandr-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 55 "sudo -E emerge x11-libs/libXrandr" checkpoint_55
 
 checkpoint_56() {
-    sudo -E emerge x11-libs/libXcursor
-    rm -rf /var/tmp/portage/x11-libs/libXcursor-*
+    retry_emerge "sudo -E emerge x11-libs/libXcursor"
+    rm -rf /var/tmp/portage/x11-libs/libXcursor-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 56 "sudo -E emerge x11-libs/libXcursor" checkpoint_56
 
 checkpoint_57() {
-    sudo -E emerge x11-libs/libXi
-    rm -rf /var/tmp/portage/x11-libs/libXi-*
+    retry_emerge "sudo -E emerge x11-libs/libXi"
+    rm -rf /var/tmp/portage/x11-libs/libXi-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 57 "sudo -E emerge x11-libs/libXi" checkpoint_57
 
 checkpoint_58() {
-    sudo -E emerge x11-libs/libXinerama
-    rm -rf /var/tmp/portage/x11-libs/libXinerama-*
+    retry_emerge "sudo -E emerge x11-libs/libXinerama"
+    rm -rf /var/tmp/portage/x11-libs/libXinerama-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 58 "sudo -E emerge x11-libs/libXinerama" checkpoint_58
 
 checkpoint_59() {
-    sudo -E emerge x11-libs/pango
-    rm -rf /var/tmp/portage/x11-libs/pango-*
+    retry_emerge "sudo -E emerge x11-libs/pango"
+    rm -rf /var/tmp/portage/x11-libs/pango-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 59 "sudo -E emerge x11-libs/pango" checkpoint_59
 
 checkpoint_60() {
-    sudo -E emerge dev-libs/wayland
-    rm -rf /var/tmp/portage/dev-libs/wayland-*
+    retry_emerge "sudo -E emerge dev-libs/wayland"
+    rm -rf /var/tmp/portage/dev-libs/wayland-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 60 "sudo -E emerge dev-libs/wayland" checkpoint_60
 
 checkpoint_61() {
-    sudo -E emerge dev-libs/wayland-protocols
-    rm -rf /var/tmp/portage/dev-libs/wayland-protocols-*
+    retry_emerge "sudo -E emerge dev-libs/wayland-protocols"
+    rm -rf /var/tmp/portage/dev-libs/wayland-protocols-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 61 "sudo -E emerge dev-libs/wayland-protocols" checkpoint_61
 
 checkpoint_62() {
-    sudo -E emerge x11-base/xwayland
-    rm -rf /var/tmp/portage/x11-base/xwayland-*
+    retry_emerge "sudo -E emerge x11-base/xwayland"
+    rm -rf /var/tmp/portage/x11-base/xwayland-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 62 "sudo -E emerge x11-base/xwayland" checkpoint_62
 
 checkpoint_63() {
-    sudo -E emerge x11-libs/libxkbcommon
-    rm -rf /var/tmp/portage/x11-libs/libxkbcommon-*
+    retry_emerge "sudo -E emerge x11-libs/libxkbcommon"
+    rm -rf /var/tmp/portage/x11-libs/libxkbcommon-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 63 "sudo -E emerge x11-libs/libxkbcommon" checkpoint_63
 
 checkpoint_64() {
-    sudo -E emerge media-libs/harfbuzz
-    sudo -E emerge gui-libs/gtk
-    rm -rf /var/tmp/portage/gui-libs/gtk-*
+    retry_emerge "sudo -E emerge media-libs/harfbuzz"
+    retry_emerge "sudo -E emerge gui-libs/gtk"
+    rm -rf /var/tmp/portage/gui-libs/gtk-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 64 "sudo -E emerge gui-libs/gtk" checkpoint_64
 
 checkpoint_65() {
-    sudo -E emerge xfce-base/libxfce4util
-    rm -rf /var/tmp/portage/xfce-base/libxfce4util-*
+    retry_emerge "sudo -E emerge xfce-base/libxfce4util"
+    rm -rf /var/tmp/portage/xfce-base/libxfce4util-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 65 "sudo -E emerge xfce-base/libxfce4util" checkpoint_65
 
 checkpoint_66() {
-    sudo -E emerge xfce-base/xfconf
-    rm -rf /var/tmp/portage/xfce-base/xfconf-*
+    retry_emerge "sudo -E emerge xfce-base/xfconf"
+    rm -rf /var/tmp/portage/xfce-base/xfconf-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 66 "sudo -E emerge xfce-base/xfconf" checkpoint_66
 
 checkpoint_67() {
-    sudo -E emerge sys-apps/xdg-desktop-portal
-    sudo -E emerge xdg-desktop-portal-gtk
-    rm -rf /var/tmp/portage/sys-apps/xdg-desktop-portal-*
+    retry_emerge "sudo -E emerge sys-apps/xdg-desktop-portal"
+    retry_emerge "sudo -E emerge xdg-desktop-portal-gtk"
+    rm -rf /var/tmp/portage/sys-apps/xdg-desktop-portal-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 67 "sudo -E emerge sys-apps/xdg-desktop-portal" checkpoint_67
 
 checkpoint_68() {
-    sudo -E emerge gui-libs/xdg-desktop-portal-wlr
-    rm -rf /var/tmp/portage/gui-libs/xdg-desktop-portal-wlr-*
+    retry_emerge "sudo -E emerge gui-libs/xdg-desktop-portal-wlr"
+    rm -rf /var/tmp/portage/gui-libs/xdg-desktop-portal-wlr-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 68 "sudo -E emerge gui-libs/xdg-desktop-portal-wlr" checkpoint_68
 
 checkpoint_69() {
     sudo -E /bin/chard_mesa
-    rm -rf /var/tmp/portage/media-libs/mesa-*
+    rm -rf /var/tmp/portage/media-libs/mesa-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 69 "sudo -E chard_mesa" checkpoint_69
 
 checkpoint_70() {
-    sudo -E emerge x11-apps/mesa-progs
-    rm -rf /var/tmp/portage/x11-apps/mesa-progs-*
+    retry_emerge "sudo -E emerge x11-apps/mesa-progs"
+    rm -rf /var/tmp/portage/x11-apps/mesa-progs-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 70 "sudo -E emerge x11-apps/mesa-progs" checkpoint_70
 
 checkpoint_71() {
-    sudo -E emerge dev-qt/qtbase
-    rm -rf /var/tmp/portage/dev-qt/qtbase-*
+    retry_emerge "sudo -E emerge dev-qt/qtbase"
+    rm -rf /var/tmp/portage/dev-qt/qtbase-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 71 "sudo -E emerge dev-qt/qtbase" checkpoint_71
 
 checkpoint_72() {
-    sudo -E emerge dev-qt/qttools
-    rm -rf /var/tmp/portage/dev-qt/qttools-*
+    retry_emerge "sudo -E emerge dev-qt/qttools"
+    rm -rf /var/tmp/portage/dev-qt/qttools-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 72 "sudo -E emerge dev-qt/qttools" checkpoint_72
 
 checkpoint_73() {
-    sudo -E emerge dev-qt/qtnetwork
-    rm -rf /var/tmp/portage/dev-qt/qtnetwork-*
+    retry_emerge "sudo -E emerge dev-qt/qtnetwork"
+    rm -rf /var/tmp/portage/dev-qt/qtnetwork-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 73 "sudo -E emerge dev-qt/qtnetwork" checkpoint_73
 
 checkpoint_74() {
-    sudo -E emerge dev-qt/qtconcurrent
-    rm -rf /var/tmp/portage/dev-qt/qtconcurrent-*
+    retry_emerge "sudo -E emerge dev-qt/qtconcurrent"
+    rm -rf /var/tmp/portage/dev-qt/qtconcurrent-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 74 "sudo -E emerge dev-qt/qtconcurrent" checkpoint_74
 
 checkpoint_75() {
-    sudo -E emerge dev-qt/qtxml
-    rm -rf /var/tmp/portage/dev-qt/qtxml-*
+    retry_emerge "sudo -E emerge dev-qt/qtxml"
+    rm -rf /var/tmp/portage/dev-qt/qtxml-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 75 "sudo -E emerge dev-qt/qtxml" checkpoint_75
 
 checkpoint_76() {
-    sudo -E emerge dev-qt/qtgui
-    rm -rf /var/tmp/portage/dev-qt/qtgui-*
+    retry_emerge "sudo -E emerge dev-qt/qtgui"
+    rm -rf /var/tmp/portage/dev-qt/qtgui-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 76 "sudo -E emerge dev-qt/qtgui" checkpoint_76
 
 checkpoint_77() {
-    sudo -E emerge dev-qt/qtcore
-    rm -rf /var/tmp/portage/dev-qt/qtcore-*
+    retry_emerge "sudo -E emerge dev-qt/qtcore"
+    rm -rf /var/tmp/portage/dev-qt/qtcore-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 77 "sudo -E emerge dev-qt/qtcore" checkpoint_77
 
 checkpoint_78() {
-    sudo -E emerge dev-build/cmake
-    rm -rf /var/tmp/portage/dev-build/cmake-*
+    retry_emerge "sudo -E emerge dev-build/cmake"
+    rm -rf /var/tmp/portage/dev-build/cmake-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 78 "sudo -E emerge dev-build/cmake" checkpoint_78
 
 checkpoint_79() {
-    sudo -E emerge sys-apps/dbus
-    rm -rf /var/tmp/portage/sys-apps/dbus-*
+    retry_emerge "sudo -E emerge sys-apps/dbus"
+    rm -rf /var/tmp/portage/sys-apps/dbus-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 79 "sudo -E emerge sys-apps/dbus" checkpoint_79
 
 checkpoint_80() {
-    sudo -E emerge app-accessibility/at-spi2-core
-    rm -rf /var/tmp/portage/app-accessibility/at-spi2-core-*
+    retry_emerge "sudo -E emerge app-accessibility/at-spi2-core"
+    rm -rf /var/tmp/portage/app-accessibility/at-spi2-core-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 80 "sudo -E emerge app-accessibility/at-spi2-core" checkpoint_80
 
 checkpoint_81() {
-    sudo -E emerge app-accessibility/at-spi2-atk
-    rm -rf /var/tmp/portage/app-accessibility/at-spi2-atk-*
+    retry_emerge "sudo -E emerge app-accessibility/at-spi2-atk"
+    rm -rf /var/tmp/portage/app-accessibility/at-spi2-atk-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 81 "sudo -E emerge app-accessibility/at-spi2-atk" checkpoint_81
 
 checkpoint_82() {
-    sudo -E emerge media-libs/fontconfig
-    rm -rf /var/tmp/portage/media-libs/fontconfig-*
+    retry_emerge "sudo -E emerge media-libs/fontconfig"
+    rm -rf /var/tmp/portage/media-libs/fontconfig-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 82 "sudo -E emerge media-libs/fontconfig" checkpoint_82
 
 checkpoint_83() {
-    sudo -E emerge media-fonts/dejavu
-    rm -rf /var/tmp/portage/media-fonts/dejavu-*
+    retry_emerge "sudo -E emerge media-fonts/dejavu"
+    rm -rf /var/tmp/portage/media-fonts/dejavu-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 83 "sudo -E emerge media-fonts/dejavu" checkpoint_83
 
 checkpoint_84() {
-    sudo -E emerge x11-themes/gtk-engines
-    rm -rf /var/tmp/portage/x11-themes/gtk-engines-*
+    retry_emerge "sudo -E emerge x11-themes/gtk-engines"
+    rm -rf /var/tmp/portage/x11-themes/gtk-engines-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 84 "sudo -E emerge x11-themes/gtk-engines" checkpoint_84
 
 checkpoint_85() {
-    sudo -E emerge x11-themes/gtk-engines-murrine
-    rm -rf /var/tmp/portage/x11-themes/gtk-engines-murrine-*
+    retry_emerge "sudo -E emerge x11-themes/gtk-engines-murrine"
+    rm -rf /var/tmp/portage/x11-themes/gtk-engines-murrine-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 85 "sudo -E emerge x11-themes/gtk-engines-murrine" checkpoint_85
 
 checkpoint_86() {
-    sudo -E emerge dev-lang/python
-    sudo -E emerge dev-python/pip
-    rm -rf /var/tmp/portage/dev-lang/python-*
-    rm -rf /var/tmp/portage/dev-lang/pip-*
+    retry_emerge "sudo -E emerge dev-lang/python"
+    retry_emerge "sudo -E emerge dev-python/pip"
+    rm -rf /var/tmp/portage/dev-lang/python-* 2>/dev/null
+    rm -rf /var/tmp/portage/dev-lang/pip-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 86 "sudo -E emerge dev-lang/python" checkpoint_86
 
 checkpoint_87() {
-    sudo -E emerge x11-libs/libnotify
-    rm -rf /var/tmp/portage/x11-libs/libnotify-*
+    retry_emerge "sudo -E emerge x11-libs/libnotify"
+    rm -rf /var/tmp/portage/x11-libs/libnotify-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 87 "sudo -E emerge x11-libs/libnotify" checkpoint_87
 
 checkpoint_88() {
-    sudo -E emerge dev-libs/libdbusmenu
-    rm -rf /var/tmp/portage/dev-libs/libdbusmenu-*
+    retry_emerge "sudo -E emerge dev-libs/libdbusmenu"
+    rm -rf /var/tmp/portage/dev-libs/libdbusmenu-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 88 "sudo -E emerge dev-libs/libdbusmenu" checkpoint_88
 
 checkpoint_89() {
-    sudo -E emerge x11-libs/libSM
-    rm -rf /var/tmp/portage/x11-libs/libSM-*
+    retry_emerge "sudo -E emerge x11-libs/libSM"
+    rm -rf /var/tmp/portage/x11-libs/libSM-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 89 "sudo -E emerge x11-libs/libSM" checkpoint_89
 
 checkpoint_90() {
-    sudo -E emerge x11-libs/libICE
-    rm -rf /var/tmp/portage/x11-libs/libICE-*
+    retry_emerge "sudo -E emerge x11-libs/libICE"
+    rm -rf /var/tmp/portage/x11-libs/libICE-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 90 "sudo -E emerge x11-libs/libICE" checkpoint_90
 
 checkpoint_91() {
-    sudo -E emerge x11-libs/libwnck
-    rm -rf /var/tmp/portage/x11-libs/libwnck-*
+    retry_emerge "sudo -E emerge x11-libs/libwnck"
+    rm -rf /var/tmp/portage/x11-libs/libwnck-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 91 "sudo -E emerge x11-libs/libwnck" checkpoint_91
 
 checkpoint_92() {
-    sudo -E emerge dev-build/cmake
-    rm -rf /var/tmp/portage/dev-build/cmake-*
+    retry_emerge "sudo -E emerge dev-build/cmake"
+    rm -rf /var/tmp/portage/dev-build/cmake-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 92 "sudo -E emerge dev-build/cmake" checkpoint_92
 
 checkpoint_93() {
-    sudo -E emerge xfce-base/exo
-    rm -rf /var/tmp/portage/xfce-base/exo-*
+    retry_emerge "sudo -E emerge xfce-base/exo"
+    rm -rf /var/tmp/portage/xfce-base/exo-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 93 "sudo -E emerge xfce-base/exo" checkpoint_93
 
 checkpoint_94() {
-    sudo -E emerge app-admin/exo
-    rm -rf /var/tmp/portage/app-admin/exo-*
+    retry_emerge "sudo -E emerge app-admin/exo"
+    rm -rf /var/tmp/portage/app-admin/exo-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 94 "sudo -E emerge app-admin/exo" checkpoint_94
 
 checkpoint_95() {
-    sudo -E emerge app-arch/tar
-    rm -rf /var/tmp/portage/app-arch/tar-*
+    retry_emerge "sudo -E emerge app-arch/tar"
+    rm -rf /var/tmp/portage/app-arch/tar-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 95 "sudo -E emerge app-arch/tar" checkpoint_95
 
 checkpoint_96() {
-    sudo -E emerge app-arch/xz-utils
-    rm -rf /var/tmp/portage/app-arch/xz-utils-*
+    retry_emerge "sudo -E emerge app-arch/xz-utils"
+    rm -rf /var/tmp/portage/app-arch/xz-utils-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 96 "sudo -E emerge app-arch/xz-utils" checkpoint_96
 
 checkpoint_97() {
-    sudo -E emerge net-libs/gnutls
-    rm -rf /var/tmp/portage/net-libs/gnutls-*
+    retry_emerge "sudo -E emerge net-libs/gnutls"
+    rm -rf /var/tmp/portage/net-libs/gnutls-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 97 "sudo -E emerge net-libs/gnutls" checkpoint_97
 
 checkpoint_98() {
-    sudo -E emerge net-libs/glib-networking
-    rm -rf /var/tmp/portage/net-libs/glib-networking-*
+    retry_emerge "sudo -E emerge net-libs/glib-networking"
+    rm -rf /var/tmp/portage/net-libs/glib-networking-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 98 "sudo -E emerge net-libs/glib-networking" checkpoint_98
 
 checkpoint_99() {
-    sudo -E emerge sys-libs/libseccomp
-    rm -rf /var/tmp/portage/sys-libs/libseccomp-*
+    retry_emerge "sudo -E emerge sys-libs/libseccomp"
+    rm -rf /var/tmp/portage/sys-libs/libseccomp-* 2>/dev/null
     eclean-dist -d
 }
 run_checkpoint 99 "sudo -E emerge sys-libs/libseccomp" checkpoint_99
 
 checkpoint_100() {
-    sudo -E emerge app-eselect/eselect-repository
-    rm -rf /var/tmp/portage/app-eselect/eselect-repository-*
+    retry_emerge "sudo -E emerge app-eselect/eselect-repository"
+    rm -rf /var/tmp/portage/app-eselect/eselect-repository-* 2>/dev/null
     eclean-dist -d
 }
-run_checkpoint 100 "sudo -E emerge app-eselect/eselect-repository" checkpoint_100
+run_checkpoint 100 "sudo -E emerge app-eselect/eselect-repository" checkpoint_10
 
 checkpoint_101() {
     sudo -E emerge dev-libs/appstream-glib
