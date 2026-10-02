@@ -526,7 +526,7 @@ case "$cmd" in
 		fi
 		
 		echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
-		
+		sudo -v 2>/dev/null
 		sudo chown 1000:1000 "$CHARD_ROOT/$CHARD_HOME/.local/share/recently-used.xbel" 2>/dev/null
         $CHARD_ROOT/bin/chard_volume > /dev/null 2>&1 &
 		$CHARD_ROOT/bin/chard_shortcut_daemon start 2>/dev/null &
