@@ -66,8 +66,6 @@ echo "${RESET}${BLUE}"
 echo "                           Downloading to: ${BOLD}$DISPLAY_PATH"
 echo "${RESET}" 
 
-sudo apt install curl -y
-
 curl -L "$URL" -o "$DOWNLOAD_DIR/Chard_Installer" || {
     echo "${RED}Download failed. ${RESET}"
     exit 1
@@ -94,8 +92,9 @@ if find /home/chronos/user -maxdepth 1 -type d -name MyFiles >/dev/null 2>&1; th
     echo "${RESET}"
 else
     echo
-    echo "${GREEN}${BOLD}Linux install detected! Installing curl if needed... ${RESET}"
-    echo
+    echo "${GREEN}${BOLD}Linux install detected! ${RESET}"
+    echo "${MAGENTA}"
+	echo
 		if ! command -v curl >/dev/null 2>&1; then
 		    if [ -f /etc/os-release ]; then
 		        . /etc/os-release
@@ -127,7 +126,7 @@ else
 		        echo "Unable to detect Linux distribution."
 		    fi
 		fi
-
+	echo "${RESET}
     echo "${BLUE}${BOLD}sudo -u $RUN_USER bash ~/Chard_Installer ${RESET}"
     sleep 3
     sudo -u "$RUN_USER" bash ~/Chard_Installer
