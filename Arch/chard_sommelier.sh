@@ -48,24 +48,23 @@ SOMMELIER_CMD=(
     fi
     cd "$CHARD_HOME"
     chard_xfce4 powercontrol-gui 2>/dev/null &
-    sleep 0.2
+    sleep 0.1
     sudo -E chard_scale daemon 2>/dev/null &
-    sleep 0.2
+    sleep 0.1
     pipewire 2>/dev/null &
-    sleep 0.2
+    sleep 0.1
     pulseaudio 2>/dev/null &
-    sleep 0.2
+    sleep 0.1
     chardwire 2>/dev/null &
-    sleep 0.2
+    sleep 0.1
     color_reset 2>/dev/null &
-    sleep 0.2
+    sleep 0.1
     chard_xfce4 xfce4-terminal 2>/dev/null &
-    sleep 0.2
+    sleep 0.1
     chard_launch_daemon 2>/dev/null &
-    sleep 0.2
-    QT_QPA_PLATFORM=wayland thunar --daemon 2>/dev/null &
-    sleep 0.2
-    killall -9 thunar 2>/dev/null &
+    sleep 0.1
+    chard_sudo 2>/dev/null &
+    sleep 0.1
     exec bash
 '
 error_color
