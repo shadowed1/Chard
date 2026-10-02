@@ -12,7 +12,12 @@ VULKANINFO64=$(command -v vulkaninfo || command -v /usr/bin/vulkaninfo)
 VULKANINFO32=$(command -v vulkaninfo32 || command -v /usr/bin/vulkaninfo32)
 
 sudo pacman -S vulkan-headers --noconfirm --overwrite '*' 2>/dev/null
-yay -S --noconfirm lib32-vulkan-tools 2>/dev/null
+if command -v pacman >/dev/null 2>&1; then
+    sudo pacman -S --noconfirm vulkan-headers vulkan-tools libva-utils 2>/dev/null
+elif command -v apt >/dev/null 2>&1; then
+    sudo apt update 2>/dev/null
+    sudo apt install -y vulkan-tools vainfo mesa-utils mesa-opencl-icd 2>/dev/null
+fi
 sudo pacman -S --noconfirm vulkan-tools 2>/dev/null
 sudo pacman -S --noconfirm libva-utils 2>/dev/null
 sudo apt update 2>/dev/null
