@@ -714,9 +714,8 @@ case "$cmd" in
 		        XDG_RUNTIME_DIR="/run/user/1000/"
 		    fi
 		fi
-		
+		sudo -v 2>/dev/null
 		echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
-		
         chard_volume > /dev/null 2>&1 &
 		chard_shortcut_daemon start 2>/dev/null &
 		chard_timezone_daemon &
