@@ -94,9 +94,40 @@ if find /home/chronos/user -maxdepth 1 -type d -name MyFiles >/dev/null 2>&1; th
     echo "${RESET}"
 else
     echo
-    echo "${GREEN}${BOLD}Linux install${RESET}"
+    echo "${GREEN}${BOLD}Linux install detected. Installing curl if needed... ${RESET}"
     echo
-    echo "${CYAN}Running:${RESET}"
+		if ! command -v curl >/dev/null 2>&1; then
+		    if [ -f /etc/os-release ]; then
+		        . /etc/os-release
+		
+		        case "$ID" in
+		            ubuntu|debian|linuxmint|pop)
+		                sudo apt install -y curl >/dev/null 2>&1
+		                ;;
+		            fedora|rhel|centos|rocky|almalinux)
+		                sudo dnf install -y curl >/dev/null 2>&1
+		                ;;
+		            arch|manjaro|endeavouros)
+		                sudo pacman -Sy --noconfirm curl >/dev/null 2>&1
+		                ;;
+		            opensuse*|sles)
+		                sudo zypper --non-interactive install curl >/dev/null 2>&1
+		                ;;
+		            alpine)
+		                sudo apk add curl >/dev/null 2>&1
+		                ;;
+		            gentoo)
+		                sudo emerge --quiet net-misc/curl >/dev/null 2>&1
+		                ;;
+		            *)
+		                echo "Unsupported Linux distribution: $ID"
+		                ;;
+		        esac
+		    else
+		        echo "Unable to detect Linux distribution."
+		    fi
+		fi
+
     echo "${BLUE}${BOLD}sudo -u $RUN_USER bash ~/Chard_Installer ${RESET}"
     sleep 3
     sudo -u "$RUN_USER" bash ~/Chard_Installer
