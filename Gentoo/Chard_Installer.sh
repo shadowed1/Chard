@@ -1025,6 +1025,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/c
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_browser.sh"            -o "$CHARD_ROOT/bin/chard_browser" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sudo.sh"            -o "$CHARD_ROOT/bin/chard_sudo" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -1053,6 +1055,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_version"
 sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
 sudo chmod +x "$CHARD_ROOT/bin/chard_browser"
 sudo chmod +x "/usr/local/bin/chard_repair" 2>/dev/null
+sudo chmod +x "$CHARD_ROOT/bin/chard_sudo"
 
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
