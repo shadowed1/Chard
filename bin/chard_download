@@ -66,6 +66,8 @@ echo "${RESET}${BLUE}"
 echo "                           Downloading to: ${BOLD}$DISPLAY_PATH"
 echo "${RESET}" 
 
+sudo apt install curl -y
+
 curl -L "$URL" -o "$DOWNLOAD_DIR/Chard_Installer" || {
     echo "${RED}Download failed. ${RESET}"
     exit 1
