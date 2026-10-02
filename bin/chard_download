@@ -94,7 +94,7 @@ if find /home/chronos/user -maxdepth 1 -type d -name MyFiles >/dev/null 2>&1; th
     echo "${RESET}"
 else
     echo
-    echo "${GREEN}${BOLD}Linux install detected. Installing curl if needed... ${RESET}"
+    echo "${GREEN}${BOLD}Linux install detected! Installing curl if needed... ${RESET}"
     echo
 		if ! command -v curl >/dev/null 2>&1; then
 		    if [ -f /etc/os-release ]; then
@@ -120,7 +120,7 @@ else
 		                sudo emerge --quiet net-misc/curl >/dev/null 2>&1
 		                ;;
 		            *)
-		                echo "Unsupported Linux distribution: $ID"
+		                echo "${RED}Unsupported Linux distribution: ${BOLD}$ID${RESET}${RED} Please install Curl manually!"
 		                ;;
 		        esac
 		    else
