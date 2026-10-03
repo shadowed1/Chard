@@ -1241,10 +1241,10 @@ EOF
                     umount -l /proc        2>/dev/null || true
                 '
                 
-                $CHARD_ROOT/bin/chard_unmount
-				$CHARD_ROOT/bin/chard_shortcut
-                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock
-                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/*
+                $CHARD_ROOT/bin/chard_unmount 2>/dev/null
+				$CHARD_ROOT/bin/chard_shortcut 2>/dev/null
+                sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
+                sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
 				
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
