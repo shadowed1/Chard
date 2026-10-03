@@ -249,7 +249,7 @@ chmod 700 "$LWJGL_TMPDIR"
 WINE_UID=$(id -u "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
 mkdir -p "$WINE_TMP"
-chown "$CHARD_USER":"$CHARD_USER" "$WINE_TMP"
+chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
 chmod 700 "$WINE_TMP"
 sudo setfacl -Rm u:$CHARD_USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
@@ -407,6 +407,12 @@ XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
+WINE_UID=$(id -u "$CHARD_USER")
+WINE_GID=$(id -g "$CHARD_USER")
+WINE_TMP="/tmp/.wine-${WINE_UID}"
+mkdir -p "$WINE_TMP"
+chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
+chmod 700 "$WINE_TMP"
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
 export QT_QPA_PLATFORMTHEME=gtk3
@@ -422,7 +428,7 @@ chmod 700 "$LWJGL_TMPDIR"
 WINE_UID=$(id -u "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
 mkdir -p "$WINE_TMP"
-chown "$CHARD_USER":"$CHARD_USER" "$WINE_TMP"
+chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
 chmod 700 "$WINE_TMP"
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
@@ -489,7 +495,7 @@ chmod 700 "$LWJGL_TMPDIR"
 WINE_UID=$(id -u "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
 mkdir -p "$WINE_TMP"
-chown "$CHARD_USER":"$CHARD_USER" "$WINE_TMP"
+chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
 chmod 700 "$WINE_TMP"
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
