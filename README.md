@@ -22,7 +22,7 @@ https://www.chromium.org/chromium-os/developer-library/guides/device/developer-m
 
 1.)   For **ChromeOS, and most Linux Distros,** press `ctrl-alt-t`, open a crosh `shell` and copy paste:
 
-<pre>bash <(wget -qO- "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")</pre>
+<pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")</pre>
 
 <br>
 
