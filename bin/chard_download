@@ -126,7 +126,7 @@ else
 		        echo "Unable to detect Linux distribution."
 		    fi
 		fi
-	echo "${RESET}
+	echo "${RESET}"
     echo "${BLUE}${BOLD}sudo -u $RUN_USER bash ~/Chard_Installer ${RESET}"
     sleep 3
     sudo -u "$RUN_USER" bash ~/Chard_Installer
