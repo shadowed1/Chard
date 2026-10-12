@@ -1767,6 +1767,7 @@ checkpoint_163() {
     retry_pacman "sudo pacman -S --noconfirm glib2-devel"
     retry_pacman "sudo pacman -S --noconfirm python-pyparsing"
     retry_pacman "sudo pacman -S --noconfirm ostree"
+    retry_pacman "sudo pacman -S --noconfirm appstream"
     sudo -E pacman -Rdd --noconfirm bubblewrap 2>/dev/null
     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak" 2>/dev/null
     sudo chmod +x /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
