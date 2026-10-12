@@ -1062,6 +1062,7 @@ EOF
 				                cd ~/
 								sudo pacman -S --noconfirm ostree 2>/dev/null
 								sudo pacman -S --noconfirm nautilus 2>/dev/null
+								sudo pacman -S --noconfirm glycin 2>/dev/null
     							xdg-mime default org.gnome.Nautilus.desktop inode/directory 2>/dev/null
     							xdg-mime default org.gnome.Nautilus.desktop application/x-gnome-saved-search 2>/dev/null
 				                /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
