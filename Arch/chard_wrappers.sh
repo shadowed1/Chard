@@ -247,7 +247,9 @@ LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
 WINE_UID=$(id -u "$CHARD_USER")
+WINE_GID=$(id -g "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
+WINE_GID=$(id -g "$CHARD_USER")
 mkdir -p "$WINE_TMP"
 chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
 chmod 700 "$WINE_TMP"
@@ -425,7 +427,6 @@ export FLATPAK_BWRAP
 LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
-WINE_UID=$(id -u "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
 mkdir -p "$WINE_TMP"
 chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
@@ -492,8 +493,10 @@ export PATH="$WRAPPED_PATH"
 LWJGL_TMPDIR="$HOME/.local/tmp"
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
+WINE_GID=$(id -g "$CHARD_USER")
 WINE_UID=$(id -u "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
+WINE_GID=$(id -g "$CHARD_USER")
 mkdir -p "$WINE_TMP"
 chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
 chmod 700 "$WINE_TMP"
