@@ -106,7 +106,6 @@ meson setup builddir \
   -Dsandboxed_triggers=false \
   -Dselinux_module=disabled \
   -Dmalcontent=disabled \
-  -Dseccomp=disabled \
   -Dgir=disabled \
   -Dgtkdoc=disabled \
   -Ddocbook_docs=disabled \
@@ -144,7 +143,6 @@ meson setup builddir \
   -Dsandboxed_triggers=false \
   -Dselinux_module=disabled \
   -Dmalcontent=disabled \
-  -Dseccomp=disabled \
   -Dgir=disabled \
   -Dgtkdoc=disabled \
   -Ddocbook_docs=disabled \
