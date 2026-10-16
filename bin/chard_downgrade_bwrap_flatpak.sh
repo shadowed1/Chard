@@ -96,7 +96,14 @@ sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
 sudo tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
 cd /tmp/flatpak-1.16.3
+      
 sed -i '69d' /tmp/flatpak-1.16.3/common/flatpak-exports.c
+
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/tmp/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
+sudo chmod +x /tmp/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
+python3 /tmp/flatpak-1.16.3/chard_flatpak_patch.py /tmp/flatpak-1.16.3/ 2>/dev/null
+
+
 meson setup builddir \
   --prefix=/usr/local/flatpak-1.16.3 \
   --libdir=/usr/lib \
@@ -133,7 +140,13 @@ sudo rm -rf /tmp/flatpak-* 2>/dev/null
 wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
 sudo tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
 cd /tmp/flatpak-1.16.3
+
 sed -i '69d' /tmp/flatpak-1.16.3/common/flatpak-exports.c
+
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/tmp/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
+sudo chmod +x /tmp/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
+python3 /tmp/flatpak-1.16.3/chard_flatpak_patch.py /tmp/flatpak-1.16.3/ 2>/dev/null
+    
 meson setup builddir \
   --prefix=/usr/ \
   --libdir=/usr/lib \
