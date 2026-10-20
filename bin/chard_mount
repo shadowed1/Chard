@@ -14,7 +14,7 @@ if ls /.chardrc > /dev/null 2>&1; then
     exit 1
 fi
 
-source /home/chronos/user/.bashrc 
+source /home/chronos/user/.bashrc 2>/dev/null
 STATE_FILE="$CHARD_ROOT/tmp/usb_mount_state"
 MOUNT_POINT="$CHARD_ROOT/$CHARD_HOME/external"
 : > "$STATE_FILE"
@@ -45,12 +45,12 @@ while read -r PART MP; do
     BASENAME=$(basename "$PART")
     TARGET="$MOUNT_POINT/$BASENAME"
     sudo mkdir -p "$TARGET"
-    source $CHARD_ROOT/.chard.preload 
-    if sudo env LD_PRELOAD="$LD_PRELOAD" "$CHARD_ROOT/usr/bin/bindfs" -o uid=1000,gid=1001 --perms=ugo+x "$MP" "$TARGET" ; then
-        echo "${GREEN}bindfs mounted:${BOLD} $MP to $TARGET${RESET}"
-    else
-        echo "${YELLOW}bindfs failed, falling back to bind mount:${BOLD} $MP to $TARGET${RESET}"
-        sudo mount --bind "$MP" "$TARGET" 
-    fi
+    #source $CHARD_ROOT/.chard.preload 
+    #if sudo env LD_PRELOAD="$LD_PRELOAD" "$CHARD_ROOT/usr/bin/bindfs" -o uid=1000,gid=1001 --perms=ugo+x "$MP" "$TARGET" ; then
+    #    echo "${GREEN}bindfs mounted:${BOLD} $MP to $TARGET${RESET}"
+    #else
+        echo "${YELLOW}bindfs unsupported (for now), falling back to bind mount:${BOLD} $MP to $TARGET${RESET}"
+        sudo mount --bind "$MP" "$TARGET" 2>/dev/null
+    #fi
 done < "$STATE_FILE"
 unset LD_PRELOAD
