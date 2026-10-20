@@ -29,6 +29,8 @@ LD_PRELOAD_PATTERNS=(
     #"$CHARD_ROOT/usr/lib/libdebuginfod.so.1"
     "$CHARD_ROOT/usr/lib/libopcodes-*.so"
     "$CHARD_ROOT/usr/lib/libctf.so.0"
+    "$CHARD_ROOT/usr/lib/liburing.so.2"
+    "$CHARD_ROOT/usr/lib/libnuma.so.1"
 )
 
 LD_PRELOAD=""
