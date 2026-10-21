@@ -864,7 +864,7 @@ case "$cmd" in
             umount -l /tmp         2>/dev/null || true
         '
         $CHARD_ROOT/bin/error_color
-        killall -9 chard_volume 2>/dev/null
+        sudo $CHARD_ROOT/bin/killall -9 chard_volume 2>/dev/null
         chard_unmount 2>/dev/null
         chard_mtp_unmount 2>/dev/null
         sudo rm -f /run/chrome/pulse/native
@@ -872,9 +872,9 @@ case "$cmd" in
         sudo mkdir -p /run/chrome/pulse
         sudo -E chown $USER:$USER /run/chrome/pulse
         sudo chmod 770 /run/chrome/pulse
-        killall -9 cras_test_client 2>/dev/null
-        killall -9 powercontrol-gui 2>/dev/null
-		killall -9 chard_timezone_daemon 2>/dev/null
+        sudo $CHARD_ROOT/bin/killall -9 cras_test_client 2>/dev/null
+        sudo $CHARD_ROOT/bin/killall -9 powercontrol-gui 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_timezone_daemon 2>/dev/null
         sudo pkill -f powercontrol-gui 2>/dev/null
 		sudo pkill -f chard_timezone_daemon 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
