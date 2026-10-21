@@ -22,6 +22,7 @@ fi
 
 if [[ -z "$BASHRC_PATH" ]]; then
     echo "${RED}[charon_daemon] Error: No .bashrc found to discover chard config${RESET}" >&2
+    sleep 5
     exit 1
 fi
 
@@ -41,10 +42,12 @@ if [[ -f "$CHARDRC_PATH" ]]; then
 
     if [[ -z "$CHARD_ROOT" ]]; then
         echo "${RED}[charon_daemon] Error: CHARD_ROOT not found in $CHARDRC_PATH${RESET}" >&2
+        sleep 5
         exit 1
     fi
 else
     echo "${RED}[charon_daemon] Error: $CHARDRC_PATH not found${RESET}" >&2
+    sleep 5
     exit 1
 fi
 
@@ -65,7 +68,7 @@ if [[ ! -f "$AUTH_FILE" ]]; then
     head -c 32 /dev/urandom | base64 | tr -d '/+=' | head -c 43 > "$AUTH_FILE"
     chmod 400 "$AUTH_FILE"
     chown -R chronos:chronos "$CHARON_DIR" 2>/dev/null || true
-    echo "${GREEN}[charon_daemon] Generated new authentication token${RESET}"
+    echo "${GREEN}[charon_daemon] Generated new authentication token ${RESET}"
 fi
 
 AUTH_TOKEN=$(cat "$AUTH_FILE")
@@ -82,7 +85,7 @@ execute_command() {
     local cmd="$4"
 
     if [[ "$token" != "$AUTH_TOKEN" ]]; then
-        echo "[charon_daemon] Authentication failed" >&2
+        echo "${RED}[charon_daemon] Authentication failed ${RESET}" >&2
         {
             echo "${RED}[charon_daemon] Authentication failed${RESET}"
             echo "__CHARD_EXIT__:1"
@@ -100,7 +103,7 @@ execute_command() {
         mkfifo "$host_reply_fifo" 2>/dev/null || true
     fi
 
-    echo "${MAGENTA}[charon_daemon]:${RESET}${CYAN} $cmd ${RESET}" >&2
+    echo "${MAGENTA}[charon_daemon]: ${RESET}${CYAN} $cmd ${RESET}" >&2
 
     {
         if [[ -n "$tty_dev" && -c "$tty_dev" && -t 0 ]]; then
@@ -134,8 +137,8 @@ trap 'exit 0' SIGINT SIGTERM
 
 echo
 echo "${GREEN}[charon_daemon] Listening on $CMD_FIFO${RESET}"
-echo "${GREEN}[charon_daemon] CHARD_ROOT=$CHARD_ROOT  CHARD_HOME=$CHARD_HOME  CHARD_USER=$CHARD_USER${RESET}"
-echo "[charon_daemon] Authentication enabled - Ctrl-C to exit.${RESET}"
+echo "${GREEN}[charon_daemon] CHARD_ROOT=${BOLD}$CHARD_ROOT${RESET}${RED}  CHARD_HOME=${BOLD}$CHARD_HOME${RESET}${YELLOW}  CHARD_USER=${BOLD}$CHARD_USER${RESET}"
+echo "${GREEN}[charon_daemon] Authentication enabled - Ctrl-C to exit.${RESET}"
 echo
 
 exec 3<>"$CMD_FIFO"
@@ -151,7 +154,7 @@ while IFS= read -r line <&3 || [[ -n "$line" ]]; do
     req_cmd="${rest#*|}"
 
     if [[ -z "$req_token" || -z "$req_reply" || -z "$req_cmd" ]]; then
-        echo "[charon_daemon] Malformed request: $line" >&2
+        echo "${RED}[charon_daemon] Malformed request: $line ${RESET}" >&2
         continue
     fi
 
