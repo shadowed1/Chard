@@ -449,15 +449,15 @@ download_file() {
         sleep 0.05
         sudo setfacl -Rb /run/chrome 2>/dev/null
         echo
-		killall -9 cras_test_client 2>/dev/null
-        #killall -9 pipewire 2>/dev/null
-        #killall -9 pipewire-pulse 2>/dev/null
-        #killall -9 pulseaudio 2>/dev/null
-        #killall -9 steam 2>/dev/null
-		#killall -9 powercontrol-gui 2>/dev/null
-		#killall -9 gedit 2>/dev/null
-		killall -9 chard_launch_daemon 2>/dev/null
-		killall -9 chardwire 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 cras_test_client 2>/dev/null
+        #sudo $CHARD_ROOT/bin/killall -9 pipewire 2>/dev/null
+        #sudo $CHARD_ROOT/bin/killall -9 pipewire-pulse 2>/dev/null
+        #sudo $CHARD_ROOT/bin/killall -9 pulseaudio 2>/dev/null
+        #sudo $CHARD_ROOT/bin/killall -9 steam 2>/dev/null
+		#sudo $CHARD_ROOT/bin/killall -9 powercontrol-gui 2>/dev/null
+		#sudo $CHARD_ROOT/bin/killall -9 gedit 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
         sudo pkill -f xfce4-session 2>/dev/null
         sudo pkill -f xfwm4 2>/dev/null
         sudo pkill -f xfce4-panel 2>/dev/null
@@ -967,15 +967,15 @@ EOF
 						$CHARD_ROOT/bin/chard_timezone_daemon 2>/dev/null &
 				        sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
 				        sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-				        #killall -9 pipewire 2>/dev/null
-				        #killall -9 pipewire-pulse 2>/dev/null
-				        #killall -9 pulseaudio 2>/dev/null
-				        #killall -9 steam 2>/dev/null
-						#killall -9 plasmashell 2>/dev/null
-						#killall -9 obs 2>/dev/null
-						killall -9 chard_launch_daemon 2>/dev/null
-						#killall -9 xfce4-terminal 2>/dev/null
-						killall -9 chardwire 2>/dev/null
+				        #sudo $CHARD_ROOT/bin/killall -9 pipewire 2>/dev/null
+				        #sudo $CHARD_ROOT/bin/killall -9 pipewire-pulse 2>/dev/null
+				        #sudo $CHARD_ROOT/bin/killall -9 pulseaudio 2>/dev/null
+				        #sudo $CHARD_ROOT/bin/killall -9 steam 2>/dev/null
+						#sudo $CHARD_ROOT/bin/killall -9 plasmashell 2>/dev/null
+						#sudo $CHARD_ROOT/bin/killall -9 obs 2>/dev/null
+						sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
+						#sudo $CHARD_ROOT/bin/killall -9 xfce4-terminal 2>/dev/null
+						sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
 						sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
 				        sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
 				        sudo mount --make-rslave "$CHARD_ROOT"
@@ -1096,7 +1096,7 @@ EOF
 				            umount -l /proc        2>/dev/null || true
 				        '
 				        $CHARD_ROOT/bin/error_color
-				        killall -9 chard_volume 2>/dev/null
+				        sudo $CHARD_ROOT/bin/killall -9 chard_volume 2>/dev/null
 				        chard_unmount 2>/dev/null
 						chard_mtp_unmount 2>/dev/null
 				        sudo rm -f /run/chrome/pulse/native 2>/dev/null
@@ -1104,17 +1104,17 @@ EOF
 				        sudo mkdir -p /run/chrome/pulse 2>/dev/null
 				        sudo chown chronos:chronos /run/chrome/pulse 2>/dev/null
 				        sudo chmod 770 /run/chrome/pulse 2>/dev/null
-				        killall -9 cras_test_client 2>/dev/null
+				        sudo $CHARD_ROOT/bin/killall -9 cras_test_client 2>/dev/null
 				        #killall -9 pipewire 2>/dev/null
 				        #killall -9 pipewire-pulse 2>/dev/null
 				        #killall -9 pulseaudio 2>/dev/null
 				        #killall -9 steam 2>/dev/null
 						#killall -9 powercontrol-gui 2>/dev/null
 						#killall -9 gedit 2>/dev/null
-						killall -9 chard_launch_daemon 2>/dev/null
+						sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
 						#killall -9 xfce4-terminal 2>/dev/null
-						killall -9 chardwire 2>/dev/null
-						killall -9 chard_timezone_daemon 2>/dev/null
+						sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
+						sudo $CHARD_ROOT/bin/killall -9 chard_timezone_daemon 2>/dev/null
 						$CHARD_ROOT/bin/chard_shortcut_daemon stop 2>/dev/null
 				        sudo pkill -f xfce4-session 2>/dev/null
 				        sudo pkill -f xfwm4 2>/dev/null
