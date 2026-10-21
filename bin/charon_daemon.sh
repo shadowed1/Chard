@@ -100,10 +100,9 @@ execute_command() {
         mkfifo "$host_reply_fifo" 2>/dev/null || true
     fi
 
-    echo "${MAGENTA}[charon_daemon] Running:${RESET}${CYAN} $cmd ${RESET}" >&2
+    echo "${MAGENTA}[charon_daemon]:${RESET}${CYAN} $cmd ${RESET}" >&2
 
     {
-        # Only redirect TTY if it's a valid terminal device
         if [[ -n "$tty_dev" && -c "$tty_dev" && -t 0 ]]; then
             if result=$(/bin/bash -c "$cmd" <"$tty_dev" 2>&1); then
                 exit_code=0
@@ -111,7 +110,6 @@ execute_command() {
                 exit_code=$?
             fi
         else
-            # Don't redirect stdin for non-TTY environments (LLMs, scripts)
             if result=$(/bin/bash -c "$cmd" 2>&1); then
                 exit_code=0
             else
