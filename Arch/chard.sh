@@ -533,8 +533,8 @@ case "$cmd" in
 		$CHARD_ROOT/bin/chard_timezone_daemon 2>/dev/null &
         sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-		killall -9 chard_launch_daemon 2>/dev/null
-		killall -9 chardwire 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
 		sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
@@ -666,10 +666,10 @@ case "$cmd" in
         sudo mkdir -p /run/chrome/pulse 2>/dev/null
         sudo chown chronos:chronos /run/chrome/pulse 2>/dev/null
         sudo chmod 770 /run/chrome/pulse 2>/dev/null
-        killall -9 cras_test_client 2>/dev/null
-		killall -9 chard_launch_daemon 2>/dev/null
-		killall -9 chardwire 2>/dev/null
-		killall -9 chard_timezone_daemon 2>/dev/null
+        sudo $CHARD_ROOT/bin/killall -9 cras_test_client 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_timezone_daemon 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
 		sudo pkill -f chard_timezone_daemon 2>/dev/null
 		if [ -s "$VERSION_FILE" ]; then
