@@ -100,7 +100,7 @@ execute_command() {
         mkfifo "$host_reply_fifo" 2>/dev/null || true
     fi
 
-    echo "${MAGENTA}[charon_daemon] Running:${RESET}${CYAN} $cmd ${RESET}" >&2
+    echo "${MAGENTA}[charon_daemon]:${RESET}${CYAN} $cmd ${RESET}" >&2
 
     {
         if [[ -n "$tty_dev" && -c "$tty_dev" ]]; then
