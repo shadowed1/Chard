@@ -9,7 +9,7 @@ MAGENTA=$'\033[35m'
 CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
-
+NOW=$(date +"%Y-%m-%d_%H-%M-%S ")
 BASHRC_PATH=""
 if [[ -f "/home/chronos/user/.bashrc" ]]; then
     BASHRC_PATH="/home/chronos/user/.bashrc"
@@ -68,7 +68,7 @@ if [[ ! -f "$AUTH_FILE" ]]; then
     head -c 32 /dev/urandom | base64 | tr -d '/+=' | head -c 43 > "$AUTH_FILE"
     chmod 400 "$AUTH_FILE"
     chown -R chronos:chronos "$CHARON_DIR" 2>/dev/null || true
-    echo "${GREEN}[charon_daemon] Generated new authentication token ${RESET}"
+    echo "${GREEN}${NOW}[charon_daemon] Generated new authentication token ${RESET}"
 fi
 
 AUTH_TOKEN=$(cat "$AUTH_FILE")
@@ -103,7 +103,7 @@ execute_command() {
         mkfifo "$host_reply_fifo" 2>/dev/null || true
     fi
 
-    echo "${MAGENTA}[charon_daemon]: ${RESET}${CYAN} $cmd ${RESET}" >&2
+    echo "${MAGENTA}${NOW}[charon_daemon]: ${RESET}${CYAN} $cmd ${RESET}" >&2
 
     {
         if [[ -n "$tty_dev" && -c "$tty_dev" && -t 0 ]]; then
@@ -129,7 +129,7 @@ cleanup() {
     wait 2>/dev/null
     rm -f "$CMD_FIFO" 2>/dev/null
     rm -f "$LOCK_FILE" 2>/dev/null
-    echo "${RED}[charon_daemon] Stopped${RESET}"
+    echo "${RED}${NOW}[charon_daemon] Stopped${RESET}"
 }
 
 trap cleanup EXIT
@@ -154,11 +154,11 @@ while IFS= read -r line <&3 || [[ -n "$line" ]]; do
     req_cmd="${rest#*|}"
 
     if [[ -z "$req_token" || -z "$req_reply" || -z "$req_cmd" ]]; then
-        echo "${RED}[charon_daemon] Malformed request: $line ${RESET}" >&2
+        echo "${RED}${NOW}[charon_daemon] Malformed request: $line ${RESET}" >&2
         continue
     fi
 
     execute_command "$req_token" "$req_reply" "$req_tty" "$req_cmd" &
 done
 
-echo "${RED}[charon_daemon] FIFO closed, exiting. ${RESET}" >&2
+echo "${RED}${NOW}[charon_daemon] FIFO closed, exiting. ${RESET}" >&2
