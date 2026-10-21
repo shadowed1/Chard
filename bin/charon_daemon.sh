@@ -100,16 +100,18 @@ execute_command() {
         mkfifo "$host_reply_fifo" 2>/dev/null || true
     fi
 
-    echo "${MAGENTA}[charon_daemon]:${RESET}${CYAN} $cmd ${RESET}" >&2
+    echo "${MAGENTA}[charon_daemon] Running:${RESET}${CYAN} $cmd ${RESET}" >&2
 
     {
-        if [[ -n "$tty_dev" && -c "$tty_dev" ]]; then
+        # Only redirect TTY if it's a valid terminal device
+        if [[ -n "$tty_dev" && -c "$tty_dev" && -t 0 ]]; then
             if result=$(/bin/bash -c "$cmd" <"$tty_dev" 2>&1); then
                 exit_code=0
             else
                 exit_code=$?
             fi
         else
+            # Don't redirect stdin for non-TTY environments (LLMs, scripts)
             if result=$(/bin/bash -c "$cmd" 2>&1); then
                 exit_code=0
             else
@@ -133,14 +135,15 @@ trap cleanup EXIT
 trap 'exit 0' SIGINT SIGTERM
 
 echo
-echo "${GREEN}[charon_daemon] Listening on ${BOLD}$CMD_FIFO${RESET}"
-echo "${GREEN}[charon_daemon] ${BOLD}CHARD_ROOT=$CHARD_ROOT  CHARD_HOME=$CHARD_HOME  CHARD_USER=$CHARD_USER${RESET}"
-echo "${GREEN}[charon_daemon] Authentication enabled - ${BOLD}Ctrl-C to exit.${RESET}"
+echo "${GREEN}[charon_daemon] Listening on $CMD_FIFO${RESET}"
+echo "${GREEN}[charon_daemon] CHARD_ROOT=$CHARD_ROOT  CHARD_HOME=$CHARD_HOME  CHARD_USER=$CHARD_USER${RESET}"
+echo "[charon_daemon] Authentication enabled - Ctrl-C to exit.${RESET}"
 echo
 
 exec 3<>"$CMD_FIFO"
 
-while IFS= read -r line <&3; do
+while IFS= read -r line <&3 || [[ -n "$line" ]]; do
+    line="${line//$'\r'/}"
     [[ -z "$line" ]] && continue
     req_token="${line%%|*}"
     rest="${line#*|}"
