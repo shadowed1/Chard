@@ -15,7 +15,7 @@ if [[ -f "/.chard_home" ]]; then
     CHARD_HOME=$(cat "/.chard_home" | tr -d '[:space:]')
 else
     echo "${RED}[charon] Error: /.chard_home not found${RESET}" >&2
-    echo "Expected /.chard_home to contain the relative home path (e.g., home/chronos)" >&2
+    sleep 5
     exit 1
 fi
 
@@ -23,9 +23,8 @@ CMD_FIFO="/${CHARD_HOME}/charon/charon.fifo"
 AUTH_FILE="/${CHARD_HOME}/charon/.charon.auth"
 
 if [[ ! -p "$CMD_FIFO" ]]; then
-    echo "${RED}[charon] charon_daemon is not running" >&2
-    echo "Expected FIFO: $CMD_FIFO" >&2
-    echo "(On host this maps to \$CHARD_ROOT/$CMD_FIFO) ${RESET}" >&2
+    echo "${RED}[charon] charon_daemon is not running${RESET}" >&2
+    echo "${RED}Expected FIFO: $CMD_FIFO ${RESET}" >&2
     sleep 5
     exit 1
 fi
@@ -40,7 +39,7 @@ AUTH_TOKEN=$(cat "$AUTH_FILE")
 
 if [[ $# -eq 0 ]]; then
     echo "${GREEN}[charon] charon_daemon is running - commands enabled${RESET}"
-    echo "FIFO: $CMD_FIFO"
+    echo "${CYAN}FIFO:${BOLD} $CMD_FIFO ${RESET}"
     exit 0
 fi
 
@@ -54,14 +53,14 @@ trap cleanup EXIT
 mkfifo "$REPLY_FIFO"
 chmod 600 "$REPLY_FIFO"
 
-TTY_DEV=$(tty 2>/dev/null || echo "/dev/tty1")
+TTY_DEV=$(tty 2>/dev/null | grep -E '^/dev/' || echo "/dev/tty1")
 cmd=$(printf '%q ' "$@" | sed 's/ $//')
 
 {
     printf '%s|%s|%s|%s\n' "$AUTH_TOKEN" "$REPLY_FIFO" "$TTY_DEV" "$cmd"
 } >"$CMD_FIFO" || {
     echo "${RED}[charon] Failed to write to command FIFO${RESET}" >&2
-    echo "${YELLOW}The daemon may have restarted. Try again. ${RESET}" >&2
+    sleep 5
     exit 1
 }
 
@@ -81,6 +80,7 @@ done <"$REPLY_FIFO"
 
 if [[ "$found_exit" != "true" ]]; then
     echo "${RED}[charon] No exit marker received from daemon${RESET}" >&2
+    sleep 5
     exit 1
 fi
 
