@@ -371,7 +371,8 @@ trap cleanup_chroot EXIT INT TERM
 					"bin/rainbow.sh|$CHARD_ROOT/bin/rainbow|1"
 					"bin/chard_browser.sh|$CHARD_ROOT/bin/chard_browser|1"
 					"bin/chard_sudo.sh|$CHARD_ROOT/bin/chard_sudo|1"
-
+					"bin/charon.sh|$CHARD_ROOT/bin/charon|1"
+					"bin/charon_daemon.sh|$CHARD_ROOT/bin/charon_daemon|1"
 				)
 				
 				for entry in "${FILES[@]}"; do
