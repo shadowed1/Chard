@@ -1027,6 +1027,10 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sudo.sh"            -o "$CHARD_ROOT/bin/chard_sudo" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/charon.sh"            -o "$CHARD_ROOT/bin/charon" 2>/dev/null
+sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/charon_daemon.sh"            -o "$CHARD_ROOT/bin/charon_daemon" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -1056,6 +1060,8 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_timezone_daemon"
 sudo chmod +x "$CHARD_ROOT/bin/chard_browser"
 sudo chmod +x "/usr/local/bin/chard_repair" 2>/dev/null
 sudo chmod +x "$CHARD_ROOT/bin/chard_sudo"
+sudo chmod +x "$CHARD_ROOT/bin/charon"
+sudo chmod +x "$CHARD_ROOT/bin/charon.sh"
 
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
