@@ -580,7 +580,12 @@ checkpoint_22() {
     sudo -E /usr/lib/python-exec/python3.14/emerge --oneshot dev-lang/python 2>/dev/null
     sudo -E /usr/lib/python-exec/python3.14/emerge --oneshot --changed-use app-eselect/eselect-python 2>/dev/null
     sudo eselect python set python3.14 2>/dev/null
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge --oneshot dev-lang/python" 
+    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge --oneshot dev-lang/python"
+    sudo cp -a /usr/lib/python-exec/python-exec2 \
+    /usr/lib/python-exec/python-exec2.bak
+    sudo sed -i \
+    's/exec_dirs\[-2\] if len(exec_dirs) > 1/exec_dirs[-3] if len(exec_dirs) > 2/' \
+    /usr/lib/python-exec/python-exec2
 }
 run_checkpoint 22 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/python" checkpoint_22
 
