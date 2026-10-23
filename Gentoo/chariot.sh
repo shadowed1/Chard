@@ -731,6 +731,33 @@ checkpoint_48() {
     retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge llvm-runtimes/libcxx"
     retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge llvm-runtimes/libcxxabi"
     retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/spirv-llvm-translator"
+    echo '>=llvm-runtimes/libclc-23' | sudo tee -a /etc/portage/package.mask/libclc
+    
+    EB=$(equery w sys-libs/glibc)
+    USEFILE=/etc/portage/package.use/glibc
+    
+    getvar() { sed -n "s/^$1=[\"']\{0,1\}\([0-9][0-9.]*\).*/\1/p" "$EB" | head -1; }
+    
+    GENTOO=$(getvar MIN_KERN_VER_GENTOO)
+    UPSTREAM=$(getvar MIN_KERN_VER_UPSTREAM)
+    RUN=$(uname -r | grep -o '^[0-9][0-9.]*' | sed 's/\.$//')
+    ver_lt() { [ "$1" != "$2" ] && [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ]; }
+    echo "${BLUE}running=$RUN gentoo_min=$GENTOO upstream_min=$UPSTREAM ($EB) ${RESET}"
+    
+    if [ -z "$GENTOO" ] || [ -z "$UPSTREAM" ]; then
+        echo "${RED}could not parse MIN_KERN_VER_GENTOO/UPSTREAM from $EB ${RESET}" >&2
+    elif ver_lt "$RUN" "$GENTOO"; then
+        if ver_lt "$RUN" "$UPSTREAM"; then
+            echo "${MAGENTA}running kernel below upstream floor${RESET}" >&2
+        else
+            echo 'sys-libs/glibc old-kernel' | sudo tee "$USEFILE" >/dev/null
+            echo "${YELLOW}set USE=old-kernel in $USEFILE ${RESET}"
+        fi
+    else
+        sudo rm -f "$USEFILE"
+        echo "${GREEN}kernel OK, old-kernel not needed${RESET}"
+    fi
+    
     sudo -E /usr/lib/python-exec/python3.14/emerge --update --deep --newuse @world
     
 }
