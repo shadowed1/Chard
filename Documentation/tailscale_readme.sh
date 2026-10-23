@@ -60,8 +60,6 @@ end script
 EOF
 
 sudo chmod 644 /etc/init/tailscaled.conf
-# In ChromeOS Shell:
-
 
 # Days' cleaned it up and made it a script:
 
