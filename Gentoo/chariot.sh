@@ -734,7 +734,6 @@ checkpoint_48() {
     sudo -E /usr/lib/python-exec/python3.14/emerge --update --deep --newuse @world
     
 }
-run_checkpoint 48 "sudo -E /usr/lib/python-exec/python3.14/emerge llvm-core/libclc-20" checkpoint_48
 
 checkpoint_49() {
     SMRT $((PCT_DEFAULT))
