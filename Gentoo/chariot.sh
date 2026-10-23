@@ -56,7 +56,7 @@ if [[ "$1" == "reset" ]]; then
 fi
 
 retry_emerge() {
-    local max_retries=10
+    local max_retries=3
     local retry_count=0
     local wait_time=5
     local cmd="$@"
