@@ -726,7 +726,8 @@ checkpoint_47() {
 run_checkpoint 47 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/bubblewrap" checkpoint_47
 
 checkpoint_48() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge -v =llvm-core/libclc-20*"
+    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge -1v llvm-core/llvm:23 llvm-core/clang:23"
+    #retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge -v =llvm-core/libclc-20*"
     retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge llvm-runtimes/libcxx"
     retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge llvm-runtimes/libcxxabi"
     retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/spirv-llvm-translator"
