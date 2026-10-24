@@ -7,6 +7,18 @@ XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
 ACCELERATORS=""
 WINDOWED_ACCELERATORS=""
 FORCE_DRM_DEVICE="/dev/dri/renderD128"
+shopt -s nullglob
+wayland_sockets=("$XDG_RUNTIME_DIR"/wayland-*)
+shopt -u nullglob
+
+if [[ ${#wayland_sockets[@]} -eq 0 ]]; then
+    echo "Error: No Wayland sockets found" >&2
+    SOMMELIER_DISPLAY="$XDG_RUNTIME_DIR/wayland-0"
+fi
+
+SOMMELIER_DISPLAY="${wayland_sockets[0]}"
+SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
+
 WAYLAND_DISPLAY="$XDG_RUNTIME_DIR/wayland-0"
 
 XWAYLAND_PATH=""
