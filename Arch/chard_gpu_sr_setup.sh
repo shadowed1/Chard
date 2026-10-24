@@ -310,7 +310,13 @@ sudo chmod +x /bin/chard_gpusrc
 
 sudo tee /bin/chard_gpusr >/dev/null <<'GPUSR_UI_EOF'
 #!/bin/bash
-RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/chrome}"
+CHARD_HOME=$(cat /.chard_home)
+CHARD_USER=$(cat /.chard_user)
+RUNTIME_DIR=$(cat /.xdg_runtime_dir)
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
+export HOME=/$CHARD_HOME
+export USER=$CHARD_USER
 SOCKET="$RUNTIME_DIR/gsr-ui"
 mkdir -p "$RUNTIME_DIR" 2>/dev/null || true
 if [ -S "$SOCKET" ] && ! pgrep -u "$(id -u)" -x gsr-ui >/dev/null 2>&1; then
@@ -320,6 +326,7 @@ exec env \
   GSR_FORCE_X11=1 \
   __EGL_EXTERNAL_PLATFORM_CONFIG_DIRS="" \
   WAYLAND_DISPLAY="" \
+  PULSE_SERVER=unix:$RUNTIME_DIR/pulse/native \
   DISPLAY=:0 \
   EGL_PLATFORM=x11 \
   LD_LIBRARY_PATH=/usr/lib:/usr/lib64 \
