@@ -6,7 +6,7 @@ CHARD_HOME=""
 CHARD_USER=""
 # <<< END_CHARD_ROOT_MARKER >>>
 
-START_TIME=$(date +%s)
+START_TIME=$(date +%
 RED=$'\033[31m'
 GREEN=$'\033[32m'
 YELLOW=$'\033[33m'
@@ -581,11 +581,11 @@ checkpoint_22() {
     sudo -E emerge --oneshot --changed-use app-eselect/eselect-python 2>/dev/null
     sudo eselect python set python3.14 2>/dev/null
     retry_emerge "sudo -E emerge --oneshot dev-lang/python"
-    sudo cp -a /usr/lib/python-exec/python-exec2 \
-    /usr/lib/python-exec/python-exec2.bak
-    sudo sed -i \
-    's/exec_dirs\[-2\] if len(exec_dirs) > 1/exec_dirs[-3] if len(exec_dirs) > 2/' \
-    /usr/lib/python-exec/python-exec2
+    #sudo cp -a /usr/lib/python-exec/python-exec2 \
+    #/usr/lib/python-exec/python-exec2.bak
+    #sudo sed -i \
+    #'s/exec_dirs\[-2\] if len(exec_dirs) > 1/exec_dirs[-3] if len(exec_dirs) > 2/' \
+    #/usr/lib/python-exec/python-exec2
 }
 run_checkpoint 22 "sudo -E emerge dev-lang/python" checkpoint_22
 
