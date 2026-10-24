@@ -80,9 +80,9 @@ retry_emerge() {
                 [ $wait_time -gt 60 ] && wait_time=60
 
                 echo "${CYAN}Resyncing portage tree and cleaning build state...${RESET}"
-                sudo -E eix-sync --quiet 2>/dev/null || sudo -E /usr/lib/python-exec/python3.14/emerge --sync 2>/dev/null || true
+                sudo -E eix-sync --quiet 2>/dev/null || sudo -E emerge --sync 2>/dev/null || true
                 sudo -E eclass-update 2>/dev/null || true
-                sudo -E /usr/lib/python-exec/python3.14/emerge --metadata 2>/dev/null || true
+                sudo -E emerge --metadata 2>/dev/null || true
                 sudo -E rm -rf /var/tmp/portage/* 2>/dev/null || true
             else
                 echo "${RED}$max_retries attempts failed. Skipping this package.${RESET}"
@@ -424,58 +424,58 @@ checkpoint_1() {
     sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc > /dev/null 2>&1
     ARCH="arm64"
     sed -n -e "s|^${ARCH}[[:space:]]\+\([^[:space:]]\+\)[[:space:]]\+\([^[:space:]]\+\).*$|\1::\2|p" /usr/portage/profiles/profiles.desc > /dev/null 2>&1
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/make"
+    retry_emerge "sudo -E emerge dev-build/make"
     rm -rf /var/tmp/portage/dev-build/make-* 2>/dev/null
 }
-run_checkpoint 1 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/make" checkpoint_1
+run_checkpoint 1 "sudo -E emerge dev-build/make" checkpoint_1
 
 checkpoint_2() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge --noreplace app-portage/gentoolkit"
+    retry_emerge "sudo -E emerge --noreplace app-portage/gentoolkit"
     
 }
-run_checkpoint 2 "sudo -E /usr/lib/python-exec/python3.14/emerge app-portage/gentoolkit" checkpoint_2
+run_checkpoint 2 "sudo -E emerge app-portage/gentoolkit" checkpoint_2
 
 checkpoint_3() {
-    retry_emerge 'USE="-gui" sudo -E /usr/lib/python-exec/python3.14/emerge -1v dev-build/cmake'    
+    retry_emerge 'USE="-gui" sudo -E emerge -1v dev-build/cmake'    
 }
-run_checkpoint 3 'USE="-gui" sudo -E /usr/lib/python-exec/python3.14/emerge -1v dev-build/cmake' checkpoint_3
+run_checkpoint 3 'USE="-gui" sudo -E emerge -1v dev-build/cmake' checkpoint_3
 
 checkpoint_4() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-misc/resolve-march-native"    
+    retry_emerge "sudo -E emerge app-misc/resolve-march-native"    
 }
-run_checkpoint 4 "sudo -E /usr/lib/python-exec/python3.14/emerge app-misc/resolve-march-native" checkpoint_4
+run_checkpoint 4 "sudo -E emerge app-misc/resolve-march-native" checkpoint_4
 
 checkpoint_5() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/gmp"    
+    retry_emerge "sudo -E emerge dev-libs/gmp"    
 }
-run_checkpoint 5 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/gmp" checkpoint_5
+run_checkpoint 5 "sudo -E emerge dev-libs/gmp" checkpoint_5
 
 checkpoint_6() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/mpfr"    
+    retry_emerge "sudo -E emerge dev-libs/mpfr"    
 }
-run_checkpoint 6 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/mpfr" checkpoint_6
+run_checkpoint 6 "sudo -E emerge dev-libs/mpfr" checkpoint_6
 
 checkpoint_7() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-devel/binutils"    
+    retry_emerge "sudo -E emerge sys-devel/binutils"    
 }
-run_checkpoint 7 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-devel/binutils" checkpoint_7
+run_checkpoint 7 "sudo -E emerge sys-devel/binutils" checkpoint_7
 
 checkpoint_8() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/diffutils"
+    retry_emerge "sudo -E emerge sys-apps/diffutils"
     rm -rf /var/tmp/portage/sys-apps/diffutils-* 2>/dev/null
     
 }
-run_checkpoint 8 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/diffutils" checkpoint_8
+run_checkpoint 8 "sudo -E emerge sys-apps/diffutils" checkpoint_8
 
 checkpoint_9() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/openssl"    
+    retry_emerge "sudo -E emerge dev-libs/openssl"    
 }
-run_checkpoint 9 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/openssl" checkpoint_9
+run_checkpoint 9 "sudo -E emerge dev-libs/openssl" checkpoint_9
 
 checkpoint_10() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge net-misc/curl"    
+    retry_emerge "sudo -E emerge net-misc/curl"    
 }
-run_checkpoint 10 "sudo -E /usr/lib/python-exec/python3.14/emerge net-misc/curl" checkpoint_10
+run_checkpoint 10 "sudo -E emerge net-misc/curl" checkpoint_10
 
 checkpoint_11() {
     if ! getent hosts proxy.golang.org >/dev/null 2>&1; then
@@ -493,62 +493,62 @@ checkpoint_11() {
         echo "DNS for proxy.golang.org is working."
     fi
     
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-misc/ca-certificates"
+    retry_emerge "sudo -E emerge app-misc/ca-certificates"
     sudo update-ca-certificates
-    retry_emerge 'USE="curl" sudo -E /usr/lib/python-exec/python3.14/emerge dev-vcs/git'    
+    retry_emerge 'USE="curl" sudo -E emerge dev-vcs/git'    
     [ -d /usr/libexec/git-core ] && \
     [ ! -e /usr/lib/git-core ] && \
     ln -s /usr/libexec/git-core /usr/lib/git-core
     GIT_CURL_VERBOSE=1 GIT_TRACE=1 git ls-remote https://github.com/torvalds/linux.git HEAD 2>&1 | head -50
     export GIT_EXEC_PATH=/usr/libexec/git-core
 }
-run_checkpoint 11 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-vcs/git" checkpoint_11
+run_checkpoint 11 "sudo -E emerge dev-vcs/git" checkpoint_11
 
 checkpoint_12() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/shadow"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/coreutils"
+    retry_emerge "sudo -E emerge sys-apps/shadow"
+    retry_emerge "sudo -E emerge sys-apps/coreutils"
 }
-run_checkpoint 12 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/coreutils" checkpoint_12
+run_checkpoint 12 "sudo -E emerge sys-apps/coreutils" checkpoint_12
 
 # checkpoint_13 skipped
 
 checkpoint_14() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/perl"    
+    retry_emerge "sudo -E emerge dev-lang/perl"    
 }
-run_checkpoint 14 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/perl" checkpoint_14
+run_checkpoint 14 "sudo -E emerge dev-lang/perl" checkpoint_14
 
 checkpoint_15() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Capture-Tiny"    
+    retry_emerge "sudo -E emerge dev-perl/Capture-Tiny"    
     sudo -E perl-cleaner --all
 }
-run_checkpoint 15 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Capture-Tiny" checkpoint_15
+run_checkpoint 15 "sudo -E emerge dev-perl/Capture-Tiny" checkpoint_15
 
 checkpoint_16() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Try-Tiny"    
+    retry_emerge "sudo -E emerge dev-perl/Try-Tiny"    
 }
-run_checkpoint 16 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Try-Tiny" checkpoint_16
+run_checkpoint 16 "sudo -E emerge dev-perl/Try-Tiny" checkpoint_16
 
 checkpoint_17() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Config-AutoConf"
+    retry_emerge "sudo -E emerge dev-perl/Config-AutoConf"
     rm -rf /var/tmp/portage/dev-perl/Config-AutoConf-* 2>/dev/null
     
 }
-run_checkpoint 17 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Config-AutoConf" checkpoint_17
+run_checkpoint 17 "sudo -E emerge dev-perl/Config-AutoConf" checkpoint_17
 
 checkpoint_18() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Test-Fatal"    
+    retry_emerge "sudo -E emerge dev-perl/Test-Fatal"    
 }
-run_checkpoint 18 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/Test-Fatal" checkpoint_18
+run_checkpoint 18 "sudo -E emerge dev-perl/Test-Fatal" checkpoint_18
 
 checkpoint_19() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/findutils"    
+    retry_emerge "sudo -E emerge sys-apps/findutils"    
 }
-run_checkpoint 19 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/findutils" checkpoint_19
+run_checkpoint 19 "sudo -E emerge sys-apps/findutils" checkpoint_19
 
 checkpoint_20() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/elfutils"    
+    retry_emerge "sudo -E emerge dev-libs/elfutils"    
 }
-run_checkpoint 20 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/elfutils" checkpoint_20
+run_checkpoint 20 "sudo -E emerge dev-libs/elfutils" checkpoint_20
 
 checkpoint_21() {
     sudo bash -c '
@@ -577,128 +577,128 @@ checkpoint_21() {
 run_checkpoint 21 "build and install kernel + modules" checkpoint_21
 
 checkpoint_22() {
-    sudo -E /usr/lib/python-exec/python3.14/emerge --oneshot dev-lang/python 2>/dev/null
-    sudo -E /usr/lib/python-exec/python3.14/emerge --oneshot --changed-use app-eselect/eselect-python 2>/dev/null
+    sudo -E emerge --oneshot dev-lang/python 2>/dev/null
+    sudo -E emerge --oneshot --changed-use app-eselect/eselect-python 2>/dev/null
     sudo eselect python set python3.14 2>/dev/null
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge --oneshot dev-lang/python"
+    retry_emerge "sudo -E emerge --oneshot dev-lang/python"
     sudo cp -a /usr/lib/python-exec/python-exec2 \
     /usr/lib/python-exec/python-exec2.bak
     sudo sed -i \
     's/exec_dirs\[-2\] if len(exec_dirs) > 1/exec_dirs[-3] if len(exec_dirs) > 2/' \
     /usr/lib/python-exec/python-exec2
 }
-run_checkpoint 22 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/python" checkpoint_22
+run_checkpoint 22 "sudo -E emerge dev-lang/python" checkpoint_22
 
 checkpoint_23() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/meson"    
+    retry_emerge "sudo -E emerge dev-build/meson"    
 }
-run_checkpoint 23 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/meson" checkpoint_23
+run_checkpoint 23 "sudo -E emerge dev-build/meson" checkpoint_23
 
 checkpoint_24() {
-    retry_emerge 'USE="-tiff" sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libwebp'
-    retry_emerge 'USE="-truetype" sudo -E /usr/lib/python-exec/python3.14/emerge -1 dev-python/pillow'
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libwebp"
+    retry_emerge 'USE="-tiff" sudo -E emerge media-libs/libwebp'
+    retry_emerge 'USE="-truetype" sudo -E emerge -1 dev-python/pillow'
+    retry_emerge "sudo -E emerge media-libs/libwebp"
 }
-run_checkpoint 24 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-python/pillow and libwebp" checkpoint_24
+run_checkpoint 24 "sudo -E emerge dev-python/pillow and libwebp" checkpoint_24
 
 checkpoint_25() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/harfbuzz"
+    retry_emerge "sudo -E emerge media-libs/harfbuzz"
     rm -rf /var/tmp/portage/media-libs/harfbuzz-* 2>/dev/null
     
 }
-run_checkpoint 25 "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/harfbuzz" checkpoint_25
+run_checkpoint 25 "sudo -E emerge media-libs/harfbuzz" checkpoint_25
 
 checkpoint_26() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/glib"    
+    retry_emerge "sudo -E emerge dev-libs/glib"    
 }
-run_checkpoint 26 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/glib" checkpoint_26
+run_checkpoint 26 "sudo -E emerge dev-libs/glib" checkpoint_26
 
 checkpoint_27() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/pkgconf"    
+    retry_emerge "sudo -E emerge dev-util/pkgconf"    
 }
-run_checkpoint 27 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/pkgconf" checkpoint_27
+run_checkpoint 27 "sudo -E emerge dev-util/pkgconf" checkpoint_27
 
 checkpoint_28() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-cpp/gtest"    
+    retry_emerge "sudo -E emerge dev-cpp/gtest"    
 }
-run_checkpoint 28 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-cpp/gtest" checkpoint_28
+run_checkpoint 28 "sudo -E emerge dev-cpp/gtest" checkpoint_28
 
 checkpoint_29() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/gtest-parallel"    
+    retry_emerge "sudo -E emerge dev-util/gtest-parallel"    
 }
-run_checkpoint 29 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/gtest-parallel" checkpoint_29
+run_checkpoint 29 "sudo -E emerge dev-util/gtest-parallel" checkpoint_29
 
 checkpoint_30() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/re2c"    
+    retry_emerge "sudo -E emerge dev-util/re2c"    
 }
-run_checkpoint 30 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/re2c" checkpoint_30
+run_checkpoint 30 "sudo -E emerge dev-util/re2c" checkpoint_30
 
 checkpoint_31() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/ninja"    
+    retry_emerge "sudo -E emerge dev-build/ninja"    
 }
-run_checkpoint 31 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/ninja" checkpoint_31
+run_checkpoint 31 "sudo -E emerge dev-build/ninja" checkpoint_31
 
 checkpoint_32() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-text/docbook2X"    
+    retry_emerge "sudo -E emerge app-text/docbook2X"    
 }
-run_checkpoint 32 "sudo -E /usr/lib/python-exec/python3.14/emerge app-text/docbook2X" checkpoint_32
+run_checkpoint 32 "sudo -E emerge app-text/docbook2X" checkpoint_32
 
 checkpoint_33() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-text/build-docbook-catalog"    
+    retry_emerge "sudo -E emerge app-text/build-docbook-catalog"    
 }
-run_checkpoint 33 "sudo -E /usr/lib/python-exec/python3.14/emerge app-text/build-docbook-catalog" checkpoint_33
+run_checkpoint 33 "sudo -E emerge app-text/build-docbook-catalog" checkpoint_33
 
 checkpoint_34() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/gtk-doc"    
+    retry_emerge "sudo -E emerge dev-util/gtk-doc"    
 }
-run_checkpoint 34 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/gtk-doc" checkpoint_34
+run_checkpoint 34 "sudo -E emerge dev-util/gtk-doc" checkpoint_34
 
 checkpoint_35() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-libs/zlib"    
+    retry_emerge "sudo -E emerge sys-libs/zlib"    
 }
-run_checkpoint 35 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-libs/zlib" checkpoint_35
+run_checkpoint 35 "sudo -E emerge sys-libs/zlib" checkpoint_35
 
 checkpoint_36() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/libunistring"    
+    retry_emerge "sudo -E emerge dev-libs/libunistring"    
 }
-run_checkpoint 36 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/libunistring" checkpoint_36
+run_checkpoint 36 "sudo -E emerge dev-libs/libunistring" checkpoint_36
 
 checkpoint_37() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/file"    
+    retry_emerge "sudo -E emerge sys-apps/file"    
 }
-run_checkpoint 37 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/file" checkpoint_37
+run_checkpoint 37 "sudo -E emerge sys-apps/file" checkpoint_37
 
 checkpoint_38() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge kde-frameworks/extra-cmake-modules"    
+    retry_emerge "sudo -E emerge kde-frameworks/extra-cmake-modules"    
 }
-run_checkpoint 38 "sudo -E /usr/lib/python-exec/python3.14/emerge kde-frameworks/extra-cmake-modules" checkpoint_38
+run_checkpoint 38 "sudo -E emerge kde-frameworks/extra-cmake-modules" checkpoint_38
 
 checkpoint_39() {
-    retry_emerge 'sudo -E /usr/lib/python-exec/python3.14/emerge -j$(nproc) dev-perl/File-LibMagic'    
+    retry_emerge 'sudo -E emerge -j$(nproc) dev-perl/File-LibMagic'    
 }
-run_checkpoint 39 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-perl/File-LibMagic" checkpoint_39
+run_checkpoint 39 "sudo -E emerge dev-perl/File-LibMagic" checkpoint_39
 
 checkpoint_40() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge net-libs/libpsl"    
+    retry_emerge "sudo -E emerge net-libs/libpsl"    
 }
-run_checkpoint 40 "sudo -E /usr/lib/python-exec/python3.14/emerge net-libs/libpsl" checkpoint_40
+run_checkpoint 40 "sudo -E emerge net-libs/libpsl" checkpoint_40
 
 checkpoint_41() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/expat"    
+    retry_emerge "sudo -E emerge dev-libs/expat"    
 }
-run_checkpoint 41 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/expat" checkpoint_41
+run_checkpoint 41 "sudo -E emerge dev-libs/expat" checkpoint_41
 
 checkpoint_42() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/duktape"    
+    retry_emerge "sudo -E emerge dev-lang/duktape"    
 }
-run_checkpoint 42 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/duktape" checkpoint_42
+run_checkpoint 42 "sudo -E emerge dev-lang/duktape" checkpoint_42
 
 checkpoint_43() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/brotli"
+    retry_emerge "sudo -E emerge app-arch/brotli"
     rm -rf /var/tmp/portage/app-arch/brotli-* 2>/dev/null
     
 }
-run_checkpoint 43 "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/brotli" checkpoint_43
+run_checkpoint 43 "sudo -E emerge app-arch/brotli" checkpoint_43
 
 checkpoint_44() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -706,9 +706,9 @@ checkpoint_44() {
 run_checkpoint 44 "install rustup" checkpoint_44
 
 checkpoint_45() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/boehm-gc"    
+    retry_emerge "sudo -E emerge dev-libs/boehm-gc"    
 }
-run_checkpoint 45 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/boehm-gc" checkpoint_45
+run_checkpoint 45 "sudo -E emerge dev-libs/boehm-gc" checkpoint_45
 
 checkpoint_46() {
     echo ">=app-text/xmlto-0.0.28-r11 text" | sudo tee -a /etc/portage/package.use/xmlto
@@ -716,21 +716,21 @@ checkpoint_46() {
     echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
     SMRT $((PCT_LOAD))
     source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-auth/polkit"    
+    retry_emerge "sudo -E emerge sys-auth/polkit"    
 }
-run_checkpoint 46 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-auth/polkit" checkpoint_46
+run_checkpoint 46 "sudo -E emerge sys-auth/polkit" checkpoint_46
 
 checkpoint_47() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/bubblewrap"    
+    retry_emerge "sudo -E emerge sys-apps/bubblewrap"    
 }
-run_checkpoint 47 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/bubblewrap" checkpoint_47
+run_checkpoint 47 "sudo -E emerge sys-apps/bubblewrap" checkpoint_47
 
 checkpoint_48() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge -1v llvm-core/llvm:23 llvm-core/clang:23"
-    #retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge -v =llvm-core/libclc-20*"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge llvm-runtimes/libcxx"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge llvm-runtimes/libcxxabi"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/spirv-llvm-translator"
+    retry_emerge "sudo -E emerge -1v llvm-core/llvm:23 llvm-core/clang:23"
+    #retry_emerge "sudo -E emerge -v =llvm-core/libclc-20*"
+    retry_emerge "sudo -E emerge llvm-runtimes/libcxx"
+    retry_emerge "sudo -E emerge llvm-runtimes/libcxxabi"
+    retry_emerge "sudo -E emerge dev-util/spirv-llvm-translator"
     echo '>=llvm-runtimes/libclc-23' | sudo tee -a /etc/portage/package.mask/libclc
     
     EB=$(equery w sys-libs/glibc)
@@ -758,119 +758,119 @@ checkpoint_48() {
         echo "${GREEN}kernel OK, old-kernel not needed${RESET}"
     fi
     
-    sudo -E /usr/lib/python-exec/python3.14/emerge --update --deep --newuse @world
+    sudo -E emerge --update --deep --newuse @world
     
 }
 
 checkpoint_49() {
     SMRT $((PCT_DEFAULT))
     source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xorg-drivers"    
+    retry_emerge "sudo -E emerge x11-base/xorg-drivers"    
 }
-run_checkpoint 49 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xorg-drivers" checkpoint_49
+run_checkpoint 49 "sudo -E emerge x11-base/xorg-drivers" checkpoint_49
 
 checkpoint_50() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xorg-server"    
+    retry_emerge "sudo -E emerge x11-base/xorg-server"    
 }
-run_checkpoint 50 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xorg-server" checkpoint_50
+run_checkpoint 50 "sudo -E emerge x11-base/xorg-server" checkpoint_50
 
 checkpoint_51() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xorg-apps"    
+    retry_emerge "sudo -E emerge x11-base/xorg-apps"    
 }
-run_checkpoint 51 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xorg-apps" checkpoint_51
+run_checkpoint 51 "sudo -E emerge x11-base/xorg-apps" checkpoint_51
 
 checkpoint_52() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libX11"    
+    retry_emerge "sudo -E emerge x11-libs/libX11"    
 }
-run_checkpoint 52 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libX11" checkpoint_52
+run_checkpoint 52 "sudo -E emerge x11-libs/libX11" checkpoint_52
 
 checkpoint_53() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXft"    
+    retry_emerge "sudo -E emerge x11-libs/libXft"    
 }
-run_checkpoint 53 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXft" checkpoint_53
+run_checkpoint 53 "sudo -E emerge x11-libs/libXft" checkpoint_53
 
 checkpoint_54() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXrender"    
+    retry_emerge "sudo -E emerge x11-libs/libXrender"    
 }
-run_checkpoint 54 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXrender" checkpoint_54
+run_checkpoint 54 "sudo -E emerge x11-libs/libXrender" checkpoint_54
 
 checkpoint_55() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXrandr"    
+    retry_emerge "sudo -E emerge x11-libs/libXrandr"    
 }
-run_checkpoint 55 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXrandr" checkpoint_55
+run_checkpoint 55 "sudo -E emerge x11-libs/libXrandr" checkpoint_55
 
 checkpoint_56() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXcursor"    
+    retry_emerge "sudo -E emerge x11-libs/libXcursor"    
 }
-run_checkpoint 56 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXcursor" checkpoint_56
+run_checkpoint 56 "sudo -E emerge x11-libs/libXcursor" checkpoint_56
 
 checkpoint_57() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXi"
+    retry_emerge "sudo -E emerge x11-libs/libXi"
     rm -rf /var/tmp/portage/x11-libs/libXi-* 2>/dev/null
     
 }
-run_checkpoint 57 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXi" checkpoint_57
+run_checkpoint 57 "sudo -E emerge x11-libs/libXi" checkpoint_57
 
 checkpoint_58() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXinerama"
+    retry_emerge "sudo -E emerge x11-libs/libXinerama"
     rm -rf /var/tmp/portage/x11-libs/libXinerama-* 2>/dev/null
     
 }
-run_checkpoint 58 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libXinerama" checkpoint_58
+run_checkpoint 58 "sudo -E emerge x11-libs/libXinerama" checkpoint_58
 
 checkpoint_59() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/pango"    
+    retry_emerge "sudo -E emerge x11-libs/pango"    
 }
-run_checkpoint 59 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/pango" checkpoint_59
+run_checkpoint 59 "sudo -E emerge x11-libs/pango" checkpoint_59
 
 checkpoint_60() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/wayland"
+    retry_emerge "sudo -E emerge dev-libs/wayland"
     rm -rf /var/tmp/portage/dev-libs/wayland-* 2>/dev/null
     
 }
-run_checkpoint 60 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/wayland" checkpoint_60
+run_checkpoint 60 "sudo -E emerge dev-libs/wayland" checkpoint_60
 
 checkpoint_61() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/wayland-protocols"    
+    retry_emerge "sudo -E emerge dev-libs/wayland-protocols"    
 }
-run_checkpoint 61 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/wayland-protocols" checkpoint_61
+run_checkpoint 61 "sudo -E emerge dev-libs/wayland-protocols" checkpoint_61
 
 checkpoint_62() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xwayland"    
+    retry_emerge "sudo -E emerge x11-base/xwayland"    
 }
-run_checkpoint 62 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xwayland" checkpoint_62
+run_checkpoint 62 "sudo -E emerge x11-base/xwayland" checkpoint_62
 
 checkpoint_63() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libxkbcommon"    
+    retry_emerge "sudo -E emerge x11-libs/libxkbcommon"    
 }
-run_checkpoint 63 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libxkbcommon" checkpoint_63
+run_checkpoint 63 "sudo -E emerge x11-libs/libxkbcommon" checkpoint_63
 
 checkpoint_64() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/harfbuzz"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge gui-libs/gtk"    
+    retry_emerge "sudo -E emerge media-libs/harfbuzz"
+    retry_emerge "sudo -E emerge gui-libs/gtk"    
 }
-run_checkpoint 64 "sudo -E /usr/lib/python-exec/python3.14/emerge gui-libs/gtk" checkpoint_64
+run_checkpoint 64 "sudo -E emerge gui-libs/gtk" checkpoint_64
 
 checkpoint_65() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/libxfce4util"    
+    retry_emerge "sudo -E emerge xfce-base/libxfce4util"    
 }
-run_checkpoint 65 "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/libxfce4util" checkpoint_65
+run_checkpoint 65 "sudo -E emerge xfce-base/libxfce4util" checkpoint_65
 
 checkpoint_66() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/xfconf"    
+    retry_emerge "sudo -E emerge xfce-base/xfconf"    
 }
-run_checkpoint 66 "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/xfconf" checkpoint_66
+run_checkpoint 66 "sudo -E emerge xfce-base/xfconf" checkpoint_66
 
 checkpoint_67() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/xdg-desktop-portal"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge xdg-desktop-portal-gtk"    
+    retry_emerge "sudo -E emerge sys-apps/xdg-desktop-portal"
+    retry_emerge "sudo -E emerge xdg-desktop-portal-gtk"    
 }
-run_checkpoint 67 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/xdg-desktop-portal" checkpoint_67
+run_checkpoint 67 "sudo -E emerge sys-apps/xdg-desktop-portal" checkpoint_67
 
 checkpoint_68() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge gui-libs/xdg-desktop-portal-wlr"    
+    retry_emerge "sudo -E emerge gui-libs/xdg-desktop-portal-wlr"    
 }
-run_checkpoint 68 "sudo -E /usr/lib/python-exec/python3.14/emerge gui-libs/xdg-desktop-portal-wlr" checkpoint_68
+run_checkpoint 68 "sudo -E emerge gui-libs/xdg-desktop-portal-wlr" checkpoint_68
 
 checkpoint_69() {
     sudo -E /bin/chard_mesa    
@@ -878,289 +878,289 @@ checkpoint_69() {
 run_checkpoint 69 "sudo -E chard_mesa" checkpoint_69
 
 checkpoint_70() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-apps/mesa-progs"    
+    retry_emerge "sudo -E emerge x11-apps/mesa-progs"    
 }
-run_checkpoint 70 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-apps/mesa-progs" checkpoint_70
+run_checkpoint 70 "sudo -E emerge x11-apps/mesa-progs" checkpoint_70
 
 checkpoint_71() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtbase"    
+    retry_emerge "sudo -E emerge dev-qt/qtbase"    
 }
-run_checkpoint 71 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtbase" checkpoint_71
+run_checkpoint 71 "sudo -E emerge dev-qt/qtbase" checkpoint_71
 
 checkpoint_72() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qttools"
+    retry_emerge "sudo -E emerge dev-qt/qttools"
     rm -rf /var/tmp/portage/dev-qt/qttools-* 2>/dev/null
     
 }
-run_checkpoint 72 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qttools" checkpoint_72
+run_checkpoint 72 "sudo -E emerge dev-qt/qttools" checkpoint_72
 
 checkpoint_73() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtnetwork"    
+    retry_emerge "sudo -E emerge dev-qt/qtnetwork"    
 }
-run_checkpoint 73 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtnetwork" checkpoint_73
+run_checkpoint 73 "sudo -E emerge dev-qt/qtnetwork" checkpoint_73
 
 checkpoint_74() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtconcurrent"    
+    retry_emerge "sudo -E emerge dev-qt/qtconcurrent"    
 }
-run_checkpoint 74 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtconcurrent" checkpoint_74
+run_checkpoint 74 "sudo -E emerge dev-qt/qtconcurrent" checkpoint_74
 
 checkpoint_75() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtxml"    
+    retry_emerge "sudo -E emerge dev-qt/qtxml"    
 }
-run_checkpoint 75 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtxml" checkpoint_75
+run_checkpoint 75 "sudo -E emerge dev-qt/qtxml" checkpoint_75
 
 checkpoint_76() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtgui"    
+    retry_emerge "sudo -E emerge dev-qt/qtgui"    
 }
-run_checkpoint 76 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtgui" checkpoint_76
+run_checkpoint 76 "sudo -E emerge dev-qt/qtgui" checkpoint_76
 
 checkpoint_77() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtcore"    
+    retry_emerge "sudo -E emerge dev-qt/qtcore"    
 }
-run_checkpoint 77 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-qt/qtcore" checkpoint_77
+run_checkpoint 77 "sudo -E emerge dev-qt/qtcore" checkpoint_77
 
 checkpoint_78() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/cmake"    
+    retry_emerge "sudo -E emerge dev-build/cmake"    
 }
-run_checkpoint 78 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/cmake" checkpoint_78
+run_checkpoint 78 "sudo -E emerge dev-build/cmake" checkpoint_78
 
 checkpoint_79() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/dbus"    
+    retry_emerge "sudo -E emerge sys-apps/dbus"    
 }
-run_checkpoint 79 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/dbus" checkpoint_79
+run_checkpoint 79 "sudo -E emerge sys-apps/dbus" checkpoint_79
 
 checkpoint_80() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-accessibility/at-spi2-core"    
+    retry_emerge "sudo -E emerge app-accessibility/at-spi2-core"    
 }
-run_checkpoint 80 "sudo -E /usr/lib/python-exec/python3.14/emerge app-accessibility/at-spi2-core" checkpoint_80
+run_checkpoint 80 "sudo -E emerge app-accessibility/at-spi2-core" checkpoint_80
 
 checkpoint_81() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-accessibility/at-spi2-atk"
+    retry_emerge "sudo -E emerge app-accessibility/at-spi2-atk"
     rm -rf /var/tmp/portage/app-accessibility/at-spi2-atk-* 2>/dev/null
     
 }
-run_checkpoint 81 "sudo -E /usr/lib/python-exec/python3.14/emerge app-accessibility/at-spi2-atk" checkpoint_81
+run_checkpoint 81 "sudo -E emerge app-accessibility/at-spi2-atk" checkpoint_81
 
 checkpoint_82() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/fontconfig"    
+    retry_emerge "sudo -E emerge media-libs/fontconfig"    
 }
-run_checkpoint 82 "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/fontconfig" checkpoint_82
+run_checkpoint 82 "sudo -E emerge media-libs/fontconfig" checkpoint_82
 
 checkpoint_83() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-fonts/dejavu"    
+    retry_emerge "sudo -E emerge media-fonts/dejavu"    
 }
-run_checkpoint 83 "sudo -E /usr/lib/python-exec/python3.14/emerge media-fonts/dejavu" checkpoint_83
+run_checkpoint 83 "sudo -E emerge media-fonts/dejavu" checkpoint_83
 
 checkpoint_84() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-themes/gtk-engines"    
+    retry_emerge "sudo -E emerge x11-themes/gtk-engines"    
 }
-run_checkpoint 84 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-themes/gtk-engines" checkpoint_84
+run_checkpoint 84 "sudo -E emerge x11-themes/gtk-engines" checkpoint_84
 
 checkpoint_85() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-themes/gtk-engines-murrine"    
+    retry_emerge "sudo -E emerge x11-themes/gtk-engines-murrine"    
 }
-run_checkpoint 85 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-themes/gtk-engines-murrine" checkpoint_85
+run_checkpoint 85 "sudo -E emerge x11-themes/gtk-engines-murrine" checkpoint_85
 
 checkpoint_86() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/python"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-python/pip"    
+    retry_emerge "sudo -E emerge dev-lang/python"
+    retry_emerge "sudo -E emerge dev-python/pip"    
 }
-run_checkpoint 86 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/python" checkpoint_86
+run_checkpoint 86 "sudo -E emerge dev-lang/python" checkpoint_86
 
 checkpoint_87() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libnotify"    
+    retry_emerge "sudo -E emerge x11-libs/libnotify"    
 }
-run_checkpoint 87 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libnotify" checkpoint_87
+run_checkpoint 87 "sudo -E emerge x11-libs/libnotify" checkpoint_87
 
 checkpoint_88() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/libdbusmenu"    
+    retry_emerge "sudo -E emerge dev-libs/libdbusmenu"    
 }
-run_checkpoint 88 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/libdbusmenu" checkpoint_88
+run_checkpoint 88 "sudo -E emerge dev-libs/libdbusmenu" checkpoint_88
 
 checkpoint_89() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libSM"    
+    retry_emerge "sudo -E emerge x11-libs/libSM"    
 }
-run_checkpoint 89 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libSM" checkpoint_89
+run_checkpoint 89 "sudo -E emerge x11-libs/libSM" checkpoint_89
 
 checkpoint_90() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libICE"    
+    retry_emerge "sudo -E emerge x11-libs/libICE"    
 }
-run_checkpoint 90 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libICE" checkpoint_90
+run_checkpoint 90 "sudo -E emerge x11-libs/libICE" checkpoint_90
 
 checkpoint_91() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libwnck"    
+    retry_emerge "sudo -E emerge x11-libs/libwnck"    
 }
-run_checkpoint 91 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/libwnck" checkpoint_91
+run_checkpoint 91 "sudo -E emerge x11-libs/libwnck" checkpoint_91
 
 checkpoint_92() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/cmake"
+    retry_emerge "sudo -E emerge dev-build/cmake"
 }
-run_checkpoint 92 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-build/cmake" checkpoint_92
+run_checkpoint 92 "sudo -E emerge dev-build/cmake" checkpoint_92
 
 checkpoint_93() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/exo"    
+    retry_emerge "sudo -E emerge xfce-base/exo"    
 }
-run_checkpoint 93 "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/exo" checkpoint_93
+run_checkpoint 93 "sudo -E emerge xfce-base/exo" checkpoint_93
 
 checkpoint_94() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-admin/exo"    
+    retry_emerge "sudo -E emerge app-admin/exo"    
 }
-run_checkpoint 94 "sudo -E /usr/lib/python-exec/python3.14/emerge app-admin/exo" checkpoint_94
+run_checkpoint 94 "sudo -E emerge app-admin/exo" checkpoint_94
 
 checkpoint_95() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/tar"    
+    retry_emerge "sudo -E emerge app-arch/tar"    
 }
-run_checkpoint 95 "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/tar" checkpoint_95
+run_checkpoint 95 "sudo -E emerge app-arch/tar" checkpoint_95
 
 checkpoint_96() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/xz-utils"    
+    retry_emerge "sudo -E emerge app-arch/xz-utils"    
 }
-run_checkpoint 96 "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/xz-utils" checkpoint_96
+run_checkpoint 96 "sudo -E emerge app-arch/xz-utils" checkpoint_96
 
 checkpoint_97() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge net-libs/gnutls"
+    retry_emerge "sudo -E emerge net-libs/gnutls"
     # rm -rf /var/tmp/portage/net-libs/gnutls-* 2>/dev/null
     
 }
-run_checkpoint 97 "sudo -E /usr/lib/python-exec/python3.14/emerge net-libs/gnutls" checkpoint_97
+run_checkpoint 97 "sudo -E emerge net-libs/gnutls" checkpoint_97
 
 checkpoint_98() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge net-libs/glib-networking"
+    retry_emerge "sudo -E emerge net-libs/glib-networking"
     # rm -rf /var/tmp/portage/net-libs/glib-networking-* 2>/dev/null
     
 }
-run_checkpoint 98 "sudo -E /usr/lib/python-exec/python3.14/emerge net-libs/glib-networking" checkpoint_98
+run_checkpoint 98 "sudo -E emerge net-libs/glib-networking" checkpoint_98
 
 checkpoint_99() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-libs/libseccomp"
+    retry_emerge "sudo -E emerge sys-libs/libseccomp"
     # rm -rf /var/tmp/portage/sys-libs/libseccomp-* 2>/dev/null
     
 }
-run_checkpoint 99 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-libs/libseccomp" checkpoint_99
+run_checkpoint 99 "sudo -E emerge sys-libs/libseccomp" checkpoint_99
 
 checkpoint_100() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-eselect/eselect-repository"
+    retry_emerge "sudo -E emerge app-eselect/eselect-repository"
     # rm -rf /var/tmp/portage/app-eselect/eselect-repository-* 2>/dev/null
     
 }
-run_checkpoint 100 "sudo -E /usr/lib/python-exec/python3.14/emerge app-eselect/eselect-repository" checkpoint_10
+run_checkpoint 100 "sudo -E emerge app-eselect/eselect-repository" checkpoint_10
 
 checkpoint_101() {
-    retry_emerge " sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/appstream-glib"
+    retry_emerge " sudo -E emerge dev-libs/appstream-glib"
     # rm -rf /var/tmp/portage/dev-libs/appstream-glib-*
     
 }
-run_checkpoint 101 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/appstream-glib" checkpoint_101
+run_checkpoint 101 "sudo -E emerge dev-libs/appstream-glib" checkpoint_101
 
 checkpoint_102() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-crypt/gpgme"
+    retry_emerge "sudo -E emerge app-crypt/gpgme"
     # rm -rf /var/tmp/portage/app-crypt/gpgme-*
     
 }
-run_checkpoint 102 "sudo -E /usr/lib/python-exec/python3.14/emerge app-crypt/gpgme" checkpoint_102
+run_checkpoint 102 "sudo -E emerge app-crypt/gpgme" checkpoint_102
 
 checkpoint_103() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/ostree"
+    retry_emerge "sudo -E emerge dev-util/ostree"
     # rm -rf /var/tmp/portage/dev-util/ostree-*
     
 }
-run_checkpoint 103 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/ostree" checkpoint_103
+run_checkpoint 103 "sudo -E emerge dev-util/ostree" checkpoint_103
 
 checkpoint_104() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/xdg-dbus-proxy"
+    retry_emerge "sudo -E emerge sys-apps/xdg-dbus-proxy"
     # rm -rf /var/tmp/portage/sys-apps/xdg-dbus-proxy-*
     
 }
-run_checkpoint 104 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/xdg-dbus-proxy" checkpoint_104
+run_checkpoint 104 "sudo -E emerge sys-apps/xdg-dbus-proxy" checkpoint_104
 
 checkpoint_105() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/gdk-pixbuf"
+    retry_emerge "sudo -E emerge x11-libs/gdk-pixbuf"
     # rm -rf /var/tmp/portage/x11-libs/gdk-pixbuf-*
     
 }
-run_checkpoint 105 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-libs/gdk-pixbuf" checkpoint_105
+run_checkpoint 105 "sudo -E emerge x11-libs/gdk-pixbuf" checkpoint_105
 
 checkpoint_106() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-fs/fuse"
+    retry_emerge "sudo -E emerge sys-fs/fuse"
     # rm -rf /var/tmp/portage/sys-fs/fuse-*
     
 }
-run_checkpoint 106 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-fs/fuse" checkpoint_106
+run_checkpoint 106 "sudo -E emerge sys-fs/fuse" checkpoint_106
 
 checkpoint_107() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-python/pygobject"
+    retry_emerge "sudo -E emerge dev-python/pygobject"
     # rm -rf /var/tmp/portage/dev-python/pygobject-*
     
 }
-run_checkpoint 107 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-python/pygobject" checkpoint_107
+run_checkpoint 107 "sudo -E emerge dev-python/pygobject" checkpoint_107
 
 checkpoint_108() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge gnome-base/dconf"
+    retry_emerge "sudo -E emerge gnome-base/dconf"
     # rm -rf /var/tmp/portage/gnome-base/dconf-*
     
 }
-run_checkpoint 108 "sudo -E /usr/lib/python-exec/python3.14/emerge gnome-base/dconf" checkpoint_108
+run_checkpoint 108 "sudo -E emerge gnome-base/dconf" checkpoint_108
 
 checkpoint_109() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-misc/xdg-utils"
+    retry_emerge "sudo -E emerge x11-misc/xdg-utils"
     # rm -rf /var/tmp/portage/x11-misc/xdg-utils-*
     
 }
-run_checkpoint 109 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-misc/xdg-utils" checkpoint_109
+run_checkpoint 109 "sudo -E emerge x11-misc/xdg-utils" checkpoint_109
 
 checkpoint_110() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-apps/xinit"
+    retry_emerge "sudo -E emerge x11-apps/xinit"
     # rm -rf /var/tmp/portage/x11-apps/xinit-*
     
 }
-run_checkpoint 110 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-apps/xinit" checkpoint_110
+run_checkpoint 110 "sudo -E emerge x11-apps/xinit" checkpoint_110
 
 checkpoint_111() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-terms/xterm"
+    retry_emerge "sudo -E emerge x11-terms/xterm"
     # rm -rf /var/tmp/portage/x11-terms/xterm-*
     
 }
-run_checkpoint 111 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-terms/xterm" checkpoint_111
+run_checkpoint 111 "sudo -E emerge x11-terms/xterm" checkpoint_111
 
 checkpoint_112() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-wm/twm"
+    retry_emerge "sudo -E emerge x11-wm/twm"
     # rm -rf /var/tmp/portage/x11-wm/twm-*
     
 }
-run_checkpoint 112 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-wm/twm" checkpoint_112
+run_checkpoint 112 "sudo -E emerge x11-wm/twm" checkpoint_112
 
 checkpoint_113() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-python/pillow"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-misc/fastfetch"
+    retry_emerge "sudo -E emerge dev-python/pillow"
+    retry_emerge "sudo -E emerge app-misc/fastfetch"
     # rm -rf /var/tmp/portage/dev-python/pillow-*
     # rm -rf /var/tmp/portage/app-misc/fastfetch-*
     
 }
-run_checkpoint 113 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-python/pillow + fastfetch" checkpoint_113
+run_checkpoint 113 "sudo -E emerge dev-python/pillow + fastfetch" checkpoint_113
 
 checkpoint_114() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-gfx/chafa"
+    retry_emerge "sudo -E emerge media-gfx/chafa"
     # rm -rf /var/tmp/portage/media-gfx/chafa-*
     
 }
-run_checkpoint 114 "sudo -E /usr/lib/python-exec/python3.14/emerge media-gfx/chafa" checkpoint_114
+run_checkpoint 114 "sudo -E emerge media-gfx/chafa" checkpoint_114
 
 checkpoint_115() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-text/doxygen"
+    retry_emerge "sudo -E emerge app-text/doxygen"
     # rm -rf /var/tmp/portage/app-text/doxygen-*
     
 }
-run_checkpoint 115 "sudo -E /usr/lib/python-exec/python3.14/emerge app-text/doxygen" checkpoint_115
+run_checkpoint 115 "sudo -E emerge app-text/doxygen" checkpoint_115
 
 checkpoint_116() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge -1 =llvm-core/libclc-20*"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge gui-libs/egl-gbm"
+    retry_emerge "sudo -E emerge -1 =llvm-core/libclc-20*"
+    retry_emerge "sudo -E emerge gui-libs/egl-gbm"
     # rm -rf /var/tmp/portage/dev-util/mesa_clc-*
     # rm -rf /var/tmp/portage/llvm-core/libclc-*
     # rm -rf /var/tmp/portage/gui-libs/egl-gbm-*
     
 }
-run_checkpoint 116 "sudo -E /usr/lib/python-exec/python3.14/emerge gui-libs/egl-gbm" checkpoint_116
+run_checkpoint 116 "sudo -E emerge gui-libs/egl-gbm" checkpoint_116
 
 checkpoint_117() {
     cd /tmp
@@ -1178,71 +1178,71 @@ checkpoint_117() {
 run_checkpoint 117 "Build Sommelier" checkpoint_117
 
 #checkpoint_118() {
-#    sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/flatpak
+#    sudo -E emerge sys-apps/flatpak
 #    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 #    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 #    # rm -rf /var/tmp/portage/sys-apps/flatpak-*
 #    chown -R 1000:1000 ~/.local/share/flatpak
 #    
 #}
-# 118 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/flatpak" checkpoint_118
+# 118 "sudo -E emerge sys-apps/flatpak" checkpoint_118
 
 checkpoint_119() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-admin/sudo"
+    retry_emerge "sudo -E emerge app-admin/sudo"
     # rm -rf /var/tmp/portage/app-admin/sudo-*
     
 }
-run_checkpoint 119 "sudo -E /usr/lib/python-exec/python3.14/emerge app-admin/sudo" checkpoint_119
+run_checkpoint 119 "sudo -E emerge app-admin/sudo" checkpoint_119
 
 #checkpoint_120() {
-#    sudo -E /usr/lib/python-exec/python3.14/emerge x11-misc/xkeyboard-config
+#    sudo -E emerge x11-misc/xkeyboard-config
 #    # rm -rf /var/tmp/portage/x11-misc/xkeyboard-config-*
 #    
 #}
-#run_checkpoint 120 "sudo -E /usr/lib/python-exec/python3.14/emerge x11-misc/xkeyboard-config" checkpoint_120
+#run_checkpoint 120 "sudo -E emerge x11-misc/xkeyboard-config" checkpoint_120
 
 
 checkpoint_120() {
-    retry_emerge 'USE="udisks" sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/thunar'
+    retry_emerge 'USE="udisks" sudo -E emerge xfce-base/thunar'
     # rm -rf /var/tmp/portage/xfce-base/thunar-*
     
 }
-run_checkpoint 120 "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/thunar" checkpoint_120
+run_checkpoint 120 "sudo -E emerge xfce-base/thunar" checkpoint_120
 
 checkpoint_121() {
-    retry_emerge 'USE="udisks" sudo -E /usr/lib/python-exec/python3.14/emerge gnome-base/gvfs'
+    retry_emerge 'USE="udisks" sudo -E emerge gnome-base/gvfs'
     # rm -rf /var/tmp/portage/gnome-base/gvfs-*
     
 }
-run_checkpoint 121 "sudo -E /usr/lib/python-exec/python3.14/emerge gnome-base/gvfs" checkpoint_121
+run_checkpoint 121 "sudo -E emerge gnome-base/gvfs" checkpoint_121
 
 checkpoint_122() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/xfce4-meta"
+    retry_emerge "sudo -E emerge xfce-base/xfce4-meta"
     # rm -rf /var/tmp/portage/xfce-base/xfce4-meta-*
     
 }
-run_checkpoint 122 "sudo -E /usr/lib/python-exec/python3.14/emerge xfce-base/xfce4-meta" checkpoint_122
+run_checkpoint 122 "sudo -E emerge xfce-base/xfce4-meta" checkpoint_122
 
 checkpoint_123() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libao"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge net-misc/yt-dlp"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/opus"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-video/vlc"
+    retry_emerge "sudo -E emerge media-libs/libao"
+    retry_emerge "sudo -E emerge net-misc/yt-dlp"
+    retry_emerge "sudo -E emerge media-libs/opus"
+    retry_emerge "sudo -E emerge media-video/vlc"
     # rm -rf /var/tmp/portage/net-misc/libao-*
     # rm -rf /var/tmp/portage/net-misc/yt-dlp-*
     # rm -rf /var/tmp/portage/media-libs/libopus-*
     # rm -rf /var/tmp/portage/media-video/vlc-*
     
 }
-run_checkpoint 123 "sudo -E /usr/lib/python-exec/python3.14/emerge vlc" checkpoint_123
+run_checkpoint 123 "sudo -E emerge vlc" checkpoint_123
 
 checkpoint_124() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libva"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libva-intel-media-driver"
+    retry_emerge "sudo -E emerge media-libs/libva"
+    retry_emerge "sudo -E emerge media-libs/libva-intel-media-driver"
     # rm -rf /var/tmp/portage/media-libs/libva-* 2>/dev/null
     
 }
-run_checkpoint 124 "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libva" checkpoint_124
+run_checkpoint 124 "sudo -E emerge media-libs/libva" checkpoint_124
 
 checkpoint_125() {
     detect_intel_gpu() {
@@ -1268,28 +1268,28 @@ checkpoint_125() {
         echo "[*] Skipping Intel driver installation"
     fi
 }
-run_checkpoint 125 "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libva-intel-media-driver" checkpoint_125
+run_checkpoint 125 "sudo -E emerge media-libs/libva-intel-media-driver" checkpoint_125
 
 checkpoint_126() {
     echo "media-plugins/alsa-plugins pulseaudio" | sudo tee -a /etc/portage/package.use/firefox-bin
     echo "media-libs/libsdl2 gles2" | sudo tee -a /etc/portage/package.use/libsdl2
-    retry_emerge " sudo -E /usr/lib/python-exec/python3.14/emerge --autounmask-write firefox-bin"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge firefox-bin"
+    retry_emerge " sudo -E emerge --autounmask-write firefox-bin"
+    retry_emerge "sudo -E emerge firefox-bin"
     # rm -rf /var/tmp/portage/www-client/firefox-bin-*
     
 }
-run_checkpoint 126 "sudo -E /usr/lib/python-exec/python3.14/emerge firefox" checkpoint_126
+run_checkpoint 126 "sudo -E emerge firefox" checkpoint_126
 
 checkpoint_127() {
     sudo chown -R 1000:1000 ~/
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/vulkan-header"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/vulkan-layers"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/vulkan-utility-libraries"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-util/vulkan-tools"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-eselect/eselect-repository"
+    retry_emerge "sudo -E emerge dev-util/vulkan-header"
+    retry_emerge "sudo -E emerge media-libs/vulkan-layers"
+    retry_emerge "sudo -E emerge dev-util/vulkan-utility-libraries"
+    retry_emerge "sudo -E emerge dev-util/vulkan-tools"
+    retry_emerge "sudo -E emerge app-eselect/eselect-repository"
     sudo -E eselect repository enable another-brave-overlay
-    sudo -E /usr/lib/python-exec/python3.14/emerge --sync another-brave-overlay
-    sudo -E /usr/lib/python-exec/python3.14/emerge www-client/brave-browser::another-brave-overlay
+    sudo -E emerge --sync another-brave-overlay
+    sudo -E emerge www-client/brave-browser::another-brave-overlay
     sudo chown root:root /opt/brave.com/brave/chrome-sandbox 2>/dev/null
     sudo chmod 4755 /opt/brave.com/brave/chrome-sandbox 2>/dev/null
     # rm -rf /var/tmp/portage/dev-util/vulkan-*
@@ -1298,21 +1298,21 @@ checkpoint_127() {
     # rm -rf /var/tmp/portage/www-client/brave-browser-*
     
 }
-run_checkpoint 127 "sudo -E /usr/lib/python-exec/python3.14/emerge www-client/brave-browser::another-brave-overlay" checkpoint_127
+run_checkpoint 127 "sudo -E emerge www-client/brave-browser::another-brave-overlay" checkpoint_127
 
 checkpoint_128() {
     echo "app-arch/lha lha" | sudo tee -a /etc/portage/package.license
     echo "app-arch/unrar unRAR" | sudo tee -a /etc/portage/package.license
     echo "app-arch/rar RAR" | sudo tee -a /etc/portage/package.license
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/p7zip"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/arj"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/lha"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/lzop"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/unrar"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/rar"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/unzip"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/zip"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-arch/xarchiver"
+    retry_emerge "sudo -E emerge app-arch/p7zip"
+    retry_emerge "sudo -E emerge app-arch/arj"
+    retry_emerge "sudo -E emerge app-arch/lha"
+    retry_emerge "sudo -E emerge app-arch/lzop"
+    retry_emerge "sudo -E emerge app-arch/unrar"
+    retry_emerge "sudo -E emerge app-arch/rar"
+    retry_emerge "sudo -E emerge app-arch/unzip"
+    retry_emerge "sudo -E emerge app-arch/zip"
+    retry_emerge "sudo -E emerge app-arch/xarchiver"
     # rm -rf /var/tmp/portage/app-arch/p7zip-* 2>/dev/null
     # rm -rf /var/tmp/portage/app-arch/arj-* 2>/dev/null
     # rm -rf /var/tmp/portage/app-arch/lha-* 2>/dev/null
@@ -1327,30 +1327,30 @@ checkpoint_128() {
 run_checkpoint 128 "xarchiver" checkpoint_128
 
 #checkpoint_129() {
-#    sudo -E /usr/lib/python-exec/python3.14/emerge app-editors/vscodium
+#    sudo -E emerge app-editors/vscodium
 #    # rm -rf /var/tmp/portage/app-editors/vscodium-*
 #    
 #}
-#run_checkpoint 129 "sudo -E /usr/lib/python-exec/python3.14/emerge app-editors/vscodium" checkpoint_129
+#run_checkpoint 129 "sudo -E emerge app-editors/vscodium" checkpoint_129
 
 checkpoint_130() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge games-util/gamemode"
-    #retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge games-action/prismlauncher"
+    retry_emerge "sudo -E emerge games-util/gamemode"
+    #retry_emerge "sudo -E emerge games-action/prismlauncher"
     # rm -rf /var/tmp/portage/games-util/gamemode-* 2>/dev/null
     # rm -rf /var/tmp/portage/games-action/prismlauncher-* 2>/dev/null
     
 }
-run_checkpoint 130 "sudo -E /usr/lib/python-exec/python3.14/emerge games-action/prismlauncher" checkpoint_130
+run_checkpoint 130 "sudo -E emerge games-action/prismlauncher" checkpoint_130
 
 checkpoint_131() {
     locale_code=$(cat "/.chard_language" | sed 's/-/_/')
     sudo sed -i "s/^# \(${locale_code}[[:space:]]\)/\1/" "/etc/locale.gen"
     sudo -E locale-gen
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-gfx/gimp"
+    retry_emerge "sudo -E emerge media-gfx/gimp"
     # rm -rf /var/tmp/portage/media-gfx/gimp-*
     
 }
-run_checkpoint 131 "sudo -E /usr/lib/python-exec/python3.14/emerge media-gfx/gimp" checkpoint_131
+run_checkpoint 131 "sudo -E emerge media-gfx/gimp" checkpoint_131
 
 checkpoint_132() {
     cd /usr/share/xkeyboard-config-2/symbols/inet
@@ -1360,29 +1360,29 @@ checkpoint_132() {
 run_checkpoint 132 "Keyboard error spam fix" checkpoint_132
 
 #checkpoint_133() {
-    #sudo -E /usr/lib/python-exec/python3.14/emerge app-office/libreoffice-bin
+    #sudo -E emerge app-office/libreoffice-bin
     ## rm -rf /var/tmp/portage/app-office/libreoffice-bin-*
     #
 #}
-#run_checkpoint 133 "sudo -E /usr/lib/python-exec/python3.14/emerge app-office/libreoffice-bin" checkpoint_133
+#run_checkpoint 133 "sudo -E emerge app-office/libreoffice-bin" checkpoint_133
 
-#sudo -E /usr/lib/python-exec/python3.14/emerge app-office/libreoffice-bin
+#sudo -E emerge app-office/libreoffice-bin
 
 checkpoint_134() {
     echo "media-video/obs-studio" | sudo tee -a /etc/portage/package.use/obs
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-plugins/obs-vkcapture"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-video/obs-studio"
+    retry_emerge "sudo -E emerge media-plugins/obs-vkcapture"
+    retry_emerge "sudo -E emerge media-video/obs-studio"
     # rm -rf /var/tmp/portage/media-video/obs-studio-*
     
 }
-run_checkpoint 134 "sudo -E /usr/lib/python-exec/python3.14/emerge media-video/obs-studio" checkpoint_134
+run_checkpoint 134 "sudo -E emerge media-video/obs-studio" checkpoint_134
 
 checkpoint_135() {
-    retry_emerge 'USE="ruby_targets_ruby40" sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/ruby'
+    retry_emerge 'USE="ruby_targets_ruby40" sudo -E emerge dev-lang/ruby'
     # rm -rf /var/tmp/portage/dev-lang/ruby-*
     
 }
-run_checkpoint 135 "sudo -E /usr/lib/python-exec/python3.14/emerge dev-lang/ruby" checkpoint_135
+run_checkpoint 135 "sudo -E emerge dev-lang/ruby" checkpoint_135
 
 checkpoint_136() {
 sudo chown -R 1000:1000 ~/
@@ -1391,7 +1391,7 @@ run_checkpoint 136 "sudo chown -R $USER:$USER $HOME" checkpoint_136
 
 checkpoint_137() {
     if [[ "$ARCH" == "x86_64" ]]; then
-        retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge games-util/heroic-bin"
+        retry_emerge "sudo -E emerge games-util/heroic-bin"
         sudo chmod 4755 /opt/heroic-2.18.1/chrome-sandbox
         sudo chown -R 1000:1000 ~/
         # rm -rf /var/tmp/portage/games-util/heroic-bin-*
@@ -1400,12 +1400,12 @@ checkpoint_137() {
         echo "Skipping Heroic Games Launcher on $ARCH"
     fi
 }
-run_checkpoint 137 "sudo -E /usr/lib/python-exec/python3.14/emerge games-util/heroic-bin" checkpoint_137
+run_checkpoint 137 "sudo -E emerge games-util/heroic-bin" checkpoint_137
 
 checkpoint_138() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-block/gparted"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-fs/exfatprogs sys-fs/dosfstools sys-fs/ntfs3g"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-fs/mtools"
+    retry_emerge "sudo -E emerge sys-block/gparted"
+    retry_emerge "sudo -E emerge sys-fs/exfatprogs sys-fs/dosfstools sys-fs/ntfs3g"
+    retry_emerge "sudo -E emerge sys-fs/mtools"
     # rm -rf /var/tmp/portage/sys-block/gparted-*
     # rm -rf /var/tmp/portage/emerge sys-fs/exfatprogs-*
     # rm -rf /var/tmp/portage/sys-fs/dosfstools-*
@@ -1413,7 +1413,7 @@ checkpoint_138() {
     # rm -rf /var/tmp/portage/sys-fs/mtools-*
     
 }
-run_checkpoint 138 "sudo -E /usr/lib/python-exec/python3.14/emerge sys-block/gparted" checkpoint_138
+run_checkpoint 138 "sudo -E emerge sys-block/gparted" checkpoint_138
 
 checkpoint_139() {
     sudo curl -L -o /usr/local/bin/unetbootin https://github.com/unetbootin/unetbootin/releases/download/702/unetbootin-linux64-702.bin
@@ -1422,9 +1422,9 @@ checkpoint_139() {
 run_checkpoint 139 "unetbootin" checkpoint_139
 
 checkpoint_140() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge app-emulation/qemu"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge qemu-init-scripts"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge sys-apps/usermode-utilities"
+    retry_emerge "sudo -E emerge app-emulation/qemu"
+    retry_emerge "sudo -E emerge qemu-init-scripts"
+    retry_emerge "sudo -E emerge sys-apps/usermode-utilities"
     rm -rf /var/tmp/app-emulation/qemu*
     rm -rf /var/tmp/qemu-init-scripts*
     rm -rf /var/tmp/sys-apps/usermode-utilities*
@@ -1434,24 +1434,24 @@ checkpoint_140() {
 run_checkpoint 140 "Chard Bubblepatch" checkpoint_140
 
 checkpoint_142() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge gedit"
+    retry_emerge "sudo -E emerge gedit"
     
 }
-run_checkpoint 142 "sudo -E /usr/lib/python-exec/python3.14/emerge gedit" checkpoint_142
+run_checkpoint 142 "sudo -E emerge gedit" checkpoint_142
 
 checkpoint_143() {
     ARCH=$(uname -m)
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge pipewire"
+    retry_emerge "sudo -E emerge pipewire"
     sudo rm /etc/pipewire/pipewire.conf.d/crostini-audio.conf 2>/dev/null
     rm -rf ~/.config/pulse 2>/dev/null
     rm -rf ~/.pulse 2>/dev/null
     rm -rf ~/.cache/pulse 2>/dev/null
     cd ~/
-    #sudo -E /usr/lib/python-exec/python3.14/emerge media-sound/pulseaudio-ctl
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-libs/libpulse"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-sound/pulseaudio-daemon"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-sound/alsa-utils"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge pavucontrol"
+    #sudo -E emerge media-sound/pulseaudio-ctl
+    retry_emerge "sudo -E emerge media-libs/libpulse"
+    retry_emerge "sudo -E emerge media-sound/pulseaudio-daemon"
+    retry_emerge "sudo -E emerge media-sound/alsa-utils"
+    retry_emerge "sudo -E emerge pavucontrol"
     mv ~/.config/pulse/default.pa ~/.config/pulse/default.pa.bak 2>/dev/null
     
     git clone --depth 1 https://github.com/shadowed1/alsa-ucm-conf-cros
@@ -1506,13 +1506,13 @@ checkpoint_143() {
 run_checkpoint 143 "xkbcomp" checkpoint_143
 
 checkpoint_144() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge xkbcomp"
+    retry_emerge "sudo -E emerge xkbcomp"
     
 }
 run_checkpoint 144 "xkbcomp" checkpoint_144
 
 checkpoint_145() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge coreutils"
+    retry_emerge "sudo -E emerge coreutils"
     
 }
 run_checkpoint 145 "coreutils" checkpoint_145
@@ -1548,8 +1548,8 @@ checkpoint_147() {
 run_checkpoint 147 "VIRTM - Virtual Touch Mouse and Autoclicker" checkpoint_147
 
 checkpoint_148() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge xfce4-terminal"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge x11-base/xwayland"
+    retry_emerge "sudo -E emerge xfce4-terminal"
+    retry_emerge "sudo -E emerge x11-base/xwayland"
     xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
     xfconf-query -c xfwm4 -p /general/theme -s "Adwaita-dark"
     # rm -rf /var/tmp/portage/x11-base/xwayland-*
@@ -1595,7 +1595,7 @@ sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
 checkpoint_150() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge bindfs"
+    retry_emerge "sudo -E emerge bindfs"
     
 }
 run_checkpoint 150 "Bindfs" checkpoint_150
@@ -1606,7 +1606,7 @@ checkpoint_151() {
 run_checkpoint 151 "Exo Color Inversion Patch" checkpoint_151
 
 checkpoint_152() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-python/pyparsing"
+    retry_emerge "sudo -E emerge dev-python/pyparsing"
     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak"
     sudo chmod +x /bin/chard_downgrade_bwrap_flatpak
     /bin/chard_downgrade_bwrap_flatpak
@@ -1619,7 +1619,7 @@ checkpoint_152() {
 run_checkpoint 152 "Chardpak" checkpoint_152
 
 checkpoint_153() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge media-video/libva-utils"
+    retry_emerge "sudo -E emerge media-video/libva-utils"
     
 }
 run_checkpoint 153 "VAInfo" checkpoint_153
@@ -1636,8 +1636,8 @@ checkpoint_154() {
 run_checkpoint 154 "chard_wrappers" checkpoint_154
 
 checkpoint_155() {
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge dev-libs/nss"
-    retry_emerge "sudo -E /usr/lib/python-exec/python3.14/emerge net-print/cups"
+    retry_emerge "sudo -E emerge dev-libs/nss"
+    retry_emerge "sudo -E emerge net-print/cups"
     
 }
 run_checkpoint 155 "nss and cups" checkpoint_155
