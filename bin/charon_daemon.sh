@@ -35,10 +35,10 @@ if [[ -z "$CHARDRC_PATH" ]]; then
 fi
 
 if [[ -f "$CHARDRC_PATH" ]]; then
-
-    CHARD_ROOT=$(sed -n '/# <<< CHARD_ROOT_MARKER >>>/,/# <<< END_CHARD_ROOT_MARKER >>>/p' "$CHARDRC_PATH" | grep '^CHARD_ROOT=' | head -1 | sed 's/CHARD_ROOT="//;s/"//')
-    CHARD_HOME=$(sed -n '/# <<< CHARD_ROOT_MARKER >>>/,/# <<< END_CHARD_ROOT_MARKER >>>/p' "$CHARDRC_PATH" | grep '^CHARD_HOME=' | head -1 | sed 's/CHARD_HOME="//;s/"//')
-    CHARD_USER=$(sed -n '/# <<< CHARD_ROOT_MARKER >>>/,/# <<< END_CHARD_ROOT_MARKER >>>/p' "$CHARDRC_PATH" | grep '^CHARD_USER=' | head -1 | sed 's/CHARD_USER="//;s/"//')
+    CHARD_CONFIG=$(sed -n '/# <<< CHARD_ROOT_MARKER >>>/,/# <<< END_CHARD_ROOT_MARKER >>>/p' "$CHARDRC_PATH")
+    CHARD_ROOT=$(printf '%s\n' "$CHARD_CONFIG" | sed -n 's/^[[:space:]]*CHARD_ROOT="[[:space:]]*\([^"]*\)"[[:space:]]*$/\1/p' | head -1)
+    CHARD_HOME=$(printf '%s\n' "$CHARD_CONFIG" | sed -n 's/^[[:space:]]*CHARD_HOME="[[:space:]]*\([^"]*\)"[[:space:]]*$/\1/p' | head -1)
+    CHARD_USER=$(printf '%s\n' "$CHARD_CONFIG" | sed -n 's/^[[:space:]]*CHARD_USER="[[:space:]]*\([^"]*\)"[[:space:]]*$/\1/p' | head -1)
 
     if [[ -z "$CHARD_ROOT" ]]; then
         echo "${RED}[charon_daemon] Error: CHARD_ROOT not found in $CHARDRC_PATH${RESET}" >&2
