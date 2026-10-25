@@ -1579,11 +1579,31 @@ sudo tee /etc/pulse/default.pa.d/99-disable-hw.pa > /dev/null << 'EOF'
 unload-module module-udev-detect
 unload-module module-alsa-card
 EOF
+
 sudo cp /etc/pulse/daemon.conf /etc/pulse/daemon.conf.bak.$(date +%s) 2>/dev/null
+
 sudo sed -i \
-    -e 's/^[#[:space:]]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
-    -e 's/^[#[:space:]]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
-    "/etc/pulse/daemon.conf"
+    -e 's/^[[:space:]#]*avoid-resampling[[:space:]]*=.*/avoid-resampling = true/' \
+    -e 's/^[[:space:]#]*flat-volumes[[:space:]]*=.*/flat-volumes = no/' \
+    -e 's/^[[:space:]#]*default-fragments[[:space:]]*=.*/default-fragments = 2/' \
+    -e 's/^[[:space:]#]*default-fragment-size-msec[[:space:]]*=.*/default-fragment-size-msec = 10/' \
+    -e 's/^[[:space:]#]*resample-method[[:space:]]*=.*/resample-method = trivial/' \
+    -e 's/^[[:space:]#]*enable-deferred-volume[[:space:]]*=.*/enable-deferred-volume = no/' \
+    /etc/pulse/daemon.conf
+
+for setting in \
+    'avoid-resampling = true' \
+    'flat-volumes = no' \
+    'default-fragments = 2' \
+    'default-fragment-size-msec = 10' \
+    'resample-method = trivial' \
+    'enable-deferred-volume = no'
+do
+    key=${setting%% =*}
+    if ! grep -Eq "^[[:space:]]*${key}[[:space:]]*=" /etc/pulse/daemon.conf; then
+        printf '%s\n' "$setting" | sudo tee -a /etc/pulse/daemon.conf >/dev/null
+    fi
+done
 
 sudo cp /$CHARD_HOME/.config/pulse/default.pa /$CHARD_HOME/.config/pulse/default.pa.bak.$(date +%s) 2>/dev/null
 grep -qxF ".include /etc/pulse/default.pa" "/$CHARD_HOME/.config/pulse/default.pa" 2>/dev/null || \
