@@ -28,27 +28,28 @@ cd ~/
 sudo rm -rf bubblepatch
 
 ##################################################################################################
-
+sudo rm -rf /usr/local/bubblewrap-0.11.1
+sudo mkdir -p  /usr/local/bubblewrap-0.11.1
 sudo mkdir -p /usr/local/bwrap-0.11
-wget -c -P /tmp https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
-tar -xf /tmp/bubblewrap-0.11.1.tar.xz -C /tmp
-cd /tmp/bubblewrap-0.11.1
+sudo chown -R 1000:1000 /usr/local/bubblewrap-0.11.1
+sudo wget -c -P /usr/local https://github.com/containers/bubblewrap/releases/download/v0.11.1/bubblewrap-0.11.1.tar.xz
+sudo tar -xf /usr/local/bubblewrap-0.11.1.tar.xz -C /usr/local
+cd /usr/local/bubblewrap-0.11.1
 meson setup build -Dprefix=/usr/local/bwrap-0.11
 
-meson setup \
+meson setup build \
   -Dprefix=/usr/local/bwrap-0.11 \
   -Drequire_userns=false \
   -Dselinux=disabled \
   -Dtests=false \
   -Dbash_completion=disabled \
   -Dzsh_completion=disabled \
-  -Dman=disabled \
-  build
+  -Dman=disabled
   
 ninja -C build
 sudo ninja -C build install
 cd
-sudo rm -rf /tmp/bubblewrap-* 2>/dev/null
+sudo rm -rf /usr/local/bubblewrap-* 2>/dev/null
 
 ##################################################################################################
 
@@ -92,16 +93,17 @@ makepkg -si --noconfirm
 ##################################################################################################
 
 sudo mkdir -p /usr/local/flatpak-1.16.3
-sudo rm -rf /tmp/flatpak-* 2>/dev/null
-wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
-sudo tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
-cd /tmp/flatpak-1.16.3
+sudo rm -rf /usr/local/flatpak-* 2>/dev/null
+sudo wget -c -P /usr/local https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
+sudo tar -xf /usr/local/flatpak-1.16.3.tar.xz -C /usr/local
+sudo chown -R 1000:1000 /usr/local/flatpak-1.16.3
+cd /usr/local/flatpak-1.16.3
       
-sed -i '69d' /tmp/flatpak-1.16.3/common/flatpak-exports.c
+sed -i '69d' /usr/local/flatpak-1.16.3/common/flatpak-exports.c
 
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/tmp/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
-sudo chmod +x /tmp/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
-python3 /tmp/flatpak-1.16.3/chard_flatpak_patch.py /tmp/flatpak-1.16.3/ 2>/dev/null
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/usr/local/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
+sudo chmod +x /usr/local/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
+python3 /usr/local/flatpak-1.16.3/chard_flatpak_patch.py /usr/local/flatpak-1.16.3/ 2>/dev/null
 
 
 meson setup builddir \
@@ -130,22 +132,23 @@ meson setup builddir \
 ninja -C builddir -j$(nproc)
 sudo ninja -C builddir install
 cd
-sudo rm -rf /tmp/flatpak-* 2>/dev/null
+#sudo rm -rf /usr/local/flatpak-* 2>/dev/null
 
 ##################################################################################################
 
 
+#sudo rm -rf /usr/local/flatpak-* 2>/dev/null
 sudo mkdir -p /usr/local/flatpak-1.16.3
-sudo rm -rf /tmp/flatpak-* 2>/dev/null
-wget -c -P /tmp https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
-sudo tar -xf /tmp/flatpak-1.16.3.tar.xz -C /tmp
-cd /tmp/flatpak-1.16.3
+sudo chown -R 1000:1000 /usr/local/flatpak-1.16.3
+sudo wget -c -P /usr/local https://github.com/flatpak/flatpak/releases/download/1.16.3/flatpak-1.16.3.tar.xz
+sudo tar -xf /usr/local/flatpak-1.16.3.tar.xz -C /usr/local
+cd /usr/local/flatpak-1.16.3
 
-sed -i '69d' /tmp/flatpak-1.16.3/common/flatpak-exports.c
+sed -i '69d' /usr/local/flatpak-1.16.3/common/flatpak-exports.c
 
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/tmp/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
-sudo chmod +x /tmp/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
-python3 /tmp/flatpak-1.16.3/chard_flatpak_patch.py /tmp/flatpak-1.16.3/ 2>/dev/null
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/usr/local/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
+sudo chmod +x /usr/local/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
+python3 /usr/local/flatpak-1.16.3/chard_flatpak_patch.py /usr/local/flatpak-1.16.3/ 2>/dev/null
     
 meson setup builddir \
   --prefix=/usr/ \
@@ -173,7 +176,7 @@ meson setup builddir \
 ninja -C builddir -j$(nproc)
 sudo ninja -C builddir install
 cd
-sudo rm -rf /tmp/flatpak-* 2>/dev/null
+#sudo rm -rf /usr/local/flatpak-* 2>/dev/null
 
 ##################################################################################################
 
