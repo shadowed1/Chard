@@ -1282,7 +1282,7 @@ run_checkpoint 126 "sudo -E emerge firefox" checkpoint_126
 
 checkpoint_127() {
     sudo chown -R 1000:1000 ~/
-    retry_emerge "sudo -E emerge dev-util/vulkan-header"
+    retry_emerge "sudo -E emerge dev-util/vulkan-headers"
     retry_emerge "sudo -E emerge media-libs/vulkan-layers"
     retry_emerge "sudo -E emerge dev-util/vulkan-utility-libraries"
     retry_emerge "sudo -E emerge dev-util/vulkan-tools"
