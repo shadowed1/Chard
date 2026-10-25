@@ -342,6 +342,8 @@ SOMMELIER=(
     sleep 0.1
     chard_sudo 2>/dev/null &
     sleep 0.1
+    chard_bindfs 2>/dev/null &
+    sleep 0.1
     exec bash
 '
 error_color
