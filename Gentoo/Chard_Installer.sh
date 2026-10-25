@@ -1063,7 +1063,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_browser"
 sudo chmod +x "/usr/local/bin/chard_repair" 2>/dev/null
 sudo chmod +x "$CHARD_ROOT/bin/chard_sudo"
 sudo chmod +x "$CHARD_ROOT/bin/charon"
-sudo chmod +x "$CHARD_ROOT/bin/charon.sh"
+sudo chmod +x "$CHARD_ROOT/bin/charon_daemon"
 
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
