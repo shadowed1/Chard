@@ -9,7 +9,6 @@ MAGENTA=$'\033[35m'
 CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
-NOW=$(date +"%Y-%m-%d_%H-%M-%S ")
 BASHRC_PATH=""
 if [[ -f "/home/chronos/user/.bashrc" ]]; then
     BASHRC_PATH="/home/chronos/user/.bashrc"
@@ -83,7 +82,7 @@ execute_command() {
     local reply_fifo="$2"
     local tty_dev="$3"
     local cmd="$4"
-
+    local now=$(date +"%Y-%m-%d_%H-%M-%S ")
     if [[ "$token" != "$AUTH_TOKEN" ]]; then
         echo "${RED}[charon_daemon] Authentication failed ${RESET}" >&2
         {
@@ -103,7 +102,7 @@ execute_command() {
         mkfifo "$host_reply_fifo" 2>/dev/null || true
     fi
 
-    echo "${MAGENTA}${NOW}[charon_daemon]: ${RESET}${CYAN} $cmd ${RESET}" >&2
+    echo "${MAGENTA}${now}[charon_daemon]: ${RESET}${CYAN} $cmd ${RESET}" >&2
 
     {
         if [[ -n "$tty_dev" && -c "$tty_dev" && -t 0 ]]; then
