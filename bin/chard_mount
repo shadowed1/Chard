@@ -45,8 +45,12 @@ while read -r PART MP; do
     BASENAME=$(basename "$PART")
     TARGET="$MOUNT_POINT/$BASENAME"
     sudo mkdir -p "$TARGET"
-    STAGE="$MOUNT_POINT/.raw/$BASENAME"
-    sudo mkdir -p "$STAGE"
-    sudo mount --bind "$MP" "$STAGE"
+    #source $CHARD_ROOT/.chard.preload 
+    if sudo env LD_PRELOAD="$LD_PRELOAD" "/usr/local/bin/chard_bindfs" -o uid=1000,gid=1001 --perms=ugo+x "$MP" "$TARGET" ; then
+        echo "${GREEN}bindfs mounted:${BOLD} $MP to $TARGET${RESET}"
+    else
+        echo "${YELLOW}bindfs unsupported (for now), falling back to bind mount:${BOLD} $MP to $TARGET${RESET}"
+        sudo mount --bind "$MP" "$TARGET" 2>/dev/null
+    fi
 done < "$STATE_FILE"
 unset LD_PRELOAD
