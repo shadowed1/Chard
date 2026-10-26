@@ -1617,8 +1617,9 @@ sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
 checkpoint_150() {
-    retry_emerge "sudo -E emerge bindfs"
-    
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bindfs.sh" -o "/bin/chard_bindfs" 2>/dev/null
+    sudo chmod +x /bin/chard_bindfs 2>/dev/null
+    chard_bindfs 2>/dev/null
 }
 run_checkpoint 150 "Bindfs" checkpoint_150
 
