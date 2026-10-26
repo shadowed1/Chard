@@ -1082,6 +1082,7 @@ run_checkpoint 105 "sudo -E emerge x11-libs/gdk-pixbuf" checkpoint_105
 
 checkpoint_106() {
     retry_emerge "sudo -E emerge sys-fs/fuse"
+    retry_emerge "sudo -E emerge sys-fs/fuse:0"
     # rm -rf /var/tmp/portage/sys-fs/fuse-*
     
 }
