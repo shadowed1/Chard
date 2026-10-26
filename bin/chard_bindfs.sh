@@ -8,11 +8,9 @@ CYAN=$'\033[36m'
 BOLD=$'\033[1m'
 RESET=$'\033[0m'
 
-   for SRC in ~/external/.raw/*/; do
-       N=$(basename "$SRC")
-       DST=~/external/$N
-       mountpoint -q "$DST" && continue
-       sudo mkdir -p "$DST"
-       sudo bindfs -o uid=1000,gid=1001 -o allow_other --perms=ugo+x "$SRC" "$DST" \
-           || sudo mount --bind "$SRC" "$DST"
-   done
+curl -L -o bindfs-1.18.4.tar.gz "https://bindfs.org/downloads/bindfs-1.18.4.tar.gz"
+tar xzf bindfs-1.18.4.tar.gz
+cd bindfs-1.18.4
+./configure --with-fuse2 --prefix=/usr/local
+make -j$(nproc)
+sudo make install
