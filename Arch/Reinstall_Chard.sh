@@ -714,6 +714,19 @@ if [[ -z "$XDG_RUNTIME_DIR" ]]; then
     fi
 fi
 
+if [ "$IS_CHROMEOS" -eq 1 ]; then
+    ARCH="$(uname -m)"
+    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_ARM64" \
+            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+        sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
+    else
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_x86_64" \
+            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+        sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
+    fi
+fi
+
 echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
 
 sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
