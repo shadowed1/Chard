@@ -1717,13 +1717,9 @@ checkpoint_158() {
 run_checkpoint 158 "Emoji Support" checkpoint_158
 
 checkpoint_159() {
-    ARCH="$(uname -m)"
-    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        echo "Skipping bindfs install on ARM ($ARCH)"
-    else
-        retry_pacman "yay -S --noconfirm bindfs"
-        fc-cache -f 2>/dev/null
-    fi
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bindfs.sh" -o "/bin/chard_bindfs" 2>/dev/null
+    sudo chmod +x /bin/chard_bindfs 2>/dev/null
+    chard_bindfs 2>/dev/null
 }
 run_checkpoint 159 "Bindfs" checkpoint_159
 
