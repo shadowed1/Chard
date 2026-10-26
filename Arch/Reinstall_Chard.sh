@@ -1104,6 +1104,7 @@ EOF
     							xdg-mime default org.gnome.Nautilus.desktop inode/directory 2>/dev/null
     							xdg-mime default org.gnome.Nautilus.desktop application/x-gnome-saved-search 2>/dev/null
 				                /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
+								/bin/chard_bindfs 2>/dev/null
 								#/bin/chard_svg 2>/dev/null
 				                "
 				            /bin/error_color
@@ -1284,7 +1285,7 @@ EOF
 				$CHARD_ROOT/bin/chard_shortcut 2>/dev/null
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-				
+				sudo cp $CHARD_ROOT/usr/bin/bindfs /usr/local/bin/chard_bindfs 2>/dev/null
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
