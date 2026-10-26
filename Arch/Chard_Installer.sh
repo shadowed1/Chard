@@ -110,6 +110,7 @@ case "$response" in
         ;;
     *)
         echo -e "${RED}[EXIT]${RESET}"
+		sleep 2
         exit 1
         ;;
 esac
@@ -124,6 +125,18 @@ elif [ -f "$DEFAULT_CHARD_ROOT/.install_path" ]; then
     echo -e "${CYAN}Found existing Install Path: ${BOLD}$CHARD_ROOT${RESET}"
 else
     CHARD_ROOT="$DEFAULT_CHARD_ROOT"
+fi
+
+# Early USB support
+ARCH="$(uname -m)"
+if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+	sudo mkdir -p /usr/local/bin 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_ARM64"            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+	sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
+else
+	sudo mkdir -p /usr/local/bin 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_x86_64"            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+	sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
 fi
 
 while true; do
@@ -354,6 +367,7 @@ chard_boot_setup() {
     return 0
 }
 sudo stop chard 2>/dev/null
+
 chard_boot_setup
 
 CHARD_ROOT="${CHARD_ROOT%/}"
