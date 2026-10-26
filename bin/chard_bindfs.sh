@@ -11,6 +11,6 @@ RESET=$'\033[0m'
 curl -L -o bindfs-1.18.4.tar.gz "https://bindfs.org/downloads/bindfs-1.18.4.tar.gz"
 tar xzf bindfs-1.18.4.tar.gz
 cd bindfs-1.18.4
-./configure --with-fuse2 --prefix=/usr/local
+./configure --with-fuse2 --prefix=/usr/
 make -j$(nproc)
 sudo make install
