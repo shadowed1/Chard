@@ -1286,6 +1286,7 @@ EOF
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
 				sudo cp $CHARD_ROOT/usr/bin/bindfs /usr/local/bin/chard_bindfs 2>/dev/null
+				sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
                 echo "${MAGENTA}${BOLD}[*] Quick Reinstall complete.${RESET}"
                 echo
                 
