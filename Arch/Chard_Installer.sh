@@ -2601,6 +2601,8 @@ sudo chroot "$CHARD_ROOT" /bin/bash -c '
 
 chard_unmount
 #$CHARD_ROOT/bin/chard_preload
+sudo cp $CHARD_ROOT/usr/bin/bindfs /usr/local/bin/chard_bindfs 2>/dev/null
+sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
 $CHARD_ROOT/bin/chard_shortcut 2>/dev/null
 sudo mv "$CHARD_ROOT/usr/bin/reboot" "$CHARD_ROOT/$CHARD_HOME/.reboot.bak" 2>/dev/null
 show_progress
