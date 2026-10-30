@@ -172,16 +172,6 @@ EOF
 sudo tee /etc/portage/package.use/systemd >/dev/null <<'EOF'
 sys-apps/systemd -test
 EOF
-
-    USE="-gpm" sudo -E emerge --oneshot sys-libs/ncurses
-    sudo -E emerge --oneshot sys-libs/glibc
-    USE="policykit" sudo -E emerge --oneshot sys-apps/systemd
-    sudo -E emerge games-util/steam-launcher
-    sudo -E emerge sys-libs/ncurses
-    eclean-dist -d
-    STEAM_SCRIPT="/usr/lib/steam/bin_steam.sh"
-    sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
-    
     sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
 export PATH=/usr/local/bubblepatch/bin:$PATH
@@ -212,6 +202,21 @@ Categories=Game;
 Terminal=false
 StartupNotify=true
 EOF
+
+USE="-gpm" sudo -E emerge --oneshot sys-libs/ncurses
+kver=$(uname -r | cut -d- -f1)
+if [ "$(printf '%s\n' "$kver" 6.1.0 | sort -V | head -n1)" != "6.1.0" ]; then
+    echo "kernel $kver < 6.1.0, enabling old-kernel for glibc"
+    USE="old-kernel" sudo -E emerge --oneshot sys-libs/glibc
+else
+    sudo -E emerge --oneshot sys-libs/glibc
+fiUSE="policykit" sudo -E emerge --oneshot sys-apps/systemd
+sudo -E emerge games-util/steam-launcher
+sudo -E emerge sys-libs/ncurses
+eclean-dist -d
+STEAM_SCRIPT="/usr/lib/steam/bin_steam.sh"
+sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
+    
 
 elif [[ "$ARCH" == "aarch64" ]]; then
     echo "Skipping Steam for architecture: $ARCH"
