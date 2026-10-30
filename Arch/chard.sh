@@ -506,8 +506,6 @@ case "$cmd" in
 		    fi
 		fi
 
-		# Thanks to i-am-days for finding this. Run:
-		dbus-send --system --print-reply --dest=org.chromium.ResourceManager /org/chromium/ResourceManager org.chromium.ResourceManager.SetGameMode byte:1 2>/dev/null
 		
 		# Write our user hash to Chard for preliminary shortcut support
 		U_HASH=""
@@ -518,7 +516,7 @@ case "$cmd" in
 		fi
 		
 		if [ -n "$U_HASH" ]; then
-		    echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
+		    echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" 2>/dev/null
 		fi
 		
 		if [[ -z "$XDG_RUNTIME_DIR" ]]; then
@@ -556,6 +554,10 @@ case "$cmd" in
             sudo mount -o remount,rw,bind "$CHARD_ROOT/$CHARD_HOME/user/MyFiles/Downloads" 2>/dev/null
             $CHARD_ROOT/bin/chard_mount 2>/dev/null
 			$CHARD_ROOT/bin/chard_mtp_mount 2>/dev/null
+			# Thanks to i-am-days for finding this. Run:
+		    echo "${GREEN}Enabling Game Mode:"
+		    dbus-send --system --print-reply --dest=org.chromium.ResourceManager /org/chromium/ResourceManager org.chromium.ResourceManager.SetGameMode byte:1 2>/dev/null
+		    echo "${RESET}"
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
