@@ -104,6 +104,7 @@ sys-libs/ncurses                  abi_x86_32
 sys-libs/pam                      abi_x86_32
 sys-libs/readline                 abi_x86_32
 sys-libs/zlib                     abi_x86_32
+sys-libs/libxcrypt                abi_x86_32
 virtual/glu                       abi_x86_32
 virtual/libelf                    abi_x86_32
 virtual/libiconv                  abi_x86_32
