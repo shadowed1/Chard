@@ -210,7 +210,8 @@ if [ "$(printf '%s\n' "$kver" 6.1.0 | sort -V | head -n1)" != "6.1.0" ]; then
     USE="old-kernel" sudo -E emerge --oneshot sys-libs/glibc
 else
     sudo -E emerge --oneshot sys-libs/glibc
-fiUSE="policykit" sudo -E emerge --oneshot sys-apps/systemd
+fi
+USE="policykit" sudo -E emerge --oneshot sys-apps/systemd
 sudo -E emerge games-util/steam-launcher
 sudo -E emerge sys-libs/ncurses
 eclean-dist -d
