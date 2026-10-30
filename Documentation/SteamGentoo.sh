@@ -212,8 +212,10 @@ if [ "$(printf '%s\n' "$kver" 6.1.0 | sort -V | head -n1)" != "6.1.0" ]; then
 else
     sudo -E emerge --oneshot sys-libs/glibc
 fi
+sudo -E emerge --oneshot sys-libs/libxcrypt
+sudo -E emerge --oneshot sys-libs/pam
 USE="policykit" sudo -E emerge --oneshot sys-apps/systemd
-sudo -E emerge games-util/steam-launcher
+sudo -E emerge -avt dev-util/gdbus-codegen games-util/steam-launcher
 sudo -E emerge sys-libs/ncurses
 eclean-dist -d
 STEAM_SCRIPT="/usr/lib/steam/bin_steam.sh"
