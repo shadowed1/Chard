@@ -200,7 +200,7 @@ export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:$USER
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
-/usr/bin/steam -console -chromeos -force-opaque-background "$@"
+/usr/bin/steam -console -force-opaque-background "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
