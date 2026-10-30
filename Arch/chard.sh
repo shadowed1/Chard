@@ -110,6 +110,7 @@ cleanup_chroot() {
     sudo umount -l "$CHARD_ROOT" 2>/dev/null || true
     sleep 0.05
     sudo setfacl -Rb /run/chrome 2>/dev/null
+	dbus-send --system --print-reply --dest=org.chromium.ResourceManager /org/chromium/ResourceManager org.chromium.ResourceManager.SetGameMode byte:0 2>/dev/null
 	echo
 	echo "${RESET}${GREEN}Chard safely unmounted${RESET}"
 	echo
@@ -504,6 +505,9 @@ case "$cmd" in
 		        sudo chown -E $USER:video /dev/dri/renderD128
 		    fi
 		fi
+
+		# Thanks to i-am-days for finding this. Run:
+		dbus-send --system --print-reply --dest=org.chromium.ResourceManager /org/chromium/ResourceManager org.chromium.ResourceManager.SetGameMode byte:1 2>/dev/null
 		
 		# Write our user hash to Chard for preliminary shortcut support
 		U_HASH=""
