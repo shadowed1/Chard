@@ -204,8 +204,6 @@ USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
 export QT_QPA_PLATFORM=wayland
-export GDK_BACKEND=wayland
-export XDG_SESSION_TYPE=wayland
 export STEAM_FREE_SPACE_CHECK=0
 export STEAM_DISK_SPACE_MB=0
 export SteamReservedSpace_MB=0
@@ -223,7 +221,7 @@ if ! pgrep -x steam >/dev/null && ! pgrep -x steamwebhelper >/dev/null; then
     STEAM_ARGS+=(-forcesteamupdate)
 fi
 
-/usr/lib/steam/steam -console -force-opaque-background "${STEAM_ARGS[@]}" "$@"
+/usr/lib/steam/steam -console -system-composer -force-opaque-background "${STEAM_ARGS[@]}" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
@@ -900,8 +898,6 @@ USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
 export QT_QPA_PLATFORM=wayland
-export GDK_BACKEND=wayland
-export XDG_SESSION_TYPE=wayland
 export STEAM_FREE_SPACE_CHECK=0
 export STEAM_DISK_SPACE_MB=0
 export SteamReservedSpace_MB=0
@@ -919,7 +915,7 @@ if ! pgrep -x steam >/dev/null && ! pgrep -x steamwebhelper >/dev/null; then
     STEAM_ARGS+=(-forcesteamupdate)
 fi
 
-/usr/lib/steam/steam -console -force-opaque-background "${STEAM_ARGS[@]}" "$@"
+/usr/lib/steam/steam -console -system-composer -force-opaque-background "${STEAM_ARGS[@]}" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
