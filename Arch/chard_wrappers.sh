@@ -223,7 +223,7 @@ if ! pgrep -x steam >/dev/null && ! pgrep -x steamwebhelper >/dev/null; then
     STEAM_ARGS+=(-forcesteamupdate)
 fi
 
-/usr/lib/steam/steam -console -system-composer -force-opaque-background "${STEAM_ARGS[@]}" "$@"
+/usr/lib/steam/steam -console -force-opaque-background "${STEAM_ARGS[@]}" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
@@ -919,7 +919,7 @@ if ! pgrep -x steam >/dev/null && ! pgrep -x steamwebhelper >/dev/null; then
     STEAM_ARGS+=(-forcesteamupdate)
 fi
 
-/usr/lib/steam/steam -console -system-composer -force-opaque-background "${STEAM_ARGS[@]}" "$@"
+/usr/lib/steam/steam -console -force-opaque-background "${STEAM_ARGS[@]}" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
