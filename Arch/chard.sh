@@ -516,7 +516,7 @@ case "$cmd" in
 		fi
 		
 		if [ -n "$U_HASH" ]; then
-		    echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" 2>/dev/null
+		    echo "$U_HASH" | sudo tee "$CHARD_ROOT/.chard_hash" > /dev/null
 		fi
 		
 		if [[ -z "$XDG_RUNTIME_DIR" ]]; then
