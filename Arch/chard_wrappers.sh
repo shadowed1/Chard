@@ -203,7 +203,9 @@ HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export QT_QPA_PLATFORM=xcb
+export QT_QPA_PLATFORM=wayland
+export GDK_BACKEND=wayland
+export XDG_SESSION_TYPE=wayland
 export STEAM_FREE_SPACE_CHECK=0
 export STEAM_DISK_SPACE_MB=0
 export SteamReservedSpace_MB=0
@@ -221,7 +223,7 @@ if ! pgrep -x steam >/dev/null && ! pgrep -x steamwebhelper >/dev/null; then
     STEAM_ARGS+=(-forcesteamupdate)
 fi
 
-/usr/lib/steam/steam -console -force-opaque-background "${STEAM_ARGS[@]}" "$@"
+/usr/lib/steam/steam -console -system-composer -force-opaque-background "${STEAM_ARGS[@]}" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
@@ -881,20 +883,43 @@ sudo tee /usr/bin/steam >/dev/null <<'EOF'
 #!/bin/bash
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
-XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+XDG_RUNTIME_DIR_ORIG=$(cat /.xdg_runtime_dir)
+XDG_RUNTIME_DIR="/$CHARD_HOME/.steam_runtime"
+export XDG_RUNTIME_DIR
+TMPDIR="/$CHARD_HOME/.steam_tmp"
+TEMP="$TMPDIR"
+TMP="$TMPDIR"
+export TMPDIR TEMP TMP
+mkdir -p "$XDG_RUNTIME_DIR"
+chmod 700 "$XDG_RUNTIME_DIR"
+mkdir -p "$TMPDIR"
+find "$TMPDIR" -type f -mmin +60 -delete 2>/dev/null
+find "$TMPDIR" -type d -empty -delete 2>/dev/null
 HOME=/$CHARD_HOME
 USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export XDG_RUNTIME_DIR
-export QT_QPA_PLATFORM=xcb
+export QT_QPA_PLATFORM=wayland
+export GDK_BACKEND=wayland
+export XDG_SESSION_TYPE=wayland
+export STEAM_FREE_SPACE_CHECK=0
+export STEAM_DISK_SPACE_MB=0
+export SteamReservedSpace_MB=0
+sudo chown -R $USER:1000 "$XDG_RUNTIME_DIR" 2>/dev/null
 STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
 export PATH=/usr/local/bubblepatch/bin:$PATH
+cd "/$CHARD_HOME"
 xhost +SI:localuser:$USER
 sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
-/usr/lib/steam/steam -console -chromeos -force-opaque-back "$@"
+
+STEAM_ARGS=()
+if ! pgrep -x steam >/dev/null && ! pgrep -x steamwebhelper >/dev/null; then
+    rm -rf "$XDG_RUNTIME_DIR_ORIG"/steam* "$XDG_RUNTIME_DIR_ORIG"/SteamPipe* 2>/dev/null
+    STEAM_ARGS+=(-forcesteamupdate)
+fi
+
+/usr/lib/steam/steam -console -system-composer -force-opaque-background "${STEAM_ARGS[@]}" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
