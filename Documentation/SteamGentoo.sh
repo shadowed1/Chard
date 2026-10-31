@@ -1,5 +1,5 @@
 #!/bin/bash
-# not working rn
+# working - thanks for days for helping finish this
 ARCH=$(uname -m)    
 if [[ "$ARCH" == "x86_64" ]]; then
     grep -q '^ABI_X86="64 32"' /etc/portage/make.conf || echo 'ABI_X86="64 32"' | sudo tee -a /etc/portage/make.conf
