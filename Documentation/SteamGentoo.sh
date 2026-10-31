@@ -173,23 +173,51 @@ EOF
 sudo tee /etc/portage/package.use/systemd >/dev/null <<'EOF'
 sys-apps/systemd -test
 EOF
-    sudo tee /bin/chard_steam >/dev/null <<'EOF'
+    
+sudo tee /bin/chard_steam >/dev/null <<'EOF'
 #!/bin/bash
-export PATH=/usr/local/bubblepatch/bin:$PATH
 CHARD_HOME=$(cat /.chard_home)
 CHARD_USER=$(cat /.chard_user)
+XDG_RUNTIME_DIR_ORIG=$(cat /.xdg_runtime_dir)
+XDG_RUNTIME_DIR="/$CHARD_HOME/.steam_runtime"
+export XDG_RUNTIME_DIR
+TMPDIR="/$CHARD_HOME/.steam_tmp"
+TEMP="$TMPDIR"
+TMP="$TMPDIR"
+export TMPDIR TEMP TMP
+mkdir -p "$XDG_RUNTIME_DIR"
+chmod 700 "$XDG_RUNTIME_DIR"
+mkdir -p "$TMPDIR"
+find "$TMPDIR" -type f -mmin +60 -delete 2>/dev/null
+find "$TMPDIR" -type d -empty -delete 2>/dev/null
+HOME=/$CHARD_HOME
+USER=$CHARD_USER
 export HOME=/$CHARD_HOME
 export USER=$CHARD_USER
-export QT_QPA_PLATFORM=xcb
+export QT_QPA_PLATFORM=wayland
+export STEAM_FREE_SPACE_CHECK=0
+export STEAM_DISK_SPACE_MB=0
+export SteamReservedSpace_MB=0
+sudo chown -R $USER:1000 "$XDG_RUNTIME_DIR" 2>/dev/null
 STEAM_USER_HOME=$CHARD_HOME/.local/share/Steam
+export PATH=/usr/local/bubblepatch/bin:$PATH
+cd "/$CHARD_HOME"
 xhost +SI:localuser:$USER
-sudo setfacl -Rm u:$USER:rwx /run/chrome 2>/dev/null
-sudo setfacl -Rm u:root:rwx /run/chrome 2>/dev/null
-/usr/lib/steam/bin_steam.sh -no-cef-sandbox -cef-disable-gpu-compositing "$@"
-sudo setfacl -Rb /run/chrome 2>/dev/null
+sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
+sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
+
+STEAM_ARGS=()
+if ! pgrep -x steam >/dev/null && ! pgrep -x steamwebhelper >/dev/null; then
+    rm -rf "$XDG_RUNTIME_DIR_ORIG"/steam* "$XDG_RUNTIME_DIR_ORIG"/SteamPipe* 2>/dev/null
+    STEAM_ARGS+=(-forcesteamupdate)
+fi
+
+/usr/bin//steam -console -system-composer -force-opaque-background "${STEAM_ARGS[@]}" "$@"
+sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
 
-    sudo chmod +x /bin/chard_steam 
+sudo chmod +x /bin/chard_steam
+
     mkdir -p ~/.local/share/applications
     
     tee ~/.local/share/applications/steam-chard.desktop >/dev/null <<'EOF'
@@ -218,8 +246,8 @@ USE="policykit" sudo -E emerge --oneshot sys-apps/systemd
 sudo -E emerge -avt dev-util/gdbus-codegen games-util/steam-launcher
 sudo -E emerge sys-libs/ncurses
 eclean-dist -d
-STEAM_SCRIPT="/usr/lib/steam/bin_steam.sh"
-sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
+#STEAM_SCRIPT="/usr/lib/steam/bin_steam.sh"
+#sudo sed -i.bak -E '/if \[ "\$\(id -u\)" == "0" \]; then/,/fi/ s/^/#/' "$STEAM_SCRIPT"
     
 
 elif [[ "$ARCH" == "aarch64" ]]; then
