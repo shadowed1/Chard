@@ -487,6 +487,23 @@ else
     FINAL_ARGS=("$CMD" "$@")
 fi
 
+# Some apps need a stripped $DBUS_SESSION_BUS_ADDRESS
+# This is a lazy solution that I dislike but idk how else to handle this problem.
+
+STRIP_DBUS_APPS=(
+  org.vinegarhq.Vinegar
+  org.vinegarhq.Sober
+)
+
+APP_DBUS_ADDR="$DBUS_SESSION_BUS_ADDRESS"
+if [[ "$CMD" == "run" ]]; then
+    for a in "$@"; do
+        for s in "${STRIP_DBUS_APPS[@]}"; do
+            [[ "$a" == "$s" ]] && APP_DBUS_ADDR="" && break 2
+        done
+    done
+fi
+
 if [[ "$CMD" == "run" ]]; then
     FINAL_ARGS=("${FINAL_ARGS[@]:0:1}" \
         "--device=dri" \
@@ -512,7 +529,7 @@ env \
     LIBVA_DRIVER_NAME="$LIBVA_DRIVER_NAME" \
     LIBVA_DISPLAY="drm" \
     LIBVA_DRIVERS_PATH="$LIBVA_DRIVERS_PATH" \
-    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
+    DBUS_SESSION_BUS_ADDRESS="$APP_DBUS_ADDR" \
     XAUTHORITY="$XAUTHORITY" \
     OBS_VKCAPTURE=1 \
     OBS_GAMECAPTURE=1 \
