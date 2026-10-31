@@ -374,6 +374,9 @@ export _JAVA_OPTIONS="-Dsun.java2d.uiScale=$CHARD_SCALE"
 export XCURSOR_SIZE
 export XCURSOR_THEME
 
+# Steam
+alias steam='/bin/chard_steam'
+
 # Firefox
 alias firefox-bin='chard_firefox'
 alias firefox='chard_firefox'
