@@ -558,6 +558,7 @@ case "$cmd" in
 		    echo "${GREEN}Enabling Game Mode:"
 		    dbus-send --system --print-reply --dest=org.chromium.ResourceManager /org/chromium/ResourceManager org.chromium.ResourceManager.SetGameMode byte:1 2>/dev/null
 		    echo "${RESET}"
+			sudo chmod 666 /dev/hidraw* 2>/dev/null
         else
             sudo mountpoint -q "$CHARD_ROOT/run/user/1000" || sudo mount --bind /run/user/1000 "$CHARD_ROOT/run/user/1000" 2>/dev/null
         fi
