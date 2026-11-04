@@ -778,6 +778,7 @@ case "$cmd" in
 			sudo mount --make-rslave $CHARD_ROOT/opt/usr/lib64
 			sudo mount --rbind /lib64 $CHARD_ROOT/opt/lib64
 			sudo mount --make-rslave $CHARD_ROOT/opt/lib64
+			sudo chmod 666 /dev/hidraw* 2>/dev/null
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
