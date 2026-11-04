@@ -1,13 +1,23 @@
 #!/bin/bash
-VERSION="0.49"
+VERSION="0.50"
 
 changelog() {
-    echo "- Fixed several typos on Gentoo's Chariot by yesidodo73."
-    echo "- iamdays confirming selinux package install was useless and removed. "
-    echo "- NotRX finding bugs, suggesting to hide folders, and spotting useless Arch packages."
-    echo "- Fixed language setup due to missing environmental variable."
-    echo "- Fixed chard run issue for Chard Arch."
-    echo "- Fixed Chard Gentoo's XDG_DATA_DIRS."
-    echo "- Added full $CHARD_ROOT path for commands on reinstall."
+    echo "- Added dynamic wayland socket support."
+    echo "- Chard Gentoo can now retry failed packages during Installer like Chard Arch. "
+    echo "- Added chard_sudo to cache sudo inside chroot."
+    echo "- Updated glycin and added appstream."
+    echo "- Fixed GPU Screen Recorder."
+    echo "- Added Charon, a bidirectional mkfifo script for ChromeOS <--> Chard communication for developers."
+    echo "- Updated .chard.preload for Chard Arch."
+    echo "- Updated Chard Gentoo to use Python 3.14 and LLVM 23."
+    echo "- Updated .chard.preload for Chard Arch."
+    echo "- Fixed crackling audio and audio artifacts, especially when recording/streaming - thanks to LolWRLD for fixing and reporting Chardwire gamma bug."
+    echo "- Fixed Chard Gentoo from not installing Bubblepatch, Flatpatch, Chardonnay, and others."
+    echo "- Fixed Steam not updating properly; dropped chromeos launch argument that Steam used. Added Steam to Gentoo."
+    echo "- Added chmod 666 to hidraw to enable PS5 Controllers; thanks to envelopMK for finding this fix."
+    echo "- Added chard_repair to chard reinstall command for Gentoo."
+
     echo
 }
+
+`           `
