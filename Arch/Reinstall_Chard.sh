@@ -715,19 +715,6 @@ if [[ -z "$XDG_RUNTIME_DIR" ]]; then
     fi
 fi
 
-if [ "$IS_CHROMEOS" -eq 1 ]; then
-    ARCH="$(uname -m)"
-    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_ARM64" \
-            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
-        sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
-    else
-        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_x86_64" \
-            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
-        sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
-    fi
-fi
-
 echo "$XDG_RUNTIME_DIR" | sudo tee "$CHARD_ROOT/.xdg_runtime_dir" >/dev/null
 
 sudo sed -i "/# <<< CHARD_XDG_RUNTIME_DIR >>>/,/# <<< END CHARD_XDG_RUNTIME_DIR >>>/c\
@@ -780,7 +767,6 @@ KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v6.x/$KERNEL_TAR"
 KERNEL_BUILD="$BUILD_DIR/linux-$KERNEL_VER"
 echo "$KERNEL_VER" | sudo tee $CHARD_ROOT/.chard_kernel >/dev/null
 
-
 if [ -f "/home/chronos/user/.bashrc" ]; then
         CHROMEOS_BASHRC="/home/chronos/user/.bashrc"
         BASHRC_PATH="$CHROMEOS_BASHRC"
@@ -789,6 +775,19 @@ else
     DEFAULT_BASHRC="$HOME/.bashrc"
     BASHRC_PATH="$DEFAULT_BASHRC"
     IS_CHROMEOS=0
+fi
+
+if [ "$IS_CHROMEOS" -eq 1 ]; then
+    ARCH="$(uname -m)"
+    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_ARM64" \
+            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+        sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
+    else
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_x86_64" \
+            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+        sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
+    fi
 fi
 
 if [ "$IS_CHROMEOS" -eq 1 ]; then
