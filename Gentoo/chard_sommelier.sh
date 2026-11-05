@@ -334,13 +334,15 @@ SOMMELIER=(
     sleep 0.1
     chardwire 2>/dev/null &
     sleep 0.1
-    color_reset 2>/dev/null &
-    sleep 0.1
     xfce4-terminal 2>/dev/null &
     sleep 0.1
     chard_launch_daemon 2>/dev/null &
     sleep 0.1
     chard_sudo 2>/dev/null &
+    sleep 0.1
+    chard_hidraw 2>/dev/null &
+    sleep 0.1
+    color_reset 2>/dev/null &
     sleep 0.1
     exec bash
 '
