@@ -62,6 +62,7 @@ alias cu='chard unmount'
 alias virtm='sudo -E $CHARD_ROOT/bin/virtm'
 alias autoclicker='sudo -E $CHARD_ROOT/bin/autoclicker'
 alias chard_log='sudo cp $CHARD_ROOT/$CHARD_HOME/chariot.log ~/MyFiles/Downloads/ 2>/dev/null'
+alias charon_daemon='sudo $CR/bin/charon_daemon'
 CR="$CHARD_ROOT"
 
 # <<< END CHARD_ENV <<<
