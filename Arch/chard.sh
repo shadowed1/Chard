@@ -537,6 +537,7 @@ case "$cmd" in
         sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_hidraw 2>/dev/null
 		sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
@@ -622,9 +623,9 @@ case "$cmd" in
             sudo -u "$USER" bash -c "
                 sudo rm -f /run/chrome/pipewire-0.lock /run/chrome/pipewire-0-manager.lock 2>/dev/null
                 sudo rm -f /run/chrome/pulse/native /run/chrome/pulse/* 2>/dev/null
-                killall -9 pipewire 2>/dev/null
-                killall -9 pipewire-pulse 2>/dev/null
-                killall -9 pulseaudio 2>/dev/null
+                 -9 pipewire 2>/dev/null
+                 -9 pipewire-pulse 2>/dev/null
+                 -9 pulseaudio 2>/dev/null
 				sudo chmod +x /bin/powercontrol-gui 2>/dev/null
                 #sudo chown -R 1000:audio /dev/snd 2>/dev/null
                 #sudo chown -R 1000:1000 /dev/snd/by-path 2>/dev/null
@@ -641,13 +642,13 @@ case "$cmd" in
             /bin/error_color
             setfacl -Rb /run/chrome/pulse 2>/dev/null
             setfacl -Rb /run/chrome 2>/dev/null
-			killall -9 chard_scale 2>/dev/null
-            killall -9 pipewire 2>/dev/null
-            killall -9 pipewire-pulse 2>/dev/null
-            killall -9 pulseaudio 2>/dev/null
-            killall -9 chardwire 2>/dev/null
-			killall -9 powercontrol-gui 2>/dev/null
-			killall -9 chard_scale 2>/dev/null
+			 -9 chard_scale 2>/dev/null
+             -9 pipewire 2>/dev/null
+             -9 pipewire-pulse 2>/dev/null
+             -9 pulseaudio 2>/dev/null
+             -9 chardwire 2>/dev/null
+			 -9 powercontrol-gui 2>/dev/null
+			 -9 chard_scale 2>/dev/null
             #sudo chown -R root:audio /dev/snd 2>/dev/null
             #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             sudo chown -R root:root /run/chrome/dconf 2>/dev/null
@@ -677,8 +678,10 @@ case "$cmd" in
 		sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chard_timezone_daemon 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_hidraw 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
 		sudo pkill -f chard_timezone_daemon 2>/dev/null
+		sudo pkill -f chard_hidraw 2>/dev/null
 		if [ -s "$VERSION_FILE" ]; then
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
 		    if [ "$CHROMEOS_VERSION" -le 103 ]; then
