@@ -844,3 +844,17 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
 EOF
 
 sudo chmod +x /bin/chard_faugus
+
+# For sober players...
+tee ~/.local/share/applications/org.vinegarhq.Sober.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Sober
+Comment=Roblox through Chard
+Exec=/bin/chard_flatpak run org.vinegarhq.Sober %u
+Terminal=false
+Categories=Game;
+StartupNotify=true
+MimeType=x-scheme-handler/roblox;x-scheme-handler/roblox-player;
+EOF
