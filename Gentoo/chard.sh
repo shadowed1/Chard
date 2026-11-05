@@ -828,6 +828,7 @@ case "$cmd" in
                 killall -9 pipewire 2>/dev/null
                 killall -9 pipewire-pulse 2>/dev/null
                 killall -9 pulseaudio 2>/dev/null
+				killall -9 chard_hidraw 2>/dev/null
                 #sudo chown -R 1000:audio /dev/snd
                 #sudo chown -R 1000:1000 /dev/snd/by-path
                 sudo mkdir -p /run/chrome/pulse
@@ -849,6 +850,7 @@ case "$cmd" in
             killall -9 pulseaudio 2>/dev/null
             killall -9 chardwire 2>/dev/null
             killall -9 powercontrol-gui 2>/dev/null
+			killall -9 chard_hidraw 2>/dev/null
             #sudo chown -R root:audio /dev/snd 2>/dev/null
             #sudo chown -R root:root /dev/snd/by-path 2>/dev/null
             setfacl -Rb /root 2>/dev/null
@@ -876,6 +878,7 @@ case "$cmd" in
         sudo $CHARD_ROOT/bin/killall -9 cras_test_client 2>/dev/null
         sudo $CHARD_ROOT/bin/killall -9 powercontrol-gui 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chard_timezone_daemon 2>/dev/null
+		sudo $CHARD_ROOT/bin/killall -9 chard_hidraw 2>/dev/null
         sudo pkill -f powercontrol-gui 2>/dev/null
 		sudo pkill -f chard_timezone_daemon 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
