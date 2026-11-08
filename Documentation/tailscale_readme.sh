@@ -132,4 +132,5 @@ else
 fi
 OUTER
 
+sudo start tailscaled
 sudo $CR/usr/bin/tailscale up
