@@ -16,7 +16,6 @@ pre-start script
   mkdir -p /run/tailscale
   chmod 0755 /run/tailscale
 
-  # Locate .bashrc: preferred path first, then chronos' home dir
   rc=""
   for f in /home/chronos/user/.bashrc \
            "$(getent passwd chronos | cut -d: -f6)/.bashrc" \
@@ -25,19 +24,16 @@ pre-start script
   done
   [ -n "$rc" ] || { echo "tailscaled: no .bashrc found" >&2; exit 1; }
 
-  # Marker block -> source line -> .chardrc path
   chardrc=$(sed -n '/CHARD ENV MARKER/,/END CHARD ENV MARKER/p' "$rc" \
     | grep -E '^[[:space:]]*(source|\.)[[:space:]]' \
     | head -n1 \
     | sed -E 's/^[^"]*"([^"]*)".*/\1/')
   [ -f "$chardrc" ] || { echo "tailscaled: chardrc not found ($chardrc)" >&2; exit 1; }
 
-  # CHARD_ROOT from .chardrc (parsed, not sourced)
   root=$(sed -n 's/^CHARD_ROOT="\(.*\)"/\1/p' "$chardrc" | head -n1)
   [ -d "$root" ] || { echo "tailscaled: bad CHARD_ROOT ($root)" >&2; exit 1; }
 
   echo "$root" > /run/tailscale/chard_root
-
   mkdir -p "$root/var/lib/tailscale"
   chmod 0700 "$root/var/lib/tailscale"
   mkdir -p "$root/var/log"
@@ -56,6 +52,26 @@ post-stop script
   [ -f /run/tailscale/chard_root ] || exit 0
   CHARD_ROOT=$(cat /run/tailscale/chard_root)
   "$CHARD_ROOT/usr/sbin/tailscaled" --cleanup || true
+  
+  TS_PID=$(pidof -s tailscaled 2>/dev/null)
+  if [ -n "$TS_PID" ]; then
+    nsenter -t "$TS_PID" -n ip rule del pref 5000 2>/dev/null || true
+  fi
+end script
+
+post-start script
+  sleep 2
+  
+  TS_PID=$(pidof -s tailscaled 2>/dev/null)
+  if [ -n "$TS_PID" ]; then
+    CHARD_ROOT=$(cat /run/tailscale/chard_root 2>/dev/null)
+    if [ -n "$CHARD_ROOT" ]; then
+      nsenter -t "$TS_PID" -n ip rule del pref 5000 2>/dev/null || true
+      nsenter -t "$TS_PID" -n ip rule add pref 5000 fwmark 0x80000/0xff0000 lookup 1002 2>/dev/null || true
+      "$CHARD_ROOT/usr/sbin/tailscale" netfilter install 2>/dev/null || true
+      nsenter -t "$TS_PID" -n ip route flush cache 2>/dev/null || true
+    fi
+  fi
 end script
 EOF
 
