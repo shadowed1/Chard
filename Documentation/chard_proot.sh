@@ -1,5 +1,5 @@
 # By i-am-days
-# precursor to replacing chroot with proot!!!
+# precursor to replacing chroot with proot lots to test
 sudo unshare --mount --pid --fork --kill-child --mount-proc=/usr/local/chard/proc bash -ec '
     mount --make-rprivate /
     mount --rbind /dev /usr/local/chard/dev
@@ -18,5 +18,5 @@ sudo unshare --mount --pid --fork --kill-child --mount-proc=/usr/local/chard/pro
     exec sudo -Hu chronos env \
       XDG_RUNTIME_DIR=/run/user/1000 \
       FLATPAK_BWRAP=/var/tmp/bwrap/build/bwrap \
-      chard_sommelier
+      bash
   '
