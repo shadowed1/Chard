@@ -26,6 +26,6 @@ sudo unshare --mount --pid --fork --kill-child --mount-proc=/usr/local/chard/pro
     umount -l /mnt
 
     exec sudo -Hu chronos env \
-      XDG_RUNTIME_DIR=/run/user/1000 \
-      "$@"
-  '
+        XDG_RUNTIME_DIR=/run/user/1000 \
+        "$@"
+' chard "$@"
