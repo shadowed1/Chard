@@ -626,7 +626,7 @@ chard_uninstall() {
             echo "Uninstalling Chard..."
             sudo bash "$script"
         else
-            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
+            sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/Uninstall_Chard.sh"  -o "$CHARD_ROOT/bin/Uninstall_Chard.sh"
             sudo chmod +x "$CHARD_ROOT/bin/Uninstall_Chard.sh"
             $CHARD_ROOT/bin/Uninstall_Chard.sh
         fi
@@ -1130,7 +1130,7 @@ case "$cmd" in
 	    # Denny's Version Checker
 		if [[ -f "$CHARD_ROOT/bin/chard_version" ]]; then
 			CURRENT_CLEAN=$(grep '^VERSION=' "$CHARD_ROOT/bin/chard_version" | sed -E 's/.*"?([0-9]+\.[0-9]+)"?/\1/')
-			LATEST_RAW=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_version")
+			LATEST_RAW=$(curl -Ls "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_version")
 			LATEST_CLEAN=$(echo "$LATEST_RAW" | grep '^VERSION=' | sed -E 's/.*"?([0-9]+\.[0-9]+)"?/\1/')
 			CURRENT_VER_NO=$(echo "$CURRENT_CLEAN" | awk -F. '{ printf("%d%02d\n", $1, $2) }')
 			LATEST_VER_NO=$(echo "$LATEST_CLEAN" | awk -F. '{ printf("%d%02d\n", $1, $2) }')
@@ -1142,7 +1142,7 @@ case "$cmd" in
 			    echo "$LATEST_RAW" | sed -n '/changelog()/,/^}/p' | sed '1d;$d'
 			    read -rp "Reinstall to update? (Y/n): " choice
 			    if [[ "$choice" =~ ^[Yy]$ || -z "$choice" ]]; then
-			        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
+			        bash <(curl -s "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/Reinstall_Chard.sh?$(date +%s)")
 			    fi
 			else
 			    echo "${GREEN}You're up-to-date (v$CURRENT_CLEAN)${RESET}"
