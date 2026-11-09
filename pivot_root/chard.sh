@@ -1,5 +1,8 @@
-# By i-am-days
-# precursor to replacing chroot with proot lots to test
+# TODO(days): Supersede weakly isolated, privileged chroot environments with unprivileged CHARD sessions.
+#             This precursor establishes mount and PID namespaces through privileged pivot_root setup
+#             before dropping privileges, eliminating the need for a persistent privileged shell.
+#             It separates CHARD's filesystem and process views from the host while enabling
+#             support for sandboxed applications improveing isolation and compatibility.
 sudo unshare --mount --pid --fork --kill-child --mount-proc=/usr/local/chard/proc bash -ec '
     mount --make-rprivate /
     mount --rbind /dev /usr/local/chard/dev
