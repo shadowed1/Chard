@@ -202,22 +202,22 @@ trap cleanup_chroot EXIT INT TERM
                     echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty. Entering Repair Mode!${RESET}"
 					sleep 2
 					sudo mkdir -p /usr/local/bin
-					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh" -o "/usr/local/bin/chard_repair" 2>/dev/null
+					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/chard_repair.sh" -o "/usr/local/bin/chard_repair" 2>/dev/null
 					sudo chmod +x /usr/local/bin/chard_repair 2>/dev/null
 					/usr/local/bin/chard_repair 2>/dev/null
                 fi
 				
                 if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
                     mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
-                    curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.sh"                 -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon" 2>/dev/null
+                    curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bridge_daemon.sh"                 -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon" 2>/dev/null
 					sleep 0.2
-                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_launch_daemon.sh"            -o "$CHARD_ROOT/bin/chard_launch_daemon" 2>/dev/null
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_launch_daemon.sh"            -o "$CHARD_ROOT/bin/chard_launch_daemon" 2>/dev/null
                     sleep 0.2
-                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut.sh"                 -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_shortcut.sh"                 -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
                     sleep 0.2
-					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut_daemon.sh"          -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
+					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_shortcut_daemon.sh"          -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
 					sleep 0.2
-					curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.service"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service" 2>/dev/null
+					curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bridge_daemon.service"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service" 2>/dev/null
 					sleep 0.2
                     sudo chmod +x "$CHARD_ROOT/bin/chard_launch_daemon"
                     sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut"
@@ -232,7 +232,7 @@ trap cleanup_chroot EXIT INT TERM
                 if [[ -z "$CHARD_ROOT" || "$CHARD_ROOT" == "/" ]]; then
                     echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty. Entering Repair Mode!${RESET}"
 					sleep 2
-					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_repair.sh" -o "/usr/local/bin/chard_repair" 2>/dev/null
+					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Gentoo/chard_repair.sh" -o "/usr/local/bin/chard_repair" 2>/dev/null
 					sudo chmod +x /usr/local/bin/chard_repair 2>/dev/null
 					/usr/local/bin/chard_repair 2>/dev/null
                 fi
@@ -342,7 +342,7 @@ trap cleanup_chroot EXIT INT TERM
                 
 				echo "${CYAN}[*] Downloading Chard components...${RESET}"
 				echo ""
-				BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
+				BASE_URL="https://raw.githubusercontent.com/shadowed1/change_root/Chard/main"
 				
 				FILES=(
 				    "Gentoo/.chardrc|$CHARD_ROOT/.chardrc|0"
@@ -907,7 +907,7 @@ echo
 fi
 
 sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/daemon.conf"  -o "$CHARD_ROOT/etc/pulse/daemon.conf"
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Gentoo/daemon.conf"  -o "$CHARD_ROOT/etc/pulse/daemon.conf"
 sudo mkdir -p $CHARD_ROOT/etc/pulse/default.pa.d/
 sudo mkdir -p $CHARD_ROOT/etc/pulse/
 
@@ -1266,7 +1266,7 @@ EOF
 				fi
 
 				if [ -f "/etc/init/chard.conf" ]; then
-				    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+				    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
 				    sleep 0.05
 				    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
 				        echo ""
@@ -1279,7 +1279,7 @@ EOF
 				fi
 				
 				if [ -f "/etc/init/chard_baguette.conf" ]; then
-				    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+				    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
 				    sleep 0.05
 				    if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
 				        echo ""
@@ -1298,15 +1298,15 @@ EOF
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
 				sudo rm /usr/local/Chard_Installer.sh 2>/dev/null
-                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")
+                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_download?$(date +%s)")
                 ;;
             3)	
 				echo
-				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh")
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_startup.sh")
 				;;
             r|R)
 				echo
-				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_repair.sh")
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Gentoo/chard_repair.sh")
 			    ;;
             q|Q|*)
                 echo "${RESET}${RED}[*] Reinstall cancelled. Exiting.${RESET}"
