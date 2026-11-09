@@ -70,7 +70,7 @@ echo "${GREEN}- Does not require altering current state of /usr/local/ during In
 echo "${GREEN}- Chard is currently in development. ${BOLD}Bugs will exist${RESET}${GREEN}, so please have a ${BOLD}USB backup${RESET}${GREEN} in case of serious mistakes.${RESET}"
 echo
 echo "${CYAN}${BOLD}- Chard README: ${RESET}"
-echo "${BLUE}- https://github.com/shadowed1/Chard/blob/main/README.md ${RESET}"
+echo "${BLUE}- https://github.com/shadowed1/change_root/Chard/blob/main/README.md ${RESET}"
 echo "${MAGENTA}${BOLD}"
 echo "Please disable sleep during the install - Requires Developer Mode for ChromeOS users."
 echo "${RESET}"
@@ -131,11 +131,11 @@ fi
 ARCH="$(uname -m)"
 if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
 	sudo mkdir -p /usr/local/bin 2>/dev/null
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_ARM64"            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/bindfs_ARM64"            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
 	sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
 else
 	sudo mkdir -p /usr/local/bin 2>/dev/null
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_x86_64"            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/bindfs_x86_64"            -o "/usr/local/bin/chard_bindfs" 2>/dev/null
 	sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
 fi
 
@@ -316,7 +316,7 @@ chard_boot_setup() {
                 ;;
         esac
     done
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
     sleep 0.05
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
         echo ""
@@ -334,7 +334,7 @@ chard_boot_setup() {
             echo ""
             case "$baguette_confirm" in
                 [Yy]* | "")
-                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
                     sleep 0.05
                     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
                         echo "${RED}Failed to download chard_baguette.conf${RESET}"
@@ -883,7 +883,7 @@ sudo mkdir -p "$CHARD_ROOT/bin" "$CHARD_ROOT/usr/bin" "$CHARD_ROOT/usr/lib" "$CH
 
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 echo ""
-BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
+BASE_URL="https://raw.githubusercontent.com/shadowed1/change_root/Chard/main"
 
 FILES=(
     "Arch/.chardrc|$CHARD_ROOT/.chardrc|0"
@@ -2489,15 +2489,15 @@ fi
 if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
     mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
     sleep 0.2
-    curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.sh"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon" 2>/dev/null
+    curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bridge_daemon.sh"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon" 2>/dev/null
 	sleep 0.2
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_launch_daemon.sh"            -o "$CHARD_ROOT/bin/chard_launch_daemon" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_launch_daemon.sh"            -o "$CHARD_ROOT/bin/chard_launch_daemon" 2>/dev/null
     sleep 0.2
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut.sh"            -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_shortcut.sh"            -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
     sleep 0.2
-	sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut_daemon.sh"            -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
+	sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_shortcut_daemon.sh"            -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
 	sleep 0.2
-	curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.service"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service" 2>/dev/null
+	curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bridge_daemon.service"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service" 2>/dev/null
 	sleep 0.2
     sudo chmod +x "$CHARD_ROOT/bin/chard_launch_daemon"
     sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut"
