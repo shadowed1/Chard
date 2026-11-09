@@ -1,6 +1,9 @@
-#!/usr/bin/env bash
-# Launches a namespace-isolated environment for an unprivileged user session; thereby superseding our chroot.
+#!/bin/bash
 
+# Version: 2026-10-09
+# Authors: Days, Wilds
+#
+# Launches a namespace-isolated environment for an unprivileged user session; thereby superseding our chroot.
 # TODO(days): This precursor establishes mount and PID namespaces through privileged pivot_root setup
 #             before dropping privileges, eliminating the need for a persistent privileged shell.
 #             It separates CHARD's filesystem and process views from the host while enabling
