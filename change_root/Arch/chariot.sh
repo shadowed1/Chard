@@ -1384,7 +1384,7 @@ checkpoint_138() {
             sudo -E pacman -S --noconfirm vlc-plugin-quicksync 2>/dev/null
             rm -rf ~/intel_vulkan 2>/dev/null
             rm -rf ~/intel_vulkan_271.zip 2>/dev/null
-            curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/intel_vulkan_271.zip
+            curl -L -o ~/intel_vulkan_271.zip https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/intel_vulkan_271.zip
             mkdir -p ~/intel_vulkan 2>/dev/null
             unzip ~/intel_vulkan_271.zip -d ~/intel_vulkan
             sudo cp -r ~/intel_vulkan/vulkantest/vulkan /usr/share/ 
@@ -1567,7 +1567,7 @@ run_checkpoint 141 "Prism Launcher prerequisite" checkpoint_141
 
 checkpoint_142() {
     retry_pacman "sudo -E pacman -S --noconfirm firefox"
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_wrappers.sh" -o "/bin/chard_wrappers" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/chard_wrappers.sh" -o "/bin/chard_wrappers" 2>/dev/null
     sudo chmod +x /bin/chard_wrappers 2>/dev/null
     sudo /bin/chard_wrappers 2>/dev/null
     sudo rm -rf /bin/chard_wrappers 2>/dev/null
@@ -1699,8 +1699,8 @@ run_checkpoint 155 "linux-api-header fix" checkpoint_155
 #run_checkpoint 156 "Clear Cache" checkpoint_156
 
 checkpoint_157() {
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c" -o "/tmp/virtm.c" 2>/dev/null
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker.c" -o "/tmp/autoclicker.c" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/virtm.c" -o "/tmp/virtm.c" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/autoclicker.c" -o "/tmp/autoclicker.c" 2>/dev/null
     sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
     sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
     sudo chmod +x /bin/autoclicker 2>/dev/null
@@ -1717,14 +1717,14 @@ checkpoint_158() {
 run_checkpoint 158 "Emoji Support" checkpoint_158
 
 checkpoint_159() {
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bindfs.sh" -o "/bin/chard_bindfs" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bindfs.sh" -o "/bin/chard_bindfs" 2>/dev/null
     sudo chmod +x /bin/chard_bindfs 2>/dev/null
     chard_bindfs 2>/dev/null
 }
 run_checkpoint 159 "Bindfs" checkpoint_159
 
 checkpoint_160() {
-     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_sommelier_patch.sh" -o "/bin/chard_sommelier_patch" 2>/dev/null
+     sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_sommelier_patch.sh" -o "/bin/chard_sommelier_patch" 2>/dev/null
      sudo chmod +x /bin/chard_sommelier_patch 2>/dev/null
      /bin/chard_sommelier_patch
 }
@@ -1765,7 +1765,7 @@ checkpoint_163() {
     retry_pacman "sudo pacman -S --noconfirm ostree"
     retry_pacman "sudo pacman -S --noconfirm appstream"
     sudo -E pacman -Rdd --noconfirm bubblewrap 2>/dev/null
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak" 2>/dev/null
     sudo chmod +x /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
     /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
     #sudo chmod u+s /usr/local/bubblepatch/bin/bwrap
@@ -1778,7 +1778,7 @@ checkpoint_164() {
     if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
         echo "Skipping GPU Screen Recorder on ARM ($ARCH)"
     else
-        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_gpu_sr_setup.sh"            -o "/bin/chard_gpu_sr_setup" 2>/dev/null
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/chard_gpu_sr_setup.sh"            -o "/bin/chard_gpu_sr_setup" 2>/dev/null
         sudo chmod +x /bin/chard_gpu_sr_setup 2>/dev/null
         /bin/chard_gpu_sr_setup
     fi
@@ -1823,7 +1823,7 @@ checkpoint_169() {
 run_checkpoint 169 "inkscape" checkpoint_169
 
 checkpoint_170() {
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_svg.sh"            -o "/bin/chard_svg" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_svg.sh"            -o "/bin/chard_svg" 2>/dev/null
     sudo chmod +x /bin/chard_svg 2>/dev/null
     /bin/chard_svg
 }
