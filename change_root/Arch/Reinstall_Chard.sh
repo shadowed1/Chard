@@ -367,7 +367,7 @@ download_file() {
                     echo "${RED}${BOLD}ERROR: CHARD_ROOT variable is empty. Entering Repair Mode!${RESET}"
 					sleep 2
 					sudo mkdir -p /usr/local/bin
-					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh" -o "/usr/local/bin/chard_repair" 2>/dev/null
+					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/chard_repair.sh" -o "/usr/local/bin/chard_repair" 2>/dev/null
 					sudo chmod +x /usr/local/bin/chard_repair 2>/dev/null
 					/usr/local/bin/chard_repair 2>/dev/null
                 fi
@@ -375,15 +375,15 @@ download_file() {
                 if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
                     mkdir -p /home/chronos/user/MyFiles/Downloads/chard_icons >/dev/null 2>&1
                     sleep 0.2
-                    curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.sh"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon" 2>/dev/null
+                    curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bridge_daemon.sh"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon" 2>/dev/null
 					sleep 0.2
-                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_launch_daemon.sh"            -o "$CHARD_ROOT/bin/chard_launch_daemon" 2>/dev/null
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_launch_daemon.sh"            -o "$CHARD_ROOT/bin/chard_launch_daemon" 2>/dev/null
                     sleep 0.2
-                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut.sh"            -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_shortcut.sh"            -o "$CHARD_ROOT/bin/chard_shortcut" 2>/dev/null
                     sleep 0.2
-					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_shortcut_daemon.sh"            -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
+					sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_shortcut_daemon.sh"            -o "$CHARD_ROOT/bin/chard_shortcut_daemon" 2>/dev/null
 					sleep 0.2
-					curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bridge_daemon.service"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service" 2>/dev/null
+					curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bridge_daemon.service"            -o "/home/chronos/user/MyFiles/Downloads/chard_icons/chard_bridge_daemon.service" 2>/dev/null
 					sleep 0.2
                     sudo chmod +x "$CHARD_ROOT/bin/chard_launch_daemon"
                     sudo chmod +x "$CHARD_ROOT/bin/chard_shortcut"
@@ -528,7 +528,7 @@ sudo mkdir -p /usr/local/bin
 
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 echo ""
-BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
+BASE_URL="https://raw.githubusercontent.com/shadowed1/change_root/Chard/main"
 
 FILES=(
     "Arch/.chardrc|$CHARD_ROOT/.chardrc|0"
@@ -668,7 +668,7 @@ add_chard_marker() {
 add_chard_marker "$TARGET_FILE"
 
 if [ -f "/etc/init/chard.conf" ]; then
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
     sleep 0.05
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
         echo ""
@@ -681,7 +681,7 @@ if [ -f "/etc/init/chard.conf" ]; then
 fi
 
 if [ -f "/etc/init/chard_baguette.conf" ]; then
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
     sleep 0.05
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
         echo ""
@@ -780,11 +780,11 @@ fi
 if [ "$IS_CHROMEOS" -eq 1 ]; then
     ARCH="$(uname -m)"
     if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_ARM64" \
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/bindfs_ARM64" \
             -o "/usr/local/bin/chard_bindfs" 2>/dev/null
         sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
     else
-        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/bindfs_x86_64" \
+        sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/bindfs_x86_64" \
             -o "/usr/local/bin/chard_bindfs" 2>/dev/null
         sudo chmod +x /usr/local/bin/chard_bindfs 2>/dev/null
     fi
@@ -953,7 +953,7 @@ EOF
                     if [[ -n "$selected_locale" ]]; then
                         echo "${YELLOW}Detected language: ${BOLD}$selected_locale ${RESET}"
                         echo "$selected_locale" | sudo tee "$CHARD_ROOT/.chard_language" > /dev/null
-						sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/locale.gen"            -o "$CHARD_ROOT/etc/locale.gen" 2>/dev/null
+						sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/locale.gen"            -o "$CHARD_ROOT/etc/locale.gen" 2>/dev/null
 						chmod 644 "$CHARD_ROOT/etc/locale.gen" 2>/dev/null
 						locale_raw=$(cat "$CHARD_ROOT/.chard_language")
 						locale_code=$(echo "$locale_raw" | sed 's/-/_/').UTF-8
@@ -1295,15 +1295,15 @@ EOF
             2)
                 echo "${RESET}${YELLOW}[*] Performing full reinstall..."
 				sudo rm /usr/local/Chard_Installer.sh 2>/dev/null
-                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_download?$(date +%s)")
+                bash <(curl -s "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_download?$(date +%s)")
                 ;;
 			3)	
 				echo
-				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh")
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_startup.sh")
 				;;
 			r|R)
 				echo
-				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/Arch/chard_repair.sh")
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Arch/chard_repair.sh")
 			    ;;
             q|Q|*)
                 echo "${RESET}${RED}[*] Reinstall cancelled. Exiting.${RESET}"
