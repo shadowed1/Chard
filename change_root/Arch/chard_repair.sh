@@ -230,7 +230,7 @@ add_chard_marker "$TARGET_FILE"
 
 echo "${CYAN}[*] Downloading Chard components...${RESET}"
 echo ""
-BASE_URL="https://raw.githubusercontent.com/shadowed1/Chard/main"
+BASE_URL="https://raw.githubusercontent.com/shadowed1/change_root/Chard/main"
 
 FILES=(
     "Arch/.chardrc|$CHARD_ROOT/.chardrc|0"
@@ -383,7 +383,7 @@ sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh"
 sudo chown 1000:1000 $CHARD_ROOT/$CHARD_HOME/.bashrc
 
 if [ -f "/etc/init/chard.conf" ]; then
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
     sleep 0.05
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
         echo ""
@@ -396,7 +396,7 @@ if [ -f "/etc/init/chard.conf" ]; then
 fi
 
 if [ -f "/etc/init/chard_baguette.conf" ]; then
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
     sleep 0.05
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
         echo ""
