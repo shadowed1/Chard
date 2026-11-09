@@ -101,7 +101,7 @@ cd /usr/local/flatpak-1.16.3
       
 sed -i '69d' /usr/local/flatpak-1.16.3/common/flatpak-exports.c
 
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/usr/local/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_flatpak_patch.py" -o "/usr/local/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
 sudo chmod +x /usr/local/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
 python3 /usr/local/flatpak-1.16.3/chard_flatpak_patch.py /usr/local/flatpak-1.16.3/ 2>/dev/null
 
@@ -146,7 +146,7 @@ cd /usr/local/flatpak-1.16.3
 
 sed -i '69d' /usr/local/flatpak-1.16.3/common/flatpak-exports.c
 
-sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_flatpak_patch.py" -o "/usr/local/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_flatpak_patch.py" -o "/usr/local/flatpak-1.16.3/chard_flatpak_patch.py" 2>/dev/null
 sudo chmod +x /usr/local/flatpak-1.16.3/chard_flatpak_patch.py 2>/dev/null
 python3 /usr/local/flatpak-1.16.3/chard_flatpak_patch.py /usr/local/flatpak-1.16.3/ 2>/dev/null
     
