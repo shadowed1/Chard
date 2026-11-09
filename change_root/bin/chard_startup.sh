@@ -65,7 +65,7 @@ chard_boot_setup() {
                 ;;
         esac
     done
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard.conf" -o "/etc/init/chard.conf"
     sleep 0.05
     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard.conf" ]; then
         echo ""
@@ -83,7 +83,7 @@ chard_boot_setup() {
             echo ""
             case "$baguette_confirm" in
                 [Yy]* | "")
-                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
+                    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_baguette.conf" -o "/etc/init/chard_baguette.conf"
                     sleep 0.05
                     if [ $? -ne 0 ] || [ ! -s "/etc/init/chard_baguette.conf" ]; then
                         echo "${RED}Failed to download chard_baguette.conf${RESET}"
