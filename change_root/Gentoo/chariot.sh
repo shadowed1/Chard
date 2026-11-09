@@ -1539,8 +1539,8 @@ EOF
 run_checkpoint 146 "Dark Theme and strace" checkpoint_146
 
 checkpoint_147() {
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/virtm.c" -o "/tmp/virtm.c"
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/autoclicker.c" -o "/tmp/autoclicker.c"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/virtm.c" -o "/tmp/virtm.c"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/autoclicker.c" -o "/tmp/autoclicker.c"
     sudo -E gcc /tmp/virtm.c -o /bin/virtm -lm 2>/dev/null
     sudo -E gcc /tmp/autoclicker.c -o /bin/autoclicker 2>/dev/null
     sudo chmod +x /bin/autoclicker 2>/dev/null
@@ -1618,7 +1618,7 @@ sudo ln -sf /usr/share/misc/magic.mgc /usr/share/file/misc/magic.mgc
 run_checkpoint 149 "CRAS Audio Patches" checkpoint_149
 
 checkpoint_150() {
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_bindfs.sh" -o "/bin/chard_bindfs" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_bindfs.sh" -o "/bin/chard_bindfs" 2>/dev/null
     sudo chmod +x /bin/chard_bindfs 2>/dev/null
     chard_bindfs 2>/dev/null
 }
@@ -1631,7 +1631,7 @@ run_checkpoint 151 "Exo Color Inversion Patch" checkpoint_151
 
 checkpoint_152() {
     retry_emerge "sudo -E emerge dev-python/pyparsing"
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak"
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak"
     sudo chmod +x /bin/chard_downgrade_bwrap_flatpak
     /bin/chard_downgrade_bwrap_flatpak
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -1649,11 +1649,11 @@ checkpoint_153() {
 run_checkpoint 153 "VAInfo" checkpoint_153
 
 checkpoint_154() {
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/Gentoo/chard_wrappers.sh" -o "/bin/chard_wrappers" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/Gentoo/chard_wrappers.sh" -o "/bin/chard_wrappers" 2>/dev/null
     sudo chmod +x /bin/chard_wrappers 2>/dev/null
     sudo /bin/chard_wrappers 2>/dev/null
     sudo rm -rf /bin/chard_wrappers 2>/dev/null
-    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak" 2>/dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_downgrade_bwrap_flatpak.sh" -o "/bin/chard_downgrade_bwrap_flatpak" 2>/dev/null
     sudo chmod +x /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
     /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
 }
