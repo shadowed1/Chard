@@ -1,4 +1,5 @@
 #!/bin/bash
+# delete when practical
 # working - thanks for days for helping finish this
 ARCH=$(uname -m)    
 if [[ "$ARCH" == "x86_64" ]]; then
