@@ -1302,7 +1302,7 @@ EOF
                 ;;
             3)	
 				echo
-				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/CHard/main/bin/chard_startup.sh")
+				bash <(curl -s "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_startup.sh")
 				;;
             r|R)
 				echo
