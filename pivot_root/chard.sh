@@ -1,13 +1,14 @@
 #!/bin/bash
-
+# Preliminary wrapper
 # Version: 2026-10-09
 # Authors: Days, Wilds
-#
 # Launches a namespace-isolated environment for an unprivileged user session; thereby superseding our chroot.
 # TODO(days): This precursor establishes mount and PID namespaces through privileged pivot_root setup
 #             before dropping privileges, eliminating the need for a persistent privileged shell.
 #             It separates CHARD's filesystem and process views from the host while enabling
 #             support for sandboxed applications improveing isolation and compatibility.
+set -e
+(( $# )) || set -- bash
 
 sudo unshare --mount --pid --fork --kill-child --mount-proc=/usr/local/chard/proc bash -ec '
     mount --make-rprivate /
