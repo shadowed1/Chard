@@ -1,8 +1,11 @@
 # Install Tailscale in Chard normally.
+```sh
 sudo pacman -Syy
 sudo pacman -S tailscale
+```
 
 # In ChromeOS create /etc/init/tailscaled.conf
+```sh
 sudo tee "/etc/init/tailscaled.conf" >/dev/null <<'EOF'
 description "Tailscale node agent (Chard-provided binary)"
 start on started system-services
@@ -76,9 +79,10 @@ end script
 EOF
 
 sudo chmod 644 /etc/init/tailscaled.conf
+```
 
 # Days' cleaned it up and made it a script:
-
+```sh
 sudo nsenter -t 1 --all /bin/bash -s <<'OUTER'
 cat << 'EOF' > /etc/init/tailscaled.conf
 description "Tailscale node agent (Chard-provided binary)"
@@ -150,3 +154,4 @@ OUTER
 
 sudo start tailscaled
 sudo $CR/usr/bin/tailscale up
+```
