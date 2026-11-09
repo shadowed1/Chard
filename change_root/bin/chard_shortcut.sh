@@ -176,6 +176,6 @@ echo "${GREEN}"
 echo
 echo "To enable icons and shortcuts for Chard, start Termina (Crostini), share your Downloads folder to Linux, and copy paste in Terminal: ${BOLD}"
 echo
-echo 'bash <(wget -qO- "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_share.sh")'
+echo 'bash <(wget -qO- "https://raw.githubusercontent.com/shadowed1/change_root/Chard/main/bin/chard_share.sh")'
 echo "${RESET}"
 echo
