@@ -1,0 +1,905 @@
+diff --git a/NEWS.md b/NEWS.md
+index 34a9e2d..067b12b 100644
+--- a/NEWS.md
++++ b/NEWS.md
+@@ -3,6 +3,14 @@ bubblewrap 0.13.2
+ 
+ Released: ...
+ 
++Bug fixes:
++
++  * Improve compatibility with restrictive mount policies that reject
++    mount targets passed through /proc/self/fd. If `--tmpfs` needs the
++    descriptor-based retry after `ELOOP`, that mount is made `noexec`.
++  * If the initial root staging tmpfs mount returns `EPERM`, Bubblewrap
++    retries with `noexec`; files left on that staging root cannot be executed.
++
+ bubblewrap 0.13.1
+ =================
+ 
+diff --git a/bind-mount.c b/bind-mount.c
+index b1687bb..65e349d 100644
+--- a/bind-mount.c
++++ b/bind-mount.c
+@@ -30,6 +30,25 @@
+ #  define USE_MOUNT_SETATTR_FALLBACK 0
+ #endif
+ 
++#if ASSUMED_KERNEL < BWRAP_KERNEL_VERSION (5, 2, 0)
++#  define USE_BIND_MOUNT_FALLBACK 1
++#else
++#  define USE_BIND_MOUNT_FALLBACK 0
++#endif
++
++#ifndef OPEN_TREE_CLONE
++#  define OPEN_TREE_CLONE 1
++#endif
++#ifndef OPEN_TREE_CLOEXEC
++#  define OPEN_TREE_CLOEXEC O_CLOEXEC
++#endif
++#ifndef MOVE_MOUNT_F_EMPTY_PATH
++#  define MOVE_MOUNT_F_EMPTY_PATH 0x00000004
++#endif
++#ifndef MOVE_MOUNT_T_EMPTY_PATH
++#  define MOVE_MOUNT_T_EMPTY_PATH 0x00000040
++#endif
++
+ static bind_mount_result mount_setattr_setup (const char *resolved_dest,
+                                               bind_option_t options,
+                                               char **failing_path);
+@@ -39,6 +58,8 @@ static bind_mount_result mount_setattr_fallback (const char *resolved_dest,
+                                                  char **failing_path);
+ 
+ bool opt_force_mount_setattr_fallback = false;
++bool opt_force_bind_mount_fallback = false;
++static bool mount_attr_supported = true;
+ 
+ #if USE_MOUNT_SETATTR_FALLBACK
+ static char *
+@@ -420,15 +441,166 @@ bind_mount (const char   *src,
+   return bind_mount_fd (src_fd, dest_fd, options, failing_path);
+ }
+ 
++static bind_mount_result
++bind_mount_fallback (const char *src_proc,
++                     const char *dest_proc,
++                     const char *resolved_dest,
++                     bind_option_t options,
++                     char **failing_path)
++{
++#if !USE_BIND_MOUNT_FALLBACK
++  debug ("No bind mount fallback");
++  (void) src_proc;
++  (void) dest_proc;
++  if (failing_path != NULL)
++    *failing_path = xstrdup (resolved_dest);
++  errno = ENOSYS;
++  return BIND_MOUNT_ERROR_MOUNT;
++#else
++  bool recursive = (options & BIND_RECURSIVE) != 0;
++
++  debug ("Using mount() for bind mount on \"%s\"", resolved_dest);
++
++  if (mount (src_proc, dest_proc, NULL,
++             MS_SILENT | MS_BIND | (recursive ? MS_REC : 0), NULL) != 0)
++    {
++      if (failing_path != NULL)
++        *failing_path = xstrdup (resolved_dest);
++
++      return BIND_MOUNT_ERROR_MOUNT;
++    }
++
++  debug ("-> Success");
++  return BIND_MOUNT_SUCCESS;
++#endif
++}
++
++static int
++mount_setattr_on_fd (int mount_fd, bind_option_t options)
++{
++  bool readonly = (options & BIND_READONLY) != 0;
++  bool devices = (options & BIND_DEVICES) != 0;
++  bool recursive = (options & BIND_RECURSIVE) != 0;
++  struct mount_attr attr = {
++    .attr_clr = 0,
++    .attr_set = MOUNT_ATTR_NOSUID,
++  };
++  unsigned int setattr_flags = AT_EMPTY_PATH;
++
++  if (!devices)
++    attr.attr_set |= MOUNT_ATTR_NODEV;
++
++  if (readonly)
++    attr.attr_set |= MOUNT_ATTR_RDONLY;
++
++  if (recursive)
++    setattr_flags |= AT_RECURSIVE;
++
++  return mount_setattr_wrapper (mount_fd, "", setattr_flags,
++                                &attr, sizeof (attr));
++}
++
++static bind_mount_result
++bind_mount_using_new_api (int           src_fd,
++                          int           dest_fd,
++                          const char   *src_proc,
++                          const char   *dest_proc,
++                          const char   *resolved_dest,
++                          bind_option_t options,
++                          bool         *attributes_applied,
++                          char        **failing_path)
++{
++  static bool new_mount_supported = true;
++  bool recursive = (options & BIND_RECURSIVE) != 0;
++  bool attrs_set_on_detached_mount = false;
++
++  if (new_mount_supported && !opt_force_bind_mount_fallback)
++    {
++      unsigned int open_tree_flags = OPEN_TREE_CLONE | OPEN_TREE_CLOEXEC | AT_EMPTY_PATH;
++
++      if (recursive)
++        open_tree_flags |= AT_RECURSIVE;
++
++      debug ("Using open_tree() and move_mount() for bind mount on \"%s\"",
++             resolved_dest);
++
++      cleanup_fd int tree_fd = open_tree_wrapper (src_fd, "", open_tree_flags);
++      if (tree_fd < 0)
++        {
++          int saved_errno = errno;
++
++          if (saved_errno != ENOSYS)
++            {
++              if (failing_path != NULL)
++                *failing_path = xstrdup (src_proc);
++              errno = saved_errno;
++              return BIND_MOUNT_ERROR_OPEN_TREE;
++            }
++        }
++      else
++        {
++          bool apply_attributes = !opt_force_mount_setattr_fallback &&
++                                  mount_attr_supported;
++
++          /* Set attributes on the detached clone before it is visible at the
++           * destination, avoiding a second path lookup after move_mount(). */
++          if (apply_attributes &&
++              mount_setattr_on_fd (tree_fd, options) == 0)
++            attrs_set_on_detached_mount = true;
++          else if (apply_attributes)
++            {
++              int saved_errno = errno;
++
++              if (saved_errno != ENOSYS)
++                {
++                  if (failing_path != NULL)
++                    *failing_path = xstrdup (resolved_dest);
++                  errno = saved_errno;
++                  return BIND_MOUNT_ERROR_MOUNT_SETATTR;
++                }
++
++              /* On kernels without mount_setattr(), retain the established
++               * post-attach compatibility fallback. */
++              mount_attr_supported = false;
++            }
++
++          if (move_mount_wrapper (tree_fd, "", dest_fd, "",
++                                  MOVE_MOUNT_F_EMPTY_PATH |
++                                  MOVE_MOUNT_T_EMPTY_PATH) == 0)
++            {
++              *attributes_applied = attrs_set_on_detached_mount;
++              debug ("-> Success");
++              return BIND_MOUNT_SUCCESS;
++            }
++
++          int saved_errno = errno;
++
++          if (saved_errno != ENOSYS)
++            {
++              if (failing_path != NULL)
++                *failing_path = xstrdup (resolved_dest);
++              errno = saved_errno;
++              return BIND_MOUNT_ERROR_MOVE_MOUNT;
++            }
++        }
++
++      debug ("New mount API is unavailable; falling back to mount()");
++    }
++
++  new_mount_supported = false;
++  return bind_mount_fallback (src_proc, dest_proc, resolved_dest,
++                              options, failing_path);
++}
++
+ bind_mount_result
+ bind_mount_fd (int           src_fd,
+                int           dest_fd,
+                bind_option_t options,
+                char        **failing_path)
+ {
+-  bool recursive = (options & BIND_RECURSIVE) != 0;
+   cleanup_free char *resolved_dest = NULL;
+   cleanup_free char *dest_proc = NULL;
++  bool attributes_applied = false;
+ 
+   dest_proc = fd_to_proc_path (dest_fd);
+ 
+@@ -454,16 +626,18 @@ bind_mount_fd (int           src_fd,
+   if (src_fd != -1)
+     {
+       cleanup_free char *src_proc = fd_to_proc_path (src_fd);
++      bind_mount_result result =
++        bind_mount_using_new_api (src_fd, dest_fd, src_proc, dest_proc,
++                                  resolved_dest, options, &attributes_applied,
++                                  failing_path);
+ 
+-      if (mount (src_proc, dest_proc, NULL, MS_SILENT | MS_BIND | (recursive ? MS_REC : 0), NULL) != 0)
+-        {
+-          if (failing_path != NULL)
+-            *failing_path = steal_pointer (&resolved_dest);
+-
+-          return BIND_MOUNT_ERROR_MOUNT;
+-        }
++      if (result != BIND_MOUNT_SUCCESS)
++        return result;
+     }
+ 
++  if (attributes_applied)
++    return BIND_MOUNT_SUCCESS;
++
+   return mount_setattr_setup (resolved_dest, options, failing_path);
+ }
+ 
+@@ -608,6 +782,14 @@ bind_mount_result_to_string (bind_mount_result res,
+         string = xasprintf ("mount_setattr() failed at \"%s\"", failing_path);
+         break;
+ 
++      case BIND_MOUNT_ERROR_OPEN_TREE:
++        string = xasprintf ("open_tree() failed at \"%s\"", failing_path);
++        break;
++
++      case BIND_MOUNT_ERROR_MOVE_MOUNT:
++        string = xasprintf ("move_mount() failed at \"%s\"", failing_path);
++        break;
++
+       case BIND_MOUNT_SUCCESS:
+         string = xstrdup ("Success");
+         break;
+@@ -654,6 +836,8 @@ die_with_bind_result (bind_mount_result res,
+           case BIND_MOUNT_ERROR_MOUNT:
+           case BIND_MOUNT_ERROR_REMOUNT_DEST:
+           case BIND_MOUNT_ERROR_REMOUNT_SUBMOUNT:
++          case BIND_MOUNT_ERROR_OPEN_TREE:
++          case BIND_MOUNT_ERROR_MOVE_MOUNT:
+             fprintf (stderr, ": %s", mount_strerror (saved_errno));
+             break;
+ 
+@@ -676,36 +860,20 @@ mount_setattr_setup (const char *resolved_dest,
+                      bind_option_t options,
+                      char **failing_path)
+ {
+-  static bool mount_attr_supported = true;
+   bool readonly = (options & BIND_READONLY) != 0;
+   bool devices = (options & BIND_DEVICES) != 0;
+   bool recursive = (options & BIND_RECURSIVE) != 0;
+ 
+   if (mount_attr_supported && !opt_force_mount_setattr_fallback)
+     {
+-      struct mount_attr attr = {
+-        .attr_clr = 0,
+-        .attr_set = MOUNT_ATTR_NOSUID,
+-      };
+-
+       debug ("Setting mount attributes (%s %s) on  \"%s\" %s",
+              readonly ? "ro" : "rw",
+              devices ? "dev" : "nodev",
+              resolved_dest,
+              recursive ? "recursively" : "only");
+ 
+-      if (!devices)
+-        attr.attr_set |= MOUNT_ATTR_NODEV;
+-
+-      if (readonly)
+-        attr.attr_set |= MOUNT_ATTR_RDONLY;
+-
+-      unsigned int setattr_flags = AT_EMPTY_PATH;
+-
+-      if (recursive)
+-        setattr_flags |= AT_RECURSIVE;
+-
+-      /* reopen dest_fd after mount() */
++      /* Reopen the destination after the mount. This is needed for the
++       * legacy path and kernels without mount_setattr(). */
+       cleanup_fd int resolved_dest_fd =
+         TEMP_FAILURE_RETRY(open(resolved_dest, O_PATH | O_CLOEXEC));
+       if (resolved_dest_fd < 0)
+@@ -716,7 +884,7 @@ mount_setattr_setup (const char *resolved_dest,
+           return BIND_MOUNT_ERROR_OPEN_FD;
+         }
+ 
+-      if (mount_setattr_wrapper (resolved_dest_fd, "", setattr_flags, &attr, sizeof(attr)) == 0)
++      if (mount_setattr_on_fd (resolved_dest_fd, options) == 0)
+         {
+           debug ("-> success");
+           return BIND_MOUNT_SUCCESS;
+diff --git a/bind-mount.h b/bind-mount.h
+index 71f54c3..7d7a5aa 100644
+--- a/bind-mount.h
++++ b/bind-mount.h
+@@ -38,6 +38,8 @@ typedef enum
+   BIND_MOUNT_ERROR_REMOUNT_SUBMOUNT,
+   BIND_MOUNT_ERROR_OPEN_FD,
+   BIND_MOUNT_ERROR_MOUNT_SETATTR,
++  BIND_MOUNT_ERROR_OPEN_TREE,
++  BIND_MOUNT_ERROR_MOVE_MOUNT,
+ } bind_mount_result;
+ 
+ bind_mount_result bind_mount (const char   *src,
+diff --git a/bubblewrap.c b/bubblewrap.c
+index a36adcc..d164ccf 100644
+--- a/bubblewrap.c
++++ b/bubblewrap.c
+@@ -964,21 +964,62 @@ setup_op_tmpfs_mount (uint32_t    perms,
+                       const char *dest_display)
+ {
+   cleanup_free char *mode = NULL;
++  cleanup_free char *size_string = NULL;
++  cleanup_free char *legacy_options = NULL;
++  cleanup_free char *labelled_options = NULL;
++  fs_mount_option options[3];
++  size_t n_options = 0;
++  int mount_errno;
+ 
+   /* This check should be unnecessary since we checked this when parsing
+    * the --size option as well. However, better be safe than sorry. */
+   if (size > MAX_TMPFS_BYTES)
+     die_with_error ("Specified tmpfs size too large (%zu > %zu)", size, MAX_TMPFS_BYTES);
+ 
++  mode = xasprintf ("%#o", perms);
++  options[n_options++] = (fs_mount_option) { "mode", mode };
+   if (size != 0)
+-    mode = xasprintf ("mode=%#o,size=%zu", perms, size);
+-  else
+-    mode = xasprintf ("mode=%#o", perms);
++    {
++      size_string = xasprintf ("%zu", size);
++      options[n_options++] = (fs_mount_option) { "size", size_string };
++    }
++
++#ifdef HAVE_SELINUX
++  if (opt_file_label != NULL)
++    options[n_options++] = (fs_mount_option) { "context", opt_file_label };
++#endif
+ 
+   cleanup_free char *dest_path = fd_to_proc_path (dest_fd);
+-  cleanup_free char *opt = label_mount (mode, opt_file_label);
+-  if (mount ("tmpfs", dest_path, "tmpfs", MS_NOSUID | MS_NODEV, opt) != 0)
+-    die_with_mount_error ("Can't mount tmpfs on %s", dest_display);
++  unsigned long mount_flags = MS_NOSUID | MS_NODEV;
++
++  if (size != 0)
++    legacy_options = xasprintf ("mode=%#o,size=%zu", perms, size);
++  else
++    legacy_options = xasprintf ("mode=%#o", perms);
++  labelled_options = label_mount (legacy_options, opt_file_label);
++
++  if (mount ("tmpfs", dest_path, "tmpfs", mount_flags,
++             labelled_options) == 0)
++    return;
++
++  mount_errno = errno;
++
++  /* Retry only this path-resolution failure through the already-open
++   * destination. The descriptor-based fallback adds NOEXEC, and must not be
++   * used after EPERM or any other authorization failure. */
++  if (mount_errno == ELOOP &&
++      fs_mount_at_fd ("tmpfs", dest_fd,
++                      MOUNT_ATTR_NOSUID | MOUNT_ATTR_NODEV |
++                      MOUNT_ATTR_NOEXEC,
++                      options, n_options) == 0)
++    {
++      debug ("Mounted tmpfs on %s through a descriptor with MS_NOEXEC",
++             dest_display);
++      return;
++    }
++
++  errno = mount_errno == ELOOP ? errno : mount_errno;
++  die_with_mount_error ("Can't mount tmpfs on %s", dest_display);
+ }
+ 
+ /* This creates a file node as required for the new destination of an
+@@ -1389,8 +1430,19 @@ setup_newroot (bool unshare_pid)
+             if (unshare_pid || opt_pidns_fd != -1)
+               {
+                 /* Our own procfs */
+-                if (mount ("proc", dest_path, "proc", MS_NOSUID | MS_NOEXEC | MS_NODEV, NULL) != 0)
+-                  die_with_mount_error ("Can't mount proc on %s", op->dest);
++                if (fs_mount_at_fd ("proc", dest_fd,
++                                    MOUNT_ATTR_NOSUID | MOUNT_ATTR_NOEXEC |
++                                    MOUNT_ATTR_NODEV,
++                                    NULL, 0) < 0)
++                  {
++                    if (errno != ENOSYS)
++                      die_with_mount_error ("Can't mount proc on %s", op->dest);
++
++                    debug ("Falling back to mount() for proc mount on %s", op->dest);
++                    if (mount ("proc", dest_path, "proc",
++                               MS_NOSUID | MS_NOEXEC | MS_NODEV, NULL) != 0)
++                      die_with_mount_error ("Can't mount proc on %s", op->dest);
++                  }
+               }
+             else
+               {
+@@ -1474,10 +1526,25 @@ setup_newroot (bool unshare_pid)
+               if (pts_fd < 0)
+                 die_with_error ("Can't open %s/pts", op->dest);
+               cleanup_free char *pts_path = fd_to_proc_path (pts_fd);
+-
+-              if (mount ("devpts", pts_path, "devpts", MS_NOSUID | MS_NOEXEC,
+-                         "newinstance,ptmxmode=0666,mode=620") != 0)
+-                die_with_mount_error ("Can't mount devpts on %s/pts", op->dest);
++              static const fs_mount_option devpts_options[] = {
++                { "newinstance", NULL },
++                { "ptmxmode", "0666" },
++                { "mode", "620" }
++              };
++
++              if (fs_mount_at_fd ("devpts", pts_fd,
++                                  MOUNT_ATTR_NOSUID | MOUNT_ATTR_NOEXEC,
++                                  devpts_options, N_ELEMENTS (devpts_options)) < 0)
++                {
++                  if (errno != ENOSYS)
++                    die_with_mount_error ("Can't mount devpts on %s/pts", op->dest);
++
++                  debug ("Falling back to mount() for devpts mount on %s/pts", op->dest);
++                  if (mount ("devpts", pts_path, "devpts",
++                             MS_NOSUID | MS_NOEXEC,
++                             "newinstance,ptmxmode=0666,mode=620") != 0)
++                    die_with_mount_error ("Can't mount devpts on %s/pts", op->dest);
++                }
+             }
+ 
+             if (symlinkat ("pts/ptmx", dest_fd, "ptmx") != 0)
+@@ -1509,8 +1576,18 @@ setup_newroot (bool unshare_pid)
+         case SETUP_MOUNT_MQUEUE:
+           {
+             cleanup_free char *dest_path = fd_to_proc_path (dest_fd);
+-            if (mount ("mqueue", dest_path, "mqueue", 0, NULL) != 0)
+-              die_with_mount_error ("Can't mount mqueue on %s", op->dest);
++            if (fs_mount_at_fd ("mqueue", dest_fd,
++                                MOUNT_ATTR_NOSUID | MOUNT_ATTR_NODEV |
++                                MOUNT_ATTR_NOEXEC,
++                                NULL, 0) < 0)
++              {
++                if (errno != ENOSYS)
++                  die_with_mount_error ("Can't mount mqueue on %s", op->dest);
++
++                debug ("Falling back to mount() for mqueue mount on %s", op->dest);
++                if (mount ("mqueue", dest_path, "mqueue", 0, NULL) != 0)
++                  die_with_mount_error ("Can't mount mqueue on %s", op->dest);
++              }
+             break;
+           }
+ 
+@@ -2727,6 +2804,14 @@ parse_args_recurse (int          *argcp,
+             {
+               opt_force_mount_setattr_fallback = true;
+             }
++          else if (strcmp (val, "force-bind-mount-fallback") == 0)
++            {
++              opt_force_bind_mount_fallback = true;
++            }
++          else if (strcmp (val, "force-fs-mount-fallback") == 0)
++            {
++              opt_force_fs_mount_fallback = true;
++            }
+           else if (strcmp (val, "print-assumed-kernel") == 0)
+             {
+ #ifdef HAVE_ASSUMED_KERNEL
+@@ -3282,7 +3367,14 @@ main (int    argc,
+ 
+   /* Create a tmpfs which we will use as / in the namespace */
+   if (mount ("tmpfs", base_path, "tmpfs", MS_NODEV | MS_NOSUID, NULL) != 0)
+-    die_with_mount_error ("Failed to mount tmpfs");
++    {
++      if (errno != EPERM ||
++          mount ("tmpfs", base_path, "tmpfs",
++                 MS_NODEV | MS_NOSUID | MS_NOEXEC, NULL) != 0)
++        die_with_mount_error ("Failed to mount tmpfs");
++
++      debug ("Mounted root staging tmpfs with MS_NOEXEC after EPERM");
++    }
+ 
+   old_cwd = get_current_dir_name ();
+ 
+diff --git a/tests/test-sandbox.py b/tests/test-sandbox.py
+index d33f1ad..1646c07 100644
+--- a/tests/test-sandbox.py
++++ b/tests/test-sandbox.py
+@@ -319,6 +319,15 @@ class TestSandbox(unittest.TestCase):
+     def test_ro_bind_root_is_recursive(self):
+         self._test_ro_bind_root_is_recursive()
+ 
++    def test_bind_mount_fallback(self):
++        if get_assumed_kernel() >= (5, 2, 0):
++            self.skipTest('bind mount fallback not compiled')
++        result = run_bwrap('--debug-opt=force-bind-mount-fallback', 'true')
++        if result.returncode != 0 and b'Too many levels of symbolic links' in result.stderr:
++            self.skipTest('legacy mount through proc fd path failed with ELOOP')
++        self.assertEqual(result.returncode, 0,
++                         f'bind mount fallback failed: {result.stderr!r}')
++
+     @in_sandbox('--debug-opt=force-mount-setattr-fallback')
+     def _test_ro_bind_root_is_recursive_fallback(self):
+         self._test_ro_bind_root_is_recursive()
+@@ -359,11 +368,25 @@ class TestSandbox(unittest.TestCase):
+         self.assertIsMountpoint('/tmp/t')
+         self.assertIsTmpfs('/tmp/t')
+         self.assertMountFlags('/tmp/t',
+-                              [os.ST_NOSUID, os.ST_NODEV], [os.ST_RDONLY])
++                              [os.ST_NOSUID, os.ST_NODEV],
++                              [os.ST_RDONLY])
+         with open('/tmp/t/testfile', 'w') as f:
+             f.write('writable')
+         self.assertFileContent('/tmp/t/testfile', 'writable')
+ 
++        script = '/tmp/t/exec-probe'
++        with open(script, 'w') as f:
++            f.write('#!/bin/sh\nexit 0\n')
++        os.chmod(script, 0o700)
++        noexec = bool(os.statvfs('/tmp/t').f_flag & os.ST_NOEXEC)
++        try:
++            result = subprocess.run([script], capture_output=True)
++        except PermissionError:
++            self.assertTrue(noexec, 'execution failed on an executable tmpfs')
++        else:
++            self.assertFalse(noexec, 'tmpfs allowed execution despite noexec')
++            self.assertEqual(result.returncode, 0, result.stderr)
++
+     @in_sandbox('--perms', '0700', '--tmpfs', '/tmp/t')
+     def test_tmpfs_perms(self):
+         self.assertIsMountpoint('/tmp/t')
+@@ -379,6 +402,11 @@ class TestSandbox(unittest.TestCase):
+         total = st.f_blocks * st.f_frsize
+         self.assertLessEqual(total, 64 * 1024 + 4096)
+ 
++    def test_tmpfs_to_symlink_dest_fails(self):
++        result = run_bwrap('--symlink', '/tmp/target', '/tmp/link',
++                           '--tmpfs', '/tmp/link', 'true')
++        self.assertBwrapFailed(result)
++
+     # ------ proc ------
+ 
+     @in_sandbox()
+@@ -392,12 +420,30 @@ class TestSandbox(unittest.TestCase):
+                 self.assertFalse(os.access(path, os.W_OK),
+                                  f'/proc/{subdir} should not be writable')
+ 
++    def test_proc_mount_api(self):
++        result = run_bwrap(
++            '--unshare-pid', 'python3', '-c',
++            'import os; flags = os.statvfs("/proc").f_flag; '
++            'assert os.path.ismount("/proc"); '
++            'assert flags & os.ST_NOSUID; '
++            'assert flags & os.ST_NOEXEC; '
++            'assert flags & os.ST_NODEV')
++        if result.returncode != 0 and b'Operation not permitted' in result.stderr:
++            self.skipTest('PID namespaces not available in user namespace')
++        self.assertEqual(result.returncode, 0,
++                         f'proc mount failed: {result.stderr!r}')
++
+     # ------ dev ------
+ 
+     @in_sandbox()
+     def test_dev_nodes(self):
++        self.assertMountFlags('/dev',
++                              [os.ST_NOSUID, os.ST_NODEV], [os.ST_RDONLY])
+         for node in ['null', 'zero', 'full', 'random', 'urandom', 'tty']:
+             self.assertIsChrDev(f'/dev/{node}')
++        self.assertIsMountpoint('/dev/pts')
++        self.assertMountFlags('/dev/pts',
++                              [os.ST_NOSUID, os.ST_NOEXEC], [])
+         for link in ['stdin', 'stdout', 'stderr', 'fd', 'ptmx']:
+             self.assertIsSymlink(f'/dev/{link}')
+         self.assertIsDir('/dev/pts')
+@@ -503,11 +549,31 @@ class TestSandbox(unittest.TestCase):
+     # ------ mqueue ------
+ 
+     def test_mqueue(self):
+-        result = run_bwrap('--mqueue', '/tmp/mq', 'true')
+-        if result.returncode != 0 and b'Operation not permitted' in result.stderr:
+-            self.skipTest('mqueue not available in user namespace')
++        result = run_bwrap(
++            '--mqueue', '/tmp/mq', 'python3', '-c',
++            'import os; flags = os.statvfs("/tmp/mq").f_flag; '
++            'assert os.path.ismount("/tmp/mq"); '
++            'assert flags & os.ST_NOSUID; '
++            'assert flags & os.ST_NODEV; '
++            'assert flags & os.ST_NOEXEC')
++        if result.returncode != 0 and any(
++                error in result.stderr for error in
++                [b'Operation not permitted', b'No such device']):
++            self.skipTest('mqueue not available in this environment')
+         self.assertEqual(result.returncode, 0)
+ 
++    def test_filesystem_mount_fallback(self):
++        result = run_bwrap('--debug-opt=force-fs-mount-fallback',
++                           '--mqueue', '/tmp/mq', 'true')
++        if result.returncode != 0 and any(
++                error in result.stderr for error in
++                [b'Too many levels of symbolic links',
++                 b'Operation not permitted', b'No such device',
++                 b'Function not implemented']):
++            self.skipTest('legacy filesystem mounts are unavailable here')
++        self.assertEqual(result.returncode, 0,
++                         f'filesystem mount fallback failed: {result.stderr!r}')
++
+     # ------ hostname ------
+ 
+     def test_hostname(self):
+diff --git a/utils.c b/utils.c
+index 5865cdb..1c99e00 100644
+--- a/utils.c
++++ b/utils.c
+@@ -1135,3 +1135,226 @@ mount_setattr_wrapper (int dirfd, const char *path, unsigned int flags,
+   return -1;
+ #endif
+ }
++
++/* Enable open_tree() and move_mount() when the kernel is new enough but
++ * the glibc headers may be older than the running kernel. */
++#ifndef __NR_open_tree
++# if (defined(__x86_64__) && defined(__LP64__)) \
++     || defined(__i386__) \
++     || (defined(__aarch64__) && defined(__LP64__))
++#   define __NR_open_tree 428
++# endif
++#endif
++
++#ifndef __NR_move_mount
++# if (defined(__x86_64__) && defined(__LP64__)) \
++     || defined(__i386__) \
++     || (defined(__aarch64__) && defined(__LP64__))
++#   define __NR_move_mount 429
++# endif
++#endif
++
++#ifndef __NR_fsopen
++# if (defined(__x86_64__) && defined(__LP64__)) \
++     || defined(__i386__) \
++     || (defined(__aarch64__) && defined(__LP64__))
++#   define __NR_fsopen 430
++# endif
++#endif
++
++#ifndef __NR_fsconfig
++# if (defined(__x86_64__) && defined(__LP64__)) \
++     || defined(__i386__) \
++     || (defined(__aarch64__) && defined(__LP64__))
++#   define __NR_fsconfig 431
++# endif
++#endif
++
++#ifndef __NR_fsmount
++# if (defined(__x86_64__) && defined(__LP64__)) \
++     || defined(__i386__) \
++     || (defined(__aarch64__) && defined(__LP64__))
++#   define __NR_fsmount 432
++# endif
++#endif
++
++#ifndef FSOPEN_CLOEXEC
++# define FSOPEN_CLOEXEC 0x00000001
++enum {
++  FSCONFIG_SET_FLAG = 0,
++  FSCONFIG_SET_STRING = 1,
++  FSCONFIG_CMD_CREATE = 6
++};
++# define FSMOUNT_CLOEXEC 0x00000001
++#endif
++
++#ifndef MOVE_MOUNT_F_EMPTY_PATH
++# define MOVE_MOUNT_F_EMPTY_PATH 0x00000004
++#endif
++#ifndef MOVE_MOUNT_T_EMPTY_PATH
++# define MOVE_MOUNT_T_EMPTY_PATH 0x00000040
++#endif
++
++int
++open_tree_wrapper (int dirfd, const char *path, unsigned int flags)
++{
++#ifdef __NR_open_tree
++  return syscall (__NR_open_tree, dirfd, path, flags);
++#else
++  (void) dirfd;
++  (void) path;
++  (void) flags;
++  errno = ENOSYS;
++  return -1;
++#endif
++}
++
++int
++move_mount_wrapper (int from_dirfd, const char *from_path,
++                    int to_dirfd, const char *to_path,
++                    unsigned int flags)
++{
++#ifdef __NR_move_mount
++  return syscall (__NR_move_mount, from_dirfd, from_path, to_dirfd,
++                  to_path, flags);
++#else
++  (void) from_dirfd;
++  (void) from_path;
++  (void) to_dirfd;
++  (void) to_path;
++  (void) flags;
++  errno = ENOSYS;
++  return -1;
++#endif
++}
++
++static int
++fsopen_wrapper (const char *filesystem, unsigned int flags)
++{
++#ifdef __NR_fsopen
++  return syscall (__NR_fsopen, filesystem, flags);
++#else
++  (void) filesystem;
++  (void) flags;
++  errno = ENOSYS;
++  return -1;
++#endif
++}
++
++static int
++fsconfig_wrapper (int fsfd, unsigned int command, const char *key,
++                  const void *value, int aux)
++{
++#ifdef __NR_fsconfig
++  return syscall (__NR_fsconfig, fsfd, command, key, value, aux);
++#else
++  (void) fsfd;
++  (void) command;
++  (void) key;
++  (void) value;
++  (void) aux;
++  errno = ENOSYS;
++  return -1;
++#endif
++}
++
++static int
++fsmount_wrapper (int fsfd, unsigned int flags, unsigned int mount_attr_flags)
++{
++#ifdef __NR_fsmount
++  return syscall (__NR_fsmount, fsfd, flags, mount_attr_flags);
++#else
++  (void) fsfd;
++  (void) flags;
++  (void) mount_attr_flags;
++  errno = ENOSYS;
++  return -1;
++#endif
++}
++
++bool opt_force_fs_mount_fallback = false;
++
++int
++fs_mount_at_fd (const char *filesystem,
++                int dest_fd,
++                unsigned int mount_attr_flags,
++                const fs_mount_option *options,
++                size_t n_options)
++{
++  static bool new_mount_supported = true;
++  unsigned int required_mount_attrs = MOUNT_ATTR_NOSUID | MOUNT_ATTR_NOEXEC;
++  int fsfd = -1;
++  int mount_fd = -1;
++  size_t i;
++
++  /* Keep descriptor-based filesystem mounts restricted to explicit
++   * nosuid/noexec/nodev attributes. devpts is an intentional exception to
++   * NODEV because it provides device nodes for pseudo-terminals. */
++  if (strcmp (filesystem, "devpts") != 0)
++    required_mount_attrs |= MOUNT_ATTR_NODEV;
++
++  if ((mount_attr_flags & required_mount_attrs) != required_mount_attrs)
++    {
++      errno = EPERM;
++      return -1;
++    }
++
++  if (opt_force_fs_mount_fallback || !new_mount_supported)
++    {
++      errno = ENOSYS;
++      return -1;
++    }
++
++  debug ("Using fsopen() and move_mount() for %s mount", filesystem);
++
++  fsfd = fsopen_wrapper (filesystem, FSOPEN_CLOEXEC);
++  if (fsfd < 0)
++    goto failed;
++
++  for (i = 0; i < n_options; i++)
++    {
++      unsigned int command = options[i].value != NULL
++                             ? FSCONFIG_SET_STRING
++                             : FSCONFIG_SET_FLAG;
++
++      if (fsconfig_wrapper (fsfd, command, options[i].key,
++                            options[i].value, 0) < 0)
++        goto failed;
++    }
++
++  if (fsconfig_wrapper (fsfd, FSCONFIG_CMD_CREATE, NULL, NULL, 0) < 0)
++    goto failed;
++
++  mount_fd = fsmount_wrapper (fsfd, FSMOUNT_CLOEXEC, mount_attr_flags);
++  if (mount_fd < 0)
++    goto failed;
++
++  if (move_mount_wrapper (mount_fd, "", dest_fd, "",
++                          MOVE_MOUNT_F_EMPTY_PATH |
++                          MOVE_MOUNT_T_EMPTY_PATH) < 0)
++    goto failed;
++
++  close (mount_fd);
++  close (fsfd);
++  debug ("-> Success");
++  return 0;
++
++failed:
++  {
++    int saved_errno = errno;
++
++    if (mount_fd >= 0)
++      close (mount_fd);
++    if (fsfd >= 0)
++      close (fsfd);
++
++    if (saved_errno == ENOSYS)
++      {
++        new_mount_supported = false;
++        debug ("New filesystem mount API is unavailable; falling back to mount()");
++      }
++
++    errno = saved_errno;
++    return -1;
++  }
++}
+diff --git a/utils.h b/utils.h
+index 0872223..a5e914b 100644
+--- a/utils.h
++++ b/utils.h
+@@ -158,8 +158,20 @@ char *label_mount (const char *opt,
+ int   label_exec (const char *exec_label);
+ int   label_create_file (const char *file_label);
+ 
++typedef struct {
++  const char *key;
++  const char *value; /* NULL means FSCONFIG_SET_FLAG. */
++} fs_mount_option;
++
++int   fs_mount_at_fd (const char *filesystem,
++                      int dest_fd,
++                      unsigned int mount_attr_flags,
++                      const fs_mount_option *options,
++                      size_t n_options);
++
+ extern bool opt_force_openat_fallback;
+ extern bool opt_force_mount_setattr_fallback;
++extern bool opt_force_fs_mount_fallback;
+ 
+ int safe_openat (int dirfd,
+                  const char *rootfs,
+@@ -320,3 +332,9 @@ struct mount_attr
+ 
+ int mount_setattr_wrapper (int dirfd, const char *path, unsigned int flags,
+                            struct mount_attr *attr, size_t size);
++int open_tree_wrapper (int dirfd, const char *path, unsigned int flags);
++int move_mount_wrapper (int from_dirfd, const char *from_path,
++                        int to_dirfd, const char *to_path,
++                        unsigned int flags);
++
++extern bool opt_force_bind_mount_fallback;
