@@ -314,8 +314,8 @@ export DBUS_SESSION_BUS_ADDRESS='$CHARD_DBUS_ADDRESS'
 export DBUS_SESSION_BUS_PID='$DBUS_SESSION_BUS_PID'
 EOF
 
-export LIBGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
-export LIBEGL_DRIVERS_PATH="$CHARD_ROOT/usr/lib64/dri:$CHARD_ROOT/usr/lib/dri"
+export LIBGL_DRIVERS_PATH="/usr/lib64/dri:/usr/lib/dri"
+export LIBEGL_DRIVERS_PATH="/usr/lib64/dri:/usr/lib/dri"
 
 #export LD_LIBRARY_PATH=/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export LIBGL_ALWAYS_INDIRECT=0
