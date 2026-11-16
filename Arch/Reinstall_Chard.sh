@@ -458,6 +458,9 @@ download_file() {
 		#sudo $CHARD_ROOT/bin/killall -9 gedit 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
+		sudo pkill -9 -f '[v]irgl_test_server' 2>/dev/null
+		sudo $CHARD_ROOT/usr/bin/killall -9 virgl_test_server 2>/dev/null
+		sudo rm -f /run/chrome/virgl_test_server 2>/dev/null
         sudo pkill -f xfce4-session 2>/dev/null
         sudo pkill -f xfwm4 2>/dev/null
         sudo pkill -f xfce4-panel 2>/dev/null
