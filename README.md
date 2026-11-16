@@ -349,7 +349,6 @@ More QEMU documentation: <br>
 ### *Known Issues - Some of these issues might not be easily fixed:*
 
 - Chard Arch cannot run multiple `chard root` shells simultaneously (use xfce4's terminal app)
-- *Mediatek GPU support is currently being worked on (hard!) - ARM64 is software rendering only for now.
 - *Meteor Lake iGPU support is currently having issues.
 
 <br>
@@ -423,6 +422,7 @@ Improved wrappers and added VA-API support. Added Flatpak app icon and launch su
 - 0.48: `Implemented chard_garcon to allow ChromeOS chrome to open links if user prefers. Fixed chard_baguette launching termina as root on boot. Created chard_browser to let us save and change default browser on reinstall. Added .conf update syntax. Fixed $U_HASH being read too early on boot and added safety fallback. Improved downloader logic. Improved GPU detection logic for Intel. Improved bwrap package install. Removed OBS. Simplified Baguette startup on boot.` <br><br>
 - 0.49: `Fixed several typos on Gentoo's Chariot by yesidodo73, iamdays confirming selinux package install was useless and removed, NotRX confirming selinux bug, spotting several Arch Chariot useless packages, bug reports and Steam suggestion. Fixed language setup. Fixed chard run issue for Chard Arch. Added Dynamic LD Preload scan. Fixed Chard Gentoo's XDG_DATA_DIRS. Added full $CHARD_ROOT path for commands on reinstall.` <br><br>
 - 0.50: `Added dynamic wayland socket support. Chard Gentoo can now retry failed packages during Installer like Chard Arch. Added temporary DNS fallback during Chariot (mainly for VMWare Fusion). Added distro detection for curl support. Added chard_sudo to cache sudo inside chroot. Updated glycin and added appstream. Fixed GPU Screen Recorder. Added Charon, a bidirectional mkfifo script for ChromeOS <--> Chard communication for developers. Updated .chard.preload for Chard Arch. Updated Chard Gentoo to use Python 3.14 and LLVM 23. Fixed crackling audio and audio artifacts, especially when recording/streaming - thanks to LolWRLD for fixing and reporting Chardwire bug. Fixed Chardwire gamma bug. Fixed Chard Gentoo from not installing Bubblepatch, Flatpatch, Chardonnay, and others. Fixed Steam not updating properly; dropped chromeos launch argument that Steam used. Added Steam to Gentoo. Added chmod 666 to hidraw to enable PS5 Controllers; thanks to envelopMK for finding this fix.`
+- 0.51: `ARM64 GPU Acceleration enabled! Thanks to days for fixing this and showing how it is done!` 
 
 ### Acknowledgements - This project would not exist without the help and support from the ChromeOS community.
 
