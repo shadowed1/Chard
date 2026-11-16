@@ -590,6 +590,18 @@ case "$cmd" in
         else
             sudo mountpoint -q "$CHARD_ROOT/run/cras" || sudo mount --bind /run/user/1000/pulse "$CHARD_ROOT/run/cras" 2>/dev/null
         fi
+
+		ARCH="$(uname -m)"
+		if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+		    sudo pkill -9 -f '[v]irgl_test_server' 2>/dev/null
+			sudo $CHARD_ROOT/usr/bin/killall -9 virgl_test_server 2>/dev/null
+			sudo rm -f /run/chrome/virgl_test_server 2>/dev/null
+			sudo nsenter -t 1 -m -- env -u LD_LIBRARY_PATH virgl_test_server --use-gles --use-egl-surfaceless --venus --multi-clients --socket-path=/run/chrome/virgl_test_server &
+			sleep 1
+			sudo chmod 666 /run/chrome/virgl_test_server
+			sudo ss -xlnp | grep virgl
+		fi
+
         $CHARD_ROOT/bin/error_color
         sudo chroot "$CHARD_ROOT" /bin/bash -c '
             mountpoint -q /proc       || mount -t proc proc /proc 2>/dev/null
