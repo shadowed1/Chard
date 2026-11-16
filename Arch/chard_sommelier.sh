@@ -4,15 +4,28 @@
 shopt -s nullglob
 wayland_sockets=("$XDG_RUNTIME_DIR"/wayland-*)
 shopt -u nullglob
+ARCH="$(uname -m)"
 
 if [[ ${#wayland_sockets[@]} -eq 0 ]]; then
     echo "Error: No Wayland sockets found" >&2
     SOMMELIER_DISPLAY="$XDG_RUNTIME_DIR/wayland-0"
 fi
 
+if [ "$ARCH" = "aarch64" ]; then
+    export SDL_VIDEODRIVER=wayland
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export DISPLAY="${DISPLAY:-:0}"
+    export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}"
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+fi
+
 SOMMELIER_DISPLAY="${wayland_sockets[0]}"
 SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
-ARCH="$(uname -m)"
 SOMMELIER_CMD=(
     sommelier
     -X
