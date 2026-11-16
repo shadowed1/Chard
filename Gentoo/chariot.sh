@@ -1932,47 +1932,15 @@ checkpoint_157() {
     # Implementing virtio. Thanks to days for making this possible. 
     ARCH="$(uname -m)"
     if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
-        . /etc/os-release 2>/dev/null
-        DISTRO="${ID:-unknown}"
-        DISTRO_LIKE="${ID_LIKE:-}"
-        DISTRO="${DISTRO,,}"
-        DISTRO_LIKE="${DISTRO_LIKE,,}"
-    
-        if [[ "$DISTRO" == "arch" || "$DISTRO_LIKE" == *arch* ]]; then
-            echo
-            echo "${GREEN}Chard Arch $ARCH Found! ${RESET}"
-            sudo pacman -S --noconfirm --needed patchelf 2>/dev/null
-            sudo pacman -S --noconfirm --needed vulkan-icd-loader 2>/dev/null
-            sudo pacman -S --noconfirm --needed vulkan-tools 2>/dev/null
-            sudo pacman -S --noconfirm --needed mesa-utils 2>/dev/null
-            sudo pacman -S --noconfirm --needed strace 2>/dev/null
-            sudo pacman -S --noconfirm --needed binutils 2>/dev/null
-            sudo pacman -S --noconfirm --needed wayland 2>/dev/null
-            sudo pacman -S --noconfirm --needed libdrm 2>/dev/null
-            sudo pacman -S --noconfirm --needed mesa 2>/dev/null
-            sudo pacman -S --noconfirm --needed vulkan-virtio 2>/dev/null
-            sudo pacman -S --noconfirm --needed vulkan-icd-loader 2>/dev/null
-            sudo pacman -S --noconfirm --needed vulkan-tools 2>/dev/null
-            sudo pacman -S --noconfirm --needed mesa-utils 2>/dev/null
-    
-        elif [[ "$DISTRO" == "gentoo" || "$DISTRO_LIKE" == *gentoo* ]]; then
-            echo
-            echo "${GREEN}Chard Gentoo $ARCH Found! ${RESET}"
-            sudo emerge --noreplace dev-util/patchelf 2>/dev/null
-            sudo emerge --noreplace media-libs/vulkan-loader 2>/dev/null
-            sudo emerge --noreplace dev-util/vulkan-tools 2>/dev/null
-            sudo emerge --noreplace x11-apps/mesa-progs 2>/dev/null
-            sudo emerge --noreplace dev-debug/strace 2>/dev/null
-            sudo emerge --noreplace sys-devel/binutils 2>/dev/null
-            sudo emerge --noreplace dev-libs/wayland 2>/dev/null
-            sudo emerge --noreplace x11-libs/libdrm 2>/dev/null
-            sudo emerge --noreplace media-libs/mesa 2>/dev/null
-    
-        else
-            echo
-            echo "${RED}Unsupported distro: $DISTRO ${RESET}"
-        fi
-    
+            retry_emerge "sudo emerge --noreplace dev-util/patchelf 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace media-libs/vulkan-loader 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace dev-util/vulkan-tools 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace x11-apps/mesa-progs 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace dev-debug/strace 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace sys-devel/binutils 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace dev-libs/wayland 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace x11-libs/libdrm 2>/dev/null"
+            retry_emerge "sudo emerge --noreplace media-libs/mesa 2>/dev/null"
     else
         echo
         echo "${BLUE}Not ARM64 system ($ARCH), skipping. ${RESET}"
