@@ -38,6 +38,7 @@ if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
         sudo pacman -S --noconfirm --needed vulkan-icd-loader 2>/dev/null
         sudo pacman -S --noconfirm --needed vulkan-tools 2>/dev/null
         sudo pacman -S --noconfirm --needed mesa-utils 2>/dev/null
+        yay -S --noconfirm --needed vulkan-mesa-layers 2>/dev/null
         echo "${RESET}"
         LIB=$(find /opt/libmali -maxdepth 1 -type f -name 'libmali.so.0*' ! -name '*.orig' | head -n 1)
         sudo patchelf --remove-needed libc.so.6 "$LIB"
