@@ -799,6 +799,28 @@ ctl.!default {
         type cras
 }
 EOF
+
+ARCH="$(uname -m)"
+
+if [[ -f "/home/chronos/user/.bashrc" ]] && [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+    sudo mkdir -p "$CHARD_ROOT/opt/libmali/" 2>/dev/null
+    MALI_LIB=$(sudo find /usr/lib64 -name 'libmali.so.0.*' -type f 2>/dev/null | head -n 1)
+    if [ -n "$MALI_LIB" ]; then
+        echo
+        echo "${GREEN}Found Mali library: $MALI_LIB ${RESET}"
+        echo
+        sudo cp -a "$MALI_LIB" "$CHARD_ROOT/opt/libmali/"
+    else
+        echo
+        echo "${RED}libmali.so.0.* not found ${RESET}"
+        echo
+    fi
+else
+    echo
+    echo "${BLUE}Not ChromeOS or unsupported architecture, skipping ${BOLD}chard_virtio ${RESET}"
+    echo
+fi
+
 sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
 sudo mkdir -p $CHARD_ROOT/$CHARD_HOME/mtp_devices 2>/dev/null
 sudo chown -R chronos:chronos-access $CHARD_ROOT/$CHARD_HOME/external 2>/dev/null
