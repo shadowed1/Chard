@@ -156,8 +156,8 @@ fi
 
 if [ "$ARCH" = "aarch64" ]; then
     export SDL_VIDEODRIVER=wayland
-    export LIBGL_ALWAYS_SOFTWARE=1
-    export GALLIUM_DRIVER=llvmpipe
+    export MESA_LOADER_DRIVER_OVERRIDE=virtio_gpu
+    unset LIBGL_ALWAYS_SOFTWARE GALLIUM_DRIVER
 fi
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
