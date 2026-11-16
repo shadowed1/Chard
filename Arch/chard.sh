@@ -702,6 +702,9 @@ case "$cmd" in
 				sudo umount -l "$CHARD_ROOT/proc/"    2>/dev/null || true
 		    fi
 		fi
+		sudo pkill -9 -f '[v]irgl_test_server' 2>/dev/null
+		sudo $CHARD_ROOT/usr/bin/killall -9 virgl_test_server 2>/dev/null
+		sudo rm -f /run/chrome/virgl_test_server 2>/dev/null
         $CHARD_ROOT/bin/color_reset
 		if [ -s "$VERSION_FILE" ]; then
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE")"
