@@ -27,6 +27,19 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
+  ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   exec /usr/bin/firefox "$@"
 ' bash "$@"
 EOF
@@ -109,6 +122,19 @@ export USER=$CHARD_USER
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo /bin/bash -c '
   DISPLAY=:0
+  ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   exec /usr/bin/gparted "$@"
 ' bash "$@"
 EOF
@@ -132,6 +158,19 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
+  ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   exec /usr/bin/torbrowser-launcher "$@"
 ' bash "$@"
 EOF
@@ -156,6 +195,19 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export MOZ_CUBEB_FORCE_PULSE=1
   export MOZ_ENABLE_WAYLAND=1
   export MOZ_GTK_TITLEBAR_DECORATION=client
+  ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   exec /usr/bin/thunderbird "$@"
 ' bash "$@"
 EOF
@@ -292,6 +344,19 @@ sudo -u "$CHARD_USER" env \
     XDG_DATA_DIRS="$XDG_DATA_DIRS" \
     WAYLAND_DISPLAY="" \
     QT_QPA_PLATFORM=xcb \
+    ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
     "$XFCE4" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
@@ -334,7 +399,19 @@ export LIBVA_DRIVER_NAME
 
 mkdir -p "$LWJGL_TMPDIR"
 chmod 700 "$LWJGL_TMPDIR"
-
+ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
 WINE_UID=$(id -u "$CHARD_USER")
 WINE_GID=$(id -g "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
@@ -513,6 +590,19 @@ env \
     XDG_DATA_DIRS="$XDG_DATA_DIRS" \
     WAYLAND_DISPLAY="" \
     QT_QPA_PLATFORM=xcb \
+    ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
 xfce4-terminal
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
@@ -603,6 +693,19 @@ sudo env \
     GDK_SCALE="${GDK_SCALE:-1.25}" \
     XDG_DATA_DIRS="$XDG_DATA_DIRS" \
     XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
+    ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
     "$QEMU_BIN" "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
@@ -638,6 +741,19 @@ chown $CHARD_USER:$CHARD_USER "$LWJGL_TMPDIR"
       EGL_PLATFORM=wayland \
       GDK_SCALE="${GDK_SCALE:-1.25}" \
       XDG_DATA_DIRS="$XDG_DATA_DIRS" \
+      ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   /usr/bin/bazaar "$@"
 sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
 EOF
@@ -657,6 +773,19 @@ export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
   export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
+  ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   exec /usr/bin/blender "$@"
 ' bash "$@"
 EOF
@@ -726,6 +855,19 @@ export USER=$CHARD_USER
 export PATH=/usr/local/bubblepatch/bin:$PATH
 xhost +SI:localuser:root >/dev/null 2>&1
 exec sudo -u "$CHARD_USER" /bin/bash -c '
+  ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   exec /usr/bin/7zFM "$@"
 ' bash "$@"
 EOF
@@ -839,6 +981,19 @@ exec sudo -u "$CHARD_USER" /bin/bash -c '
   export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
   PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
   export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native
+  ARCH="$(uname -m)"
+  if [ "$ARCH" = "aarch64" ]; then
+    unset MESA_LOADER_DRIVER_OVERRIDE
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=virpipe
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
+    export VN_DEBUG=vtest
+    export DISPLAY="${DISPLAY:-:0}"
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+  fi
   exec /usr/bin/faugus-launcher "$@"
 ' bash "$@"
 EOF
