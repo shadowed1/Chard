@@ -1035,6 +1035,8 @@ sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/char
 sleep 0.2
 sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_hidraw.sh"            -o "$CHARD_ROOT/bin/chard_hidraw" 2>/dev/null
 sleep 0.2
+sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/Chard/main/bin/chard_virtio.sh"            -o "$CHARD_ROOT/bin/chard_virtio" 2>/dev/null
+sleep 0.2
 sudo chmod +x "$CHARD_ROOT/bin/SMRT"
 sudo chmod +x "$CHARD_ROOT/bin/chard"
 sudo chmod +x "$CHARD_ROOT/bin/chariot"
@@ -1067,6 +1069,7 @@ sudo chmod +x "$CHARD_ROOT/bin/chard_sudo"
 sudo chmod +x "$CHARD_ROOT/bin/charon"
 sudo chmod +x "$CHARD_ROOT/bin/charon_daemon"
 sudo chmod +x "$CHARD_ROOT/bin/chard_hidraw"
+sudo chmod +x "$CHARD_ROOT/bin/chard_virtio"
 
 sudo chown 1000:1000 "$CHARD_ROOT/bin/chard_version"
 
