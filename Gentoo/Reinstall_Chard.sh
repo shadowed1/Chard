@@ -1233,6 +1233,7 @@ EOF
 						sudo /bin/chard_wrappers 2>/dev/null
 						sudo /bin/chard_browser 2>/dev/null
 						sudo /bin/chard_downgrade_bwrap_flatpak 2>/dev/null
+						sudo /bin/chard_virtio 2>/dev/null
 		            "
 		            /bin/error_color
 		            setfacl -Rb /run/chrome/pulse 2>/dev/null
