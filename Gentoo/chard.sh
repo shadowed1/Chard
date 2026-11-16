@@ -894,6 +894,9 @@ case "$cmd" in
         sudo pkill -f powercontrol-gui 2>/dev/null
 		sudo pkill -f chard_timezone_daemon 2>/dev/null
 		chard_shortcut_daemon stop 2>/dev/null
+		sudo pkill -9 -f '[v]irgl_test_server' 2>/dev/null
+		sudo $CHARD_ROOT/usr/bin/killall -9 virgl_test_server 2>/dev/null
+		sudo rm -f /run/chrome/virgl_test_server 2>/dev/null
         $CHARD_ROOT/bin/color_reset
 		if [ -s "$VERSION_FILE" ]; then
 		    CHROMEOS_VERSION="$(cat "$VERSION_FILE" 2>/dev/null)"
