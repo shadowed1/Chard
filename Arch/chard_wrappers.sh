@@ -322,43 +322,50 @@ chmod 700 "$LWJGL_TMPDIR"
 WINE_UID=$(id -u "$CHARD_USER")
 WINE_GID=$(id -g "$CHARD_USER")
 WINE_TMP="/tmp/.wine-${WINE_UID}"
-WINE_GID=$(id -g "$CHARD_USER")
 mkdir -p "$WINE_TMP"
 chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
 chmod 700 "$WINE_TMP"
 sudo setfacl -Rm u:$CHARD_USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
-sudo -u "$CHARD_USER" env \
-    HOME="$HOME" \
-    USER="$CHARD_USER" \
-    PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native \
-    DISPLAY="${DISPLAY:-:0}" \
-    XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-    FLATPAK_BWRAP="$FLATPAK_BWRAP" \
-    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
-    XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}" \
-    GDK_SCALE="${GDK_SCALE:-1.25}" \
-    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    WAYLAND_DISPLAY="" \
-    QT_QPA_PLATFORM=xcb \
-    ARCH="$(uname -m)"
-  if [ "$ARCH" = "aarch64" ]; then
-    unset MESA_LOADER_DRIVER_OVERRIDE
-    export LIBGL_ALWAYS_SOFTWARE=1
-    export GALLIUM_DRIVER=virpipe
-    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
-    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
-    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
-    export VN_DEBUG=vtest
-    export DISPLAY="${DISPLAY:-:0}"
-    export MOZ_WEBRENDER=1
-    export MOZ_ACCELERATED=1
-  fi
-    "$XFCE4" "$@"
-sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
+
+ARCH="$(uname -m)"
+
+ENV_VARS=(
+    HOME="$HOME"
+    USER="$CHARD_USER"
+    PULSE_SERVER="unix:$XDG_RUNTIME_DIR/pulse/native"
+    DISPLAY="${DISPLAY:-:0}"
+    XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+    FLATPAK_BWRAP="$FLATPAK_BWRAP"
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH"
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH"
+    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS"
+    XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
+    GDK_SCALE="${GDK_SCALE:-1.25}"
+    XDG_DATA_DIRS="$XDG_DATA_DIRS"
+    WAYLAND_DISPLAY=""
+    QT_QPA_PLATFORM=xcb
+    ARCH="$ARCH"
+)
+
+ENV_UNSET=()
+if [ "$ARCH" = "aarch64" ]; then
+    ENV_UNSET+=(-u MESA_LOADER_DRIVER_OVERRIDE)
+    ENV_VARS+=(
+        LIBGL_ALWAYS_SOFTWARE=1
+        GALLIUM_DRIVER=virpipe
+        VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+        VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+        VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/virtio_icd.json
+        VN_DEBUG=vtest
+        MOZ_WEBRENDER=1
+        MOZ_ACCELERATED=1
+    )
+fi
+
+sudo -u "$CHARD_USER" env "${ENV_UNSET[@]}" "${ENV_VARS[@]}" "$XFCE4" "$@"
+sudo setfacl -Rb "$XDG_RUNTIME_DIR" 2>/dev/null
 EOF
 
 sudo chmod +x "/bin/chard_xfce4"
@@ -537,78 +544,6 @@ EOF
 
 sudo chmod +x /bin/chard_flatpak
 
-sudo tee /bin/chard_xfce4-terminal >/dev/null <<'EOF'
-#!/bin/bash
-CHARD_HOME=$(cat /.chard_home)
-CHARD_USER=$(cat /.chard_user)
-XDG_RUNTIME_DIR=$(cat /.xdg_runtime_dir)
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
-HOME=/$CHARD_HOME
-USER=$CHARD_USER
-WINE_UID=$(id -u "$CHARD_USER")
-WINE_GID=$(id -g "$CHARD_USER")
-WINE_TMP="/tmp/.wine-${WINE_UID}"
-mkdir -p "$WINE_TMP"
-chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
-chmod 700 "$WINE_TMP"
-export HOME=/$CHARD_HOME
-export USER=$CHARD_USER
-export QT_QPA_PLATFORMTHEME=gtk3
-xhost +SI:localuser:$CHARD_USER
-[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
-WRAPPED_PATH="/usr/local/bubblepatch/bin:$PATH"
-export PATH="$WRAPPED_PATH"
-FLATPAK_BWRAP="/usr/local/bubblepatch/bin/bwrap"
-export FLATPAK_BWRAP
-LWJGL_TMPDIR="$HOME/.local/tmp"
-mkdir -p "$LWJGL_TMPDIR"
-chmod 700 "$LWJGL_TMPDIR"
-WINE_TMP="/tmp/.wine-${WINE_UID}"
-mkdir -p "$WINE_TMP"
-chown "$WINE_UID:$WINE_GID" "$WINE_TMP"
-chmod 700 "$WINE_TMP"
-sudo setfacl -Rm u:$USER:rwx $XDG_RUNTIME_DIR 2>/dev/null
-sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
-XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
-
-sudo -u $CHARD_USER \
-env \
-    HOME="$HOME" \
-    PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native \
-    DISPLAY="${DISPLAY:-:0}" \
-    XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-    FLATPAK_BWRAP="$FLATPAK_BWRAP" \
-    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-    OBS_VKCAPTURE=1 \
-    DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
-    XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}" \
-    OBS_GAMECAPTURE=1 \
-    LIBGL_ALWAYS_INDIRECT=0 \
-    GDK_SCALE="${GDK_SCALE:-1.25}" \
-    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    WAYLAND_DISPLAY="" \
-    QT_QPA_PLATFORM=xcb \
-    ARCH="$(uname -m)"
-  if [ "$ARCH" = "aarch64" ]; then
-    unset MESA_LOADER_DRIVER_OVERRIDE
-    export LIBGL_ALWAYS_SOFTWARE=1
-    export GALLIUM_DRIVER=virpipe
-    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
-    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
-    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
-    export VN_DEBUG=vtest
-    export DISPLAY="${DISPLAY:-:0}"
-    export MOZ_WEBRENDER=1
-    export MOZ_ACCELERATED=1
-  fi
-xfce4-terminal
-sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
-EOF
-
-sudo chmod +x /bin/chard_xfce4-terminal
-
 sudo rm -f /bin/chard_flatpak_ns 2>/dev/null
 
 sudo tee /bin/chard_plasma >/dev/null <<'EOF'
@@ -678,36 +613,42 @@ xhost +SI:localuser:root
 sudo setfacl -Rm u:root:rwx $XDG_RUNTIME_DIR 2>/dev/null
 source /$CHARD_HOME/.bashrc
 WRAPPED_PATH="/usr/local/bubblepatch/bin:/usr/local/bwrap-0.11/bin:/usr/local/flatpak-1.16.3/bin:$PATH"
-sudo env \
-    HOME=/$CHARD_HOME \
-    USER=$CHARD_USER \
-    DISPLAY="${DISPLAY:-:0}" \
-    PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native \
-    PATH="$WRAPPED_PATH" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
-    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH" \
-    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH" \
-    LIBGL_ALWAYS_INDIRECT=0 \
-    GDK_BACKEND="wayland" \
-    EGL_PLATFORM=wayland \
-    GDK_SCALE="${GDK_SCALE:-1.25}" \
-    XDG_DATA_DIRS="$XDG_DATA_DIRS" \
-    XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
-    ARCH="$(uname -m)"
-  if [ "$ARCH" = "aarch64" ]; then
-    unset MESA_LOADER_DRIVER_OVERRIDE
-    export LIBGL_ALWAYS_SOFTWARE=1
-    export GALLIUM_DRIVER=virpipe
-    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
-    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
-    export VK_ICD_FILENAMES=$VK_DRIVER_FILES
-    export VN_DEBUG=vtest
-    export DISPLAY="${DISPLAY:-:0}"
-    export MOZ_WEBRENDER=1
-    export MOZ_ACCELERATED=1
-  fi
-    "$QEMU_BIN" "$@"
-sudo setfacl -Rb $XDG_RUNTIME_DIR 2>/dev/null
+
+ENV_VARS=(
+    HOME="/$CHARD_HOME"
+    USER="$CHARD_USER"
+    DISPLAY="${DISPLAY:-:0}"
+    PULSE_SERVER="unix:$XDG_RUNTIME_DIR/pulse/native"
+    PATH="$WRAPPED_PATH"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+    LIBGL_DRIVERS_PATH="$LIBGL_DRIVERS_PATH"
+    LIBEGL_DRIVERS_PATH="$LIBEGL_DRIVERS_PATH"
+    LIBGL_ALWAYS_INDIRECT=0
+    GDK_BACKEND=wayland
+    EGL_PLATFORM=wayland
+    GDK_SCALE="${GDK_SCALE:-1.25}"
+    XDG_DATA_DIRS="$XDG_DATA_DIRS"
+    XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR"
+    ARCH="$ARCH"
+)
+
+ENV_UNSET=()
+if [ "$ARCH" = "aarch64" ]; then
+    ENV_UNSET+=(-u MESA_LOADER_DRIVER_OVERRIDE)
+    ENV_VARS+=(
+        LIBGL_ALWAYS_SOFTWARE=1
+        GALLIUM_DRIVER=virpipe
+        VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+        VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+        VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/virtio_icd.json
+        VN_DEBUG=vtest
+        MOZ_WEBRENDER=1
+        MOZ_ACCELERATED=1
+    )
+fi
+
+sudo env "${ENV_UNSET[@]}" "${ENV_VARS[@]}" "$QEMU_BIN" "$@"
+sudo setfacl -Rb "$XDG_RUNTIME_DIR" 2>/dev/null
 EOF
 
 sudo chmod +x /bin/chard_qemu
