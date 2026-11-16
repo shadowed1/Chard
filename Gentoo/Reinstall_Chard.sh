@@ -772,16 +772,16 @@ sudo chmod +x "$CHARD_ROOT/usr/bin/chard_gedit"
                     VIDEO_CARDS="nouveau nvk"
                     ;;
                 mali)
-                    VIDEO_CARDS="panfrost lima"
+                    VIDEO_CARDS="virgl panfrost lima"
                     ;;
                 adreno)
-                    VIDEO_CARDS="freedreno"
+                    VIDEO_CARDS="virgl freedreno"
                     ;;
                 mediatek)
-                    VIDEO_CARDS="panfrost lima"
+                    VIDEO_CARDS="virgl panfrost lima"
                     ;;
                 vivante)
-                    VIDEO_CARDS="etnaviv"
+                    VIDEO_CARDS="virgl etnaviv"
                     ;;
                 asahi)
                     VIDEO_CARDS="asahi"
