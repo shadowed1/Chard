@@ -11,6 +11,17 @@ if [[ ${#wayland_sockets[@]} -eq 0 ]]; then
     SOMMELIER_DISPLAY="$XDG_RUNTIME_DIR/wayland-0"
 fi
 
+if [ "$ARCH" = "aarch64" ]; then
+    export SDL_VIDEODRIVER=wayland
+    export MESA_LOADER_DRIVER_OVERRIDE=virtio_gpu
+    unset LIBGL_ALWAYS_SOFTWARE GALLIUM_DRIVER
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VN_DEBUG=vtest
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
+fi
+
+
 SOMMELIER_DISPLAY="${wayland_sockets[0]}"
 SOMMELIER_DRM_DEVICE="/dev/dri/renderD128"
 SOMMELIER_CMD=(
