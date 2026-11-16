@@ -476,6 +476,7 @@ if [ "$ARCH" = "aarch64" ]; then
     export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
     export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/virtio_icd.json
     export VN_DEBUG=vtest
+    export GALLIUM_DRIVER=virpipe
     export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
 fi
 
