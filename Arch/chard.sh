@@ -538,7 +538,7 @@ case "$cmd" in
 		sudo $CHARD_ROOT/bin/killall -9 chard_launch_daemon 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chardwire 2>/dev/null
 		sudo $CHARD_ROOT/bin/killall -9 chard_hidraw 2>/dev/null
-		sudo $CHARD_ROOT/bin/killall -9 chard_volume 2>/dev/null
+		
 		sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf" 2>/dev/null
         sudo mount --bind "$CHARD_ROOT" "$CHARD_ROOT"
         sudo mount --make-rslave "$CHARD_ROOT"
@@ -681,7 +681,6 @@ case "$cmd" in
             umount -l /proc        2>/dev/null || true
         '
         $CHARD_ROOT/bin/error_color
-        killall -9 chard_volume 2>/dev/null
         chard_unmount 2>/dev/null
 		chard_mtp_unmount 2>/dev/null
         sudo rm -f /run/chrome/pulse/native 2>/dev/null
