@@ -2461,22 +2461,27 @@ sudo ln -s $CHARD_ROOT/usr/lib/python-exec /usr/lib/python-exec 2>/dev/null
 sudo mkdir -p $CHARD_ROOT/usr/lib64
 sudo mkdir -p $CHARD_ROOT/usr/share/vulkan/icd.d
 sudo mkdir -p $CHARD_ROOT/etc/portage/env
-#sudo mkdir -p $CHARD_ROOT/etc/portage/package.env/sys-libs
 
-#sudo tee "$CHARD_ROOT/etc/portage/env/glibc.conf" > /dev/null <<'EOF'
-#LDFLAGS="${LDFLAGS} -Wl,--pack-dyn-relocs=relr"
-#EOF
+ARCH="$(uname -m)"
 
-#sudo tee "$CHARD_ROOT/etc/portage/package.env/sys-libs/glibc" > /dev/null <<'EOF'
-#glibc.conf
-#EOF
-
-#if [[ "$(uname -m)" == "aarch64" ]]; then
-#    sudo cp /usr/lib64/libmali.so "$CHARD_ROOT/usr/lib64/" 2>/dev/null
-#    sudo cp /usr/lib64/libmali.so.0 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
-#    sudo cp /usr/lib64/libmali.so.0.44.1 "$CHARD_ROOT/usr/lib64/" 2>/dev/null
-#    sudo cp /usr/share/vulkan/icd.d/mali_icd.json "$CHARD_ROOT/usr/share/vulkan/icd.d/" 2>/dev/null
-#fi
+if [[ -f "/home/chronos/user/.bashrc" ]] && [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+    sudo mkdir -p "$CHARD_ROOT/opt/libmali/" 2>/dev/null
+    MALI_LIB=$(sudo find /usr/lib64 -name 'libmali.so.0.*' -type f 2>/dev/null | head -n 1)
+    if [ -n "$MALI_LIB" ]; then
+        echo
+        echo "${GREEN}Found Mali library: $MALI_LIB ${RESET}"
+        echo
+        sudo cp -a "$MALI_LIB" "$CHARD_ROOT/opt/libmali/"
+    else
+        echo
+        echo "${RED}libmali.so.0.* not found ${RESET}"
+        echo
+    fi
+else
+    echo
+    echo "${BLUE}Not ChromeOS or unsupported architecture, skipping ${BOLD}chard_virtio ${RESET}"
+    echo
+fi
 
 if [ -x "/usr/local/bin/powercontrol" ] && \
 	[ -d "/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config" ]; then
