@@ -1478,16 +1478,16 @@ case "$GPU_TYPE" in
         VIDEO_CARDS="nouveau nvk"
         ;;
     mali)
-        VIDEO_CARDS="panfrost panthor"
+        VIDEO_CARDS="virgl panfrost panthor"
         ;;
     adreno)
-        VIDEO_CARDS="freedreno"
+        VIDEO_CARDS="virgl freedreno"
         ;;
     mediatek)
-        VIDEO_CARDS="panfrost panthor"
+        VIDEO_CARDS="virgl panfrost panthor"
         ;;
     vivante)
-        VIDEO_CARDS="etnaviv"
+        VIDEO_CARDS="virgl etnaviv"
         ;;
     asahi)
         VIDEO_CARDS="asahi"
@@ -1510,7 +1510,7 @@ case "$GPU_TYPE" in
         USE_FLAGS+=" video_cards_intel vaapi vdpau vulkan"
         ;;
     mediatek)
-        USE_FLAGS+=" video_cards_panthor video_cards_panfrost vulkan"
+        USE_FLAGS+=" video_cards_virgl video_cards_panthor video_cards_panfrost vulkan"
 esac
 
 sudo tee "$MAKECONF_FILE" > /dev/null <<EOF
