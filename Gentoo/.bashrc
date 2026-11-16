@@ -471,12 +471,12 @@ if [ "$ARCH" = "aarch64" ]; then
     export SDL_VIDEODRIVER=wayland
     export MESA_LOADER_DRIVER_OVERRIDE=virtio_gpu
     unset LIBGL_ALWAYS_SOFTWARE GALLIUM_DRIVER
-    DISPLAY="${DISPLAY:-:0}" \
-    WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
-    VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json \
-    VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/virtio_icd.json \
-    VN_DEBUG=vtest \
-    VTEST_SOCKET_NAME=/run/chrome/virgl_test_server \
+    export DISPLAY="${DISPLAY:-:0}"
+    export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}"
+    export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/virtio_icd.json
+    export VN_DEBUG=vtest
+    export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
 fi
 
 # <<< CHARD_SMRT >>>
