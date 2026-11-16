@@ -515,6 +515,27 @@ EOF
 
 sudo chmod +x "$CHARD_ROOT/usr/bin/chard_gedit"
 
+ARCH="$(uname -m)"
+
+if [[ -f "/home/chronos/user/.bashrc" ]] && [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+    sudo mkdir -p "$CHARD_ROOT/opt/libmali/" 2>/dev/null
+    MALI_LIB=$(sudo find /usr/lib64 -name 'libmali.so.0.*' -type f 2>/dev/null | head -n 1)
+    if [ -n "$MALI_LIB" ]; then
+        echo
+        echo "${GREEN}Found Mali library: $MALI_LIB ${RESET}"
+        echo
+        sudo cp -a "$MALI_LIB" "$CHARD_ROOT/opt/libmali/"
+    else
+        echo
+        echo "${RED}libmali.so.0.* not found ${RESET}"
+        echo
+    fi
+else
+    echo
+    echo "${BLUE}Not ChromeOS or unsupported architecture, skipping ${BOLD}chard_virtio ${RESET}"
+    echo
+fi
+
                 sudo chown 1000:1000 "$CHARD_ROOT/usr/.chard_prompt.sh" 2>/dev/null
                 sudo cp /etc/resolv.conf "$CHARD_ROOT/etc/resolv.conf"
                 sudo chroot $CHARD_ROOT /bin/bash -c "
