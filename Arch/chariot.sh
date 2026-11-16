@@ -1843,12 +1843,32 @@ run_checkpoint 172 "Nautilus" checkpoint_172
 
 checkpoint_173() {
     retry_pacman "sudo pacman -S --noconfirm nautilus" 
+    retry_pacman "sudo pacman -S --noconfirm glycin"
     xdg-mime default org.gnome.Nautilus.desktop inode/directory 2>/dev/null
     xdg-mime default org.gnome.Nautilus.desktop application/x-gnome-saved-search 2>/dev/null
 }
-run_checkpoint 173 "Glycin" checkpoint_173
+run_checkpoint 173 "nautilus and glycin" checkpoint_173
 
-sudo pacman -S --noconfirm glycin 2>/dev/null
+checkpoint_174() {
+    ARCH="$(uname -m)"
+    if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+        retry_pacman "sudo pacman -S --noconfirm --needed patchelf 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed vulkan-icd-loader 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed vulkan-tools 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed mesa-utils 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed strace 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed binutils 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed wayland 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed libdrm 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed mesa 2>/dev/null"
+        retry_pacman "sudo pacman -S --noconfirm --needed vulkan-virtio 2>/dev/null"
+    else
+        echo
+        echo "${BLUE}Not ARM64 system ($ARCH), skipping. ${RESET}"
+    fi
+}
+run_checkpoint 174 "virtio" checkpoint_174
+
 
 #checkpoint_XXX() {
 #    ARCH="$(uname -m)"
