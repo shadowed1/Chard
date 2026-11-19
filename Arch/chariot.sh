@@ -1372,11 +1372,11 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     
     ~/.local/share/Steam/steamrtarm64/steam
     
-    yay -S --noconfirm gtk2
+    yay -S --noconfirm --needed gtk2
     
-    sudo pacman -S --noconfirm sdl2 sdl2_mixer openal
-    sudo pacman -S --noconfirm libnm libibus
-    sudo pacman -S --noconfirm lsof
+    sudo pacman -S --noconfirm --neededsdl2 sdl2_mixer openal
+    sudo pacman -S --noconfirm --neededlibnm libibus
+    sudo pacman -S --noconfirm --needed lsof
 else
     echo "Unsupported architecture: $ARCH"
 fi
