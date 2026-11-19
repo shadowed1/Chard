@@ -1360,6 +1360,23 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     sudo ninja -C build install
     cd ~/
     rm -rf bubblewrap
+    wget  https://client-update.steamstatic.com/bins_linuxarm64_linuxarm64.zip.f523fa87fc6b9b5435a5e7370cb0d664ef53b50b  ; mv bins_linuxarm64_linuxarm64.zip.f523fa87fc6b9b5435a5e7370cb0d664ef53b50b bins_linuxarm64_linuxarm64.zip 2>/dev/null
+    mkdir -p ~/.local/share/Steam/package && echo publicbeta > ~/.local/share/Steam/package/beta 2>/dev/null
+    unzip ~/bins_linuxarm64_linuxarm64.zip -d ~/.local/share/Steam/ 2>/dev/null
+    chmod -R u+rwx ~/.local/share/Steam/steamrtarm64/ 2>/dev/null
+    sudo ln -s /usr/lib/libvpx.so.12 /usr/lib/libvpx.so.6 2>/dev/null
+    
+    mkdir -p ~/.steam
+    ln -s ~/.local/share/Steam ~/.steam/steam
+    ln -s ~/.local/share/Steam ~/.steam/root
+    
+    ~/.local/share/Steam/steamrtarm64/steam
+    
+    yay -S --noconfirm gtk2
+    
+    sudo pacman -S --noconfirm sdl2 sdl2_mixer openal
+    sudo pacman -S --noconfirm libnm libibus
+    sudo pacman -S --noconfirm lsof
 else
     echo "Unsupported architecture: $ARCH"
 fi
