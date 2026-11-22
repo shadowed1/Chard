@@ -895,7 +895,7 @@ checkpoint_72() {
 run_checkpoint 72 "sudo -E emerge dev-qt/qttools" checkpoint_72
 
 checkpoint_73() {
-    retry_emerge "sudo -E emerge dev-qt/qtnetwork"    
+    retry_emerge "sudo -E emerge dev-qt/qtnetworkauth"    
 }
 run_checkpoint 73 "sudo -E emerge dev-qt/qtnetwork" checkpoint_73
 
