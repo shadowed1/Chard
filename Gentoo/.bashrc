@@ -480,6 +480,8 @@ if [ "$ARCH" = "aarch64" ]; then
     export VTEST_SOCKET_NAME=/run/chrome/virgl_test_server
 fi
 
+export CROSD=~/user/MyFiles/Downloads/
+
 # <<< CHARD_SMRT >>>
 SMRT_ENV_FILE="$HOME/.smrt_env.sh"
 
