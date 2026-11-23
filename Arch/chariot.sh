@@ -1374,7 +1374,7 @@ elif [[ "$ARCH" == "aarch64" ]]; then
     sudo pacman -S --noconfirm --needed sdl2 sdl2_mixer openal
     sudo pacman -S --noconfirm --needed libnm libibus
     sudo pacman -S --noconfirm --needed lsof
-    yay -S --noconfirm --needed gtk2
+    # something is wrong with this command: yay -S --noconfirm --needed gtk2 
 else
     echo "Unsupported architecture: $ARCH"
 fi
