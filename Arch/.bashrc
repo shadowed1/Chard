@@ -359,6 +359,8 @@ alias powercontrol-gui='chard_xfce4 powercontrol-gui'
 # chard_gpusr
 alias rec='/bin/chard_gpusr'
 
+export CROSD=~/user/MyFiles/Downloads/
+
 command -v chard_refresh >/dev/null && chard_refresh
 
 # vkgears bandaid
