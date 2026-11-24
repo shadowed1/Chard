@@ -716,7 +716,8 @@ checkpoint_46() {
     echo ">=sys-apps/systemd-259.2 policykit" | sudo tee -a /etc/portage/package.use/systemd
     SMRT $((PCT_LOAD))
     source /$CHARD_HOME/.smrt_env.sh 2>/dev/null
-    retry_emerge "sudo -E emerge sys-auth/polkit"    
+    #retry_emerge "sudo -E emerge sys-auth/polkit"
+    # idk how to fix polkit rn
 }
 run_checkpoint 46 "sudo -E emerge sys-auth/polkit" checkpoint_46
 
